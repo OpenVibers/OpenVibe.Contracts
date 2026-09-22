@@ -190,6 +190,8 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     };
     let c = check({ 'a.js': "router.post('/x', guard('network.coins.credit'), h); validate('identity.subject-ref@1', v);" });
     ok(c.code === 0 && /1 capabilities enforced \[network.coins.credit\]/.test(c.out), 'owned capability passes: ' + c.out);
+    c = check({ 'a.js': "router.post('/', tenantAuth({ capability: 'media.object.upload' }), h)" }, 'media');
+    ok(c.code === 0 && /\[media.object.upload\]/.test(c.out), 'route-option capabilities are checked too');
     c = check({ 'a.js': "requireCapability('network.coins.mint')" });
     ok(c.code === 1 && /not defined/.test(c.out), 'unknown capability fails');
     c = check({ 'a.js': "requireCapability('media.object.upload')" });

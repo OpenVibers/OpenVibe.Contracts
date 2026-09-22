@@ -7,7 +7,8 @@
  *
  * Fails when
  *   - the installed openvibe-contracts version is outside the service manifest's contractRanges
- *   - the code guards a capability (requireCapability('x') / guard('x') / capabilities.check(.., 'x'))
+ *   - the code guards a capability (requireCapability('x') / guard('x') / capabilities.check(.., 'x') /
+ *     { capability: 'x' } route options)
  *     that the contracts don't define, that is retired, or that another service owns
  *   - the code validates against a contract id (validate('x') / assertValid('x')) that doesn't exist
  * Prints what it checked so a green run says something.
@@ -56,14 +57,14 @@ for (const d of srcDirs) (function walk(dir) {
     }
 })(d);
 
-const CAP_RE = /\b(?:requireCapability|guard)\(\s*['"]([a-z][a-z0-9_.]+)['"]|capabilities\.check\([^,]+,\s*['"]([a-z][a-z0-9_.]+)['"]/g;
+const CAP_RE = /\b(?:requireCapability|guard)\(\s*['"]([a-z][a-z0-9_.]+)['"]|capabilities\.check\([^,]+,\s*['"]([a-z][a-z0-9_.]+)['"]|\bcapability:\s*['"]([a-z][a-z0-9_.]+)['"]/g;
 const CONTRACT_RE = /\b(?:validate|assertValid)\(\s*['"]([a-z][a-z0-9-]*\.[a-z0-9-]+(?:@\d+)?)['"]/g;
 const used = new Map();
 const refs = new Map();
 for (const f of files) {
     const text = fs.readFileSync(f, 'utf8');
     let m;
-    while ((m = CAP_RE.exec(text))) { const id = m[1] || m[2]; (used.get(id) || used.set(id, []).get(id)).push(path.relative(process.cwd(), f)); }
+    while ((m = CAP_RE.exec(text))) { const id = m[1] || m[2] || m[3]; (used.get(id) || used.set(id, []).get(id)).push(path.relative(process.cwd(), f)); }
     while ((m = CONTRACT_RE.exec(text))) { (refs.get(m[1]) || refs.set(m[1], []).get(m[1])).push(path.relative(process.cwd(), f)); }
 }
 for (const [id, where] of used) {
