@@ -4,12 +4,12 @@
   "owner": "network",
   "status": "active",
   "visibility": "internal",
-  "description": "Credit OpenCoins (loyalty, never money) to a Network user. Idempotent by idempotency_key.",
+  "description": "Credit OpenCoins (loyalty, never money) to a Network user. Idempotent by idempotency_key. A token may only act for its own app_id.",
   "permissions": [
     "coins:write"
   ],
   "resourceConstraints": [
-    "none"
+    "owner"
   ],
   "quotaClass": "ledger-write",
   "events": [],

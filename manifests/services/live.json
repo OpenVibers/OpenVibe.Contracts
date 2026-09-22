@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": "^0.1.0"
+    "openvibe-contracts": "^0.2.0"
   },
   "id": "live",
   "name": "OpenVibe.Live",

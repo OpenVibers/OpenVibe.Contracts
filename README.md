@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.1 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
+**Status:** alpha, v0.2 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -27,6 +27,20 @@ contracts.http.sendProblem(res, 403, 'capability.denied', { detail: 'not granted
 contracts.capabilities.check(tokenClaims, 'media.object.upload', { namespace: 'live.files' });
 // { allowed: false, code: 'capability.denied' | 'capability.namespace_denied' | 'capability.unknown', reason }
 ```
+
+Service principals (v0.2): a caller gets a short-lived token from Network with its OAuth client credentials, and a receiver guards a route with the capability it performs:
+
+```js
+const tokens = contracts.serviceAuth.createTokenClient({ tokenUrl: `${NETWORK}/oauth/token`, clientId, clientSecret, audience: 'openvibe.network' });
+await fetch(url, { headers: await tokens.authHeaders() });
+
+router.post('/coins/credit', contracts.serviceAuth.requireCapability('network.coins.credit', {
+    publicKey, issuer, audience: 'openvibe.network',
+    legacy: (req) => req.headers['x-internal-key'] === key,   // old callers keep working during migration
+}), handler);
+```
+
+A request that presents a Bearer token is judged only on that token; a bad token is never rescued by a legacy header.
 
 TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json). All schemas in one file: `generated/json-schema/bundle.json`.
 

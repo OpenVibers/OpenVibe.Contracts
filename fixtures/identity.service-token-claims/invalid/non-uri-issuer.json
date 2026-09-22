@@ -1,5 +1,5 @@
 {
-  "iss": "https://evil.example",
+  "iss": "openvibe network",
   "sub": "svc:live",
   "actor_type": "service",
   "aud": [

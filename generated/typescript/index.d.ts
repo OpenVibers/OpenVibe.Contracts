@@ -47,12 +47,15 @@ export interface LegacyIdentityMapEntry {
   metadata?: {};
 }
 
-/** identity.service-token-claims@1.0.0 (owner: network) */
+/** identity.service-token-claims@1.1.0 (owner: network) */
 /**
  * Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service or app principal. Replaces X-Internal-Key.
  */
 export interface ServiceTokenClaims {
-  iss: "https://openvibe.network";
+  /**
+   * Issuer; https://openvibe.network in production. Receivers pass the issuer they expect to verifyServiceToken().
+   */
+  iss: string;
   sub: string;
   actor_type: "service" | "app" | "mod";
   /**

@@ -6,7 +6,7 @@
  * consumer of the same major version:
  *   - a property removed, or its type changed
  *   - a property newly required
- *   - an enum/const value removed
+ *   - an enum value removed, or a const changed to another value
  *   - additionalProperties tightened to false
  *   - a catalog entry removed without a deprecation record
  * A breaking change belongs in a new major (<name>.v2.json) with the old file deprecated.
@@ -28,7 +28,8 @@ function compare(id, a, b, at) {
     const ta = JSON.stringify(a.type), tb = JSON.stringify(b.type);
     if (a.type !== undefined && ta !== tb) problems.push(`${id} ${at}: type ${ta} -> ${tb}`);
     for (const k of ['enum']) if (Array.isArray(a[k])) for (const v of a[k]) if (!(b[k] || []).includes(v)) problems.push(`${id} ${at}: enum value ${JSON.stringify(v)} removed`);
-    if ('const' in a && JSON.stringify(a.const) !== JSON.stringify(b.const)) problems.push(`${id} ${at}: const changed`);
+    // Dropping a const only widens what is accepted; changing it to another value breaks.
+    if ('const' in a && 'const' in b && JSON.stringify(a.const) !== JSON.stringify(b.const)) problems.push(`${id} ${at}: const changed`);
     if (a.additionalProperties !== false && b.additionalProperties === false) problems.push(`${id} ${at}: additionalProperties tightened`);
     for (const r of b.required || []) if (!(a.required || []).includes(r)) problems.push(`${id} ${at}: "${r}" newly required`);
     for (const [k, v] of Object.entries(a.properties || {})) {

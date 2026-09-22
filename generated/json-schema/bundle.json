@@ -162,7 +162,7 @@
       }
     },
     "identity.service-token-claims": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -184,7 +184,9 @@
         "additionalProperties": true,
         "properties": {
           "iss": {
-            "const": "https://openvibe.network"
+            "type": "string",
+            "format": "uri",
+            "description": "Issuer; https://openvibe.network in production. Receivers pass the issuer they expect to verifyServiceToken()."
           },
           "sub": {
             "type": "string",

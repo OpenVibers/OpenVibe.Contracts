@@ -1,10 +1,10 @@
 {
-  "id": "network.coins.debit",
+  "id": "network.coins.transfer",
   "version": "1.0",
   "owner": "network",
   "status": "active",
   "visibility": "internal",
-  "description": "Debit OpenCoins; 409 insufficient_funds. A token may only act for its own app_id.",
+  "description": "Atomically move OpenCoins between two Network users. A token may only act for its own app_id.",
   "permissions": [
     "coins:write"
   ],
@@ -14,6 +14,6 @@
   "quotaClass": "ledger-write",
   "events": [],
   "implementedBy": [
-    "POST /internal/coins/debit"
+    "POST /internal/coins/transfer"
   ]
 }

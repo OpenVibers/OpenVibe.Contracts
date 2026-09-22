@@ -103,8 +103,62 @@ ok(!capabilities.check({ cap: ['media.*'], ns: ['*'] }, 'network.coins.debit').a
 ok(!capabilities.grants(['media.object'], 'media.object.read'), 'a prefix without .* is not a family grant');
 ok(!capabilities.namespaceAllowed(['live.*'], 'livestream'), 'namespace wildcard does not match a longer sibling name');
 
+// ── Service tokens: issue, verify, guard, client ─────────────────────────
+(async () => {
+const { serviceAuth } = contracts;
+const kp = require('crypto').generateKeyPairSync('rsa', { modulusLength: 2048 });
+const other = require('crypto').generateKeyPairSync('rsa', { modulusLength: 2048 });
+const t0 = Math.floor(Date.now() / 1000);
+const claims = { iss: 'https://openvibe.network', sub: 'svc:live', actor_type: 'service', aud: ['openvibe.network'], cap: ['network.coins.credit'], ns: ['live'], iat: t0, exp: t0 + 300, jti: 'jti_0123456789' };
+const tok = serviceAuth.signServiceToken(claims, kp.privateKey);
+const V = (t, o = {}) => serviceAuth.verifyServiceToken(t, { publicKey: kp.publicKey, issuer: 'https://openvibe.network', audience: 'openvibe.network', ...o });
+ok(V(tok).ok && V(tok).claims.sub === 'svc:live', 'valid token verifies');
+ok(V(serviceAuth.signServiceToken(claims, other.privateKey)).code === 'token.bad_signature', 'foreign key rejected');
+ok(V(serviceAuth.signServiceToken({ ...claims, exp: t0 - 120 }, kp.privateKey)).code === 'token.expired', 'expired rejected');
+ok(V(tok, { audience: 'openvibe.media' }).code === 'token.wrong_audience', 'wrong audience rejected');
+ok(V(tok, { issuer: 'https://evil.example' }).code === 'token.wrong_issuer', 'wrong issuer rejected');
+ok(V(serviceAuth.signServiceToken({ ...claims, sub: 'user:42' }, kp.privateKey)).code === 'token.invalid_claims', 'claims must match the contract');
+const [h, p] = tok.split('.');
+const none = `${Buffer.from(JSON.stringify({ alg: 'none' })).toString('base64url')}.${p}.`;
+ok(V(none).code === 'token.malformed', 'alg none rejected');
+ok(V(`${h}.${Buffer.from(JSON.stringify({ ...claims, cap: ['network.coins.debit'] })).toString('base64url')}.${tok.split('.')[2]}`).code === 'token.bad_signature', 'tampered claims rejected');
+ok(V('nope').code === 'token.malformed', 'garbage rejected');
+
+const run = (guard, headers) => new Promise((resolve) => {
+    const req = { headers, body: {} };
+    const res = { headers: {}, setHeader(k, v) { this.headers[k.toLowerCase()] = v; }, end(b) { resolve({ status: this.statusCode, body: JSON.parse(b), req }); } };
+    guard(req, res, () => resolve({ status: 200, req }));
+});
+const audit = [];
+const opts = { publicKey: kp.publicKey, issuer: 'https://openvibe.network', audience: 'openvibe.network', legacy: (req) => req.headers['x-internal-key'] === 'k', onDecision: (d) => audit.push(d) };
+let r = await run(serviceAuth.requireCapability('network.coins.credit', opts), { authorization: `Bearer ${tok}` });
+ok(r.status === 200 && r.req.principal.sub === 'svc:live', 'granted capability passes with the principal attached');
+r = await run(serviceAuth.requireCapability('network.coins.debit', opts), { authorization: `Bearer ${tok}` });
+ok(r.status === 403 && r.body.code === 'capability.denied' && contracts.validate('errors.problem', r.body).valid, 'ungranted capability is a 403 problem');
+r = await run(serviceAuth.requireCapability('network.coins.credit', opts), { authorization: 'Bearer garbage', 'x-internal-key': 'k' });
+ok(r.status === 401 && r.body.code === 'token.malformed', 'a bad token is not rescued by a legacy key');
+r = await run(serviceAuth.requireCapability('network.coins.credit', opts), { 'x-internal-key': 'k' });
+ok(r.status === 200 && r.req.principal.legacy === true, 'legacy key still works in compatibility mode');
+r = await run(serviceAuth.requireCapability('network.coins.credit', opts), {});
+ok(r.status === 403, 'no credentials, no access');
+r = await run(serviceAuth.requireCapability('media.object.upload', { ...opts, audience: 'openvibe.network', namespace: () => 'games.maps' }), { authorization: `Bearer ${serviceAuth.signServiceToken({ ...claims, cap: ['media.object.*'], ns: ['live.*'] }, kp.privateKey)}` });
+ok(r.status === 403 && r.body.code === 'capability.namespace_denied', 'namespace constraint enforced');
+ok(audit.length === 6 && audit.filter(a => a.allowed).length === 2, 'every decision reaches the audit hook');
+assert.throws(() => serviceAuth.requireCapability('nope.nope.nope'), /unknown capability/);
+
+let calls = 0;
+const fakeFetch = async (url, init) => { calls++; const b = new URLSearchParams(init.body); ok(b.get('grant_type') === 'client_credentials' && b.get('audience') === 'openvibe.network', 'client sends client_credentials'); return { ok: true, status: 200, json: async () => ({ access_token: `t${calls}`, expires_in: 300 }) }; };
+const client = serviceAuth.createTokenClient({ tokenUrl: 'http://x/oauth/token', clientId: 'live', clientSecret: 's', audience: 'openvibe.network', fetchImpl: fakeFetch });
+const [a1, a2] = await Promise.all([client.getToken(), client.getToken()]);
+ok(a1 === 't1' && a2 === 't1' && calls === 1, 'concurrent callers share one fetch');
+ok((await client.authHeaders()).Authorization === 'Bearer t1' && calls === 1, 'cached until near expiry');
+client.invalidate(); await client.getToken(); ok(calls === 2, 'invalidate forces a refetch');
+const failing = serviceAuth.createTokenClient({ tokenUrl: 'x', clientId: 'live', clientSecret: 'bad', audience: 'a', fetchImpl: async () => ({ ok: false, status: 401, json: async () => ({ error: 'invalid_client' }) }) });
+await assert.rejects(failing.getToken(), /401: invalid_client/);
+
 // ── Generated output and compatibility gate ──────────────────────────────
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/compat.js')], { stdio: 'inherit' });
 
 console.log(`openvibe-contracts: ${n} checks passed`);
+})().catch((err) => { console.error(err); process.exit(1); });

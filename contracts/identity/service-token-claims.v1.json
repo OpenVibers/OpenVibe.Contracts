@@ -4,17 +4,66 @@
   "title": "ServiceTokenClaims",
   "description": "Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service or app principal. Replaces X-Internal-Key.",
   "type": "object",
-  "required": ["iss", "sub", "actor_type", "aud", "cap", "iat", "exp", "jti"],
+  "required": [
+    "iss",
+    "sub",
+    "actor_type",
+    "aud",
+    "cap",
+    "iat",
+    "exp",
+    "jti"
+  ],
   "additionalProperties": true,
   "properties": {
-    "iss": { "const": "https://openvibe.network" },
-    "sub": { "type": "string", "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26}|mod:mod_[0-9A-HJKMNP-TV-Z]{26})$" },
-    "actor_type": { "enum": ["service", "app", "mod"] },
-    "aud": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z0-9.-]+$" } },
-    "cap": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_*]+)+$" }, "description": "Granted capability ids; a trailing .* grants a family." },
-    "ns": { "type": "array", "items": { "type": "string" }, "description": "Namespace constraints, e.g. live.* or mod.example.*" },
-    "iat": { "type": "integer" },
-    "exp": { "type": "integer" },
-    "jti": { "type": "string", "minLength": 8 }
+    "iss": {
+      "type": "string",
+      "format": "uri",
+      "description": "Issuer; https://openvibe.network in production. Receivers pass the issuer they expect to verifyServiceToken()."
+    },
+    "sub": {
+      "type": "string",
+      "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26}|mod:mod_[0-9A-HJKMNP-TV-Z]{26})$"
+    },
+    "actor_type": {
+      "enum": [
+        "service",
+        "app",
+        "mod"
+      ]
+    },
+    "aud": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9.-]+$"
+      }
+    },
+    "cap": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_*]+)+$"
+      },
+      "description": "Granted capability ids; a trailing .* grants a family."
+    },
+    "ns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Namespace constraints, e.g. live.* or mod.example.*"
+    },
+    "iat": {
+      "type": "integer"
+    },
+    "exp": {
+      "type": "integer"
+    },
+    "jti": {
+      "type": "string",
+      "minLength": 8
+    }
   }
 }
