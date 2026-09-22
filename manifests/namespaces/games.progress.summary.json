@@ -1,0 +1,38 @@
+{
+  "namespace": "games.progress.summary",
+  "owner": "games",
+  "version": 1,
+  "description": "Public summary of game progress. The authoritative inventory stays in OpenVibe.Games.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [
+    "level",
+    "achievements",
+    "playtime_hours"
+  ],
+  "quotaBytes": 4096,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "level": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "achievements": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "playtime_hours": {
+        "type": "number",
+        "minimum": 0
+      },
+      "last_world": {
+        "type": "string",
+        "maxLength": 120
+      }
+    }
+  }
+}

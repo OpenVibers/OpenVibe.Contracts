@@ -1,0 +1,39 @@
+{
+  "namespace": "tools.usage",
+  "owner": "tools",
+  "version": 1,
+  "description": "Recently used tools, for the launcher. Written by Tools only.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [],
+  "quotaBytes": 8192,
+  "onOwnerRemoved": "delete-after-retention",
+  "retentionDays": 90,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "recent": {
+        "type": "array",
+        "maxItems": 30,
+        "items": {
+          "type": "object",
+          "required": [
+            "tool"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "tool": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "at": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

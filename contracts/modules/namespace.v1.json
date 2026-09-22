@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/modules/namespace.v1.json",
+  "title": "ModuleNamespace",
+  "description": "Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5).",
+  "type": "object",
+  "required": ["namespace", "owner", "version", "schema", "writers", "publicFields", "quotaBytes", "onOwnerRemoved"],
+  "additionalProperties": false,
+  "properties": {
+    "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$" },
+    "owner": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "Service that owns the namespace and may write it with network.modules.write." },
+    "version": { "type": "integer", "minimum": 1, "description": "Schema version stored with every record; a change needs a migration note." },
+    "description": { "type": "string" },
+    "schema": { "type": "object", "description": "JSON Schema (2020-12) every stored value must satisfy." },
+    "writers": { "type": "array", "minItems": 1, "items": { "enum": ["owner", "user"] }, "description": "owner = the owning service with a token; user = the subject themselves." },
+    "publicFields": { "type": "array", "items": { "type": "string" }, "description": "Top-level fields anyone may read. Everything else is readable only by the subject and granted services." },
+    "quotaBytes": { "type": "integer", "minimum": 64, "maximum": 65536 },
+    "onOwnerRemoved": { "enum": ["retain-readonly", "delete-after-retention"], "description": "What happens to records when the owning service or mod is retired." },
+    "retentionDays": { "type": "integer", "minimum": 0 },
+    "migration": { "type": "string", "description": "How records of the previous version are upgraded." }
+  }
+}

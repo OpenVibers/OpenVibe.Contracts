@@ -1,0 +1,23 @@
+{
+  "id": "network.modules.write",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Write a subject's record in a namespace the service owns (If-Match revision).",
+  "inputSchema": "modules.module-record@1",
+  "outputSchema": "modules.module-record@1",
+  "permissions": [
+    "modules:write"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "modules-write",
+  "events": [
+    "network.module.updated"
+  ],
+  "implementedBy": [
+    "PUT /internal/modules/:namespace/:subject"
+  ]
+}

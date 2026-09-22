@@ -1,0 +1,43 @@
+{
+  "namespace": "ai.preferences",
+  "owner": "network",
+  "version": 1,
+  "description": "How this person wants AI features to behave (roadmap 28.3 m12: style, length, perspective, personalization opt-out).",
+  "writers": [
+    "owner",
+    "user"
+  ],
+  "publicFields": [],
+  "quotaBytes": 2048,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "enum": [
+          "neutral",
+          "casual",
+          "formal"
+        ]
+      },
+      "length": {
+        "enum": [
+          "short",
+          "medium",
+          "long"
+        ]
+      },
+      "perspective": {
+        "type": "string",
+        "maxLength": 80
+      },
+      "personalization": {
+        "type": "boolean"
+      },
+      "history": {
+        "type": "boolean"
+      }
+    }
+  }
+}

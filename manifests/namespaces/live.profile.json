@@ -1,0 +1,44 @@
+{
+  "namespace": "live.profile",
+  "owner": "live",
+  "version": 1,
+  "description": "Live channel summary shown on other sites. Written by Live only.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [
+    "channel_url",
+    "followers",
+    "is_streamer",
+    "last_live_at"
+  ],
+  "quotaBytes": 4096,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "channel_url": {
+        "type": "string",
+        "format": "uri"
+      },
+      "followers": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "is_streamer": {
+        "type": "boolean"
+      },
+      "last_live_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "stream_minutes_30d": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  }
+}

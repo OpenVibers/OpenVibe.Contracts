@@ -193,3 +193,61 @@ export interface MediaRef {
   role?: string;
   variant?: string;
 }
+
+/** modules.namespace@1.0.0 (owner: network) */
+/**
+ * Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5).
+ */
+export interface ModuleNamespace {
+  namespace: string;
+  /**
+   * Service that owns the namespace and may write it with network.modules.write.
+   */
+  owner: string;
+  /**
+   * Schema version stored with every record; a change needs a migration note.
+   */
+  version: number;
+  description?: string;
+  /**
+   * JSON Schema (2020-12) every stored value must satisfy.
+   */
+  schema: {};
+  /**
+   * owner = the owning service with a token; user = the subject themselves.
+   *
+   * @minItems 1
+   */
+  writers: ["owner" | "user", ...("owner" | "user")[]];
+  /**
+   * Top-level fields anyone may read. Everything else is readable only by the subject and granted services.
+   */
+  publicFields: string[];
+  quotaBytes: number;
+  /**
+   * What happens to records when the owning service or mod is retired.
+   */
+  onOwnerRemoved: "retain-readonly" | "delete-after-retention";
+  retentionDays?: number;
+  /**
+   * How records of the previous version are upgraded.
+   */
+  migration?: string;
+}
+
+/** modules.module-record@1.0.0 (owner: network) */
+/**
+ * One subject's value in one namespace, as returned by Network. revision increases by one on every write; a write names the revision it read (If-Match) and fails with 412 if it moved.
+ */
+export interface ModuleRecord {
+  subject: SubjectRef;
+  namespace: string;
+  version: number;
+  revision: number;
+  data: {};
+  updated_at: string;
+  /**
+   * user:<subject> or svc:<service>
+   */
+  updated_by?: string;
+}

@@ -88,6 +88,25 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-006"
+    },
+    {
+      "id": "modules.namespace",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "modules/namespace.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
+      "id": "modules.module-record",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "modules/module-record.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

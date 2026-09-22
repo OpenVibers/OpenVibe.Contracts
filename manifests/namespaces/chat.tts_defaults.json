@@ -1,0 +1,31 @@
+{
+  "namespace": "chat.tts_defaults",
+  "owner": "live",
+  "version": 1,
+  "description": "Default text-to-speech voice and rate for this person.",
+  "writers": [
+    "owner",
+    "user"
+  ],
+  "publicFields": [],
+  "quotaBytes": 2048,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "voice": {
+        "type": "string",
+        "maxLength": 80
+      },
+      "rate": {
+        "type": "number",
+        "minimum": 0.5,
+        "maximum": 2
+      },
+      "muted": {
+        "type": "boolean"
+      }
+    }
+  }
+}

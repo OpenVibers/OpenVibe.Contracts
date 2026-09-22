@@ -22,7 +22,9 @@
     "network.coins.credit",
     "network.coins.debit",
     "network.coins.transfer",
-    "network.notifications.push"
+    "network.notifications.push",
+    "network.modules.read",
+    "network.modules.write"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],

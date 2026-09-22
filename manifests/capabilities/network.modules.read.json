@@ -1,0 +1,20 @@
+{
+  "id": "network.modules.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a subject's user-module record in a granted namespace.",
+  "outputSchema": "modules.module-record@1",
+  "permissions": [
+    "modules:read"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "modules-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/modules/:namespace/:subject"
+  ]
+}

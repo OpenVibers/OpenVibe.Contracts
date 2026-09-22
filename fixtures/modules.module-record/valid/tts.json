@@ -1,0 +1,15 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "namespace": "chat.tts_defaults",
+  "version": 1,
+  "revision": 3,
+  "data": {
+    "voice": "en-US-1",
+    "rate": 1.2
+  },
+  "updated_at": "2026-09-22 21:40:00",
+  "updated_by": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+}

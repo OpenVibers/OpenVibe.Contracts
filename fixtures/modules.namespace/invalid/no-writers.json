@@ -1,0 +1,10 @@
+{
+  "namespace": "x.y",
+  "owner": "live",
+  "version": 1,
+  "schema": {},
+  "writers": [],
+  "publicFields": [],
+  "quotaBytes": 100,
+  "onOwnerRemoved": "retain-readonly"
+}

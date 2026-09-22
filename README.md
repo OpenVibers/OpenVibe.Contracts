@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.3 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
+**Status:** alpha, v0.4 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -63,6 +63,10 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 Manifests: `manifests/services/` (the 7 running services plus the 21 charter repos as `placeholder`), `manifests/capabilities/` (first set: Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve, Community post). Each active capability names the route that implements it today.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
+
+## User modules (v0.4)
+
+`manifests/namespaces/*.json` define per-subject module namespaces (`modules.namespace@1`): owner, data schema, writers (`owner` service and/or the `user`), public fields, quota and what happens when the owner is retired. OpenVibe.Network stores the records (`modules.module-record@1`, revision-checked writes). `contracts.modules.validateData / publicView / canWrite` apply the same rules everywhere. Modules hold portable preferences and summaries, never domain truth, money or authoritative game inventory.
 
 ## Versioning and compatibility
 

@@ -1,0 +1,36 @@
+{
+  "namespace": "chat.preferences",
+  "owner": "live",
+  "version": 1,
+  "description": "Portable chat display preferences (moves to OpenVibe.Chat in Wave 6).",
+  "writers": [
+    "owner",
+    "user"
+  ],
+  "publicFields": [],
+  "quotaBytes": 4096,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "timestamps": {
+        "type": "boolean"
+      },
+      "compact": {
+        "type": "boolean"
+      },
+      "font_scale": {
+        "type": "number",
+        "minimum": 0.75,
+        "maximum": 2
+      },
+      "show_badges": {
+        "type": "boolean"
+      },
+      "hide_emotes": {
+        "type": "boolean"
+      }
+    }
+  }
+}

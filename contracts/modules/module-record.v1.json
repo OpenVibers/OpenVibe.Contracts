@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/modules/module-record.v1.json",
+  "title": "ModuleRecord",
+  "description": "One subject's value in one namespace, as returned by Network. revision increases by one on every write; a write names the revision it read (If-Match) and fails with 412 if it moved.",
+  "type": "object",
+  "required": ["subject", "namespace", "version", "revision", "data", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "subject": { "$ref": "../identity/subject-ref.v1.json" },
+    "namespace": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "revision": { "type": "integer", "minimum": 0 },
+    "data": { "type": "object" },
+    "updated_at": { "type": "string" },
+    "updated_by": { "type": "string", "description": "user:<subject> or svc:<service>" }
+  }
+}

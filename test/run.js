@@ -156,6 +156,26 @@ client.invalidate(); await client.getToken(); ok(calls === 2, 'invalidate forces
 const failing = serviceAuth.createTokenClient({ tokenUrl: 'x', clientId: 'live', clientSecret: 'bad', audience: 'a', fetchImpl: async () => ({ ok: false, status: 401, json: async () => ({ error: 'invalid_client' }) }) });
 await assert.rejects(failing.getToken(), /401: invalid_client/);
 
+// ── User-module namespaces ────────────────────────────────────────────────
+{
+    const { modules } = contracts;
+    ok(modules.namespaces.length >= 6, 'seed namespaces present');
+    for (const n of modules.namespaces) {
+        ok(contracts.validate('modules.namespace@1', n).valid, `namespace ${n.namespace} matches the contract`);
+        ok(serviceIds.has(n.owner), `${n.namespace} owner ${n.owner} is a service`);
+        for (const f of n.publicFields) ok(n.schema.properties && n.schema.properties[f], `${n.namespace} public field ${f} is in its schema`);
+        ok(n.onOwnerRemoved !== 'delete-after-retention' || Number.isInteger(n.retentionDays), `${n.namespace} deletion has a retention period`);
+    }
+    ok(modules.validateData('chat.tts_defaults', { voice: 'a', rate: 1 }).valid, 'valid module data passes');
+    ok(!modules.validateData('chat.tts_defaults', { rate: 9 }).valid, 'out-of-range value fails');
+    ok(!modules.validateData('chat.tts_defaults', { voice: 'a', password: 'x' }).valid, 'unknown field fails');
+    ok(!modules.validateData('tools.usage', { recent: Array.from({ length: 30 }, () => ({ tool: 'x'.repeat(80), at: 'y'.repeat(300) })) }).valid, 'over quota fails');
+    ok(!modules.validateData('nope.nope', {}).valid && !modules.validateData('chat.preferences', []).valid, 'unknown namespace / non-object fails');
+    ok(JSON.stringify(modules.publicView('live.profile', { followers: 3, stream_minutes_30d: 99 })) === '{"followers":3}', 'public view keeps only public fields');
+    ok(modules.canWrite('chat.preferences', { type: 'user' }) && !modules.canWrite('live.profile', { type: 'user' }), 'user write follows writers');
+    ok(modules.canWrite('live.profile', { type: 'service', id: 'live' }) && !modules.canWrite('live.profile', { type: 'service', id: 'tools' }), 'only the owning service writes');
+}
+
 // ── openvibe-contracts-check (the CLI services run in CI) ─────────────────
 {
     const os = require('os');
