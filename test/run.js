@@ -156,6 +156,31 @@ client.invalidate(); await client.getToken(); ok(calls === 2, 'invalidate forces
 const failing = serviceAuth.createTokenClient({ tokenUrl: 'x', clientId: 'live', clientSecret: 'bad', audience: 'a', fetchImpl: async () => ({ ok: false, status: 401, json: async () => ({ error: 'invalid_client' }) }) });
 await assert.rejects(failing.getToken(), /401: invalid_client/);
 
+// ── openvibe-contracts-check (the CLI services run in CI) ─────────────────
+{
+    const os = require('os');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ovc-check-'));
+    const bin = path.join(ROOT, 'bin/check-service.js');
+    const check = (files, service = 'network') => {
+        fs.rmSync(path.join(tmp, 'src'), { recursive: true, force: true });
+        fs.mkdirSync(path.join(tmp, 'src'), { recursive: true });
+        for (const [n, body] of Object.entries(files)) fs.writeFileSync(path.join(tmp, 'src', n), body);
+        try { return { code: 0, out: execFileSync(process.execPath, [bin, '--service', service, '--src', 'src'], { cwd: tmp, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }) }; }
+        catch (e) { return { code: e.status, out: String(e.stdout) + String(e.stderr) }; }
+    };
+    let c = check({ 'a.js': "router.post('/x', guard('network.coins.credit'), h); validate('identity.subject-ref@1', v);" });
+    ok(c.code === 0 && /1 capabilities enforced \[network.coins.credit\]/.test(c.out), 'owned capability passes: ' + c.out);
+    c = check({ 'a.js': "requireCapability('network.coins.mint')" });
+    ok(c.code === 1 && /not defined/.test(c.out), 'unknown capability fails');
+    c = check({ 'a.js': "requireCapability('media.object.upload')" });
+    ok(c.code === 1 && /owned by media, not network/.test(c.out), 'another service\'s capability fails');
+    c = check({ 'a.js': "assertValid('identity.subject-ref@9', v)" });
+    ok(c.code === 1 && /not @9/.test(c.out), 'unknown contract major fails');
+    c = check({ 'a.js': '' }, 'nope');
+    ok(c.code === 1 && /no service manifest/.test(c.out), 'unknown service fails');
+    fs.rmSync(tmp, { recursive: true, force: true });
+}
+
 // ── Generated output and compatibility gate ──────────────────────────────
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/compat.js')], { stdio: 'inherit' });

@@ -1,6 +1,6 @@
 {
   "name": "openvibe-contracts",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Machine-readable contracts for the OpenVibe network: schemas, manifests, ids, error envelope, capability checks.",
   "main": "index.js",
   "types": "generated/typescript/index.d.ts",
@@ -10,7 +10,8 @@
     "contracts/",
     "manifests/",
     "compatibility/",
-    "generated/"
+    "generated/",
+    "bin/"
   ],
   "scripts": {
     "test": "node test/run.js",
@@ -27,5 +28,8 @@
   },
   "devDependencies": {
     "json-schema-to-typescript": "^15.0.4"
+  },
+  "bin": {
+    "openvibe-contracts-check": "bin/check-service.js"
   }
 }

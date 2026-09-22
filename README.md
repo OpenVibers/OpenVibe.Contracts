@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.2 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
+**Status:** alpha, v0.3 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -41,6 +41,8 @@ router.post('/coins/credit', contracts.serviceAuth.requireCapability('network.co
 ```
 
 A request that presents a Bearer token is judged only on that token; a bad token is never rescued by a legacy header.
+
+Contract check for a service's CI (v0.3): `npx openvibe-contracts-check --service network --src server`. It fails if the installed contracts are outside the service manifest's `contractRanges`, if the code enforces a capability (`requireCapability('…')`, `guard('…')`, `capabilities.check(…, '…')`) that is undefined, retired or owned by another service, or if it validates against a contract id that doesn't exist.
 
 TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json). All schemas in one file: `generated/json-schema/bundle.json`.
 
