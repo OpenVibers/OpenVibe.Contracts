@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/media-ref.v1.json",
+  "title": "MediaRef",
+  "description": "Reference to a Media object. Canonical ids (med_<ULID>) arrive with the Wave 4 object model; until then legacy:<app>:<kind>:<id> addresses today's VOD/clip/file/paste/thumbnail rows.",
+  "type": "object",
+  "required": ["media_id"],
+  "additionalProperties": false,
+  "properties": {
+    "media_id": { "type": "string", "pattern": "^(med_[0-9A-HJKMNP-TV-Z]{26}|legacy:[a-z][a-z0-9-]{1,39}:(vod|clip|file|paste|thumbnail|avatar):[A-Za-z0-9._/-]{1,200})$" },
+    "role": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$" },
+    "variant": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$" }
+  }
+}

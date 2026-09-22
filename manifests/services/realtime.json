@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "realtime",
+  "name": "OpenVibe.Realtime",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Realtime",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Browser delivery plane for events: authorised WS/SSE topics with cursors, resume and presence. Charter only; no runtime."
+}

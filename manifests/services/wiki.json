@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "wiki",
+  "name": "OpenVibe.Wiki",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Wiki",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Wiki spaces with page trees, revisions, citations, media and discussion — editable together, source-backed. Charter only; no runtime."
+}

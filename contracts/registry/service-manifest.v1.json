@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/registry/service-manifest.v1.json",
+  "title": "ServiceManifest",
+  "description": "What a service is, where it lives and what it offers. The ecosystem registry is built from these, not from hard-coded route maps.",
+  "type": "object",
+  "required": ["id", "version", "status", "repository", "domains", "capabilities", "eventsProduced", "eventsConsumed", "namespacesOwned"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+    "name": { "type": "string" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$" },
+    "status": { "enum": ["placeholder", "alpha", "beta", "stable", "degraded", "retired"] },
+    "repository": { "type": "string", "pattern": "^OpenVibers/[A-Za-z0-9._-]+$" },
+    "domains": { "type": "array", "items": { "type": "string" } },
+    "publicOrigin": { "type": "string", "format": "uri" },
+    "health": { "type": "string", "pattern": "^/" },
+    "ready": { "type": "string", "pattern": "^/" },
+    "capabilities": { "type": "array", "items": { "type": "string" } },
+    "eventsProduced": { "type": "array", "items": { "type": "string" } },
+    "eventsConsumed": { "type": "array", "items": { "type": "string" } },
+    "namespacesOwned": { "type": "array", "items": { "type": "string" } },
+    "contractRanges": { "type": "object", "additionalProperties": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

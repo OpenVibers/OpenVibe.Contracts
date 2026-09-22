@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "host",
+  "name": "OpenVibe.Host",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Host",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "The network's deployment/control plane first; then isolated hosting for community sites, bots and mods. Charter only; no runtime."
+}

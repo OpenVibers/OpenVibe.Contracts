@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/legacy-identity-map.v1.json",
+  "title": "LegacyIdentityMapEntry",
+  "description": "One row of identity_legacy_map: links a service-local id to its canonical subject. Kept alongside legacy ids, never replacing them.",
+  "type": "object",
+  "required": ["subject_id", "source_system", "source_type", "source_id"],
+  "additionalProperties": false,
+  "properties": {
+    "subject_id": { "type": "string", "pattern": "^(usr|gst|app|mod)_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "source_system": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "live, media, games, network, rs-companion, hobo, ..." },
+    "source_type": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$", "description": "user, anon_user, player, steam, ..." },
+    "source_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "first_seen_at": { "type": "string", "format": "date-time" },
+    "verified_at": { "type": ["string", "null"], "format": "date-time" },
+    "metadata": { "type": "object" }
+  }
+}

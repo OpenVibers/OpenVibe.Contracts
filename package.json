@@ -1,0 +1,22 @@
+{
+  "name": "openvibe-contracts",
+  "version": "0.1.0",
+  "description": "Machine-readable contracts for the OpenVibe network: schemas, manifests, ids, error envelope, capability checks.",
+  "main": "index.js",
+  "types": "generated/typescript/index.d.ts",
+  "files": ["index.js", "lib/", "contracts/", "manifests/", "compatibility/", "generated/"],
+  "scripts": {
+    "test": "node test/run.js",
+    "generate": "node scripts/generate.js"
+  },
+  "engines": { "node": ">=20" },
+  "repository": "github:OpenVibers/OpenVibe.Contracts",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^15.0.4"
+  }
+}

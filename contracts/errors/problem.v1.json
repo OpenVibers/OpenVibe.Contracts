@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/errors/problem.v1.json",
+  "title": "Problem",
+  "description": "RFC 9457 problem details (application/problem+json) with a stable OpenVibe error code and trace identifiers. The legacy 'error' string is allowed during migration so existing clients keep working.",
+  "type": "object",
+  "required": ["type", "title", "status", "code"],
+  "additionalProperties": true,
+  "properties": {
+    "type": { "type": "string", "format": "uri-reference" },
+    "title": { "type": "string", "minLength": 1 },
+    "status": { "type": "integer", "minimum": 400, "maximum": 599 },
+    "detail": { "type": "string" },
+    "instance": { "type": "string", "format": "uri-reference" },
+    "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$" },
+    "request_id": { "type": "string" },
+    "trace_id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "errors": { "type": "array", "items": { "type": "object", "required": ["message"], "properties": { "path": { "type": "string" }, "message": { "type": "string" } } } },
+    "error": { "type": "string", "description": "Deprecated compatibility field: same text as title/detail for clients that read {error}." }
+  }
+}

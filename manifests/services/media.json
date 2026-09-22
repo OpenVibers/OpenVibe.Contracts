@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "media",
+  "name": "OpenVibe.Media",
+  "status": "beta",
+  "repository": "OpenVibers/OpenVibe.Media",
+  "domains": [
+    "openvibe.media"
+  ],
+  "publicOrigin": "https://openvibe.media",
+  "health": "/healthz",
+  "capabilities": [
+    "media.object.upload",
+    "media.object.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "media.*"
+  ]
+}

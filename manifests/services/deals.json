@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "deals",
+  "name": "OpenVibe.Deals",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Deals",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Deals submitted and voted on by the community, with source, price and freshness always shown. Charter only; no runtime."
+}

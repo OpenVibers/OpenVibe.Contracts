@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "trade",
+  "name": "OpenVibe.Trade",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Trade",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Informational watchlists, sourced market context and alerts. No custody, no order execution. Charter only; no runtime."
+}

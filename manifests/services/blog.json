@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "blog",
+  "name": "OpenVibe.Blog",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Blog",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "The official OpenVibe blog and a blog for every member: drafts, revisions, series, scheduling, feeds. Charter only; no runtime."
+}

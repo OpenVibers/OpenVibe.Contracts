@@ -1,0 +1,20 @@
+{
+  "id": "community.post.create",
+  "version": "1.0",
+  "owner": "community",
+  "status": "planned",
+  "visibility": "public",
+  "description": "Create a post in a thread or typed comment thread (Wave 5).",
+  "outputSchema": "common.entity-ref@1",
+  "permissions": [
+    "community:write"
+  ],
+  "resourceConstraints": [
+    "space_member"
+  ],
+  "quotaClass": "community-write",
+  "events": [
+    "community.post.created"
+  ],
+  "implementedBy": []
+}

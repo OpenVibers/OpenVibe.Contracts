@@ -1,0 +1,14 @@
+{
+  "_about": "Every contract this repository publishes. A contract id is stable forever; a breaking change is a new major (new file .v2.json, new catalog entry) while the old one is deprecated with a replacement and a window. Minor versions only add optional fields.",
+  "contracts": [
+    { "id": "identity.subject-ref", "version": "1.0.0", "owner": "network", "schema": "identity/subject-ref.v1.json", "visibility": "public", "compatibility": "backward", "status": "active", "adr": "ADR-001" },
+    { "id": "identity.legacy-identity-map", "version": "1.0.0", "owner": "network", "schema": "identity/legacy-identity-map.v1.json", "visibility": "first-party", "compatibility": "backward", "status": "active", "adr": "ADR-001" },
+    { "id": "identity.service-token-claims", "version": "1.0.0", "owner": "network", "schema": "identity/service-token-claims.v1.json", "visibility": "public", "compatibility": "backward", "status": "active", "adr": "ADR-003" },
+    { "id": "common.entity-ref", "version": "1.0.0", "owner": "contracts", "schema": "common/entity-ref.v1.json", "visibility": "public", "compatibility": "backward", "status": "active" },
+    { "id": "errors.problem", "version": "1.0.0", "owner": "contracts", "schema": "errors/problem.v1.json", "visibility": "public", "compatibility": "backward", "status": "active", "adr": "ADR-002" },
+    { "id": "registry.service-manifest", "version": "1.0.0", "owner": "network", "schema": "registry/service-manifest.v1.json", "visibility": "public", "compatibility": "backward", "status": "active" },
+    { "id": "capabilities.capability", "version": "1.0.0", "owner": "network", "schema": "capabilities/capability.v1.json", "visibility": "public", "compatibility": "backward", "status": "active", "adr": "ADR-003" },
+    { "id": "events.event-envelope", "version": "1.0.0", "owner": "events", "schema": "events/event-envelope.v1.json", "visibility": "public", "compatibility": "backward", "status": "active", "adr": "ADR-004" },
+    { "id": "media.media-ref", "version": "1.0.0", "owner": "media", "schema": "media/media-ref.v1.json", "visibility": "public", "compatibility": "backward", "status": "active", "adr": "ADR-006" }
+  ]
+}

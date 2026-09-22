@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/subject-ref.v1.json",
+  "title": "SubjectRef",
+  "description": "The one cross-platform reference to an actor. Issued by OpenVibe.Network. Never a service-local integer id.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "user"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "description": "UserSubject"
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "guest"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "description": "GuestSubject"
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "app"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "description": "AppSubject"
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "mod"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "description": "ModSubject"
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "service",
+            "system"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}$"
+        }
+      },
+      "description": "PrincipalSubject"
+    }
+  ]
+}

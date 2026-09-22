@@ -1,0 +1,11 @@
+{
+  "id": "media.upload",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "public",
+  "permissions": [],
+  "resourceConstraints": [],
+  "quotaClass": "x",
+  "events": []
+}

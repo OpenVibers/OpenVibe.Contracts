@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "chat",
+  "name": "OpenVibe.Chat",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Chat",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Rooms, messages, DMs, calls, TTS and audio queues, moderation and presence — one identity, every conversation. Charter only; no runtime."
+}

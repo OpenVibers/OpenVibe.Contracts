@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "news",
+  "name": "OpenVibe.News",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.News",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Source-backed stories: clustered coverage, cited summaries, perspectives and timelines. Charter only; no runtime."
+}

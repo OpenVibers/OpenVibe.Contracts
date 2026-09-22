@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "reviews",
+  "name": "OpenVibe.Reviews",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Reviews",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Review signals gathered across sources with provenance, entity resolution and honest aggregates. Charter only; no runtime."
+}

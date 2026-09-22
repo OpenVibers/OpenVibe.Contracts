@@ -1,0 +1,1 @@
+{ "_about": "Old identifier -> current contract id. Consumers resolve through contracts.resolve(id).", "aliases": {} }

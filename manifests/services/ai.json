@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "ai",
+  "name": "OpenVibe.AI",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.AI",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Providers, models, routing, prompt templates, workflows, runs, citations, cache and quotas for every product. Charter only; no runtime."
+}

@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "tips",
+  "name": "OpenVibe.Tips",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Tips",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Creator support: tips, goals, paid messages, TTS and media requests, overlays. Charter only; no runtime."
+}

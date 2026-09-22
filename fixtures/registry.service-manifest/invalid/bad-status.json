@@ -1,0 +1,11 @@
+{
+  "id": "x1",
+  "version": "1.0.0",
+  "status": "live",
+  "repository": "OpenVibers/X",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": []
+}

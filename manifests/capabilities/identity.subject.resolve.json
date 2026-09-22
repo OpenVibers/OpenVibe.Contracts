@@ -1,0 +1,19 @@
+{
+  "id": "identity.subject.resolve",
+  "version": "1.0",
+  "owner": "network",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "Resolve a subject (or a legacy service-local id) to its canonical SubjectRef and display projection.",
+  "inputSchema": "identity.legacy-identity-map@1",
+  "outputSchema": "identity.subject-ref@1",
+  "permissions": [
+    "identity:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "identity-read",
+  "events": [],
+  "implementedBy": []
+}

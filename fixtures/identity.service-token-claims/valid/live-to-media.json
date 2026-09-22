@@ -1,0 +1,18 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "svc:live",
+  "actor_type": "service",
+  "aud": [
+    "openvibe.media"
+  ],
+  "cap": [
+    "media.object.upload",
+    "media.object.read"
+  ],
+  "ns": [
+    "live.*"
+  ],
+  "iat": 1790000000,
+  "exp": 1790000300,
+  "jti": "tok_abcdef12"
+}

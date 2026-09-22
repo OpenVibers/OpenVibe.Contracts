@@ -1,0 +1,19 @@
+{
+  "id": "network.notifications.push",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Create a notification for Network users (ids already translated).",
+  "permissions": [
+    "notifications:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "notify",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/notifications/*"
+  ]
+}

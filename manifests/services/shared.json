@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "shared",
+  "name": "OpenVibe.Shared",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Shared",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Versioned UI, chrome, SEO, legal and release-client packages every OpenVibe site renders. Charter only; no runtime."
+}

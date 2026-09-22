@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/event-envelope.v1.json",
+  "title": "EventEnvelope",
+  "description": "Durable platform event (OpenVibe.Events, Wave 3). Producers write it to an outbox in the same transaction as the domain change.",
+  "type": "object",
+  "required": ["event_id", "event_type", "version", "source", "actor", "timestamp", "subject", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "trace_id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "event_type": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "source": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+    "actor": { "$ref": "../identity/subject-ref.v1.json" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "priority": { "enum": ["critical", "important", "low"], "default": "important" },
+    "visibility": { "enum": ["public", "subject", "internal"], "default": "internal" },
+    "subject": {
+      "type": "object", "required": ["type", "id"], "additionalProperties": false,
+      "properties": { "type": { "type": "string" }, "id": { "type": "string" }, "revision": { "type": "integer", "minimum": 0 } }
+    },
+    "payload": { "type": "object" }
+  }
+}

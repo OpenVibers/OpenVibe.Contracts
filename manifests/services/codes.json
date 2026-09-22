@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "codes",
+  "name": "OpenVibe.Codes",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Codes",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "The developer portal: registry and contract explorers, credentials, playgrounds, examples, mod/app publishing, governance. Charter only; no runtime."
+}

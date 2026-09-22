@@ -1,0 +1,10 @@
+{
+  "type": "https://openvibe.network/problems/capability.denied",
+  "title": "Forbidden",
+  "status": 403,
+  "code": "capability.denied",
+  "detail": "media.object.upload not granted",
+  "request_id": "req_0123456789ab",
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
+  "error": "media.object.upload not granted"
+}

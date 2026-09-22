@@ -2,9 +2,59 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** placeholder — planning only, no runnable code yet.  
-**Plan:** OpenVibe End-to-End Realignment & Implementation Plan, revision 3 (20 Sep 2026), §3.1 and §18.11.  
+**Status:** alpha, v0.1 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
+**Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
+
+## Using it
+
+Pin a release tag. It's a public repo, so no deploy key is needed:
+
+```json
+"dependencies": { "openvibe-contracts": "github:OpenVibers/OpenVibe.Contracts#v0.1.0" }
+```
+
+```js
+const contracts = require('openvibe-contracts');
+
+contracts.validate('identity.subject-ref@1', { type: 'user', id: 'usr_01JAB2C3D4E5F6G7H8J9K0MNPQ' });  // { valid, errors }
+contracts.ids.newId('user');                         // 'usr_01J…' (ULID, time-sortable)
+contracts.ids.parseSubject('service:live');          // { type: 'service', id: 'live' }
+
+app.use(contracts.http.middleware());                // req.ov = { traceId, requestId, traceparent, idempotencyKey }
+contracts.http.sendProblem(res, 403, 'capability.denied', { detail: 'not granted', ctx: req.ov });
+
+contracts.capabilities.check(tokenClaims, 'media.object.upload', { namespace: 'live.files' });
+// { allowed: false, code: 'capability.denied' | 'capability.namespace_denied' | 'capability.unknown', reason }
+```
+
+TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json). All schemas in one file: `generated/json-schema/bundle.json`.
+
+## What's in v0.1
+
+| Contract | Owner | Purpose |
+|---|---|---|
+| `identity.subject-ref` | network | `{ type: user\|guest\|service\|app\|mod\|system, id }`: the one actor reference; never a service-local integer |
+| `identity.legacy-identity-map` | network | row shape of `identity_legacy_map`: legacy id to subject, kept alongside legacy ids |
+| `identity.service-token-claims` | network | client-credentials token for service/app/mod principals (replaces `X-Internal-Key`) |
+| `common.entity-ref` | contracts | `{ service, type, id, revision?, label? }`: typed cross-service reference instead of a foreign key |
+| `errors.problem` | contracts | RFC 9457 problem details plus stable `code`, `request_id`, `trace_id` and a compatibility `error` field |
+| `registry.service-manifest` | network | what a service is, where it lives and what it offers |
+| `capabilities.capability` | network | an invokable action: permissions, resource constraints, quota class, events |
+| `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
+| `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
+
+Manifests: `manifests/services/` (the 7 running services plus the 21 charter repos as `placeholder`), `manifests/capabilities/` (first set: Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve, Community post). Each active capability names the route that implements it today.
+
+**Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
+
+## Versioning and compatibility
+
+- A contract id is permanent. Minor versions only add optional fields.
+- A breaking change is a new file (`<name>.v2.json`) and catalog entry. The old one is listed in `compatibility/deprecations.json` with a replacement and a `removeAfter` date.
+- `scripts/compat.js` runs in `npm test` and CI. It fails on removed or retyped properties, newly required fields, removed enum values, tightened `additionalProperties`, or catalog removals without a deprecation, compared against the previous release tag.
+- `generated/` is checked in; `npm test` fails if it is stale (`npm run generate`).
+- Every contract ships valid and invalid fixtures under `fixtures/<id>/`.
 
 ## Purpose
 

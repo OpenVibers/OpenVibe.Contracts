@@ -1,0 +1,22 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "games",
+  "name": "OpenVibe.Games",
+  "status": "stable",
+  "repository": "OpenVibers/OpenVibe.Games",
+  "domains": [
+    "openvibe.games",
+    "play.openvibe.games"
+  ],
+  "publicOrigin": "https://openvibe.games",
+  "health": "/healthz",
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "games.*"
+  ]
+}

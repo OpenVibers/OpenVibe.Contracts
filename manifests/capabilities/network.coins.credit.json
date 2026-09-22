@@ -1,0 +1,19 @@
+{
+  "id": "network.coins.credit",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Credit OpenCoins (loyalty, never money) to a Network user. Idempotent by idempotency_key.",
+  "permissions": [
+    "coins:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "ledger-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/coins/credit"
+  ]
+}

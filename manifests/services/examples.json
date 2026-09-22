@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "examples",
+  "name": "OpenVibe.Examples",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Examples",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Executable public integration examples, tested in CI against the platform. Charter only; no runtime."
+}

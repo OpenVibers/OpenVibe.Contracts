@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "vip",
+  "name": "OpenVibe.VIP",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.VIP",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Memberships: plans, perks and benefits recognised across every OpenVibe site. Charter only; no runtime."
+}

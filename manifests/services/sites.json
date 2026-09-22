@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "sites",
+  "name": "OpenVibe.Sites",
+  "status": "stable",
+  "repository": "OpenVibers/OpenVibe.Sites",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Static placeholder generator; not a runtime."
+}

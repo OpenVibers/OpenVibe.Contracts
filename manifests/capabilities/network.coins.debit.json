@@ -1,0 +1,19 @@
+{
+  "id": "network.coins.debit",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Debit OpenCoins; 409 insufficient_funds.",
+  "permissions": [
+    "coins:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "ledger-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/coins/debit"
+  ]
+}

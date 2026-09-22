@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "events",
+  "name": "OpenVibe.Events",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Events",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Durable events, subscriptions, delivery, retry, dead letters and replay for the network. Charter only; no runtime."
+}

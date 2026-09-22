@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "openre",
+  "name": "OpenRe.Stream",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenRe.Stream",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Ingest and restream: stream definitions, keys, sessions, transport workers, outputs and output health. Charter only; no runtime."
+}

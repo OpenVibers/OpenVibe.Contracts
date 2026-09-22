@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "contracts",
+  "name": "OpenVibe.Contracts",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Contracts",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Machine-readable contracts for the whole OpenVibe network. Artifact repository; no runtime."
+}

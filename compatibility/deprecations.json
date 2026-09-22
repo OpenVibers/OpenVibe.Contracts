@@ -1,0 +1,1 @@
+{ "_about": "Deprecated contracts: { id, replacement, since, removeAfter, reason }. A deprecated contract stays loadable until removeAfter.", "deprecations": [] }

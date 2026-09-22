@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "live",
+  "name": "OpenVibe.Live",
+  "status": "stable",
+  "repository": "OpenVibers/OpenVibe.Live",
+  "domains": [
+    "openvibe.live",
+    "ingest.openvibe.live"
+  ],
+  "publicOrigin": "https://openvibe.live",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "capabilities": [
+    "chat.message.send",
+    "community.paste.create"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "live.*"
+  ],
+  "notes": "Still hosts chat, ingest, comments, money and AI authorities until Waves 5-13."
+}

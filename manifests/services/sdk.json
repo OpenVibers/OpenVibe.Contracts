@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "sdk",
+  "name": "OpenVibe.SDK",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.SDK",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Supported browser and server clients for the OpenVibe platform. Charter only; no runtime."
+}

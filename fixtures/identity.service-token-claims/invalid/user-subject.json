@@ -1,0 +1,12 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "actor_type": "service",
+  "aud": [
+    "openvibe.media"
+  ],
+  "cap": [],
+  "iat": 1,
+  "exp": 2,
+  "jti": "tok_abcdef12"
+}

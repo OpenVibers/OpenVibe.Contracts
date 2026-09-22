@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "community",
+  "name": "OpenVibe.Community",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Community",
+  "domains": [
+    "openvibe.community"
+  ],
+  "publicOrigin": "https://openvibe.community",
+  "health": "/api/health",
+  "capabilities": [
+    "community.post.create"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "community.*"
+  ],
+  "ready": "/api/ready"
+}

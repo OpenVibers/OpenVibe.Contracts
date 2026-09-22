@@ -1,0 +1,21 @@
+{
+  "id": "media.object.read",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read object metadata / bytes in a namespace.",
+  "inputSchema": "media.media-ref@1",
+  "permissions": [
+    "media:read"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "media-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/:app/files/:key",
+    "GET /f/:key"
+  ]
+}

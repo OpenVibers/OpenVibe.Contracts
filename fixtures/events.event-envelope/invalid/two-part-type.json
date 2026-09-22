@@ -1,0 +1,16 @@
+{
+  "event_id": "evt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "event_type": "vod.ready",
+  "version": 1,
+  "source": "media",
+  "actor": {
+    "type": "service",
+    "id": "media"
+  },
+  "timestamp": "2026-09-22T12:00:00Z",
+  "subject": {
+    "type": "vod",
+    "id": "1"
+  },
+  "payload": {}
+}

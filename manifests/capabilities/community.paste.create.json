@@ -1,0 +1,22 @@
+{
+  "id": "community.paste.create",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "public",
+  "description": "Create a paste. Authority moves to OpenVibe.Community in Wave 5.",
+  "outputSchema": "common.entity-ref@1",
+  "permissions": [
+    "community:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "community-write",
+  "events": [
+    "community.paste.created"
+  ],
+  "implementedBy": [
+    "POST /api/pastes (Live; Community proxies)"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "tools",
+  "name": "OpenVibe.Tools",
+  "status": "stable",
+  "repository": "OpenVibers/OpenVibe.Tools",
+  "domains": [
+    "openvibe.tools"
+  ],
+  "publicOrigin": "https://openvibe.tools",
+  "health": "/api/health",
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "tools.*"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "media.object.upload",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "public",
+  "description": "Upload a file object into an app namespace.",
+  "outputSchema": "media.media-ref@1",
+  "permissions": [
+    "media:write"
+  ],
+  "resourceConstraints": [
+    "namespace",
+    "owner"
+  ],
+  "quotaClass": "media-upload",
+  "events": [
+    "media.object.uploaded"
+  ],
+  "implementedBy": [
+    "POST /api/v1/:app/files"
+  ]
+}

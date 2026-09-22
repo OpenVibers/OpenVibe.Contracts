@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "coupons",
+  "name": "OpenVibe.Coupons",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Coupons",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Coupon codes with merchant matching, restrictions, expiry and real-people validity reports. Charter only; no runtime."
+}
