@@ -1,0 +1,23 @@
+{
+  "id": "community.paste.write",
+  "version": "1.0",
+  "owner": "community",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Edit, delete, fork, like, copy and comment on pastes as the acting subject (X-OV-Subject). Ownership is checked by Community, never by the caller.",
+  "permissions": [
+    "community:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "community-write",
+  "events": [
+    "community.paste.updated",
+    "community.comment.created"
+  ],
+  "implementedBy": [
+    "PUT|DELETE /api/pastes/:slug",
+    "POST /api/pastes/:slug/{fork,like,copy,comments}"
+  ]
+}

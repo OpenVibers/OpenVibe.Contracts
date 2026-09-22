@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": "^0.1.0"
+    "openvibe-contracts": ">=0.5.0 <1.0.0"
   },
   "id": "community",
   "name": "OpenVibe.Community",
@@ -13,6 +13,9 @@
   "publicOrigin": "https://openvibe.community",
   "health": "/api/health",
   "capabilities": [
+    "community.paste.create",
+    "community.paste.write",
+    "community.paste.moderate",
     "community.post.create"
   ],
   "eventsProduced": [],

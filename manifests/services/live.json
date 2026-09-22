@@ -15,13 +15,12 @@
   "health": "/api/health",
   "ready": "/api/ready",
   "capabilities": [
-    "chat.message.send",
-    "community.paste.create"
+    "chat.message.send"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [
     "live.*"
   ],
-  "notes": "Still hosts chat, ingest, comments, money and AI authorities until Waves 5-13."
+  "notes": "Still hosts chat, ingest, money and AI authorities until Waves 6-13; paste authority moved to Community (W5)."
 }

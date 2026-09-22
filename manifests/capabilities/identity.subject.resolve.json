@@ -2,7 +2,7 @@
   "id": "identity.subject.resolve",
   "version": "1.0",
   "owner": "network",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
   "description": "Resolve a subject (or a legacy service-local id) to its canonical SubjectRef and display projection.",
   "inputSchema": "identity.legacy-identity-map@1",
@@ -15,5 +15,8 @@
   ],
   "quotaClass": "identity-read",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "GET /internal/identity/resolve",
+    "POST /internal/identity/resolve-batch"
+  ]
 }

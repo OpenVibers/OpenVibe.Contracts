@@ -1,10 +1,10 @@
 {
   "id": "community.paste.create",
   "version": "1.0",
-  "owner": "live",
+  "owner": "community",
   "status": "active",
   "visibility": "public",
-  "description": "Create a paste. Authority moves to OpenVibe.Community in Wave 5.",
+  "description": "Create a paste (text or screenshot). A service token creates it for the acting subject named in X-OV-Subject, or as origin \"ai\" for derived pastes (roadmap 33).",
   "outputSchema": "common.entity-ref@1",
   "permissions": [
     "community:write"
@@ -17,6 +17,6 @@
     "community.paste.created"
   ],
   "implementedBy": [
-    "POST /api/pastes (Live; Community proxies)"
+    "POST /api/pastes (Community)"
   ]
 }

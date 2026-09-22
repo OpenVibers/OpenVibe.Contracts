@@ -1,0 +1,23 @@
+{
+  "id": "community.paste.moderate",
+  "version": "1.0",
+  "owner": "community",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Staff moderation of any paste or comment (censor, delete, bulk). The caller vouches that the acting subject is staff.",
+  "permissions": [
+    "community:moderate"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "community-moderate",
+  "events": [
+    "community.paste.moderated"
+  ],
+  "implementedBy": [
+    "POST /api/pastes/:slug/censor",
+    "POST /api/pastes/bulk",
+    "DELETE /api/pastes/:slug/comments/:id"
+  ]
+}
