@@ -1,0 +1,10 @@
+{
+  "service": "live",
+  "release": "8a678c8",
+  "released_at": "2026-09-23T01:28:10Z",
+  "booted_at": "2026-09-23T01:31:52Z",
+  "contracts_version": "0.8.0",
+  "packages": { "openvibe-shared": "1.0.0", "openvibe-sdk": "0.2.2" },
+  "min_client_release": null,
+  "mixed_version_window_hours": 24
+}

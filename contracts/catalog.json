@@ -107,6 +107,16 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "registry.release-manifest",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "registry/release-manifest.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-016"
     }
   ]
 }

@@ -800,6 +800,72 @@
           }
         }
       }
+    },
+    "registry.release-manifest": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/registry/release-manifest.v1.json",
+        "title": "ReleaseManifest",
+        "description": "What a running web surface is serving (GET /release.json, ADR-016). Open clients compare it on focus and reconnect; a client outside the supported window is prompted and reloads only when that is safe.",
+        "type": "object",
+        "required": [
+          "service",
+          "release",
+          "released_at",
+          "contracts_version",
+          "min_client_release",
+          "mixed_version_window_hours"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "release": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{7,40}$",
+            "description": "The deployed commit (short sha)."
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Commit time of the release."
+          },
+          "booted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contracts_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "openvibe-contracts version the service runs against."
+          },
+          "packages": {
+            "type": "object",
+            "description": "Versions of the platform packages the page loads (openvibe-shared, openvibe-sdk, ...).",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "min_client_release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Oldest client release still supported; null while every client in the window is."
+          },
+          "mixed_version_window_hours": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
     }
   }
 }

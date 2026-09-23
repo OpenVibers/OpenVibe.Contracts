@@ -251,3 +251,35 @@ export interface ModuleRecord {
    */
   updated_by?: string;
 }
+
+/** registry.release-manifest@1.0.0 (owner: network) */
+/**
+ * What a running web surface is serving (GET /release.json, ADR-016). Open clients compare it on focus and reconnect; a client outside the supported window is prompted and reloads only when that is safe.
+ */
+export interface ReleaseManifest {
+  service: string;
+  /**
+   * The deployed commit (short sha).
+   */
+  release: string;
+  /**
+   * Commit time of the release.
+   */
+  released_at: string;
+  booted_at?: string;
+  /**
+   * openvibe-contracts version the service runs against.
+   */
+  contracts_version: string | null;
+  /**
+   * Versions of the platform packages the page loads (openvibe-shared, openvibe-sdk, ...).
+   */
+  packages?: {
+    [k: string]: string | undefined;
+  };
+  /**
+   * Oldest client release still supported; null while every client in the window is.
+   */
+  min_client_release: string | null;
+  mixed_version_window_hours: number;
+}
