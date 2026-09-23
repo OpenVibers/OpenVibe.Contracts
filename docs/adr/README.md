@@ -18,6 +18,7 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-012](ADR-012-economic-classification.md) | Billing vs loyalty, credits and currency classification | Accepted 2026-09-22; gates Waves 8-10 |
 | [ADR-013](ADR-013-mod-manifest.md) | Mod manifest, trust and sandbox/resource model | Accepted 2026-09-23; gates Waves 12 and 21C |
 | [ADR-014](ADR-014-developer-projects.md) | Developer project, tenant and quota model | Accepted 2026-09-23; gates Waves 20-21 |
+| [ADR-015](ADR-015-ai-workflows.md) | AI workflow and publication ownership boundary | Accepted 2026-09-23; OpenVibe.AI deployed |
 | [ADR-016](ADR-016-active-client-updates.md) | Active client update safety and mixed-version window | Accepted 2026-09-23; Track R |
 | [ADR-017](ADR-017-sources-home.md) | Home of the source registry and ingestion runtime | Accepted 2026-09-23: OpenVibe.Sources |
 | [ADR-018](ADR-018-search-home.md) | Home of the search index and query contract | Accepted 2026-09-23: OpenVibe.Search, FTS first |
@@ -29,4 +30,3 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-024](ADR-024-theme-authority.md) | Theme authority between Network and Shared | Accepted 2026-09-23 |
 | [ADR-025](ADR-025-marketplace-scope.md) | Marketplace and commerce scope | Accepted 2026-09-23: Trade stays informational |
 
-ADR-015 (AI workflow and publication ownership) is written with the Wave 13 extraction.
