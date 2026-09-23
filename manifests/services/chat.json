@@ -1,16 +1,25 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contractRanges": {
-    "openvibe-contracts": "^0.1.0"
+    "openvibe-contracts": ">=0.13.0 <1.0.0"
   },
   "id": "chat",
   "name": "OpenVibe.Chat",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Chat",
   "domains": [],
-  "capabilities": [],
-  "eventsProduced": [],
+  "capabilities": [
+    "chat.live_bridge.write",
+    "chat.presence.read"
+  ],
+  "eventsProduced": [
+    "chat.message.created",
+    "chat.dm.created",
+    "chat.moderation.action"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [],
-  "notes": "Rooms, messages, DMs, calls, TTS and audio queues, moderation and presence \u2014 one identity, every conversation. Charter only; no runtime."
+  "notes": "Wave 6: Live's chat (WebSocket, DMs, history, TTS, sounds, moderation) behind a service boundary on 127.0.0.1:4400. Alpha: runs beside Live; authority moves only when Live runs with CHAT_AUTHORITY=chat and nginx routes the chat paths (see OpenVibe.Chat docs/cutover.md).",
+  "health": "/health",
+  "ready": "/ready"
 }
