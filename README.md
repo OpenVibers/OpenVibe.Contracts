@@ -157,3 +157,10 @@ implemented service.
 ---
 
 Part of the [OpenVibe network](https://openvibe.network). Built in the open by [OpenVibers](https://github.com/OpenVibers).
+
+## Release note: v0.27.0 and v0.28.0
+
+The `v0.27.0` tag (commit `742db68`) was cut on top of the `0.28.0` developer-app events commit, so its
+package reports version `0.28.0` and contains both changes (Codes: `codes.app-manifest@1`,
+`codes.release.*`; Events: `events.app.*`). `v0.28.0` points at the same commit. Pin `v0.28.0`; `v0.27.0`
+stays for consumers that already pinned it and is identical.
