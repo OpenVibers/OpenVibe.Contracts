@@ -53,25 +53,14 @@
   },
   "examples": [
     {
-      "title": "Convert a JPEG photo to PNG",
-      "input": {},
+      "title": "Compression level 12 (the schema allows 0 to 9)",
+      "input": {
+        "compressionLevel": 12
+      },
       "files": [
         {
           "name": "photo.jpg",
           "mime": "image/jpeg"
-        }
-      ]
-    },
-    {
-      "title": "512 px wide, at the highest compression level",
-      "input": {
-        "width": 512,
-        "compressionLevel": 9
-      },
-      "files": [
-        {
-          "name": "screenshot.webp",
-          "mime": "image/webp"
         }
       ]
     }

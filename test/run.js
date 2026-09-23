@@ -29,13 +29,17 @@ for (const d of contracts.catalog.length ? JSON.parse(fs.readFileSync(path.join(
 }
 
 // ── Fixtures: every contract has examples that pass and counter-examples that fail ──
+// A contract with a helper that holds it to more than its schema is checked with that helper, so
+// its invalid fixtures can break those rules too (a tool example whose input its own schema refuses).
+const FULL_CHECK = { 'tools.tool': (v) => contracts.tools.checkDescriptor(v), 'tools.tool-list': (v) => contracts.tools.checkList(v) };
 for (const c of contracts.catalog) {
     for (const kind of ['valid', 'invalid']) {
         const dir = path.join(ROOT, 'fixtures', c.id, kind);
         const list = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.endsWith('.json')) : [];
         ok(list.length > 0, `${c.id} has ${kind} fixtures`);
         for (const f of list) {
-            const r = contracts.validate(c.id, JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
+            const value = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+            const r = FULL_CHECK[c.id] ? FULL_CHECK[c.id](value) : contracts.validate(c.id, value);
             ok(r.valid === (kind === 'valid'), `${c.id} ${kind}/${f}: ${r.valid ? 'passed' : JSON.stringify(r.errors)}`);
         }
     }
@@ -256,6 +260,49 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(!tools.checkList({ ...list, tools: [list.tools[0], { ...list.tools[1], hosts: [list.tools[0].hosts[0]] }], count: 2, families: undefined }).valid, 'a host belongs to one tool');
     ok(!tools.checkList({ ...list, families: [{ id: 'img', name: 'Image Tools', count: 2 }] }).valid, 'family counts are honest');
     ok(!tools.checkList({ ...list, tools: [{ ...list.tools[0], run: { ...list.tools[0].run, path: '/api/v1/tools/jpg/run' } }], count: 1, families: undefined }).valid, 'checkList applies checkDescriptor to every tool');
+
+    // v0.33.1: keywords and examples are optional, so a v0.33.0 descriptor stays valid; every example
+    // runs as it says (checkDescriptor checks its input when the input schema is embedded).
+    const bare = (d) => Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'keywords' && k !== 'examples'));
+    for (const d of valid) ok(D(bare(d)), `${d.id}: a descriptor without keywords or examples (v0.33.0) is still valid`);
+    ok(valid.some(d => d.keywords && d.keywords.length) && valid.some(d => d.examples && d.input && !d.input.$ref), 'valid fixtures carry keywords and examples with an embedded input');
+    ok(list.tools.some(d => d.keywords), 'the list carries keywords, which ?q= matches');
+    const pngBad = tools.checkDescriptor({ ...png, examples: [{ input: { compressionLevel: 12 } }] });
+    ok(!pngBad.valid && pngBad.errors.some(e => e.path === '/examples/0/input/compressionLevel'), `an example whose input the tool's schema refuses fails, pointing at it: ${JSON.stringify(pngBad.errors)}`);
+    ok(!D({ ...byId.jsonminify, examples: [{ input: {} }] }), 'an example missing a required input field fails');
+    ok(!D({ ...byId.jsonminify, examples: [{ input: { text: '[]', extra: 1 } }] }), 'an example with a field the input schema does not allow fails');
+    ok(D({ ...dns, examples: [{ input: { anything: true } }] }), 'an input given as $ref cannot be checked here, so its examples pass (the Tools registry checks them with the schema embedded)');
+    ok(!D({ ...byId.jsonminify, limits: { ...byId.jsonminify.limits, maxInputBytes: 20 }, examples: [{ input: { text: 'x'.repeat(40) } }] }), 'an example fits limits.maxInputBytes');
+    ok(!D({ ...png, examples: [{ input: {}, files: [] }] }) && !D({ ...png, examples: [{ input: {}, files: [{ mime: 'image/png' }, { mime: 'image/png' }] }] }), 'example files fit files.min and files.max');
+    ok(D({ ...png, examples: [{ input: {}, files: [{ mime: 'image/heic' }] }] }) && !D({ ...png, examples: [{ input: {}, files: [{ mime: 'text/plain' }] }] }), 'example files are types files.accept allows (image/* takes image/heic)');
+    ok(!D({ ...dns, examples: [{ input: {}, files: [{ mime: 'text/plain' }] }] }), 'a tool that takes no files has no example files');
+    ok(!T({ ...yt, examples: [{ input: {} }] }), 'a tool without an API has no examples');
+    ok(!T({ ...png, examples: [{ title: 'no input' }] }) && !T({ ...png, examples: [{ input: {}, output: {} }] }), 'each example is an input, with an optional title and files');
+    ok(!T({ ...png, keywords: ['png', 'png'] }) && !T({ ...png, keywords: [''] }) && !T({ ...png, keywords: ['trailing '] }) && T({ ...byId.png, keywords: ['curl -I online'] }), 'keywords are unique, trimmed, non-empty phrases');
+    const bogus = tools.checkDescriptor({ ...byId.jsonminify, input: { type: 'object', properties: { text: { type: 'nope' } } }, examples: [{ input: { text: 'x' } }] });
+    ok(!bogus.valid && bogus.errors.some(e => e.path === '/input'), 'an embedded input schema that does not compile is reported when there are examples to check');
+    ok(D({ ...byId.jsonminify, input: { ...byId.jsonminify.input, $id: 'https://openvibe.tools/api/v1/tools/jsonminify/schema' }, examples: [{ input: { text: '{}' } }] }) && D({ ...byId.port, input: { ...byId.port.input, $id: 'https://openvibe.tools/api/v1/tools/jsonminify/schema' }, examples: [{ input: { host: 'a.example', ports: [1] } }] }), 'input schemas that carry the same $id do not clash');
+
+    // v0.33.1: the registry is served (tools.tool.read active); the run API and probes are not yet.
+    ok(readCap.status === 'active' && runCap.status === 'planned' && probeCap.status === 'planned', 'tools.tool.read is active; tools.tool.run and tools.net.probe stay planned until the run API ships');
+    const statuses = contracts.schema('tools.tool').properties.status.enum;
+    ok(!statuses.includes('planned') && /no planned status/.test(contracts.schema('tools.tool').description) && /planned placeholders are not tools and are not listed/.test(contracts.schema('tools.tool-list').description), 'there is no planned status: planned entries are not tools, and the contracts say so');
+
+    // Problem codes Tools emits, listed where the routes that answer them are described.
+    const codeRe = new RegExp(contracts.schema('errors.problem').properties.code.pattern);
+    const said = [
+        ...['tools.tool', 'tools.tool-list', 'tools.run-request', 'tools.run', 'tools.job', 'tools.job-request'].map(id => JSON.stringify(contracts.schema(id))),
+        ...['tools.tool.read', 'tools.tool.run', 'tools.job.create'].map(id => capabilities.get(id).description),
+    ].join('\n');
+    const codes = { 'tools.unavailable': 503, 'tools.pdf.too_many_pages': 413, 'tools.pdf.wrong_password': 422, 'tools.query.invalid': 400, 'tools.tool.not_found': 404, 'tools.quota.exceeded': 429, 'tools.busy': 503 };
+    for (const [code, status] of Object.entries(codes)) {
+        ok(codeRe.test(code) && contracts.validate('errors.problem@1', { type: `https://openvibe.network/problems/${code}`, title: 'x', status, code }).valid, `${code} is a valid problem code`);
+        ok(said.includes(`${status} ${code}`), `${status} ${code} is listed in the Tools contracts`);
+    }
+    for (const id of ['tools.run-request', 'tools.job-request']) {
+        const text = contracts.schema(id).description;
+        ok(/tools\.quota\.exceeded \(Retry-After;/.test(text) && /503 tools\.busy \(Retry-After;/.test(text), `${id}: tools.quota.exceeded and tools.busy carry Retry-After`);
+    }
 }
 
 // ── Ids ──────────────────────────────────────────────────────────────────

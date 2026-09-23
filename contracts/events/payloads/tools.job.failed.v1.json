@@ -28,7 +28,7 @@
       "description": "The job's problem (errors.problem@1) without request or trace ids.",
       "properties": {
         "status": { "type": "integer", "minimum": 400, "maximum": 599 },
-        "code": { "type": "string", "pattern": "^tools\\.[a-z0-9_.]+$", "description": "tools.job.failed, tools.job.timeout, or a code the tool chose (tools.…)." },
+        "code": { "type": "string", "pattern": "^tools\\.[a-z0-9_.]+$", "description": "tools.job.failed, tools.job.timeout, or a code the tool chose (tools.…: tools.pdf.too_many_pages, tools.pdf.wrong_password…)." },
         "detail": { "type": "string", "maxLength": 500, "description": "Human-readable reason; server paths are scrubbed." }
       }
     },

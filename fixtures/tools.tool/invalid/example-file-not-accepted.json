@@ -53,25 +53,12 @@
   },
   "examples": [
     {
-      "title": "Convert a JPEG photo to PNG",
+      "title": "A PDF is not an image",
       "input": {},
       "files": [
         {
-          "name": "photo.jpg",
-          "mime": "image/jpeg"
-        }
-      ]
-    },
-    {
-      "title": "512 px wide, at the highest compression level",
-      "input": {
-        "width": 512,
-        "compressionLevel": 9
-      },
-      "files": [
-        {
-          "name": "screenshot.webp",
-          "mime": "image/webp"
+          "name": "scan.pdf",
+          "mime": "application/pdf"
         }
       ]
     }

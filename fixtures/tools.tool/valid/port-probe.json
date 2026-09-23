@@ -3,6 +3,10 @@
   "family": "net",
   "name": "Port Checker",
   "summary": "Check whether TCP ports on a host are open.",
+  "keywords": [
+    "open port checker",
+    "port scanner"
+  ],
   "status": "beta",
   "execution": "sync",
   "api": true,
@@ -39,6 +43,17 @@
     }
   },
   "files": null,
+  "examples": [
+    {
+      "title": "Is HTTPS open?",
+      "input": {
+        "host": "example.com",
+        "ports": [
+          443
+        ]
+      }
+    }
+  ],
   "output": {
     "kind": "json",
     "schema": {

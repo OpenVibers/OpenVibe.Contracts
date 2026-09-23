@@ -865,7 +865,7 @@
     },
     {
       "id": "tools.tool",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "tools",
       "schema": "tools/tool.v1.json",
       "visibility": "public",

@@ -1,0 +1,43 @@
+{
+  "id": "yt",
+  "family": "media",
+  "name": "YouTube Downloader",
+  "summary": "Save a YouTube video or its audio.",
+  "status": "stable",
+  "execution": "job",
+  "api": false,
+  "run": null,
+  "input": null,
+  "files": null,
+  "examples": [
+    {
+      "input": {
+        "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ"
+      }
+    }
+  ],
+  "output": {
+    "kind": "file",
+    "mime": [
+      "video/mp4",
+      "audio/mpeg"
+    ]
+  },
+  "limits": {
+    "timeoutMs": 900000,
+    "maxDurationSec": 3600,
+    "perTargetPerMinute": 20
+  },
+  "auth": {
+    "anonymous": true,
+    "capability": "tools.tool.run"
+  },
+  "quotaClass": "tools-download",
+  "cost": 50,
+  "egress": true,
+  "hosts": [
+    "youtube-downloader.openvibe.tools",
+    "yt.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/yt"
+}

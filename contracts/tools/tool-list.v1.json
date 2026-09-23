@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/tools/tool-list.v1.json",
   "title": "ToolList",
-  "description": "The answer of GET /api/v1/tools on openvibe.tools (capability tools.tool.read; ADR-027): every tool's descriptor (tools.tool@1), with input and output schemas in the { $ref } form (GET /api/v1/tools/:id has them embedded). Filters: ?family=, ?execution=client|sync|job, ?api=true|false, ?status=, ?q= (name, summary and keywords). Planned placeholders are not tools and are not listed. Cacheable (ETag); updated_at changes when any descriptor does.",
+  "description": "The answer of GET /api/v1/tools on openvibe.tools (capability tools.tool.read; ADR-027): every tool's descriptor (tools.tool@1), with input and output schemas in the { $ref } form (GET /api/v1/tools/:id has them embedded). Filters: ?family=, ?execution=client|sync|job, ?api=true|false, ?status=, ?q= (every word must appear in the id, name, summary or keywords); family, execution and status take comma lists. An unknown execution or status value, or an api that is not true or false, is 400 tools.query.invalid. Every listed tool has one of the descriptor's statuses: there is no planned status, so planned placeholders are not tools and are not listed, and neither are mirrors (GET /api/v1/tools/:id answers 404 tools.tool.not_found for both, with a detail saying why). Cacheable (ETag); updated_at changes when any descriptor does.",
   "type": "object",
   "required": ["tools", "count", "updated_at"],
   "additionalProperties": false,

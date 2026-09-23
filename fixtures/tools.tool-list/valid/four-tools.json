@@ -5,6 +5,12 @@
       "family": "img",
       "name": "PNG Converter",
       "summary": "Convert JPG, WebP, AVIF, HEIC, GIF, BMP, TIFF and more to PNG.",
+      "keywords": [
+        "jpg to png",
+        "webp to png",
+        "heic to png",
+        "convert image to png"
+      ],
       "status": "stable",
       "execution": "job",
       "api": true,
@@ -61,6 +67,12 @@
       "family": "net",
       "name": "DNS Lookup",
       "summary": "Look up A, AAAA, MX, TXT, NS, CNAME and other records for a domain.",
+      "keywords": [
+        "dns lookup",
+        "mx record lookup",
+        "txt record check",
+        "nslookup online"
+      ],
       "status": "stable",
       "execution": "sync",
       "api": true,
@@ -104,6 +116,10 @@
       "family": "net",
       "name": "Port Checker",
       "summary": "Check whether TCP ports on a host are open.",
+      "keywords": [
+        "open port checker",
+        "port scanner"
+      ],
       "status": "beta",
       "execution": "sync",
       "api": true,

@@ -2,9 +2,9 @@
   "id": "tools.tool.read",
   "version": "1.0",
   "owner": "tools",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "Read the tool registry (ADR-027): every tool's descriptor (tools.tool@1: execution, whether the run API exposes it, how to call it, input and output schemas, files, limits, auth, quota class, cost, egress, hosts, docs), filtered by family, execution, api, status or text. GET /api/v1/tools answers tools.tool-list@1 with schemas as { $ref }; GET /api/v1/tools/:id has them embedded; GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }. Open to everyone, anonymous callers included; cacheable. Planned until the gateway serves these routes.",
+  "description": "Read the tool registry (ADR-027): every tool's descriptor (tools.tool@1: execution, whether the run API exposes it, how to call it, input and output schemas, files, limits, auth, quota class, cost, egress, hosts, docs), filtered by family, execution, api, status or text. GET /api/v1/tools answers tools.tool-list@1 with schemas as { $ref }; GET /api/v1/tools/:id has them embedded; GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, with $defs.input false for a tool without an API. The gateway (https://openvibe.tools) answers for every tool, and each satellite for its own tools with its own live status. Open to everyone, anonymous callers included, from any origin (CORS *); cacheable (ETag, 304). A bad filter value is 400 tools.query.invalid; an unknown, planned or mirror id is 404 tools.tool.not_found, whose detail says which.",
   "outputSchema": "tools.tool@1",
   "permissions": [
     "tools:catalog:read"

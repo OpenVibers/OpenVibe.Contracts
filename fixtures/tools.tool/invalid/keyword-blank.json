@@ -5,9 +5,7 @@
   "summary": "Convert JPG, WebP, AVIF, HEIC, GIF, BMP, TIFF and more to PNG.",
   "keywords": [
     "jpg to png",
-    "webp to png",
-    "heic to png",
-    "convert image to png"
+    " "
   ],
   "status": "stable",
   "execution": "job",
@@ -63,7 +61,7 @@
       ]
     },
     {
-      "title": "512 px wide, at the highest compression level",
+      "title": "Convert and shrink to 512 px wide, smallest file",
       "input": {
         "width": 512,
         "compressionLevel": 9

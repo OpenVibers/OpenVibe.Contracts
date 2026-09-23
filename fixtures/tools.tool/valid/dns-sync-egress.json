@@ -3,6 +3,12 @@
   "family": "net",
   "name": "DNS Lookup",
   "summary": "Look up A, AAAA, MX, TXT, NS, CNAME and other records for a domain.",
+  "keywords": [
+    "dns lookup",
+    "mx record lookup",
+    "txt record check",
+    "nslookup online"
+  ],
   "status": "stable",
   "execution": "sync",
   "api": true,
@@ -18,6 +24,15 @@
     "$ref": "https://openvibe.tools/api/v1/tools/dns/schema#/$defs/input"
   },
   "files": null,
+  "examples": [
+    {
+      "title": "MX records of a domain",
+      "input": {
+        "target": "example.com",
+        "type": "MX"
+      }
+    }
+  ],
   "output": {
     "kind": "json",
     "schema": {

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/tools/tool.v1.json",
   "title": "ToolDescriptor",
-  "description": "One tool on openvibe.tools as its registry describes it (GET /api/v1/tools/:id, and each item of GET /api/v1/tools; capability tools.tool.read; ADR-027). There is one descriptor per catalogue tool (GET /api/catalog.json tools[].id), built from the tool's own code, so its page, the run API, openvibe-sdk/tools, the OpenAPI document and the docs all read the same facts. EXECUTION is where the tool's engine runs for its page: client (in the browser; nothing leaves it), sync (a server request answered inline) or job (an asynchronous job on a satellite, tools.job@1). API says whether POST /api/v1/tools/{id}/run exposes the tool. A client tool has api true only when it also has a server engine (a pure transform that runs in Node), and its page stays browser-only. A page-only tool (yt) has api false and run null. A job tool's run creates a job of run.job.type whose input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). INPUT is the JSON Schema (2020-12) that a run request's input must match, embedded or as { $ref: https://openvibe.tools/api/v1/tools/{id}/schema#/$defs/input }. GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, and the list uses the $ref form. RULES this schema enforces: api false has no run, and api true has a run and an input; an API job tool names its job, and only job tools name one; an API tool whose output is a file runs as a job (its results are served as job files); a tools.net.probe tool fetches (egress) and is never anonymous; an anonymous egress tool has a per-target throttle (limits.perTargetPerMinute); a client tool never fetches; an unavailable tool says why (statusReason); JSON output has a schema. contracts.tools.checkDescriptor(d) also checks what depends on the id (run.path, $ref targets) and files.min <= files.max.",
+  "description": "One tool on openvibe.tools as its registry describes it (GET /api/v1/tools/:id, and each item of GET /api/v1/tools; capability tools.tool.read; ADR-027). There is one descriptor per catalogue tool (GET /api/catalog.json tools[].id), built from the tool's own code, so its page, the run API, openvibe-sdk/tools, the OpenAPI document and the docs all read the same facts. EXECUTION is where the tool's engine runs for its page: client (in the browser; nothing leaves it), sync (a server request answered inline) or job (an asynchronous job on a satellite, tools.job@1). API says whether POST /api/v1/tools/{id}/run exposes the tool. A client tool has api true only when it also has a server engine (a pure transform that runs in Node), and its page stays browser-only. A page-only tool (yt) has api false and run null. A job tool's run creates a job of run.job.type whose input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). INPUT is the JSON Schema (2020-12) that a run request's input must match, embedded or as { $ref: https://openvibe.tools/api/v1/tools/{id}/schema#/$defs/input }. GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, and the list uses the $ref form. When api is false, $defs.input is false (the schema that accepts nothing), since there is no run to take an input. OUTPUT.SCHEMA describes result.data for every execution: inline and job tools alike. KEYWORDS (the catalogue's search terms) and EXAMPLES (sample runs for the docs and the OpenAPI document) are optional. NOT A TOOL: there is no planned status. A planned catalogue entry has no descriptor and is not listed, and neither is a mirror (a second build of another tool). GET /api/v1/tools/:id and /schema answer 404 tools.tool.not_found for either, with a detail that says the id is planned or names the tool it mirrors, as for an id that does not exist. RULES this schema enforces: api false has no run and no examples, and api true has a run and an input; an API job tool names its job, and only job tools name one; an API tool whose output is a file runs as a job (its results are served as job files); a tools.net.probe tool fetches (egress) and is never anonymous; an anonymous egress tool has a per-target throttle (limits.perTargetPerMinute); a client tool never fetches; an unavailable tool says why (statusReason); JSON output has a schema. contracts.tools.checkDescriptor(d) also checks what depends on the id (run.path, $ref targets), files.min <= files.max, and each example: its input against an embedded input schema and limits.maxInputBytes, and its files against files (count and accept).",
   "type": "object",
   "required": ["id", "family", "name", "summary", "status", "execution", "api", "run", "input", "files", "output", "limits", "auth", "quotaClass", "cost", "egress", "hosts", "docs"],
   "additionalProperties": false,
@@ -11,9 +11,14 @@
     "family": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "The catalogue family: net, dev, img, audio, docs, text, media, places, pastes…" },
     "name": { "type": "string", "minLength": 1, "maxLength": 80 },
     "summary": { "type": "string", "minLength": 1, "maxLength": 200, "description": "One plain sentence: what the tool does." },
+    "keywords": {
+      "type": "array", "uniqueItems": true, "maxItems": 50,
+      "items": { "type": "string", "minLength": 1, "maxLength": 100, "pattern": "^\\S(.*\\S)?$" },
+      "description": "Optional. The catalogue's search terms for the tool (GET /api/catalog.json tools[].keywords): phrases people search for, such as 'heic to png' or 'yaml validator'. GET /api/v1/tools?q= matches every word of the query against the id, name, summary and these."
+    },
     "status": {
       "enum": ["stable", "beta", "preview", "unavailable"],
-      "description": "stable: works, and its input and output only grow. beta: works; input or output may still change in a minor. preview: works with known gaps (limits or output not final). unavailable: listed, but runs are refused with 503 tools.tool.unavailable and the page says so (statusReason)."
+      "description": "stable: works, and its input and output only grow. beta: works; input or output may still change in a minor. preview: works with known gaps (limits or output not final). unavailable: listed, but runs are refused with 503 tools.tool.unavailable and the page says so (statusReason); a program or upstream the engine needs is missing (qpdf, pdftoppm, heif-dec, ffmpeg…), and the engine's own routes answer 503 tools.unavailable while it is. There is no planned status: a planned catalogue entry is not a tool, so it has no descriptor and is not listed."
     },
     "statusReason": { "type": "string", "minLength": 1, "maxLength": 300, "description": "Why the status is what it is, for people (e.g. 'needs qpdf on the host'). Required when unavailable." },
     "execution": { "enum": ["client", "sync", "job"], "description": "Where the engine runs for the tool's page: client (the browser), sync (a server request answered inline), job (an asynchronous job)." },
@@ -41,7 +46,7 @@
       }
     },
     "input": {
-      "description": "JSON Schema (2020-12) of the run request's input: embedded (an object schema), or { $ref } to $defs/input of GET /api/v1/tools/:id/schema. null only for a tool without an API.",
+      "description": "JSON Schema (2020-12) of the run request's input: embedded (an object schema), or { $ref } to $defs/input of GET /api/v1/tools/:id/schema. null only for a tool without an API, whose $defs/input is false (it accepts nothing).",
       "anyOf": [
         { "type": "object", "required": ["$ref"], "maxProperties": 1, "properties": { "$ref": { "type": "string", "format": "uri" } } },
         { "type": "object", "required": ["type"], "properties": { "type": { "const": "object" } } },
@@ -62,12 +67,35 @@
         "maxBytes": { "type": "integer", "minimum": 1, "description": "Largest accepted file." }
       }
     },
+    "examples": {
+      "type": "array", "maxItems": 50,
+      "description": "Optional. Sample runs, which the docs and the generated OpenAPI document publish. Each example's input is valid against the tool's input schema and fits limits.maxInputBytes, and its files fit files (count and accept); contracts.tools.checkDescriptor checks this whenever input is embedded. Only a tool with an API has examples.",
+      "items": {
+        "type": "object", "required": ["input"], "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string", "minLength": 1, "maxLength": 120, "description": "What the example shows, for people." },
+          "input": { "type": "object", "description": "A run request's input (tools.run-request@1 input), valid against the tool's input schema." },
+          "files": {
+            "type": "array", "maxItems": 100,
+            "description": "The files the sample run takes (uploaded parts or files references), in order: what each one is, and where to download a sample.",
+            "items": {
+              "type": "object", "required": ["mime"], "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "minLength": 1, "maxLength": 200, "description": "A file name for the sample (photo.jpg)." },
+                "mime": { "type": "string", "pattern": "^[a-z]+/[a-z0-9][a-z0-9.+-]*$", "description": "Its media type, one that files.accept allows." },
+                "url": { "type": "string", "format": "uri", "pattern": "^https://", "description": "A sample file to download." }
+              }
+            }
+          }
+        }
+      }
+    },
     "output": {
       "type": "object", "required": ["kind"], "additionalProperties": false,
       "properties": {
         "kind": { "enum": ["json", "file", "files", "text"], "description": "json: result.data; text: result.text; file or files: result.files (job result files)." },
         "schema": {
-          "description": "JSON Schema of result.data (kind json): embedded, or { $ref } to $defs/output of GET /api/v1/tools/:id/schema.",
+          "description": "JSON Schema of result.data, whatever the execution: for a job tool too, where it describes the data of the run's result and of its job's result (tools.job@1 result.data), which are the same object. Required when kind is json. Embedded, or { $ref } to $defs/output of GET /api/v1/tools/:id/schema.",
           "anyOf": [
             { "type": "object", "required": ["$ref"], "maxProperties": 1, "properties": { "$ref": { "type": "string", "format": "uri" } } },
             { "type": "object", "required": ["type"], "properties": { "type": { "const": "object" } } }
@@ -88,7 +116,7 @@
         "timeoutMs": { "type": "integer", "minimum": 1, "maximum": 3600000, "description": "A run (or its job) longer than this fails with tools.job.timeout or 504." },
         "maxDurationSec": { "type": "integer", "minimum": 1, "description": "Longest audio or video input." },
         "maxPixels": { "type": "integer", "minimum": 1, "description": "Largest image input (width × height)." },
-        "maxPages": { "type": "integer", "minimum": 1, "description": "Most PDF pages." },
+        "maxPages": { "type": "integer", "minimum": 1, "description": "Most PDF pages. A longer document fails with 413 tools.pdf.too_many_pages." },
         "maxInputBytes": { "type": "integer", "minimum": 1, "description": "Largest input as JSON (text to transform, lists of hosts…)." },
         "perTargetPerMinute": { "type": "integer", "minimum": 1, "description": "Egress tools: most runs per minute against one target host or address, across all callers." }
       }
@@ -106,7 +134,7 @@
     },
     "quotaClass": {
       "type": "string", "pattern": "^tools-[a-z0-9]+(-[a-z0-9]+)*$",
-      "description": "The quota bucket a run counts against, with allowances per caller tier. Names describe the work, never a tier or a price (tools-run, tools-job, tools-probe, tools-fetch…), so a paid tier later adds allowances, not names."
+      "description": "The quota bucket a run counts against, with allowances per caller tier. Names describe the work, never a tier or a price (tools-run, tools-job, tools-probe, tools-fetch…), so a paid tier later adds allowances, not names. A caller whose allowance is spent gets 429 tools.quota.exceeded with Retry-After."
     },
     "cost": { "type": "integer", "minimum": 1, "maximum": 1000, "description": "Relative weight of one run within its quota class (1 = a cheap lookup or transform). Quotas count weight, not requests." },
     "egress": { "type": "boolean", "description": "The server fetches a host or URL the caller chose (DNS, WHOIS, headers, Open Graph, ports…), always through the SSRF guard." },
@@ -123,7 +151,7 @@
     "allOf": [
       {
         "if": { "properties": { "api": { "const": false } }, "required": ["api"] },
-        "then": { "properties": { "run": { "type": "null" } } }
+        "then": { "properties": { "run": { "type": "null" }, "examples": false } }
       },
       {
         "if": { "properties": { "api": { "const": true } }, "required": ["api"] },
