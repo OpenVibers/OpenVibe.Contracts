@@ -13,6 +13,7 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-007](ADR-007-data-ownership.md) | Logical data ownership and database technology | Accepted 2026-09-22 |
 | [ADR-008](ADR-008-shared-packages.md) | Shared package publication and release manifests | Accepted 2026-09-22; implementation in progress (OpenVibe.Shared) |
 | [ADR-009](ADR-009-live-openre-boundary.md) | Live versus OpenRe boundary | Accepted 2026-09-23; gates Wave 7 |
+| [ADR-010](ADR-010-chat-boundary.md) | Chat versus Live/Community boundary | Accepted and executed 2026-09-23 (Chat serves Live's chat) |
 | [ADR-011](ADR-011-community-pastes.md) | Community paste and comment ownership migration | Accepted and executed 2026-09-22 |
 | [ADR-012](ADR-012-economic-classification.md) | Billing vs loyalty, credits and currency classification | Accepted 2026-09-22; gates Waves 8-10 |
 | [ADR-013](ADR-013-mod-manifest.md) | Mod manifest, trust and sandbox/resource model | Accepted 2026-09-23; gates Waves 12 and 21C |
@@ -28,4 +29,4 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-024](ADR-024-theme-authority.md) | Theme authority between Network and Shared | Accepted 2026-09-23 |
 | [ADR-025](ADR-025-marketplace-scope.md) | Marketplace and commerce scope | Accepted 2026-09-23: Trade stays informational |
 
-ADR-010 (Chat boundary) and ADR-015 (AI workflow and publication ownership) are written with the Wave 6 and Wave 13 extractions.
+ADR-015 (AI workflow and publication ownership) is written with the Wave 13 extraction.
