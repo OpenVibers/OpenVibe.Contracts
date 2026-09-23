@@ -1,6 +1,6 @@
 # ADR-009: Live versus OpenRe boundary
 
-**Status:** Accepted 2026-09-23. Gates Wave 7 (OpenRe.Stream).
+**Status:** Accepted 2026-09-23. OpenRe.Stream deployed the same day (RTMP ingest + restream; WHIP, SFU and JSMPEG not yet ported). No slot has moved: per-slot cutover waits for the ingest DNS name, the public RTMP port and a broadcaster window.
 
 ## Context and current evidence
 

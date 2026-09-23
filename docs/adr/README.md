@@ -12,7 +12,7 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-006](ADR-006-media-objects.md) | Media object, location and namespace model | Accepted 2026-09-22; implementation in progress (OpenVibe.Media Wave 4) |
 | [ADR-007](ADR-007-data-ownership.md) | Logical data ownership and database technology | Accepted 2026-09-22 |
 | [ADR-008](ADR-008-shared-packages.md) | Shared package publication and release manifests | Accepted 2026-09-22; implementation in progress (OpenVibe.Shared) |
-| [ADR-009](ADR-009-live-openre-boundary.md) | Live versus OpenRe boundary | Accepted 2026-09-23; gates Wave 7 |
+| [ADR-009](ADR-009-live-openre-boundary.md) | Live versus OpenRe boundary | Accepted 2026-09-23; OpenRe deployed, no slot moved yet |
 | [ADR-010](ADR-010-chat-boundary.md) | Chat versus Live/Community boundary | Accepted and executed 2026-09-23 (Chat serves Live's chat) |
 | [ADR-011](ADR-011-community-pastes.md) | Community paste and comment ownership migration | Accepted and executed 2026-09-22 |
 | [ADR-012](ADR-012-economic-classification.md) | Billing vs loyalty, credits and currency classification | Accepted 2026-09-22; gates Waves 8-10 |
