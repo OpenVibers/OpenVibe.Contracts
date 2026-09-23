@@ -1,0 +1,27 @@
+{
+  "service": "live",
+  "release": "047f2069a1b2",
+  "released_at": "2026-09-23T18:02:11Z",
+  "booted_at": "2026-09-23T18:04:40Z",
+  "contracts_version": "0.31.0",
+  "packages": { "openvibe-shared": "1.5.0", "openvibe-sdk": "0.4.0" },
+  "min_client_release": null,
+  "mixed_version_window_hours": 24,
+  "components": {
+    "styles": { "kind": "style", "version": "3f9a1c07be21" },
+    "docs": { "kind": "content", "version": "a07e44d1c9f0" },
+    "shell": { "kind": "script", "version": "c1d2e3f4a5b6" },
+    "server": { "kind": "server", "version": "047f2069a1b2" }
+  },
+  "assets": {
+    "/css/app.css": { "url": "/css/app.css?v=3f9a1c07be21", "component": "styles", "integrity": "sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" },
+    "/js/app.js": { "url": "/js/app.js?v=9b8a7c6d5e4f", "component": "shell" }
+  },
+  "schema_generation": 42,
+  "schema_compatible_from": 40,
+  "contract_ranges": {
+    "live.web-api": { "version": "1.4.0", "accepts": ">=1.0.0 <2.0.0" },
+    "media.object": { "version": "1.0.0", "accepts": ">=1.0.0 <2.0.0", "role": "consumes" }
+  },
+  "metrics_url": "/release-metrics"
+}

@@ -4,6 +4,28 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.31.0 — 2026-09-23
+
+Additive: `compat.js` reports no breaking change against v0.30.2.
+
+- `registry.release-manifest` 1.0.0 → 1.1.0 (ADR-016, roadmap Track R). Six optional fields, so a
+  `/release.json` can say what changed and what it still accepts:
+  - `components`: `{ <id>: { kind: style|content|script|server, version } }`. A tab applies a release
+    in place only when every component that changed is `style`, `content` or `server`. `shell` is the
+    catch-all for client code that no other component lists.
+  - `assets`: `{ "<logical path>": { url, component, integrity? } }`, the content-addressed URL of each
+    asset this release serves.
+  - `schema_generation` and `schema_compatible_from` (integers or null): the database schema generation,
+    and the oldest generation whose code still runs against it. A rollback below the second is not
+    data-safe.
+  - `contract_ranges`: `{ <contract id>: { version, accepts: ">=a.b.c <x.y.z", role?: produces|consumes } }`.
+    A page from release A works against a server on release B when A's version is in B's `accepts`
+    and B's version is in A's `accepts`.
+  - `metrics_url`: where tabs POST their update outcome counts (D46).
+- A consumer that validates manifests against 0.30.x rejects these fields (`additionalProperties: false`).
+  openvibe-shared ≥ 1.5.0 therefore serves only the fields the service's installed openvibe-contracts
+  declares. A service starts serving them by moving its pin to this release.
+
 ## 0.30.2 — 2026-09-23
 
 - New capability `live.follower.read` (Live, internal): `GET /internal/followers`, used by OpenVibe.Network's

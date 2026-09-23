@@ -266,9 +266,9 @@ export interface ModuleRecord {
   updated_by?: string;
 }
 
-/** registry.release-manifest@1.0.0 (owner: network) */
+/** registry.release-manifest@1.1.0 (owner: network) */
 /**
- * What a running web surface is serving (GET /release.json, ADR-016). Open clients compare it on focus and reconnect; a client outside the supported window is prompted and reloads only when that is safe.
+ * What a running web surface is serving (GET /release.json, ADR-016). Open clients compare it on focus and reconnect. A client outside the supported window is prompted and reloads only when that is safe. Since 1.1.0 the manifest can also say which components changed, so a client can apply style and content changes in place, and which contract versions the server still accepts, so a mixed-version population can be checked.
  */
 export interface ReleaseManifest {
   service: string;
@@ -296,6 +296,65 @@ export interface ReleaseManifest {
    */
   min_client_release: string | null;
   mixed_version_window_hours: number;
+  /**
+   * Since 1.1.0. Per-component versions. A client applies a new release in place only when every component that changed is a style, content or server component and the contract ranges still match. Any other change is applied by a reload at a safe moment. The shell component covers every client-facing file that no other component lists.
+   */
+  components?: {
+    [k: string]:
+      | {
+          /**
+           * style: stylesheets, swapped in place. content: server-rendered regions (data-ov-content), re-fetched in place. script: code the page runs, applied by a reload. server: code only the server runs, no client action.
+           */
+          kind: "style" | "content" | "script" | "server";
+          /**
+           * Content hash of the component's files, or a version the service states.
+           */
+          version: string;
+        }
+      | undefined;
+  };
+  /**
+   * Since 1.1.0. Asset map: each logical URL path the release serves, mapped to its content-addressed URL. HTML from this release references only these URLs.
+   */
+  assets?: {
+    [k: string]:
+      | {
+          url: string;
+          component: string;
+          integrity?: string;
+        }
+      | undefined;
+  };
+  /**
+   * Since 1.1.0. The database schema generation this release migrates to and runs against; null when the service does not track one.
+   */
+  schema_generation?: number | null;
+  /**
+   * Since 1.1.0. The oldest schema generation whose code still runs against this release's schema, because every migration since then only expanded it. Rolling back to a release whose schema_generation is lower is not data-safe.
+   */
+  schema_compatible_from?: number | null;
+  /**
+   * Since 1.1.0. For each contract the service produces (its API, as served to its own pages and clients) or consumes: the version this release speaks and the range of versions it accepts from the other side. A page from release A works against a server on release B when, for every contract A produces, A's version is in B's accepts and B's version is in A's accepts.
+   */
+  contract_ranges?: {
+    [k: string]:
+      | {
+          version: string;
+          /**
+           * A half-open range, always written ">=a.b.c <x.y.z".
+           */
+          accepts: string;
+          /**
+           * produces when absent.
+           */
+          role?: "produces" | "consumes";
+        }
+      | undefined;
+  };
+  /**
+   * Since 1.1.0. Same-origin URL where clients POST their update outcome counts (applied, reloaded, deferred, failed); null or absent when the service does not collect them.
+   */
+  metrics_url?: string | null;
 }
 
 /** search.index-document@1.0.0 (owner: search) */
