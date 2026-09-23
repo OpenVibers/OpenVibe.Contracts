@@ -6185,7 +6185,19 @@
               },
               "payout_method": {
                 "type": "object",
-                "description": "{ type, address } as the creator entered it (e.g. a PayPal email)."
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false,
+                "description": "The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.",
+                "properties": {
+                  "type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               },
               "escrow_until": {
                 "type": "string"
@@ -6290,7 +6302,19 @@
               },
               "payout_method": {
                 "type": "object",
-                "description": "{ type, address } as the creator entered it (e.g. a PayPal email)."
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false,
+                "description": "The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.",
+                "properties": {
+                  "type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               },
               "escrow_until": {
                 "type": "string"
@@ -6395,7 +6419,19 @@
               },
               "payout_method": {
                 "type": "object",
-                "description": "{ type, address } as the creator entered it (e.g. a PayPal email)."
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false,
+                "description": "The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.",
+                "properties": {
+                  "type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               },
               "escrow_until": {
                 "type": "string"

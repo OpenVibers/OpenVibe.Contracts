@@ -17,7 +17,7 @@
         "amount_bits": { "type": "integer", "minimum": 1 },
         "value_cents": { "type": "integer" },
         "status": { "const": "paid" },
-        "payout_method": { "type": "object", "description": "{ type, address } as the creator entered it (e.g. a PayPal email)." },
+        "payout_method": { "type": "object", "required": ["type"], "additionalProperties": false, "description": "The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.", "properties": { "type": { "type": ["string", "null"] } } },
         "escrow_until": { "type": "string" },
         "request_txn": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$" },
         "settle_txn": { "type": ["string", "null"], "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$" },

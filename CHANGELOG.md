@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.30.1 — 2026-09-23
+
+- `billing.cashout.requested|paid|denied`: `cashout.payout_method` carries the method's `type` only
+  (`additionalProperties: false`). The address (e.g. a PayPal email) stays in Billing and never
+  travels on the retained event stream. No producer had emitted a cashout event yet.
+
 ## 0.30.0 (2026-09-23)
 
 Additive: `compat.js` reports no breaking change against v0.29.0. No existing contract changed.

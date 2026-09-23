@@ -6151,9 +6151,11 @@ export interface BillingCashoutRequestedPayload {
     value_cents: number;
     status: "requested";
     /**
-     * { type, address } as the creator entered it (e.g. a PayPal email).
+     * The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.
      */
-    payout_method: {};
+    payout_method: {
+      type: string | null;
+    };
     escrow_until: string;
     request_txn: string;
     settle_txn: string | null;
@@ -6181,9 +6183,11 @@ export interface BillingCashoutPaidPayload {
     value_cents: number;
     status: "paid";
     /**
-     * { type, address } as the creator entered it (e.g. a PayPal email).
+     * The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.
      */
-    payout_method: {};
+    payout_method: {
+      type: string | null;
+    };
     escrow_until: string;
     request_txn: string;
     settle_txn: string | null;
@@ -6211,9 +6215,11 @@ export interface BillingCashoutDeniedPayload {
     value_cents: number;
     status: "denied";
     /**
-     * { type, address } as the creator entered it (e.g. a PayPal email).
+     * The payout method's kind only; the address (e.g. a PayPal email) stays in Billing and never travels on the event stream.
      */
-    payout_method: {};
+    payout_method: {
+      type: string | null;
+    };
     escrow_until: string;
     request_txn: string;
     settle_txn: string | null;

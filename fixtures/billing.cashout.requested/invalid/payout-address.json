@@ -7,9 +7,10 @@
     },
     "amount_bits": 5000,
     "value_cents": 5000,
-    "status": "denied",
+    "status": "requested",
     "payout_method": {
-      "type": "paypal"
+      "type": "paypal",
+      "address": "someone@example.com"
     },
     "escrow_until": "2026-09-30T10:00:00.000Z",
     "request_txn": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ6",
@@ -19,5 +20,6 @@
     "reason": null,
     "created_at": "2026-09-23T10:00:00.000Z",
     "updated_at": "2026-09-23T10:00:00.000Z"
-  }
+  },
+  "transaction_id": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ6"
 }
