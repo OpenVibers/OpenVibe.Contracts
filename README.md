@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.4 (Wave 1). Schemas, manifests and helpers are real and tested; no service validates against them in production yet.  
+**Status:** alpha, v0.29.0 (first released in Wave 1). 17 schemas, 30 service manifests, 170 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -60,7 +60,7 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (the 7 running services plus the 21 charter repos as `placeholder`), `manifests/capabilities/` (first set: Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve, Community post). Each active capability names the route that implements it today.
+Manifests: `manifests/services/` (30 services as of v0.29.0: 20 `alpha`, 1 `beta`, 5 `stable`, and 4 still marked `placeholder`: examples, realtime, sdk and shared), `manifests/capabilities/` (170 capabilities; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Some manifest `notes` predate deployment: wiki, reviews and vip still say "not deployed", and SDK and Shared are tagged packages and Examples is a working repository, although their manifests say `placeholder`. Correcting them needs a new tag.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
