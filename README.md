@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.33.0 (first released in Wave 1). 95 schemas (66 of them event payloads), 30 service manifests, 176 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
+**Status:** alpha, v0.33.1 (first released in Wave 1). 95 schemas (66 of them event payloads), 30 service manifests, 176 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -133,7 +133,9 @@ openvibe-sdk and the docs all read it. It says:
 - whether the API exposes it (`api`), and how to call it (`run`);
 - its input schema, files, output, limits and auth;
 - its quota class and cost;
-- whether it fetches hosts the caller chose (`egress`).
+- whether it fetches hosts the caller chose (`egress`);
+- optionally (v0.33.1), its catalogue `keywords`, which `?q=` searches, and `examples` of runs for the
+  docs and the OpenAPI document.
 
 | Route (openvibe.tools) | Capability | Contract |
 |---|---|---|
@@ -143,11 +145,20 @@ openvibe-sdk and the docs all read it. It says:
 
 A run is answered inline, or with its job (202 + `Location`) while a job tool is still working.
 Callers are tiered: anonymous < session < user < app/service. Quotas count each tool's `cost` within
-its `quotaClass`. yt is page-only (`api: false`). The registry routes and the run route are `planned`
-until Tools serves them.
+its `quotaClass`. yt is page-only (`api: false`). Only real tools have descriptors: there is no
+`planned` status, and a planned or mirror id is `404 tools.tool.not_found`. The registry routes are
+served on the gateway and every satellite (`tools.tool.read` is `active` since v0.33.1); the run route
+and `tools.net.probe` are `planned` until Tools serves them.
 
 `contracts.tools.checkDescriptor(d)` and `checkList(list)` apply the rules that JSON Schema cannot
-express, such as `run.path` being the tool's own. `jobInput(d, input)` builds a job tool's job input.
+express, such as `run.path` being the tool's own, and check each example's input against an embedded
+input schema. `jobInput(d, input)` builds a job tool's job input.
+
+Tools' problem codes are listed with the routes that answer them (`tools.run-request@1`,
+`tools.job-request@1`, `tools.tool-list@1`, `tools.tool@1`). They include `400 tools.query.invalid`,
+`404 tools.tool.not_found`, `413 tools.pdf.too_many_pages`, `422 tools.pdf.wrong_password`,
+`503 tools.unavailable` (a program or upstream a tool needs is missing), and, with `Retry-After`,
+`429 tools.quota.exceeded` and `503 tools.busy`.
 
 ## Versioning and compatibility
 

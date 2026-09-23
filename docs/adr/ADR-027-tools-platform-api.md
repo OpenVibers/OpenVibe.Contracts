@@ -1,7 +1,8 @@
 # ADR-027: Tools platform API
 
-**Status:** Accepted 2026-09-23. Contracts in openvibe-contracts v0.33.0; the registry and run routes
-are `planned` until OpenVibe.Tools serves them.
+**Status:** Accepted 2026-09-23. Contracts in openvibe-contracts v0.33.0. Tools serves the registry
+routes since 2026-09-23, so `tools.tool.read` is `active` in v0.33.1; the run route and
+`tools.net.probe` stay `planned` until Tools serves them.
 
 ## Context and current evidence
 
@@ -35,9 +36,11 @@ OpenVibe.Tools that day found:
 - **`tools.tool@1` describes each tool.** It gives `id` (the catalogue id), `family`, `name`,
   `summary`, `status` (`stable` | `beta` | `preview` | `unavailable`, and `statusReason` when a tool
   is unavailable), `execution` (`client` | `sync` | `job`), `api`, `run`, `input` (JSON Schema),
-  `files`, `output`, `limits`, `auth`, `quotaClass`, `cost`, `egress`, `hosts` and `docs`. Tools
-  builds the descriptors from each tool's own code, which retires the three copies. The page, the
-  run API, `openvibe-sdk/tools`, the OpenAPI document and the docs all read them.
+  `files`, `output`, `limits`, `auth`, `quotaClass`, `cost`, `egress`, `hosts` and `docs`, and
+  optionally (v0.33.1) the catalogue's `keywords` and `examples` of runs, each valid against the
+  input schema. There is no `planned` status: a planned entry is not a tool and has no descriptor.
+  Tools builds the descriptors from each tool's own code, which retires the three copies. The page,
+  the run API, `openvibe-sdk/tools`, the OpenAPI document and the docs all read them.
 - **Registry routes** (capability `tools.tool.read`, public). `GET /api/v1/tools` answers
   `tools.tool-list@1`, with schemas as `$ref`. `GET /api/v1/tools/:id` answers the descriptor with
   its schemas embedded. `GET /api/v1/tools/:id/schema` answers

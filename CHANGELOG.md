@@ -4,6 +4,91 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.33.1 — 2026-09-23
+
+Additive: `compat.js` reports no breaking change against v0.33.0.
+
+Follow-ups to the Tools registry, which OpenVibe.Tools now serves in production (`GET /api/v1/tools`,
+`/api/v1/tools/:id` and `/api/v1/tools/:id/schema` on openvibe.tools and every satellite).
+
+**Capabilities and manifests**
+
+- `tools.tool.read` is `active` (it was `planned`). The gateway answers for all 169 tools, and the img,
+  audio, docs, text, yt, maps and food satellites answer for their own. Its description now says what
+  the routes answer: CORS for any origin, ETag and 304, `$defs.input: false` for a tool without an API,
+  `400 tools.query.invalid` and `404 tools.tool.not_found`.
+- `tools.tool.run` and `tools.net.probe` stay `planned` until Tools serves the run API.
+- Tools 0.4.1: its notes say the registry is served.
+
+**`tools.tool@1` 1.0.0 → 1.1.0.** Two optional fields, so every v0.33.0 descriptor stays valid:
+
+- `keywords`: the catalogue's search terms (`GET /api/catalog.json` `tools[].keywords`), which
+  `GET /api/v1/tools?q=` matches beside the id, name and summary. Unique, trimmed, non-empty phrases.
+- `examples`: `[{ title?, input, files?: [{ name?, mime, url? }] }]`, sample runs that the docs and the
+  generated OpenAPI document will publish. Each input is valid against the tool's input schema. The
+  schema refuses examples on a tool without an API.
+
+The descriptions now also say:
+
+- `output.schema` describes `result.data` whatever the execution. For a job tool, that is the data of
+  the run's result and of its job's result, which are the same object.
+- `GET /api/v1/tools/:id/schema` has `$defs.input: false` when `api` is false.
+- There is no `planned` status. A planned catalogue entry is not a tool: it has no descriptor and is
+  not listed. Neither is a mirror (a second build of another tool). Both answer
+  `404 tools.tool.not_found`, with a detail that says the id is planned or names the tool it mirrors.
+  `tools.tool-list@1` says the same, and that `family`, `execution` and `status` take comma lists.
+
+A consumer that validates descriptors against v0.33.0 refuses `keywords` and `examples`
+(`additionalProperties: false`). Tools should start serving them only after it moves its pin to this
+release, and so should any service that validates descriptors it reads.
+
+**`contracts.tools.checkDescriptor`** now checks each example:
+
+- its input against the tool's input schema, when the schema is embedded (errors point at
+  `/examples/<i>/input/…`);
+- its size as JSON against `limits.maxInputBytes`;
+- its files against `files`: the count within `min` and `max`, and each `mime` allowed by `accept`
+  (`image/*` takes `image/heic`).
+
+An input given as `{ $ref }` (the list form) is not fetched, so its examples are checked where the
+schema is embedded: `GET /api/v1/tools/:id` and the Tools registry test. When there are examples to
+check, an embedded input schema that does not compile is reported. All 169 of Tools' current
+descriptors pass, and so do they with their catalogue keywords and their own example inputs added.
+
+**Problem codes Tools emits.** They are listed with the routes that answer them, as every service's are
+(`errors.problem@1` carries any code).
+
+- Registry (`tools.tool@1`, `tools.tool-list@1`, `tools.tool.read`):
+  - `400 tools.query.invalid`: an unknown `execution` or `status` value, or an `api` that is not
+    `true` or `false`;
+  - `404 tools.tool.not_found`: an unknown id, and a planned or mirror id, with a detail saying which.
+- `tools.run-request@1` and `tools.job-request@1`:
+  - `503 tools.unavailable`: a program or upstream the tool needs is missing. A job submission is
+    refused then, rather than failing later. `503 tools.tool.unavailable` is still the run API's
+    refusal for a tool whose descriptor status is `unavailable`.
+  - Coming with the shared guard, not emitted yet: `429 tools.quota.exceeded` (the caller's allowance
+    in the quota class is spent) and `503 tools.busy` (every slot for that kind of work is taken).
+    Both carry `Retry-After`. The run request still lists `quota.exceeded` beside the new code.
+- Codes a tool chooses, carried as the error of a failed run or job (`tools.run@1`, `tools.job@1`,
+  `tools.job.failed`): `413 tools.pdf.too_many_pages` (over `limits.maxPages`) and
+  `422 tools.pdf.wrong_password`.
+
+**Fixtures and tests**
+
+- The valid png, dns, jsonminify and port descriptors carry keywords and examples, and the list fixture
+  carries keywords.
+- New invalid descriptors: an example whose input the tool's schema refuses, an example file that
+  `files.accept` does not allow, examples on a page-only tool, and a blank keyword.
+- `test/run.js` checks the `tools.tool` and `tools.tool-list` fixtures with `checkDescriptor` and
+  `checkList`, not only the schema, so an invalid fixture can break a rule that JSON Schema cannot
+  express. It also checks:
+  - that a v0.33.0 descriptor, without the new fields, is still valid;
+  - each example rule;
+  - that `tools.tool.read` is `active` while the run capabilities stay `planned`;
+  - that there is no `planned` status;
+  - that each new code is a valid problem code and is listed with its status;
+  - that `tools.quota.exceeded` and `tools.busy` carry `Retry-After`.
+
 ## 0.33.0 — 2026-09-23
 
 Additive: `compat.js` reports no breaking change against v0.32.0.
