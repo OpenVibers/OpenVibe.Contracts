@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.30.0 (first released in Wave 1). 74 schemas (53 of them event payloads), 30 service manifests, 170 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
+**Status:** alpha, v0.33.0 (first released in Wave 1). 95 schemas (66 of them event payloads), 30 service manifests, 176 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -60,7 +60,7 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (173 capabilities as of v0.32.0; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
+Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (176 capabilities as of v0.33.0; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
@@ -84,7 +84,7 @@ Three `public` capabilities let a developer app (ADR-014) use OpenVibe.Events wi
 
 ## Event payload contracts (v0.30)
 
-Every event type has a payload contract, named after the type. The envelope's `version` is the contract's major, and the file is `contracts/events/payloads/<event_type>.v<version>.json`. The owner is the producing service, whose manifest lists the type in `eventsProduced`. Contracts with status `planned` describe events the owner does not emit yet (`ai.run.*`, `tools.job.*`).
+Every event type has a payload contract, named after the type. The envelope's `version` is the contract's major, and the file is `contracts/events/payloads/<event_type>.v<version>.json`. The owner is the producing service, whose manifest lists the type in `eventsProduced`. Contracts with status `planned` describe events the owner does not emit yet (`ai.run.*`). `tools.job.*` are `active` since v0.33.0, because Tools publishes them.
 
 ```js
 if (env.payload.redacted === true) return;                               // a tombstone (events.tombstone-payload@1)
@@ -123,6 +123,31 @@ One resolver answers "which channel, and whose, is this?" for channel, stream, V
 | 8 | `legacy_ids` | `legacy_map` | legacy_map |
 
 The first input that resolves decides. Every other input that resolves must name the same channel, or the answer is `unresolved` with reason `conflict`. A clip belongs to the clipped channel, never to the clipper. A display name never resolves anything: a request holding only one is answered `unresolved`, `display_name_only`.
+
+## Tools platform API (v0.33)
+
+Every tool on openvibe.tools gets a descriptor, `tools.tool@1` (ADR-027). The page, the run API,
+openvibe-sdk and the docs all read it. It says:
+
+- where the tool runs (`execution`: `client` | `sync` | `job`);
+- whether the API exposes it (`api`), and how to call it (`run`);
+- its input schema, files, output, limits and auth;
+- its quota class and cost;
+- whether it fetches hosts the caller chose (`egress`).
+
+| Route (openvibe.tools) | Capability | Contract |
+|---|---|---|
+| `GET /api/v1/tools`, `/api/v1/tools/:id`, `/api/v1/tools/:id/schema` | `tools.tool.read` (public) | `tools.tool-list@1`, `tools.tool@1` |
+| `POST /api/v1/tools/:id/run` | `tools.tool.run` (public); probes need `tools.net.probe` (partner) | `tools.run-request@1` → `tools.run@1` |
+| `/api/v1/jobs…` (img, audio, docs; the gateway later) | `tools.job.create`, `.read`, `.cancel` | `tools.job-request@1` → `tools.job@1` |
+
+A run is answered inline, or with its job (202 + `Location`) while a job tool is still working.
+Callers are tiered: anonymous < session < user < app/service. Quotas count each tool's `cost` within
+its `quotaClass`. yt is page-only (`api: false`). The registry routes and the run route are `planned`
+until Tools serves them.
+
+`contracts.tools.checkDescriptor(d)` and `checkList(list)` apply the rules that JSON Schema cannot
+express, such as `run.path` being the tool's own. `jobInput(d, input)` builds a job tool's job input.
 
 ## Versioning and compatibility
 

@@ -4,6 +4,95 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.33.0 — 2026-09-23
+
+Additive: `compat.js` reports no breaking change against v0.32.0.
+
+**Tools platform API** (new ADR-027). The tools on openvibe.tools become one registry and one run API,
+open to the SDK, with tiered, weighted quotas.
+
+- `tools.tool@1`: the **tool descriptor**, one per catalogue tool.
+  - Identity: `id`, `family`, `name`, `summary`.
+  - `status`: `stable` | `beta` | `preview` | `unavailable`, with `statusReason`.
+  - How it runs:
+    - `execution`: `client` | `sync` | `job`.
+    - `api`: whether the run API exposes the tool.
+    - `run`: `{ method: POST, path: /api/v1/tools/{id}/run, job: { type, operation, preset? } | null, legacy? }`.
+  - Its data:
+    - `input`: a JSON Schema, embedded or `{ $ref }` to `GET /api/v1/tools/:id/schema#/$defs/input`.
+    - `files`: `{ min, max, accept, maxBytes }` or null.
+    - `output`: `{ kind: json|file|files|text, schema?, mime? }`.
+    - `limits`: `timeoutMs`, and optionally `maxDurationSec`, `maxPixels`, `maxPages`, `maxInputBytes`,
+      `perTargetPerMinute`.
+  - Access and cost:
+    - `auth`: `{ anonymous, capability: tools.tool.run | tools.net.probe }`.
+    - `quotaClass` and `cost` (the relative weight quotas count).
+    - `egress`: the server fetches a host the caller chose.
+  - `hosts` and `docs`.
+
+  The schema enforces these rules:
+  - `api: false` has `run: null`, and `api: true` has a run and an input schema.
+  - Only job tools name a job, and an API job tool always does.
+  - File output through the API comes from a job.
+  - A `tools.net.probe` tool fetches and is never anonymous.
+  - An anonymous egress tool declares `limits.perTargetPerMinute`.
+  - A client tool never fetches.
+  - `unavailable` needs `statusReason`.
+  - JSON output has a schema.
+- `tools.tool-list@1`: the `GET /api/v1/tools` answer (`tools`, `count`, `updated_at`, optional `families`).
+- `tools.run-request@1`: the body of `POST /api/v1/tools/{id}/run`, `{ input, files?, wait_ms?, idempotency_key? }`.
+  It can be JSON or multipart, like the jobs API. `files` references a Media object (`{ media_id }`)
+  or a result file of the caller's own job (`{ job_id, index }`), so tools can chain. The refusal
+  codes are listed in the description.
+- `tools.run@1`: the answer. Either `{ state: succeeded, tool, result: { data?, text?, files? }, took_ms, job? }`,
+  or `{ state: failed|cancelled, tool, error, took_ms, job? }`, or `{ state: queued|running, tool, job, location }`
+  (202).
+- `tools.job@1`: the jobs API's view of a job, read from `apps/_shared/jobs` `system.view()` today.
+  It carries state, progress, attempts, times, `expires_at`, result files (`storage`, `media`, `url`),
+  error, retry links and references. It also has an optional `tool`, set when the job came from a
+  run. `tools.job-request@1` is the body of `POST /api/v1/jobs`.
+- `contracts.tools` (`lib/tools.js`) adds three helpers:
+  - `checkDescriptor(d)` applies the schema plus the rules that depend on the id: `run.path` is the
+    tool's own, `$ref`s point at its own schema, `files.min <= files.max`, `legacy` never lists the
+    run API, and the quota class has no tier word.
+  - `checkList(list)` checks every descriptor, that ids and hosts are unique, and that counts are right.
+  - `jobInput(d, input)` returns `{ ...input, ...preset, tool: operation }`.
+
+**Capabilities**
+
+- These are `planned` until Tools serves their routes:
+  - `tools.tool.read`: public, quota class `tools-read`. `GET /api/v1/tools`, `GET /api/v1/tools/:id`
+    and `GET /api/v1/tools/:id/schema`.
+  - `tools.tool.run`: public, quota class `tools-run`, `tools.run-request@1` → `tools.run@1`.
+    `POST /api/v1/tools/:id/run`.
+  - `tools.net.probe`: **partner**, quota class `tools-probe`. Network grants it only through a
+    staff-set project allowance, never a default one. It covers port, ping, traceroute, mtr, latency
+    and bulk header and TLS checks through the API.
+- `tools.job.create` adds `POST /api/v1/jobs/:id/retry` and `PUT|DELETE /api/v1/jobs/:id/references/:ref`,
+  and declares `tools.job-request@1` → `tools.job@1`. `tools.job.read` and `tools.job.cancel` declare
+  `tools.job@1`.
+
+**Manifests and statuses**
+
+- Tools 0.4.0:
+  - lists the three new capabilities;
+  - gains `ready: /api/ready`;
+  - its notes now say that job results are in Media and job events reach OpenVibe.Events in
+    production, that the gateway has no jobs routes yet, and what ADR-027 plans.
+- `tools.job.created|started|succeeded|failed` are `active` (they were `planned`), because Tools
+  publishes them. Their descriptions no longer say planned.
+
+**Tests.** `test/run.js` checks:
+- every descriptor fixture with `checkDescriptor`;
+- that a run endpoint exists exactly when `api` is true;
+- that only job tools name a job;
+- the egress, probe and client rules, and tier-free quota classes;
+- that the run capabilities and the descriptor's `auth.capability` agree;
+- that a run's result files are exactly the job's, and that runs and jobs share the Idempotency-Key
+  rule and the job type pattern;
+- that the `tools.job.succeeded` event carries a subset of the job view;
+- the list's counts, ids and hosts.
+
 ## 0.32.0 — 2026-09-23
 
 Additive: `compat.js` reports no breaking change against v0.31.0.
