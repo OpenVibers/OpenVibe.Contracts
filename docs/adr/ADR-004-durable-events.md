@@ -13,6 +13,13 @@ Cross-service side effects are best-effort POSTs and HMAC webhooks; a consumer t
 - Consumers get exactly-once *effects* through an inbox of idempotency receipts in their own database.
 - Storage starts on SQLite (single host, see ADR-007); Redis is not durable truth and is not used.
 
+### Delivery signatures and replay window (2026-09-23)
+
+- Every delivery is HMAC-SHA256-signed with the subscription secret. v1, `X-OpenVibe-Signature: sha256=<hex HMAC of the raw body>`, has no time in it: a captured delivery can be replayed forever, and only the consumer's `event_id` inbox limits the damage.
+- v2 adds `X-OpenVibe-Timestamp: <unix seconds>` and `X-OpenVibe-Signature-V2: t=<ts>,v2=<hex HMAC of "<ts>.<raw body>">`. Events signs every attempt, retries and replays included, with the time it is sent.
+- Consumers accept a v2 signature only within ±300 s of their clock, compare in constant time, and never fall back to v1 when a v2 header is present but bad or stale. With `requireV2` they also refuse deliveries without v2, which closes the replay-by-stripping-the-header path.
+- Rollout is additive: Events sends v1 and v2 first; consumers then move to openvibe-sdk 0.4.0 (v2 checked whenever present) and set `requireV2: true` one by one; v1 stays on the wire until every consumer requires v2, and only then may it be removed. Rollback at any step is to unset `requireV2` (consumers) or stop sending v2 (Events, only while no consumer requires it).
+
 ## Alternatives considered
 
 - Kafka/NATS now: rejected, operational weight far beyond current volume.
@@ -28,4 +35,4 @@ Producers can switch back to their direct calls; events already stored stay repl
 
 ## Acceptance tests
 
-Events tests: persistence before delivery, retry/backoff, DLQ, replay, crash-and-replay yields one effect, outbox commit/rollback, SSE visibility and resume.
+Events tests: persistence before delivery, retry/backoff, DLQ, replay, crash-and-replay yields one effect, outbox commit/rollback, SSE visibility and resume. Signatures: v1 and v2 on every attempt, a fresh timestamp per retry, v2 refused outside ±300 s or with a changed body or timestamp, and (SDK) no v1 fallback when v2 is present, v1-only refused under `requireV2`.

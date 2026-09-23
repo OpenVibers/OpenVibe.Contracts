@@ -80,6 +80,20 @@ Three `public` capabilities let a developer app (ADR-014) use OpenVibe.Events wi
 
 `project_key` is `p` followed by the project's ULID in lowercase (`prj_01JAB…` → `p01jab…`), so it fits an event-type segment. An app event's `source` is `app-` followed by the app's ULID in lowercase (`app:app_01JAB…` → `app-01jab…`), which keeps `events.event-envelope@1` unchanged (its `source` pattern already allows it). OpenVibe.Events enforces the scope, the sandbox separation and per-project quotas.
 
+## Event delivery signatures
+
+OpenVibe.Events POSTs each webhook delivery as `{ "event": <events.event-envelope@1>, "seq": n }`, keyed with the subscription secret:
+
+| Header | Value |
+|---|---|
+| `X-OpenVibe-Signature` (v1) | `sha256=<hex HMAC-SHA256 of the raw body>` |
+| `X-OpenVibe-Timestamp` | `<unix seconds>` when this attempt was sent (every retry gets a fresh one) |
+| `X-OpenVibe-Signature-V2` | `t=<that timestamp>,v2=<hex HMAC-SHA256 of "<t>.<raw body>">` |
+
+v1 covers only the body, so a captured delivery verifies forever (only `event_id` dedupe limits a replay). A consumer checking v2 refuses a timestamp more than **300 s** from its own clock in either direction, compares in constant time, and never falls back to v1 when a v2 header is present but wrong or stale. openvibe-sdk ≥ 0.4.0 does this in `parseDelivery(raw, headers, secret, { requireV2 })` and `verifyDeliveryV2()`; the `openvibe-events` package has `verifyDeliveryV2()`.
+
+Rollout: (1) Events sends v2 beside v1; (2) each consumer moves to SDK 0.4.0, which verifies v2 whenever it is present; (3) each consumer sets `requireV2: true`, so a v1-only (header-stripped) replay fails; (4) once every consumer requires v2, v1 may be dropped. See ADR-004.
+
 ## Versioning and compatibility
 
 - A contract id is permanent. Minor versions only add optional fields.
