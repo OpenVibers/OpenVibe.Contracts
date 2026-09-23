@@ -123,6 +123,14 @@ const none = `${Buffer.from(JSON.stringify({ alg: 'none' })).toString('base64url
 ok(V(none).code === 'token.malformed', 'alg none rejected');
 ok(V(`${h}.${Buffer.from(JSON.stringify({ ...claims, cap: ['network.coins.debit'] })).toString('base64url')}.${tok.split('.')[2]}`).code === 'token.bad_signature', 'tampered claims rejected');
 ok(V('nope').code === 'token.malformed', 'garbage rejected');
+// Developer apps (ADR-014): sandbox tokens are refused unless the receiver opts in.
+const appClaims = { ...claims, sub: 'app:app_01J0000000000000000000000Z', actor_type: 'app', project_id: 'prj_01J0000000000000000000000Z', env: 'sandbox' };
+const sandboxTok = serviceAuth.signServiceToken(appClaims, kp.privateKey);
+ok(V(sandboxTok).code === 'token.sandbox_refused', 'sandbox app token refused by default');
+ok(V(sandboxTok, { acceptSandbox: true }).ok, 'sandbox app token accepted when the receiver opts in');
+ok(V(serviceAuth.signServiceToken({ ...appClaims, env: 'production' }, kp.privateKey)).ok, 'production app token accepted');
+ok(V(serviceAuth.signServiceToken((({ project_id, ...rest }) => rest)(appClaims), kp.privateKey)).code === 'token.invalid_claims', 'an app token needs project_id');
+ok(contracts.ids.newId('project').startsWith('prj_'), 'project ids use the prj prefix');
 
 const run = (guard, headers) => new Promise((resolve) => {
     const req = { headers, body: {} };

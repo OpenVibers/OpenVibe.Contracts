@@ -11,7 +11,7 @@
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
     "owner": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
     "status": { "enum": ["planned", "active", "deprecated", "retired"] },
-    "visibility": { "enum": ["public", "first-party", "internal"] },
+    "visibility": { "enum": ["public", "partner", "first-party", "internal"] },
     "description": { "type": "string" },
     "inputSchema": { "type": "string" },
     "outputSchema": { "type": "string" },

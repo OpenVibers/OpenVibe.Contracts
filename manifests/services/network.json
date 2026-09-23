@@ -25,9 +25,17 @@
     "network.notifications.push",
     "network.modules.read",
     "network.modules.write",
-    "mods.grant.manage"
+    "mods.grant.manage",
+    "network.project.read",
+    "network.project.manage"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "network.app.created",
+    "network.app.revoked",
+    "network.credential.rotated",
+    "network.credential.revoked",
+    "network.grant.changed"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "identity.*",

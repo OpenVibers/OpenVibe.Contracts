@@ -47,11 +47,13 @@ export interface LegacyIdentityMapEntry {
   metadata?: {};
 }
 
-/** identity.service-token-claims@1.1.0 (owner: network) */
+/** identity.service-token-claims@1.2.0 (owner: network) */
 /**
- * Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service or app principal. Replaces X-Internal-Key.
+ * Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service or app principal. Replaces X-Internal-Key. App tokens (actor_type app) also carry project_id and env; receivers refuse env=sandbox unless they opted in.
  */
-export interface ServiceTokenClaims {
+export type ServiceTokenClaims = {
+  [k: string]: unknown | undefined;
+} & {
   /**
    * Issuer; https://openvibe.network in production. Receivers pass the issuer they expect to verifyServiceToken().
    */
@@ -73,8 +75,20 @@ export interface ServiceTokenClaims {
   iat: number;
   exp: number;
   jti: string;
+  /**
+   * Developer project of an app principal (ADR-014). Services key tenancy by it. Absent on first-party service tokens.
+   */
+  project_id?: string;
+  /**
+   * Environment of an app principal. A receiver MUST refuse env=sandbox (401 token.sandbox_refused) unless it opted in to sandbox tokens. Absent on first-party service tokens, which are production.
+   */
+  env?: "sandbox" | "production";
+  /**
+   * The person who authorized an app through the authorization-code flow. Absent on client_credentials tokens.
+   */
+  on_behalf_of?: string;
   [k: string]: unknown | undefined;
-}
+};
 
 /** common.entity-ref@1.0.0 (owner: contracts) */
 /**
@@ -148,7 +162,7 @@ export interface Capability {
   version: string;
   owner: string;
   status: "planned" | "active" | "deprecated" | "retired";
-  visibility: "public" | "first-party" | "internal";
+  visibility: "public" | "partner" | "first-party" | "internal";
   description?: string;
   inputSchema?: string;
   outputSchema?: string;
