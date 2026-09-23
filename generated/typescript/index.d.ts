@@ -208,6 +208,185 @@ export interface MediaRef {
   variant?: string;
 }
 
+/** lineage.resolve-request@1.0.0 (owner: live) */
+/**
+ * What a caller knows about a channel, stream, VOD, clip or Media object, sent to the canonical channel/owner resolver (roadmap §15.10, requirement D20): the body of POST /internal/lineage/resolve on OpenVibe.Live (capability live.lineage.resolve). GET takes the same fields as query parameters, with legacy_ids flattened to live_user_id and network_user_id. The answer is lineage.resolution@1, whose description has the precedence rules. Every input given is checked, not only the first. display_name is never a resolution input: a request that carries only a display name resolves nothing (reason display_name_only), and next to other inputs it is ignored.
+ */
+export interface LineageResolveRequest {
+  /**
+   * Channel slug (Live: the username, as in /@<username>; the @ is optional), or a nested <channel>/<slot> naming a stream slot inside the channel by its slug or id. With parent_slug, a plain slug names the slot inside that parent.
+   */
+  slug?: string;
+  /**
+   * The channel slug when slug names a slot inside it ({ parent_slug: 'alice', slug: 'garage' } is 'alice/garage'). Alone, it names the channel.
+   */
+  parent_slug?: string;
+  /**
+   * The channel's id at its owner (Live: channels.id).
+   */
+  channel_id?: string;
+  /**
+   * A broadcast session (Live: streams.id).
+   */
+  stream_id?: string;
+  /**
+   * A persistent stream slot (Live: managed_streams.id; OpenRe stream definitions refer to it as live:managed_stream:<id>).
+   */
+  slot_id?: string;
+  /**
+   * A VOD (the Media v1 VOD id, the same id Live's VODs had before the Media split).
+   */
+  vod_id?: string;
+  /**
+   * A clip (the Media v1 clip id). A clip belongs to the clipped channel, never to the person who clipped it.
+   */
+  clip_id?: string;
+  /**
+   * A Media object: med_<ULID>, or a legacy:<app>:<kind>:<id> reference (the media_id forms of media.media-ref@1).
+   */
+  media_object_id?: string;
+  /**
+   * The canonical subject that owns the channel (identity.subject-ref@1 user id).
+   */
+  owner_subject?: string;
+  /**
+   * Pre-subject ids of the channel owner. Resolving through them is confidence legacy_map.
+   */
+  legacy_ids?: {
+    /**
+     * Live's local user id (users.id).
+     */
+    live_user_id?: number;
+    /**
+     * OpenVibe.Network's integer user id, mapped to a Live account by the account link.
+     */
+    network_user_id?: number;
+  };
+  /**
+   * A label the caller holds. Accepted so the answer can say display_name_only; never used to resolve anything, because a display name is not an identity and is never sufficient to establish ownership.
+   */
+  display_name?: string;
+}
+
+/** lineage.resolution@1.0.0 (owner: live) */
+/**
+ * The canonical channel/owner resolver's answer to lineage.resolve-request@1 (roadmap §15.10, requirement D20; capability live.lineage.resolve). One resolver serves channel, stream, VOD, clip, Pulse and creator-UI callers. PRECEDENCE between inputs (the roadmap's order): 1 explicit_slug (slug), 2 nested_slug (slug <channel>/<slot>, or parent_slug), 3 channel_id, 4 stream_lookup (stream_id, then slot_id), 5 the record's own lineage (clip_id, then vod_id), 6 media_lineage (media_object_id), 7 owner_subject, 8 legacy_map (legacy_ids). The first input in that order that resolves decides (resolved_by). Every other input that resolves must name the same channel, otherwise the answer is unresolved with reason conflict. An input whose source could not be asked makes the answer unresolved with reason source_unavailable, since it might have disagreed. An input that names nothing is reported not_found in checked and does not block the others. LINEAGE inside a record, first link that answers wins: a stream belongs to its owner, and a slot too; a VOD goes to its stream, then to its slot when the stream row is gone, then to the owner recorded on the VOD (legacy_metadata); a clip goes to its stream, then to its parent VOD's lineage (vod_parent), then to the channel recorded on the clip (legacy_metadata), and never to the clipper; a Media object goes to the record its legacy_ref names (media_lineage), then to its owner subject, then to the owner user recorded on it (legacy_metadata); a legacy:<app>:<kind>:<id> reference is read as that record (legacy_map). CONFIDENCE is the weakest hop: exact when the input itself names the channel, a stream or slot row, or the owner subject; derived when the answer came through a parent record or an owner recorded on a record; legacy_map when it needed a legacy id map (legacy_ids, a legacy media reference). A display name never resolves anything. Unresolved answers carry no channel.
+ */
+export interface LineageResolution {
+  status: "resolved" | "unresolved";
+  /**
+   * Why nothing resolved. no_input: the request named nothing. display_name_only: only a display name was given. not_found: no input names anything that exists. conflict: two inputs name different channels. ambiguous: an input names more than one channel (an owner subject linked to two accounts). source_unavailable: a record could not be read (Media down); retry later.
+   */
+  reason?: "no_input" | "display_name_only" | "not_found" | "conflict" | "ambiguous" | "source_unavailable";
+  detail?: string;
+  channel?: {
+    /**
+     * The channel's id at its owner (Live: channels.id).
+     */
+    id: string;
+    /**
+     * The channel's current slug (Live: the username, /@<slug>). Slugs can change; id and owner_subject do not.
+     */
+    slug: string;
+    /**
+     * The owner's canonical subject, or null while the owner has not signed in through OpenVibe.Network since subjects were issued.
+     */
+    owner_subject: string | null;
+    /**
+     * The owner's pre-subject ids, for callers that still key by them.
+     */
+    legacy_ids?: {
+      live_user_id?: number;
+      network_user_id?: number;
+    };
+  };
+  stream?: {
+    /**
+     * The broadcast session, or null when only a slot was named.
+     */
+    id: string | null;
+    slot_id?: string | null;
+    slot_slug?: string | null;
+    /**
+     * true when a record names this stream but the stream row no longer exists.
+     */
+    missing?: boolean;
+  };
+  vod?: {
+    id: string;
+    stream_id?: string | null;
+    slot_id?: string | null;
+  };
+  clip?: {
+    id: string;
+    vod_id?: string | null;
+    stream_id?: string | null;
+  };
+  media_object?: {
+    id: string;
+    kind?: string | null;
+    legacy_ref?: string | null;
+  };
+  /**
+   * The input that decided.
+   */
+  resolved_by?:
+    | "slug"
+    | "parent_slug"
+    | "channel_id"
+    | "stream_id"
+    | "slot_id"
+    | "clip_id"
+    | "vod_id"
+    | "media_object_id"
+    | "owner_subject"
+    | "legacy_ids";
+  /**
+   * The lineage rule that answered for the deciding input.
+   */
+  rule?:
+    | "explicit_slug"
+    | "nested_slug"
+    | "channel_id"
+    | "stream_lookup"
+    | "vod_parent"
+    | "media_lineage"
+    | "owner_subject"
+    | "legacy_metadata"
+    | "legacy_map";
+  confidence?: "exact" | "derived" | "legacy_map";
+  /**
+   * The hops the deciding input took, e.g. ["clip:7", "vod:42", "slot:3", "user:17"].
+   *
+   * @maxItems 32
+   */
+  via?: string[];
+  /**
+   * What each input given came to.
+   *
+   * @maxItems 32
+   */
+  checked?: {
+    input:
+      | "slug"
+      | "parent_slug"
+      | "channel_id"
+      | "stream_id"
+      | "slot_id"
+      | "clip_id"
+      | "vod_id"
+      | "media_object_id"
+      | "owner_subject"
+      | "legacy_ids"
+      | "display_name";
+    outcome: "decided" | "agrees" | "conflict" | "not_found" | "unavailable" | "ambiguous" | "ignored";
+    /**
+     * The channel this input named, when it named one.
+     */
+    channel_slug?: string;
+  }[];
+}
+
 /** modules.namespace@1.0.0 (owner: network) */
 /**
  * Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5).

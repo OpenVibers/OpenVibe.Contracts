@@ -1,0 +1,22 @@
+{
+  "id": "live.lineage.resolve",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Resolve the canonical channel and owner behind a slug, nested slug, channel, stream, slot, VOD, clip, Media object, owner subject or legacy id, with the stream/VOD/clip lineage and how it was decided (roadmap §15.10, D20). A display name alone resolves nothing. Loopback only.",
+  "inputSchema": "lineage.resolve-request@1",
+  "outputSchema": "lineage.resolution@1",
+  "permissions": [
+    "live:lineage"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/lineage/resolve",
+    "POST /internal/lineage/resolve"
+  ]
+}

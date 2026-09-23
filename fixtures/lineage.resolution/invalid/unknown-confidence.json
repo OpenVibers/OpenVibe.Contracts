@@ -1,0 +1,7 @@
+{
+  "status": "resolved",
+  "channel": { "id": "12", "slug": "alice", "owner_subject": null },
+  "resolved_by": "display_name",
+  "rule": "explicit_slug",
+  "confidence": "guessed"
+}

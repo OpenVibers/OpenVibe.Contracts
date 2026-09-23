@@ -1,0 +1,12 @@
+{
+  "status": "resolved",
+  "channel": { "id": "12", "slug": "alice", "owner_subject": null, "legacy_ids": { "live_user_id": 17 } },
+  "stream": { "id": "9", "slot_id": "3", "slot_slug": "garage-cam" },
+  "vod": { "id": "42", "stream_id": "9", "slot_id": "3" },
+  "clip": { "id": "7", "vod_id": "42", "stream_id": null },
+  "resolved_by": "clip_id",
+  "rule": "vod_parent",
+  "confidence": "derived",
+  "via": ["clip:7", "vod:42", "stream:9", "user:17"],
+  "checked": [{ "input": "clip_id", "outcome": "decided", "channel_slug": "alice" }]
+}

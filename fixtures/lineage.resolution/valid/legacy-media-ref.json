@@ -1,0 +1,10 @@
+{
+  "status": "resolved",
+  "channel": { "id": "12", "slug": "alice", "owner_subject": null },
+  "vod": { "id": "42", "stream_id": "9", "slot_id": null },
+  "media_object": { "id": "legacy:live:vod:42", "kind": "vod", "legacy_ref": "legacy:live:vod:42" },
+  "resolved_by": "media_object_id",
+  "rule": "legacy_map",
+  "confidence": "legacy_map",
+  "via": ["media:legacy:live:vod:42", "vod:42", "stream:9", "user:17"]
+}

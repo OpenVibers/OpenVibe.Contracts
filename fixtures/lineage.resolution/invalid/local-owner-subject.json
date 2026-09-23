@@ -1,0 +1,7 @@
+{
+  "status": "resolved",
+  "channel": { "id": "12", "slug": "alice", "owner_subject": "17" },
+  "resolved_by": "slug",
+  "rule": "explicit_slug",
+  "confidence": "exact"
+}

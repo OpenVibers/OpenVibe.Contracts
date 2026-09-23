@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/lineage/resolve-request.v1.json",
+  "title": "LineageResolveRequest",
+  "description": "What a caller knows about a channel, stream, VOD, clip or Media object, sent to the canonical channel/owner resolver (roadmap §15.10, requirement D20): the body of POST /internal/lineage/resolve on OpenVibe.Live (capability live.lineage.resolve). GET takes the same fields as query parameters, with legacy_ids flattened to live_user_id and network_user_id. The answer is lineage.resolution@1, whose description has the precedence rules. Every input given is checked, not only the first. display_name is never a resolution input: a request that carries only a display name resolves nothing (reason display_name_only), and next to other inputs it is ignored.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": false,
+  "properties": {
+    "slug": {
+      "type": "string", "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}(/[A-Za-z0-9_][A-Za-z0-9_.-]{0,63})?$",
+      "description": "Channel slug (Live: the username, as in /@<username>; the @ is optional), or a nested <channel>/<slot> naming a stream slot inside the channel by its slug or id. With parent_slug, a plain slug names the slot inside that parent."
+    },
+    "parent_slug": {
+      "type": "string", "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$",
+      "description": "The channel slug when slug names a slot inside it ({ parent_slug: 'alice', slug: 'garage' } is 'alice/garage'). Alone, it names the channel."
+    },
+    "channel_id": {
+      "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+      "description": "The channel's id at its owner (Live: channels.id)."
+    },
+    "stream_id": {
+      "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+      "description": "A broadcast session (Live: streams.id)."
+    },
+    "slot_id": {
+      "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+      "description": "A persistent stream slot (Live: managed_streams.id; OpenRe stream definitions refer to it as live:managed_stream:<id>)."
+    },
+    "vod_id": {
+      "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+      "description": "A VOD (the Media v1 VOD id, the same id Live's VODs had before the Media split)."
+    },
+    "clip_id": {
+      "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+      "description": "A clip (the Media v1 clip id). A clip belongs to the clipped channel, never to the person who clipped it."
+    },
+    "media_object_id": {
+      "type": "string", "pattern": "^(med_[0-9A-HJKMNP-TV-Z]{26}|legacy:[a-z][a-z0-9-]{1,39}:(vod|clip|file|paste|thumbnail|avatar):[A-Za-z0-9._/-]{1,200})$",
+      "description": "A Media object: med_<ULID>, or a legacy:<app>:<kind>:<id> reference (the media_id forms of media.media-ref@1)."
+    },
+    "owner_subject": {
+      "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The canonical subject that owns the channel (identity.subject-ref@1 user id)."
+    },
+    "legacy_ids": {
+      "type": "object", "minProperties": 1, "additionalProperties": false,
+      "description": "Pre-subject ids of the channel owner. Resolving through them is confidence legacy_map.",
+      "properties": {
+        "live_user_id": { "type": "integer", "minimum": 1, "description": "Live's local user id (users.id)." },
+        "network_user_id": { "type": "integer", "minimum": 1, "description": "OpenVibe.Network's integer user id, mapped to a Live account by the account link." }
+      }
+    },
+    "display_name": {
+      "type": "string", "maxLength": 200,
+      "description": "A label the caller holds. Accepted so the answer can say display_name_only; never used to resolve anything, because a display name is not an identity and is never sufficient to establish ownership."
+    }
+  }
+}

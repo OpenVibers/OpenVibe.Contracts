@@ -90,6 +90,24 @@
       "adr": "ADR-006"
     },
     {
+      "id": "lineage.resolve-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "lineage/resolve-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "lineage.resolution",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "lineage/resolution.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "modules.namespace",
       "version": "1.0.0",
       "owner": "network",

@@ -60,7 +60,7 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (170 capabilities; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
+Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (172 capabilities as of v0.32.0; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
@@ -104,6 +104,23 @@ OpenVibe.Events POSTs each webhook delivery as `{ "event": <events.event-envelop
 v1 covers only the body, so a captured delivery verifies forever (only `event_id` dedupe limits a replay). A consumer checking v2 refuses a timestamp more than **300 s** from its own clock in either direction, compares in constant time, and never falls back to v1 when a v2 header is present but wrong or stale. openvibe-sdk ≥ 0.4.0 does this in `parseDelivery(raw, headers, secret, { requireV2 })` and `verifyDeliveryV2()`; the `openvibe-events` package has `verifyDeliveryV2()`.
 
 Rollout: (1) Events sends v2 beside v1; (2) each consumer moves to SDK 0.4.0, which verifies v2 whenever it is present; (3) each consumer sets `requireV2: true`, so a v1-only (header-stripped) replay fails; (4) once every consumer requires v2, v1 may be dropped. See ADR-004.
+
+## Channel/owner lineage (v0.32)
+
+One resolver answers "which channel, and whose, is this?" for channel, stream, VOD, clip, Pulse and creator-UI callers (roadmap §15.10, D20). OpenVibe.Live implements it at `GET|POST /internal/lineage/resolve` (capability `live.lineage.resolve`, loopback). The request is `lineage.resolve-request@1`, the answer `lineage.resolution@1`.
+
+| Precedence | Input | Rule | Confidence |
+|---|---|---|---|
+| 1 | `slug` | `explicit_slug` | exact |
+| 2 | `slug` `<channel>/<slot>`, `parent_slug` | `nested_slug` | exact |
+| 3 | `channel_id` | `channel_id` | exact |
+| 4 | `stream_id`, `slot_id` | `stream_lookup` | exact |
+| 5 | `clip_id`, `vod_id` | the record's lineage: its stream, its parent VOD (`vod_parent`), the owner recorded on it (`legacy_metadata`) | derived |
+| 6 | `media_object_id` | `media_lineage` (`legacy_map` for a `legacy:` reference) | derived / legacy_map |
+| 7 | `owner_subject` | `owner_subject` | exact |
+| 8 | `legacy_ids` | `legacy_map` | legacy_map |
+
+The first input that resolves decides. Every other input that resolves must name the same channel, or the answer is `unresolved` with reason `conflict`. A clip belongs to the clipped channel, never to the clipper. A display name never resolves anything: a request holding only one is answered `unresolved`, `display_name_only`.
 
 ## Versioning and compatibility
 

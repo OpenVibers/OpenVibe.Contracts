@@ -1,0 +1,10 @@
+{
+  "status": "resolved",
+  "channel": { "id": "12", "slug": "alice", "owner_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "stream": { "id": "9", "slot_id": "3", "slot_slug": "garage-cam", "missing": true },
+  "vod": { "id": "42", "stream_id": "9", "slot_id": "3" },
+  "resolved_by": "vod_id",
+  "rule": "stream_lookup",
+  "confidence": "derived",
+  "via": ["vod:42", "slot:3", "user:17"]
+}

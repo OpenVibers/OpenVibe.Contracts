@@ -4,6 +4,30 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.32.0 — 2026-09-23
+
+Additive: `compat.js` reports no breaking change against v0.31.0.
+
+- **Channel/owner lineage resolver** (roadmap §15.10, requirement D20): one resolver for channel, stream,
+  VOD, clip, Pulse and creator-UI callers. OpenVibe.Live implements it.
+  - `lineage.resolve-request@1`: any of `slug` (a channel, or `<channel>/<slot>`), `parent_slug`,
+    `channel_id`, `stream_id`, `slot_id`, `vod_id`, `clip_id`, `media_object_id` (`med_…` or
+    `legacy:<app>:<kind>:<id>`), `owner_subject` and `legacy_ids` (`live_user_id`, `network_user_id`).
+    `display_name` is accepted and never used.
+  - `lineage.resolution@1`: `status` `resolved` with the canonical `channel` (`id`, `slug`,
+    `owner_subject`, optional `legacy_ids`), whatever of `stream`, `vod`, `clip` and `media_object`
+    the inputs reached, `resolved_by` (the deciding input), `rule`, `confidence`
+    (`exact` | `derived` | `legacy_map`), `via` and `checked`; or `status` `unresolved` with a
+    `reason` (`no_input`, `display_name_only`, `not_found`, `conflict`, `ambiguous`,
+    `source_unavailable`) and no channel.
+  - Precedence, in the roadmap's order: explicit slug, nested or parent slug, channel id, stream
+    lookup (stream, slot), the record's own lineage (clip, VOD), Media lineage, owner subject, legacy
+    maps. The first input that resolves decides, and every other input that resolves must name the
+    same channel or the answer is `conflict`. Inside a record the first link that answers wins: a clip
+    goes to its stream, then its VOD, then the channel recorded on it, never the clipper; a VOD goes to
+    its stream, then its slot, then the owner recorded on it. A display name alone resolves nothing.
+- New capability `live.lineage.resolve` (Live, internal): `GET|POST /internal/lineage/resolve`.
+
 ## 0.31.0 — 2026-09-23
 
 Additive: `compat.js` reports no breaking change against v0.30.2.

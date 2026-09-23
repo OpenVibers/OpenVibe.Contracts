@@ -119,6 +119,31 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(!contracts.validate('events.tombstone-payload@1', { redacted: false, redacted_at: tombstone.redacted_at, redacted_by: 'x' }).valid, 'a tombstone is redacted: true');
 }
 
+// ── Channel/owner lineage resolver (v0.32, roadmap D20) ─────────────────
+// A display name never resolves anything, every resolved answer says which input decided and how
+// sure it is, and an unresolved answer carries no channel.
+{
+    const cap = capabilities.get('live.lineage.resolve');
+    ok(cap && cap.owner === 'live' && cap.visibility === 'internal' && cap.inputSchema === 'lineage.resolve-request@1' && cap.outputSchema === 'lineage.resolution@1', 'live.lineage.resolve is Live-internal and names the lineage contracts');
+    const Q = (v) => contracts.validate('lineage.resolve-request@1', v).valid;
+    const A = (v) => contracts.validate('lineage.resolution@1', v).valid;
+    const channel = { id: '12', slug: 'alice', owner_subject: null };
+    const resolved = { status: 'resolved', channel, resolved_by: 'slug', rule: 'explicit_slug', confidence: 'exact' };
+    ok(Q({ display_name: 'Alice' }), 'a request holding only a display name is well formed, so it gets an explicit answer');
+    ok(!Q({ slug: 'Alice Smith' }) && !Q({ slug: 'alice/garage/extra' }), 'a display name is not a slug; nesting is one level');
+    ok(A({ status: 'unresolved', reason: 'display_name_only' }), 'display_name_only is an unresolved reason');
+    ok(!A({ ...resolved, resolved_by: 'display_name' }), 'a display name can never be what resolved');
+    for (const confidence of ['exact', 'derived', 'legacy_map']) ok(A({ ...resolved, confidence }), `confidence ${confidence}`);
+    ok(!A({ ...resolved, reason: 'conflict' }), 'a resolved answer has no reason');
+    for (const k of ['channel', 'resolved_by', 'rule', 'confidence']) ok(!A({ ...resolved, [k]: undefined }), `a resolved answer needs ${k}`);
+    for (const reason of ['no_input', 'display_name_only', 'not_found', 'conflict', 'ambiguous', 'source_unavailable']) ok(A({ status: 'unresolved', reason }), `unresolved: ${reason}`);
+    ok(!A({ status: 'unresolved', reason: 'not_found', resolved_by: 'slug' }) && !A({ status: 'unresolved', reason: 'conflict', confidence: 'exact' }), 'an unresolved answer names no decider');
+    const inputs = Object.keys(contracts.schema('lineage.resolve-request').properties).filter(k => k !== 'display_name').sort();
+    const res = contracts.schema('lineage.resolution').properties;
+    ok(JSON.stringify([...res.resolved_by.enum].sort()) === JSON.stringify(inputs), 'resolved_by names exactly the request inputs, never display_name');
+    ok(JSON.stringify([...res.checked.items.properties.input.enum].sort()) === JSON.stringify([...inputs, 'display_name'].sort()), 'checked reports every request field, display_name included');
+}
+
 // ── Ids ──────────────────────────────────────────────────────────────────
 for (const kind of ['user', 'guest', 'app', 'mod']) {
     const id = ids.newId(kind);

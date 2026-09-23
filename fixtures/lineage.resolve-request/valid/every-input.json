@@ -1,0 +1,12 @@
+{
+  "slug": "alice",
+  "channel_id": "12",
+  "stream_id": "9",
+  "slot_id": "3",
+  "vod_id": "42",
+  "clip_id": "7",
+  "media_object_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "owner_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "legacy_ids": { "live_user_id": 17, "network_user_id": 57 },
+  "display_name": "Alice"
+}

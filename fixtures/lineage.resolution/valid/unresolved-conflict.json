@@ -1,0 +1,8 @@
+{
+  "status": "unresolved",
+  "reason": "conflict",
+  "checked": [
+    { "input": "slug", "outcome": "decided", "channel_slug": "mallory" },
+    { "input": "vod_id", "outcome": "conflict", "channel_slug": "alice" }
+  ]
+}

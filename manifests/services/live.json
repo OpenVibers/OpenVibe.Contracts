@@ -19,6 +19,7 @@
     "live.chat_effects.write",
     "live.chat_mirror.write",
     "live.follower.read",
+    "live.lineage.resolve",
     "live.tips_delivery.write"
   ],
   "eventsProduced": [

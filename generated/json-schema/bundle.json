@@ -708,6 +708,415 @@
         }
       }
     },
+    "lineage.resolve-request": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/lineage/resolve-request.v1.json",
+        "title": "LineageResolveRequest",
+        "description": "What a caller knows about a channel, stream, VOD, clip or Media object, sent to the canonical channel/owner resolver (roadmap §15.10, requirement D20): the body of POST /internal/lineage/resolve on OpenVibe.Live (capability live.lineage.resolve). GET takes the same fields as query parameters, with legacy_ids flattened to live_user_id and network_user_id. The answer is lineage.resolution@1, whose description has the precedence rules. Every input given is checked, not only the first. display_name is never a resolution input: a request that carries only a display name resolves nothing (reason display_name_only), and next to other inputs it is ignored.",
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": false,
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}(/[A-Za-z0-9_][A-Za-z0-9_.-]{0,63})?$",
+            "description": "Channel slug (Live: the username, as in /@<username>; the @ is optional), or a nested <channel>/<slot> naming a stream slot inside the channel by its slug or id. With parent_slug, a plain slug names the slot inside that parent."
+          },
+          "parent_slug": {
+            "type": "string",
+            "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$",
+            "description": "The channel slug when slug names a slot inside it ({ parent_slug: 'alice', slug: 'garage' } is 'alice/garage'). Alone, it names the channel."
+          },
+          "channel_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+            "description": "The channel's id at its owner (Live: channels.id)."
+          },
+          "stream_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+            "description": "A broadcast session (Live: streams.id)."
+          },
+          "slot_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+            "description": "A persistent stream slot (Live: managed_streams.id; OpenRe stream definitions refer to it as live:managed_stream:<id>)."
+          },
+          "vod_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+            "description": "A VOD (the Media v1 VOD id, the same id Live's VODs had before the Media split)."
+          },
+          "clip_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+            "description": "A clip (the Media v1 clip id). A clip belongs to the clipped channel, never to the person who clipped it."
+          },
+          "media_object_id": {
+            "type": "string",
+            "pattern": "^(med_[0-9A-HJKMNP-TV-Z]{26}|legacy:[a-z][a-z0-9-]{1,39}:(vod|clip|file|paste|thumbnail|avatar):[A-Za-z0-9._/-]{1,200})$",
+            "description": "A Media object: med_<ULID>, or a legacy:<app>:<kind>:<id> reference (the media_id forms of media.media-ref@1)."
+          },
+          "owner_subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The canonical subject that owns the channel (identity.subject-ref@1 user id)."
+          },
+          "legacy_ids": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "description": "Pre-subject ids of the channel owner. Resolving through them is confidence legacy_map.",
+            "properties": {
+              "live_user_id": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Live's local user id (users.id)."
+              },
+              "network_user_id": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "OpenVibe.Network's integer user id, mapped to a Live account by the account link."
+              }
+            }
+          },
+          "display_name": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "A label the caller holds. Accepted so the answer can say display_name_only; never used to resolve anything, because a display name is not an identity and is never sufficient to establish ownership."
+          }
+        }
+      }
+    },
+    "lineage.resolution": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/lineage/resolution.v1.json",
+        "title": "LineageResolution",
+        "description": "The canonical channel/owner resolver's answer to lineage.resolve-request@1 (roadmap §15.10, requirement D20; capability live.lineage.resolve). One resolver serves channel, stream, VOD, clip, Pulse and creator-UI callers. PRECEDENCE between inputs (the roadmap's order): 1 explicit_slug (slug), 2 nested_slug (slug <channel>/<slot>, or parent_slug), 3 channel_id, 4 stream_lookup (stream_id, then slot_id), 5 the record's own lineage (clip_id, then vod_id), 6 media_lineage (media_object_id), 7 owner_subject, 8 legacy_map (legacy_ids). The first input in that order that resolves decides (resolved_by). Every other input that resolves must name the same channel, otherwise the answer is unresolved with reason conflict. An input whose source could not be asked makes the answer unresolved with reason source_unavailable, since it might have disagreed. An input that names nothing is reported not_found in checked and does not block the others. LINEAGE inside a record, first link that answers wins: a stream belongs to its owner, and a slot too; a VOD goes to its stream, then to its slot when the stream row is gone, then to the owner recorded on the VOD (legacy_metadata); a clip goes to its stream, then to its parent VOD's lineage (vod_parent), then to the channel recorded on the clip (legacy_metadata), and never to the clipper; a Media object goes to the record its legacy_ref names (media_lineage), then to its owner subject, then to the owner user recorded on it (legacy_metadata); a legacy:<app>:<kind>:<id> reference is read as that record (legacy_map). CONFIDENCE is the weakest hop: exact when the input itself names the channel, a stream or slot row, or the owner subject; derived when the answer came through a parent record or an owner recorded on a record; legacy_map when it needed a legacy id map (legacy_ids, a legacy media reference). A display name never resolves anything. Unresolved answers carry no channel.",
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "enum": [
+              "resolved",
+              "unresolved"
+            ]
+          },
+          "reason": {
+            "enum": [
+              "no_input",
+              "display_name_only",
+              "not_found",
+              "conflict",
+              "ambiguous",
+              "source_unavailable"
+            ],
+            "description": "Why nothing resolved. no_input: the request named nothing. display_name_only: only a display name was given. not_found: no input names anything that exists. conflict: two inputs name different channels. ambiguous: an input names more than one channel (an owner subject linked to two accounts). source_unavailable: a record could not be read (Media down); retry later."
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "channel": {
+            "type": "object",
+            "required": [
+              "id",
+              "slug",
+              "owner_subject"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+                "description": "The channel's id at its owner (Live: channels.id)."
+              },
+              "slug": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$",
+                "description": "The channel's current slug (Live: the username, /@<slug>). Slugs can change; id and owner_subject do not."
+              },
+              "owner_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The owner's canonical subject, or null while the owner has not signed in through OpenVibe.Network since subjects were issued."
+              },
+              "legacy_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "The owner's pre-subject ids, for callers that still key by them.",
+                "properties": {
+                  "live_user_id": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "network_user_id": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          },
+          "stream": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The broadcast session, or null when only a slot was named."
+              },
+              "slot_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "slot_slug": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "missing": {
+                "type": "boolean",
+                "description": "true when a record names this stream but the stream row no longer exists."
+              }
+            }
+          },
+          "vod": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "stream_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "slot_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "clip": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vod_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "stream_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "media_object": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^(med_[0-9A-HJKMNP-TV-Z]{26}|legacy:[a-z][a-z0-9-]{1,39}:(vod|clip|file|paste|thumbnail|avatar):[A-Za-z0-9._/-]{1,200})$"
+              },
+              "kind": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "legacy_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "resolved_by": {
+            "enum": [
+              "slug",
+              "parent_slug",
+              "channel_id",
+              "stream_id",
+              "slot_id",
+              "clip_id",
+              "vod_id",
+              "media_object_id",
+              "owner_subject",
+              "legacy_ids"
+            ],
+            "description": "The input that decided."
+          },
+          "rule": {
+            "enum": [
+              "explicit_slug",
+              "nested_slug",
+              "channel_id",
+              "stream_lookup",
+              "vod_parent",
+              "media_lineage",
+              "owner_subject",
+              "legacy_metadata",
+              "legacy_map"
+            ],
+            "description": "The lineage rule that answered for the deciding input."
+          },
+          "confidence": {
+            "enum": [
+              "exact",
+              "derived",
+              "legacy_map"
+            ]
+          },
+          "via": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+:[^\\s]{1,200}$"
+            },
+            "description": "The hops the deciding input took, e.g. [\"clip:7\", \"vod:42\", \"slot:3\", \"user:17\"]."
+          },
+          "checked": {
+            "type": "array",
+            "maxItems": 32,
+            "description": "What each input given came to.",
+            "items": {
+              "type": "object",
+              "required": [
+                "input",
+                "outcome"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "input": {
+                  "enum": [
+                    "slug",
+                    "parent_slug",
+                    "channel_id",
+                    "stream_id",
+                    "slot_id",
+                    "clip_id",
+                    "vod_id",
+                    "media_object_id",
+                    "owner_subject",
+                    "legacy_ids",
+                    "display_name"
+                  ]
+                },
+                "outcome": {
+                  "enum": [
+                    "decided",
+                    "agrees",
+                    "conflict",
+                    "not_found",
+                    "unavailable",
+                    "ambiguous",
+                    "ignored"
+                  ]
+                },
+                "channel_slug": {
+                  "type": "string",
+                  "description": "The channel this input named, when it named one."
+                }
+              }
+            }
+          }
+        },
+        "if": {
+          "properties": {
+            "status": {
+              "const": "resolved"
+            }
+          },
+          "required": [
+            "status"
+          ]
+        },
+        "then": {
+          "required": [
+            "channel",
+            "resolved_by",
+            "rule",
+            "confidence"
+          ],
+          "not": {
+            "required": [
+              "reason"
+            ]
+          }
+        },
+        "else": {
+          "required": [
+            "reason"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "channel"
+                ]
+              },
+              {
+                "required": [
+                  "resolved_by"
+                ]
+              },
+              {
+                "required": [
+                  "confidence"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
     "modules.namespace": {
       "version": "1.0.0",
       "owner": "network",

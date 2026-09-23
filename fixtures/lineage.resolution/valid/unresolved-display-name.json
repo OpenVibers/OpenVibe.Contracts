@@ -1,0 +1,6 @@
+{
+  "status": "unresolved",
+  "reason": "display_name_only",
+  "detail": "a display name is never sufficient to establish a channel or its owner",
+  "checked": [{ "input": "display_name", "outcome": "ignored" }]
+}

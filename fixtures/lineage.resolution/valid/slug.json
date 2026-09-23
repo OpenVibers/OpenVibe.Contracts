@@ -1,0 +1,9 @@
+{
+  "status": "resolved",
+  "channel": { "id": "12", "slug": "alice", "owner_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ", "legacy_ids": { "live_user_id": 17, "network_user_id": 57 } },
+  "resolved_by": "slug",
+  "rule": "explicit_slug",
+  "confidence": "exact",
+  "via": ["user:17"],
+  "checked": [{ "input": "slug", "outcome": "decided", "channel_slug": "alice" }]
+}
