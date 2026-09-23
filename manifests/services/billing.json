@@ -30,7 +30,8 @@
     "billing.subscription.canceled",
     "billing.cashout.requested",
     "billing.cashout.paid",
-    "billing.cashout.denied"
+    "billing.cashout.denied",
+    "billing.staff.action"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [
