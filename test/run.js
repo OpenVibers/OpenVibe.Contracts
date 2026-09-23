@@ -144,6 +144,32 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(JSON.stringify([...res.checked.items.properties.input.enum].sort()) === JSON.stringify([...inputs, 'display_name'].sort()), 'checked reports every request field, display_name included');
 }
 
+// ── Producers' payloads added in v0.32 (Tips moderation, Media jobs, Live, user modules) ──
+{
+    // Media: one contract per server/events.js JOB_TRANSITIONS entry; the payload is queue.jobPublic, every field always present.
+    const status = { proposed: 'proposed', queued: 'queued', started: 'running', retrying: 'queued', succeeded: 'succeeded', failed: 'failed', cancelled: 'cancelled' };
+    for (const [t, st] of Object.entries(status)) {
+        const s = contracts.schema(`media.job.${t}`);
+        ok(s.properties.status.const === st, `media.job.${t} carries status ${st}`);
+        ok(JSON.stringify([...s.required].sort()) === JSON.stringify(Object.keys(s.properties).sort()), `media.job.${t} requires every field it names`);
+    }
+    // Live: live.stream.ended is live.stream.started plus ended_at and duration_seconds.
+    const started = contracts.schema('live.stream.started'), ended = contracts.schema('live.stream.ended');
+    ok(JSON.stringify(Object.keys(ended.properties)) === JSON.stringify([...Object.keys(started.properties), 'ended_at', 'duration_seconds']), 'live.stream.ended = started + ended_at, duration_seconds');
+    ok(JSON.stringify(ended.properties.channel) === JSON.stringify(started.properties.channel), 'both stream events describe the channel the same way');
+    // Tips: the moderation capability announces its outcome; an erasure takes back the interaction's earlier events.
+    const mod = capabilities.get('tips.interaction.moderate');
+    ok(mod && mod.owner === 'tips' && mod.events.includes('tips.interaction.moderated'), 'tips.interaction.moderate announces tips.interaction.moderated');
+    const erased = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/tips.interaction.erased/valid/erased.json'), 'utf8'));
+    ok(erased.redacts.subject_type === 'interaction' && JSON.stringify(erased.redacts.subject_ids) === JSON.stringify([erased.interaction_id]), 'tips.interaction.erased redacts the interaction');
+    // User modules: a deleted record never carries values; chat.preferences belongs to Chat since the Wave 6 cutover.
+    const M = (v) => contracts.validate('network.module.updated@1', v).valid;
+    const upd = { owner: { type: 'user', id: ids.newId('user') }, namespace: 'live.profile', namespace_owner: 'live', schema_version: 1, revision: 2, change: 'updated', reason: 'write', keys: ['followers'], public: { followers: 1 } };
+    ok(M(upd) && !M({ ...upd, change: 'deleted', reason: 'delete' }), 'network.module.updated: public values only on a record that still exists');
+    ok(!M({ ...upd, merged_from: upd.owner }) && M({ ...upd, change: 'created', reason: 'subject_merged', merged_from: { type: 'guest', id: ids.newId('guest') } }), 'merged_from only on a record moved by a merge');
+    ok(contracts.modules.get('chat.preferences').owner === 'chat' && services.get('chat').namespacesOwned.includes('chat.preferences'), 'chat.preferences is owned by chat, and its manifest says so');
+}
+
 // ── Ids ──────────────────────────────────────────────────────────────────
 for (const kind of ['user', 'guest', 'app', 'mod']) {
     const id = ids.newId(kind);

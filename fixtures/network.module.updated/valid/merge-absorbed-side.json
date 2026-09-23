@@ -1,0 +1,19 @@
+{
+  "owner": {
+    "type": "guest",
+    "id": "gst_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "namespace": "chat.tts_defaults",
+  "namespace_owner": "live",
+  "schema_version": 1,
+  "revision": 2,
+  "change": "deleted",
+  "reason": "subject_merged",
+  "keys": [
+    "rate"
+  ],
+  "merged_into": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  }
+}

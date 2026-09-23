@@ -1125,7 +1125,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/modules/namespace.v1.json",
         "title": "ModuleNamespace",
-        "description": "Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5).",
+        "description": "Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5). The person's account decides what happens to their records in every namespace: when an account is removed, Network deletes all of its records; when two accounts are merged, the surviving account keeps its own record in a namespace where both have one (the other is deleted), and a record only the absorbed account had moves to the survivor. Each of these changes is announced as network.module.updated (reason subject_removed or subject_merged). That is separate from onOwnerRemoved, which says what happens to a namespace's records when the service that owns the namespace is retired.",
         "type": "object",
         "required": [
           "namespace",
@@ -5745,6 +5745,110 @@
         }
       }
     },
+    "tips.interaction.moderated": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.interaction.moderated.v1.json",
+        "title": "TipsInteractionModeratedPayload",
+        "description": "tips.interaction.moderated v1 (OpenVibe.Tips server/domain/moderation.js record). A moderation outcome for a paid message (and the name that came with it): the creator's word filter starred words out at settlement (filtered) or held it for review before anything was shown (held); the creator, one of their moderators or a service hid it (hidden: queued chat, TTS and media deliveries were cancelled, the overlay alert retracted, public pages leave it out) or showed it again (restored; a held one is released then). The money is never touched: no refund, the goal and totals keep it. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Carries no supporter, message, reason text or moderator identity (Tips keeps those in its own moderation log). Never emitted for simulations.",
+        "type": "object",
+        "required": [
+          "interaction_id",
+          "creator",
+          "action",
+          "by",
+          "moderation_state",
+          "cancelled_effects"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "action": {
+            "enum": [
+              "filtered",
+              "held",
+              "hidden",
+              "restored"
+            ]
+          },
+          "by": {
+            "enum": [
+              "filter",
+              "creator",
+              "moderator",
+              "service"
+            ],
+            "description": "Who acted, by role."
+          },
+          "moderation_state": {
+            "enum": [
+              "visible",
+              "held",
+              "hidden"
+            ],
+            "description": "The interaction's moderation state after this outcome."
+          },
+          "cancelled_effects": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "chat_line",
+                "paid_message",
+                "tts",
+                "media_request"
+              ]
+            },
+            "description": "Deliveries this outcome cancelled before they happened (hidden only; empty otherwise). A consumer that queued the same paid message itself should drop it."
+          }
+        }
+      }
+    },
+    "tips.interaction.erased": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.interaction.erased.v1.json",
+        "title": "TipsInteractionErasedPayload",
+        "description": "tips.interaction.erased v1 (OpenVibe.Tips server/domain/interactions.js erase). The supporter erased their data from this interaction: Tips no longer holds their subject, name, message, text-to-speech text, media link or checkout reference; the money record (amount, creator, Billing transaction, goal contribution) stays so Billing's books and the creator's totals still reconcile. payload.redacts names every earlier Tips event about the interaction, so OpenVibe.Events tombstones them (ADR-026). Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Carries no supporter data. Never emitted for simulations.",
+        "type": "object",
+        "required": [
+          "interaction_id",
+          "creator",
+          "erased_at",
+          "redacts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "erased_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "redacts": {
+            "$ref": "../redaction-directive.v1.json",
+            "description": "{ subject_type: interaction, subject_ids: [interaction_id] }."
+          }
+        }
+      }
+    },
     "tips.goal.updated": {
       "version": "1.0.0",
       "owner": "tips",
@@ -8152,6 +8256,1693 @@
           },
           "retryable": {
             "type": "boolean"
+          }
+        }
+      }
+    },
+    "live.stream.started": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.stream.started.v1.json",
+        "title": "LiveStreamStartedPayload",
+        "description": "live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRe.Stream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.",
+        "type": "object",
+        "required": [
+          "stream_id",
+          "channel",
+          "title",
+          "category",
+          "protocol",
+          "is_nsfw",
+          "started_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "stream_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Live's streams row id (the envelope subject id)."
+          },
+          "channel": {
+            "type": "object",
+            "required": [
+              "username",
+              "display_name",
+              "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The streamer's Live username (the channel slug)."
+              },
+              "display_name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The display name, or the username when there is none."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://openvibe\\.live/",
+                "description": "The channel page, https://openvibe.live/@<username, URI-encoded>. Events from Live before 4c70332 (2026-09-23) carry https://openvibe.live/<username>, which Live answers with a 301 to the @ address since that commit."
+              },
+              "subject": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "The streamer's canonical subject; absent until Live has seen it (a Network sign-in or the subject backfill)."
+              }
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null when the streamer chose none (the AI classifies the stream from what it shows)."
+          },
+          "protocol": {
+            "enum": [
+              "jsmpeg",
+              "webrtc",
+              "rtmp"
+            ],
+            "description": "How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp)."
+          },
+          "is_nsfw": {
+            "type": "boolean"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "UTC. null only for a row without a start time, which createStream never writes."
+          }
+        }
+      }
+    },
+    "live.stream.ended": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.stream.ended.v1.json",
+        "title": "LiveStreamEndedPayload",
+        "description": "live.stream.ended v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js endStream). A live streams row ended (the streamer stopped, ingest dropped, a newer session replaced it on the same slot, or an admin ended it). Ending a row that is not live emits nothing, so each stream ends once. Written to Live's event_outbox in the transaction that ends the row. Everything live.stream.started carries, as it is at the end (the title and category may have changed), plus ended_at and duration_seconds. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 2 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.",
+        "type": "object",
+        "required": [
+          "stream_id",
+          "channel",
+          "title",
+          "category",
+          "protocol",
+          "is_nsfw",
+          "started_at",
+          "ended_at",
+          "duration_seconds"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "stream_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Live's streams row id (the envelope subject id)."
+          },
+          "channel": {
+            "type": "object",
+            "required": [
+              "username",
+              "display_name",
+              "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The streamer's Live username (the channel slug)."
+              },
+              "display_name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The display name, or the username when there is none."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://openvibe\\.live/",
+                "description": "The channel page, https://openvibe.live/@<username, URI-encoded>. Events from Live before 4c70332 (2026-09-23) carry https://openvibe.live/<username>, which Live answers with a 301 to the @ address since that commit."
+              },
+              "subject": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "The streamer's canonical subject; absent until Live has seen it (a Network sign-in or the subject backfill)."
+              }
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null when the streamer chose none (the AI classifies the stream from what it shows)."
+          },
+          "protocol": {
+            "enum": [
+              "jsmpeg",
+              "webrtc",
+              "rtmp"
+            ],
+            "description": "How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp)."
+          },
+          "is_nsfw": {
+            "type": "boolean"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "UTC. null only for a row without a start time, which createStream never writes."
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC."
+          },
+          "duration_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Whole seconds from started_at to ended_at; null when the row has no start time."
+          }
+        }
+      }
+    },
+    "live.release.deployed": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.release.deployed.v1.json",
+        "title": "LiveReleaseDeployedPayload",
+        "description": "live.release.deployed v1 (OpenVibe.Live server/events/release-events.js envelopeFor, called by server/chat/deploy-notice.js announce). The first boot that runs commits never announced before: queued in the transaction that records them as announced (site setting deploy_last_announced), so a restart without new code emits nothing and a crash before that commit announces again on the next boot with the same subject. A consumer keys on subject.id (the head commit) to fold repeats. The commit subjects are public already (Live chat and /updates); the consumer decides what is shown. Envelope: subject { type: release, id: <head commit, 40 hex> }, visibility internal, priority low, actor service:live.",
+        "type": "object",
+        "required": [
+          "service",
+          "release",
+          "commit",
+          "previous",
+          "commit_count",
+          "commits",
+          "deployed_at",
+          "notes_url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "service": {
+            "const": "live"
+          },
+          "release": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{7,40}$",
+            "description": "The head commit's short sha as git abbreviated it (its first 12 characters when the head is not in the list)."
+          },
+          "commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$",
+            "description": "The head commit (the envelope subject id)."
+          },
+          "previous": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{40}$",
+            "description": "The head announced before this one; null on the first announcement."
+          },
+          "commit_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40,
+            "description": "How many new commits were found (git log previous..head, at most 40; only the head on a first run or after history was rewritten)."
+          },
+          "commits": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 40,
+            "description": "The new commits, newest first.",
+            "items": {
+              "type": "object",
+              "required": [
+                "hash",
+                "short",
+                "subject",
+                "date"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "short": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{4,40}$"
+                },
+                "subject": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "description": "The commit subject, cut to 200 characters."
+                },
+                "date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time",
+                  "description": "Author date (git %aI, with the author's UTC offset)."
+                }
+              }
+            }
+          },
+          "deployed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this boot announced it (UTC)."
+          },
+          "notes_url": {
+            "const": "https://openvibe.live/updates"
+          }
+        }
+      }
+    },
+    "media.job.proposed": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.proposed.v1.json",
+        "title": "MediaJobProposedPayload",
+        "description": "media.job.proposed v1 (OpenVibe.Media server/jobs/queue.js enqueue; server/events.js recordJob). A job was proposed and waits for its owner: approving it queues it (media.job.queued), cancelling it ends it (media.job.cancelled); the worker never runs a proposal. The size-invariant validator (invariant.scan, created_by system:invariant.scan) proposes object.split and object.remux this way. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "proposed"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "The last failure's message (free text), or null."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "A queued job waits until then (retry backoff); null otherwise."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": "null"
+          },
+          "finished_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "media.job.queued": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.queued.v1.json",
+        "title": "MediaJobQueuedPayload",
+        "description": "media.job.queued v1 (OpenVibe.Media server/jobs/queue.js enqueue, approve; server/events.js recordJob). A job was accepted and queued: a new job (POST /api/v2/:app/jobs), or a proposal its owner approved (decided_by, decided_at). An Idempotency-Key replay, or a request joined to an identical job that is still active, creates no job and no event. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "queued"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "The last failure's message (free text), or null."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "A queued job waits until then (retry backoff); null otherwise."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": "null"
+          },
+          "finished_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "media.job.started": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.started.v1.json",
+        "title": "MediaJobStartedPayload",
+        "description": "media.job.started v1 (OpenVibe.Media server/jobs/queue.js claim; server/events.js recordJob). The worker claimed the job and it is running: attempts counts this attempt, started_at stays the first attempt's start. A job that is retried starts again and is announced again. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "running"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "The last failure's message (free text), or null."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "A queued job waits until then (retry backoff); null otherwise."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "finished_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "media.job.retrying": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.retrying.v1.json",
+        "title": "MediaJobRetryingPayload",
+        "description": "media.job.retrying v1 (OpenVibe.Media server/jobs/queue.js fail with a retry; server/events.js recordJob). An attempt failed and the job is queued again after a backoff (run_after); error and error_code say why. A running job nobody holds any more (the service restarted, or the worker stopped renewing its lease) is retried this way with error_code interrupted while it has attempts left. status is queued. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "queued"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB."
+          },
+          "error": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "The failure's message, free text from the handler."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "Not before this time (the retry backoff)."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "finished_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "media.job.succeeded": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.succeeded.v1.json",
+        "title": "MediaJobSucceededPayload",
+        "description": "media.job.succeeded v1 (OpenVibe.Media server/jobs/queue.js succeed; server/events.js recordJob). The job finished: result is its type's result (thumbnail.regenerate { url, kind, id }, object.split { source_id, parts, … }, object.remux { source_id, object_id, … }, invariant.scan { thresholds, counts, … }). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "succeeded"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The job type's result, or { omitted: true, reason } when it is larger than 8 KB (GET the job for it)."
+          },
+          "error": {
+            "type": "null"
+          },
+          "error_code": {
+            "type": "null"
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "A queued job waits until then (retry backoff); null otherwise."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "finished_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          }
+        }
+      }
+    },
+    "media.job.failed": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.failed.v1.json",
+        "title": "MediaJobFailedPayload",
+        "description": "media.job.failed v1 (OpenVibe.Media server/jobs/queue.js fail; server/events.js recordJob). The job failed for good: a permanent error, or its last attempt (attempts = max_attempts) failed; error and error_code say why. A cancelled job is not a failure and is announced as media.job.cancelled. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "failed"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB."
+          },
+          "error": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "The failure's message, free text from the handler."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "A queued job waits until then (retry backoff); null otherwise."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "finished_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          }
+        }
+      }
+    },
+    "media.job.cancelled": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.job.cancelled.v1.json",
+        "title": "MediaJobCancelledPayload",
+        "description": "media.job.cancelled v1 (OpenVibe.Media server/jobs/queue.js cancel, markCancelled; server/events.js recordJob). The job was cancelled: a proposal or a queued job at once, by its owner (POST /api/v2/:app/jobs/:id/cancel or DELETE /api/v2/:app/jobs/:id) or by the validator withdrawing a proposal that no longer applies (decided_by system:invariant.scan); a running job once it stopped after its owner asked (cancel_requested true, error_code cancelled). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "object_id",
+          "type",
+          "status",
+          "params",
+          "result",
+          "error",
+          "error_code",
+          "attempts",
+          "max_attempts",
+          "run_after",
+          "cancel_requested",
+          "idempotency_key",
+          "created_by",
+          "owner_user_id",
+          "decided_by",
+          "decided_at",
+          "created_at",
+          "updated_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)."
+          },
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The object the job works on; null for a tenant-wide job (invariant.scan)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux."
+          },
+          "status": {
+            "const": "cancelled"
+          },
+          "params": {
+            "type": "object",
+            "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB."
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "The last failure's message (free text), or null."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "run_after": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "A queued job waits until then (retry backoff); null otherwise."
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "Its owner asked a running job to stop."
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null."
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>."
+          },
+          "owner_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject."
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "updated_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$",
+            "description": "null when the job never ran."
+          },
+          "finished_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          }
+        }
+      }
+    },
+    "network.module.updated": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.module.updated.v1.json",
+        "title": "NetworkModuleUpdatedPayload",
+        "description": "network.module.updated v1 (OpenVibe.Network server/identity/module-events.js buildEnvelope, called from server/identity/modules.js). One event per change to one person's user-module record (modules.module-record@1): a write (created or updated), a delete by the person (delete) or by the owning service (owner_delete, also the retention sweep of a retired owner's delete-after-retention namespace), account removal (subject_removed: every record of the account is deleted) and account merge (subject_merged: the absorbed account's records are deleted, merged_into; a record moved to the surviving account is created there, merged_from; where the survivor already has one, the survivor's is kept and unchanged). Written into Network's event outbox in the transaction that makes the change. revision grows by one on every change to (owner, namespace), deletes included, and never restarts: a consumer keeps the highest revision it applied and ignores anything lower. Values of private fields never leave Network: keys names the changed fields, public carries only the new values of changed public fields. Envelope: subject { type: user_module, id: <owner id>:<namespace>, revision }, visibility internal, actor the person, the owning service or system:network.",
+        "type": "object",
+        "required": [
+          "owner",
+          "namespace",
+          "namespace_owner",
+          "schema_version",
+          "revision",
+          "change",
+          "reason",
+          "keys"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "owner": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "guest"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                }
+              }
+            ],
+            "description": "The person the record belongs to (identity.subject-ref@1, a user or a guest)."
+          },
+          "namespace": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+            "description": "e.g. chat.preferences (modules.namespace@1)."
+          },
+          "namespace_owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The service that owns the namespace when the change was made."
+          },
+          "schema_version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The namespace version the record was written under."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The record's revision after this change (the envelope subject revision)."
+          },
+          "change": {
+            "enum": [
+              "created",
+              "updated",
+              "deleted"
+            ]
+          },
+          "reason": {
+            "enum": [
+              "write",
+              "delete",
+              "owner_delete",
+              "subject_removed",
+              "subject_merged"
+            ]
+          },
+          "keys": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Top-level fields added, changed or removed, names only, sorted. A deleted record lists every field it held."
+          },
+          "public": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": true,
+            "description": "The new values of the changed fields the namespace declares public; null for one that was removed. Absent when no public field changed, for a namespace without public fields and for a deleted record."
+          },
+          "merged_into": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "guest"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                }
+              }
+            ],
+            "description": "On the absorbed account's deleted record (reason subject_merged): the account that survives."
+          },
+          "merged_from": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "guest"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                }
+              }
+            ],
+            "description": "On a record moved to the surviving account (created, reason subject_merged): the account it came from."
+          }
+        },
+        "dependentSchemas": {
+          "public": {
+            "properties": {
+              "change": {
+                "enum": [
+                  "created",
+                  "updated"
+                ]
+              }
+            }
+          },
+          "merged_into": {
+            "properties": {
+              "change": {
+                "const": "deleted"
+              },
+              "reason": {
+                "const": "subject_merged"
+              }
+            }
+          },
+          "merged_from": {
+            "properties": {
+              "change": {
+                "const": "created"
+              },
+              "reason": {
+                "const": "subject_merged"
+              }
+            }
           }
         }
       }

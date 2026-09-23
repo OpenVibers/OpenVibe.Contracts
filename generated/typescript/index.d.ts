@@ -389,7 +389,7 @@ export interface LineageResolution {
 
 /** modules.namespace@1.0.0 (owner: network) */
 /**
- * Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5).
+ * Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5). The person's account decides what happens to their records in every namespace: when an account is removed, Network deletes all of its records; when two accounts are merged, the surviving account keeps its own record in a namespace where both have one (the other is deleted), and a record only the absorbed account had moves to the survivor. Each of these changes is announced as network.module.updated (reason subject_removed or subject_merged). That is separate from onOwnerRemoved, which says what happens to a namespace's records when the service that owns the namespace is retired.
  */
 export interface ModuleNamespace {
   namespace: string;
@@ -5938,6 +5938,39 @@ export interface TipsInteractionCancelledPayload {
   code?: string;
 }
 
+/** tips.interaction.moderated@1.0.0 (owner: tips) */
+/**
+ * tips.interaction.moderated v1 (OpenVibe.Tips server/domain/moderation.js record). A moderation outcome for a paid message (and the name that came with it): the creator's word filter starred words out at settlement (filtered) or held it for review before anything was shown (held); the creator, one of their moderators or a service hid it (hidden: queued chat, TTS and media deliveries were cancelled, the overlay alert retracted, public pages leave it out) or showed it again (restored; a held one is released then). The money is never touched: no refund, the goal and totals keep it. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Carries no supporter, message, reason text or moderator identity (Tips keeps those in its own moderation log). Never emitted for simulations.
+ */
+export interface TipsInteractionModeratedPayload {
+  interaction_id: string;
+  creator: SubjectRef;
+  action: "filtered" | "held" | "hidden" | "restored";
+  /**
+   * Who acted, by role.
+   */
+  by: "filter" | "creator" | "moderator" | "service";
+  /**
+   * The interaction's moderation state after this outcome.
+   */
+  moderation_state: "visible" | "held" | "hidden";
+  /**
+   * Deliveries this outcome cancelled before they happened (hidden only; empty otherwise). A consumer that queued the same paid message itself should drop it.
+   */
+  cancelled_effects: ("chat_line" | "paid_message" | "tts" | "media_request")[];
+}
+
+/** tips.interaction.erased@1.0.0 (owner: tips) */
+/**
+ * tips.interaction.erased v1 (OpenVibe.Tips server/domain/interactions.js erase). The supporter erased their data from this interaction: Tips no longer holds their subject, name, message, text-to-speech text, media link or checkout reference; the money record (amount, creator, Billing transaction, goal contribution) stays so Billing's books and the creator's totals still reconcile. payload.redacts names every earlier Tips event about the interaction, so OpenVibe.Events tombstones them (ADR-026). Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Carries no supporter data. Never emitted for simulations.
+ */
+export interface TipsInteractionErasedPayload {
+  interaction_id: string;
+  creator: SubjectRef;
+  erased_at: string;
+  redacts: RedactionDirective;
+}
+
 /** tips.goal.updated@1.0.0 (owner: tips) */
 /**
  * tips.goal.updated v1 (OpenVibe.Tips server/domain/goals.js changed). A goal was created, edited or closed, or its settled total moved (a contribution, the contribution that reached it, a reversal). Envelope: subject { type: goal, id: tgoal_…, revision }, visibility internal, priority important, actor service:tips.
@@ -6856,4 +6889,709 @@ export interface ToolsJobFailedPayload {
     detail: string;
   };
   retryable: boolean;
+}
+
+/** live.stream.started@1.0.0 (owner: live) */
+/**
+ * live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRe.Stream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
+ */
+export interface LiveStreamStartedPayload {
+  /**
+   * Live's streams row id (the envelope subject id).
+   */
+  stream_id: number;
+  channel: {
+    /**
+     * The streamer's Live username (the channel slug).
+     */
+    username: string;
+    /**
+     * The display name, or the username when there is none.
+     */
+    display_name: string;
+    /**
+     * The channel page, https://openvibe.live/@<username, URI-encoded>. Events from Live before 4c70332 (2026-09-23) carry https://openvibe.live/<username>, which Live answers with a 301 to the @ address since that commit.
+     */
+    url: string;
+    /**
+     * The streamer's canonical subject; absent until Live has seen it (a Network sign-in or the subject backfill).
+     */
+    subject?: {
+      type: "user";
+      id: string;
+    };
+  };
+  title: string;
+  /**
+   * null when the streamer chose none (the AI classifies the stream from what it shows).
+   */
+  category: string | null;
+  /**
+   * How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp).
+   */
+  protocol: "jsmpeg" | "webrtc" | "rtmp";
+  is_nsfw: boolean;
+  /**
+   * UTC. null only for a row without a start time, which createStream never writes.
+   */
+  started_at: string | null;
+}
+
+/** live.stream.ended@1.0.0 (owner: live) */
+/**
+ * live.stream.ended v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js endStream). A live streams row ended (the streamer stopped, ingest dropped, a newer session replaced it on the same slot, or an admin ended it). Ending a row that is not live emits nothing, so each stream ends once. Written to Live's event_outbox in the transaction that ends the row. Everything live.stream.started carries, as it is at the end (the title and category may have changed), plus ended_at and duration_seconds. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 2 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
+ */
+export interface LiveStreamEndedPayload {
+  /**
+   * Live's streams row id (the envelope subject id).
+   */
+  stream_id: number;
+  channel: {
+    /**
+     * The streamer's Live username (the channel slug).
+     */
+    username: string;
+    /**
+     * The display name, or the username when there is none.
+     */
+    display_name: string;
+    /**
+     * The channel page, https://openvibe.live/@<username, URI-encoded>. Events from Live before 4c70332 (2026-09-23) carry https://openvibe.live/<username>, which Live answers with a 301 to the @ address since that commit.
+     */
+    url: string;
+    /**
+     * The streamer's canonical subject; absent until Live has seen it (a Network sign-in or the subject backfill).
+     */
+    subject?: {
+      type: "user";
+      id: string;
+    };
+  };
+  title: string;
+  /**
+   * null when the streamer chose none (the AI classifies the stream from what it shows).
+   */
+  category: string | null;
+  /**
+   * How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp).
+   */
+  protocol: "jsmpeg" | "webrtc" | "rtmp";
+  is_nsfw: boolean;
+  /**
+   * UTC. null only for a row without a start time, which createStream never writes.
+   */
+  started_at: string | null;
+  /**
+   * UTC.
+   */
+  ended_at: string;
+  /**
+   * Whole seconds from started_at to ended_at; null when the row has no start time.
+   */
+  duration_seconds: number | null;
+}
+
+/** live.release.deployed@1.0.0 (owner: live) */
+/**
+ * live.release.deployed v1 (OpenVibe.Live server/events/release-events.js envelopeFor, called by server/chat/deploy-notice.js announce). The first boot that runs commits never announced before: queued in the transaction that records them as announced (site setting deploy_last_announced), so a restart without new code emits nothing and a crash before that commit announces again on the next boot with the same subject. A consumer keys on subject.id (the head commit) to fold repeats. The commit subjects are public already (Live chat and /updates); the consumer decides what is shown. Envelope: subject { type: release, id: <head commit, 40 hex> }, visibility internal, priority low, actor service:live.
+ */
+export interface LiveReleaseDeployedPayload {
+  service: "live";
+  /**
+   * The head commit's short sha as git abbreviated it (its first 12 characters when the head is not in the list).
+   */
+  release: string;
+  /**
+   * The head commit (the envelope subject id).
+   */
+  commit: string;
+  /**
+   * The head announced before this one; null on the first announcement.
+   */
+  previous: string | null;
+  /**
+   * How many new commits were found (git log previous..head, at most 40; only the head on a first run or after history was rewritten).
+   */
+  commit_count: number;
+  /**
+   * The new commits, newest first.
+   *
+   * @minItems 1
+   * @maxItems 40
+   */
+  commits: [
+    {
+      hash: string;
+      short: string;
+      /**
+       * The commit subject, cut to 200 characters.
+       */
+      subject: string;
+      /**
+       * Author date (git %aI, with the author's UTC offset).
+       */
+      date: string | null;
+    },
+    ...{
+      hash: string;
+      short: string;
+      /**
+       * The commit subject, cut to 200 characters.
+       */
+      subject: string;
+      /**
+       * Author date (git %aI, with the author's UTC offset).
+       */
+      date: string | null;
+    }[]
+  ];
+  /**
+   * When this boot announced it (UTC).
+   */
+  deployed_at: string;
+  notes_url: "https://openvibe.live/updates";
+}
+
+/** media.job.proposed@1.0.0 (owner: media) */
+/**
+ * media.job.proposed v1 (OpenVibe.Media server/jobs/queue.js enqueue; server/events.js recordJob). A job was proposed and waits for its owner: approving it queues it (media.job.queued), cancelling it ends it (media.job.cancelled); the worker never runs a proposal. The size-invariant validator (invariant.scan, created_by system:invariant.scan) proposes object.split and object.remux this way. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ */
+export interface MediaJobProposedPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "proposed";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
+   */
+  result: {} | null;
+  /**
+   * The last failure's message (free text), or null.
+   */
+  error: string | null;
+  /**
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
+   */
+  error_code: string | null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * A queued job waits until then (retry backoff); null otherwise.
+   */
+  run_after: string | null;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: null;
+  finished_at: null;
+}
+
+/** media.job.queued@1.0.0 (owner: media) */
+/**
+ * media.job.queued v1 (OpenVibe.Media server/jobs/queue.js enqueue, approve; server/events.js recordJob). A job was accepted and queued: a new job (POST /api/v2/:app/jobs), or a proposal its owner approved (decided_by, decided_at). An Idempotency-Key replay, or a request joined to an identical job that is still active, creates no job and no event. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
+ */
+export interface MediaJobQueuedPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "queued";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
+   */
+  result: {} | null;
+  /**
+   * The last failure's message (free text), or null.
+   */
+  error: string | null;
+  /**
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
+   */
+  error_code: string | null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * A queued job waits until then (retry backoff); null otherwise.
+   */
+  run_after: string | null;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: null;
+  finished_at: null;
+}
+
+/** media.job.started@1.0.0 (owner: media) */
+/**
+ * media.job.started v1 (OpenVibe.Media server/jobs/queue.js claim; server/events.js recordJob). The worker claimed the job and it is running: attempts counts this attempt, started_at stays the first attempt's start. A job that is retried starts again and is announced again. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
+ */
+export interface MediaJobStartedPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "running";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
+   */
+  result: {} | null;
+  /**
+   * The last failure's message (free text), or null.
+   */
+  error: string | null;
+  /**
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
+   */
+  error_code: string | null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * A queued job waits until then (retry backoff); null otherwise.
+   */
+  run_after: string | null;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: string;
+  finished_at: null;
+}
+
+/** media.job.retrying@1.0.0 (owner: media) */
+/**
+ * media.job.retrying v1 (OpenVibe.Media server/jobs/queue.js fail with a retry; server/events.js recordJob). An attempt failed and the job is queued again after a backoff (run_after); error and error_code say why. A running job nobody holds any more (the service restarted, or the worker stopped renewing its lease) is retried this way with error_code interrupted while it has attempts left. status is queued. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
+ */
+export interface MediaJobRetryingPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "queued";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
+   */
+  result: {} | null;
+  /**
+   * The failure's message, free text from the handler.
+   */
+  error: string;
+  /**
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
+   */
+  error_code: string | null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * Not before this time (the retry backoff).
+   */
+  run_after: string;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: string;
+  finished_at: null;
+}
+
+/** media.job.succeeded@1.0.0 (owner: media) */
+/**
+ * media.job.succeeded v1 (OpenVibe.Media server/jobs/queue.js succeed; server/events.js recordJob). The job finished: result is its type's result (thumbnail.regenerate { url, kind, id }, object.split { source_id, parts, … }, object.remux { source_id, object_id, … }, invariant.scan { thresholds, counts, … }). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ */
+export interface MediaJobSucceededPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "succeeded";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * The job type's result, or { omitted: true, reason } when it is larger than 8 KB (GET the job for it).
+   */
+  result: {} | null;
+  error: null;
+  error_code: null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * A queued job waits until then (retry backoff); null otherwise.
+   */
+  run_after: string | null;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: string;
+  finished_at: string;
+}
+
+/** media.job.failed@1.0.0 (owner: media) */
+/**
+ * media.job.failed v1 (OpenVibe.Media server/jobs/queue.js fail; server/events.js recordJob). The job failed for good: a permanent error, or its last attempt (attempts = max_attempts) failed; error and error_code say why. A cancelled job is not a failure and is announced as media.job.cancelled. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ */
+export interface MediaJobFailedPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "failed";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
+   */
+  result: {} | null;
+  /**
+   * The failure's message, free text from the handler.
+   */
+  error: string;
+  /**
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
+   */
+  error_code: string | null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * A queued job waits until then (retry backoff); null otherwise.
+   */
+  run_after: string | null;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: string;
+  finished_at: string;
+}
+
+/** media.job.cancelled@1.0.0 (owner: media) */
+/**
+ * media.job.cancelled v1 (OpenVibe.Media server/jobs/queue.js cancel, markCancelled; server/events.js recordJob). The job was cancelled: a proposal or a queued job at once, by its owner (POST /api/v2/:app/jobs/:id/cancel or DELETE /api/v2/:app/jobs/:id) or by the validator withdrawing a proposal that no longer applies (decided_by system:invariant.scan); a running job once it stopped after its owner asked (cancel_requested true, error_code cancelled). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ */
+export interface MediaJobCancelledPayload {
+  id: string;
+  /**
+   * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  /**
+   * The object the job works on; null for a tenant-wide job (invariant.scan).
+   */
+  object_id: string | null;
+  /**
+   * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
+   */
+  type: string;
+  status: "cancelled";
+  /**
+   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   */
+  params: {};
+  /**
+   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
+   */
+  result: {} | null;
+  /**
+   * The last failure's message (free text), or null.
+   */
+  error: string | null;
+  /**
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
+   */
+  error_code: string | null;
+  attempts: number;
+  max_attempts: number;
+  /**
+   * A queued job waits until then (retry backoff); null otherwise.
+   */
+  run_after: string | null;
+  /**
+   * Its owner asked a running job to stop.
+   */
+  cancel_requested: boolean;
+  /**
+   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   */
+  idempotency_key: string | null;
+  /**
+   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   */
+  created_by: string | null;
+  /**
+   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   */
+  owner_user_id: number | null;
+  /**
+   * Who approved or cancelled a proposal or queued job (same forms as created_by).
+   */
+  decided_by: string | null;
+  decided_at: string | null;
+  created_at: string;
+  updated_at: string;
+  /**
+   * null when the job never ran.
+   */
+  started_at: string | null;
+  finished_at: string;
+}
+
+/** network.module.updated@1.0.0 (owner: network) */
+/**
+ * network.module.updated v1 (OpenVibe.Network server/identity/module-events.js buildEnvelope, called from server/identity/modules.js). One event per change to one person's user-module record (modules.module-record@1): a write (created or updated), a delete by the person (delete) or by the owning service (owner_delete, also the retention sweep of a retired owner's delete-after-retention namespace), account removal (subject_removed: every record of the account is deleted) and account merge (subject_merged: the absorbed account's records are deleted, merged_into; a record moved to the surviving account is created there, merged_from; where the survivor already has one, the survivor's is kept and unchanged). Written into Network's event outbox in the transaction that makes the change. revision grows by one on every change to (owner, namespace), deletes included, and never restarts: a consumer keeps the highest revision it applied and ignores anything lower. Values of private fields never leave Network: keys names the changed fields, public carries only the new values of changed public fields. Envelope: subject { type: user_module, id: <owner id>:<namespace>, revision }, visibility internal, actor the person, the owning service or system:network.
+ */
+export interface NetworkModuleUpdatedPayload {
+  /**
+   * The person the record belongs to (identity.subject-ref@1, a user or a guest).
+   */
+  owner:
+    | {
+        type: "user";
+        id: string;
+      }
+    | {
+        type: "guest";
+        id: string;
+      };
+  /**
+   * e.g. chat.preferences (modules.namespace@1).
+   */
+  namespace: string;
+  /**
+   * The service that owns the namespace when the change was made.
+   */
+  namespace_owner: string;
+  /**
+   * The namespace version the record was written under.
+   */
+  schema_version: number;
+  /**
+   * The record's revision after this change (the envelope subject revision).
+   */
+  revision: number;
+  change: "created" | "updated" | "deleted";
+  reason: "write" | "delete" | "owner_delete" | "subject_removed" | "subject_merged";
+  /**
+   * Top-level fields added, changed or removed, names only, sorted. A deleted record lists every field it held.
+   */
+  keys: string[];
+  /**
+   * The new values of the changed fields the namespace declares public; null for one that was removed. Absent when no public field changed, for a namespace without public fields and for a deleted record.
+   */
+  public?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * On the absorbed account's deleted record (reason subject_merged): the account that survives.
+   */
+  merged_into?:
+    | {
+        type: "user";
+        id: string;
+      }
+    | {
+        type: "guest";
+        id: string;
+      };
+  /**
+   * On a record moved to the surviving account (created, reason subject_merged): the account it came from.
+   */
+  merged_from?:
+    | {
+        type: "user";
+        id: string;
+      }
+    | {
+        type: "guest";
+        id: string;
+      };
 }

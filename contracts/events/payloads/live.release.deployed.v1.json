@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/live.release.deployed.v1.json",
+  "title": "LiveReleaseDeployedPayload",
+  "description": "live.release.deployed v1 (OpenVibe.Live server/events/release-events.js envelopeFor, called by server/chat/deploy-notice.js announce). The first boot that runs commits never announced before: queued in the transaction that records them as announced (site setting deploy_last_announced), so a restart without new code emits nothing and a crash before that commit announces again on the next boot with the same subject. A consumer keys on subject.id (the head commit) to fold repeats. The commit subjects are public already (Live chat and /updates); the consumer decides what is shown. Envelope: subject { type: release, id: <head commit, 40 hex> }, visibility internal, priority low, actor service:live.",
+  "type": "object",
+  "required": ["service", "release", "commit", "previous", "commit_count", "commits", "deployed_at", "notes_url"],
+  "additionalProperties": false,
+  "properties": {
+    "service": { "const": "live" },
+    "release": { "type": "string", "pattern": "^[0-9a-f]{7,40}$", "description": "The head commit's short sha as git abbreviated it (its first 12 characters when the head is not in the list)." },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$", "description": "The head commit (the envelope subject id)." },
+    "previous": { "type": ["string", "null"], "pattern": "^[0-9a-f]{40}$", "description": "The head announced before this one; null on the first announcement." },
+    "commit_count": { "type": "integer", "minimum": 1, "maximum": 40, "description": "How many new commits were found (git log previous..head, at most 40; only the head on a first run or after history was rewritten)." },
+    "commits": {
+      "type": "array", "minItems": 1, "maxItems": 40,
+      "description": "The new commits, newest first.",
+      "items": {
+        "type": "object", "required": ["hash", "short", "subject", "date"], "additionalProperties": false,
+        "properties": {
+          "hash": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+          "short": { "type": "string", "pattern": "^[0-9a-f]{4,40}$" },
+          "subject": { "type": "string", "maxLength": 200, "description": "The commit subject, cut to 200 characters." },
+          "date": { "type": ["string", "null"], "format": "date-time", "description": "Author date (git %aI, with the author's UTC offset)." }
+        }
+      }
+    },
+    "deployed_at": { "type": "string", "format": "date-time", "description": "When this boot announced it (UTC)." },
+    "notes_url": { "const": "https://openvibe.live/updates" }
+  }
+}

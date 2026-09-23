@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/modules/namespace.v1.json",
   "title": "ModuleNamespace",
-  "description": "Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5).",
+  "description": "Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5). The person's account decides what happens to their records in every namespace: when an account is removed, Network deletes all of its records; when two accounts are merged, the surviving account keeps its own record in a namespace where both have one (the other is deleted), and a record only the absorbed account had moves to the survivor. Each of these changes is announced as network.module.updated (reason subject_removed or subject_merged). That is separate from onOwnerRemoved, which says what happens to a namespace's records when the service that owns the namespace is retired.",
   "type": "object",
   "required": ["namespace", "owner", "version", "schema", "writers", "publicFields", "quotaBytes", "onOwnerRemoved"],
   "additionalProperties": false,

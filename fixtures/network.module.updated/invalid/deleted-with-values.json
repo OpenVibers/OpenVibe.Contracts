@@ -1,0 +1,18 @@
+{
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "namespace": "live.profile",
+  "namespace_owner": "live",
+  "schema_version": 1,
+  "revision": 5,
+  "change": "deleted",
+  "reason": "delete",
+  "keys": [
+    "followers"
+  ],
+  "public": {
+    "followers": 4
+  }
+}

@@ -27,6 +27,33 @@ Additive: `compat.js` reports no breaking change against v0.31.0.
     goes to its stream, then its VOD, then the channel recorded on it, never the clipper; a VOD goes to
     its stream, then its slot, then the owner recorded on it. A display name alone resolves nothing.
 - New capability `live.lineage.resolve` (Live, internal): `GET|POST /internal/lineage/resolve`.
+- **Event payload contracts for events already emitted**, each read from the producer's code and checked
+  against payloads it builds:
+  - `tips.interaction.moderated@1` (a paid message filtered, held, hidden or restored, by role; the
+    deliveries a hide cancelled; never the supporter, message, reason or moderator) and
+    `tips.interaction.erased@1` (a supporter erased their data; `redacts` takes back the interaction's
+    earlier events), from OpenVibe.Tips' drafts. New capability `tips.interaction.moderate` (Tips,
+    internal): the moderation queue and log, hide and restore. The Tips manifest (0.4.0) lists all three.
+  - `media.job.proposed|queued|started|retrying|succeeded|failed|cancelled@1`: OpenVibe.Media's job
+    transitions (`server/events.js` `recordJob`), one contract each like `tools.job.*`. The payload is
+    the job as `GET /api/v2/:app/jobs/:id` answers it (`queue.jobPublic`, every field always present,
+    times as SQLite `YYYY-MM-DD HH:MM:SS` UTC); a result over 8 KB is `{ omitted: true, reason }`.
+    `retrying` carries status `queued`, `started` status `running`. The Media manifest (0.2.0) lists them.
+  - `live.stream.started@1` and `live.stream.ended@1` (public: stream id, channel username, display
+    name, URL and user subject when Live knows it, title, category or null, protocol, NSFW flag,
+    times; `ended` adds `ended_at` and `duration_seconds`) and `live.release.deployed@1` (internal:
+    head commit, short release, previous head, up to 40 new commits, `deployed_at`, `notes_url`).
+  - `network.module.updated@1`: one event per change to a user-module record (write, delete by the
+    person or the owning service, account removal, account merge), with the revision after the
+    change, the changed field names and only the new values of changed public fields. A deleted
+    record carries no values; `merged_into` and `merged_from` mark the two sides of a merge. The
+    Network manifest (0.3.0) produces it and consumes `live.stream.started` (go-live notifications).
+- `chat.preferences` is owned by `chat` (OpenVibe.Chat since the Wave 6 cutover); the Chat manifest
+  (0.4.0) lists it in `namespacesOwned`. `chat.tts_defaults` stays with Live. `modules.namespace@1`'s
+  description says what account removal and merge do to a person's records, apart from `onOwnerRemoved`.
+- Routes: `host.site.manage` adds the staff takedowns (`POST|DELETE /api/v1/projects/:id/takedown`,
+  `POST|DELETE /api/v1/sites/:id/takedown`); `wiki.page.create` adds `POST /api/v1/spaces/:space/import`
+  and `wiki.revision.publish` adds `POST /api/v1/pages/:id/revisions/:n/review`.
 
 ## 0.31.0 — 2026-09-23
 

@@ -1,0 +1,19 @@
+{
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "namespace": "live.profile",
+  "namespace_owner": "live",
+  "schema_version": 1,
+  "revision": 3,
+  "change": "updated",
+  "reason": "write",
+  "keys": [
+    "followers",
+    "stream_minutes_30d"
+  ],
+  "public": {
+    "followers": 4
+  }
+}

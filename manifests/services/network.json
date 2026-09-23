@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.2.0 <1.0.0"
   },
@@ -34,10 +34,12 @@
     "network.app.revoked",
     "network.credential.rotated",
     "network.credential.revoked",
-    "network.grant.changed"
+    "network.grant.changed",
+    "network.module.updated"
   ],
   "eventsConsumed": [
     "deals.watch.matched",
+    "live.stream.started",
     "trade.alert.triggered"
   ],
   "namespacesOwned": [

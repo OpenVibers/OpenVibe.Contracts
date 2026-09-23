@@ -1,0 +1,29 @@
+{
+  "app_id": "live",
+  "id": "mjob_01JAB3C4D5E6F7G8H9J0K1MNPQ",
+  "object_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "type": "object.split",
+  "status": "succeeded",
+  "params": {
+    "parts": 3
+  },
+  "result": {
+    "omitted": true,
+    "reason": "larger than the event limit; GET the job"
+  },
+  "error": null,
+  "error_code": null,
+  "attempts": 1,
+  "max_attempts": 3,
+  "run_after": null,
+  "cancel_requested": false,
+  "idempotency_key": null,
+  "created_by": "svc:live",
+  "owner_user_id": null,
+  "decided_by": null,
+  "decided_at": null,
+  "created_at": "2026-09-23 18:02:11",
+  "updated_at": "2026-09-23 18:31:02",
+  "started_at": "2026-09-23 18:02:12",
+  "finished_at": "2026-09-23 18:31:02"
+}

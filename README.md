@@ -60,13 +60,15 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (172 capabilities as of v0.32.0; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
+Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (173 capabilities as of v0.32.0; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
 ## User modules (v0.4)
 
 `manifests/namespaces/*.json` define per-subject module namespaces (`modules.namespace@1`): owner, data schema, writers (`owner` service and/or the `user`), public fields, quota and what happens when the owner is retired. OpenVibe.Network stores the records (`modules.module-record@1`, revision-checked writes). `contracts.modules.validateData / publicView / canWrite` apply the same rules everywhere. Modules hold portable preferences and summaries, never domain truth, money or authoritative game inventory.
+
+Every change to a record is announced as `network.module.updated` (v0.32): the revision after the change, the changed field names and only the new values of changed public fields. Removing an account deletes its records; merging two keeps the survivor's record where both have one and moves the rest. `onOwnerRemoved` is about the owning service being retired, not the person.
 
 ## Developer-app events (v0.28)
 

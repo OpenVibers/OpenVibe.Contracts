@@ -540,6 +540,26 @@
       "adr": "ADR-012"
     },
     {
+      "id": "tips.interaction.moderated",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.interaction.moderated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "tips.interaction.erased",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.interaction.erased.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
       "id": "tips.goal.updated",
       "version": "1.0.0",
       "owner": "tips",
@@ -733,6 +753,115 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "planned"
+    },
+    {
+      "id": "live.stream.started",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.stream.started.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "live.stream.ended",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.stream.ended.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "live.release.deployed",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.release.deployed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.proposed",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.proposed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.queued",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.queued.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.started",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.started.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.retrying",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.retrying.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.succeeded",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.succeeded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.failed",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.job.cancelled",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.job.cancelled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "network.module.updated",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.module.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

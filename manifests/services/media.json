@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.2.0 <1.0.0"
   },
@@ -19,6 +19,13 @@
   "eventsProduced": [
     "media.clip.failed",
     "media.clip.ready",
+    "media.job.cancelled",
+    "media.job.failed",
+    "media.job.proposed",
+    "media.job.queued",
+    "media.job.retrying",
+    "media.job.started",
+    "media.job.succeeded",
     "media.object.uploaded",
     "media.storage.alert",
     "media.storage.recovered",

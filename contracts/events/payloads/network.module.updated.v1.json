@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.module.updated.v1.json",
+  "title": "NetworkModuleUpdatedPayload",
+  "description": "network.module.updated v1 (OpenVibe.Network server/identity/module-events.js buildEnvelope, called from server/identity/modules.js). One event per change to one person's user-module record (modules.module-record@1): a write (created or updated), a delete by the person (delete) or by the owning service (owner_delete, also the retention sweep of a retired owner's delete-after-retention namespace), account removal (subject_removed: every record of the account is deleted) and account merge (subject_merged: the absorbed account's records are deleted, merged_into; a record moved to the surviving account is created there, merged_from; where the survivor already has one, the survivor's is kept and unchanged). Written into Network's event outbox in the transaction that makes the change. revision grows by one on every change to (owner, namespace), deletes included, and never restarts: a consumer keeps the highest revision it applied and ignores anything lower. Values of private fields never leave Network: keys names the changed fields, public carries only the new values of changed public fields. Envelope: subject { type: user_module, id: <owner id>:<namespace>, revision }, visibility internal, actor the person, the owning service or system:network.",
+  "type": "object",
+  "required": ["owner", "namespace", "namespace_owner", "schema_version", "revision", "change", "reason", "keys"],
+  "additionalProperties": false,
+  "properties": {
+    "owner": {
+      "oneOf": [
+        { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "const": "user" }, "id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" } } },
+        { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "const": "guest" }, "id": { "type": "string", "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$" } } }
+      ],
+      "description": "The person the record belongs to (identity.subject-ref@1, a user or a guest)."
+    },
+    "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$", "description": "e.g. chat.preferences (modules.namespace@1)." },
+    "namespace_owner": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "The service that owns the namespace when the change was made." },
+    "schema_version": { "type": "integer", "minimum": 1, "description": "The namespace version the record was written under." },
+    "revision": { "type": "integer", "minimum": 1, "description": "The record's revision after this change (the envelope subject revision)." },
+    "change": { "enum": ["created", "updated", "deleted"] },
+    "reason": { "enum": ["write", "delete", "owner_delete", "subject_removed", "subject_merged"] },
+    "keys": {
+      "type": "array", "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Top-level fields added, changed or removed, names only, sorted. A deleted record lists every field it held."
+    },
+    "public": {
+      "type": "object", "minProperties": 1, "additionalProperties": true,
+      "description": "The new values of the changed fields the namespace declares public; null for one that was removed. Absent when no public field changed, for a namespace without public fields and for a deleted record."
+    },
+    "merged_into": {
+      "oneOf": [
+        { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "const": "user" }, "id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" } } },
+        { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "const": "guest" }, "id": { "type": "string", "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$" } } }
+      ],
+      "description": "On the absorbed account's deleted record (reason subject_merged): the account that survives."
+    },
+    "merged_from": {
+      "oneOf": [
+        { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "const": "user" }, "id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" } } },
+        { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "const": "guest" }, "id": { "type": "string", "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$" } } }
+      ],
+      "description": "On a record moved to the surviving account (created, reason subject_merged): the account it came from."
+    }
+  },
+  "dependentSchemas": {
+    "public": { "properties": { "change": { "enum": ["created", "updated"] } } },
+    "merged_into": { "properties": { "change": { "const": "deleted" }, "reason": { "const": "subject_merged" } } },
+    "merged_from": { "properties": { "change": { "const": "created" }, "reason": { "const": "subject_merged" } } }
+  }
+}

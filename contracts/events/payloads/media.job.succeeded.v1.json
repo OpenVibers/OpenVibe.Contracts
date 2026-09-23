@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.job.succeeded.v1.json",
+  "title": "MediaJobSucceededPayload",
+  "description": "media.job.succeeded v1 (OpenVibe.Media server/jobs/queue.js succeed; server/events.js recordJob). The job finished: result is its type's result (thumbnail.regenerate { url, kind, id }, object.split { source_id, parts, … }, object.remux { source_id, object_id, … }, invariant.scan { thresholds, counts, … }). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.",
+  "type": "object",
+  "required": ["id", "app_id", "object_id", "type", "status", "params", "result", "error", "error_code", "attempts", "max_attempts", "run_after", "cancel_requested", "idempotency_key", "created_by", "owner_user_id", "decided_by", "decided_at", "created_at", "updated_at", "started_at", "finished_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^mjob_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "app_id": { "type": "string", "minLength": 1, "maxLength": 200, "description": "The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…)." },
+    "object_id": { "type": ["string", "null"], "maxLength": 200, "description": "The object the job works on; null for a tenant-wide job (invariant.scan)." },
+    "type": { "type": "string", "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$", "maxLength": 80, "description": "Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux." },
+    "status": { "const": "succeeded" },
+    "params": { "type": "object", "description": "The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent." },
+    "result": { "type": ["object", "null"], "description": "The job type's result, or { omitted: true, reason } when it is larger than 8 KB (GET the job for it)." },
+    "error": { "type": "null" },
+    "error_code": { "type": "null" },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "max_attempts": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "run_after": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$", "description": "A queued job waits until then (retry backoff); null otherwise." },
+    "cancel_requested": { "type": "boolean", "description": "Its owner asked a running job to stop." },
+    "idempotency_key": { "type": ["string", "null"], "maxLength": 200, "description": "The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null." },
+    "created_by": { "type": ["string", "null"], "description": "svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>." },
+    "owner_user_id": { "type": ["integer", "null"], "minimum": 1, "description": "The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject." },
+    "decided_by": { "type": ["string", "null"], "description": "Who approved or cancelled a proposal or queued job (same forms as created_by)." },
+    "decided_at": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$" },
+    "created_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$" },
+    "updated_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$" },
+    "started_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$" },
+    "finished_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$" }
+  }
+}

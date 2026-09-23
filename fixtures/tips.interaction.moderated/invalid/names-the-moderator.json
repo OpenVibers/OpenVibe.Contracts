@@ -1,0 +1,15 @@
+{
+  "interaction_id": "tint_01JAB3C4D5E6F7G8H9J0K1MNPQ",
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "action": "hidden",
+  "by": "moderator",
+  "moderator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "moderation_state": "hidden",
+  "cancelled_effects": []
+}
