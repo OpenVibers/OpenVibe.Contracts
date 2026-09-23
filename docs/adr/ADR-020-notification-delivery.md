@@ -27,7 +27,8 @@ OpenVibe.Events now provides durable, signed, retried delivery.
 
 ## Migration consequences
 
-- Go-live notifications move first: Live emits `live.stream.started`, and Network's consumer replaces `golive-notify.js`'s push.
+- Go-live notifications move first: Live emits `live.stream.started` (live since 2026-09-23), and Network's consumer replaces `golive-notify.js`'s call.
+- **Precondition found on 2026-09-23:** the recipients are Live's followers (`follows` in Live's database), which Network cannot read. The consumer can only replace the call once follows are readable by Network, either migrated into Network's follow graph (D09) or exposed through a capability-guarded Live read. Until then Live keeps calling `/internal/events/stream-live`, now with its service token (`network.notifications.push`) and the internal key only as fallback.
 - The two paths run side by side, deduplicated by event id, until parity is shown; then the push call is removed.
 
 ## Rollback
