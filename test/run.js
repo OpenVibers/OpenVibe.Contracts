@@ -146,13 +146,24 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
 
 // ── Producers' payloads added in v0.32 (Tips moderation, Media jobs, Live, user modules) ──
 {
-    // Media: one contract per server/events.js JOB_TRANSITIONS entry; the payload is queue.jobPublic, every field always present.
+    // Media: one contract per server/events.js JOB_TRANSITIONS entry; the payload is the event projection queue.jobEvent,
+    // every field always present. The tenant's params, result, error text, idempotency key and user ids stay behind GET the job.
     const status = { proposed: 'proposed', queued: 'queued', started: 'running', retrying: 'queued', succeeded: 'succeeded', failed: 'failed', cancelled: 'cancelled' };
+    const jobFields = ['id', 'app_id', 'object_id', 'type', 'status', 'attempts', 'max_attempts', 'error_code', 'cancel_requested', 'has_result',
+        'run_after', 'decided_at', 'created_at', 'updated_at', 'started_at', 'finished_at'];
+    const jobTimes = jobFields.filter(k => k === 'run_after' || k.endsWith('_at'));
     for (const [t, st] of Object.entries(status)) {
         const s = contracts.schema(`media.job.${t}`);
         ok(s.properties.status.const === st, `media.job.${t} carries status ${st}`);
         ok(JSON.stringify([...s.required].sort()) === JSON.stringify(Object.keys(s.properties).sort()), `media.job.${t} requires every field it names`);
+        ok(JSON.stringify(Object.keys(s.properties)) === JSON.stringify(jobFields) && s.additionalProperties === false, `media.job.${t} is exactly the event projection`);
+        ok(['params', 'result', 'error', 'idempotency_key', 'created_by', 'decided_by', 'owner_user_id', 'checkpoint'].every(k => !(k in s.properties)), `media.job.${t} leaves the tenant's data out`);
+        ok(jobTimes.every(k => s.properties[k].type === 'null' || (s.properties[k].format === 'date-time' && /Z\$$/.test(s.properties[k].pattern))), `media.job.${t} times are ISO 8601 UTC or null`);
+        const outcome = ['succeeded', 'failed', 'cancelled'].includes(t);
+        ok(s.properties.finished_at.type === (outcome ? 'string' : 'null'), `media.job.${t} has finished_at ${outcome ? 'always' : 'never'}`);
     }
+    const sqliteTime = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/media.job.queued/valid/thumbnail.json'), 'utf8'));
+    ok(!contracts.validate('media.job.queued@1', { ...sqliteTime, created_at: '2026-09-23 18:02:11' }).valid, 'a SQLite time is not a media.job time');
     // Live: live.stream.ended is live.stream.started plus ended_at and duration_seconds.
     const started = contracts.schema('live.stream.started'), ended = contracts.schema('live.stream.ended');
     ok(JSON.stringify(Object.keys(ended.properties)) === JSON.stringify([...Object.keys(started.properties), 'ended_at', 'duration_seconds']), 'live.stream.ended = started + ended_at, duration_seconds');

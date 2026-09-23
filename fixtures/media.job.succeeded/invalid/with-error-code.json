@@ -6,7 +6,7 @@
   "status": "succeeded",
   "attempts": 1,
   "max_attempts": 3,
-  "error_code": null,
+  "error_code": "interrupted",
   "cancel_requested": false,
   "has_result": true,
   "run_after": null,

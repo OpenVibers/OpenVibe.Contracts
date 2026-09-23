@@ -7054,9 +7054,12 @@ export interface LiveReleaseDeployedPayload {
 
 /** media.job.proposed@1.0.0 (owner: media) */
 /**
- * media.job.proposed v1 (OpenVibe.Media server/jobs/queue.js enqueue; server/events.js recordJob). A job was proposed and waits for its owner: approving it queues it (media.job.queued), cancelling it ends it (media.job.cancelled); the worker never runs a proposal. The size-invariant validator (invariant.scan, created_by system:invariant.scan) proposes object.split and object.remux this way. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ * media.job.proposed v1 (OpenVibe.Media server/jobs/queue.js enqueue; server/events.js recordJob). A job was proposed and waits for its owner: approving it queues it (media.job.queued), cancelling it ends it (media.job.cancelled); the worker never runs a proposal. The size-invariant validator (invariant.scan) proposes object.split and object.remux this way. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
  */
 export interface MediaJobProposedPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7072,48 +7075,27 @@ export interface MediaJobProposedPayload {
   type: string;
   status: "proposed";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started so far.
    */
-  params: {};
-  /**
-   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
-   */
-  result: {} | null;
-  /**
-   * The last failure's message (free text), or null.
-   */
-  error: string | null;
-  /**
-   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
-   */
-  error_code: string | null;
   attempts: number;
   max_attempts: number;
-  /**
-   * A queued job waits until then (retry backoff); null otherwise.
-   */
-  run_after: string | null;
+  error_code: null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * A proposal has no result.
    */
-  idempotency_key: string | null;
+  has_result: false;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * A queued job waits until then (retry backoff); null otherwise.
    */
-  created_by: string | null;
+  run_after: string | null;
   /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   * Nobody has decided yet.
    */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
-  decided_at: string | null;
+  decided_at: null;
   created_at: string;
   updated_at: string;
   started_at: null;
@@ -7122,9 +7104,12 @@ export interface MediaJobProposedPayload {
 
 /** media.job.queued@1.0.0 (owner: media) */
 /**
- * media.job.queued v1 (OpenVibe.Media server/jobs/queue.js enqueue, approve; server/events.js recordJob). A job was accepted and queued: a new job (POST /api/v2/:app/jobs), or a proposal its owner approved (decided_by, decided_at). An Idempotency-Key replay, or a request joined to an identical job that is still active, creates no job and no event. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
+ * media.job.queued v1 (OpenVibe.Media server/jobs/queue.js enqueue, approve; server/events.js recordJob). A job was accepted and queued: a new job (POST /api/v2/:app/jobs), or a proposal its owner approved (decided_at). An Idempotency-Key replay, or a request joined to an identical job that is still active, creates no job and no event. A failed attempt that is queued again is media.job.retrying, not this. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
  */
 export interface MediaJobQueuedPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7140,47 +7125,26 @@ export interface MediaJobQueuedPayload {
   type: string;
   status: "queued";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started so far.
    */
-  params: {};
-  /**
-   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
-   */
-  result: {} | null;
-  /**
-   * The last failure's message (free text), or null.
-   */
-  error: string | null;
-  /**
-   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
-   */
-  error_code: string | null;
   attempts: number;
   max_attempts: number;
-  /**
-   * A queued job waits until then (retry backoff); null otherwise.
-   */
-  run_after: string | null;
+  error_code: null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * A job that never ran has no result.
    */
-  idempotency_key: string | null;
+  has_result: false;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * A queued job waits until then (retry backoff); null otherwise.
    */
-  created_by: string | null;
+  run_after: string | null;
   /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   * When its owner approved it, or cancelled it while it was proposed or queued; null otherwise.
    */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
   decided_at: string | null;
   created_at: string;
   updated_at: string;
@@ -7190,9 +7154,12 @@ export interface MediaJobQueuedPayload {
 
 /** media.job.started@1.0.0 (owner: media) */
 /**
- * media.job.started v1 (OpenVibe.Media server/jobs/queue.js claim; server/events.js recordJob). The worker claimed the job and it is running: attempts counts this attempt, started_at stays the first attempt's start. A job that is retried starts again and is announced again. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
+ * media.job.started v1 (OpenVibe.Media server/jobs/queue.js claim; server/events.js recordJob). The worker claimed the job and it is running (status running): attempts counts this attempt, started_at stays the first attempt's start. A job that is retried starts again and is announced again; error_code is still the previous attempt's until the job finishes. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
  */
 export interface MediaJobStartedPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7206,61 +7173,52 @@ export interface MediaJobStartedPayload {
    * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
    */
   type: string;
+  /**
+   * started carries the job's state, running.
+   */
   status: "running";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started so far, this one included.
    */
-  params: {};
-  /**
-   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
-   */
-  result: {} | null;
-  /**
-   * The last failure's message (free text), or null.
-   */
-  error: string | null;
-  /**
-   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
-   */
-  error_code: string | null;
   attempts: number;
   max_attempts: number;
   /**
-   * A queued job waits until then (retry backoff); null otherwise.
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null when there was none or the handler gave no code. Never the message: GET the job for it.
    */
-  run_after: string | null;
+  error_code: string | null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * A running job has no result yet.
    */
-  idempotency_key: string | null;
+  has_result: false;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * Cleared when the job is claimed.
    */
-  created_by: string | null;
+  run_after: null;
   /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   * When its owner approved it, or cancelled it while it was proposed or queued; null otherwise.
    */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
   decided_at: string | null;
   created_at: string;
   updated_at: string;
+  /**
+   * The first attempt's start.
+   */
   started_at: string;
   finished_at: null;
 }
 
 /** media.job.retrying@1.0.0 (owner: media) */
 /**
- * media.job.retrying v1 (OpenVibe.Media server/jobs/queue.js fail with a retry; server/events.js recordJob). An attempt failed and the job is queued again after a backoff (run_after); error and error_code say why. A running job nobody holds any more (the service restarted, or the worker stopped renewing its lease) is retried this way with error_code interrupted while it has attempts left. status is queued. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
+ * media.job.retrying v1 (OpenVibe.Media server/jobs/queue.js fail with a retry; server/events.js recordJob). An attempt failed and the job is queued again (status queued) after a backoff (run_after); error_code says why when the handler gave a code. A running job nobody holds any more (the service restarted, or the worker stopped renewing its lease) is retried this way with error_code interrupted while it has attempts left. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority low, actor service:media.
  */
 export interface MediaJobRetryingPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7274,61 +7232,52 @@ export interface MediaJobRetryingPayload {
    * Job type: thumbnail.regenerate, invariant.scan, object.split or object.remux.
    */
   type: string;
+  /**
+   * retrying carries the job's state, queued.
+   */
   status: "queued";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started so far, the failed one included.
    */
-  params: {};
-  /**
-   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
-   */
-  result: {} | null;
-  /**
-   * The failure's message, free text from the handler.
-   */
-  error: string;
-  /**
-   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
-   */
-  error_code: string | null;
   attempts: number;
   max_attempts: number;
   /**
-   * Not before this time (the retry backoff).
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null when there was none or the handler gave no code. Never the message: GET the job for it.
    */
-  run_after: string;
+  error_code: string | null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * A job waiting for its retry has no result.
    */
-  idempotency_key: string | null;
+  has_result: false;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * Not before this time (the retry backoff).
    */
-  created_by: string | null;
+  run_after: string;
   /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   * When its owner approved it, or cancelled it while it was proposed or queued; null otherwise.
    */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
   decided_at: string | null;
   created_at: string;
   updated_at: string;
+  /**
+   * The first attempt's start.
+   */
   started_at: string;
   finished_at: null;
 }
 
 /** media.job.succeeded@1.0.0 (owner: media) */
 /**
- * media.job.succeeded v1 (OpenVibe.Media server/jobs/queue.js succeed; server/events.js recordJob). The job finished: result is its type's result (thumbnail.regenerate { url, kind, id }, object.split { source_id, parts, … }, object.remux { source_id, object_id, … }, invariant.scan { thresholds, counts, … }). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ * media.job.succeeded v1 (OpenVibe.Media server/jobs/queue.js succeed; server/events.js recordJob). The job finished. Its result (thumbnail.regenerate { url, kind, id }, object.split { source_id, parts, … }, object.remux { source_id, object_id, … }, invariant.scan { thresholds, counts, … }) is not in the event: has_result says whether there is one to GET. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
  */
 export interface MediaJobSucceededPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7344,53 +7293,44 @@ export interface MediaJobSucceededPayload {
   type: string;
   status: "succeeded";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started, the successful one included.
    */
-  params: {};
-  /**
-   * The job type's result, or { omitted: true, reason } when it is larger than 8 KB (GET the job for it).
-   */
-  result: {} | null;
-  error: null;
-  error_code: null;
   attempts: number;
   max_attempts: number;
   /**
-   * A queued job waits until then (retry backoff); null otherwise.
+   * A success clears the last failure.
    */
-  run_after: string | null;
+  error_code: null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * The job holds a result. The result itself is never in the event: GET the job with a tenant token for it.
    */
-  idempotency_key: string | null;
+  has_result: boolean;
+  run_after: null;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * When its owner approved it, or cancelled it while it was proposed or queued; null otherwise.
    */
-  created_by: string | null;
-  /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
-   */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
   decided_at: string | null;
   created_at: string;
   updated_at: string;
+  /**
+   * The first attempt's start.
+   */
   started_at: string;
   finished_at: string;
 }
 
 /** media.job.failed@1.0.0 (owner: media) */
 /**
- * media.job.failed v1 (OpenVibe.Media server/jobs/queue.js fail; server/events.js recordJob). The job failed for good: a permanent error, or its last attempt (attempts = max_attempts) failed; error and error_code say why. A cancelled job is not a failure and is announced as media.job.cancelled. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ * media.job.failed v1 (OpenVibe.Media server/jobs/queue.js fail; server/events.js recordJob). The job failed for good: a permanent error, or its last attempt (attempts = max_attempts) failed; error_code says why when the handler gave a code (GET the job for the message). A cancelled job is not a failure and is announced as media.job.cancelled. Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
  */
 export interface MediaJobFailedPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7406,59 +7346,44 @@ export interface MediaJobFailedPayload {
   type: string;
   status: "failed";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started, the last failed one included.
    */
-  params: {};
-  /**
-   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
-   */
-  result: {} | null;
-  /**
-   * The failure's message, free text from the handler.
-   */
-  error: string;
-  /**
-   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
-   */
-  error_code: string | null;
   attempts: number;
   max_attempts: number;
   /**
-   * A queued job waits until then (retry backoff); null otherwise.
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null when there was none or the handler gave no code. Never the message: GET the job for it.
    */
-  run_after: string | null;
+  error_code: string | null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * The handler left a partial result. The result itself is never in the event: GET the job with a tenant token for it.
    */
-  idempotency_key: string | null;
+  has_result: boolean;
+  run_after: null;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * When its owner approved it, or cancelled it while it was proposed or queued; null otherwise.
    */
-  created_by: string | null;
-  /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
-   */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
   decided_at: string | null;
   created_at: string;
   updated_at: string;
+  /**
+   * The first attempt's start.
+   */
   started_at: string;
   finished_at: string;
 }
 
 /** media.job.cancelled@1.0.0 (owner: media) */
 /**
- * media.job.cancelled v1 (OpenVibe.Media server/jobs/queue.js cancel, markCancelled; server/events.js recordJob). The job was cancelled: a proposal or a queued job at once, by its owner (POST /api/v2/:app/jobs/:id/cancel or DELETE /api/v2/:app/jobs/:id) or by the validator withdrawing a proposal that no longer applies (decided_by system:invariant.scan); a running job once it stopped after its owner asked (cancel_requested true, error_code cancelled). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is the job as GET /api/v2/:app/jobs/:id answers it (queue.jobPublic), except that a result larger than 8 KB is replaced by { omitted: true, reason }. It carries the tenant's params, idempotency_key, the free-text error, created_by/decided_by and owner_user_id (a tenant-local integer user id), never the handler's checkpoint, lease or request hash. Times are SQLite UTC timestamps without a zone (YYYY-MM-DD HH:MM:SS). Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
+ * media.job.cancelled v1 (OpenVibe.Media server/jobs/queue.js cancel, markCancelled; server/events.js recordJob). The job was cancelled: a proposal or a queued job at once, by its owner (POST /api/v2/:app/jobs/:id/cancel or DELETE /api/v2/:app/jobs/:id) or by the validator withdrawing a proposal that no longer applies (decided_at set, error_code cancelled when a reason was given); a running job once it stopped after its owner asked (cancel_requested true, error_code cancelled). Emitted in the SQLite transaction that records the state change, so the event exists if and only if the change committed; it goes to OpenVibe.Events only (no app webhook). The payload is an event projection of the job (queue.jobEvent): its identity, state, counters, stable error_code, times and has_result. Deliberately left out, because events travel beyond the tenant: the tenant's params (object.split keeps whatever the caller sent), the caller's idempotency_key, the free-text error (raw handler or ffmpeg output), the result (thumbnail.regenerate's is the thumbnail URL, of a private VOD too), created_by/decided_by and owner_user_id (tenant-local user ids), and the handler's checkpoint, lease and request hash. GET the job with a tenant token for params/result/error (GET /api/v2/:app/jobs/:id with a token for app_id; has_result says whether there is a result to fetch). Times are ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.sssZ) or null. Jobs of developer-project sandbox tenants are not announced. Envelope: subject { type: job, id: <id> }, visibility internal, priority important, actor service:media.
  */
 export interface MediaJobCancelledPayload {
+  /**
+   * The job. GET /api/v2/:app/jobs/:id with a token for app_id answers the rest of it.
+   */
   id: string;
   /**
    * The tenant that owns the job: an app (live, tools…) or a developer project's production tenant (prj_…).
@@ -7474,52 +7399,34 @@ export interface MediaJobCancelledPayload {
   type: string;
   status: "cancelled";
   /**
-   * The parameters the job type accepted (at most 16 KB). object.split keeps every field the caller sent.
+   * Attempts started so far.
    */
-  params: {};
-  /**
-   * null until the job finished; a failed or cancelled job may keep what its handler reported. { omitted: true, reason } when larger than 8 KB.
-   */
-  result: {} | null;
-  /**
-   * The last failure's message (free text), or null.
-   */
-  error: string | null;
-  /**
-   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null.
-   */
-  error_code: string | null;
   attempts: number;
   max_attempts: number;
   /**
-   * A queued job waits until then (retry backoff); null otherwise.
+   * Stable code of the last failure (media_unavailable, interrupted, cancelled, media.job.invalid…), or null when there was none or the handler gave no code. Never the message: GET the job for it.
    */
-  run_after: string | null;
+  error_code: string | null;
   /**
    * Its owner asked a running job to stop.
    */
   cancel_requested: boolean;
   /**
-   * The creator's Idempotency-Key (1-200 visible ASCII characters), invariant:<object_id>:<type> for a validator proposal, or null.
+   * A stopped running job left a partial result. The result itself is never in the event: GET the job with a tenant token for it.
    */
-  idempotency_key: string | null;
+  has_result: boolean;
   /**
-   * svc:<service> | app:<app> | app:<app>:user:<id> | system:<what>.
+   * A queued job waits until then (retry backoff); null otherwise.
    */
-  created_by: string | null;
+  run_after: string | null;
   /**
-   * The app's user the job was created for (X-OV-User-Id): an id in the tenant's own user space, not a Network subject.
+   * When its owner approved it, or cancelled it while it was proposed or queued; null otherwise.
    */
-  owner_user_id: number | null;
-  /**
-   * Who approved or cancelled a proposal or queued job (same forms as created_by).
-   */
-  decided_by: string | null;
   decided_at: string | null;
   created_at: string;
   updated_at: string;
   /**
-   * null when the job never ran.
+   * The first attempt's start; null when the job was cancelled before it ever ran.
    */
   started_at: string | null;
   finished_at: string;

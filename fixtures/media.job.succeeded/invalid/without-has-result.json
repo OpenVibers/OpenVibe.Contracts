@@ -8,7 +8,6 @@
   "max_attempts": 3,
   "error_code": null,
   "cancel_requested": false,
-  "has_result": true,
   "run_after": null,
   "decided_at": null,
   "created_at": "2026-09-23T18:02:11.000Z",

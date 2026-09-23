@@ -36,9 +36,18 @@ Additive: `compat.js` reports no breaking change against v0.31.0.
     internal): the moderation queue and log, hide and restore. The Tips manifest (0.4.0) lists all three.
   - `media.job.proposed|queued|started|retrying|succeeded|failed|cancelled@1`: OpenVibe.Media's job
     transitions (`server/events.js` `recordJob`), one contract each like `tools.job.*`. The payload is
-    the job as `GET /api/v2/:app/jobs/:id` answers it (`queue.jobPublic`, every field always present,
-    times as SQLite `YYYY-MM-DD HH:MM:SS` UTC); a result over 8 KB is `{ omitted: true, reason }`.
-    `retrying` carries status `queued`, `started` status `running`. The Media manifest (0.2.0) lists them.
+    an event projection of the job (`queue.jobEvent`), every field always present: `id`, `app_id`,
+    `object_id`, `type`, `status`, `attempts`, `max_attempts`, `error_code` (the stable code only),
+    `cancel_requested`, `has_result`, and `run_after`, `decided_at`, `created_at`, `updated_at`,
+    `started_at`, `finished_at` as ISO 8601 UTC (`…Z`) or null. Deliberately left out, because events
+    travel beyond the tenant: the tenant's `params`, the caller's `idempotency_key`, the free-text
+    `error`, the `result` (a thumbnail URL, of a private VOD too), `created_by`/`decided_by` and
+    `owner_user_id` (tenant-local user ids). A consumer GETs the job with a tenant token for those
+    (`GET /api/v2/:app/jobs/:id`, unchanged); `has_result` says whether there is a result to fetch.
+    `retrying` carries status `queued`, `started` status `running`; `finished_at` is set exactly on
+    `succeeded`, `failed` and `cancelled`, `started_at` on everything that ran, `run_after` always on
+    `retrying`. No service consumed `media.job.*` before this narrowing. The Media manifest (0.2.0)
+    lists them.
   - `live.stream.started@1` and `live.stream.ended@1` (public: stream id, channel username, display
     name, URL and user subject when Live knows it, title, category or null, protocol, NSFW flag,
     times; `ended` adds `ended_at` and `duration_seconds`) and `live.release.deployed@1` (internal:
