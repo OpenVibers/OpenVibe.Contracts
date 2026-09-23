@@ -24,7 +24,8 @@
     "network.coins.transfer",
     "network.notifications.push",
     "network.modules.read",
-    "network.modules.write"
+    "network.modules.write",
+    "mods.grant.manage"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],

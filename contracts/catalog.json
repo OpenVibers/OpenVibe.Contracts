@@ -147,6 +147,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-017"
+    },
+    {
+      "id": "mods.mod-manifest",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "mods/mod-manifest.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-013"
     }
   ]
 }

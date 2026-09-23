@@ -3198,3 +3198,89 @@ export interface SourceItem {
   change_seq?: number;
   revisions?: unknown[];
 }
+
+/** mods.mod-manifest@1.0.0 (owner: contracts) */
+/**
+ * A mod as the platform knows it (ADR-013): who publishes it, which runtime runs it, which capabilities it asks for and the resources it may use. Requested capabilities are only a request: the install's approved subset is the grant, and trust tiers are install metadata that never change a grant check. The runtime-specific payload (a data pack, a script bundle) is not part of the manifest.
+ */
+export interface ModManifest {
+  /**
+   * Stable mod id; its principal subject is mod:<id>.
+   */
+  id: string;
+  name: string;
+  /**
+   * Semantic version of this release.
+   */
+  version: string;
+  description?: string;
+  publisher: SubjectRef;
+  /**
+   * Where the mod runs: <service>.<surface>, e.g. games.browser, games.source, live.overlay.
+   */
+  target: string;
+  /**
+   * Runtime adapter and its major version, e.g. games-content@1 (declarative data pack) or source-quickjs@1.
+   */
+  runtime: string;
+  permissions: {
+    /**
+     * Capability ids the mod asks for (3+ segments). The target runtime binds only those it implements, and only once granted.
+     *
+     * @maxItems 64
+     */
+    capabilities: string[];
+    /**
+     * Event types the mod wants delivered to it.
+     *
+     * @maxItems 64
+     */
+    events?: string[];
+    /**
+     * User-module namespaces the mod wants to read or write (a trailing .* names a family).
+     *
+     * @maxItems 32
+     */
+    modules?: string[];
+    /**
+     * Media namespaces the mod wants to read or write.
+     *
+     * @maxItems 32
+     */
+    mediaNamespaces?: string[];
+  };
+  /**
+   * The budget the mod asks for. Runtimes meter it; the sandbox that enforces it lives in OpenVibe.Host (Stage C).
+   */
+  resources: {
+    /**
+     * CPU milliseconds per tick (game runtimes) or per request.
+     */
+    cpuMs: number;
+    memoryMb: number;
+    storageMb: number;
+    /**
+     * Hosts the mod may reach over the network. Empty or absent = none.
+     *
+     * @maxItems 32
+     */
+    outboundHosts?: string[];
+  };
+  /**
+   * Assets the mod ships, as Media object references.
+   *
+   * @maxItems 256
+   */
+  assets?: MediaRef[];
+  compatibility: {
+    /**
+     * Semver range of the runtime this release works with, e.g. ">=1.0.0 <2.0.0".
+     */
+    runtime: string;
+    /**
+     * Semver range of openvibe-contracts releases it was built against.
+     */
+    contracts?: string;
+  };
+  homepage?: string;
+}
