@@ -1,0 +1,15 @@
+{
+  "state": "succeeded",
+  "tool": "dns",
+  "result": {
+    "data": {
+      "name": "openvibe.tools",
+      "records": {
+        "A": [
+          "203.0.113.7"
+        ]
+      }
+    }
+  },
+  "took_ms": 38
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/job.v1.json",
+  "title": "ToolsJob",
+  "description": "A Tools job as the jobs API answers it (OpenVibe.Tools apps/_shared/jobs/http.js, system.view; ADR-027): POST /api/v1/jobs (202 + Location, or 200 + Idempotent-Replayed: true), GET and DELETE /api/v1/jobs/:id, POST /api/v1/jobs/:id/retry, PUT and DELETE /api/v1/jobs/:id/references/:ref, the data of every SSE event on GET /api/v1/jobs/:id/events, and the job member of tools.run@1. A job is visible only to its owner (a person, a service/app principal, or one browser session); anyone else gets the same 404 tools.job.not_found as for a job that does not exist. result is null until the job succeeded; each result file is downloaded from its url (GET /api/v1/jobs/:id/files/:n, ?inline=1 for previews) and is stored as a private OpenVibe.Media object (storage media) or on the satellite until the job expires (storage local). expires_at is null while a reference keeps the result. error is problem+json: tools.job.failed, tools.job.timeout, tools.job.cancelled, or a code the tool chose (tools.…), with server paths removed.",
+  "type": "object",
+  "required": ["id", "object", "service", "type", "type_version", "state", "progress", "attempts", "max_attempts", "cancel_requested", "created_at", "started_at", "finished_at", "expires_at", "result", "error", "retryable", "retry_of", "retried_by", "references", "links"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "object": { "const": "tools.job" },
+    "service": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "The Tools satellite that runs the job (img, audio, docs…)." },
+    "tool": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,39}$", "description": "The tool (tools.tool@1 id) whose run created the job, when it came through POST /api/v1/tools/{id}/run. Absent for a job submitted to POST /api/v1/jobs directly." },
+    "type": { "type": "string", "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$", "maxLength": 80, "description": "Job type, e.g. img.process." },
+    "type_version": { "type": "integer", "minimum": 1 },
+    "state": { "enum": ["queued", "running", "succeeded", "failed", "cancelled"], "description": "Terminal: succeeded, failed, cancelled." },
+    "progress": {
+      "type": "object", "required": ["percent", "message"], "additionalProperties": false,
+      "properties": {
+        "percent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "message": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "max_attempts": { "type": "integer", "minimum": 1 },
+    "cancel_requested": { "type": "boolean", "description": "DELETE asked a running job to stop; it ends cancelled." },
+    "created_at": { "type": "string", "format": "date-time" },
+    "started_at": { "type": ["string", "null"], "format": "date-time" },
+    "finished_at": { "type": ["string", "null"], "format": "date-time" },
+    "expires_at": { "type": ["string", "null"], "format": "date-time", "description": "When the job, its events and its result files are pruned; null while a reference keeps the result." },
+    "result": {
+      "type": ["object", "null"], "required": ["files", "data"], "additionalProperties": false,
+      "properties": {
+        "files": {
+          "type": "array", "maxItems": 100,
+          "items": {
+            "type": "object", "required": ["name", "mime", "size", "sha256", "storage", "media", "url"], "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "mime": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "size": { "type": "integer", "minimum": 0 },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "storage": { "enum": ["local", "media"], "description": "media: a private OpenVibe.Media object (TOOLS_JOB_RESULTS=media); local: kept on the satellite until the job expires." },
+              "media": {
+                "type": ["object", "null"], "required": ["media_id"], "additionalProperties": false,
+                "description": "The Media object, when storage is media.",
+                "properties": {
+                  "media_id": { "type": "string", "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$" },
+                  "role": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$" },
+                  "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{0,63}$" },
+                  "size_bytes": { "type": "integer", "minimum": 0 },
+                  "content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+                  "mime_type": { "type": "string", "maxLength": 200 },
+                  "status": { "type": "string", "maxLength": 40, "description": "The object's Media lifecycle status when it was stored (ready)." }
+                }
+              },
+              "media_error": { "type": "string", "maxLength": 500, "description": "Present when storing the file in Media failed; the file stayed local." },
+              "url": { "type": "string", "pattern": "^/api/v1/jobs/job_[0-9A-HJKMNP-TV-Z]{26}/files/\\d+$", "description": "Where the owner downloads it." }
+            }
+          }
+        },
+        "data": { "type": "object", "description": "The tool's output data (dimensions, durations, page counts…); {} when it has none." }
+      }
+    },
+    "error": { "oneOf": [{ "$ref": "../errors/problem.v1.json" }, { "type": "null" }] },
+    "retryable": { "type": "boolean", "description": "Retrying may succeed (a timeout, a restart); POST links.retry makes a new job." },
+    "retry_of": { "type": ["string", "null"], "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The failed job this one retries." },
+    "retried_by": { "type": ["string", "null"], "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The job that retried this failed one; asking again returns it." },
+    "references": {
+      "type": "array", "maxItems": 50,
+      "description": "What keeps the result (PUT /api/v1/jobs/:id/references/:ref), e.g. community:paste:p_123.",
+      "items": {
+        "type": "object", "required": ["ref", "created_at"], "additionalProperties": false,
+        "properties": {
+          "ref": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*(?::[A-Za-z0-9_.-]+){1,4}$", "maxLength": 200 },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "links": {
+      "type": "object", "required": ["self", "events", "cancel", "retry", "retried_by"], "additionalProperties": false,
+      "properties": {
+        "self": { "type": "string", "format": "uri-reference" },
+        "events": { "type": "string", "format": "uri-reference" },
+        "cancel": { "type": ["string", "null"], "format": "uri-reference", "description": "DELETE it while the job is queued or running." },
+        "retry": { "type": ["string", "null"], "format": "uri-reference", "description": "POST it when the job failed." },
+        "retried_by": { "type": ["string", "null"], "format": "uri-reference" }
+      }
+    }
+  }
+}

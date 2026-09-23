@@ -5,6 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Read a job the calling principal created: state, progress, result (Media object references or local files), SSE progress with Last-Event-ID resume, result files.",
+  "outputSchema": "tools.job@1",
   "permissions": [
     "tools:jobs:read"
   ],

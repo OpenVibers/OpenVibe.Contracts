@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/job-request.v1.json",
+  "title": "ToolsJobRequest",
+  "description": "Body of POST /api/v1/jobs on the Tools satellites that run jobs (img, audio, docs; capability tools.job.create; OpenVibe.Tools apps/_shared/jobs/http.js). JSON, or multipart/form-data with the same fields as text parts (input as JSON text) and the input files as file or files parts. The Idempotency-Key header wins over idempotency_key: the same (owner, key) and request returns the same job (200 + Idempotent-Replayed: true), a different request under it is 409 tools.job.idempotency_conflict. Types: img.process (input { tool: convert|compress|resize|crop, … }, one image), audio.process ({ tool, … } as /api/process takes them, one audio or video file), docs.process ({ tool, … }, one PDF, or several files for merge and img2pdf). A format host fills in its format (webp.openvibe.tools converts to WebP). Answers tools.job@1 (202 + Location). Refusals are problem+json: 400 tools.job.invalid (input not a JSON object or over 16 KB, wrong file count, the type's own validation) or tools.job.unknown_type, 401 token.* or tools.job.no_owner, 403 capability.denied, 413 tools.job.too_large, 429 tools.job.too_many_active (unfinished jobs per owner) or a rate limit, 503 tools.job.unavailable.",
+  "type": "object",
+  "required": ["type"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "type": "string", "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$", "maxLength": 80, "description": "Job type: img.process, audio.process, docs.process." },
+    "input": { "type": "object", "description": "The job type's input; { tool: <operation>, …options }. Default {}; at most 16 KB as JSON." },
+    "idempotency_key": { "type": "string", "pattern": "^[!-~]{8,200}$", "description": "8-200 printable ASCII characters. The Idempotency-Key header is used when both are present." }
+  }
+}

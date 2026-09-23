@@ -7799,12 +7799,12 @@
     "tools.job.created": {
       "version": "1.0.0",
       "owner": "tools",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/tools.job.created.v1.json",
         "title": "ToolsJobCreatedPayload",
-        "description": "tools.job.created v1 (OpenVibe.Tools apps/_shared/jobs, planned). A job was accepted and queued (POST /api/v1/jobs, or a retry of a failed job, which carries retry_of). An Idempotency-Key replay creates no job and no event. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor the owner when it is a subject (user, service, app or mod), else service:tools.",
+        "description": "tools.job.created v1 (OpenVibe.Tools apps/_shared/jobs/events.js). A job was accepted and queued (POST /api/v1/jobs, or a retry of a failed job, which carries retry_of). An Idempotency-Key replay creates no job and no event. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor the owner when it is a subject (user, service, app or mod), else service:tools.",
         "type": "object",
         "required": [
           "job_id",
@@ -7879,12 +7879,12 @@
     "tools.job.started": {
       "version": "1.0.0",
       "owner": "tools",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/tools.job.started.v1.json",
         "title": "ToolsJobStartedPayload",
-        "description": "tools.job.started v1 (OpenVibe.Tools apps/_shared/jobs, planned). A worker claimed the job and it is running (attempts counts this attempt). A job requeued after a restart starts again and is announced again. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:tools.",
+        "description": "tools.job.started v1 (OpenVibe.Tools apps/_shared/jobs/events.js). A worker claimed the job and it is running (attempts counts this attempt). A job requeued after a restart starts again and is announced again. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:tools.",
         "type": "object",
         "required": [
           "job_id",
@@ -7964,12 +7964,12 @@
     "tools.job.succeeded": {
       "version": "1.0.0",
       "owner": "tools",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/tools.job.succeeded.v1.json",
         "title": "ToolsJobSucceededPayload",
-        "description": "tools.job.succeeded v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job finished and its result files are stored (in Media when TOOLS_JOB_RESULTS=media). Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
+        "description": "tools.job.succeeded v1 (OpenVibe.Tools apps/_shared/jobs/events.js). The job finished and its result files are stored (in Media when TOOLS_JOB_RESULTS=media). Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
         "type": "object",
         "required": [
           "job_id",
@@ -8128,12 +8128,12 @@
     "tools.job.failed": {
       "version": "1.0.0",
       "owner": "tools",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/tools.job.failed.v1.json",
         "title": "ToolsJobFailedPayload",
-        "description": "tools.job.failed v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job failed: the tool refused the input, it timed out, or it was running when the satellite restarted and its type does not requeue. A cancelled job is not a failure and is not announced as one. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
+        "description": "tools.job.failed v1 (OpenVibe.Tools apps/_shared/jobs/events.js). The job failed: the tool refused the input, it timed out, or it was running when the satellite restarted and its type does not requeue. A cancelled job is not a failure and is not announced as one. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
         "type": "object",
         "required": [
           "job_id",
@@ -9631,6 +9631,1382 @@
                 "const": "subject_merged"
               }
             }
+          }
+        }
+      }
+    },
+    "tools.tool": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/tool.v1.json",
+        "title": "ToolDescriptor",
+        "description": "One tool on openvibe.tools as its registry describes it (GET /api/v1/tools/:id, and each item of GET /api/v1/tools; capability tools.tool.read; ADR-027). There is one descriptor per catalogue tool (GET /api/catalog.json tools[].id), built from the tool's own code, so its page, the run API, openvibe-sdk/tools, the OpenAPI document and the docs all read the same facts. EXECUTION is where the tool's engine runs for its page: client (in the browser; nothing leaves it), sync (a server request answered inline) or job (an asynchronous job on a satellite, tools.job@1). API says whether POST /api/v1/tools/{id}/run exposes the tool. A client tool has api true only when it also has a server engine (a pure transform that runs in Node), and its page stays browser-only. A page-only tool (yt) has api false and run null. A job tool's run creates a job of run.job.type whose input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). INPUT is the JSON Schema (2020-12) that a run request's input must match, embedded or as { $ref: https://openvibe.tools/api/v1/tools/{id}/schema#/$defs/input }. GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, and the list uses the $ref form. RULES this schema enforces: api false has no run, and api true has a run and an input; an API job tool names its job, and only job tools name one; an API tool whose output is a file runs as a job (its results are served as job files); a tools.net.probe tool fetches (egress) and is never anonymous; an anonymous egress tool has a per-target throttle (limits.perTargetPerMinute); a client tool never fetches; an unavailable tool says why (statusReason); JSON output has a schema. contracts.tools.checkDescriptor(d) also checks what depends on the id (run.path, $ref targets) and files.min <= files.max.",
+        "type": "object",
+        "required": [
+          "id",
+          "family",
+          "name",
+          "summary",
+          "status",
+          "execution",
+          "api",
+          "run",
+          "input",
+          "files",
+          "output",
+          "limits",
+          "auth",
+          "quotaClass",
+          "cost",
+          "egress",
+          "hosts",
+          "docs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,39}$",
+            "description": "The tool's catalogue id, which is its subdomain label (png, jsminify, dns, pdf2jpg). It never changes."
+          },
+          "family": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The catalogue family: net, dev, img, audio, docs, text, media, places, pastes…"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "One plain sentence: what the tool does."
+          },
+          "status": {
+            "enum": [
+              "stable",
+              "beta",
+              "preview",
+              "unavailable"
+            ],
+            "description": "stable: works, and its input and output only grow. beta: works; input or output may still change in a minor. preview: works with known gaps (limits or output not final). unavailable: listed, but runs are refused with 503 tools.tool.unavailable and the page says so (statusReason)."
+          },
+          "statusReason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "Why the status is what it is, for people (e.g. 'needs qpdf on the host'). Required when unavailable."
+          },
+          "execution": {
+            "enum": [
+              "client",
+              "sync",
+              "job"
+            ],
+            "description": "Where the engine runs for the tool's page: client (the browser), sync (a server request answered inline), job (an asynchronous job)."
+          },
+          "api": {
+            "type": "boolean",
+            "description": "POST /api/v1/tools/{id}/run exposes the tool. false for a client tool without a server engine and for page-only tools (yt)."
+          },
+          "run": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "method",
+              "path",
+              "job"
+            ],
+            "additionalProperties": false,
+            "description": "How to call it; null when api is false.",
+            "properties": {
+              "method": {
+                "const": "POST"
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^/api/v1/tools/[a-z][a-z0-9-]{0,39}/run$",
+                "description": "/api/v1/tools/{id}/run on https://openvibe.tools; the body is tools.run-request@1, the answer tools.run@1."
+              },
+              "job": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "type",
+                  "operation"
+                ],
+                "additionalProperties": false,
+                "description": "For a job tool: the job the run creates. null for tools answered inline.",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+                    "maxLength": 80,
+                    "description": "Job type, e.g. img.process."
+                  },
+                  "operation": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,39}$",
+                    "description": "The job input's tool field: convert, compress, trim, mergepdf…"
+                  },
+                  "preset": {
+                    "type": "object",
+                    "description": "Input fields the tool itself fixes, applied over the caller's input (png: { format: png })."
+                  }
+                }
+              },
+              "legacy": {
+                "type": "array",
+                "uniqueItems": true,
+                "maxItems": 32,
+                "items": {
+                  "type": "string",
+                  "pattern": "^(GET|POST|PUT|DELETE) /[^\\s]*$"
+                },
+                "description": "Older routes that run the same engine (GET /api/net/dns/:target, POST /api/process…). They keep working until their Sunset date and answer with Deprecation, Sunset and Link: rel=successor-version pointing at path."
+              }
+            }
+          },
+          "input": {
+            "description": "JSON Schema (2020-12) of the run request's input: embedded (an object schema), or { $ref } to $defs/input of GET /api/v1/tools/:id/schema. null only for a tool without an API.",
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "$ref"
+                ],
+                "maxProperties": 1,
+                "properties": {
+                  "$ref": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "object"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "files": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "min",
+              "max",
+              "accept",
+              "maxBytes"
+            ],
+            "additionalProperties": false,
+            "description": "The files a run takes (multipart parts, or tools.run-request@1 files references); null when it takes none.",
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "accept": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z]+/([a-z0-9][a-z0-9.+-]*|\\*)$"
+                },
+                "description": "Accepted media types, checked against the bytes, not the client's Content-Type (image/png, image/*, application/pdf…)."
+              },
+              "maxBytes": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Largest accepted file."
+              }
+            }
+          },
+          "output": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "json",
+                  "file",
+                  "files",
+                  "text"
+                ],
+                "description": "json: result.data; text: result.text; file or files: result.files (job result files)."
+              },
+              "schema": {
+                "description": "JSON Schema of result.data (kind json): embedded, or { $ref } to $defs/output of GET /api/v1/tools/:id/schema.",
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "$ref"
+                    ],
+                    "maxProperties": 1,
+                    "properties": {
+                      "$ref": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "type"
+                    ],
+                    "properties": {
+                      "type": {
+                        "const": "object"
+                      }
+                    }
+                  }
+                ]
+              },
+              "mime": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z]+/([a-z0-9][a-z0-9.+-]*|\\*)$"
+                },
+                "description": "Media types the result files can have (kind file or files)."
+              }
+            },
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "json"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "schema"
+              ]
+            }
+          },
+          "limits": {
+            "type": "object",
+            "required": [
+              "timeoutMs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "timeoutMs": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3600000,
+                "description": "A run (or its job) longer than this fails with tools.job.timeout or 504."
+              },
+              "maxDurationSec": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Longest audio or video input."
+              },
+              "maxPixels": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Largest image input (width × height)."
+              },
+              "maxPages": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Most PDF pages."
+              },
+              "maxInputBytes": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Largest input as JSON (text to transform, lists of hosts…)."
+              },
+              "perTargetPerMinute": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Egress tools: most runs per minute against one target host or address, across all callers."
+              }
+            }
+          },
+          "auth": {
+            "type": "object",
+            "required": [
+              "anonymous",
+              "capability"
+            ],
+            "additionalProperties": false,
+            "description": "Caller tiers: anonymous < session < user < app/service.",
+            "properties": {
+              "anonymous": {
+                "type": "boolean",
+                "description": "true: a caller with no token and no browser session may run it (keyed by IP, IPv6 by /64). false: a browser session (the ov_tools_jobs cookie), a signed-in person or a token is needed."
+              },
+              "capability": {
+                "enum": [
+                  "tools.tool.run",
+                  "tools.net.probe"
+                ],
+                "description": "What an app or service token must hold. tools.tool.run is public. tools.net.probe (partner) covers network probes: only principals holding it run these through the API; people use their pages, which have a per-target throttle."
+              }
+            }
+          },
+          "quotaClass": {
+            "type": "string",
+            "pattern": "^tools-[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "The quota bucket a run counts against, with allowances per caller tier. Names describe the work, never a tier or a price (tools-run, tools-job, tools-probe, tools-fetch…), so a paid tier later adds allowances, not names."
+          },
+          "cost": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "description": "Relative weight of one run within its quota class (1 = a cheap lookup or transform). Quotas count weight, not requests."
+          },
+          "egress": {
+            "type": "boolean",
+            "description": "The server fetches a host or URL the caller chose (DNS, WHOIS, headers, Open Graph, ports…), always through the SSRF guard."
+          },
+          "hosts": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 50,
+            "items": {
+              "type": "string",
+              "pattern": "^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$"
+            },
+            "description": "The tool's public hostnames, canonical first (png.openvibe.tools, a custom domain…); empty for a tool that lives on another service."
+          },
+          "docs": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "description": "Where a person reads about the tool."
+          }
+        },
+        "if": {
+          "required": [
+            "api"
+          ]
+        },
+        "then": {
+          "$comment": "The RULES in the description, as one conditional so generated types stay plain (every descriptor has api).",
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "api": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "api"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "run": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "api": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "api"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "run": {
+                    "type": "object"
+                  },
+                  "input": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "api": {
+                    "const": true
+                  },
+                  "execution": {
+                    "const": "job"
+                  }
+                },
+                "required": [
+                  "api",
+                  "execution"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "run": {
+                    "type": "object",
+                    "properties": {
+                      "job": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "execution": {
+                    "enum": [
+                      "client",
+                      "sync"
+                    ]
+                  }
+                },
+                "required": [
+                  "execution"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "run": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "job": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "api": {
+                    "const": true
+                  },
+                  "output": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "file",
+                          "files"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ]
+                  }
+                },
+                "required": [
+                  "api",
+                  "output"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "execution": {
+                    "const": "job"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "auth": {
+                    "type": "object",
+                    "properties": {
+                      "capability": {
+                        "const": "tools.net.probe"
+                      }
+                    },
+                    "required": [
+                      "capability"
+                    ]
+                  }
+                },
+                "required": [
+                  "auth"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "egress": {
+                    "const": true
+                  },
+                  "auth": {
+                    "type": "object",
+                    "properties": {
+                      "anonymous": {
+                        "const": false
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "egress": {
+                    "const": true
+                  },
+                  "auth": {
+                    "type": "object",
+                    "properties": {
+                      "anonymous": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "anonymous"
+                    ]
+                  }
+                },
+                "required": [
+                  "egress",
+                  "auth"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "limits": {
+                    "type": "object",
+                    "required": [
+                      "perTargetPerMinute"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "execution": {
+                    "const": "client"
+                  }
+                },
+                "required": [
+                  "execution"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "egress": {
+                    "const": false
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "unavailable"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "required": [
+                  "statusReason"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "tools.tool-list": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/tool-list.v1.json",
+        "title": "ToolList",
+        "description": "The answer of GET /api/v1/tools on openvibe.tools (capability tools.tool.read; ADR-027): every tool's descriptor (tools.tool@1), with input and output schemas in the { $ref } form (GET /api/v1/tools/:id has them embedded). Filters: ?family=, ?execution=client|sync|job, ?api=true|false, ?status=, ?q= (name, summary and keywords). Planned placeholders are not tools and are not listed. Cacheable (ETag); updated_at changes when any descriptor does.",
+        "type": "object",
+        "required": [
+          "tools",
+          "count",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "tool.v1.json"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The number of tools in this answer."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "families": {
+            "type": "array",
+            "description": "The families of the tools in this answer.",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "count"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,39}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tools.run-request": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/run-request.v1.json",
+        "title": "ToolsRunRequest",
+        "description": "Body of POST /api/v1/tools/{id}/run on openvibe.tools (capability tools.tool.run, or tools.net.probe for network probes; ADR-027). JSON, or multipart/form-data like POST /api/v1/jobs: the text parts input (JSON text), wait_ms and idempotency_key, and uploaded files as file or files parts. The tool gets the uploaded files first, then the files references, in order; the count must fit the descriptor's files.min and files.max. input must match the tool's input schema (tools.tool@1 input). A job tool's job input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). The Idempotency-Key header wins over idempotency_key; ?wait_ms= on the query does the same as the field. Answers tools.run@1: 200 finished (succeeded, or failed with the tool's own error), 202 + Location while a job is queued or running, 200 + Idempotent-Replayed: true for a replay. Refusals are problem+json: 400 tools.run.invalid (not JSON, a bad field, wrong file count), 401 token.*, 403 capability.denied, 404 tools.tool.not_found, 404 tools.tool.not_runnable (api false: a page-only tool), 404 tools.run.file_not_found (a reference the caller cannot read), 409 tools.job.idempotency_conflict, 413 tools.file.too_large, 415 tools.file.unsupported_type (checked against the bytes), 422 tools.input.invalid (errors[] with JSON pointers), 429 quota.exceeded or tools.job.too_many_active (Retry-After), 503 tools.tool.unavailable.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "type": "object",
+            "description": "The tool's parameters, matching its input schema. Default {}."
+          },
+          "files": {
+            "type": "array",
+            "maxItems": 50,
+            "description": "Files that are already somewhere, instead of or besides uploaded parts.",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "media_id"
+                  ],
+                  "additionalProperties": false,
+                  "description": "A Media object the caller may read. Tools reads it for the caller.",
+                  "properties": {
+                    "media_id": {
+                      "type": "string",
+                      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "job_id",
+                    "index"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Result file index of a job the same caller owns (GET /api/v1/jobs/:id/files/:n), so one tool's output feeds the next.",
+                  "properties": {
+                    "job_id": {
+                      "type": "string",
+                      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "index": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 99
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "wait_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 60000,
+            "description": "Job tools: wait up to this long for the job to finish before answering (200 finished, else 202 with the job). Default 0. Inline tools always answer finished."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[!-~]{8,200}$",
+            "description": "Job tools: the same (caller, key) and request returns the same job; a different request under it is 409 tools.job.idempotency_conflict. Inline tools ignore it."
+          }
+        }
+      }
+    },
+    "tools.run": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/run.v1.json",
+        "title": "ToolsRun",
+        "description": "The answer of POST /api/v1/tools/{id}/run (tools.run-request@1; ADR-027). Finished: { state: succeeded, tool, result, took_ms } or { state: failed|cancelled, tool, error, took_ms }, with job set when the tool ran as a job. Not finished within wait_ms: { state: queued|running, tool, job, location }, sent with 202 and a Location header; follow the job there (GET, its events, its files; tools.job@1). result carries data (kind json, matching the descriptor's output schema), text (kind text) or files (kind file or files: the job's result files, downloaded from their url). took_ms runs from the request to the answer for an inline run, and from created_at to finished_at for a job. error is problem+json from the tool: tools.job.failed, tools.job.timeout, tools.job.cancelled, or a code the tool chose (tools.…). A request refused before the tool ran is a problem+json answer, not a run.",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "state",
+              "tool",
+              "result",
+              "took_ms"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "state": {
+                "const": "succeeded"
+              },
+              "tool": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,39}$"
+              },
+              "result": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "description": "Output data; matches the descriptor's output.schema when output.kind is json."
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Output text (output.kind text)."
+                  },
+                  "files": {
+                    "type": "array",
+                    "maxItems": 100,
+                    "description": "Result files (output.kind file or files), exactly as the job lists them.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "mime",
+                        "size",
+                        "sha256",
+                        "storage",
+                        "media",
+                        "url"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "mime": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "size": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "storage": {
+                          "enum": [
+                            "local",
+                            "media"
+                          ],
+                          "description": "media: a private OpenVibe.Media object (TOOLS_JOB_RESULTS=media); local: kept on the satellite until the job expires."
+                        },
+                        "media": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "required": [
+                            "media_id"
+                          ],
+                          "additionalProperties": false,
+                          "description": "The Media object, when storage is media.",
+                          "properties": {
+                            "media_id": {
+                              "type": "string",
+                              "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                            },
+                            "role": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                            },
+                            "namespace": {
+                              "type": "string",
+                              "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
+                            },
+                            "size_bytes": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "content_hash": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "mime_type": {
+                              "type": "string",
+                              "maxLength": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "maxLength": 40,
+                              "description": "The object's Media lifecycle status when it was stored (ready)."
+                            }
+                          }
+                        },
+                        "media_error": {
+                          "type": "string",
+                          "maxLength": 500,
+                          "description": "Present when storing the file in Media failed; the file stayed local."
+                        },
+                        "url": {
+                          "type": "string",
+                          "pattern": "^/api/v1/jobs/job_[0-9A-HJKMNP-TV-Z]{26}/files/\\d+$",
+                          "description": "Where the owner downloads it."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "took_ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "job": {
+                "oneOf": [
+                  {
+                    "$ref": "job.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "state",
+              "tool",
+              "error",
+              "took_ms"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "state": {
+                "enum": [
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "tool": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,39}$"
+              },
+              "error": {
+                "$ref": "../errors/problem.v1.json"
+              },
+              "took_ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "job": {
+                "oneOf": [
+                  {
+                    "$ref": "job.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "state",
+              "tool",
+              "job",
+              "location"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "state": {
+                "enum": [
+                  "queued",
+                  "running"
+                ]
+              },
+              "tool": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,39}$"
+              },
+              "job": {
+                "$ref": "job.v1.json"
+              },
+              "location": {
+                "type": "string",
+                "format": "uri-reference",
+                "pattern": "/api/v1/jobs/job_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The job (also the Location header): /api/v1/jobs/:id on the gateway."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "tools.job": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/job.v1.json",
+        "title": "ToolsJob",
+        "description": "A Tools job as the jobs API answers it (OpenVibe.Tools apps/_shared/jobs/http.js, system.view; ADR-027): POST /api/v1/jobs (202 + Location, or 200 + Idempotent-Replayed: true), GET and DELETE /api/v1/jobs/:id, POST /api/v1/jobs/:id/retry, PUT and DELETE /api/v1/jobs/:id/references/:ref, the data of every SSE event on GET /api/v1/jobs/:id/events, and the job member of tools.run@1. A job is visible only to its owner (a person, a service/app principal, or one browser session); anyone else gets the same 404 tools.job.not_found as for a job that does not exist. result is null until the job succeeded; each result file is downloaded from its url (GET /api/v1/jobs/:id/files/:n, ?inline=1 for previews) and is stored as a private OpenVibe.Media object (storage media) or on the satellite until the job expires (storage local). expires_at is null while a reference keeps the result. error is problem+json: tools.job.failed, tools.job.timeout, tools.job.cancelled, or a code the tool chose (tools.…), with server paths removed.",
+        "type": "object",
+        "required": [
+          "id",
+          "object",
+          "service",
+          "type",
+          "type_version",
+          "state",
+          "progress",
+          "attempts",
+          "max_attempts",
+          "cancel_requested",
+          "created_at",
+          "started_at",
+          "finished_at",
+          "expires_at",
+          "result",
+          "error",
+          "retryable",
+          "retry_of",
+          "retried_by",
+          "references",
+          "links"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "object": {
+            "const": "tools.job"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The Tools satellite that runs the job (img, audio, docs…)."
+          },
+          "tool": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,39}$",
+            "description": "The tool (tools.tool@1 id) whose run created the job, when it came through POST /api/v1/tools/{id}/run. Absent for a job submitted to POST /api/v1/jobs directly."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type, e.g. img.process."
+          },
+          "type_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "description": "Terminal: succeeded, failed, cancelled."
+          },
+          "progress": {
+            "type": "object",
+            "required": [
+              "percent",
+              "message"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "percent": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 100
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 500
+              }
+            }
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cancel_requested": {
+            "type": "boolean",
+            "description": "DELETE asked a running job to stop; it ends cancelled."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the job, its events and its result files are pruned; null while a reference keeps the result."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "files",
+              "data"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "files": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "mime",
+                    "size",
+                    "sha256",
+                    "storage",
+                    "media",
+                    "url"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "mime": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "size": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "storage": {
+                      "enum": [
+                        "local",
+                        "media"
+                      ],
+                      "description": "media: a private OpenVibe.Media object (TOOLS_JOB_RESULTS=media); local: kept on the satellite until the job expires."
+                    },
+                    "media": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "required": [
+                        "media_id"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The Media object, when storage is media.",
+                      "properties": {
+                        "media_id": {
+                          "type": "string",
+                          "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                        },
+                        "role": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                        },
+                        "namespace": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
+                        },
+                        "size_bytes": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "content_hash": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "mime_type": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "status": {
+                          "type": "string",
+                          "maxLength": 40,
+                          "description": "The object's Media lifecycle status when it was stored (ready)."
+                        }
+                      }
+                    },
+                    "media_error": {
+                      "type": "string",
+                      "maxLength": 500,
+                      "description": "Present when storing the file in Media failed; the file stayed local."
+                    },
+                    "url": {
+                      "type": "string",
+                      "pattern": "^/api/v1/jobs/job_[0-9A-HJKMNP-TV-Z]{26}/files/\\d+$",
+                      "description": "Where the owner downloads it."
+                    }
+                  }
+                }
+              },
+              "data": {
+                "type": "object",
+                "description": "The tool's output data (dimensions, durations, page counts…); {} when it has none."
+              }
+            }
+          },
+          "error": {
+            "oneOf": [
+              {
+                "$ref": "../errors/problem.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "retryable": {
+            "type": "boolean",
+            "description": "Retrying may succeed (a timeout, a restart); POST links.retry makes a new job."
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The failed job this one retries."
+          },
+          "retried_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The job that retried this failed one; asking again returns it."
+          },
+          "references": {
+            "type": "array",
+            "maxItems": 50,
+            "description": "What keeps the result (PUT /api/v1/jobs/:id/references/:ref), e.g. community:paste:p_123.",
+            "items": {
+              "type": "object",
+              "required": [
+                "ref",
+                "created_at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]*(?::[A-Za-z0-9_.-]+){1,4}$",
+                  "maxLength": 200
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "self",
+              "events",
+              "cancel",
+              "retry",
+              "retried_by"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri-reference"
+              },
+              "events": {
+                "type": "string",
+                "format": "uri-reference"
+              },
+              "cancel": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri-reference",
+                "description": "DELETE it while the job is queued or running."
+              },
+              "retry": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri-reference",
+                "description": "POST it when the job failed."
+              },
+              "retried_by": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri-reference"
+              }
+            }
+          }
+        }
+      }
+    },
+    "tools.job-request": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/job-request.v1.json",
+        "title": "ToolsJobRequest",
+        "description": "Body of POST /api/v1/jobs on the Tools satellites that run jobs (img, audio, docs; capability tools.job.create; OpenVibe.Tools apps/_shared/jobs/http.js). JSON, or multipart/form-data with the same fields as text parts (input as JSON text) and the input files as file or files parts. The Idempotency-Key header wins over idempotency_key: the same (owner, key) and request returns the same job (200 + Idempotent-Replayed: true), a different request under it is 409 tools.job.idempotency_conflict. Types: img.process (input { tool: convert|compress|resize|crop, … }, one image), audio.process ({ tool, … } as /api/process takes them, one audio or video file), docs.process ({ tool, … }, one PDF, or several files for merge and img2pdf). A format host fills in its format (webp.openvibe.tools converts to WebP). Answers tools.job@1 (202 + Location). Refusals are problem+json: 400 tools.job.invalid (input not a JSON object or over 16 KB, wrong file count, the type's own validation) or tools.job.unknown_type, 401 token.* or tools.job.no_owner, 403 capability.denied, 413 tools.job.too_large, 429 tools.job.too_many_active (unfinished jobs per owner) or a rate limit, 503 tools.job.unavailable.",
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type: img.process, audio.process, docs.process."
+          },
+          "input": {
+            "type": "object",
+            "description": "The job type's input; { tool: <operation>, …options }. Default {}; at most 16 KB as JSON."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[!-~]{8,200}$",
+            "description": "8-200 printable ASCII characters. The Idempotency-Key header is used when both are present."
           }
         }
       }

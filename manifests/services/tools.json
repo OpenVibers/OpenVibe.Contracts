@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.7.0 <1.0.0"
   },
@@ -12,10 +12,14 @@
   ],
   "publicOrigin": "https://openvibe.tools",
   "health": "/api/health",
+  "ready": "/api/ready",
   "capabilities": [
     "tools.job.create",
     "tools.job.read",
-    "tools.job.cancel"
+    "tools.job.cancel",
+    "tools.tool.read",
+    "tools.tool.run",
+    "tools.net.probe"
   ],
   "eventsProduced": [
     "tools.job.created",
@@ -27,5 +31,5 @@
   "namespacesOwned": [
     "tools.*"
   ],
-  "notes": "Wave 11: asynchronous jobs on the img, audio and docs satellites (POST/GET/DELETE /api/v1/jobs, SSE events). Job lifecycle events tools.job.created|started|succeeded|failed have payload contracts (v0.30.0); Tools publishes them to OpenVibe.Events next. Tools consumes media.object.upload and media.object.read (namespace tools) when TOOLS_JOB_RESULTS=media."
+  "notes": "Public at openvibe.tools: 169 tools in 9 families on the gateway (port 4001) and its satellites, catalogue at GET /api/catalog.json (re-served by Network). Asynchronous jobs (Wave 11) run on the img, audio and docs satellites only (POST /api/v1/jobs, GET/DELETE /api/v1/jobs/:id, POST /api/v1/jobs/:id/retry, PUT|DELETE /api/v1/jobs/:id/references/:ref, SSE events, result files); the gateway has no /api/v1/jobs yet. Job results are stored as private Media objects (TOOLS_JOB_RESULTS=media: Tools holds media.object.upload and media.object.read, namespace tools) and job lifecycle events tools.job.created|started|succeeded|failed are published to OpenVibe.Events through an outbox in each satellite's jobs.db (EVENTS_URL set; events.event.publish). Planned (ADR-027): the tool registry GET /api/v1/tools[/:id[/schema]] (tools.tool.read), the uniform run API POST /api/v1/tools/:id/run (tools.tool.run; network probes need tools.net.probe), a jobs facade on the gateway, tiered quotas and a pseudonymous abuse log; the legacy /api/process, /api/net/* and /api/dev/* routes keep working with Deprecation and Sunset (2026-12-31) headers. GET /api/ready is truthful on the gateway (it checks every satellite) and on each satellite."
 }

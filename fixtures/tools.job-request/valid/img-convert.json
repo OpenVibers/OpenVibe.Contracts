@@ -1,0 +1,8 @@
+{
+  "type": "img.process",
+  "input": {
+    "tool": "convert",
+    "format": "webp",
+    "quality": 80
+  }
+}

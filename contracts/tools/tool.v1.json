@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/tool.v1.json",
+  "title": "ToolDescriptor",
+  "description": "One tool on openvibe.tools as its registry describes it (GET /api/v1/tools/:id, and each item of GET /api/v1/tools; capability tools.tool.read; ADR-027). There is one descriptor per catalogue tool (GET /api/catalog.json tools[].id), built from the tool's own code, so its page, the run API, openvibe-sdk/tools, the OpenAPI document and the docs all read the same facts. EXECUTION is where the tool's engine runs for its page: client (in the browser; nothing leaves it), sync (a server request answered inline) or job (an asynchronous job on a satellite, tools.job@1). API says whether POST /api/v1/tools/{id}/run exposes the tool. A client tool has api true only when it also has a server engine (a pure transform that runs in Node), and its page stays browser-only. A page-only tool (yt) has api false and run null. A job tool's run creates a job of run.job.type whose input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). INPUT is the JSON Schema (2020-12) that a run request's input must match, embedded or as { $ref: https://openvibe.tools/api/v1/tools/{id}/schema#/$defs/input }. GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, and the list uses the $ref form. RULES this schema enforces: api false has no run, and api true has a run and an input; an API job tool names its job, and only job tools name one; an API tool whose output is a file runs as a job (its results are served as job files); a tools.net.probe tool fetches (egress) and is never anonymous; an anonymous egress tool has a per-target throttle (limits.perTargetPerMinute); a client tool never fetches; an unavailable tool says why (statusReason); JSON output has a schema. contracts.tools.checkDescriptor(d) also checks what depends on the id (run.path, $ref targets) and files.min <= files.max.",
+  "type": "object",
+  "required": ["id", "family", "name", "summary", "status", "execution", "api", "run", "input", "files", "output", "limits", "auth", "quotaClass", "cost", "egress", "hosts", "docs"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,39}$", "description": "The tool's catalogue id, which is its subdomain label (png, jsminify, dns, pdf2jpg). It never changes." },
+    "family": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "The catalogue family: net, dev, img, audio, docs, text, media, places, pastes…" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 200, "description": "One plain sentence: what the tool does." },
+    "status": {
+      "enum": ["stable", "beta", "preview", "unavailable"],
+      "description": "stable: works, and its input and output only grow. beta: works; input or output may still change in a minor. preview: works with known gaps (limits or output not final). unavailable: listed, but runs are refused with 503 tools.tool.unavailable and the page says so (statusReason)."
+    },
+    "statusReason": { "type": "string", "minLength": 1, "maxLength": 300, "description": "Why the status is what it is, for people (e.g. 'needs qpdf on the host'). Required when unavailable." },
+    "execution": { "enum": ["client", "sync", "job"], "description": "Where the engine runs for the tool's page: client (the browser), sync (a server request answered inline), job (an asynchronous job)." },
+    "api": { "type": "boolean", "description": "POST /api/v1/tools/{id}/run exposes the tool. false for a client tool without a server engine and for page-only tools (yt)." },
+    "run": {
+      "type": ["object", "null"], "required": ["method", "path", "job"], "additionalProperties": false,
+      "description": "How to call it; null when api is false.",
+      "properties": {
+        "method": { "const": "POST" },
+        "path": { "type": "string", "pattern": "^/api/v1/tools/[a-z][a-z0-9-]{0,39}/run$", "description": "/api/v1/tools/{id}/run on https://openvibe.tools; the body is tools.run-request@1, the answer tools.run@1." },
+        "job": {
+          "type": ["object", "null"], "required": ["type", "operation"], "additionalProperties": false,
+          "description": "For a job tool: the job the run creates. null for tools answered inline.",
+          "properties": {
+            "type": { "type": "string", "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$", "maxLength": 80, "description": "Job type, e.g. img.process." },
+            "operation": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,39}$", "description": "The job input's tool field: convert, compress, trim, mergepdf…" },
+            "preset": { "type": "object", "description": "Input fields the tool itself fixes, applied over the caller's input (png: { format: png })." }
+          }
+        },
+        "legacy": {
+          "type": "array", "uniqueItems": true, "maxItems": 32,
+          "items": { "type": "string", "pattern": "^(GET|POST|PUT|DELETE) /[^\\s]*$" },
+          "description": "Older routes that run the same engine (GET /api/net/dns/:target, POST /api/process…). They keep working until their Sunset date and answer with Deprecation, Sunset and Link: rel=successor-version pointing at path."
+        }
+      }
+    },
+    "input": {
+      "description": "JSON Schema (2020-12) of the run request's input: embedded (an object schema), or { $ref } to $defs/input of GET /api/v1/tools/:id/schema. null only for a tool without an API.",
+      "anyOf": [
+        { "type": "object", "required": ["$ref"], "maxProperties": 1, "properties": { "$ref": { "type": "string", "format": "uri" } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "object" } } },
+        { "type": "null" }
+      ]
+    },
+    "files": {
+      "type": ["object", "null"], "required": ["min", "max", "accept", "maxBytes"], "additionalProperties": false,
+      "description": "The files a run takes (multipart parts, or tools.run-request@1 files references); null when it takes none.",
+      "properties": {
+        "min": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "max": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "accept": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z]+/([a-z0-9][a-z0-9.+-]*|\\*)$" },
+          "description": "Accepted media types, checked against the bytes, not the client's Content-Type (image/png, image/*, application/pdf…)."
+        },
+        "maxBytes": { "type": "integer", "minimum": 1, "description": "Largest accepted file." }
+      }
+    },
+    "output": {
+      "type": "object", "required": ["kind"], "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["json", "file", "files", "text"], "description": "json: result.data; text: result.text; file or files: result.files (job result files)." },
+        "schema": {
+          "description": "JSON Schema of result.data (kind json): embedded, or { $ref } to $defs/output of GET /api/v1/tools/:id/schema.",
+          "anyOf": [
+            { "type": "object", "required": ["$ref"], "maxProperties": 1, "properties": { "$ref": { "type": "string", "format": "uri" } } },
+            { "type": "object", "required": ["type"], "properties": { "type": { "const": "object" } } }
+          ]
+        },
+        "mime": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z]+/([a-z0-9][a-z0-9.+-]*|\\*)$" },
+          "description": "Media types the result files can have (kind file or files)."
+        }
+      },
+      "if": { "properties": { "kind": { "const": "json" } }, "required": ["kind"] },
+      "then": { "required": ["schema"] }
+    },
+    "limits": {
+      "type": "object", "required": ["timeoutMs"], "additionalProperties": false,
+      "properties": {
+        "timeoutMs": { "type": "integer", "minimum": 1, "maximum": 3600000, "description": "A run (or its job) longer than this fails with tools.job.timeout or 504." },
+        "maxDurationSec": { "type": "integer", "minimum": 1, "description": "Longest audio or video input." },
+        "maxPixels": { "type": "integer", "minimum": 1, "description": "Largest image input (width × height)." },
+        "maxPages": { "type": "integer", "minimum": 1, "description": "Most PDF pages." },
+        "maxInputBytes": { "type": "integer", "minimum": 1, "description": "Largest input as JSON (text to transform, lists of hosts…)." },
+        "perTargetPerMinute": { "type": "integer", "minimum": 1, "description": "Egress tools: most runs per minute against one target host or address, across all callers." }
+      }
+    },
+    "auth": {
+      "type": "object", "required": ["anonymous", "capability"], "additionalProperties": false,
+      "description": "Caller tiers: anonymous < session < user < app/service.",
+      "properties": {
+        "anonymous": { "type": "boolean", "description": "true: a caller with no token and no browser session may run it (keyed by IP, IPv6 by /64). false: a browser session (the ov_tools_jobs cookie), a signed-in person or a token is needed." },
+        "capability": {
+          "enum": ["tools.tool.run", "tools.net.probe"],
+          "description": "What an app or service token must hold. tools.tool.run is public. tools.net.probe (partner) covers network probes: only principals holding it run these through the API; people use their pages, which have a per-target throttle."
+        }
+      }
+    },
+    "quotaClass": {
+      "type": "string", "pattern": "^tools-[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "The quota bucket a run counts against, with allowances per caller tier. Names describe the work, never a tier or a price (tools-run, tools-job, tools-probe, tools-fetch…), so a paid tier later adds allowances, not names."
+    },
+    "cost": { "type": "integer", "minimum": 1, "maximum": 1000, "description": "Relative weight of one run within its quota class (1 = a cheap lookup or transform). Quotas count weight, not requests." },
+    "egress": { "type": "boolean", "description": "The server fetches a host or URL the caller chose (DNS, WHOIS, headers, Open Graph, ports…), always through the SSRF guard." },
+    "hosts": {
+      "type": "array", "uniqueItems": true, "maxItems": 50,
+      "items": { "type": "string", "pattern": "^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$" },
+      "description": "The tool's public hostnames, canonical first (png.openvibe.tools, a custom domain…); empty for a tool that lives on another service."
+    },
+    "docs": { "type": "string", "format": "uri", "pattern": "^https://", "description": "Where a person reads about the tool." }
+  },
+  "if": { "required": ["api"] },
+  "then": {
+    "$comment": "The RULES in the description, as one conditional so generated types stay plain (every descriptor has api).",
+    "allOf": [
+      {
+        "if": { "properties": { "api": { "const": false } }, "required": ["api"] },
+        "then": { "properties": { "run": { "type": "null" } } }
+      },
+      {
+        "if": { "properties": { "api": { "const": true } }, "required": ["api"] },
+        "then": { "properties": { "run": { "type": "object" }, "input": { "type": "object" } } }
+      },
+      {
+        "if": { "properties": { "api": { "const": true }, "execution": { "const": "job" } }, "required": ["api", "execution"] },
+        "then": { "properties": { "run": { "type": "object", "properties": { "job": { "type": "object" } } } } }
+      },
+      {
+        "if": { "properties": { "execution": { "enum": ["client", "sync"] } }, "required": ["execution"] },
+        "then": { "properties": { "run": { "type": ["object", "null"], "properties": { "job": { "type": "null" } } } } }
+      },
+      {
+        "if": { "properties": { "api": { "const": true }, "output": { "type": "object", "properties": { "kind": { "enum": ["file", "files"] } }, "required": ["kind"] } }, "required": ["api", "output"] },
+        "then": { "properties": { "execution": { "const": "job" } } }
+      },
+      {
+        "if": { "properties": { "auth": { "type": "object", "properties": { "capability": { "const": "tools.net.probe" } }, "required": ["capability"] } }, "required": ["auth"] },
+        "then": { "properties": { "egress": { "const": true }, "auth": { "type": "object", "properties": { "anonymous": { "const": false } } } } }
+      },
+      {
+        "if": { "properties": { "egress": { "const": true }, "auth": { "type": "object", "properties": { "anonymous": { "const": true } }, "required": ["anonymous"] } }, "required": ["egress", "auth"] },
+        "then": { "properties": { "limits": { "type": "object", "required": ["perTargetPerMinute"] } } }
+      },
+      {
+        "if": { "properties": { "execution": { "const": "client" } }, "required": ["execution"] },
+        "then": { "properties": { "egress": { "const": false } } }
+      },
+      {
+        "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] },
+        "then": { "required": ["statusReason"] }
+      }
+    ]
+  }
+}

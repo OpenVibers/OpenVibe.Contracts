@@ -1,0 +1,33 @@
+{
+  "id": "logo",
+  "family": "text",
+  "name": "Logo Maker",
+  "summary": "Make a text logo in the browser.",
+  "status": "stable",
+  "execution": "client",
+  "api": false,
+  "run": null,
+  "input": null,
+  "files": null,
+  "output": {
+    "kind": "file",
+    "mime": [
+      "image/png",
+      "image/svg+xml"
+    ]
+  },
+  "limits": {
+    "timeoutMs": 1000
+  },
+  "auth": {
+    "anonymous": true,
+    "capability": "tools.tool.run"
+  },
+  "quotaClass": "tools-run",
+  "cost": 1,
+  "egress": false,
+  "hosts": [
+    "logo.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/logo"
+}

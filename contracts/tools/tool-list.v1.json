@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/tool-list.v1.json",
+  "title": "ToolList",
+  "description": "The answer of GET /api/v1/tools on openvibe.tools (capability tools.tool.read; ADR-027): every tool's descriptor (tools.tool@1), with input and output schemas in the { $ref } form (GET /api/v1/tools/:id has them embedded). Filters: ?family=, ?execution=client|sync|job, ?api=true|false, ?status=, ?q= (name, summary and keywords). Planned placeholders are not tools and are not listed. Cacheable (ETag); updated_at changes when any descriptor does.",
+  "type": "object",
+  "required": ["tools", "count", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "tools": { "type": "array", "items": { "$ref": "tool.v1.json" } },
+    "count": { "type": "integer", "minimum": 0, "description": "The number of tools in this answer." },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "families": {
+      "type": "array",
+      "description": "The families of the tools in this answer.",
+      "items": {
+        "type": "object", "required": ["id", "name", "count"], "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "count": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "state": "succeeded",
+  "tool": "dns",
+  "result": {},
+  "error": {
+    "type": "https://openvibe.network/problems/tools.job.timeout",
+    "title": "Gateway Timeout",
+    "status": 504,
+    "code": "tools.job.timeout",
+    "detail": "The job ran longer than 900 s",
+    "error": "The job ran longer than 900 s"
+  },
+  "took_ms": 3
+}

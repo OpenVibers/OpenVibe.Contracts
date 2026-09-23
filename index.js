@@ -22,4 +22,5 @@ module.exports = {
     services: require('./lib/services'),
     serviceAuth: require('./lib/service-auth'),
     modules: require('./lib/modules'),
+    tools: require('./lib/tools'),
 };

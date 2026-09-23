@@ -181,6 +181,83 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(contracts.modules.get('chat.preferences').owner === 'chat' && services.get('chat').namespacesOwned.includes('chat.preferences'), 'chat.preferences is owned by chat, and its manifest says so');
 }
 
+// ── Tools platform API (v0.33, ADR-027) ──────────────────────────────────
+// The descriptor says how every tool may be called; the run API, the SDK and the docs read it. What
+// JSON Schema can hold is in tools.tool@1 (and its invalid fixtures); what depends on the id is in
+// contracts.tools.checkDescriptor, which the Tools registry runs over every descriptor.
+{
+    const { tools } = contracts;
+    const fixture = (id, kind, f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', id, kind, f), 'utf8'));
+    const valid = fs.readdirSync(path.join(ROOT, 'fixtures/tools.tool/valid')).filter(f => f.endsWith('.json')).map(f => fixture('tools.tool', 'valid', f));
+    const byId = Object.fromEntries(valid.map(d => [d.id, d]));
+    const { png, dns, port, yt } = byId;
+    const T = (d) => contracts.validate('tools.tool@1', d).valid;
+    const D = (d) => tools.checkDescriptor(d).valid;
+    for (const d of valid) ok(D(d), `${d.id} passes checkDescriptor: ${JSON.stringify(tools.checkDescriptor(d).errors)}`);
+
+    // api false never has a run endpoint, api true always has its own.
+    for (const d of valid) ok(d.api ? d.run && d.run.path === `/api/v1/tools/${d.id}/run` && d.input !== null : d.run === null, `${d.id}: run exists exactly when api is true`);
+    ok(yt.api === false && !T({ ...yt, run: { method: 'POST', path: '/api/v1/tools/yt/run', job: null } }), 'yt is page-only: no run endpoint (ADR-027)');
+    ok(!D({ ...dns, run: { ...dns.run, path: '/api/v1/tools/whois/run' } }), 'run.path is the tool\'s own');
+    ok(!D({ ...dns, run: { ...dns.run, legacy: ['POST /api/v1/tools/dns/run'] } }), 'legacy lists older routes, never the run API');
+    ok(!D({ ...dns, input: { $ref: 'https://openvibe.tools/api/v1/tools/whois/schema#/$defs/input' } }), 'an input $ref points at the tool\'s own schema');
+    ok(!D({ ...dns, input: { $ref: 'https://openvibe.tools/api/v1/tools/dns/schema#/$defs/output' } }), 'an input $ref points at $defs/input');
+    ok(!D({ ...png, files: { ...png.files, min: 2, max: 1 } }), 'files.min <= files.max');
+    // Execution: only job tools name a job, and a file result always comes from one.
+    for (const d of valid) ok(!d.run || (d.execution === 'job') === !!d.run.job, `${d.id}: names a job exactly when it runs as one`);
+    for (const d of valid) ok(!d.api || !['file', 'files'].includes(d.output.kind) || d.execution === 'job', `${d.id}: file output through the API comes from a job`);
+    ok(JSON.stringify(tools.jobInput(png, { format: 'jpg', tool: 'crop', width: 10 })) === '{"format":"png","tool":"convert","width":10}', 'a job tool\'s operation and preset win over the caller\'s input');
+    ok(tools.jobInput(dns, {}) === null, 'an inline tool submits no job');
+
+    // Egress and auth: a tool that fetches for anonymous callers throttles per target; probes are never anonymous.
+    for (const d of valid) if (d.egress) ok(!d.auth.anonymous || d.limits.perTargetPerMinute > 0, `${d.id}: egress needs a non-anonymous caller or a per-target throttle`);
+    for (const d of valid) if (d.auth.capability === 'tools.net.probe') ok(d.egress && !d.auth.anonymous, `${d.id}: a probe fetches and is never anonymous`);
+    ok(T({ ...dns, auth: { anonymous: false, capability: 'tools.tool.run' }, limits: { timeoutMs: 10000 } }), 'a signed-in-only egress tool may leave the per-target throttle out');
+    ok(!T({ ...port, auth: { anonymous: false, capability: 'tools.tool.run' }, execution: 'client' }) && !T({ ...byId.jsonminify, egress: true, limits: { timeoutMs: 1, perTargetPerMinute: 1 } }), 'a client tool never fetches');
+    for (const q of ['tools-free', 'tools-anon-run', 'tools-paid-job', 'tools-user', 'tools-pro']) ok(!D({ ...dns, quotaClass: q }), `quota class ${q} names a tier, not the work`);
+    for (const d of valid) ok(d.quotaClass.startsWith('tools-') && Number.isInteger(d.cost) && d.cost >= 1, `${d.id}: quota class and cost`);
+
+    // Capabilities: the descriptor names exactly the run capabilities, and they answer the run contracts.
+    const capEnum = [...contracts.schema('tools.tool').properties.auth.properties.capability.enum].sort();
+    ok(JSON.stringify(capEnum) === '["tools.net.probe","tools.tool.run"]', 'auth.capability is tools.tool.run or tools.net.probe');
+    for (const id of capEnum) {
+        const c = capabilities.get(id);
+        ok(c && c.owner === 'tools' && c.inputSchema === 'tools.run-request@1' && c.outputSchema === 'tools.run@1' && c.implementedBy.some(r => r.startsWith('POST /api/v1/tools/:id/run')), `${id} is the run API`);
+    }
+    const [readCap, runCap, probeCap] = ['tools.tool.read', 'tools.tool.run', 'tools.net.probe'].map(id => capabilities.get(id));
+    ok(readCap.visibility === 'public' && readCap.quotaClass === 'tools-read' && readCap.outputSchema === 'tools.tool@1' && ['GET /api/v1/tools', 'GET /api/v1/tools/:id', 'GET /api/v1/tools/:id/schema'].every(r => readCap.implementedBy.includes(r)), 'tools.tool.read: public registry routes');
+    ok(runCap.visibility === 'public' && runCap.quotaClass === 'tools-run', 'tools.tool.run is public');
+    ok(probeCap.visibility === 'partner' && probeCap.quotaClass === 'tools-probe', 'tools.net.probe is partner: staff-set allowances only, never a default one');
+    const jobCreate = capabilities.get('tools.job.create');
+    ok(['POST /api/v1/jobs/:id/retry', 'PUT|DELETE /api/v1/jobs/:id/references/:ref'].every(r => jobCreate.implementedBy.includes(r)) && jobCreate.inputSchema === 'tools.job-request@1', 'tools.job.create covers submit, retry and references');
+    ok(['tools.job.create', 'tools.job.read', 'tools.job.cancel'].every(id => capabilities.get(id).outputSchema === 'tools.job@1'), 'the job capabilities answer tools.job@1');
+    const svc = services.get('tools');
+    ok(svc.ready === '/api/ready' && ['tools.tool.read', 'tools.tool.run', 'tools.net.probe'].every(c => svc.capabilities.includes(c)), 'the tools manifest lists the registry and run capabilities and its ready path');
+    for (const t of ['created', 'started', 'succeeded', 'failed']) ok(contracts.resolve(`tools.job.${t}`).status === 'active', `tools.job.${t} is emitted (active)`);
+
+    // Runs and jobs agree: a run's result files are the job's, one idempotency rule, one job type pattern.
+    const job = contracts.schema('tools.job'), run = contracts.schema('tools.run'), req = contracts.schema('tools.run-request'), jreq = contracts.schema('tools.job-request');
+    ok(JSON.stringify(job.properties.result.properties.files.items) === JSON.stringify(run.oneOf[0].properties.result.properties.files.items), 'a run\'s result files are exactly the job\'s');
+    ok(req.properties.idempotency_key.pattern === jreq.properties.idempotency_key.pattern, 'runs and jobs take the same Idempotency-Key');
+    const typeRe = job.properties.type.pattern;
+    ok([jreq.properties.type.pattern, contracts.schema('tools.tool').properties.run.properties.job.properties.type.pattern, contracts.schema('tools.job.created').properties.type.pattern].every(p => p === typeRe), 'one job type pattern everywhere');
+    const done = fixture('tools.job', 'valid', 'succeeded-media-referenced.json');
+    ok(contracts.validate('tools.run@1', { state: 'succeeded', tool: done.tool, result: done.result, took_ms: 3000, job: done }).valid, 'a succeeded job\'s result is a run result');
+    const payloadFile = Object.keys(contracts.schema('tools.job.succeeded').properties.result.properties.files.items.properties).filter(k => k !== 'index');
+    ok(payloadFile.every(k => k in job.properties.result.properties.files.items.properties), 'the tools.job.succeeded event carries a subset of what the job shows its owner');
+    ok(!contracts.validate('tools.job@1', { ...done, result: { ...done.result, files: [{ ...done.result.files[0], _path: '/x' }] } }).valid, 'a job never shows server paths');
+
+    // The registry list: every descriptor checked, ids and hosts unique, counts honest.
+    const list = fixture('tools.tool-list', 'valid', 'four-tools.json');
+    ok(tools.checkList(list).valid, `the list fixture passes checkList: ${JSON.stringify(tools.checkList(list).errors)}`);
+    ok(list.tools.every(d => !d.input || d.input.$ref) && list.tools.every(d => !d.output.schema || d.output.schema.$ref), 'the list carries schemas as $ref');
+    ok(!tools.checkList({ ...list, count: 5 }).valid, 'count is the number of tools listed');
+    ok(!tools.checkList({ ...list, tools: [...list.tools, list.tools[0]], count: list.tools.length + 1 }).valid, 'a tool is listed once');
+    ok(!tools.checkList({ ...list, tools: [list.tools[0], { ...list.tools[1], hosts: [list.tools[0].hosts[0]] }], count: 2, families: undefined }).valid, 'a host belongs to one tool');
+    ok(!tools.checkList({ ...list, families: [{ id: 'img', name: 'Image Tools', count: 2 }] }).valid, 'family counts are honest');
+    ok(!tools.checkList({ ...list, tools: [{ ...list.tools[0], run: { ...list.tools[0].run, path: '/api/v1/tools/jpg/run' } }], count: 1, families: undefined }).valid, 'checkList applies checkDescriptor to every tool');
+}
+
 // ── Ids ──────────────────────────────────────────────────────────────────
 for (const kind of ['user', 'guest', 'app', 'mod']) {
     const id = ids.newId(kind);

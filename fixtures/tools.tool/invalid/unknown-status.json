@@ -1,0 +1,43 @@
+{
+  "id": "dns",
+  "family": "net",
+  "name": "DNS Lookup",
+  "summary": "Look up A, AAAA, MX, TXT, NS, CNAME and other records for a domain.",
+  "status": "deprecated",
+  "execution": "sync",
+  "api": true,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/tools/dns/run",
+    "job": null,
+    "legacy": [
+      "GET /api/net/dns/:target"
+    ]
+  },
+  "input": {
+    "$ref": "https://openvibe.tools/api/v1/tools/dns/schema#/$defs/input"
+  },
+  "files": null,
+  "output": {
+    "kind": "json",
+    "schema": {
+      "$ref": "https://openvibe.tools/api/v1/tools/dns/schema#/$defs/output"
+    }
+  },
+  "limits": {
+    "timeoutMs": 10000,
+    "maxInputBytes": 1024,
+    "perTargetPerMinute": 30
+  },
+  "auth": {
+    "anonymous": true,
+    "capability": "tools.tool.run"
+  },
+  "quotaClass": "tools-fetch",
+  "cost": 1,
+  "egress": true,
+  "hosts": [
+    "dns.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/dns"
+}

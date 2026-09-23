@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/tools.job.created.v1.json",
   "title": "ToolsJobCreatedPayload",
-  "description": "tools.job.created v1 (OpenVibe.Tools apps/_shared/jobs, planned). A job was accepted and queued (POST /api/v1/jobs, or a retry of a failed job, which carries retry_of). An Idempotency-Key replay creates no job and no event. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor the owner when it is a subject (user, service, app or mod), else service:tools.",
+  "description": "tools.job.created v1 (OpenVibe.Tools apps/_shared/jobs/events.js). A job was accepted and queued (POST /api/v1/jobs, or a retry of a failed job, which carries retry_of). An Idempotency-Key replay creates no job and no event. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor the owner when it is a subject (user, service, app or mod), else service:tools.",
   "type": "object",
   "required": ["job_id", "service", "type", "type_version", "state", "owner", "attempts", "max_attempts", "created_at", "retry_of"],
   "additionalProperties": false,

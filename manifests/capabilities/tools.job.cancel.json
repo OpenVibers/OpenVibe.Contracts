@@ -5,6 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Cancel a queued or running job the calling principal created.",
+  "outputSchema": "tools.job@1",
   "permissions": [
     "tools:jobs:write"
   ],

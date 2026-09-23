@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/run-request.v1.json",
+  "title": "ToolsRunRequest",
+  "description": "Body of POST /api/v1/tools/{id}/run on openvibe.tools (capability tools.tool.run, or tools.net.probe for network probes; ADR-027). JSON, or multipart/form-data like POST /api/v1/jobs: the text parts input (JSON text), wait_ms and idempotency_key, and uploaded files as file or files parts. The tool gets the uploaded files first, then the files references, in order; the count must fit the descriptor's files.min and files.max. input must match the tool's input schema (tools.tool@1 input). A job tool's job input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). The Idempotency-Key header wins over idempotency_key; ?wait_ms= on the query does the same as the field. Answers tools.run@1: 200 finished (succeeded, or failed with the tool's own error), 202 + Location while a job is queued or running, 200 + Idempotent-Replayed: true for a replay. Refusals are problem+json: 400 tools.run.invalid (not JSON, a bad field, wrong file count), 401 token.*, 403 capability.denied, 404 tools.tool.not_found, 404 tools.tool.not_runnable (api false: a page-only tool), 404 tools.run.file_not_found (a reference the caller cannot read), 409 tools.job.idempotency_conflict, 413 tools.file.too_large, 415 tools.file.unsupported_type (checked against the bytes), 422 tools.input.invalid (errors[] with JSON pointers), 429 quota.exceeded or tools.job.too_many_active (Retry-After), 503 tools.tool.unavailable.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "input": { "type": "object", "description": "The tool's parameters, matching its input schema. Default {}." },
+    "files": {
+      "type": "array", "maxItems": 50,
+      "description": "Files that are already somewhere, instead of or besides uploaded parts.",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object", "required": ["media_id"], "additionalProperties": false,
+            "description": "A Media object the caller may read. Tools reads it for the caller.",
+            "properties": {
+              "media_id": { "type": "string", "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$" }
+            }
+          },
+          {
+            "type": "object", "required": ["job_id", "index"], "additionalProperties": false,
+            "description": "Result file index of a job the same caller owns (GET /api/v1/jobs/:id/files/:n), so one tool's output feeds the next.",
+            "properties": {
+              "job_id": { "type": "string", "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$" },
+              "index": { "type": "integer", "minimum": 0, "maximum": 99 }
+            }
+          }
+        ]
+      }
+    },
+    "wait_ms": { "type": "integer", "minimum": 0, "maximum": 60000, "description": "Job tools: wait up to this long for the job to finish before answering (200 finished, else 202 with the job). Default 0. Inline tools always answer finished." },
+    "idempotency_key": { "type": "string", "pattern": "^[!-~]{8,200}$", "description": "Job tools: the same (caller, key) and request returns the same job; a different request under it is 409 tools.job.idempotency_conflict. Inline tools ignore it." }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "state": "succeeded",
+  "tool": "png",
+  "result": {
+    "files": [
+      {
+        "name": "photo.png",
+        "mime": "image/png",
+        "size": 90112,
+        "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "storage": "media",
+        "media": {
+          "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPS",
+          "role": "output",
+          "namespace": "tools",
+          "size_bytes": 90112,
+          "content_hash": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+          "mime_type": "image/png",
+          "status": "ready"
+        },
+        "url": "/api/v1/jobs/job_01JAB2C3D4E5F6G7H8J9K0MNPQ/files/0"
+      }
+    ],
+    "data": {
+      "width": 1024,
+      "height": 768
+    }
+  },
+  "took_ms": 4000,
+  "job": {
+    "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "object": "tools.job",
+    "service": "img",
+    "type": "img.process",
+    "type_version": 1,
+    "state": "succeeded",
+    "progress": {
+      "percent": 100,
+      "message": "Done"
+    },
+    "attempts": 1,
+    "max_attempts": 3,
+    "cancel_requested": false,
+    "created_at": "2026-09-23T09:00:00.000Z",
+    "started_at": "2026-09-23T09:00:01.000Z",
+    "finished_at": "2026-09-23T09:00:04.000Z",
+    "expires_at": null,
+    "result": {
+      "files": [
+        {
+          "name": "photo.png",
+          "mime": "image/png",
+          "size": 90112,
+          "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+          "storage": "media",
+          "media": {
+            "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPS",
+            "role": "output",
+            "namespace": "tools",
+            "size_bytes": 90112,
+            "content_hash": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+            "mime_type": "image/png",
+            "status": "ready"
+          },
+          "url": "/api/v1/jobs/job_01JAB2C3D4E5F6G7H8J9K0MNPQ/files/0"
+        }
+      ],
+      "data": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    "error": null,
+    "retryable": false,
+    "retry_of": null,
+    "retried_by": null,
+    "references": [
+      {
+        "ref": "community:paste:p_123",
+        "created_at": "2026-09-23T09:05:00.000Z"
+      }
+    ],
+    "links": {
+      "self": "/api/v1/jobs/job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "events": "/api/v1/jobs/job_01JAB2C3D4E5F6G7H8J9K0MNPQ/events",
+      "cancel": null,
+      "retry": null,
+      "retried_by": null
+    },
+    "tool": "png"
+  }
+}

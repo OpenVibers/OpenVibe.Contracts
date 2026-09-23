@@ -1,0 +1,59 @@
+{
+  "id": "protectpdf",
+  "family": "docs",
+  "name": "Protect PDF",
+  "summary": "Put a password on a PDF (AES-256).",
+  "status": "unavailable",
+  "execution": "job",
+  "api": true,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/tools/protectpdf/run",
+    "job": {
+      "type": "docs.process",
+      "operation": "protect"
+    }
+  },
+  "input": {
+    "type": "object",
+    "required": [
+      "password"
+    ],
+    "properties": {
+      "password": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    }
+  },
+  "files": {
+    "min": 1,
+    "max": 1,
+    "accept": [
+      "application/pdf"
+    ],
+    "maxBytes": 104857600
+  },
+  "output": {
+    "kind": "file",
+    "mime": [
+      "application/pdf"
+    ]
+  },
+  "limits": {
+    "timeoutMs": 300000,
+    "maxPages": 2000
+  },
+  "auth": {
+    "anonymous": false,
+    "capability": "tools.tool.run"
+  },
+  "quotaClass": "tools-job",
+  "cost": 10,
+  "egress": false,
+  "hosts": [
+    "protectpdf.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/protectpdf"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "jsonminify",
+  "family": "dev",
+  "name": "JSON Minifier",
+  "summary": "Strip the whitespace out of JSON.",
+  "status": "stable",
+  "execution": "client",
+  "api": true,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/tools/jsonminify/run",
+    "job": null
+  },
+  "input": {
+    "type": "string"
+  },
+  "files": null,
+  "output": {
+    "kind": "text"
+  },
+  "limits": {
+    "timeoutMs": 5000,
+    "maxInputBytes": 1048576
+  },
+  "auth": {
+    "anonymous": true,
+    "capability": "tools.tool.run"
+  },
+  "quotaClass": "tools-run",
+  "cost": 1,
+  "egress": false,
+  "hosts": [
+    "json-minifier.openvibe.tools",
+    "jsonminify.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/jsonminify"
+}

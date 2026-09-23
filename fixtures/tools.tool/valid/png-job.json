@@ -1,0 +1,69 @@
+{
+  "id": "png",
+  "family": "img",
+  "name": "PNG Converter",
+  "summary": "Convert JPG, WebP, AVIF, HEIC, GIF, BMP, TIFF and more to PNG.",
+  "status": "stable",
+  "execution": "job",
+  "api": true,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/tools/png/run",
+    "job": {
+      "type": "img.process",
+      "operation": "convert",
+      "preset": {
+        "format": "png"
+      }
+    },
+    "legacy": [
+      "POST /api/process",
+      "POST /api/process/direct"
+    ]
+  },
+  "input": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "compressionLevel": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 16384
+      }
+    }
+  },
+  "files": {
+    "min": 1,
+    "max": 1,
+    "accept": [
+      "image/*"
+    ],
+    "maxBytes": 52428800
+  },
+  "output": {
+    "kind": "file",
+    "mime": [
+      "image/png"
+    ]
+  },
+  "limits": {
+    "timeoutMs": 120000,
+    "maxPixels": 100000000
+  },
+  "auth": {
+    "anonymous": true,
+    "capability": "tools.tool.run"
+  },
+  "quotaClass": "tools-job",
+  "cost": 5,
+  "egress": false,
+  "hosts": [
+    "png.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/png"
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/tools.job.succeeded.v1.json",
   "title": "ToolsJobSucceededPayload",
-  "description": "tools.job.succeeded v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job finished and its result files are stored (in Media when TOOLS_JOB_RESULTS=media). Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
+  "description": "tools.job.succeeded v1 (OpenVibe.Tools apps/_shared/jobs/events.js). The job finished and its result files are stored (in Media when TOOLS_JOB_RESULTS=media). Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
   "type": "object",
   "required": ["job_id", "service", "type", "type_version", "state", "owner", "attempts", "max_attempts", "created_at", "retry_of", "started_at", "finished_at", "expires_at", "result"],
   "additionalProperties": false,

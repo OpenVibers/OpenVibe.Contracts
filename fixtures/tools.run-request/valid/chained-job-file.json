@@ -1,0 +1,13 @@
+{
+  "input": {
+    "width": 512
+  },
+  "files": [
+    {
+      "job_id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "index": 0
+    }
+  ],
+  "wait_ms": 20000,
+  "idempotency_key": "resize-01JAB2C3"
+}

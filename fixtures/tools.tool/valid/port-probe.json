@@ -1,0 +1,68 @@
+{
+  "id": "port",
+  "family": "net",
+  "name": "Port Checker",
+  "summary": "Check whether TCP ports on a host are open.",
+  "status": "beta",
+  "execution": "sync",
+  "api": true,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/tools/port/run",
+    "job": null,
+    "legacy": [
+      "GET /api/net/port/:target"
+    ]
+  },
+  "input": {
+    "type": "object",
+    "required": [
+      "host",
+      "ports"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "host": {
+        "type": "string",
+        "maxLength": 253
+      },
+      "ports": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 20,
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    }
+  },
+  "files": null,
+  "output": {
+    "kind": "json",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array"
+        }
+      }
+    }
+  },
+  "limits": {
+    "timeoutMs": 15000,
+    "perTargetPerMinute": 6
+  },
+  "auth": {
+    "anonymous": false,
+    "capability": "tools.net.probe"
+  },
+  "quotaClass": "tools-probe",
+  "cost": 5,
+  "egress": true,
+  "hosts": [
+    "port.openvibe.tools"
+  ],
+  "docs": "https://openvibe.tools/tool/port"
+}

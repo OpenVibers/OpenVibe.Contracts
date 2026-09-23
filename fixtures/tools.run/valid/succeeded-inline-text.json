@@ -1,0 +1,9 @@
+{
+  "state": "succeeded",
+  "tool": "jsonminify",
+  "result": {
+    "text": "{\"a\":1}"
+  },
+  "took_ms": 2,
+  "job": null
+}

@@ -725,7 +725,7 @@
       "schema": "events/payloads/tools.job.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "tools.job.started",
@@ -734,7 +734,7 @@
       "schema": "events/payloads/tools.job.started.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "tools.job.succeeded",
@@ -743,7 +743,7 @@
       "schema": "events/payloads/tools.job.succeeded.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "tools.job.failed",
@@ -752,7 +752,7 @@
       "schema": "events/payloads/tools.job.failed.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "live.stream.started",
@@ -862,6 +862,66 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "tools.tool",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/tool.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-027"
+    },
+    {
+      "id": "tools.tool-list",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/tool-list.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-027"
+    },
+    {
+      "id": "tools.run-request",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/run-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-027"
+    },
+    {
+      "id": "tools.run",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/run.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-027"
+    },
+    {
+      "id": "tools.job",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/job.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-027"
+    },
+    {
+      "id": "tools.job-request",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/job-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-027"
     }
   ]
 }

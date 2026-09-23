@@ -1,0 +1,200 @@
+{
+  "tools": [
+    {
+      "id": "png",
+      "family": "img",
+      "name": "PNG Converter",
+      "summary": "Convert JPG, WebP, AVIF, HEIC, GIF, BMP, TIFF and more to PNG.",
+      "status": "stable",
+      "execution": "job",
+      "api": true,
+      "run": {
+        "method": "POST",
+        "path": "/api/v1/tools/png/run",
+        "job": {
+          "type": "img.process",
+          "operation": "convert",
+          "preset": {
+            "format": "png"
+          }
+        },
+        "legacy": [
+          "POST /api/process",
+          "POST /api/process/direct"
+        ]
+      },
+      "input": {
+        "$ref": "https://openvibe.tools/api/v1/tools/png/schema#/$defs/input"
+      },
+      "files": {
+        "min": 1,
+        "max": 1,
+        "accept": [
+          "image/*"
+        ],
+        "maxBytes": 52428800
+      },
+      "output": {
+        "kind": "file",
+        "mime": [
+          "image/png"
+        ]
+      },
+      "limits": {
+        "timeoutMs": 120000,
+        "maxPixels": 100000000
+      },
+      "auth": {
+        "anonymous": true,
+        "capability": "tools.tool.run"
+      },
+      "quotaClass": "tools-job",
+      "cost": 5,
+      "egress": false,
+      "hosts": [
+        "png.openvibe.tools"
+      ],
+      "docs": "https://openvibe.tools/tool/png"
+    },
+    {
+      "id": "dns",
+      "family": "net",
+      "name": "DNS Lookup",
+      "summary": "Look up A, AAAA, MX, TXT, NS, CNAME and other records for a domain.",
+      "status": "stable",
+      "execution": "sync",
+      "api": true,
+      "run": {
+        "method": "POST",
+        "path": "/api/v1/tools/dns/run",
+        "job": null,
+        "legacy": [
+          "GET /api/net/dns/:target"
+        ]
+      },
+      "input": {
+        "$ref": "https://openvibe.tools/api/v1/tools/dns/schema#/$defs/input"
+      },
+      "files": null,
+      "output": {
+        "kind": "json",
+        "schema": {
+          "$ref": "https://openvibe.tools/api/v1/tools/dns/schema#/$defs/output"
+        }
+      },
+      "limits": {
+        "timeoutMs": 10000,
+        "maxInputBytes": 1024,
+        "perTargetPerMinute": 30
+      },
+      "auth": {
+        "anonymous": true,
+        "capability": "tools.tool.run"
+      },
+      "quotaClass": "tools-fetch",
+      "cost": 1,
+      "egress": true,
+      "hosts": [
+        "dns.openvibe.tools"
+      ],
+      "docs": "https://openvibe.tools/tool/dns"
+    },
+    {
+      "id": "port",
+      "family": "net",
+      "name": "Port Checker",
+      "summary": "Check whether TCP ports on a host are open.",
+      "status": "beta",
+      "execution": "sync",
+      "api": true,
+      "run": {
+        "method": "POST",
+        "path": "/api/v1/tools/port/run",
+        "job": null,
+        "legacy": [
+          "GET /api/net/port/:target"
+        ]
+      },
+      "input": {
+        "$ref": "https://openvibe.tools/api/v1/tools/port/schema#/$defs/input"
+      },
+      "files": null,
+      "output": {
+        "kind": "json",
+        "schema": {
+          "$ref": "https://openvibe.tools/api/v1/tools/port/schema#/$defs/output"
+        }
+      },
+      "limits": {
+        "timeoutMs": 15000,
+        "perTargetPerMinute": 6
+      },
+      "auth": {
+        "anonymous": false,
+        "capability": "tools.net.probe"
+      },
+      "quotaClass": "tools-probe",
+      "cost": 5,
+      "egress": true,
+      "hosts": [
+        "port.openvibe.tools"
+      ],
+      "docs": "https://openvibe.tools/tool/port"
+    },
+    {
+      "id": "yt",
+      "family": "media",
+      "name": "YouTube Downloader",
+      "summary": "Save a YouTube video or its audio.",
+      "status": "stable",
+      "execution": "job",
+      "api": false,
+      "run": null,
+      "input": null,
+      "files": null,
+      "output": {
+        "kind": "file",
+        "mime": [
+          "video/mp4",
+          "audio/mpeg"
+        ]
+      },
+      "limits": {
+        "timeoutMs": 900000,
+        "maxDurationSec": 3600,
+        "perTargetPerMinute": 20
+      },
+      "auth": {
+        "anonymous": true,
+        "capability": "tools.tool.run"
+      },
+      "quotaClass": "tools-download",
+      "cost": 50,
+      "egress": true,
+      "hosts": [
+        "youtube-downloader.openvibe.tools",
+        "yt.openvibe.tools"
+      ],
+      "docs": "https://openvibe.tools/tool/yt"
+    }
+  ],
+  "count": 4,
+  "updated_at": "2026-09-23T21:00:00.000Z",
+  "families": [
+    {
+      "id": "img",
+      "name": "Image Tools",
+      "count": 1
+    },
+    {
+      "id": "net",
+      "name": "Network Tools",
+      "count": 2
+    },
+    {
+      "id": "media",
+      "name": "Media",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "state": "succeeded",
+  "tool": "dns",
+  "result": {
+    "html": "<b>x</b>"
+  },
+  "took_ms": 3
+}

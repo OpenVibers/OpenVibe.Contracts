@@ -1,0 +1,22 @@
+{
+  "id": "tools.tool.read",
+  "version": "1.0",
+  "owner": "tools",
+  "status": "planned",
+  "visibility": "public",
+  "description": "Read the tool registry (ADR-027): every tool's descriptor (tools.tool@1: execution, whether the run API exposes it, how to call it, input and output schemas, files, limits, auth, quota class, cost, egress, hosts, docs), filtered by family, execution, api, status or text. GET /api/v1/tools answers tools.tool-list@1 with schemas as { $ref }; GET /api/v1/tools/:id has them embedded; GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }. Open to everyone, anonymous callers included; cacheable. Planned until the gateway serves these routes.",
+  "outputSchema": "tools.tool@1",
+  "permissions": [
+    "tools:catalog:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "tools-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/tools",
+    "GET /api/v1/tools/:id",
+    "GET /api/v1/tools/:id/schema"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "tools.tool.run",
+  "version": "1.0",
+  "owner": "tools",
+  "status": "planned",
+  "visibility": "public",
+  "description": "Run a tool through the uniform run API (ADR-027): POST /api/v1/tools/:id/run with tools.run-request@1 (JSON, or multipart with uploaded files), answered inline (tools.run@1 succeeded or failed) or, for a job tool that has not finished within wait_ms, with its job (202 + Location). Every tool whose descriptor has api true and auth.capability tools.tool.run. Callers are tiered, anonymous < session < user < app/service: tools with auth.anonymous true take anonymous callers (keyed by IP, IPv6 by /64); the others need a browser session, a signed-in person or a token. An app or service token needs this capability; people and browser sessions do not. Quotas count each tool's cost within its quota class, per caller. A job tool's run creates a job owned by the caller, like tools.job.create. Planned until the gateway serves the route.",
+  "inputSchema": "tools.run-request@1",
+  "outputSchema": "tools.run@1",
+  "permissions": [
+    "tools:run"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "tools-run",
+  "events": [
+    "tools.job.created",
+    "tools.job.started",
+    "tools.job.succeeded",
+    "tools.job.failed"
+  ],
+  "implementedBy": [
+    "POST /api/v1/tools/:id/run"
+  ]
+}
