@@ -13,3 +13,4 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-007](ADR-007-data-ownership.md) | Logical data ownership and database technology | Accepted 2026-09-22 |
 | [ADR-008](ADR-008-shared-packages.md) | Shared package publication and release manifests | Accepted 2026-09-22; implementation in progress (OpenVibe.Shared) |
 | [ADR-011](ADR-011-community-pastes.md) | Community paste and comment ownership migration | Accepted and executed 2026-09-22 |
+| [ADR-012](ADR-012-economic-classification.md) | Billing vs loyalty, credits and currency classification | Accepted 2026-09-22; gates Waves 8-10 |
