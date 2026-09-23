@@ -18,7 +18,8 @@
     "chat.message.send",
     "live.chat_context.read",
     "live.chat_effects.write",
-    "live.chat_mirror.write"
+    "live.chat_mirror.write",
+    "live.tips_delivery.write"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],
