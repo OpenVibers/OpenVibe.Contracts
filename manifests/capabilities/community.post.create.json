@@ -1,10 +1,10 @@
 {
   "id": "community.post.create",
-  "version": "1.0",
+  "version": "1.1",
   "owner": "community",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "Create a post in a thread or typed comment thread (Wave 5).",
+  "description": "Forum writes as a service: create threads and replies in a space, vote on threads, and edit or delete one's own posts, as the acting subject (X-OV-Subject) or as origin \"ai\" (no author, labelled as AI). Space visibility (public, members, staff), locks and limits are checked by Community.",
   "outputSchema": "common.entity-ref@1",
   "permissions": [
     "community:write"
@@ -14,7 +14,14 @@
   ],
   "quotaClass": "community-write",
   "events": [
+    "community.thread.created",
     "community.post.created"
   ],
-  "implementedBy": []
+  "implementedBy": [
+    "POST /api/v1/spaces/:space/threads",
+    "POST /api/v1/spaces/:space/threads/:slug/posts",
+    "POST /api/v1/spaces/:space/threads/:slug/votes",
+    "PUT|DELETE /api/v1/posts/:id",
+    "DELETE /api/v1/spaces/:space/threads/:slug"
+  ]
 }

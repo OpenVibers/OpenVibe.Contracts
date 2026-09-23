@@ -16,7 +16,10 @@
     "community.paste.create",
     "community.paste.write",
     "community.paste.moderate",
-    "community.post.create"
+    "community.post.create",
+    "community.comment.write",
+    "community.comment.moderate",
+    "community.pulse.write"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],
