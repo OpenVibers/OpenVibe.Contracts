@@ -68,6 +68,18 @@ Manifests: `manifests/services/` (the 7 running services plus the 21 charter rep
 
 `manifests/namespaces/*.json` define per-subject module namespaces (`modules.namespace@1`): owner, data schema, writers (`owner` service and/or the `user`), public fields, quota and what happens when the owner is retired. OpenVibe.Network stores the records (`modules.module-record@1`, revision-checked writes). `contracts.modules.validateData / publicView / canWrite` apply the same rules everywhere. Modules hold portable preferences and summaries, never domain truth, money or authoritative game inventory.
 
+## Developer-app events (v0.28)
+
+Three `public` capabilities let a developer app (ADR-014) use OpenVibe.Events with a scoped app token, without any first-party `events.*` capability (those stay `internal`):
+
+| Capability | What the app may do |
+|---|---|
+| `events.app.publish` | publish event types `app.<project_key>.<name>[.<more>]` only |
+| `events.app.read` | pull its own project's events (same environment) plus first-party `public` events |
+| `events.app.subscribe` | webhook subscriptions in the same scope, to public https endpoints only |
+
+`project_key` is `p` followed by the project's ULID in lowercase (`prj_01JAB…` → `p01jab…`), so it fits an event-type segment. An app event's `source` is `app-` followed by the app's ULID in lowercase (`app:app_01JAB…` → `app-01jab…`), which keeps `events.event-envelope@1` unchanged (its `source` pattern already allows it). OpenVibe.Events enforces the scope, the sandbox separation and per-project quotas.
+
 ## Versioning and compatibility
 
 - A contract id is permanent. Minor versions only add optional fields.

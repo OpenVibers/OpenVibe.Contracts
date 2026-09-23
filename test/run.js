@@ -58,6 +58,21 @@ for (const cap of capabilities.manifests) {
     for (const k of ['inputSchema', 'outputSchema']) if (cap[k]) ok(contracts.resolve(cap[k]), `${cap.id} ${k} resolves`);
     ok(cap.status !== 'active' || cap.implementedBy.length > 0, `active ${cap.id} names the route that implements it`);
 }
+// Developer-app events (v0.28, ADR-014): grantable to apps, owned by Events, project-scoped. The
+// existing service-level events.* capabilities stay internal.
+for (const id of ['events.app.publish', 'events.app.read', 'events.app.subscribe']) {
+    const c = capabilities.get(id);
+    ok(c && c.owner === 'events' && c.visibility === 'public' && c.status === 'active' && c.resourceConstraints.includes('project'), `${id} is a public, active, project-scoped Events capability`);
+}
+for (const id of ['events.event.publish', 'events.event.read', 'events.subscription.manage', 'events.delivery.admin']) {
+    ok(capabilities.get(id).visibility === 'internal', `${id} stays internal`);
+}
+{
+    // An app event keeps source and event_type inside the envelope's existing patterns.
+    const env = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/events.event-envelope/valid/app-event.json'), 'utf8'));
+    ok(contracts.validate('events.event-envelope@1', { ...env, source: `app-${'01JAB2C3D4E5F6G7H8J9K0MNPS'.toLowerCase()}` }).valid, 'app-<lowercased ULID> is a valid source');
+    ok(!contracts.validate('events.event-envelope@1', { ...env, source: 'app:app_01JAB2C3D4E5F6G7H8J9K0MNPS' }).valid, 'the raw app subject is not a valid source');
+}
 
 // ── Ids ──────────────────────────────────────────────────────────────────
 for (const kind of ['user', 'guest', 'app', 'mod']) {

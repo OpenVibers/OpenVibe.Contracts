@@ -1,0 +1,20 @@
+{
+  "id": "events.app.publish",
+  "version": "1.0",
+  "owner": "events",
+  "status": "active",
+  "visibility": "public",
+  "description": "Publish durable events (events.event-envelope@1) as a developer app (ADR-014). The app token (sub app:app_<ULID>, project_id prj_<ULID>, env) may publish only event types app.<project_key>.<name>[.<more>], where project_key is 'p' followed by the project's ULID in lowercase (prj_01JAB... -> p01jab...). source must be 'app-' followed by the app's ULID in lowercase; actor is the app (or the on_behalf_of user). Events stores the token's env with each event: sandbox events are never delivered to production subscriptions nor shown to production apps. Rate and retained bytes are limited per project and environment by OpenVibe.Events.",
+  "inputSchema": "events.event-envelope@1",
+  "permissions": [
+    "events:write"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "events-app-publish",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/events"
+  ]
+}

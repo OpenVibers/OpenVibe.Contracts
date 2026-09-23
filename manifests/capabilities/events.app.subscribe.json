@@ -1,0 +1,23 @@
+{
+  "id": "events.app.subscribe",
+  "version": "1.0",
+  "owner": "events",
+  "status": "active",
+  "visibility": "public",
+  "description": "Manage webhook subscriptions as a developer app (ADR-014). Topic patterns are limited to the scope of events.app.read (own project's app.<project_key>.* events in the token's environment, plus public platform events). Endpoints must be https URLs whose host resolves only to public IP addresses; OpenVibe.Events re-checks the resolved address when it delivers and never follows redirects. Deliveries are signed with the subscription secret (X-OpenVibe-Signature: sha256=<HMAC of the raw body>). Subscriptions carry project_id and env; sandbox events reach sandbox subscriptions only.",
+  "permissions": [
+    "events:subscribe"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "events-app-subscribe",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/subscriptions",
+    "GET /api/v1/subscriptions",
+    "GET /api/v1/subscriptions/:id",
+    "POST /api/v1/subscriptions/:id/disable",
+    "POST /api/v1/subscriptions/:id/enable"
+  ]
+}

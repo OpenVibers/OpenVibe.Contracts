@@ -1,0 +1,22 @@
+{
+  "id": "events.app.read",
+  "version": "1.0",
+  "owner": "events",
+  "status": "active",
+  "visibility": "public",
+  "description": "Pull events as a developer app (ADR-014): only the app's own project's events (app.<project_key>.*, same environment as the token) plus first-party platform events with visibility public. Topic patterns must start with a literal segment; app.* patterns must name the caller's own project_key. Checkpoints are stored per app.",
+  "permissions": [
+    "events:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "events-app-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/events",
+    "GET /api/v1/events/:event_id",
+    "GET /api/v1/checkpoints",
+    "PUT /api/v1/checkpoints"
+  ]
+}
