@@ -1,0 +1,19 @@
+{
+  "id": "live.follower.read",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read who follows the channel behind a stream (Network subject or Network user id per follower), for OpenVibe.Network's go-live notifications from live.stream.started. Loopback only.",
+  "permissions": [
+    "live:followers"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/followers"
+  ]
+}

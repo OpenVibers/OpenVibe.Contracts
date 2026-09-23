@@ -10,6 +10,7 @@
   "domains": [],
   "capabilities": [
     "chat.live_bridge.write",
+    "chat.message.send",
     "chat.presence.read"
   ],
   "eventsProduced": [

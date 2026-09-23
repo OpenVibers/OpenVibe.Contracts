@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.30.2 — 2026-09-23
+
+- New capability `live.follower.read` (Live, internal): `GET /internal/followers`, used by OpenVibe.Network's
+  go-live notifications from `live.stream.started`.
+- `chat.message.send` is owned by `chat` (was `live`) and is also implemented by Chat's service API
+  (`POST /internal/live/calls`); it moves from Live's manifest to Chat's.
+- Live declares `eventsProduced` (`live.stream.started`, `live.stream.ended`, `live.release.deployed`) and
+  `eventsConsumed` (`openre.session.*`, `media.vod.*`, `media.clip.*`, `media.storage.*`); Media declares
+  its seven `media.*` event types.
+
 ## 0.30.1 — 2026-09-23
 
 - `billing.cashout.requested|paid|denied`: `cashout.payout_method` carries the method's `type` only

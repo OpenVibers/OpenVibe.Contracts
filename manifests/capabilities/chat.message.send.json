@@ -1,10 +1,10 @@
 {
   "id": "chat.message.send",
   "version": "1.0",
-  "owner": "live",
+  "owner": "chat",
   "status": "active",
   "visibility": "first-party",
-  "description": "Send a chat message to a room the actor is a member of. Moves to OpenVibe.Chat in Wave 6.",
+  "description": "Send a chat message to a room the actor is a member of (browsers over the chat socket; first-party services over Chat's service API).",
   "permissions": [
     "chat:write"
   ],
@@ -16,6 +16,7 @@
     "chat.message.created"
   ],
   "implementedBy": [
-    "WS /ws/chat {type:\"chat\"}"
+    "WS /ws/chat {type:\"chat\"}",
+    "POST /internal/live/calls"
   ]
 }

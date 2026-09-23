@@ -15,14 +15,23 @@
   "health": "/api/health",
   "ready": "/api/ready",
   "capabilities": [
-    "chat.message.send",
     "live.chat_context.read",
     "live.chat_effects.write",
     "live.chat_mirror.write",
+    "live.follower.read",
     "live.tips_delivery.write"
   ],
-  "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsProduced": [
+    "live.stream.started",
+    "live.stream.ended",
+    "live.release.deployed"
+  ],
+  "eventsConsumed": [
+    "openre.session.*",
+    "media.vod.*",
+    "media.clip.*",
+    "media.storage.*"
+  ],
   "namespacesOwned": [
     "live.*"
   ],

@@ -16,7 +16,15 @@
     "media.object.upload",
     "media.object.read"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "media.clip.failed",
+    "media.clip.ready",
+    "media.object.uploaded",
+    "media.storage.alert",
+    "media.storage.recovered",
+    "media.vod.failed",
+    "media.vod.ready"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "media.*"
