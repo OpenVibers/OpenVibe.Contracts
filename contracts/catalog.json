@@ -117,6 +117,36 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-016"
+    },
+    {
+      "id": "search.index-document",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/index-document.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-018"
+    },
+    {
+      "id": "sources.source",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/source.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "sources.item",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/item.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
     }
   ]
 }

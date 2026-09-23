@@ -866,6 +866,760 @@
           }
         }
       }
+    },
+    "search.index-document": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/index-document.v1.json",
+        "title": "IndexDocument",
+        "description": "What an owning service tells OpenVibe.Search about one of its resources (roadmap §15.12, §4.2 A). The owner stays the source of truth; Search keeps a revision-ordered, permission-aware copy for discovery. A document with deleted=true is a tombstone: it removes the resource from every result and wins over any upsert with the same or an older revision.",
+        "type": "object",
+        "required": [
+          "owner",
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "Owning service id (wiki, blog, news, community, sources…). Only that service may write the document."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "description": "Resource type inside the owner (page, post, story, entity, offer, coupon, instrument, item…)."
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:~-]{0,127}$",
+            "description": "Resource id inside owner+type. Stable across revisions."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Owner's monotonic revision of the resource. An older revision never overwrites a newer one; at equal revision a deletion wins."
+          },
+          "deleted": {
+            "type": "boolean",
+            "default": false,
+            "description": "Deletion marker. true = tombstone; every other content field is ignored."
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private",
+              "draft"
+            ],
+            "description": "public: anyone. unlisted: never listed except to ACL matches; fetchable by exact id by a signed-in subject. members: subjects, groups or entitlements in acl. private: subjects in acl.subjects only. draft: never served."
+          },
+          "acl": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Who may see a non-public document. Ignored for public documents. Empty means nobody (for members/private) or direct-id only (for unlisted).",
+            "properties": {
+              "subjects": {
+                "type": "array",
+                "maxItems": 200,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^(usr|gst)_[0-9A-HJKMNP-TV-Z]{26}$"
+                }
+              },
+              "groups": {
+                "type": "array",
+                "maxItems": 100,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_.:-]{0,127}$"
+                },
+                "description": "Opaque group keys owned by some service, e.g. role:admin (Network role), wiki.space:spc_…:member."
+              },
+              "entitlements": {
+                "type": "array",
+                "maxItems": 100,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_.:-]{0,127}$"
+                },
+                "description": "Entitlement keys (VIP/Billing), e.g. vip.plan:pln_…. Only a first-party service that just resolved them may present them for a viewer."
+              }
+            }
+          },
+          "canonical_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 48000,
+            "description": "Plain text for full-text search (no HTML). Keep it under the Events payload limit when publishing through Events."
+          },
+          "facets": {
+            "type": "object",
+            "maxProperties": 20,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,39}$"
+            },
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "array",
+                  "maxItems": 50,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                }
+              ]
+            },
+            "description": "Filterable values (category, tags, space, author subject, currency…). Filter with facet.<key>=<value>."
+          },
+          "language": {
+            "type": "string",
+            "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+            "description": "BCP 47 tag."
+          },
+          "authorship": {
+            "enum": [
+              "human",
+              "ai_assisted",
+              "ai_generated",
+              "imported"
+            ]
+          },
+          "provenance": {
+            "type": "array",
+            "maxItems": 50,
+            "description": "Where the content came from: typed references to source records (Sources items, citations, Media objects).",
+            "items": {
+              "type": "object",
+              "required": [
+                "service",
+                "type",
+                "id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "service": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,39}$"
+                },
+                "type": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://",
+                  "maxLength": 2048
+                },
+                "retrieved_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "stub": {
+                  "type": "boolean",
+                  "description": "true when the reference came from a stub provider; the document is then never indexable."
+                }
+              }
+            }
+          },
+          "publication_state": {
+            "enum": [
+              "draft",
+              "scheduled",
+              "published",
+              "unpublished",
+              "retracted",
+              "archived"
+            ],
+            "description": "Only published documents are ever served."
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "indexability": {
+            "type": "object",
+            "required": [
+              "decision"
+            ],
+            "additionalProperties": false,
+            "description": "The owner's deterministic indexability decision (publishing packages, roadmap §32.3). Search can only make it stricter.",
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                },
+                "description": "Known reasons: draft, private, members_only, unlisted, not_published, deleted, thin_content, duplicate_without_canonical, unsupported_claims, unsourced, stub_provider, sensitive_unreviewed, ai_unreviewed, missing_canonical_url, third_party_content, owner_decision."
+              }
+            }
+          }
+        },
+        "if": {
+          "properties": {
+            "deleted": {
+              "const": true
+            }
+          },
+          "required": [
+            "deleted"
+          ]
+        },
+        "then": {},
+        "else": {
+          "required": [
+            "visibility",
+            "publication_state",
+            "title",
+            "indexability"
+          ]
+        }
+      }
+    },
+    "sources.source": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/sources/source.v1.json",
+        "title": "Source",
+        "description": "A registered source (roadmap §4.2 B, Wave 14): where it is fetched from and on what terms. Credentials are referenced by environment-variable NAME only. A source's existence is never permission to fetch: robots and terms are verified before it is enabled, and the fetcher re-checks robots.txt on every run.",
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "type",
+          "category",
+          "endpoints",
+          "auth",
+          "min_interval_ms",
+          "poll_interval_sec",
+          "stale_after_sec",
+          "max_items",
+          "enabled",
+          "review_required",
+          "sensitivity",
+          "default_indexability"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "type": {
+            "enum": [
+              "rss",
+              "atom",
+              "sitemap",
+              "jsonld",
+              "api",
+              "manual"
+            ]
+          },
+          "category": {
+            "enum": [
+              "news",
+              "blog",
+              "reviews",
+              "deals",
+              "coupons",
+              "trade"
+            ]
+          },
+          "homepage_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "endpoints": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "required": [
+                "url"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "format": {
+                  "enum": [
+                    "json",
+                    "xml"
+                  ]
+                },
+                "items_path": {
+                  "type": "string"
+                },
+                "item_kind": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                },
+                "fields": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "extra": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "auth": {
+            "type": "object",
+            "required": [
+              "mode"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "mode": {
+                "enum": [
+                  "none",
+                  "header",
+                  "bearer",
+                  "query"
+                ]
+              },
+              "env": {
+                "type": "string",
+                "pattern": "^SOURCES_CRED_[A-Z0-9_]{2,60}$",
+                "description": "Name of the environment variable holding the credential. Never a value."
+              },
+              "header": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9-]{0,63}$"
+              },
+              "param": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.-]{1,64}$"
+              }
+            }
+          },
+          "robots_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "terms_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "license_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "min_interval_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Rate limit: the least time between two requests to this source (the per-host floor and robots Crawl-delay may raise it)."
+          },
+          "poll_interval_sec": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "stale_after_sec": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "max_items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "review_required": {
+            "type": "boolean",
+            "description": "Products must review what they derive from this source before it can be indexable."
+          },
+          "sensitivity": {
+            "enum": [
+              "none",
+              "financial",
+              "health",
+              "political",
+              "legal",
+              "adult"
+            ]
+          },
+          "default_indexability": {
+            "enum": [
+              "index",
+              "noindex"
+            ],
+            "description": "What a product's indexability gate starts from for content derived from this source."
+          },
+          "search_visibility": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "members",
+              null
+            ],
+            "description": "members = raw items are indexed in OpenVibe.Search for staff only (never indexable)."
+          },
+          "health": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "healthy",
+                  "stale",
+                  "failing",
+                  "never_fetched",
+                  "disabled",
+                  "manual"
+                ]
+              },
+              "stale": {
+                "type": "boolean"
+              },
+              "last_success_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_run_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "consecutive_failures": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "next_due_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "stale_after_sec": {
+                "type": "integer"
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "sources.item": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/sources/item.v1.json",
+        "title": "SourceItem",
+        "description": "One thing a source said, with its provenance: source, canonical URL, retrieval time, content hash, raw-body hash, parser version and the terms it was ingested under. A field the source did not state is null — never guessed. Items change only through successful fetches (a new revision per content change) or an explicit, audited removal.",
+        "type": "object",
+        "required": [
+          "id",
+          "source_key",
+          "category",
+          "kind",
+          "identity",
+          "canonical_url",
+          "title",
+          "summary",
+          "authors",
+          "published_at",
+          "source_updated_at",
+          "fields",
+          "revision",
+          "provenance",
+          "removed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "source_key": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "category": {
+            "enum": [
+              "news",
+              "blog",
+              "reviews",
+              "deals",
+              "coupons",
+              "trade"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "description": "article | url | sitemap | product | offer | review | review_signal | record | coupon …"
+          },
+          "identity": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "The source's own id (guid, @id, API id) or the canonical URL."
+          },
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "Plain text, capped. Sources keeps metadata and short descriptions, not republishable full text."
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "source_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "fields": {
+            "type": "object",
+            "description": "Adapter-specific parsed fields (offers, ratings, prices as stated, API extras)."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "provenance": {
+            "type": "object",
+            "required": [
+              "retrieved_at",
+              "first_seen_at",
+              "content_hash",
+              "raw_body_hash",
+              "parser_version",
+              "fetch_run_id",
+              "license_note",
+              "terms_note",
+              "entered_by"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "retrieved_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last successful fetch that contained this item (observation time)."
+              },
+              "first_seen_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "raw_body_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "parser_version": {
+                "type": "string",
+                "pattern": "^[a-z]+@\\d+$"
+              },
+              "fetch_run_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^frn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "license_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "terms_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "entered_by": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Principal that entered a manual item."
+              }
+            }
+          },
+          "removed": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "reason"
+            ],
+            "properties": {
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          },
+          "change_seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "revisions": {
+            "type": "array"
+          }
+        }
+      }
     }
   }
 }
