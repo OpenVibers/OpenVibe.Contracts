@@ -157,6 +157,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-013"
+    },
+    {
+      "id": "codes.app-manifest",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/app-manifest.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
     }
   ]
 }
