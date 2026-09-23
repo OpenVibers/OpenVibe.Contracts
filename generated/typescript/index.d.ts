@@ -3371,3 +3371,3245 @@ export interface AppManifest {
     sdk?: string;
   };
 }
+
+/** events.redaction-directive@1.0.0 (owner: events) */
+/**
+ * payload.redacts (ADR-026): a producer takes back events it published earlier. Any event may carry it, normally the producer's own *.deleted event. It names event_ids, or subject_type + subject_ids, or both, never an empty list. event_ids names events directly; subject_type + subject_ids names every stored event of the same source (for an app, the same project and environment) about those subjects. OpenVibe.Events rewrites each target into a tombstone (events.tombstone-payload@1) in the transaction that stores the directive. Naming another source's event is 403 events.redaction_not_allowed (the whole batch is refused); a malformed directive is 422 events.invalid_redaction. An event that carries a directive is never redacted itself.
+ */
+export interface RedactionDirective {
+  /**
+   * Events to redact by id. Duplicates are ignored.
+   *
+   * @minItems 1
+   * @maxItems 1000
+   */
+  event_ids?: [string, ...string[]];
+  /**
+   * Envelope subject.type of the events to redact (chat_message, post…). Goes with subject_ids.
+   */
+  subject_type?: string;
+  /**
+   * Envelope subject.id values; every not-yet-redacted event of the same source about each one is redacted.
+   *
+   * @minItems 1
+   * @maxItems 1000
+   */
+  subject_ids?: [string, ...string[]];
+}
+
+/** events.tombstone-payload@1.0.0 (owner: events) */
+/**
+ * The payload of a redacted event (ADR-026). OpenVibe.Events replaces the original payload with this and the actor with the producer itself ({ type: service, id: <source> }, or the app); event_id, seq, event_type, version, subject, timestamp and visibility stay. Every read path serves it from then on: pull, GET by id, SSE replay, queued deliveries and DLQ replays. A consumer checks payload.redacted before validating a payload against its event type's schema.
+ */
+export interface TombstonePayload {
+  redacted: true;
+  redacted_at: string;
+  /**
+   * The event_id of the redacting event; an operator label (e.g. backfill) when OpenVibe.Events redacted by script.
+   */
+  redacted_by: string;
+}
+
+/** chat.message.deleted@1.0.0 (owner: chat) */
+/**
+ * chat.message.deleted v1 (OpenVibe.Chat server/db/database.js _announceDeleted). Public messages were deleted: by a moderator, through Live's bridge, the author's or an anon's history, a time-range purge or the auto-delete sweep. Envelope: subject { type: chat_message, id: <first id> }, visibility public, priority important, actor service:chat. One event per 500 ids. Carries only ids, never the text, the author or who deleted it; payload.redacts makes OpenVibe.Events tombstone the chat.message.created of each id.
+ */
+export interface ChatMessageDeletedPayload {
+  /**
+   * Chat message ids (the id in chat.message.created).
+   *
+   * @minItems 1
+   * @maxItems 500
+   */
+  message_ids: [number, ...number[]];
+  redacts: RedactionDirective;
+}
+
+/** sources.item.created@1.0.0 (owner: sources) */
+/**
+ * sources.item.created v1 (OpenVibe.Sources server/items.js ingest → itemEvent). A successful fetch, or a manual entry, produced an item Sources had not seen (revision 1). A summary only: consumers fetch the full sources.item@1 with sources.item.read. Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.
+ */
+export interface SourcesItemCreatedPayload {
+  item_id: string;
+  source_key: string;
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  /**
+   * article | url | sitemap | product | offer | review | record … (sources.item@1 kind).
+   */
+  kind: string;
+  canonical_url: string | null;
+  title: string | null;
+  revision: number;
+  content_hash: string;
+  /**
+   * Last successful fetch (or manual entry) that contained the item.
+   */
+  retrieved_at: string;
+}
+
+/** sources.item.updated@1.0.0 (owner: sources) */
+/**
+ * sources.item.updated v1 (OpenVibe.Sources server/items.js ingest → itemEvent). A successful fetch or manual entry changed an existing item's content hash, which made a new revision. A removed item is never updated (removal is sticky). Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.
+ */
+export interface SourcesItemUpdatedPayload {
+  item_id: string;
+  source_key: string;
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  /**
+   * article | url | sitemap | product | offer | review | record … (sources.item@1 kind).
+   */
+  kind: string;
+  canonical_url: string | null;
+  title: string | null;
+  revision: number;
+  content_hash: string;
+  /**
+   * Last successful fetch (or manual entry) that contained the item.
+   */
+  retrieved_at: string;
+  previous_content_hash: string;
+}
+
+/** sources.item.removed@1.0.0 (owner: sources) */
+/**
+ * sources.item.removed v1 (OpenVibe.Sources server/items.js remove → itemEvent, from DELETE /api/v1/items/:id). Staff removed an item (takedown, licence, error). Sticky: a later fetch that still lists it does not bring it back. The removal bumps the revision; content_hash is the last content's. Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.
+ */
+export interface SourcesItemRemovedPayload {
+  item_id: string;
+  source_key: string;
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  /**
+   * article | url | sitemap | product | offer | review | record … (sources.item@1 kind).
+   */
+  kind: string;
+  canonical_url: string | null;
+  title: string | null;
+  revision: number;
+  content_hash: string;
+  /**
+   * Last successful fetch (or manual entry) that contained the item.
+   */
+  retrieved_at: string;
+  reason: string;
+}
+
+/** sources.fetch.failed@1.0.0 (owner: sources) */
+/**
+ * sources.fetch.failed v1 (OpenVibe.Sources server/ingest.js failedEvent). One endpoint fetch of a source failed and counts as a failure: robots denied or unreachable, an HTTP error, the site's 429, a parse error or an internal error. Not sent for 304, a disabled source, a missing credential or the local rate limit. No item is created or changed. Envelope: subject { type: source, id: <source_key> }, visibility internal, priority important, actor service:sources.
+ */
+export interface SourcesFetchFailedPayload {
+  source_key: string;
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  /**
+   * The recorded fetch run (GET /api/v1/sources/:key/runs).
+   */
+  run_id: string;
+  endpoint_url: string;
+  state: "robots_denied" | "http_error" | "rate_limited" | "parse_error";
+  /**
+   * robots | address_refused | port_refused | bad_url | upstream_429 | http_<status> | unreadable | adapter_error | internal.
+   */
+  error_code: string;
+  http_status: number | null;
+  /**
+   * The source's consecutive failed runs including this one.
+   */
+  consecutive_failures: number;
+}
+
+/** sources.index_document.upserted@1.0.0 (owner: sources) */
+/**
+ * sources.index_document.upserted v1 (OpenVibe.Sources server/items.js indexEvent). An item of a source with search_visibility was created or updated; the payload is its search.index-document@1 (owner sources, type item, visibility members for role:admin and role:global_mod, authorship imported, indexability noindex third_party_content). Consumed by OpenVibe.Search (*.index_document.*). Envelope: subject { type: item, id: <item id>, revision }, visibility internal, priority important, actor service:sources.
+ */
+export interface SourcesIndexDocumentUpsertedPayload {
+  /**
+   * Owning service id (wiki, blog, news, community, sources…). Only that service may write the document.
+   */
+  owner: string;
+  /**
+   * Resource type inside the owner (page, post, story, entity, offer, coupon, instrument, item…).
+   */
+  type: string;
+  /**
+   * Resource id inside owner+type. Stable across revisions.
+   */
+  id: string;
+  /**
+   * Owner's monotonic revision of the resource. An older revision never overwrites a newer one; at equal revision a deletion wins.
+   */
+  revision: number;
+  /**
+   * Deletion marker. true = tombstone; every other content field is ignored.
+   */
+  deleted?: boolean;
+  /**
+   * public: anyone. unlisted: never listed except to ACL matches; fetchable by exact id by a signed-in subject. members: subjects, groups or entitlements in acl. private: subjects in acl.subjects only. draft: never served.
+   */
+  visibility?: "public" | "unlisted" | "members" | "private" | "draft";
+  /**
+   * Who may see a non-public document. Ignored for public documents. Empty means nobody (for members/private) or direct-id only (for unlisted).
+   */
+  acl?: {
+    /**
+     * @maxItems 200
+     */
+    subjects?: string[];
+    /**
+     * Opaque group keys owned by some service, e.g. role:admin (Network role), wiki.space:spc_…:member.
+     *
+     * @maxItems 100
+     */
+    groups?: string[];
+    /**
+     * Entitlement keys (VIP/Billing), e.g. vip.plan:pln_…. Only a first-party service that just resolved them may present them for a viewer.
+     *
+     * @maxItems 100
+     */
+    entitlements?: string[];
+  };
+  canonical_url?: string;
+  title?: string;
+  summary?: string;
+  /**
+   * Plain text for full-text search (no HTML). Keep it under the Events payload limit when publishing through Events.
+   */
+  body?: string;
+  /**
+   * Filterable values (category, tags, space, author subject, currency…). Filter with facet.<key>=<value>.
+   */
+  facets?: {
+    [k: string]: (string | number | boolean | string[]) | undefined;
+  };
+  /**
+   * BCP 47 tag.
+   */
+  language?: string;
+  authorship?: "human" | "ai_assisted" | "ai_generated" | "imported";
+  /**
+   * Where the content came from: typed references to source records (Sources items, citations, Media objects).
+   *
+   * @maxItems 50
+   */
+  provenance?: {
+    service: string;
+    type: string;
+    id: string;
+    revision?: number;
+    label?: string;
+    url?: string;
+    retrieved_at?: string;
+    /**
+     * true when the reference came from a stub provider; the document is then never indexable.
+     */
+    stub?: boolean;
+  }[];
+  /**
+   * Only published documents are ever served.
+   */
+  publication_state?: "draft" | "scheduled" | "published" | "unpublished" | "retracted" | "archived";
+  published_at?: string | null;
+  updated_at?: string | null;
+  /**
+   * The owner's deterministic indexability decision (publishing packages, roadmap §32.3). Search can only make it stricter.
+   */
+  indexability?: {
+    decision: "index" | "noindex";
+    /**
+     * Known reasons: draft, private, members_only, unlisted, not_published, deleted, thin_content, duplicate_without_canonical, unsupported_claims, unsourced, stub_provider, sensitive_unreviewed, ai_unreviewed, missing_canonical_url, third_party_content, owner_decision.
+     *
+     * @maxItems 20
+     */
+    reasons?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+}
+
+/** sources.index_document.deleted@1.0.0 (owner: sources) */
+/**
+ * sources.index_document.deleted v1 (OpenVibe.Sources server/items.js indexEvent). An item of a source with search_visibility was removed; OpenVibe.Search stores a tombstone at this revision. Envelope: subject { type: item, id: <item id>, revision }, visibility internal, priority important, actor service:sources.
+ */
+export interface SourcesIndexDocumentDeletedPayload {
+  type: "item";
+  id: string;
+  revision: number;
+}
+
+/** search.document.indexed@1.0.0 (owner: search) */
+/**
+ * search.document.indexed v1 (OpenVibe.Search server/store.js announce). An applied index document (from an owner's *.index_document.upserted or the direct API) is servable: restricted (ACL only) or public. Sent on every applied revision that stays exposed, first time or not. Envelope: subject { type: document, id: <owner>/<type>/<id>, revision }, visibility internal, priority important, actor service:search, trace_id of the request or event that caused it.
+ */
+export interface SearchDocumentIndexedPayload {
+  owner: string;
+  type: string;
+  id: string;
+  revision: number;
+  exposure: "restricted" | "public_unlisted" | "public_listed";
+  /**
+   * true when Search already held an earlier revision of the document.
+   */
+  reindexed: boolean;
+  /**
+   * Only when the document is public (public_unlisted or public_listed); null otherwise or when it has none.
+   */
+  canonical_url: string | null;
+}
+
+/** search.document.removed@1.0.0 (owner: search) */
+/**
+ * search.document.removed v1 (OpenVibe.Search server/store.js announce). A document's exposure went down: deleted, made draft or unpublished, its visibility changed, or it became noindex. Caches and sitemaps purge canonical_url. Envelope: subject { type: document, id: <owner>/<type>/<id>, revision }, visibility internal, priority important, actor service:search, trace_id of the request or event that caused it.
+ */
+export interface SearchDocumentRemovedPayload {
+  owner: string;
+  type: string;
+  id: string;
+  revision: number;
+  reason: "deleted" | "draft" | "not_published" | "visibility_changed" | "noindex";
+  previous_exposure: "restricted" | "public_unlisted" | "public_listed";
+  /**
+   * Lower than previous_exposure. none: no longer served to anyone.
+   */
+  exposure: "none" | "restricted" | "public_unlisted";
+  /**
+   * The URL only when the document was public before (so it must be purged); null otherwise.
+   */
+  canonical_url: string | null;
+}
+
+/** wiki.space.updated@1.0.0 (owner: wiki) */
+/**
+ * wiki.space.updated v1 (OpenVibe.Wiki server/wiki/service.js spaceEvent). Emitted when a space is created, renamed, changes visibility or settings, has its roles changed, or is deleted, in the transaction of the change. Envelope: subject { type: space, id: spc_… }, visibility public for a public space that is not deleted, otherwise internal, priority important, actor the person (user) or service.
+ */
+export interface WikiSpaceUpdatedPayload {
+  slug: string;
+  name: string;
+  kind: "official" | "user";
+  visibility: "public" | "members" | "private";
+  deleted: boolean;
+  /**
+   * What changed. renamed = a new slug.
+   */
+  change: "created" | "renamed" | "visibility" | "settings" | "roles" | "deleted";
+  /**
+   * Canonical URL of the space.
+   */
+  url: string;
+}
+
+/** wiki.revision.created@1.0.0 (owner: wiki) */
+/**
+ * wiki.revision.created v1 (OpenVibe.Wiki server/wiki/service.js revisionEvent). Emitted when a page gets a new immutable revision: an edit, a revert or an AI proposal. A new revision is a draft until it is published (then wiki.page.published|updated follows). Envelope: subject { type: page, id: pg_…, revision: <number> }, visibility internal, priority important, actor the person or service.
+ */
+export interface WikiRevisionCreatedPayload {
+  space_id: string;
+  /**
+   * Space slug.
+   */
+  space: string;
+  /**
+   * Page slug.
+   */
+  slug: string;
+  /**
+   * The new revision number.
+   */
+  number: number;
+  kind: "edit" | "revert" | "import";
+  parent_number: number | null;
+  /**
+   * The revision a revert restored; null otherwise.
+   */
+  reverted_to: number | null;
+  /**
+   * Search's authorship vocabulary; null when the revision has no authorship record.
+   */
+  authorship: "human" | "ai_assisted" | "ai_generated" | "imported" | null;
+  /**
+   * Who wrote it: a subject id (usr_…) or a service (svc:<id>).
+   */
+  author: string | null;
+  message: string | null;
+  /**
+   * Present when the revision is an AI proposal awaiting a person's approval.
+   */
+  proposal_id?: string;
+}
+
+/** wiki.watch.triggered@1.0.0 (owner: wiki) */
+/**
+ * wiki.watch.triggered v1 (OpenVibe.Wiki server/wiki/service.js notifyWatchers). One event per change to a watched page, listing the watchers who may read the page (never the actor); not emitted when nobody is left. Envelope: subject { type: page, id: pg_…, revision: <revision or 0> }, visibility internal, priority important, actor the person or service.
+ */
+export interface WikiWatchTriggeredPayload {
+  /**
+   * revised = a new draft revision; proposed = an AI proposal awaits approval; the rest follow wiki.page.*.
+   */
+  action: "published" | "updated" | "unpublished" | "deleted" | "revised" | "proposed";
+  /**
+   * Space slug.
+   */
+  space: string;
+  /**
+   * Page slug.
+   */
+  slug: string;
+  title: string;
+  revision: number | null;
+  url: string;
+  /**
+   * Watchers to notify.
+   *
+   * @minItems 1
+   */
+  recipients: [string, ...string[]];
+}
+
+/** wiki.page.published@1.0.0 (owner: wiki) */
+/**
+ * wiki.page.published v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a page became published, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:wiki (scheduled and system changes).
+ */
+export interface WikiPagePublishedPayload {
+  canonical_url: string;
+  publication_state: "published";
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * Space slug.
+   */
+  space: string;
+  /**
+   * Page slug inside the space.
+   */
+  slug: string;
+  /**
+   * Effective visibility (the page's, narrowed by its space's).
+   */
+  visibility: "public" | "members" | "private";
+}
+
+/** wiki.page.updated@1.0.0 (owner: wiki) */
+/**
+ * wiki.page.updated v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published page got a new published revision or visibility, or a review changed what Search holds, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:wiki (scheduled and system changes).
+ */
+export interface WikiPageUpdatedPayload {
+  canonical_url: string;
+  publication_state: "published";
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * Space slug.
+   */
+  space: string;
+  /**
+   * Page slug inside the space.
+   */
+  slug: string;
+  /**
+   * Effective visibility (the page's, narrowed by its space's).
+   */
+  visibility: "public" | "members" | "private";
+}
+
+/** wiki.page.unpublished@1.0.0 (owner: wiki) */
+/**
+ * wiki.page.unpublished v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published page stopped being published, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:wiki (scheduled and system changes).
+ */
+export interface WikiPageUnpublishedPayload {
+  /**
+   * null: the event carries a tombstone, which has no URL.
+   */
+  canonical_url: string | null;
+  publication_state: "unpublished";
+  /**
+   * The last gate decision, or null when there is none.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
+  /**
+   * Space slug.
+   */
+  space: string;
+  /**
+   * Page slug inside the space.
+   */
+  slug: string;
+  /**
+   * Effective visibility (the page's, narrowed by its space's).
+   */
+  visibility: "public" | "members" | "private";
+}
+
+/** wiki.page.deleted@1.0.0 (owner: wiki) */
+/**
+ * wiki.page.deleted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a page (or its whole space) was deleted, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:wiki (scheduled and system changes).
+ */
+export interface WikiPageDeletedPayload {
+  /**
+   * null: the event carries a tombstone, which has no URL.
+   */
+  canonical_url: string | null;
+  publication_state: "deleted";
+  /**
+   * The last gate decision, or null when there is none.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
+  /**
+   * Space slug.
+   */
+  space: string;
+  /**
+   * Page slug inside the space.
+   */
+  slug: string;
+  /**
+   * Effective visibility (the page's, narrowed by its space's).
+   */
+  visibility: "public" | "members" | "private";
+}
+
+/** wiki.index_document.upserted@1.0.0 (owner: wiki) */
+/**
+ * wiki.index_document.upserted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published, public, listable page, sent whenever what Search should hold changed (the revision grows with every change). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: page, id, revision: <document revision> }, visibility internal, priority important, actor service:wiki.
+ */
+export type WikiIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "wiki";
+  type: "page";
+  id?: string;
+  deleted: false;
+};
+
+/** wiki.index_document.deleted@1.0.0 (owner: wiki) */
+/**
+ * wiki.index_document.deleted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the page is no longer published, public and listable, so Search drops it at this revision or older. Only sent for a page Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: page, id, revision }, visibility internal, priority important, actor service:wiki.
+ */
+export interface WikiIndexDocumentDeletedPayload {
+  type: "page";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** blog.post.created@1.0.0 (owner: blog) */
+/**
+ * blog.post.created v1 (OpenVibe.Blog server/domain/posts.js create). A post exists as a draft (its first revision). Envelope: subject { type: post, id: pst_…, revision: 1 }, visibility internal, priority low, actor the person or the calling service.
+ */
+export interface BlogPostCreatedPayload {
+  blog: {
+    id: string;
+    handle: string;
+  };
+  state: "draft";
+  visibility: "public" | "unlisted" | "members" | "private";
+  /**
+   * openvibe-publishing authorship mode (not Search's vocabulary).
+   */
+  authorship: "human" | "ai" | "hybrid" | "imported";
+  /**
+   * The OpenVibe.AI workflow and run behind ai and hybrid posts; absent for human posts.
+   */
+  workflow?: {
+    id: string;
+    runId: string;
+    version?: number | string;
+    model?: string;
+  };
+}
+
+/** blog.post.published@1.0.0 (owner: blog) */
+/**
+ * blog.post.published v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a post became published (now or by its schedule), in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:blog (scheduled and system changes).
+ */
+export interface BlogPostPublishedPayload {
+  canonical_url: string;
+  publication_state: "published";
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  blog: {
+    id: string;
+    handle: string;
+  };
+  /**
+   * The post's own visibility (members = entitlement-gated).
+   */
+  visibility: "public" | "unlisted" | "members" | "private";
+}
+
+/** blog.post.updated@1.0.0 (owner: blog) */
+/**
+ * blog.post.updated v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published post got a new published revision, visibility or URL, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:blog (scheduled and system changes).
+ */
+export interface BlogPostUpdatedPayload {
+  canonical_url: string;
+  publication_state: "published";
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  blog: {
+    id: string;
+    handle: string;
+  };
+  /**
+   * The post's own visibility (members = entitlement-gated).
+   */
+  visibility: "public" | "unlisted" | "members" | "private";
+}
+
+/** blog.post.unpublished@1.0.0 (owner: blog) */
+/**
+ * blog.post.unpublished v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published post stopped being published, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:blog (scheduled and system changes).
+ */
+export interface BlogPostUnpublishedPayload {
+  /**
+   * null: the event carries a tombstone, which has no URL.
+   */
+  canonical_url: string | null;
+  publication_state: "unpublished";
+  /**
+   * The last gate decision, or null when there is none.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
+  blog: {
+    id: string;
+    handle: string;
+  };
+  /**
+   * The post's own visibility (members = entitlement-gated).
+   */
+  visibility: "public" | "unlisted" | "members" | "private";
+}
+
+/** blog.post.deleted@1.0.0 (owner: blog) */
+/**
+ * blog.post.deleted v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a post was soft-deleted, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:blog (scheduled and system changes).
+ */
+export interface BlogPostDeletedPayload {
+  /**
+   * null: the event carries a tombstone, which has no URL.
+   */
+  canonical_url: string | null;
+  publication_state: "deleted";
+  /**
+   * The last gate decision, or null when there is none.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
+  blog: {
+    id: string;
+    handle: string;
+  };
+  /**
+   * The post's own visibility (members = entitlement-gated).
+   */
+  visibility: "public" | "unlisted" | "members" | "private";
+}
+
+/** blog.schedule.failed@1.0.0 (owner: blog) */
+/**
+ * blog.schedule.failed v1 (OpenVibe.Blog server/domain/posts.js runScheduled). A scheduled publish or unpublish gave up after its retries; a scheduled post goes back to draft. Envelope: subject { type: post, id: pst_…, revision?: <scheduled revision> }, visibility internal, priority important, actor service:blog.
+ */
+export interface BlogScheduleFailedPayload {
+  job_id: string;
+  action: "publish" | "unpublish";
+  /**
+   * The revision a publish was to make live; null for an unpublish.
+   */
+  revision: number | null;
+  /**
+   * When the job was last due.
+   */
+  run_at: string;
+  attempts: number;
+  /**
+   * The last error.
+   */
+  error: string | null;
+  /**
+   * null when the post no longer exists.
+   */
+  blog_id: string | null;
+}
+
+/** blog.index_document.upserted@1.0.0 (owner: blog) */
+/**
+ * blog.index_document.upserted v1 (OpenVibe.Blog server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published, public, listable post, sent whenever what Search should hold changed (the revision grows with every change). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: post, id, revision: <document revision> }, visibility internal, priority important, actor service:blog.
+ */
+export type BlogIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "blog";
+  type: "post";
+  id?: string;
+  deleted: false;
+};
+
+/** blog.index_document.deleted@1.0.0 (owner: blog) */
+/**
+ * blog.index_document.deleted v1 (OpenVibe.Blog server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the post is no longer published, public and listable, so Search drops it at this revision or older. Only sent for a post Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: post, id, revision }, visibility internal, priority important, actor service:blog.
+ */
+export interface BlogIndexDocumentDeletedPayload {
+  type: "post";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** ai.run-request@1.0.0 (owner: ai) */
+/**
+ * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.
+ */
+export interface AiRunRequest {
+  /**
+   * Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…).
+   */
+  workflow: string;
+  /**
+   * Pin a workflow version (active or deprecated). Omitted: the newest active version.
+   */
+  version?: number;
+  /**
+   * Workflow input; validated against the workflow version's input_schema. Default {}.
+   */
+  input?: {};
+  target?: EntityRef;
+  attribution?: EntityRef;
+  on_behalf_of?: SubjectRef;
+  /**
+   * Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent.
+   */
+  idempotency_key?: string;
+  options?: {
+    /**
+     * false skips the scoped cache lookup and store.
+     */
+    cache?: boolean;
+    /**
+     * Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on.
+     */
+    debug?: boolean;
+  };
+}
+
+/** ai.run@1.0.0 (owner: ai) */
+/**
+ * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted.
+ */
+export interface AiRun {
+  id: string;
+  /**
+   * Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused).
+   */
+  status: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "cached";
+  workflow: {
+    key: string;
+    version: number;
+  };
+  /**
+   * The prompt template of the workflow's llm step; null for workflows without one.
+   */
+  template: {
+    key: string;
+    version: number | null;
+  } | null;
+  /**
+   * Provider route; version null while the route is unresolved or disabled.
+   */
+  route: {
+    key: string;
+    version: number | null;
+  } | null;
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  attribution: EntityRef | null;
+  /**
+   * The requester's service id when the requester is a service.
+   */
+  source_service: string | null;
+  target: EntityRef | null;
+  /**
+   * The retained input (see the description).
+   */
+  input: {};
+  /**
+   * Workflow output, or null.
+   */
+  output: {} | null;
+  error: {
+    /**
+     * run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…
+     */
+    code: string;
+    detail: string | null;
+  } | null;
+  /**
+   * Produced by the stub provider; never served to production callers and never cached.
+   */
+  synthetic: boolean;
+  provenance: {
+    origin: "ai";
+    workflow: string;
+    workflow_version: number;
+    template_version: number | null;
+    route: string | null;
+    route_version: number | null;
+    provider: string | null;
+    model: string | null;
+    /**
+     * The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded).
+     */
+    fallback_used: boolean;
+    run_id: string;
+    cached_from: string | null;
+    synthetic: boolean;
+  };
+  usage: {
+    tokens_in: number;
+    tokens_out: number;
+    cost_usd: number;
+    /**
+     * Provider calls made (skipped routes not counted).
+     */
+    attempts: number;
+  };
+  /**
+   * Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later.
+   */
+  citations_count: number;
+  retry_of: string | null;
+  idempotency_key: string | null;
+  trace_id: string | null;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+/** ai.run.queued@1.0.0 (owner: ai) */
+/**
+ * ai.run.queued v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run was stored queued (it then runs inline within ?wait or on the worker). Not published for a cache hit (ai.run.cached) or a create refused by quota or a full queue. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.
+ */
+export interface AiRunQueuedPayload {
+  run_id: string;
+  status: "queued";
+  workflow: {
+    key: string;
+    version: number;
+  };
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  target: EntityRef | null;
+  attribution: EntityRef | null;
+  /**
+   * Provider that produced the output; null before a provider call and for cached runs.
+   */
+  provider: string | null;
+  model: string | null;
+  fallback_used: boolean;
+  /**
+   * Stub provider output.
+   */
+  synthetic: boolean;
+  cached_from: null;
+  usage: {
+    tokens_in: number;
+    tokens_out: number;
+    cost_usd: number;
+    attempts: number;
+  };
+  error: null;
+  citations_count: number;
+  retry_of: string | null;
+  created_at: string;
+  finished_at: null;
+}
+
+/** ai.run.succeeded@1.0.0 (owner: ai) */
+/**
+ * ai.run.succeeded v1 (OpenVibe.AI server/runs.js execute). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run finished with output that matched the workflow output schema. The output itself is not in the event: a consumer that needs it reads GET /api/v1/runs/:id with ai.run.read (own runs only). A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority important, actor service:ai.
+ */
+export interface AiRunSucceededPayload {
+  run_id: string;
+  status: "succeeded";
+  workflow: {
+    key: string;
+    version: number;
+  };
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  target: EntityRef | null;
+  attribution: EntityRef | null;
+  /**
+   * Provider that produced the output; null before a provider call and for cached runs.
+   */
+  provider: string | null;
+  model: string | null;
+  fallback_used: boolean;
+  /**
+   * Stub provider output.
+   */
+  synthetic: boolean;
+  cached_from: null;
+  usage: {
+    tokens_in: number;
+    tokens_out: number;
+    cost_usd: number;
+    attempts: number;
+  };
+  error: null;
+  citations_count: number;
+  retry_of: string | null;
+  created_at: string;
+  finished_at: string;
+}
+
+/** ai.run.failed@1.0.0 (owner: ai) */
+/**
+ * ai.run.failed v1 (OpenVibe.AI server/runs.js execute / recoverInterrupted). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run ended failed: a provider, route, source or output error, run.internal, or run.interrupted after a restart or shutdown (retryable with POST /api/v1/runs/:id/retry unless its input was not retained). A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority important, actor service:ai.
+ */
+export interface AiRunFailedPayload {
+  run_id: string;
+  status: "failed";
+  workflow: {
+    key: string;
+    version: number;
+  };
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  target: EntityRef | null;
+  attribution: EntityRef | null;
+  /**
+   * Provider that produced the output; null before a provider call and for cached runs.
+   */
+  provider: string | null;
+  model: string | null;
+  fallback_used: boolean;
+  /**
+   * Stub provider output.
+   */
+  synthetic: boolean;
+  cached_from: null;
+  usage: {
+    tokens_in: number;
+    tokens_out: number;
+    cost_usd: number;
+    attempts: number;
+  };
+  error: {
+    code: string;
+    detail: string | null;
+  };
+  citations_count: number;
+  retry_of: string | null;
+  created_at: string;
+  finished_at: string;
+}
+
+/** ai.run.cached@1.0.0 (owner: ai) */
+/**
+ * ai.run.cached v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A create was served from the scoped cache: no provider call, cached_from names the run whose output was reused. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.
+ */
+export interface AiRunCachedPayload {
+  run_id: string;
+  status: "cached";
+  workflow: {
+    key: string;
+    version: number;
+  };
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  target: EntityRef | null;
+  attribution: EntityRef | null;
+  /**
+   * Provider that produced the output; null before a provider call and for cached runs.
+   */
+  provider: string | null;
+  model: string | null;
+  fallback_used: boolean;
+  /**
+   * Stub provider output.
+   */
+  synthetic: boolean;
+  cached_from: string;
+  usage: {
+    tokens_in: number;
+    tokens_out: number;
+    cost_usd: number;
+    attempts: number;
+  };
+  error: null;
+  citations_count: number;
+  retry_of: string | null;
+  created_at: string;
+  finished_at: string;
+}
+
+/** tips.interaction.ready@1.0.0 (owner: tips) */
+/**
+ * tips.interaction.ready v1 (OpenVibe.Tips server/domain/interactions.js settle, summary()). The interaction settled: it is active and its effects (overlay alert, chat line, paid message, TTS, media request) are queued. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.
+ */
+export interface TipsInteractionReadyPayload {
+  interaction_id: string;
+  creator: SubjectRef;
+  /**
+   * The supporter, null when external, anonymous or unmapped.
+   */
+  supporter: SubjectRef | null;
+  /**
+   * Display name at the time.
+   */
+  supporter_name: string | null;
+  kind: "tip" | "paid_message" | "tts" | "media_request";
+  /**
+   * Integer amount in currency minor units (Vibes bits).
+   */
+  amount: number;
+  /**
+   * vibes-bits today.
+   */
+  currency: string;
+  settlement: "billing" | "external" | "simulated" | "imported";
+  payment_state: "pending" | "settled" | "reversed" | "failed";
+  delivery_state: "awaiting_payment" | "queued" | "delivered" | "failed" | "cancelled";
+  /**
+   * The Billing transaction (txn_…) that settled it.
+   */
+  billing_txn_id: string | null;
+  /**
+   * Simulations never emit events, so false in practice.
+   */
+  test: boolean;
+}
+
+/** tips.interaction.failed@1.0.0 (owner: tips) */
+/**
+ * tips.interaction.failed v1 (OpenVibe.Tips server/domain/interactions.js recomputeDelivery). A delivery effect gave up after its retries and none is still queued; the payment state is untouched. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.
+ */
+export interface TipsInteractionFailedPayload {
+  interaction_id: string;
+  creator: SubjectRef;
+  /**
+   * The supporter, null when external, anonymous or unmapped.
+   */
+  supporter: SubjectRef | null;
+  /**
+   * Display name at the time.
+   */
+  supporter_name: string | null;
+  kind: "tip" | "paid_message" | "tts" | "media_request";
+  /**
+   * Integer amount in currency minor units (Vibes bits).
+   */
+  amount: number;
+  /**
+   * vibes-bits today.
+   */
+  currency: string;
+  settlement: "billing" | "external" | "simulated" | "imported";
+  payment_state: "pending" | "settled" | "reversed" | "failed";
+  delivery_state: "awaiting_payment" | "queued" | "delivered" | "failed" | "cancelled";
+  /**
+   * The Billing transaction (txn_…) that settled it.
+   */
+  billing_txn_id: string | null;
+  /**
+   * Simulations never emit events, so false in practice.
+   */
+  test: boolean;
+  /**
+   * @minItems 1
+   */
+  failed_effects: [
+    {
+      effect: "chat_line" | "paid_message" | "tts" | "media_request" | "overlay_alert";
+      adapter: string;
+      last_error: string | null;
+    },
+    ...{
+      effect: "chat_line" | "paid_message" | "tts" | "media_request" | "overlay_alert";
+      adapter: string;
+      last_error: string | null;
+    }[]
+  ];
+}
+
+/** tips.interaction.cancelled@1.0.0 (owner: tips) */
+/**
+ * tips.interaction.cancelled v1 (OpenVibe.Tips server/domain/interactions.js failPayment, cancelQueued). Undelivered effects were cancelled: the payment failed before settling (reason payment_failed, with the Billing error code), Billing reversed it (payment_reversed) or an effect came up while the payment was no longer settled (payment_not_settled). Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.
+ */
+export interface TipsInteractionCancelledPayload {
+  interaction_id: string;
+  creator: SubjectRef;
+  /**
+   * The supporter, null when external, anonymous or unmapped.
+   */
+  supporter: SubjectRef | null;
+  /**
+   * Display name at the time.
+   */
+  supporter_name: string | null;
+  kind: "tip" | "paid_message" | "tts" | "media_request";
+  /**
+   * Integer amount in currency minor units (Vibes bits).
+   */
+  amount: number;
+  /**
+   * vibes-bits today.
+   */
+  currency: string;
+  settlement: "billing" | "external" | "simulated" | "imported";
+  payment_state: "pending" | "settled" | "reversed" | "failed";
+  delivery_state: "awaiting_payment" | "queued" | "delivered" | "failed" | "cancelled";
+  /**
+   * The Billing transaction (txn_…) that settled it.
+   */
+  billing_txn_id: string | null;
+  /**
+   * Simulations never emit events, so false in practice.
+   */
+  test: boolean;
+  reason: "payment_failed" | "payment_reversed" | "payment_not_settled";
+  /**
+   * Only with reason payment_failed: the Billing problem code (billing.insufficient_funds, billing.funding_reversed, billing.refused…).
+   */
+  code?: string;
+}
+
+/** tips.goal.updated@1.0.0 (owner: tips) */
+/**
+ * tips.goal.updated v1 (OpenVibe.Tips server/domain/goals.js changed). A goal was created, edited or closed, or its settled total moved (a contribution, the contribution that reached it, a reversal). Envelope: subject { type: goal, id: tgoal_…, revision }, visibility internal, priority important, actor service:tips.
+ */
+export interface TipsGoalUpdatedPayload {
+  goal_id: string;
+  creator: SubjectRef;
+  title: string;
+  target_amount: number;
+  /**
+   * Settled total including any amount carried over from Live.
+   */
+  current_amount: number;
+  currency: string;
+  status: "active" | "closed";
+  reached: boolean;
+  reason: "created" | "updated" | "closed" | "contribution" | "reached" | "reversal";
+  /**
+   * The interaction behind a contribution, reached or reversal change; null otherwise.
+   */
+  interaction_id: string | null;
+}
+
+/** tips.overlay.delivered@1.0.0 (owner: tips) */
+/**
+ * tips.overlay.delivered v1 (OpenVibe.Tips server/domain/overlays.js markDelivered). An overlay delivery (alert or goal update) reached at least one connected overlay, first time only. Envelope: subject { type: overlay_delivery, id: tovd_… }, visibility internal, priority important, actor service:tips. Never for tests.
+ */
+export interface TipsOverlayDeliveredPayload {
+  delivery_id: string;
+  creator: SubjectRef;
+  kind: "alert" | "goal";
+  interaction_id: string | null;
+  goal_id: string | null;
+}
+
+/** tips.overlay.failed@1.0.0 (owner: tips) */
+/**
+ * tips.overlay.failed v1 (OpenVibe.Tips server/domain/overlays.js sweepFailed). No overlay showed the delivery within the delivery window. Envelope: subject { type: overlay_delivery, id: tovd_… }, visibility internal, priority important, actor service:tips. Never for tests.
+ */
+export interface TipsOverlayFailedPayload {
+  delivery_id: string;
+  creator: SubjectRef;
+  kind: "alert" | "goal";
+  interaction_id: string | null;
+  goal_id: string | null;
+  reason: string;
+}
+
+/** vip.plan.published@1.0.0 (owner: vip) */
+/**
+ * vip.plan.published v1 (OpenVibe.VIP server/domain/plans.js emitPublished). A plan version became what new members buy: the plan was published, or a published plan was edited (a new immutable version). Carries the version's full terms, never a price (Billing prices and charges). Envelope: subject { type: plan, id: vpl_…, revision: <version> }, visibility public, priority important, actor service:vip.
+ */
+export interface VipPlanPublishedPayload {
+  plan_id: string;
+  slug: string;
+  version: number;
+  version_id: string;
+  creator: {
+    /**
+     * vcr_… or network.
+     */
+    id: string;
+    kind: "creator" | "network";
+    /**
+     * null for the network creator.
+     */
+    subject: SubjectRef | null;
+    username: string | null;
+    display_name: string | null;
+    bio: string | null;
+    status: "active" | "suspended";
+  };
+  /**
+   * The Billing product that sells it; null for a plan Billing does not sell (network plans).
+   */
+  billing_kind: "channel_subscription" | null;
+  terms: {
+    name: string;
+    description: string | null;
+    /**
+     * @maxItems 20
+     */
+    benefits:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | null;
+    perks: {
+      key: string;
+      name: string;
+      kind: "badge" | "emote" | "gated_content" | "room" | "role" | "other";
+      scope: "creator" | "network";
+    }[];
+    billing_kind: "channel_subscription" | null;
+    /**
+     * Never an amount: a note that Billing sets and charges the price, or null.
+     */
+    price: string | null;
+    /**
+     * sha256 prefix of name, description, benefits, perks and billing_kind.
+     */
+    digest: string;
+  };
+  published_at: string;
+}
+
+/** vip.membership.changed@1.0.0 (owner: vip) */
+/**
+ * vip.membership.changed v1 (OpenVibe.VIP server/domain/entitlements.js emitChanged). A member's standing with a creator changed as projected from Billing (granted, renewed, cancel scheduled, expired, refunded…): active, expires_at or cancel_at_period_end differ from before, or a first look found an active membership. Names the plan version the membership was bought under. Envelope: subject { type: membership, id: <member usr_…>:<creator usr_…> }, visibility internal, priority important, actor service:vip.
+ */
+export interface VipMembershipChangedPayload {
+  member: SubjectRef;
+  creator: SubjectRef;
+  /**
+   * Billing entitlement kind; channel_subscription today.
+   */
+  kind: string;
+  active: boolean;
+  expires_at: string | null;
+  cancel_at_period_end: boolean;
+  /**
+   * The projection before the change; null on first sight.
+   */
+  previous: {
+    active: boolean;
+    expires_at: string | null;
+    cancel_at_period_end: boolean;
+  } | null;
+  /**
+   * Billing's reason (granted, renewed, refund, expired…) or VIP's (checked, cancel_scheduled).
+   */
+  reason: string | null;
+  source: "event" | "billing_check" | "import";
+  /**
+   * The Billing event (evt_…) behind the change, when it came from one.
+   */
+  billing_event_id: string | null;
+  membership_id: string | null;
+  plan_id: string | null;
+  plan_version_id: string | null;
+  plan_version: number | null;
+  /**
+   * The Billing subscription (sub_…).
+   */
+  subscription_id: string | null;
+}
+
+/** billing.transaction.settled@1.0.0 (owner: billing) */
+/**
+ * billing.transaction.settled v1 (OpenVibe.Billing server/ops/purchases.js summary(); emitted by purchases, transfers, subscriptions, cashouts recycle and admin adjustments). A journal transaction was posted. Envelope: subject { type: transaction, id: txn_… }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingTransactionSettledPayload {
+  transaction_id: string;
+  type:
+    | "purchase"
+    | "donation"
+    | "subscription"
+    | "subscription_share"
+    | "cashout_request"
+    | "cashout_paid"
+    | "cashout_denied"
+    | "recycle"
+    | "refund"
+    | "chargeback"
+    | "adjustment"
+    | "import";
+  /**
+   * Test money: never counted.
+   */
+  test: boolean;
+  /**
+   * Subject id (usr_…) value moved from, null for provider money.
+   */
+  from_subject: string | null;
+  /**
+   * Subject id (usr_…) value moved to.
+   */
+  to_subject: string | null;
+  /**
+   * stripe, paypal, powerchat…; null for credit movements.
+   */
+  provider: string | null;
+  /**
+   * Transaction metadata as posted (amount_bits, paid_cents, value_cents, target EntityRef, intent_id, message, donor_name, rates…). Its keys depend on the transaction type.
+   */
+  metadata: {};
+}
+
+/** billing.transaction.reversed@1.0.0 (owner: billing) */
+/**
+ * billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out. Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingTransactionReversedPayload {
+  transaction_id: string;
+  type:
+    | "purchase"
+    | "donation"
+    | "subscription"
+    | "subscription_share"
+    | "cashout_request"
+    | "cashout_paid"
+    | "cashout_denied"
+    | "recycle"
+    | "refund"
+    | "chargeback"
+    | "adjustment"
+    | "import";
+  /**
+   * Test money: never counted.
+   */
+  test: boolean;
+  /**
+   * Subject id (usr_…) value moved from, null for provider money.
+   */
+  from_subject: string | null;
+  /**
+   * Subject id (usr_…) value moved to.
+   */
+  to_subject: string | null;
+  /**
+   * stripe, paypal, powerchat…; null for credit movements.
+   */
+  provider: string | null;
+  /**
+   * Transaction metadata as posted (amount_bits, paid_cents, value_cents, target EntityRef, intent_id, message, donor_name, rates…). Its keys depend on the transaction type.
+   */
+  metadata: {};
+  /**
+   * The transaction this one reverses.
+   */
+  reverses_txn: string;
+  /**
+   * Provider reversals only: required when Billing kept value it could not recover (staff review).
+   */
+  review?: "required" | null;
+  /**
+   * Provider reversals only: subscription periods revoked.
+   */
+  entitlements_revoked?: number;
+}
+
+/** billing.entitlement.changed@1.0.0 (owner: billing) */
+/**
+ * billing.entitlement.changed v1 (OpenVibe.Billing server/ops/subscriptions.js pay, setStatus, revokeForTxn; entitlement()). A subscriber's channel-subscription entitlement to a streamer changed: a period was granted or renewed, the subscription ended or expired, or a reversed payment revoked a period. The payload is the entitlement as of now. Envelope: subject { type: entitlement, id: <subscriber usr_…>:channel_subscription:<streamer usr_…> }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingEntitlementChangedPayload {
+  subject: SubjectRef;
+  streamer: SubjectRef;
+  kind: "channel_subscription";
+  active: boolean;
+  expires_at: string | null;
+  subscription: {
+    id: string;
+    status: "active" | "canceled" | "expired";
+    auto_renew: boolean;
+    cancel_at_period_end: boolean;
+    provider: string;
+  } | null;
+  /**
+   * granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback.
+   */
+  reason: string;
+  /**
+   * granted/renewed: the transaction that paid the period.
+   */
+  transaction_id?: string;
+  /**
+   * refund/chargeback: the period the reversed payment had granted.
+   */
+  revoked_period?: {
+    starts_at: string;
+    ends_at: string;
+  };
+}
+
+/** billing.subscription.canceled@1.0.0 (owner: billing) */
+/**
+ * billing.subscription.canceled v1 (OpenVibe.Billing server/ops/subscriptions.js cancel). A subscription was set to cancel at period end (for Stripe, after Stripe accepted it); the paid period still runs. Envelope: subject { type: subscription, id: sub_… }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingSubscriptionCanceledPayload {
+  subscription: {
+    id: string;
+    subscriber: SubjectRef;
+    streamer: SubjectRef;
+    tier: number;
+    provider: string;
+    provider_ref: string | null;
+    route: string | null;
+    status: "active" | "canceled" | "expired";
+    auto_renew: boolean;
+    cancel_at_period_end: boolean;
+    price_cents: number;
+    current_period_end: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+  provider_sync: "not_needed" | "stripe_cancel_at_period_end";
+  /**
+   * Who asked: the calling principal and the person it acted for.
+   */
+  actor: {
+    /**
+     * Token sub of the caller (svc:…, usr_…).
+     */
+    principal: string | null;
+    request_id: string | null;
+    on_behalf_of?: SubjectRef;
+  };
+}
+
+/** billing.cashout.requested@1.0.0 (owner: billing) */
+/**
+ * billing.cashout.requested v1 (OpenVibe.Billing server/ops/cashouts.js request). A creator asked to cash out payable bits; they are held in escrow. Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingCashoutRequestedPayload {
+  cashout: {
+    id: string;
+    subject: SubjectRef;
+    amount_bits: number;
+    value_cents: number;
+    status: "requested";
+    /**
+     * { type, address } as the creator entered it (e.g. a PayPal email).
+     */
+    payout_method: {};
+    escrow_until: string;
+    request_txn: string;
+    settle_txn: string | null;
+    payout_provider: string | null;
+    payout_reference: string | null;
+    reason: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+  /**
+   * The cashout_request transaction.
+   */
+  transaction_id: string;
+}
+
+/** billing.cashout.paid@1.0.0 (owner: billing) */
+/**
+ * billing.cashout.paid v1 (OpenVibe.Billing server/ops/cashouts.js approve). Staff paid a cash-out out through a provider. Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingCashoutPaidPayload {
+  cashout: {
+    id: string;
+    subject: SubjectRef;
+    amount_bits: number;
+    value_cents: number;
+    status: "paid";
+    /**
+     * { type, address } as the creator entered it (e.g. a PayPal email).
+     */
+    payout_method: {};
+    escrow_until: string;
+    request_txn: string;
+    settle_txn: string | null;
+    payout_provider: string | null;
+    payout_reference: string | null;
+    reason: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+  /**
+   * The cashout_paid transaction.
+   */
+  transaction_id: string;
+}
+
+/** billing.cashout.denied@1.0.0 (owner: billing) */
+/**
+ * billing.cashout.denied v1 (OpenVibe.Billing server/ops/cashouts.js deny). Staff denied a cash-out; the escrowed bits went back (a billing.transaction.reversed follows in the same transaction). Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingCashoutDeniedPayload {
+  cashout: {
+    id: string;
+    subject: SubjectRef;
+    amount_bits: number;
+    value_cents: number;
+    status: "denied";
+    /**
+     * { type, address } as the creator entered it (e.g. a PayPal email).
+     */
+    payout_method: {};
+    escrow_until: string;
+    request_txn: string;
+    settle_txn: string | null;
+    payout_provider: string | null;
+    payout_reference: string | null;
+    reason: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+  /**
+   * The cashout_denied transaction.
+   */
+  transaction_id: string;
+}
+
+/** billing.staff.action@1.0.0 (owner: billing) */
+/**
+ * billing.staff.action v1 (OpenVibe.Billing server/console/audit.js record). A staff member completed an action in the Billing console (only outcome done is announced; refused actions stay in staff_audit). Holds no secrets: codes, payout reference, counts. Envelope: subject { type: staff_action, id: sa_… }, visibility internal, priority important, actor the staff user ({ type: user, id: usr_… }).
+ */
+export interface BillingStaffActionPayload {
+  audit_id: string;
+  action: string;
+  outcome: "done";
+  target: {
+    type: string;
+    id: string;
+  } | null;
+  reason: string | null;
+  request_id: string | null;
+  /**
+   * Small whitelisted detail of the action.
+   */
+  detail: {};
+}
+
+/** billing.receipt.external@1.0.0 (owner: billing) */
+/**
+ * billing.receipt.external v1 (OpenVibe.Billing server/ops/external.js record). An EXTERNAL receipt (ADR-012): a tip paid on a creator's own provider account (PowerChat route direct). The money never touches OpenVibe (no journal entry); Billing announces it once per payment, only when BILLING_AUTHORITY=billing and the receiving account is mapped to a creator. OpenVibe.Tips celebrates it (chat line, overlay alert, goal). Envelope: subject { type: provider_receipt, id: <provider>:<payment id> }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingReceiptExternalPayload {
+  classification: "EXTERNAL";
+  provider: string;
+  /**
+   * <provider>:<payment id>, e.g. powerchat:…
+   */
+  receipt_ref: string;
+  /**
+   * The provider's id of the payment, stable across redeliveries.
+   */
+  provider_event_id: string;
+  /**
+   * The webhook delivery that carried it.
+   */
+  delivery_id: string;
+  streamer: SubjectRef;
+  receiving_account: {
+    provider: string;
+    id: string | null;
+    username: string | null;
+  };
+  amount_cents: number;
+  currency: "usd-cents";
+  /**
+   * Billing's value of the money in bits.
+   */
+  value_bits: number;
+  /**
+   * null when anonymous.
+   */
+  donor_name: string | null;
+  anonymous: boolean;
+  message: string | null;
+  app_ref: string | null;
+  app_purpose: string | null;
+  /**
+   * The provider's timestamp as it sent it.
+   */
+  occurred_at: string | null;
+  test: boolean;
+  /**
+   * Rate snapshot.
+   */
+  rates: {
+    bits_per_usd: number;
+  };
+}
+
+/** deals.watch.matched@1.0.0 (owner: deals) */
+/**
+ * deals.watch.matched v1 (OpenVibe.Deals server/domain/watches.js onObservation). A person's keyword, product or price-below watch matched a fresh observation of an active offer, inside the transaction that recorded the observation. At most one event per (watch, observation); a keyword/product watch notifies once per offer, a price-below watch again only for a lower price. Saved searches (kind search) never notify. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:deals. OpenVibe.Network turns it into a DEAL_WATCH_MATCH notification for payload.recipient (server/notifications/events-consumer.js). A price is the decimal exactly as stated, never inferred; null when the observation stated none.
+ */
+export interface DealsWatchMatchedPayload {
+  watch_id: string;
+  /**
+   * The watch owner's user subject id: who is notified.
+   */
+  recipient: string;
+  kind: "keyword" | "product" | "price_below";
+  /**
+   * Keywords of a keyword watch, or of a price-below watch without a product.
+   */
+  query: string | null;
+  /**
+   * Deals product id of a product or price-below watch.
+   */
+  product_id: string | null;
+  /**
+   * Price-below threshold as entered (decimal text, e.g. 19.99).
+   */
+  max_price: string | null;
+  /**
+   * ISO 4217 currency of max_price.
+   */
+  currency: string | null;
+  /**
+   * The canonical (root) offer id (dof_…).
+   */
+  offer_id: string;
+  /**
+   * Canonical offer page URL on Deals.
+   */
+  offer_url: string;
+  title: string;
+  observation: {
+    id: string;
+    observed_at: string;
+    /**
+     * Decimal text as stated; null when the observation stated no price.
+     */
+    price: string | null;
+    currency: string | null;
+    availability:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+  };
+}
+
+/** trade.alert.triggered@1.0.0 (owner: trade) */
+/**
+ * trade.alert.triggered v1 (OpenVibe.Trade server/domain/alerts.js deliver). One delivery of one private alert rule: a threshold crossed by a new observation (trigger kind observation), or a newly seen document of the instrument (filing_type / new_document rules, trigger kind document). Written in the transaction that recorded the observation or document; at most one per (rule, trigger). Envelope: subject { type: user, id: <rule owner usr_…> }, visibility subject, priority important, actor service:trade. Data only, never rendered notification text (ADR-020): OpenVibe.Network renders a TRADE_ALERT notification (server/notifications/events-consumer.js). Information only, not investment advice.
+ */
+export interface TradeAlertTriggeredPayload {
+  delivery_id: string;
+  rule: {
+    id: string;
+    kind: "threshold" | "filing_type" | "new_document";
+    status: "active" | "deleted";
+    instrument: {
+      id: string;
+      symbol?: string;
+      name?: string;
+    };
+    /**
+     * Threshold rules: e.g. price.close, volume, us-gaap:Revenues.
+     */
+    metric: string | null;
+    operator: "above" | "below" | null;
+    /**
+     * Decimal text as entered.
+     */
+    threshold: string | null;
+    unit: string | null;
+    currency: string | null;
+    /**
+     * filing_type rules: the 1–10 form types that trigger it (10-K, 8-K…).
+     */
+    form_types: string[] | null;
+    /**
+     * Threshold rules: armed before this delivery (always true when it fired); null for document rules.
+     */
+    armed: boolean | null;
+    created_at: string;
+    updated_at: string;
+  };
+  instrument: {
+    id: string;
+    symbol: string;
+    name: string;
+    /**
+     * Instrument page on Trade.
+     */
+    url: string;
+  };
+  trigger:
+    | {
+        kind: "observation";
+        id: string;
+        metric: string;
+        /**
+         * The decimal exactly as the source stated it.
+         */
+        value: string;
+        unit: string;
+        currency: string | null;
+        observed_at: string;
+        retrieved_at: string;
+        /**
+         * OpenVibe.Sources source key.
+         */
+        source_key: string;
+        source_url: string | null;
+      }
+    | {
+        kind: "document";
+        id: string;
+        form_type: string | null;
+        title: string | null;
+        url: string | null;
+        /**
+         * The source's own date; null if it gave none.
+         */
+        published_at: string | null;
+        retrieved_at: string;
+        source_key: string;
+      };
+  /**
+   * Currently "Information only — not investment advice; no trading here."
+   */
+  disclaimer: string;
+}
+
+/** tools.job.created@1.0.0 (owner: tools) */
+/**
+ * tools.job.created v1 (OpenVibe.Tools apps/_shared/jobs, planned). A job was accepted and queued (POST /api/v1/jobs, or a retry of a failed job, which carries retry_of). An Idempotency-Key replay creates no job and no event. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor the owner when it is a subject (user, service, app or mod), else service:tools.
+ */
+export interface ToolsJobCreatedPayload {
+  job_id: string;
+  /**
+   * The Tools satellite that runs the job (img, audio, docs…).
+   */
+  service: string;
+  /**
+   * Job type, e.g. img.process.
+   */
+  type: string;
+  type_version: number;
+  state: "queued";
+  /**
+   * Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published.
+   */
+  owner: SubjectRef | null;
+  attempts: number;
+  max_attempts: number;
+  created_at: string;
+  /**
+   * The failed job this one retries (POST /api/v1/jobs/:id/retry).
+   */
+  retry_of: string | null;
+}
+
+/** tools.job.started@1.0.0 (owner: tools) */
+/**
+ * tools.job.started v1 (OpenVibe.Tools apps/_shared/jobs, planned). A worker claimed the job and it is running (attempts counts this attempt). A job requeued after a restart starts again and is announced again. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:tools.
+ */
+export interface ToolsJobStartedPayload {
+  job_id: string;
+  /**
+   * The Tools satellite that runs the job (img, audio, docs…).
+   */
+  service: string;
+  /**
+   * Job type, e.g. img.process.
+   */
+  type: string;
+  type_version: number;
+  state: "running";
+  /**
+   * Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published.
+   */
+  owner: SubjectRef | null;
+  attempts: number;
+  max_attempts: number;
+  created_at: string;
+  /**
+   * The failed job this one retries (POST /api/v1/jobs/:id/retry).
+   */
+  retry_of: string | null;
+  started_at: string;
+}
+
+/** tools.job.succeeded@1.0.0 (owner: tools) */
+/**
+ * tools.job.succeeded v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job finished and its result files are stored (in Media when TOOLS_JOB_RESULTS=media). Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.
+ */
+export interface ToolsJobSucceededPayload {
+  job_id: string;
+  /**
+   * The Tools satellite that runs the job (img, audio, docs…).
+   */
+  service: string;
+  /**
+   * Job type, e.g. img.process.
+   */
+  type: string;
+  type_version: number;
+  state: "succeeded";
+  /**
+   * Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published.
+   */
+  owner: SubjectRef | null;
+  attempts: number;
+  max_attempts: number;
+  created_at: string;
+  /**
+   * The failed job this one retries (POST /api/v1/jobs/:id/retry).
+   */
+  retry_of: string | null;
+  started_at: string;
+  finished_at: string;
+  /**
+   * When the job and its result files are pruned; null while something references the result (PUT /api/v1/jobs/:id/references/:ref).
+   */
+  expires_at: string | null;
+  /**
+   * Where the result files are, never their content, names or the tool's output data (GET /api/v1/jobs/:id has those, for the owner).
+   */
+  result: {
+    /**
+     * @maxItems 100
+     */
+    files: {
+      /**
+       * n in /api/v1/jobs/:id/files/:n.
+       */
+      index: number;
+      mime: string;
+      size: number;
+      sha256: string;
+      /**
+       * media: stored as an OpenVibe.Media object (TOOLS_JOB_RESULTS=media); local: kept on the satellite until the job expires.
+       */
+      storage: "local" | "media";
+      /**
+       * { media_id, role: output } when storage is media.
+       */
+      media: MediaRef | null;
+    }[];
+  };
+}
+
+/** tools.job.failed@1.0.0 (owner: tools) */
+/**
+ * tools.job.failed v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job failed: the tool refused the input, it timed out, or it was running when the satellite restarted and its type does not requeue. A cancelled job is not a failure and is not announced as one. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.
+ */
+export interface ToolsJobFailedPayload {
+  job_id: string;
+  /**
+   * The Tools satellite that runs the job (img, audio, docs…).
+   */
+  service: string;
+  /**
+   * Job type, e.g. img.process.
+   */
+  type: string;
+  type_version: number;
+  state: "failed";
+  /**
+   * Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published.
+   */
+  owner: SubjectRef | null;
+  attempts: number;
+  max_attempts: number;
+  created_at: string;
+  /**
+   * The failed job this one retries (POST /api/v1/jobs/:id/retry).
+   */
+  retry_of: string | null;
+  /**
+   * null when the job failed before it ever ran.
+   */
+  started_at: string | null;
+  finished_at: string;
+  /**
+   * When the job and its result files are pruned; null while something references the result (PUT /api/v1/jobs/:id/references/:ref).
+   */
+  expires_at: string | null;
+  /**
+   * The job's problem (errors.problem@1) without request or trace ids.
+   */
+  error: {
+    status: number;
+    /**
+     * tools.job.failed, tools.job.timeout, or a code the tool chose (tools.…).
+     */
+    code: string;
+    /**
+     * Human-readable reason; server paths are scrubbed.
+     */
+    detail: string;
+  };
+  retryable: boolean;
+}

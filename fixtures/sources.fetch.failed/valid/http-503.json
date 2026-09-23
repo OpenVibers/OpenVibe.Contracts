@@ -1,0 +1,1 @@
+{ "source_key": "bbc-world", "category": "news", "run_id": "frn_01JAB2C3D4E5F6G7H8J9K0MNPQ", "endpoint_url": "https://feeds.bbci.co.uk/news/world/rss.xml", "state": "http_error", "error_code": "http_503", "http_status": 503, "consecutive_failures": 2 }

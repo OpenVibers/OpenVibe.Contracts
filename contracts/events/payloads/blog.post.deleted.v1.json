@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/blog.post.deleted.v1.json",
+  "title": "BlogPostDeletedPayload",
+  "description": "blog.post.deleted v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a post was soft-deleted, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:blog (scheduled and system changes).",
+  "type": "object",
+  "required": ["canonical_url", "publication_state", "indexability", "blog", "visibility"],
+  "additionalProperties": false,
+  "properties": {
+    "canonical_url": { "type": ["string", "null"], "description": "null: the event carries a tombstone, which has no URL." },
+    "publication_state": { "const": "deleted" },
+    "indexability": { "type": ["object", "null"], "required": ["decision", "reasons"], "additionalProperties": false, "properties": { "decision": { "enum": ["index", "noindex"] }, "reasons": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" } } }, "description": "The last gate decision, or null when there is none." },
+    "blog": {
+      "type": "object", "required": ["id", "handle"], "additionalProperties": false,
+      "properties": { "id": { "type": "string", "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$" }, "handle": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$" } }
+    },
+    "visibility": { "enum": ["public", "unlisted", "members", "private"], "description": "The post's own visibility (members = entitlement-gated)." }
+  }
+}

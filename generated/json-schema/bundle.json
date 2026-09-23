@@ -1967,6 +1967,5630 @@
           }
         }
       }
+    },
+    "events.redaction-directive": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/redaction-directive.v1.json",
+        "title": "RedactionDirective",
+        "description": "payload.redacts (ADR-026): a producer takes back events it published earlier. Any event may carry it, normally the producer's own *.deleted event. It names event_ids, or subject_type + subject_ids, or both, never an empty list. event_ids names events directly; subject_type + subject_ids names every stored event of the same source (for an app, the same project and environment) about those subjects. OpenVibe.Events rewrites each target into a tombstone (events.tombstone-payload@1) in the transaction that stores the directive. Naming another source's event is 403 events.redaction_not_allowed (the whole batch is refused); a malformed directive is 422 events.invalid_redaction. An event that carries a directive is never redacted itself.",
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": false,
+        "dependentRequired": {
+          "subject_type": [
+            "subject_ids"
+          ],
+          "subject_ids": [
+            "subject_type"
+          ]
+        },
+        "properties": {
+          "event_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "type": "string",
+              "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "description": "Events to redact by id. Duplicates are ignored."
+          },
+          "subject_type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "description": "Envelope subject.type of the events to redact (chat_message, post…). Goes with subject_ids."
+          },
+          "subject_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": "Envelope subject.id values; every not-yet-redacted event of the same source about each one is redacted."
+          }
+        }
+      }
+    },
+    "events.tombstone-payload": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/tombstone-payload.v1.json",
+        "title": "TombstonePayload",
+        "description": "The payload of a redacted event (ADR-026). OpenVibe.Events replaces the original payload with this and the actor with the producer itself ({ type: service, id: <source> }, or the app); event_id, seq, event_type, version, subject, timestamp and visibility stay. Every read path serves it from then on: pull, GET by id, SSE replay, queued deliveries and DLQ replays. A consumer checks payload.redacted before validating a payload against its event type's schema.",
+        "type": "object",
+        "required": [
+          "redacted",
+          "redacted_at",
+          "redacted_by"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "redacted": {
+            "const": true
+          },
+          "redacted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "redacted_by": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The event_id of the redacting event; an operator label (e.g. backfill) when OpenVibe.Events redacted by script."
+          }
+        }
+      }
+    },
+    "chat.message.deleted": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/chat.message.deleted.v1.json",
+        "title": "ChatMessageDeletedPayload",
+        "description": "chat.message.deleted v1 (OpenVibe.Chat server/db/database.js _announceDeleted). Public messages were deleted: by a moderator, through Live's bridge, the author's or an anon's history, a time-range purge or the auto-delete sweep. Envelope: subject { type: chat_message, id: <first id> }, visibility public, priority important, actor service:chat. One event per 500 ids. Carries only ids, never the text, the author or who deleted it; payload.redacts makes OpenVibe.Events tombstone the chat.message.created of each id.",
+        "type": "object",
+        "required": [
+          "message_ids",
+          "redacts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "message_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 500,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Chat message ids (the id in chat.message.created)."
+          },
+          "redacts": {
+            "$ref": "../redaction-directive.v1.json",
+            "description": "{ subject_type: chat_message, subject_ids: message_ids as strings }."
+          }
+        }
+      }
+    },
+    "sources.item.created": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/sources.item.created.v1.json",
+        "title": "SourcesItemCreatedPayload",
+        "description": "sources.item.created v1 (OpenVibe.Sources server/items.js ingest → itemEvent). A successful fetch, or a manual entry, produced an item Sources had not seen (revision 1). A summary only: consumers fetch the full sources.item@1 with sources.item.read. Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.",
+        "type": "object",
+        "required": [
+          "item_id",
+          "source_key",
+          "category",
+          "kind",
+          "canonical_url",
+          "title",
+          "revision",
+          "content_hash",
+          "retrieved_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "source_key": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "category": {
+            "enum": [
+              "news",
+              "blog",
+              "reviews",
+              "deals",
+              "coupons",
+              "trade"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "description": "article | url | sitemap | product | offer | review | record … (sources.item@1 kind)."
+          },
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last successful fetch (or manual entry) that contained the item."
+          }
+        }
+      }
+    },
+    "sources.item.updated": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/sources.item.updated.v1.json",
+        "title": "SourcesItemUpdatedPayload",
+        "description": "sources.item.updated v1 (OpenVibe.Sources server/items.js ingest → itemEvent). A successful fetch or manual entry changed an existing item's content hash, which made a new revision. A removed item is never updated (removal is sticky). Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.",
+        "type": "object",
+        "required": [
+          "item_id",
+          "source_key",
+          "category",
+          "kind",
+          "canonical_url",
+          "title",
+          "revision",
+          "content_hash",
+          "retrieved_at",
+          "previous_content_hash"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "source_key": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "category": {
+            "enum": [
+              "news",
+              "blog",
+              "reviews",
+              "deals",
+              "coupons",
+              "trade"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "description": "article | url | sitemap | product | offer | review | record … (sources.item@1 kind)."
+          },
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last successful fetch (or manual entry) that contained the item."
+          },
+          "previous_content_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "sources.item.removed": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/sources.item.removed.v1.json",
+        "title": "SourcesItemRemovedPayload",
+        "description": "sources.item.removed v1 (OpenVibe.Sources server/items.js remove → itemEvent, from DELETE /api/v1/items/:id). Staff removed an item (takedown, licence, error). Sticky: a later fetch that still lists it does not bring it back. The removal bumps the revision; content_hash is the last content's. Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.",
+        "type": "object",
+        "required": [
+          "item_id",
+          "source_key",
+          "category",
+          "kind",
+          "canonical_url",
+          "title",
+          "revision",
+          "content_hash",
+          "retrieved_at",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "source_key": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "category": {
+            "enum": [
+              "news",
+              "blog",
+              "reviews",
+              "deals",
+              "coupons",
+              "trade"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "description": "article | url | sitemap | product | offer | review | record … (sources.item@1 kind)."
+          },
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last successful fetch (or manual entry) that contained the item."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "sources.fetch.failed": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/sources.fetch.failed.v1.json",
+        "title": "SourcesFetchFailedPayload",
+        "description": "sources.fetch.failed v1 (OpenVibe.Sources server/ingest.js failedEvent). One endpoint fetch of a source failed and counts as a failure: robots denied or unreachable, an HTTP error, the site's 429, a parse error or an internal error. Not sent for 304, a disabled source, a missing credential or the local rate limit. No item is created or changed. Envelope: subject { type: source, id: <source_key> }, visibility internal, priority important, actor service:sources.",
+        "type": "object",
+        "required": [
+          "source_key",
+          "category",
+          "run_id",
+          "endpoint_url",
+          "state",
+          "error_code",
+          "http_status",
+          "consecutive_failures"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "source_key": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+          },
+          "category": {
+            "enum": [
+              "news",
+              "blog",
+              "reviews",
+              "deals",
+              "coupons",
+              "trade"
+            ]
+          },
+          "run_id": {
+            "type": "string",
+            "pattern": "^frn_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The recorded fetch run (GET /api/v1/sources/:key/runs)."
+          },
+          "endpoint_url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "state": {
+            "enum": [
+              "robots_denied",
+              "http_error",
+              "rate_limited",
+              "parse_error"
+            ]
+          },
+          "error_code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "description": "robots | address_refused | port_refused | bad_url | upstream_429 | http_<status> | unreadable | adapter_error | internal."
+          },
+          "http_status": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 100,
+            "maximum": 599
+          },
+          "consecutive_failures": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The source's consecutive failed runs including this one."
+          }
+        }
+      }
+    },
+    "sources.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/sources.index_document.upserted.v1.json",
+        "title": "SourcesIndexDocumentUpsertedPayload",
+        "description": "sources.index_document.upserted v1 (OpenVibe.Sources server/items.js indexEvent). An item of a source with search_visibility was created or updated; the payload is its search.index-document@1 (owner sources, type item, visibility members for role:admin and role:global_mod, authorship imported, indexability noindex third_party_content). Consumed by OpenVibe.Search (*.index_document.*). Envelope: subject { type: item, id: <item id>, revision }, visibility internal, priority important, actor service:sources.",
+        "$ref": "../../search/index-document.v1.json"
+      }
+    },
+    "sources.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/sources.index_document.deleted.v1.json",
+        "title": "SourcesIndexDocumentDeletedPayload",
+        "description": "sources.index_document.deleted v1 (OpenVibe.Sources server/items.js indexEvent). An item of a source with search_visibility was removed; OpenVibe.Search stores a tombstone at this revision. Envelope: subject { type: item, id: <item id>, revision }, visibility internal, priority important, actor service:sources.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "item"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "search.document.indexed": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/search.document.indexed.v1.json",
+        "title": "SearchDocumentIndexedPayload",
+        "description": "search.document.indexed v1 (OpenVibe.Search server/store.js announce). An applied index document (from an owner's *.index_document.upserted or the direct API) is servable: restricted (ACL only) or public. Sent on every applied revision that stays exposed, first time or not. Envelope: subject { type: document, id: <owner>/<type>/<id>, revision }, visibility internal, priority important, actor service:search, trace_id of the request or event that caused it.",
+        "type": "object",
+        "required": [
+          "owner",
+          "type",
+          "id",
+          "revision",
+          "exposure",
+          "reindexed",
+          "canonical_url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:~-]{0,127}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "exposure": {
+            "enum": [
+              "restricted",
+              "public_unlisted",
+              "public_listed"
+            ]
+          },
+          "reindexed": {
+            "type": "boolean",
+            "description": "true when Search already held an earlier revision of the document."
+          },
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Only when the document is public (public_unlisted or public_listed); null otherwise or when it has none."
+          }
+        }
+      }
+    },
+    "search.document.removed": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/search.document.removed.v1.json",
+        "title": "SearchDocumentRemovedPayload",
+        "description": "search.document.removed v1 (OpenVibe.Search server/store.js announce). A document's exposure went down: deleted, made draft or unpublished, its visibility changed, or it became noindex. Caches and sitemaps purge canonical_url. Envelope: subject { type: document, id: <owner>/<type>/<id>, revision }, visibility internal, priority important, actor service:search, trace_id of the request or event that caused it.",
+        "type": "object",
+        "required": [
+          "owner",
+          "type",
+          "id",
+          "revision",
+          "reason",
+          "previous_exposure",
+          "exposure",
+          "canonical_url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:~-]{0,127}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "reason": {
+            "enum": [
+              "deleted",
+              "draft",
+              "not_published",
+              "visibility_changed",
+              "noindex"
+            ]
+          },
+          "previous_exposure": {
+            "enum": [
+              "restricted",
+              "public_unlisted",
+              "public_listed"
+            ]
+          },
+          "exposure": {
+            "enum": [
+              "none",
+              "restricted",
+              "public_unlisted"
+            ],
+            "description": "Lower than previous_exposure. none: no longer served to anyone."
+          },
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The URL only when the document was public before (so it must be purged); null otherwise."
+          }
+        }
+      }
+    },
+    "wiki.space.updated": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.space.updated.v1.json",
+        "title": "WikiSpaceUpdatedPayload",
+        "description": "wiki.space.updated v1 (OpenVibe.Wiki server/wiki/service.js spaceEvent). Emitted when a space is created, renamed, changes visibility or settings, has its roles changed, or is deleted, in the transaction of the change. Envelope: subject { type: space, id: spc_… }, visibility public for a public space that is not deleted, otherwise internal, priority important, actor the person (user) or service.",
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "kind",
+          "visibility",
+          "deleted",
+          "change",
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "kind": {
+            "enum": [
+              "official",
+              "user"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "private"
+            ]
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "change": {
+            "enum": [
+              "created",
+              "renamed",
+              "visibility",
+              "settings",
+              "roles",
+              "deleted"
+            ],
+            "description": "What changed. renamed = a new slug."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048,
+            "description": "Canonical URL of the space."
+          }
+        }
+      }
+    },
+    "wiki.revision.created": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.revision.created.v1.json",
+        "title": "WikiRevisionCreatedPayload",
+        "description": "wiki.revision.created v1 (OpenVibe.Wiki server/wiki/service.js revisionEvent). Emitted when a page gets a new immutable revision: an edit, a revert or an AI proposal. A new revision is a draft until it is published (then wiki.page.published|updated follows). Envelope: subject { type: page, id: pg_…, revision: <number> }, visibility internal, priority important, actor the person or service.",
+        "type": "object",
+        "required": [
+          "space_id",
+          "space",
+          "slug",
+          "number",
+          "kind",
+          "parent_number",
+          "reverted_to",
+          "authorship",
+          "author",
+          "message"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "space_id": {
+            "type": "string",
+            "pattern": "^spc_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+            "description": "Space slug."
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Page slug."
+          },
+          "number": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The new revision number."
+          },
+          "kind": {
+            "enum": [
+              "edit",
+              "revert",
+              "import"
+            ]
+          },
+          "parent_number": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "reverted_to": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The revision a revert restored; null otherwise."
+          },
+          "authorship": {
+            "enum": [
+              "human",
+              "ai_assisted",
+              "ai_generated",
+              "imported",
+              null
+            ],
+            "description": "Search's authorship vocabulary; null when the revision has no authorship record."
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "Who wrote it: a subject id (usr_…) or a service (svc:<id>)."
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "proposal_id": {
+            "type": "string",
+            "pattern": "^prp_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Present when the revision is an AI proposal awaiting a person's approval."
+          }
+        }
+      }
+    },
+    "wiki.watch.triggered": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.watch.triggered.v1.json",
+        "title": "WikiWatchTriggeredPayload",
+        "description": "wiki.watch.triggered v1 (OpenVibe.Wiki server/wiki/service.js notifyWatchers). One event per change to a watched page, listing the watchers who may read the page (never the actor); not emitted when nobody is left. Envelope: subject { type: page, id: pg_…, revision: <revision or 0> }, visibility internal, priority important, actor the person or service.",
+        "type": "object",
+        "required": [
+          "action",
+          "space",
+          "slug",
+          "title",
+          "revision",
+          "url",
+          "recipients"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "published",
+              "updated",
+              "unpublished",
+              "deleted",
+              "revised",
+              "proposed"
+            ],
+            "description": "revised = a new draft revision; proposed = an AI proposal awaits approval; the rest follow wiki.page.*."
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+            "description": "Space slug."
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Page slug."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "revision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048
+          },
+          "recipients": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "description": "Watchers to notify."
+          }
+        }
+      }
+    },
+    "wiki.page.published": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.page.published.v1.json",
+        "title": "WikiPagePublishedPayload",
+        "description": "wiki.page.published v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a page became published, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:wiki (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "space",
+          "slug",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048
+          },
+          "publication_state": {
+            "const": "published"
+          },
+          "indexability": {
+            "type": "object",
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            }
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+            "description": "Space slug."
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Page slug inside the space."
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "private"
+            ],
+            "description": "Effective visibility (the page's, narrowed by its space's)."
+          }
+        }
+      }
+    },
+    "wiki.page.updated": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.page.updated.v1.json",
+        "title": "WikiPageUpdatedPayload",
+        "description": "wiki.page.updated v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published page got a new published revision or visibility, or a review changed what Search holds, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:wiki (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "space",
+          "slug",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048
+          },
+          "publication_state": {
+            "const": "published"
+          },
+          "indexability": {
+            "type": "object",
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            }
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+            "description": "Space slug."
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Page slug inside the space."
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "private"
+            ],
+            "description": "Effective visibility (the page's, narrowed by its space's)."
+          }
+        }
+      }
+    },
+    "wiki.page.unpublished": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.page.unpublished.v1.json",
+        "title": "WikiPageUnpublishedPayload",
+        "description": "wiki.page.unpublished v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published page stopped being published, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:wiki (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "space",
+          "slug",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null: the event carries a tombstone, which has no URL."
+          },
+          "publication_state": {
+            "const": "unpublished"
+          },
+          "indexability": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            },
+            "description": "The last gate decision, or null when there is none."
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+            "description": "Space slug."
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Page slug inside the space."
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "private"
+            ],
+            "description": "Effective visibility (the page's, narrowed by its space's)."
+          }
+        }
+      }
+    },
+    "wiki.page.deleted": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.page.deleted.v1.json",
+        "title": "WikiPageDeletedPayload",
+        "description": "wiki.page.deleted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks publicationEvent). Emitted when a page (or its whole space) was deleted, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from wiki.index_document.*). Envelope: subject { type: page, id: pg_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:wiki (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "space",
+          "slug",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null: the event carries a tombstone, which has no URL."
+          },
+          "publication_state": {
+            "const": "deleted"
+          },
+          "indexability": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            },
+            "description": "The last gate decision, or null when there is none."
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+            "description": "Space slug."
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Page slug inside the space."
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "private"
+            ],
+            "description": "Effective visibility (the page's, narrowed by its space's)."
+          }
+        }
+      }
+    },
+    "wiki.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.index_document.upserted.v1.json",
+        "title": "WikiIndexDocumentUpsertedPayload",
+        "description": "wiki.index_document.upserted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published, public, listable page, sent whenever what Search should hold changed (the revision grows with every change). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: page, id, revision: <document revision> }, visibility internal, priority important, actor service:wiki.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "wiki"
+              },
+              "type": {
+                "const": "page"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^pg_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "wiki.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.index_document.deleted.v1.json",
+        "title": "WikiIndexDocumentDeletedPayload",
+        "description": "wiki.index_document.deleted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the page is no longer published, public and listable, so Search drops it at this revision or older. Only sent for a page Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: page, id, revision }, visibility internal, priority important, actor service:wiki.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "page"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^pg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "blog.post.created": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.post.created.v1.json",
+        "title": "BlogPostCreatedPayload",
+        "description": "blog.post.created v1 (OpenVibe.Blog server/domain/posts.js create). A post exists as a draft (its first revision). Envelope: subject { type: post, id: pst_…, revision: 1 }, visibility internal, priority low, actor the person or the calling service.",
+        "type": "object",
+        "required": [
+          "blog",
+          "state",
+          "visibility",
+          "authorship"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "blog": {
+            "type": "object",
+            "required": [
+              "id",
+              "handle"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "handle": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$"
+              }
+            }
+          },
+          "state": {
+            "const": "draft"
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ]
+          },
+          "authorship": {
+            "enum": [
+              "human",
+              "ai",
+              "hybrid",
+              "imported"
+            ],
+            "description": "openvibe-publishing authorship mode (not Search's vocabulary)."
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "id",
+              "runId"
+            ],
+            "additionalProperties": false,
+            "description": "The OpenVibe.AI workflow and run behind ai and hybrid posts; absent for human posts.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$"
+              },
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": [
+                  "integer",
+                  "string"
+                ]
+              },
+              "model": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "blog.post.published": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.post.published.v1.json",
+        "title": "BlogPostPublishedPayload",
+        "description": "blog.post.published v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a post became published (now or by its schedule), in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:blog (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "blog",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048
+          },
+          "publication_state": {
+            "const": "published"
+          },
+          "indexability": {
+            "type": "object",
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            }
+          },
+          "blog": {
+            "type": "object",
+            "required": [
+              "id",
+              "handle"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "handle": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$"
+              }
+            }
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ],
+            "description": "The post's own visibility (members = entitlement-gated)."
+          }
+        }
+      }
+    },
+    "blog.post.updated": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.post.updated.v1.json",
+        "title": "BlogPostUpdatedPayload",
+        "description": "blog.post.updated v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published post got a new published revision, visibility or URL, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility public when the document is public and the gate lets it be listed, otherwise internal, priority important, actor the person or service:blog (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "blog",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048
+          },
+          "publication_state": {
+            "const": "published"
+          },
+          "indexability": {
+            "type": "object",
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            }
+          },
+          "blog": {
+            "type": "object",
+            "required": [
+              "id",
+              "handle"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "handle": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$"
+              }
+            }
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ],
+            "description": "The post's own visibility (members = entitlement-gated)."
+          }
+        }
+      }
+    },
+    "blog.post.unpublished": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.post.unpublished.v1.json",
+        "title": "BlogPostUnpublishedPayload",
+        "description": "blog.post.unpublished v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a published post stopped being published, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:blog (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "blog",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null: the event carries a tombstone, which has no URL."
+          },
+          "publication_state": {
+            "const": "unpublished"
+          },
+          "indexability": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            },
+            "description": "The last gate decision, or null when there is none."
+          },
+          "blog": {
+            "type": "object",
+            "required": [
+              "id",
+              "handle"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "handle": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$"
+              }
+            }
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ],
+            "description": "The post's own visibility (members = entitlement-gated)."
+          }
+        }
+      }
+    },
+    "blog.post.deleted": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.post.deleted.v1.json",
+        "title": "BlogPostDeletedPayload",
+        "description": "blog.post.deleted v1 (OpenVibe.Blog server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). Emitted when a post was soft-deleted, in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the body (Search gets that from blog.index_document.*). Envelope: subject { type: post, id: pst_…, revision: <published revision, 0 if none> }, visibility internal, priority important, actor the person or service:blog (scheduled and system changes).",
+        "type": "object",
+        "required": [
+          "canonical_url",
+          "publication_state",
+          "indexability",
+          "blog",
+          "visibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "canonical_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null: the event carries a tombstone, which has no URL."
+          },
+          "publication_state": {
+            "const": "deleted"
+          },
+          "indexability": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "decision",
+              "reasons"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                }
+              }
+            },
+            "description": "The last gate decision, or null when there is none."
+          },
+          "blog": {
+            "type": "object",
+            "required": [
+              "id",
+              "handle"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "handle": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$"
+              }
+            }
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ],
+            "description": "The post's own visibility (members = entitlement-gated)."
+          }
+        }
+      }
+    },
+    "blog.schedule.failed": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.schedule.failed.v1.json",
+        "title": "BlogScheduleFailedPayload",
+        "description": "blog.schedule.failed v1 (OpenVibe.Blog server/domain/posts.js runScheduled). A scheduled publish or unpublish gave up after its retries; a scheduled post goes back to draft. Envelope: subject { type: post, id: pst_…, revision?: <scheduled revision> }, visibility internal, priority important, actor service:blog.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "action",
+          "revision",
+          "run_at",
+          "attempts",
+          "error",
+          "blog_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "action": {
+            "enum": [
+              "publish",
+              "unpublish"
+            ]
+          },
+          "revision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The revision a publish was to make live; null for an unpublish."
+          },
+          "run_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the job was last due."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "The last error."
+          },
+          "blog_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "null when the post no longer exists."
+          }
+        }
+      }
+    },
+    "blog.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.index_document.upserted.v1.json",
+        "title": "BlogIndexDocumentUpsertedPayload",
+        "description": "blog.index_document.upserted v1 (OpenVibe.Blog server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published, public, listable post, sent whenever what Search should hold changed (the revision grows with every change). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: post, id, revision: <document revision> }, visibility internal, priority important, actor service:blog.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "blog"
+              },
+              "type": {
+                "const": "post"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^pst_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "blog.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.index_document.deleted.v1.json",
+        "title": "BlogIndexDocumentDeletedPayload",
+        "description": "blog.index_document.deleted v1 (OpenVibe.Blog server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the post is no longer published, public and listable, so Search drops it at this revision or older. Only sent for a post Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: post, id, revision }, visibility internal, priority important, actor service:blog.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "post"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^pst_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "ai.run-request": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-request.v1.json",
+        "title": "AiRunRequest",
+        "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.",
+        "type": "object",
+        "required": [
+          "workflow"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "workflow": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)+$",
+            "maxLength": 200,
+            "description": "Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…)."
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Pin a workflow version (active or deprecated). Omitted: the newest active version."
+          },
+          "input": {
+            "type": "object",
+            "description": "Workflow input; validated against the workflow version's input_schema. Default {}."
+          },
+          "target": {
+            "$ref": "../common/entity-ref.v1.json"
+          },
+          "attribution": {
+            "$ref": "../common/entity-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{8,128}$",
+            "description": "Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent."
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cache": {
+                "type": "boolean",
+                "default": true,
+                "description": "false skips the scoped cache lookup and store."
+              },
+              "debug": {
+                "type": "boolean",
+                "default": false,
+                "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
+              }
+            }
+          }
+        }
+      }
+    },
+    "ai.run": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run.v1.json",
+        "title": "AiRun",
+        "description": "A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted.",
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "workflow",
+          "template",
+          "route",
+          "requester",
+          "on_behalf_of",
+          "attribution",
+          "source_service",
+          "target",
+          "input",
+          "output",
+          "error",
+          "synthetic",
+          "provenance",
+          "usage",
+          "citations_count",
+          "retry_of",
+          "idempotency_key",
+          "trace_id",
+          "created_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "cached"
+            ],
+            "description": "Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused)."
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "template": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "description": "The prompt template of the workflow's llm step; null for workflows without one."
+          },
+          "route": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "description": "Provider route; version null while the route is unresolved or disabled."
+          },
+          "requester": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "$ref": "../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_service": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The requester's service id when the requester is a service."
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "The retained input (see the description)."
+          },
+          "output": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Workflow output, or null."
+          },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "code",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+                "description": "run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…"
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "synthetic": {
+            "type": "boolean",
+            "description": "Produced by the stub provider; never served to production callers and never cached."
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "origin",
+              "workflow",
+              "workflow_version",
+              "template_version",
+              "route",
+              "route_version",
+              "provider",
+              "model",
+              "fallback_used",
+              "run_id",
+              "cached_from",
+              "synthetic"
+            ],
+            "properties": {
+              "origin": {
+                "const": "ai"
+              },
+              "workflow": {
+                "type": "string"
+              },
+              "workflow_version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "template_version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "route": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "route_version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fallback_used": {
+                "type": "boolean",
+                "description": "The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded)."
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "cached_from": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "synthetic": {
+                "type": "boolean"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "tokens_in",
+              "tokens_out",
+              "cost_usd",
+              "attempts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Provider calls made (skipped routes not counted)."
+              }
+            }
+          },
+          "citations_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later."
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "trace_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.run.queued": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.run.queued.v1.json",
+        "title": "AiRunQueuedPayload",
+        "description": "ai.run.queued v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run was stored queued (it then runs inline within ?wait or on the worker). Not published for a cache hit (ai.run.cached) or a create refused by quota or a full queue. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.",
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "workflow",
+          "requester",
+          "on_behalf_of",
+          "target",
+          "attribution",
+          "provider",
+          "model",
+          "fallback_used",
+          "synthetic",
+          "cached_from",
+          "usage",
+          "error",
+          "citations_count",
+          "retry_of",
+          "created_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "const": "queued"
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Provider that produced the output; null before a provider call and for cached runs."
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fallback_used": {
+            "type": "boolean"
+          },
+          "synthetic": {
+            "type": "boolean",
+            "description": "Stub provider output."
+          },
+          "cached_from": {
+            "type": "null"
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "tokens_in",
+              "tokens_out",
+              "cost_usd",
+              "attempts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "error": {
+            "type": "null"
+          },
+          "citations_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "ai.run.succeeded": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.run.succeeded.v1.json",
+        "title": "AiRunSucceededPayload",
+        "description": "ai.run.succeeded v1 (OpenVibe.AI server/runs.js execute). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run finished with output that matched the workflow output schema. The output itself is not in the event: a consumer that needs it reads GET /api/v1/runs/:id with ai.run.read (own runs only). A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority important, actor service:ai.",
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "workflow",
+          "requester",
+          "on_behalf_of",
+          "target",
+          "attribution",
+          "provider",
+          "model",
+          "fallback_used",
+          "synthetic",
+          "cached_from",
+          "usage",
+          "error",
+          "citations_count",
+          "retry_of",
+          "created_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "const": "succeeded"
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Provider that produced the output; null before a provider call and for cached runs."
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fallback_used": {
+            "type": "boolean"
+          },
+          "synthetic": {
+            "type": "boolean",
+            "description": "Stub provider output."
+          },
+          "cached_from": {
+            "type": "null"
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "tokens_in",
+              "tokens_out",
+              "cost_usd",
+              "attempts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "error": {
+            "type": "null"
+          },
+          "citations_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.run.failed": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.run.failed.v1.json",
+        "title": "AiRunFailedPayload",
+        "description": "ai.run.failed v1 (OpenVibe.AI server/runs.js execute / recoverInterrupted). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run ended failed: a provider, route, source or output error, run.internal, or run.interrupted after a restart or shutdown (retryable with POST /api/v1/runs/:id/retry unless its input was not retained). A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority important, actor service:ai.",
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "workflow",
+          "requester",
+          "on_behalf_of",
+          "target",
+          "attribution",
+          "provider",
+          "model",
+          "fallback_used",
+          "synthetic",
+          "cached_from",
+          "usage",
+          "error",
+          "citations_count",
+          "retry_of",
+          "created_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "const": "failed"
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Provider that produced the output; null before a provider call and for cached runs."
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fallback_used": {
+            "type": "boolean"
+          },
+          "synthetic": {
+            "type": "boolean",
+            "description": "Stub provider output."
+          },
+          "cached_from": {
+            "type": "null"
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "tokens_in",
+              "tokens_out",
+              "cost_usd",
+              "attempts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$"
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "citations_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.run.cached": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.run.cached.v1.json",
+        "title": "AiRunCachedPayload",
+        "description": "ai.run.cached v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A create was served from the scoped cache: no provider call, cached_from names the run whose output was reused. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.",
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "workflow",
+          "requester",
+          "on_behalf_of",
+          "target",
+          "attribution",
+          "provider",
+          "model",
+          "fallback_used",
+          "synthetic",
+          "cached_from",
+          "usage",
+          "error",
+          "citations_count",
+          "retry_of",
+          "created_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "const": "cached"
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "$ref": "../../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Provider that produced the output; null before a provider call and for cached runs."
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fallback_used": {
+            "type": "boolean"
+          },
+          "synthetic": {
+            "type": "boolean",
+            "description": "Stub provider output."
+          },
+          "cached_from": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "tokens_in",
+              "tokens_out",
+              "cost_usd",
+              "attempts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "error": {
+            "type": "null"
+          },
+          "citations_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "tips.interaction.ready": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.interaction.ready.v1.json",
+        "title": "TipsInteractionReadyPayload",
+        "description": "tips.interaction.ready v1 (OpenVibe.Tips server/domain/interactions.js settle, summary()). The interaction settled: it is active and its effects (overlay alert, chat line, paid message, TTS, media request) are queued. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.",
+        "type": "object",
+        "required": [
+          "interaction_id",
+          "creator",
+          "supporter",
+          "supporter_name",
+          "kind",
+          "amount",
+          "currency",
+          "settlement",
+          "payment_state",
+          "delivery_state",
+          "billing_txn_id",
+          "test"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "supporter": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The supporter, null when external, anonymous or unmapped."
+          },
+          "supporter_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Display name at the time."
+          },
+          "kind": {
+            "enum": [
+              "tip",
+              "paid_message",
+              "tts",
+              "media_request"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Integer amount in currency minor units (Vibes bits)."
+          },
+          "currency": {
+            "type": "string",
+            "description": "vibes-bits today."
+          },
+          "settlement": {
+            "enum": [
+              "billing",
+              "external",
+              "simulated",
+              "imported"
+            ]
+          },
+          "payment_state": {
+            "enum": [
+              "pending",
+              "settled",
+              "reversed",
+              "failed"
+            ]
+          },
+          "delivery_state": {
+            "enum": [
+              "awaiting_payment",
+              "queued",
+              "delivered",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "billing_txn_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The Billing transaction (txn_…) that settled it."
+          },
+          "test": {
+            "type": "boolean",
+            "description": "Simulations never emit events, so false in practice."
+          }
+        }
+      }
+    },
+    "tips.interaction.failed": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.interaction.failed.v1.json",
+        "title": "TipsInteractionFailedPayload",
+        "description": "tips.interaction.failed v1 (OpenVibe.Tips server/domain/interactions.js recomputeDelivery). A delivery effect gave up after its retries and none is still queued; the payment state is untouched. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.",
+        "type": "object",
+        "required": [
+          "interaction_id",
+          "creator",
+          "supporter",
+          "supporter_name",
+          "kind",
+          "amount",
+          "currency",
+          "settlement",
+          "payment_state",
+          "delivery_state",
+          "billing_txn_id",
+          "test",
+          "failed_effects"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "supporter": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The supporter, null when external, anonymous or unmapped."
+          },
+          "supporter_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Display name at the time."
+          },
+          "kind": {
+            "enum": [
+              "tip",
+              "paid_message",
+              "tts",
+              "media_request"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Integer amount in currency minor units (Vibes bits)."
+          },
+          "currency": {
+            "type": "string",
+            "description": "vibes-bits today."
+          },
+          "settlement": {
+            "enum": [
+              "billing",
+              "external",
+              "simulated",
+              "imported"
+            ]
+          },
+          "payment_state": {
+            "enum": [
+              "pending",
+              "settled",
+              "reversed",
+              "failed"
+            ]
+          },
+          "delivery_state": {
+            "enum": [
+              "awaiting_payment",
+              "queued",
+              "delivered",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "billing_txn_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The Billing transaction (txn_…) that settled it."
+          },
+          "test": {
+            "type": "boolean",
+            "description": "Simulations never emit events, so false in practice."
+          },
+          "failed_effects": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "effect",
+                "adapter",
+                "last_error"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "effect": {
+                  "enum": [
+                    "chat_line",
+                    "paid_message",
+                    "tts",
+                    "media_request",
+                    "overlay_alert"
+                  ]
+                },
+                "adapter": {
+                  "type": "string"
+                },
+                "last_error": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tips.interaction.cancelled": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.interaction.cancelled.v1.json",
+        "title": "TipsInteractionCancelledPayload",
+        "description": "tips.interaction.cancelled v1 (OpenVibe.Tips server/domain/interactions.js failPayment, cancelQueued). Undelivered effects were cancelled: the payment failed before settling (reason payment_failed, with the Billing error code), Billing reversed it (payment_reversed) or an effect came up while the payment was no longer settled (payment_not_settled). Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.",
+        "type": "object",
+        "required": [
+          "interaction_id",
+          "creator",
+          "supporter",
+          "supporter_name",
+          "kind",
+          "amount",
+          "currency",
+          "settlement",
+          "payment_state",
+          "delivery_state",
+          "billing_txn_id",
+          "test",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "supporter": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The supporter, null when external, anonymous or unmapped."
+          },
+          "supporter_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Display name at the time."
+          },
+          "kind": {
+            "enum": [
+              "tip",
+              "paid_message",
+              "tts",
+              "media_request"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Integer amount in currency minor units (Vibes bits)."
+          },
+          "currency": {
+            "type": "string",
+            "description": "vibes-bits today."
+          },
+          "settlement": {
+            "enum": [
+              "billing",
+              "external",
+              "simulated",
+              "imported"
+            ]
+          },
+          "payment_state": {
+            "enum": [
+              "pending",
+              "settled",
+              "reversed",
+              "failed"
+            ]
+          },
+          "delivery_state": {
+            "enum": [
+              "awaiting_payment",
+              "queued",
+              "delivered",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "billing_txn_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The Billing transaction (txn_…) that settled it."
+          },
+          "test": {
+            "type": "boolean",
+            "description": "Simulations never emit events, so false in practice."
+          },
+          "reason": {
+            "enum": [
+              "payment_failed",
+              "payment_reversed",
+              "payment_not_settled"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "description": "Only with reason payment_failed: the Billing problem code (billing.insufficient_funds, billing.funding_reversed, billing.refused…)."
+          }
+        }
+      }
+    },
+    "tips.goal.updated": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.goal.updated.v1.json",
+        "title": "TipsGoalUpdatedPayload",
+        "description": "tips.goal.updated v1 (OpenVibe.Tips server/domain/goals.js changed). A goal was created, edited or closed, or its settled total moved (a contribution, the contribution that reached it, a reversal). Envelope: subject { type: goal, id: tgoal_…, revision }, visibility internal, priority important, actor service:tips.",
+        "type": "object",
+        "required": [
+          "goal_id",
+          "creator",
+          "title",
+          "target_amount",
+          "current_amount",
+          "currency",
+          "status",
+          "reached",
+          "reason",
+          "interaction_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "goal_id": {
+            "type": "string",
+            "pattern": "^tgoal_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "title": {
+            "type": "string"
+          },
+          "target_amount": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "current_amount": {
+            "type": "integer",
+            "description": "Settled total including any amount carried over from Live."
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "closed"
+            ]
+          },
+          "reached": {
+            "type": "boolean"
+          },
+          "reason": {
+            "enum": [
+              "created",
+              "updated",
+              "closed",
+              "contribution",
+              "reached",
+              "reversal"
+            ]
+          },
+          "interaction_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The interaction behind a contribution, reached or reversal change; null otherwise."
+          }
+        }
+      }
+    },
+    "tips.overlay.delivered": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.overlay.delivered.v1.json",
+        "title": "TipsOverlayDeliveredPayload",
+        "description": "tips.overlay.delivered v1 (OpenVibe.Tips server/domain/overlays.js markDelivered). An overlay delivery (alert or goal update) reached at least one connected overlay, first time only. Envelope: subject { type: overlay_delivery, id: tovd_… }, visibility internal, priority important, actor service:tips. Never for tests.",
+        "type": "object",
+        "required": [
+          "delivery_id",
+          "creator",
+          "kind",
+          "interaction_id",
+          "goal_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "delivery_id": {
+            "type": "string",
+            "pattern": "^tovd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "kind": {
+            "enum": [
+              "alert",
+              "goal"
+            ]
+          },
+          "interaction_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "goal_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "tips.overlay.failed": {
+      "version": "1.0.0",
+      "owner": "tips",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tips.overlay.failed.v1.json",
+        "title": "TipsOverlayFailedPayload",
+        "description": "tips.overlay.failed v1 (OpenVibe.Tips server/domain/overlays.js sweepFailed). No overlay showed the delivery within the delivery window. Envelope: subject { type: overlay_delivery, id: tovd_… }, visibility internal, priority important, actor service:tips. Never for tests.",
+        "type": "object",
+        "required": [
+          "delivery_id",
+          "creator",
+          "kind",
+          "interaction_id",
+          "goal_id",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "delivery_id": {
+            "type": "string",
+            "pattern": "^tovd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "kind": {
+            "enum": [
+              "alert",
+              "goal"
+            ]
+          },
+          "interaction_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "goal_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "vip.plan.published": {
+      "version": "1.0.0",
+      "owner": "vip",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/vip.plan.published.v1.json",
+        "title": "VipPlanPublishedPayload",
+        "description": "vip.plan.published v1 (OpenVibe.VIP server/domain/plans.js emitPublished). A plan version became what new members buy: the plan was published, or a published plan was edited (a new immutable version). Carries the version's full terms, never a price (Billing prices and charges). Envelope: subject { type: plan, id: vpl_…, revision: <version> }, visibility public, priority important, actor service:vip.",
+        "type": "object",
+        "required": [
+          "plan_id",
+          "slug",
+          "version",
+          "version_id",
+          "creator",
+          "billing_kind",
+          "terms",
+          "published_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,47}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "version_id": {
+            "type": "string",
+            "pattern": "^vpv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "creator": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "subject",
+              "username",
+              "display_name",
+              "bio",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "vcr_… or network."
+              },
+              "kind": {
+                "enum": [
+                  "creator",
+                  "network"
+                ]
+              },
+              "subject": {
+                "anyOf": [
+                  {
+                    "$ref": "../../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "null for the network creator."
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bio": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "suspended"
+                ]
+              }
+            }
+          },
+          "billing_kind": {
+            "enum": [
+              "channel_subscription",
+              null
+            ],
+            "description": "The Billing product that sells it; null for a plan Billing does not sell (network plans)."
+          },
+          "terms": {
+            "type": "object",
+            "required": [
+              "name",
+              "description",
+              "benefits",
+              "perks",
+              "billing_kind",
+              "price",
+              "digest"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "benefits": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "maxItems": 20,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "perks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "key",
+                    "name",
+                    "kind",
+                    "scope"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "enum": [
+                        "badge",
+                        "emote",
+                        "gated_content",
+                        "room",
+                        "role",
+                        "other"
+                      ]
+                    },
+                    "scope": {
+                      "enum": [
+                        "creator",
+                        "network"
+                      ]
+                    }
+                  }
+                }
+              },
+              "billing_kind": {
+                "enum": [
+                  "channel_subscription",
+                  null
+                ]
+              },
+              "price": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Never an amount: a note that Billing sets and charges the price, or null."
+              },
+              "digest": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{16}$",
+                "description": "sha256 prefix of name, description, benefits, perks and billing_kind."
+              }
+            }
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "vip.membership.changed": {
+      "version": "1.0.0",
+      "owner": "vip",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/vip.membership.changed.v1.json",
+        "title": "VipMembershipChangedPayload",
+        "description": "vip.membership.changed v1 (OpenVibe.VIP server/domain/entitlements.js emitChanged). A member's standing with a creator changed as projected from Billing (granted, renewed, cancel scheduled, expired, refunded…): active, expires_at or cancel_at_period_end differ from before, or a first look found an active membership. Names the plan version the membership was bought under. Envelope: subject { type: membership, id: <member usr_…>:<creator usr_…> }, visibility internal, priority important, actor service:vip.",
+        "type": "object",
+        "required": [
+          "member",
+          "creator",
+          "kind",
+          "active",
+          "expires_at",
+          "cancel_at_period_end",
+          "previous",
+          "reason",
+          "source",
+          "billing_event_id",
+          "membership_id",
+          "plan_id",
+          "plan_version_id",
+          "plan_version",
+          "subscription_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "member": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "creator": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "kind": {
+            "type": "string",
+            "description": "Billing entitlement kind; channel_subscription today."
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cancel_at_period_end": {
+            "type": "boolean"
+          },
+          "previous": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "active",
+              "expires_at",
+              "cancel_at_period_end"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "active": {
+                "type": "boolean"
+              },
+              "expires_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cancel_at_period_end": {
+                "type": "boolean"
+              }
+            },
+            "description": "The projection before the change; null on first sight."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Billing's reason (granted, renewed, refund, expired…) or VIP's (checked, cancel_scheduled)."
+          },
+          "source": {
+            "enum": [
+              "event",
+              "billing_check",
+              "import"
+            ]
+          },
+          "billing_event_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The Billing event (evt_…) behind the change, when it came from one."
+          },
+          "membership_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^vms_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "plan_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan_version_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan_version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "subscription_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The Billing subscription (sub_…)."
+          }
+        }
+      }
+    },
+    "billing.transaction.settled": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.transaction.settled.v1.json",
+        "title": "BillingTransactionSettledPayload",
+        "description": "billing.transaction.settled v1 (OpenVibe.Billing server/ops/purchases.js summary(); emitted by purchases, transfers, subscriptions, cashouts recycle and admin adjustments). A journal transaction was posted. Envelope: subject { type: transaction, id: txn_… }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "transaction_id",
+          "type",
+          "test",
+          "from_subject",
+          "to_subject",
+          "provider",
+          "metadata"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "transaction_id": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "type": {
+            "enum": [
+              "purchase",
+              "donation",
+              "subscription",
+              "subscription_share",
+              "cashout_request",
+              "cashout_paid",
+              "cashout_denied",
+              "recycle",
+              "refund",
+              "chargeback",
+              "adjustment",
+              "import"
+            ]
+          },
+          "test": {
+            "type": "boolean",
+            "description": "Test money: never counted."
+          },
+          "from_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Subject id (usr_…) value moved from, null for provider money."
+          },
+          "to_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Subject id (usr_…) value moved to."
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "stripe, paypal, powerchat…; null for credit movements."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Transaction metadata as posted (amount_bits, paid_cents, value_cents, target EntityRef, intent_id, message, donor_name, rates…). Its keys depend on the transaction type."
+          }
+        }
+      }
+    },
+    "billing.transaction.reversed": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.transaction.reversed.v1.json",
+        "title": "BillingTransactionReversedPayload",
+        "description": "billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out. Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "transaction_id",
+          "type",
+          "test",
+          "from_subject",
+          "to_subject",
+          "provider",
+          "metadata",
+          "reverses_txn"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "transaction_id": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "type": {
+            "enum": [
+              "purchase",
+              "donation",
+              "subscription",
+              "subscription_share",
+              "cashout_request",
+              "cashout_paid",
+              "cashout_denied",
+              "recycle",
+              "refund",
+              "chargeback",
+              "adjustment",
+              "import"
+            ]
+          },
+          "test": {
+            "type": "boolean",
+            "description": "Test money: never counted."
+          },
+          "from_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Subject id (usr_…) value moved from, null for provider money."
+          },
+          "to_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Subject id (usr_…) value moved to."
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "stripe, paypal, powerchat…; null for credit movements."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Transaction metadata as posted (amount_bits, paid_cents, value_cents, target EntityRef, intent_id, message, donor_name, rates…). Its keys depend on the transaction type."
+          },
+          "reverses_txn": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The transaction this one reverses."
+          },
+          "review": {
+            "enum": [
+              "required",
+              null
+            ],
+            "description": "Provider reversals only: required when Billing kept value it could not recover (staff review)."
+          },
+          "entitlements_revoked": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Provider reversals only: subscription periods revoked."
+          }
+        }
+      }
+    },
+    "billing.entitlement.changed": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.entitlement.changed.v1.json",
+        "title": "BillingEntitlementChangedPayload",
+        "description": "billing.entitlement.changed v1 (OpenVibe.Billing server/ops/subscriptions.js pay, setStatus, revokeForTxn; entitlement()). A subscriber's channel-subscription entitlement to a streamer changed: a period was granted or renewed, the subscription ended or expired, or a reversed payment revoked a period. The payload is the entitlement as of now. Envelope: subject { type: entitlement, id: <subscriber usr_…>:channel_subscription:<streamer usr_…> }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "subject",
+          "streamer",
+          "kind",
+          "active",
+          "expires_at",
+          "subscription",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "streamer": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "kind": {
+            "const": "channel_subscription"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "subscription": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "id",
+              "status",
+              "auto_renew",
+              "cancel_at_period_end",
+              "provider"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^sub_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "canceled",
+                  "expired"
+                ]
+              },
+              "auto_renew": {
+                "type": "boolean"
+              },
+              "cancel_at_period_end": {
+                "type": "boolean"
+              },
+              "provider": {
+                "type": "string"
+              }
+            }
+          },
+          "reason": {
+            "type": "string",
+            "description": "granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback."
+          },
+          "transaction_id": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "granted/renewed: the transaction that paid the period."
+          },
+          "revoked_period": {
+            "type": "object",
+            "required": [
+              "starts_at",
+              "ends_at"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "starts_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "ends_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "description": "refund/chargeback: the period the reversed payment had granted."
+          }
+        }
+      }
+    },
+    "billing.subscription.canceled": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.subscription.canceled.v1.json",
+        "title": "BillingSubscriptionCanceledPayload",
+        "description": "billing.subscription.canceled v1 (OpenVibe.Billing server/ops/subscriptions.js cancel). A subscription was set to cancel at period end (for Stripe, after Stripe accepted it); the paid period still runs. Envelope: subject { type: subscription, id: sub_… }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "subscription",
+          "provider_sync",
+          "actor"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subscription": {
+            "type": "object",
+            "required": [
+              "id",
+              "subscriber",
+              "streamer",
+              "tier",
+              "provider",
+              "provider_ref",
+              "route",
+              "status",
+              "auto_renew",
+              "cancel_at_period_end",
+              "price_cents",
+              "current_period_end",
+              "created_at",
+              "updated_at"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^sub_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "subscriber": {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              "streamer": {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              "tier": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "provider": {
+                "type": "string"
+              },
+              "provider_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "route": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "canceled",
+                  "expired"
+                ]
+              },
+              "auto_renew": {
+                "type": "boolean"
+              },
+              "cancel_at_period_end": {
+                "type": "boolean"
+              },
+              "price_cents": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current_period_end": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": "string"
+              }
+            }
+          },
+          "provider_sync": {
+            "enum": [
+              "not_needed",
+              "stripe_cancel_at_period_end"
+            ]
+          },
+          "actor": {
+            "type": "object",
+            "required": [
+              "principal",
+              "request_id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "principal": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Token sub of the caller (svc:…, usr_…)."
+              },
+              "request_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "on_behalf_of": {
+                "$ref": "../../identity/subject-ref.v1.json"
+              }
+            },
+            "description": "Who asked: the calling principal and the person it acted for."
+          }
+        }
+      }
+    },
+    "billing.cashout.requested": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.cashout.requested.v1.json",
+        "title": "BillingCashoutRequestedPayload",
+        "description": "billing.cashout.requested v1 (OpenVibe.Billing server/ops/cashouts.js request). A creator asked to cash out payable bits; they are held in escrow. Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "cashout",
+          "transaction_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "cashout": {
+            "type": "object",
+            "required": [
+              "id",
+              "subject",
+              "amount_bits",
+              "value_cents",
+              "status",
+              "payout_method",
+              "escrow_until",
+              "request_txn",
+              "settle_txn",
+              "payout_provider",
+              "payout_reference",
+              "reason",
+              "created_at",
+              "updated_at"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^co_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "subject": {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              "amount_bits": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "value_cents": {
+                "type": "integer"
+              },
+              "status": {
+                "const": "requested"
+              },
+              "payout_method": {
+                "type": "object",
+                "description": "{ type, address } as the creator entered it (e.g. a PayPal email)."
+              },
+              "escrow_until": {
+                "type": "string"
+              },
+              "request_txn": {
+                "type": "string",
+                "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "settle_txn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "payout_provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "payout_reference": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": "string"
+              }
+            }
+          },
+          "transaction_id": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The cashout_request transaction."
+          }
+        }
+      }
+    },
+    "billing.cashout.paid": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.cashout.paid.v1.json",
+        "title": "BillingCashoutPaidPayload",
+        "description": "billing.cashout.paid v1 (OpenVibe.Billing server/ops/cashouts.js approve). Staff paid a cash-out out through a provider. Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "cashout",
+          "transaction_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "cashout": {
+            "type": "object",
+            "required": [
+              "id",
+              "subject",
+              "amount_bits",
+              "value_cents",
+              "status",
+              "payout_method",
+              "escrow_until",
+              "request_txn",
+              "settle_txn",
+              "payout_provider",
+              "payout_reference",
+              "reason",
+              "created_at",
+              "updated_at"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^co_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "subject": {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              "amount_bits": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "value_cents": {
+                "type": "integer"
+              },
+              "status": {
+                "const": "paid"
+              },
+              "payout_method": {
+                "type": "object",
+                "description": "{ type, address } as the creator entered it (e.g. a PayPal email)."
+              },
+              "escrow_until": {
+                "type": "string"
+              },
+              "request_txn": {
+                "type": "string",
+                "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "settle_txn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "payout_provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "payout_reference": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": "string"
+              }
+            }
+          },
+          "transaction_id": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The cashout_paid transaction."
+          }
+        }
+      }
+    },
+    "billing.cashout.denied": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.cashout.denied.v1.json",
+        "title": "BillingCashoutDeniedPayload",
+        "description": "billing.cashout.denied v1 (OpenVibe.Billing server/ops/cashouts.js deny). Staff denied a cash-out; the escrowed bits went back (a billing.transaction.reversed follows in the same transaction). Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "cashout",
+          "transaction_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "cashout": {
+            "type": "object",
+            "required": [
+              "id",
+              "subject",
+              "amount_bits",
+              "value_cents",
+              "status",
+              "payout_method",
+              "escrow_until",
+              "request_txn",
+              "settle_txn",
+              "payout_provider",
+              "payout_reference",
+              "reason",
+              "created_at",
+              "updated_at"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^co_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "subject": {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              "amount_bits": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "value_cents": {
+                "type": "integer"
+              },
+              "status": {
+                "const": "denied"
+              },
+              "payout_method": {
+                "type": "object",
+                "description": "{ type, address } as the creator entered it (e.g. a PayPal email)."
+              },
+              "escrow_until": {
+                "type": "string"
+              },
+              "request_txn": {
+                "type": "string",
+                "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "settle_txn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "payout_provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "payout_reference": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": "string"
+              }
+            }
+          },
+          "transaction_id": {
+            "type": "string",
+            "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The cashout_denied transaction."
+          }
+        }
+      }
+    },
+    "billing.staff.action": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.staff.action.v1.json",
+        "title": "BillingStaffActionPayload",
+        "description": "billing.staff.action v1 (OpenVibe.Billing server/console/audit.js record). A staff member completed an action in the Billing console (only outcome done is announced; refused actions stay in staff_audit). Holds no secrets: codes, payout reference, counts. Envelope: subject { type: staff_action, id: sa_… }, visibility internal, priority important, actor the staff user ({ type: user, id: usr_… }).",
+        "type": "object",
+        "required": [
+          "audit_id",
+          "action",
+          "outcome",
+          "target",
+          "reason",
+          "request_id",
+          "detail"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "audit_id": {
+            "type": "string",
+            "pattern": "^sa_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "action": {
+            "type": "string"
+          },
+          "outcome": {
+            "const": "done"
+          },
+          "target": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "request_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "detail": {
+            "type": "object",
+            "description": "Small whitelisted detail of the action."
+          }
+        }
+      }
+    },
+    "billing.receipt.external": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.receipt.external.v1.json",
+        "title": "BillingReceiptExternalPayload",
+        "description": "billing.receipt.external v1 (OpenVibe.Billing server/ops/external.js record). An EXTERNAL receipt (ADR-012): a tip paid on a creator's own provider account (PowerChat route direct). The money never touches OpenVibe (no journal entry); Billing announces it once per payment, only when BILLING_AUTHORITY=billing and the receiving account is mapped to a creator. OpenVibe.Tips celebrates it (chat line, overlay alert, goal). Envelope: subject { type: provider_receipt, id: <provider>:<payment id> }, visibility internal, priority important, actor service:billing.",
+        "type": "object",
+        "required": [
+          "classification",
+          "provider",
+          "receipt_ref",
+          "provider_event_id",
+          "delivery_id",
+          "streamer",
+          "receiving_account",
+          "amount_cents",
+          "currency",
+          "value_bits",
+          "donor_name",
+          "anonymous",
+          "message",
+          "app_ref",
+          "app_purpose",
+          "occurred_at",
+          "test",
+          "rates"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "classification": {
+            "const": "EXTERNAL"
+          },
+          "provider": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{1,39}$"
+          },
+          "receipt_ref": {
+            "type": "string",
+            "description": "<provider>:<payment id>, e.g. powerchat:…"
+          },
+          "provider_event_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The provider's id of the payment, stable across redeliveries."
+          },
+          "delivery_id": {
+            "type": "string",
+            "description": "The webhook delivery that carried it."
+          },
+          "streamer": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "receiving_account": {
+            "type": "object",
+            "required": [
+              "provider",
+              "id",
+              "username"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "provider": {
+                "type": "string"
+              },
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "amount_cents": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "currency": {
+            "const": "usd-cents"
+          },
+          "value_bits": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Billing's value of the money in bits."
+          },
+          "donor_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "description": "null when anonymous."
+          },
+          "anonymous": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "app_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "app_purpose": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "occurred_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The provider's timestamp as it sent it."
+          },
+          "test": {
+            "type": "boolean"
+          },
+          "rates": {
+            "type": "object",
+            "required": [
+              "bits_per_usd"
+            ],
+            "properties": {
+              "bits_per_usd": {
+                "type": "number"
+              }
+            },
+            "description": "Rate snapshot."
+          }
+        }
+      }
+    },
+    "deals.watch.matched": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/deals.watch.matched.v1.json",
+        "title": "DealsWatchMatchedPayload",
+        "description": "deals.watch.matched v1 (OpenVibe.Deals server/domain/watches.js onObservation). A person's keyword, product or price-below watch matched a fresh observation of an active offer, inside the transaction that recorded the observation. At most one event per (watch, observation); a keyword/product watch notifies once per offer, a price-below watch again only for a lower price. Saved searches (kind search) never notify. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:deals. OpenVibe.Network turns it into a DEAL_WATCH_MATCH notification for payload.recipient (server/notifications/events-consumer.js). A price is the decimal exactly as stated, never inferred; null when the observation stated none.",
+        "type": "object",
+        "required": [
+          "watch_id",
+          "recipient",
+          "kind",
+          "query",
+          "product_id",
+          "max_price",
+          "currency",
+          "offer_id",
+          "offer_url",
+          "title",
+          "observation"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "watch_id": {
+            "type": "string",
+            "pattern": "^dwt_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "recipient": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The watch owner's user subject id: who is notified."
+          },
+          "kind": {
+            "enum": [
+              "keyword",
+              "product",
+              "price_below"
+            ]
+          },
+          "query": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "Keywords of a keyword watch, or of a price-below watch without a product."
+          },
+          "product_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "Deals product id of a product or price-below watch."
+          },
+          "max_price": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40,
+            "description": "Price-below threshold as entered (decimal text, e.g. 19.99)."
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Z]{3}$",
+            "description": "ISO 4217 currency of max_price."
+          },
+          "offer_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The canonical (root) offer id (dof_…)."
+          },
+          "offer_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 2048,
+            "description": "Canonical offer page URL on Deals."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "observation": {
+            "type": "object",
+            "required": [
+              "id",
+              "observed_at",
+              "price",
+              "currency",
+              "availability"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^dpo_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "observed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "price": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 40,
+                "description": "Decimal text as stated; null when the observation stated no price."
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[A-Z]{3}$"
+              },
+              "availability": {
+                "enum": [
+                  "in_stock",
+                  "out_of_stock",
+                  "preorder",
+                  "discontinued",
+                  "limited",
+                  "sold_out",
+                  "online_only",
+                  "in_store_only",
+                  null
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "trade.alert.triggered": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/trade.alert.triggered.v1.json",
+        "title": "TradeAlertTriggeredPayload",
+        "description": "trade.alert.triggered v1 (OpenVibe.Trade server/domain/alerts.js deliver). One delivery of one private alert rule: a threshold crossed by a new observation (trigger kind observation), or a newly seen document of the instrument (filing_type / new_document rules, trigger kind document). Written in the transaction that recorded the observation or document; at most one per (rule, trigger). Envelope: subject { type: user, id: <rule owner usr_…> }, visibility subject, priority important, actor service:trade. Data only, never rendered notification text (ADR-020): OpenVibe.Network renders a TRADE_ALERT notification (server/notifications/events-consumer.js). Information only, not investment advice.",
+        "type": "object",
+        "required": [
+          "delivery_id",
+          "rule",
+          "instrument",
+          "trigger",
+          "disclaimer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "delivery_id": {
+            "type": "string",
+            "pattern": "^ald_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "rule": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "kind",
+              "status",
+              "instrument",
+              "metric",
+              "operator",
+              "threshold",
+              "unit",
+              "currency",
+              "form_types",
+              "armed",
+              "created_at",
+              "updated_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^alr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "kind": {
+                "enum": [
+                  "threshold",
+                  "filing_type",
+                  "new_document"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "deleted"
+                ]
+              },
+              "instrument": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  "symbol": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "metric": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 80,
+                "description": "Threshold rules: e.g. price.close, volume, us-gaap:Revenues."
+              },
+              "operator": {
+                "enum": [
+                  "above",
+                  "below",
+                  null
+                ]
+              },
+              "threshold": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 64,
+                "description": "Decimal text as entered."
+              },
+              "unit": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 20
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[A-Z]{3}$"
+              },
+              "form_types": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string",
+                  "maxLength": 20
+                },
+                "description": "filing_type rules: the 1–10 form types that trigger it (10-K, 8-K…)."
+              },
+              "armed": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "description": "Threshold rules: armed before this delivery (always true when it fired); null for document rules."
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "instrument": {
+            "type": "object",
+            "required": [
+              "id",
+              "symbol",
+              "name",
+              "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://",
+                "maxLength": 2048,
+                "description": "Instrument page on Trade."
+              }
+            }
+          },
+          "trigger": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "id",
+                  "metric",
+                  "value",
+                  "unit",
+                  "currency",
+                  "observed_at",
+                  "retrieved_at",
+                  "source_key",
+                  "source_url"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "observation"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^obs_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  "metric": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "description": "The decimal exactly as the source stated it."
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "currency": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[A-Z]{3}$"
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "retrieved_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "source_key": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "OpenVibe.Sources source key."
+                  },
+                  "source_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 2048
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "id",
+                  "form_type",
+                  "title",
+                  "url",
+                  "published_at",
+                  "retrieved_at",
+                  "source_key"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "document"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^doc_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  "form_type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 20
+                  },
+                  "title": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 1000
+                  },
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 2048
+                  },
+                  "published_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time",
+                    "description": "The source's own date; null if it gave none."
+                  },
+                  "retrieved_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "source_key": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                }
+              }
+            ]
+          },
+          "disclaimer": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Currently \"Information only — not investment advice; no trading here.\""
+          }
+        }
+      }
+    },
+    "tools.job.created": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tools.job.created.v1.json",
+        "title": "ToolsJobCreatedPayload",
+        "description": "tools.job.created v1 (OpenVibe.Tools apps/_shared/jobs, planned). A job was accepted and queued (POST /api/v1/jobs, or a retry of a failed job, which carries retry_of). An Idempotency-Key replay creates no job and no event. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor the owner when it is a subject (user, service, app or mod), else service:tools.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "service",
+          "type",
+          "type_version",
+          "state",
+          "owner",
+          "attempts",
+          "max_attempts",
+          "created_at",
+          "retry_of"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The Tools satellite that runs the job (img, audio, docs…)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type, e.g. img.process."
+          },
+          "type_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "state": {
+            "const": "queued"
+          },
+          "owner": {
+            "oneOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The failed job this one retries (POST /api/v1/jobs/:id/retry)."
+          }
+        }
+      }
+    },
+    "tools.job.started": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tools.job.started.v1.json",
+        "title": "ToolsJobStartedPayload",
+        "description": "tools.job.started v1 (OpenVibe.Tools apps/_shared/jobs, planned). A worker claimed the job and it is running (attempts counts this attempt). A job requeued after a restart starts again and is announced again. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:tools.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "service",
+          "type",
+          "type_version",
+          "state",
+          "owner",
+          "attempts",
+          "max_attempts",
+          "created_at",
+          "retry_of",
+          "started_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The Tools satellite that runs the job (img, audio, docs…)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type, e.g. img.process."
+          },
+          "type_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "state": {
+            "const": "running"
+          },
+          "owner": {
+            "oneOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The failed job this one retries (POST /api/v1/jobs/:id/retry)."
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "tools.job.succeeded": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tools.job.succeeded.v1.json",
+        "title": "ToolsJobSucceededPayload",
+        "description": "tools.job.succeeded v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job finished and its result files are stored (in Media when TOOLS_JOB_RESULTS=media). Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "service",
+          "type",
+          "type_version",
+          "state",
+          "owner",
+          "attempts",
+          "max_attempts",
+          "created_at",
+          "retry_of",
+          "started_at",
+          "finished_at",
+          "expires_at",
+          "result"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The Tools satellite that runs the job (img, audio, docs…)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type, e.g. img.process."
+          },
+          "type_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "state": {
+            "const": "succeeded"
+          },
+          "owner": {
+            "oneOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The failed job this one retries (POST /api/v1/jobs/:id/retry)."
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the job and its result files are pruned; null while something references the result (PUT /api/v1/jobs/:id/references/:ref)."
+          },
+          "result": {
+            "type": "object",
+            "required": [
+              "files"
+            ],
+            "additionalProperties": false,
+            "description": "Where the result files are, never their content, names or the tool's output data (GET /api/v1/jobs/:id has those, for the owner).",
+            "properties": {
+              "files": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "index",
+                    "mime",
+                    "size",
+                    "sha256",
+                    "storage",
+                    "media"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "n in /api/v1/jobs/:id/files/:n."
+                    },
+                    "mime": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "size": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "storage": {
+                      "enum": [
+                        "local",
+                        "media"
+                      ],
+                      "description": "media: stored as an OpenVibe.Media object (TOOLS_JOB_RESULTS=media); local: kept on the satellite until the job expires."
+                    },
+                    "media": {
+                      "oneOf": [
+                        {
+                          "$ref": "../../media/media-ref.v1.json"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "{ media_id, role: output } when storage is media."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tools.job.failed": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tools.job.failed.v1.json",
+        "title": "ToolsJobFailedPayload",
+        "description": "tools.job.failed v1 (OpenVibe.Tools apps/_shared/jobs, planned). The job failed: the tool refused the input, it timed out, or it was running when the satellite restarted and its type does not requeue. A cancelled job is not a failure and is not announced as one. Emitted in the transaction that records the transition, beside the job's own SSE event. Carries ids, type, owner, state, times and result locations; never the job's input, its files, its output data or a session. Jobs of sandbox app tokens are not announced. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:tools.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "service",
+          "type",
+          "type_version",
+          "state",
+          "owner",
+          "attempts",
+          "max_attempts",
+          "created_at",
+          "retry_of",
+          "started_at",
+          "finished_at",
+          "expires_at",
+          "error",
+          "retryable"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The Tools satellite that runs the job (img, audio, docs…)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9_.]+$",
+            "maxLength": 80,
+            "description": "Job type, e.g. img.process."
+          },
+          "type_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "state": {
+            "const": "failed"
+          },
+          "owner": {
+            "oneOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Who submitted the job: a user (user:usr_…), a service, app or mod principal. null for an anonymous browser session; the session is never published."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The failed job this one retries (POST /api/v1/jobs/:id/retry)."
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "null when the job failed before it ever ran."
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the job and its result files are pruned; null while something references the result (PUT /api/v1/jobs/:id/references/:ref)."
+          },
+          "error": {
+            "type": "object",
+            "required": [
+              "status",
+              "code",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "description": "The job's problem (errors.problem@1) without request or trace ids.",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "minimum": 400,
+                "maximum": 599
+              },
+              "code": {
+                "type": "string",
+                "pattern": "^tools\\.[a-z0-9_.]+$",
+                "description": "tools.job.failed, tools.job.timeout, or a code the tool chose (tools.…)."
+              },
+              "detail": {
+                "type": "string",
+                "maxLength": 500,
+                "description": "Human-readable reason; server paths are scrubbed."
+              }
+            }
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/sources.item.created.v1.json",
+  "title": "SourcesItemCreatedPayload",
+  "description": "sources.item.created v1 (OpenVibe.Sources server/items.js ingest → itemEvent). A successful fetch, or a manual entry, produced an item Sources had not seen (revision 1). A summary only: consumers fetch the full sources.item@1 with sources.item.read. Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.",
+  "type": "object",
+  "required": ["item_id", "source_key", "category", "kind", "canonical_url", "title", "revision", "content_hash", "retrieved_at"],
+  "additionalProperties": false,
+  "properties": {
+    "item_id": { "type": "string", "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "source_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+    "category": { "enum": ["news", "blog", "reviews", "deals", "coupons", "trade"] },
+    "kind": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$", "description": "article | url | sitemap | product | offer | review | record … (sources.item@1 kind)." },
+    "canonical_url": { "type": ["string", "null"], "format": "uri" },
+    "title": { "type": ["string", "null"] },
+    "revision": { "type": "integer", "minimum": 1 },
+    "content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "retrieved_at": { "type": "string", "format": "date-time", "description": "Last successful fetch (or manual entry) that contained the item." }
+  }
+}

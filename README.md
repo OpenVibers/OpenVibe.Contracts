@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.29.0 (first released in Wave 1). 17 schemas, 30 service manifests, 170 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
+**Status:** alpha, v0.30.0 (first released in Wave 1). 74 schemas (53 of them event payloads), 30 service manifests, 170 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -60,7 +60,7 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (30 services as of v0.29.0: 20 `alpha`, 1 `beta`, 5 `stable`, and 4 still marked `placeholder`: examples, realtime, sdk and shared), `manifests/capabilities/` (170 capabilities; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Some manifest `notes` predate deployment: wiki, reviews and vip still say "not deployed", and SDK and Shared are tagged packages and Examples is a working repository, although their manifests say `placeholder`. Correcting them needs a new tag.
+Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (170 capabilities; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
@@ -79,6 +79,17 @@ Three `public` capabilities let a developer app (ADR-014) use OpenVibe.Events wi
 | `events.app.subscribe` | webhook subscriptions in the same scope, to public https endpoints only |
 
 `project_key` is `p` followed by the project's ULID in lowercase (`prj_01JAB…` → `p01jab…`), so it fits an event-type segment. An app event's `source` is `app-` followed by the app's ULID in lowercase (`app:app_01JAB…` → `app-01jab…`), which keeps `events.event-envelope@1` unchanged (its `source` pattern already allows it). OpenVibe.Events enforces the scope, the sandbox separation and per-project quotas.
+
+## Event payload contracts (v0.30)
+
+Every event type has a payload contract, named after the type. The envelope's `version` is the contract's major, and the file is `contracts/events/payloads/<event_type>.v<version>.json`. The owner is the producing service, whose manifest lists the type in `eventsProduced`. Contracts with status `planned` describe events the owner does not emit yet (`ai.run.*`, `tools.job.*`).
+
+```js
+if (env.payload.redacted === true) return;                               // a tombstone (events.tombstone-payload@1)
+const r = contracts.validate(`${env.event_type}@${env.version}`, env.payload);
+```
+
+**Redaction (ADR-026).** Any event may carry `payload.redacts` (`events.redaction-directive@1`), shaped `{ event_ids?, subject_type?, subject_ids? }` with up to 1000 ids each, to take back the producer's own earlier events. OpenVibe.Events rewrites each target into a tombstone at its original seq: `{ redacted: true, redacted_at, redacted_by }`, with the producer itself as actor. Naming another source's event refuses the whole batch with 403 `events.redaction_not_allowed`. A malformed directive gets 422 `events.invalid_redaction`. `chat.message.deleted` always carries one. Browsers are replayed only the `public` events of the last `REALTIME_PUBLIC_REPLAY_SECONDS` (default 300); an older cursor gets `event: gap` with reason `public_window`.
 
 ## Event delivery signatures
 

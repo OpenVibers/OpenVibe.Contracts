@@ -1,0 +1,5 @@
+{
+  "owner": "sources", "type": "item", "id": "itm_01JAB2C3D4E5F6G7H8J9K0MNPQ", "revision": 1,
+  "visibility": "members", "acl": { "groups": ["role:admin", "role:global_mod"] },
+  "title": "Summit ends without agreement", "publication_state": "published"
+}

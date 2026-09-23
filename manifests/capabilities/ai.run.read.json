@@ -5,6 +5,7 @@
   "status": "active",
   "visibility": "first-party",
   "description": "Read the caller's own runs, their citations and request-log metadata (hashes, tokens, latency; never raw prompts).",
+  "outputSchema": "ai.run@1",
   "permissions": [
     "ai:read"
   ],

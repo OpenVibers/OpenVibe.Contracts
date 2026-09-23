@@ -1,0 +1,11 @@
+{
+  "owner": "sources", "type": "item", "id": "itm_01JAB2C3D4E5F6G7H8J9K0MNPQ", "revision": 1,
+  "visibility": "members", "acl": { "groups": ["role:admin", "role:global_mod"] },
+  "title": "Summit ends without agreement", "summary": "", "body": "",
+  "facets": { "category": "news", "source": "bbc-world", "kind": "article" },
+  "authorship": "imported",
+  "provenance": [{ "service": "sources", "type": "item", "id": "itm_01JAB2C3D4E5F6G7H8J9K0MNPQ", "revision": 1, "url": "https://www.bbc.co.uk/news/world-12345678", "retrieved_at": "2026-09-23T08:00:00.000Z" }],
+  "publication_state": "published", "published_at": "2026-09-23T07:45:00Z", "updated_at": null,
+  "indexability": { "decision": "noindex", "reasons": ["third_party_content"] },
+  "canonical_url": "https://www.bbc.co.uk/news/world-12345678"
+}

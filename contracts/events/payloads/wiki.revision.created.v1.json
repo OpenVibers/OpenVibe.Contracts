@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/wiki.revision.created.v1.json",
+  "title": "WikiRevisionCreatedPayload",
+  "description": "wiki.revision.created v1 (OpenVibe.Wiki server/wiki/service.js revisionEvent). Emitted when a page gets a new immutable revision: an edit, a revert or an AI proposal. A new revision is a draft until it is published (then wiki.page.published|updated follows). Envelope: subject { type: page, id: pg_…, revision: <number> }, visibility internal, priority important, actor the person or service.",
+  "type": "object",
+  "required": ["space_id", "space", "slug", "number", "kind", "parent_number", "reverted_to", "authorship", "author", "message"],
+  "additionalProperties": false,
+  "properties": {
+    "space_id": { "type": "string", "pattern": "^spc_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "space": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$", "description": "Space slug." },
+    "slug": { "type": "string", "minLength": 1, "maxLength": 80, "description": "Page slug." },
+    "number": { "type": "integer", "minimum": 1, "description": "The new revision number." },
+    "kind": { "enum": ["edit", "revert", "import"] },
+    "parent_number": { "type": ["integer", "null"], "minimum": 1 },
+    "reverted_to": { "type": ["integer", "null"], "minimum": 1, "description": "The revision a revert restored; null otherwise." },
+    "authorship": { "enum": ["human", "ai_assisted", "ai_generated", "imported", null], "description": "Search's authorship vocabulary; null when the revision has no authorship record." },
+    "author": { "type": ["string", "null"], "maxLength": 200, "description": "Who wrote it: a subject id (usr_…) or a service (svc:<id>)." },
+    "message": { "type": ["string", "null"], "maxLength": 2000 },
+    "proposal_id": { "type": "string", "pattern": "^prp_[0-9A-HJKMNP-TV-Z]{26}$", "description": "Present when the revision is an AI proposal awaiting a person's approval." }
+  }
+}

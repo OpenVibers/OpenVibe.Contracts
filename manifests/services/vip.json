@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "contractRanges": {
     "openvibe-contracts": ">=0.14.0 <1.0.0"
   },
@@ -41,5 +41,5 @@
   "namespacesOwned": [
     "vip.*"
   ],
-  "notes": "Memberships (ADR-012): plans, immutable versioned plan terms, perks, product bindings, member preferences and gated-resource policy. OpenVibe.Billing holds subscriptions, charges, renewals, refunds and the canonical entitlements; VIP keeps a short-lived projection of them (valid_until, authoritative fallback, 'unknown' never authorizes). Alpha: not deployed; openvibe.vip stays on its OpenVibe.Sites placeholder until the launch rule holds."
+  "notes": "Memberships (ADR-012): plans, immutable versioned plan terms, perks, product bindings, member preferences and gated-resource policy. OpenVibe.Billing holds subscriptions, charges, renewals, refunds and the canonical entitlements; VIP keeps a short-lived projection of them (valid_until, authoritative fallback, 'unknown' never authorizes). Alpha: deployed internally (loopback only), not launched publicly: openvibe.vip serves the OpenVibe.Sites placeholder until the launch rule holds."
 }

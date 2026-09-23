@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/blog.schedule.failed.v1.json",
+  "title": "BlogScheduleFailedPayload",
+  "description": "blog.schedule.failed v1 (OpenVibe.Blog server/domain/posts.js runScheduled). A scheduled publish or unpublish gave up after its retries; a scheduled post goes back to draft. Envelope: subject { type: post, id: pst_…, revision?: <scheduled revision> }, visibility internal, priority important, actor service:blog.",
+  "type": "object",
+  "required": ["job_id", "action", "revision", "run_at", "attempts", "error", "blog_id"],
+  "additionalProperties": false,
+  "properties": {
+    "job_id": { "type": "string", "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "action": { "enum": ["publish", "unpublish"] },
+    "revision": { "type": ["integer", "null"], "minimum": 1, "description": "The revision a publish was to make live; null for an unpublish." },
+    "run_at": { "type": "string", "format": "date-time", "description": "When the job was last due." },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "error": { "type": ["string", "null"], "maxLength": 1000, "description": "The last error." },
+    "blog_id": { "type": ["string", "null"], "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$", "description": "null when the post no longer exists." }
+  }
+}

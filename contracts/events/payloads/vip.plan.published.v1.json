@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/vip.plan.published.v1.json",
+  "title": "VipPlanPublishedPayload",
+  "description": "vip.plan.published v1 (OpenVibe.VIP server/domain/plans.js emitPublished). A plan version became what new members buy: the plan was published, or a published plan was edited (a new immutable version). Carries the version's full terms, never a price (Billing prices and charges). Envelope: subject { type: plan, id: vpl_…, revision: <version> }, visibility public, priority important, actor service:vip.",
+  "type": "object",
+  "required": ["plan_id", "slug", "version", "version_id", "creator", "billing_kind", "terms", "published_at"],
+  "additionalProperties": false,
+  "properties": {
+    "plan_id": { "type": "string", "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,47}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "version_id": { "type": "string", "pattern": "^vpv_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "creator": {
+      "type": "object",
+      "required": ["id", "kind", "subject", "username", "display_name", "bio", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "description": "vcr_… or network." },
+        "kind": { "enum": ["creator", "network"] },
+        "subject": { "anyOf": [{ "$ref": "../../identity/subject-ref.v1.json" }, { "type": "null" }], "description": "null for the network creator." },
+        "username": { "type": ["string", "null"] },
+        "display_name": { "type": ["string", "null"] },
+        "bio": { "type": ["string", "null"] },
+        "status": { "enum": ["active", "suspended"] }
+      }
+    },
+    "billing_kind": {
+      "enum": ["channel_subscription", null],
+      "description": "The Billing product that sells it; null for a plan Billing does not sell (network plans)."
+    },
+    "terms": {
+      "type": "object",
+      "required": ["name", "description", "benefits", "perks", "billing_kind", "price", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "benefits": { "type": ["array", "null"], "maxItems": 20, "items": { "type": "string" } },
+        "perks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "name", "kind", "scope"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "type": "string" },
+              "name": { "type": "string" },
+              "kind": { "enum": ["badge", "emote", "gated_content", "room", "role", "other"] },
+              "scope": { "enum": ["creator", "network"] }
+            }
+          }
+        },
+        "billing_kind": { "enum": ["channel_subscription", null] },
+        "price": { "type": ["string", "null"], "description": "Never an amount: a note that Billing sets and charges the price, or null." },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{16}$", "description": "sha256 prefix of name, description, benefits, perks and billing_kind." }
+      }
+    },
+    "published_at": { "type": "string", "format": "date-time" }
+  }
+}

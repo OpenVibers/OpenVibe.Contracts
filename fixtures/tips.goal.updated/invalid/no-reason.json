@@ -1,0 +1,14 @@
+{
+  "goal_id": "tgoal_01JAB3C4D5E6F7G8H9J0K1MNPS",
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "title": "New microphone",
+  "target_amount": 10000,
+  "current_amount": 2500,
+  "currency": "vibes-bits",
+  "status": "active",
+  "reached": false,
+  "interaction_id": "tint_01JAB3C4D5E6F7G8H9J0K1MNPQ"
+}

@@ -167,6 +167,554 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-014"
+    },
+    {
+      "id": "events.redaction-directive",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/redaction-directive.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-026"
+    },
+    {
+      "id": "events.tombstone-payload",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/tombstone-payload.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-026"
+    },
+    {
+      "id": "chat.message.deleted",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "events/payloads/chat.message.deleted.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-026"
+    },
+    {
+      "id": "sources.item.created",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "events/payloads/sources.item.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "sources.item.updated",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "events/payloads/sources.item.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "sources.item.removed",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "events/payloads/sources.item.removed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "sources.fetch.failed",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "events/payloads/sources.fetch.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "sources.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "events/payloads/sources.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "sources.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "events/payloads/sources.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
+      "id": "search.document.indexed",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "events/payloads/search.document.indexed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-018"
+    },
+    {
+      "id": "search.document.removed",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "events/payloads/search.document.removed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-018"
+    },
+    {
+      "id": "wiki.space.updated",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.space.updated.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.revision.created",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.revision.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.watch.triggered",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.watch.triggered.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.page.published",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.page.published.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.page.updated",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.page.updated.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.page.unpublished",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.page.unpublished.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.page.deleted",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.page.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post.created",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.post.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post.published",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.post.published.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post.updated",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.post.updated.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post.unpublished",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.post.unpublished.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post.deleted",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.post.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.schedule.failed",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.schedule.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.run-request",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run.queued",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.run.queued.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run.succeeded",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.run.succeeded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run.failed",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.run.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run.cached",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.run.cached.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "tips.interaction.ready",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.interaction.ready.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "tips.interaction.failed",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.interaction.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "tips.interaction.cancelled",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.interaction.cancelled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "tips.goal.updated",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.goal.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "tips.overlay.delivered",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.overlay.delivered.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "tips.overlay.failed",
+      "version": "1.0.0",
+      "owner": "tips",
+      "schema": "events/payloads/tips.overlay.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "vip.plan.published",
+      "version": "1.0.0",
+      "owner": "vip",
+      "schema": "events/payloads/vip.plan.published.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "vip.membership.changed",
+      "version": "1.0.0",
+      "owner": "vip",
+      "schema": "events/payloads/vip.membership.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.transaction.settled",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.transaction.settled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.transaction.reversed",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.transaction.reversed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.entitlement.changed",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.entitlement.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.subscription.canceled",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.subscription.canceled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.cashout.requested",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.cashout.requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.cashout.paid",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.cashout.paid.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.cashout.denied",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.cashout.denied.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.staff.action",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.staff.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "billing.receipt.external",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.receipt.external.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-012"
+    },
+    {
+      "id": "deals.watch.matched",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.watch.matched.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.alert.triggered",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.alert.triggered.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-020"
+    },
+    {
+      "id": "tools.job.created",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "events/payloads/tools.job.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "tools.job.started",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "events/payloads/tools.job.started.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "tools.job.succeeded",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "events/payloads/tools.job.succeeded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "tools.job.failed",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "events/payloads/tools.job.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.staff.action.v1.json",
+  "title": "BillingStaffActionPayload",
+  "description": "billing.staff.action v1 (OpenVibe.Billing server/console/audit.js record). A staff member completed an action in the Billing console (only outcome done is announced; refused actions stay in staff_audit). Holds no secrets: codes, payout reference, counts. Envelope: subject { type: staff_action, id: sa_… }, visibility internal, priority important, actor the staff user ({ type: user, id: usr_… }).",
+  "type": "object",
+  "required": ["audit_id", "action", "outcome", "target", "reason", "request_id", "detail"],
+  "additionalProperties": false,
+  "properties": {
+    "audit_id": { "type": "string", "pattern": "^sa_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "action": { "type": "string" },
+    "outcome": { "const": "done" },
+    "target": {
+      "type": ["object", "null"],
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": { "type": { "type": "string" }, "id": { "type": "string" } }
+    },
+    "reason": { "type": ["string", "null"], "maxLength": 500 },
+    "request_id": { "type": ["string", "null"] },
+    "detail": { "type": "object", "description": "Small whitelisted detail of the action." }
+  }
+}

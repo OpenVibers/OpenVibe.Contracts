@@ -1,16 +1,16 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contractRanges": {
-    "openvibe-contracts": "^0.1.0"
+    "openvibe-contracts": ">=0.28.0 <1.0.0"
   },
   "id": "examples",
   "name": "OpenVibe.Examples",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Examples",
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
-  "notes": "Executable public integration examples, tested in CI against the platform. Charter only; no runtime."
+  "notes": "Executable public integration examples (developer apps on openvibe-sdk), each with a smoke test that CI runs against openvibe-sdk/testing's mock platform. A repository with CI, not a runtime and not a published package; nothing to deploy or poll."
 }

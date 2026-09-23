@@ -1,0 +1,1 @@
+{ "source_key": "shop-sitemap", "category": "deals", "run_id": "frn_01JAB2C3D4E5F6G7H8J9K0MNPR", "endpoint_url": "https://shop.example.com/sitemap.xml", "state": "robots_denied", "error_code": "robots", "http_status": null, "consecutive_failures": 1 }

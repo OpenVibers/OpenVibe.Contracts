@@ -1,0 +1,17 @@
+{
+  "transaction_id": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ3",
+  "type": "chargeback",
+  "test": false,
+  "from_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "to_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "provider": "stripe",
+  "metadata": {
+    "cents": 500,
+    "original_paid_cents": 500,
+    "reason": "charge.dispute.created",
+    "review": "required"
+  },
+  "reverses_txn": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ1",
+  "review": "required",
+  "entitlements_revoked": 0
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/sources.index_document.upserted.v1.json",
+  "title": "SourcesIndexDocumentUpsertedPayload",
+  "description": "sources.index_document.upserted v1 (OpenVibe.Sources server/items.js indexEvent). An item of a source with search_visibility was created or updated; the payload is its search.index-document@1 (owner sources, type item, visibility members for role:admin and role:global_mod, authorship imported, indexability noindex third_party_content). Consumed by OpenVibe.Search (*.index_document.*). Envelope: subject { type: item, id: <item id>, revision }, visibility internal, priority important, actor service:sources.",
+  "$ref": "../../search/index-document.v1.json"
+}

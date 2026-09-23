@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.5.1 <1.0.0"
   },
@@ -31,7 +31,8 @@
     "billing.cashout.requested",
     "billing.cashout.paid",
     "billing.cashout.denied",
-    "billing.staff.action"
+    "billing.staff.action",
+    "billing.receipt.external"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

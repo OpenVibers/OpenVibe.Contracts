@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/trade.alert.triggered.v1.json",
+  "title": "TradeAlertTriggeredPayload",
+  "description": "trade.alert.triggered v1 (OpenVibe.Trade server/domain/alerts.js deliver). One delivery of one private alert rule: a threshold crossed by a new observation (trigger kind observation), or a newly seen document of the instrument (filing_type / new_document rules, trigger kind document). Written in the transaction that recorded the observation or document; at most one per (rule, trigger). Envelope: subject { type: user, id: <rule owner usr_…> }, visibility subject, priority important, actor service:trade. Data only, never rendered notification text (ADR-020): OpenVibe.Network renders a TRADE_ALERT notification (server/notifications/events-consumer.js). Information only, not investment advice.",
+  "type": "object",
+  "required": ["delivery_id", "rule", "instrument", "trigger", "disclaimer"],
+  "additionalProperties": false,
+  "properties": {
+    "delivery_id": { "type": "string", "pattern": "^ald_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "rule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "status", "instrument", "metric", "operator", "threshold", "unit", "currency", "form_types", "armed", "created_at", "updated_at"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^alr_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "kind": { "enum": ["threshold", "filing_type", "new_document"] },
+        "status": { "enum": ["active", "deleted"] },
+        "instrument": {
+          "type": "object", "required": ["id"], "additionalProperties": false,
+          "properties": { "id": { "type": "string", "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$" }, "symbol": { "type": "string" }, "name": { "type": "string" } }
+        },
+        "metric": { "type": ["string", "null"], "maxLength": 80, "description": "Threshold rules: e.g. price.close, volume, us-gaap:Revenues." },
+        "operator": { "enum": ["above", "below", null] },
+        "threshold": { "type": ["string", "null"], "maxLength": 64, "description": "Decimal text as entered." },
+        "unit": { "type": ["string", "null"], "maxLength": 20 },
+        "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
+        "form_types": { "type": ["array", "null"], "items": { "type": "string", "maxLength": 20 }, "description": "filing_type rules: the 1–10 form types that trigger it (10-K, 8-K…)." },
+        "armed": { "type": ["boolean", "null"], "description": "Threshold rules: armed before this delivery (always true when it fired); null for document rules." },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "instrument": {
+      "type": "object", "required": ["id", "symbol", "name", "url"], "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "symbol": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Instrument page on Trade." }
+      }
+    },
+    "trigger": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "id", "metric", "value", "unit", "currency", "observed_at", "retrieved_at", "source_key", "source_url"],
+          "properties": {
+            "kind": { "const": "observation" },
+            "id": { "type": "string", "pattern": "^obs_[0-9A-HJKMNP-TV-Z]{26}$" },
+            "metric": { "type": "string", "minLength": 1, "maxLength": 80 },
+            "value": { "type": "string", "minLength": 1, "maxLength": 64, "description": "The decimal exactly as the source stated it." },
+            "unit": { "type": "string", "minLength": 1, "maxLength": 20 },
+            "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
+            "observed_at": { "type": "string", "format": "date-time" },
+            "retrieved_at": { "type": "string", "format": "date-time" },
+            "source_key": { "type": "string", "minLength": 1, "maxLength": 128, "description": "OpenVibe.Sources source key." },
+            "source_url": { "type": ["string", "null"], "maxLength": 2048 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "id", "form_type", "title", "url", "published_at", "retrieved_at", "source_key"],
+          "properties": {
+            "kind": { "const": "document" },
+            "id": { "type": "string", "pattern": "^doc_[0-9A-HJKMNP-TV-Z]{26}$" },
+            "form_type": { "type": ["string", "null"], "maxLength": 20 },
+            "title": { "type": ["string", "null"], "maxLength": 1000 },
+            "url": { "type": ["string", "null"], "maxLength": 2048 },
+            "published_at": { "type": ["string", "null"], "format": "date-time", "description": "The source's own date; null if it gave none." },
+            "retrieved_at": { "type": "string", "format": "date-time" },
+            "source_key": { "type": "string", "minLength": 1, "maxLength": 128 }
+          }
+        }
+      ]
+    },
+    "disclaimer": { "type": "string", "minLength": 1, "maxLength": 200, "description": "Currently \"Information only — not investment advice; no trading here.\"" }
+  }
+}

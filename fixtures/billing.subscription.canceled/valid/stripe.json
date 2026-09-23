@@ -1,0 +1,33 @@
+{
+  "subscription": {
+    "id": "sub_01JAB3C4D5E6F7G8H9J0K1MNQ0",
+    "subscriber": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+    },
+    "streamer": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "tier": 1,
+    "provider": "stripe",
+    "provider_ref": "sub_1Q2w3E4r5T6y",
+    "route": "site",
+    "status": "active",
+    "auto_renew": false,
+    "cancel_at_period_end": true,
+    "price_cents": 499,
+    "current_period_end": "2026-10-23T10:00:00.000Z",
+    "created_at": "2026-09-23T10:00:00.000Z",
+    "updated_at": "2026-09-23T11:00:00.000Z"
+  },
+  "provider_sync": "stripe_cancel_at_period_end",
+  "actor": {
+    "principal": "svc:vip",
+    "request_id": "req_abcdefgh",
+    "on_behalf_of": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+    }
+  }
+}

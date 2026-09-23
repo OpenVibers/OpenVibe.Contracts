@@ -1,0 +1,39 @@
+{
+  "plan_id": "vpl_01JAB3C4D5E6F7G8H9J0K1MNPV",
+  "slug": "supporters",
+  "version": 2,
+  "version_id": "vpv_01JAB3C4D5E6F7G8H9J0K1MNPW",
+  "creator": {
+    "id": "vcr_01JAB3C4D5E6F7G8H9J0K1MNPX",
+    "kind": "creator",
+    "subject": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "username": "japaneseoldguy",
+    "display_name": "JapaneseOldGuy",
+    "bio": null,
+    "status": "active"
+  },
+  "billing_kind": "channel_subscription",
+  "terms": {
+    "name": "Supporters",
+    "description": "Back the channel.",
+    "benefits": [
+      "Sub badge",
+      "Emote-only chat"
+    ],
+    "perks": [
+      {
+        "key": "badge",
+        "name": "Sub badge",
+        "kind": "badge",
+        "scope": "creator"
+      }
+    ],
+    "billing_kind": "channel_subscription",
+    "price": "set and charged by OpenVibe.Billing",
+    "digest": "3f9a0c1d2e4b5a67"
+  },
+  "published_at": "2026-09-23T10:00:00.000Z"
+}

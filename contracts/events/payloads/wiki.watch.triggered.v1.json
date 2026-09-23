@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/wiki.watch.triggered.v1.json",
+  "title": "WikiWatchTriggeredPayload",
+  "description": "wiki.watch.triggered v1 (OpenVibe.Wiki server/wiki/service.js notifyWatchers). One event per change to a watched page, listing the watchers who may read the page (never the actor); not emitted when nobody is left. Envelope: subject { type: page, id: pg_…, revision: <revision or 0> }, visibility internal, priority important, actor the person or service.",
+  "type": "object",
+  "required": ["action", "space", "slug", "title", "revision", "url", "recipients"],
+  "additionalProperties": false,
+  "properties": {
+    "action": { "enum": ["published", "updated", "unpublished", "deleted", "revised", "proposed"], "description": "revised = a new draft revision; proposed = an AI proposal awaits approval; the rest follow wiki.page.*." },
+    "space": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$", "description": "Space slug." },
+    "slug": { "type": "string", "minLength": 1, "maxLength": 80, "description": "Page slug." },
+    "title": { "type": "string", "maxLength": 200 },
+    "revision": { "type": ["integer", "null"], "minimum": 1 },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048 },
+    "recipients": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+      "description": "Watchers to notify."
+    }
+  }
+}

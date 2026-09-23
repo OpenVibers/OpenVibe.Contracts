@@ -1,16 +1,13 @@
 {
-  "version": "0.1.0",
-  "contractRanges": {
-    "openvibe-contracts": "^0.1.0"
-  },
+  "version": "0.2.0",
   "id": "shared",
   "name": "OpenVibe.Shared",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Shared",
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
-  "notes": "Versioned UI, chrome, SEO, legal and release-client packages every OpenVibe site renders. Charter only; no runtime."
+  "notes": "Versioned UI, chrome, SEO, legal and release-client packages every OpenVibe site renders (openvibe-shared). A released library, not a runtime: tagged releases installed from https://codeload.github.com/OpenVibers/OpenVibe.Shared/tar.gz/refs/tags/<tag> (v1.3.0 on 2026-09-23) and served at /shared/* by each site. Nothing to deploy or poll."
 }

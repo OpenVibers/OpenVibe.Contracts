@@ -1,0 +1,14 @@
+{
+  "audit_id": "sa_01JAB3C4D5E6F7G8H9J0K1MNQ9",
+  "action": "cashout.approve",
+  "outcome": "refused",
+  "target": {
+    "type": "cashout",
+    "id": "co_01JAB3C4D5E6F7G8H9J0K1MNQ5"
+  },
+  "reason": "verified payout email",
+  "request_id": "req_abcdefgh",
+  "detail": {
+    "payout_reference": "8XK12345AB678901C"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.11.0 <1.0.0"
   },
@@ -42,10 +42,11 @@
   ],
   "eventsConsumed": [
     "billing.transaction.settled",
-    "billing.transaction.reversed"
+    "billing.transaction.reversed",
+    "billing.receipt.external"
   ],
   "namespacesOwned": [
     "tips.*"
   ],
-  "notes": "Creator support (roadmap Wave 9): tip interactions whose payment state mirrors OpenVibe.Billing (keyed by Billing transaction id) and whose delivery state is Tips' own; goals derived from settled interactions; paid messages, TTS and media requests created on settlement; scoped revocable overlay tokens with SSE overlays; simulation mode. Tips never moves money (ADR-012). Alpha: the placeholder on OpenVibe.Sites stays until the launch rule in README.md holds. Proposed manifest; replaces the placeholder in manifests/services/tips.json."
+  "notes": "Creator support (roadmap Wave 9): tip interactions whose payment state mirrors OpenVibe.Billing (keyed by Billing transaction id) and whose delivery state is Tips' own; goals derived from settled interactions; paid messages, TTS and media requests created on settlement; scoped revocable overlay tokens with SSE overlays; simulation mode. Tips never moves money (ADR-012). Alpha: deployed internally (loopback only), not launched publicly: openvibe.tips serves the OpenVibe.Sites placeholder until the launch rule in README.md holds."
 }

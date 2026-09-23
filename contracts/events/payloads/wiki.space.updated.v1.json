@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/wiki.space.updated.v1.json",
+  "title": "WikiSpaceUpdatedPayload",
+  "description": "wiki.space.updated v1 (OpenVibe.Wiki server/wiki/service.js spaceEvent). Emitted when a space is created, renamed, changes visibility or settings, has its roles changed, or is deleted, in the transaction of the change. Envelope: subject { type: space, id: spc_… }, visibility public for a public space that is not deleted, otherwise internal, priority important, actor the person (user) or service.",
+  "type": "object",
+  "required": ["slug", "name", "kind", "visibility", "deleted", "change", "url"],
+  "additionalProperties": false,
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "kind": { "enum": ["official", "user"] },
+    "visibility": { "enum": ["public", "members", "private"] },
+    "deleted": { "type": "boolean" },
+    "change": { "enum": ["created", "renamed", "visibility", "settings", "roles", "deleted"], "description": "What changed. renamed = a new slug." },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical URL of the space." }
+  }
+}

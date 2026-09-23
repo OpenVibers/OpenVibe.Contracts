@@ -1,0 +1,34 @@
+{
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "queued",
+  "workflow": {
+    "key": "live.chat_reply",
+    "version": 1
+  },
+  "requester": {
+    "type": "service",
+    "id": "live"
+  },
+  "on_behalf_of": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "target": null,
+  "attribution": null,
+  "provider": null,
+  "model": null,
+  "fallback_used": false,
+  "synthetic": false,
+  "cached_from": null,
+  "usage": {
+    "tokens_in": 0,
+    "tokens_out": 0,
+    "cost_usd": 0,
+    "attempts": 0
+  },
+  "error": null,
+  "citations_count": 0,
+  "retry_of": null,
+  "created_at": "2026-09-23T10:00:00.000Z",
+  "finished_at": null
+}

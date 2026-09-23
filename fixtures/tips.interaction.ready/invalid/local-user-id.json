@@ -1,0 +1,20 @@
+{
+  "interaction_id": "tint_01JAB3C4D5E6F7G8H9J0K1MNPQ",
+  "creator": {
+    "type": "user",
+    "id": "42"
+  },
+  "supporter": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "supporter_name": "Generous Fan",
+  "kind": "tip",
+  "amount": 500,
+  "currency": "vibes-bits",
+  "settlement": "billing",
+  "payment_state": "settled",
+  "delivery_state": "queued",
+  "billing_txn_id": "txn_01JAB3C4D5E6F7G8H9J0K1MNPR",
+  "test": false
+}

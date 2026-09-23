@@ -12,7 +12,12 @@
     "owner"
   ],
   "quotaClass": "tools-job",
-  "events": [],
+  "events": [
+    "tools.job.created",
+    "tools.job.started",
+    "tools.job.succeeded",
+    "tools.job.failed"
+  ],
   "implementedBy": [
     "POST /api/v1/jobs (Tools satellites: img, audio, docs)"
   ]

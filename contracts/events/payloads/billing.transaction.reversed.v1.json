@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.transaction.reversed.v1.json",
+  "title": "BillingTransactionReversedPayload",
+  "description": "billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out. Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "required": ["transaction_id", "type", "test", "from_subject", "to_subject", "provider", "metadata", "reverses_txn"],
+  "additionalProperties": false,
+  "properties": {
+    "transaction_id": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "type": {
+      "enum": ["purchase", "donation", "subscription", "subscription_share", "cashout_request", "cashout_paid", "cashout_denied", "recycle", "refund", "chargeback", "adjustment", "import"]
+    },
+    "test": { "type": "boolean", "description": "Test money: never counted." },
+    "from_subject": { "type": ["string", "null"], "description": "Subject id (usr_…) value moved from, null for provider money." },
+    "to_subject": { "type": ["string", "null"], "description": "Subject id (usr_…) value moved to." },
+    "provider": { "type": ["string", "null"], "description": "stripe, paypal, powerchat…; null for credit movements." },
+    "metadata": {
+      "type": "object",
+      "description": "Transaction metadata as posted (amount_bits, paid_cents, value_cents, target EntityRef, intent_id, message, donor_name, rates…). Its keys depend on the transaction type."
+    },
+    "reverses_txn": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The transaction this one reverses." },
+    "review": { "enum": ["required", null], "description": "Provider reversals only: required when Billing kept value it could not recover (staff review)." },
+    "entitlements_revoked": { "type": "integer", "minimum": 0, "description": "Provider reversals only: subscription periods revoked." }
+  }
+}

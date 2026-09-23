@@ -1,0 +1,7 @@
+{
+  "workflow": "news.summarize_story",
+  "input": { "topic": "Transit strike", "sources": [{ "source_type": "news.item", "source_id": "itm_42", "url": "https://example.com/a", "title": "Strike begins" }] },
+  "target": { "service": "news", "type": "story", "id": "sty_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "idempotency_key": "news:story:sty_01JAB2C3:v3",
+  "options": { "cache": false }
+}

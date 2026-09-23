@@ -20,6 +20,12 @@ Cross-service side effects are best-effort POSTs and HMAC webhooks; a consumer t
 - Consumers accept a v2 signature only within ±300 s of their clock, compare in constant time, and never fall back to v1 when a v2 header is present but bad or stale. With `requireV2` they also refuse deliveries without v2, which closes the replay-by-stripping-the-header path.
 - Rollout is additive: Events sends v1 and v2 first; consumers then move to openvibe-sdk 0.4.0 (v2 checked whenever present) and set `requireV2: true` one by one; v1 stays on the wire until every consumer requires v2, and only then may it be removed. Rollback at any step is to unset `requireV2` (consumers) or stop sending v2 (Events, only while no consumer requires it).
 
+### Redaction, payload contracts and the public replay window (2026-09-23)
+
+- A producer takes back its own events with `payload.redacts` (`events.redaction-directive@1`). Events turns the targets into tombstones (`events.tombstone-payload@1`) at their original seq. Naming another source's event is 403 `events.redaction_not_allowed`, and a malformed directive is 422 `events.invalid_redaction`. See [ADR-026](ADR-026-event-redaction.md).
+- Each event type's payload has a contract named after the type, with the envelope `version` as its major (`contracts/events/payloads/<event_type>.v<version>.json`, from v0.30.0).
+- Browsers are replayed only the `public` events of the last `REALTIME_PUBLIC_REPLAY_SECONDS` (default 300). An older cursor gets `event: gap` with reason `public_window`.
+
 ## Alternatives considered
 
 - Kafka/NATS now: rejected, operational weight far beyond current volume.

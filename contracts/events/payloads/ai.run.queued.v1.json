@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/ai.run.queued.v1.json",
+  "title": "AiRunQueuedPayload",
+  "description": "ai.run.queued v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run was stored queued (it then runs inline within ?wait or on the worker). Not published for a cache hit (ai.run.cached) or a create refused by quota or a full queue. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.",
+  "type": "object",
+  "required": [
+    "run_id",
+    "status",
+    "workflow",
+    "requester",
+    "on_behalf_of",
+    "target",
+    "attribution",
+    "provider",
+    "model",
+    "fallback_used",
+    "synthetic",
+    "cached_from",
+    "usage",
+    "error",
+    "citations_count",
+    "retry_of",
+    "created_at",
+    "finished_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "run_id": { "type": "string", "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "status": { "const": "queued" },
+    "workflow": {
+      "type": "object",
+      "required": ["key", "version"],
+      "additionalProperties": false,
+      "properties": { "key": { "type": "string" }, "version": { "type": "integer", "minimum": 1 } }
+    },
+    "requester": { "$ref": "../../identity/subject-ref.v1.json" },
+    "on_behalf_of": { "anyOf": [{ "$ref": "../../identity/subject-ref.v1.json" }, { "type": "null" }] },
+    "target": { "anyOf": [{ "$ref": "../../common/entity-ref.v1.json" }, { "type": "null" }] },
+    "attribution": { "anyOf": [{ "$ref": "../../common/entity-ref.v1.json" }, { "type": "null" }] },
+    "provider": { "type": ["string", "null"], "description": "Provider that produced the output; null before a provider call and for cached runs." },
+    "model": { "type": ["string", "null"] },
+    "fallback_used": { "type": "boolean" },
+    "synthetic": { "type": "boolean", "description": "Stub provider output." },
+    "cached_from": { "type": "null" },
+    "usage": {
+      "type": "object",
+      "required": ["tokens_in", "tokens_out", "cost_usd", "attempts"],
+      "additionalProperties": false,
+      "properties": {
+        "tokens_in": { "type": "integer", "minimum": 0 },
+        "tokens_out": { "type": "integer", "minimum": 0 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "attempts": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "error": { "type": "null" },
+    "citations_count": { "type": "integer", "minimum": 0 },
+    "retry_of": { "type": ["string", "null"], "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "null" }
+  }
+}

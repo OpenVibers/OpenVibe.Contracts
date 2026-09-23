@@ -74,6 +74,51 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(!contracts.validate('events.event-envelope@1', { ...env, source: 'app:app_01JAB2C3D4E5F6G7H8J9K0MNPS' }).valid, 'the raw app subject is not a valid source');
 }
 
+// ── Event payload contracts (v0.30, ADR-026) ─────────────────────────────
+// A payload contract is named after its event type; its major is the envelope `version`; its owner
+// is the producer, which lists the type in eventsProduced. Every valid fixture rides in a valid
+// envelope, and a tombstone never passes for a live payload.
+{
+    const payloads = contracts.catalog.filter(c => c.schema.startsWith('events/payloads/'));
+    ok(payloads.length >= 40, `event payload contracts present (${payloads.length})`);
+    const tombstone = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/events.tombstone-payload/valid/chat.json'), 'utf8'));
+    for (const c of payloads) {
+        const major = Number(c.version.split('.')[0]);
+        ok(c.schema === `events/payloads/${c.id}.v${major}.json`, `${c.id} lives at events/payloads/<event_type>.v<major>.json`);
+        ok(/^[a-z][a-z0-9_]*(\.[a-z0-9_]+){2,}$/.test(c.id), `${c.id} is an event type`);
+        ok(services.get(c.owner) && services.get(c.owner).eventsProduced.includes(c.id), `${c.owner} manifest lists ${c.id} in eventsProduced`);
+        ok(['active', 'planned'].includes(c.status), `${c.id} status ${c.status}`);
+        const s = contracts.schema(c.id);
+        ok((s.type === 'object' || s.$ref || s.allOf) && s.title.endsWith('Payload'), `${c.id} is an object payload schema`);
+        if (s.properties && s.properties.redacts) ok(s.properties.redacts.$ref === '../redaction-directive.v1.json', `${c.id} redacts uses events.redaction-directive@1`);
+        ok(!contracts.validate(c.id, tombstone).valid, `${c.id}: a tombstone is not a valid payload (check payload.redacted first)`);
+        const dir = path.join(ROOT, 'fixtures', c.id, 'valid');
+        for (const f of fs.readdirSync(dir).filter(n => n.endsWith('.json'))) {
+            const payload = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+            const env = { event_id: ids.newId('event'), event_type: c.id, version: major, source: c.owner, actor: { type: 'service', id: c.owner }, timestamp: new Date().toISOString(), subject: { type: 'x', id: '1' }, payload };
+            ok(contracts.validate('events.event-envelope@1', env).valid, `${c.id} valid/${f} fits in an envelope`);
+            ok(contracts.validate(`${env.event_type}@${env.version}`, env.payload).valid, `${c.id} resolves as <event_type>@<version>`);
+        }
+    }
+    // Every event type a manifest produces and consumes is well formed; consumed types have a producer.
+    const produced = new Map();
+    for (const m of services.manifests) for (const t of m.eventsProduced) { ok(!produced.has(t), `${t} has one producer`); produced.set(t, m.id); }
+    const matches = (pattern, t) => new RegExp(`^${pattern.split('.').map(s => (s === '*' ? '[a-z0-9_]+' : s)).join('\\.')}$`).test(t);
+    for (const m of services.manifests) for (const t of m.eventsConsumed) ok([...produced.keys()].some(p => matches(t, p)), `${m.id} consumes ${t}, which some manifest produces`);
+
+    // payload.redacts: what Chat sends, and what Events refuses (403/422 are Events' answers).
+    const del = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/chat.message.deleted/valid/two-messages.json'), 'utf8'));
+    ok(contracts.validate('events.redaction-directive@1', del.redacts).valid, 'chat.message.deleted carries a valid directive');
+    ok(JSON.stringify(del.redacts.subject_ids) === JSON.stringify(del.message_ids.map(String)), 'Chat redacts exactly the deleted ids');
+    ok(!contracts.validate('chat.message.deleted@1', { message_ids: del.message_ids }).valid, 'chat.message.deleted without redacts fails');
+    const D = (v) => contracts.validate('events.redaction-directive@1', v).valid;
+    ok(D({ event_ids: ['evt_01JAB2C3D4E5F6G7H8J9K0MNPQ'], subject_type: 'post', subject_ids: ['p1'] }), 'both forms together pass');
+    ok(!D({ subject_ids: ['1'] }) && !D({ subject_type: 'post' }), 'subject_type and subject_ids go together');
+    ok(!D({ event_ids: Array.from({ length: 1001 }, () => ids.newId('event')) }), 'more than 1000 ids fail');
+    ok(!D({ event_ids: ['evt_1'] }) && !D({ subject_type: 'Chat Message', subject_ids: ['1'] }), 'bad ids and subject types fail');
+    ok(!contracts.validate('events.tombstone-payload@1', { redacted: false, redacted_at: tombstone.redacted_at, redacted_by: 'x' }).valid, 'a tombstone is redacted: true');
+}
+
 // ── Ids ──────────────────────────────────────────────────────────────────
 for (const kind of ['user', 'guest', 'app', 'mod']) {
     const id = ids.newId(kind);
@@ -229,6 +274,13 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 // ── Generated output and compatibility gate ──────────────────────────────
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/compat.js')], { stdio: 'inherit' });
+{
+    // A $ref with sibling keywords makes json-schema-to-typescript emit SubjectRef1 & co. without declaring them.
+    const dts = fs.readFileSync(path.join(ROOT, 'generated/typescript/index.d.ts'), 'utf8');
+    const declared = new Set([...dts.matchAll(/^export (?:interface|type) (\w+)/gm)].map(m => m[1]));
+    const dangling = [...new Set([...dts.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\b([A-Z][A-Za-z]*\d+)\b/g)].map(m => m[1]))].filter(n => !declared.has(n));
+    ok(dangling.length === 0, `generated types reference undeclared names: ${dangling.join(', ')}`);
+}
 
 console.log(`openvibe-contracts: ${n} checks passed`);
 })().catch((err) => { console.error(err); process.exit(1); });

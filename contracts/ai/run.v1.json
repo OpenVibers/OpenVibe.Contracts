@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/run.v1.json",
+  "title": "AiRun",
+  "description": "A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted.",
+  "type": "object",
+  "required": ["id", "status", "workflow", "template", "route", "requester", "on_behalf_of", "attribution", "source_service", "target", "input", "output", "error", "synthetic", "provenance", "usage", "citations_count", "retry_of", "idempotency_key", "trace_id", "created_at", "started_at", "finished_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "status": {
+      "enum": ["queued", "running", "succeeded", "failed", "cancelled", "cached"],
+      "description": "Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused)."
+    },
+    "workflow": {
+      "type": "object", "required": ["key", "version"], "additionalProperties": false,
+      "properties": { "key": { "type": "string" }, "version": { "type": "integer", "minimum": 1 } }
+    },
+    "template": {
+      "type": ["object", "null"], "required": ["key", "version"], "additionalProperties": false,
+      "properties": { "key": { "type": "string" }, "version": { "type": ["integer", "null"] } },
+      "description": "The prompt template of the workflow's llm step; null for workflows without one."
+    },
+    "route": {
+      "type": ["object", "null"], "required": ["key", "version"], "additionalProperties": false,
+      "properties": { "key": { "type": "string" }, "version": { "type": ["integer", "null"] } },
+      "description": "Provider route; version null while the route is unresolved or disabled."
+    },
+    "requester": { "$ref": "../identity/subject-ref.v1.json" },
+    "on_behalf_of": { "anyOf": [{ "$ref": "../identity/subject-ref.v1.json" }, { "type": "null" }] },
+    "attribution": { "anyOf": [{ "$ref": "../common/entity-ref.v1.json" }, { "type": "null" }] },
+    "source_service": { "type": ["string", "null"], "description": "The requester's service id when the requester is a service." },
+    "target": { "anyOf": [{ "$ref": "../common/entity-ref.v1.json" }, { "type": "null" }] },
+    "input": { "type": "object", "description": "The retained input (see the description)." },
+    "output": { "type": ["object", "null"], "description": "Workflow output, or null." },
+    "error": {
+      "type": ["object", "null"], "required": ["code", "detail"], "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$", "description": "run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…" },
+        "detail": { "type": ["string", "null"] }
+      }
+    },
+    "synthetic": { "type": "boolean", "description": "Produced by the stub provider; never served to production callers and never cached." },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["origin", "workflow", "workflow_version", "template_version", "route", "route_version", "provider", "model", "fallback_used", "run_id", "cached_from", "synthetic"],
+      "properties": {
+        "origin": { "const": "ai" },
+        "workflow": { "type": "string" },
+        "workflow_version": { "type": "integer", "minimum": 1 },
+        "template_version": { "type": ["integer", "null"] },
+        "route": { "type": ["string", "null"] },
+        "route_version": { "type": ["integer", "null"] },
+        "provider": { "type": ["string", "null"] },
+        "model": { "type": ["string", "null"] },
+        "fallback_used": { "type": "boolean", "description": "The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded)." },
+        "run_id": { "type": "string", "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "cached_from": { "type": ["string", "null"], "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "synthetic": { "type": "boolean" }
+      }
+    },
+    "usage": {
+      "type": "object", "required": ["tokens_in", "tokens_out", "cost_usd", "attempts"], "additionalProperties": false,
+      "properties": {
+        "tokens_in": { "type": "integer", "minimum": 0 },
+        "tokens_out": { "type": "integer", "minimum": 0 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "attempts": { "type": "integer", "minimum": 0, "description": "Provider calls made (skipped routes not counted)." }
+      }
+    },
+    "citations_count": { "type": "integer", "minimum": 0, "description": "Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later." },
+    "retry_of": { "type": ["string", "null"], "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "idempotency_key": { "type": ["string", "null"] },
+    "trace_id": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "started_at": { "type": ["string", "null"], "format": "date-time" },
+    "finished_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

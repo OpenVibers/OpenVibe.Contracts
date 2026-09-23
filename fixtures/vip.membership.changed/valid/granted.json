@@ -1,0 +1,23 @@
+{
+  "member": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "kind": "channel_subscription",
+  "active": true,
+  "expires_at": "2026-10-23T10:00:00.000Z",
+  "cancel_at_period_end": false,
+  "previous": null,
+  "reason": "granted",
+  "source": "event",
+  "billing_event_id": "evt_01JAB3C4D5E6F7G8H9J0K1MNPY",
+  "membership_id": "vms_01JAB3C4D5E6F7G8H9J0K1MNPZ",
+  "plan_id": "vpl_01JAB3C4D5E6F7G8H9J0K1MNPV",
+  "plan_version_id": "vpv_01JAB3C4D5E6F7G8H9J0K1MNPW",
+  "plan_version": 2,
+  "subscription_id": "sub_01JAB3C4D5E6F7G8H9J0K1MNQ0"
+}

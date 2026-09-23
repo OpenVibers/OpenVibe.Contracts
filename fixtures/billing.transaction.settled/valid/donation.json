@@ -1,0 +1,17 @@
+{
+  "transaction_id": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ1",
+  "type": "donation",
+  "test": false,
+  "from_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "to_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "provider": null,
+  "metadata": {
+    "amount_bits": 500,
+    "target": {
+      "service": "tips",
+      "type": "interaction",
+      "id": "tint_01JAB3C4D5E6F7G8H9J0K1MNPQ"
+    },
+    "message": "gg"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "delivery_id": "ald_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "rule": {
+    "id": "alr_01JAB2C3D4E5F6G7H8J9K0MNPR", "kind": "threshold", "status": "active",
+    "instrument": { "id": "ins_01JAB2C3D4E5F6G7H8J9K0MNPS", "symbol": "AAPL", "name": "Apple Inc." },
+    "metric": "price.close", "operator": "above", "threshold": "250", "unit": "USD", "currency": "USD",
+    "form_types": null, "armed": true, "created_at": "2026-09-20T10:00:00.000Z", "updated_at": "2026-09-22T21:00:00.000Z"
+  },
+  "instrument": { "id": "ins_01JAB2C3D4E5F6G7H8J9K0MNPS", "symbol": "AAPL", "name": "Apple Inc.", "url": "https://openvibe.trade/i/AAPL" },
+  "trigger": { "kind": "observation", "id": "obs_01JAB2C3D4E5F6G7H8J9K0MNPT", "metric": "price.close", "unit": "USD", "currency": "USD", "observed_at": "2026-09-22T20:00:00.000Z", "retrieved_at": "2026-09-22T20:05:00.000Z", "source_key": "stooq-daily", "source_url": null },
+  "disclaimer": "Information only — not investment advice; no trading here."
+}

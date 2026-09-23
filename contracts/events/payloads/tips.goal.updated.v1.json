@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/tips.goal.updated.v1.json",
+  "title": "TipsGoalUpdatedPayload",
+  "description": "tips.goal.updated v1 (OpenVibe.Tips server/domain/goals.js changed). A goal was created, edited or closed, or its settled total moved (a contribution, the contribution that reached it, a reversal). Envelope: subject { type: goal, id: tgoal_…, revision }, visibility internal, priority important, actor service:tips.",
+  "type": "object",
+  "required": ["goal_id", "creator", "title", "target_amount", "current_amount", "currency", "status", "reached", "reason", "interaction_id"],
+  "additionalProperties": false,
+  "properties": {
+    "goal_id": { "type": "string", "pattern": "^tgoal_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "creator": { "$ref": "../../identity/subject-ref.v1.json" },
+    "title": { "type": "string" },
+    "target_amount": { "type": "integer", "minimum": 1 },
+    "current_amount": { "type": "integer", "description": "Settled total including any amount carried over from Live." },
+    "currency": { "type": "string" },
+    "status": { "enum": ["active", "closed"] },
+    "reached": { "type": "boolean" },
+    "reason": { "enum": ["created", "updated", "closed", "contribution", "reached", "reversal"] },
+    "interaction_id": {
+      "type": ["string", "null"],
+      "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The interaction behind a contribution, reached or reversal change; null otherwise."
+    }
+  }
+}

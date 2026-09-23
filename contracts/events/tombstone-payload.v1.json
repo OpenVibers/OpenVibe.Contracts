@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/tombstone-payload.v1.json",
+  "title": "TombstonePayload",
+  "description": "The payload of a redacted event (ADR-026). OpenVibe.Events replaces the original payload with this and the actor with the producer itself ({ type: service, id: <source> }, or the app); event_id, seq, event_type, version, subject, timestamp and visibility stay. Every read path serves it from then on: pull, GET by id, SSE replay, queued deliveries and DLQ replays. A consumer checks payload.redacted before validating a payload against its event type's schema.",
+  "type": "object",
+  "required": ["redacted", "redacted_at", "redacted_by"],
+  "additionalProperties": false,
+  "properties": {
+    "redacted": { "const": true },
+    "redacted_at": { "type": "string", "format": "date-time" },
+    "redacted_by": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "description": "The event_id of the redacting event; an operator label (e.g. backfill) when OpenVibe.Events redacted by script."
+    }
+  }
+}

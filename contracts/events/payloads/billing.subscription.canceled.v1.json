@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.subscription.canceled.v1.json",
+  "title": "BillingSubscriptionCanceledPayload",
+  "description": "billing.subscription.canceled v1 (OpenVibe.Billing server/ops/subscriptions.js cancel). A subscription was set to cancel at period end (for Stripe, after Stripe accepted it); the paid period still runs. Envelope: subject { type: subscription, id: sub_… }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "required": ["subscription", "provider_sync", "actor"],
+  "additionalProperties": false,
+  "properties": {
+    "subscription": {
+      "type": "object",
+      "required": ["id", "subscriber", "streamer", "tier", "provider", "provider_ref", "route", "status", "auto_renew", "cancel_at_period_end", "price_cents", "current_period_end", "created_at", "updated_at"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^sub_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "subscriber": { "$ref": "../../identity/subject-ref.v1.json" },
+        "streamer": { "$ref": "../../identity/subject-ref.v1.json" },
+        "tier": { "type": "integer", "minimum": 1 },
+        "provider": { "type": "string" },
+        "provider_ref": { "type": ["string", "null"] },
+        "route": { "type": ["string", "null"] },
+        "status": { "enum": ["active", "canceled", "expired"] },
+        "auto_renew": { "type": "boolean" },
+        "cancel_at_period_end": { "type": "boolean" },
+        "price_cents": { "type": "integer", "minimum": 0 },
+        "current_period_end": { "type": ["string", "null"] },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      }
+    },
+    "provider_sync": { "enum": ["not_needed", "stripe_cancel_at_period_end"] },
+    "actor": {
+      "type": "object",
+      "required": ["principal", "request_id"],
+      "additionalProperties": false,
+      "properties": {
+        "principal": { "type": ["string", "null"], "description": "Token sub of the caller (svc:…, usr_…)." },
+        "request_id": { "type": ["string", "null"] },
+        "on_behalf_of": { "$ref": "../../identity/subject-ref.v1.json" }
+      },
+      "description": "Who asked: the calling principal and the person it acted for."
+    }
+  }
+}

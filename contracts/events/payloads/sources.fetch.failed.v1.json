@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/sources.fetch.failed.v1.json",
+  "title": "SourcesFetchFailedPayload",
+  "description": "sources.fetch.failed v1 (OpenVibe.Sources server/ingest.js failedEvent). One endpoint fetch of a source failed and counts as a failure: robots denied or unreachable, an HTTP error, the site's 429, a parse error or an internal error. Not sent for 304, a disabled source, a missing credential or the local rate limit. No item is created or changed. Envelope: subject { type: source, id: <source_key> }, visibility internal, priority important, actor service:sources.",
+  "type": "object",
+  "required": ["source_key", "category", "run_id", "endpoint_url", "state", "error_code", "http_status", "consecutive_failures"],
+  "additionalProperties": false,
+  "properties": {
+    "source_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+    "category": { "enum": ["news", "blog", "reviews", "deals", "coupons", "trade"] },
+    "run_id": { "type": "string", "pattern": "^frn_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The recorded fetch run (GET /api/v1/sources/:key/runs)." },
+    "endpoint_url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "state": { "enum": ["robots_denied", "http_error", "rate_limited", "parse_error"] },
+    "error_code": {
+      "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$",
+      "description": "robots | address_refused | port_refused | bad_url | upstream_429 | http_<status> | unreadable | adapter_error | internal."
+    },
+    "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+    "consecutive_failures": { "type": "integer", "minimum": 1, "description": "The source's consecutive failed runs including this one." }
+  }
+}

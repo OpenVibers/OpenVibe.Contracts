@@ -29,4 +29,5 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-023](ADR-023-client-surfaces.md) | First-party client surfaces | Accepted 2026-09-23: OpenVibe.Extensions at Wave 18 |
 | [ADR-024](ADR-024-theme-authority.md) | Theme authority between Network and Shared | Accepted 2026-09-23 |
 | [ADR-025](ADR-025-marketplace-scope.md) | Marketplace and commerce scope | Accepted 2026-09-23: Trade stays informational |
+| [ADR-026](ADR-026-event-redaction.md) | Producer redaction of its own events (`payload.redacts`) and event payload contracts | Accepted and implemented 2026-09-23 (OpenVibe.Events, Chat) |
 

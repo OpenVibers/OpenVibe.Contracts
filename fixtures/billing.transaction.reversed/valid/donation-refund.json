@@ -1,0 +1,18 @@
+{
+  "transaction_id": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ3",
+  "type": "refund",
+  "test": false,
+  "from_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "to_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "provider": null,
+  "metadata": {
+    "amount_bits": 500,
+    "target": {
+      "service": "tips",
+      "type": "interaction",
+      "id": "tint_01JAB3C4D5E6F7G8H9J0K1MNPQ"
+    },
+    "message": "gg"
+  },
+  "reverses_txn": "txn_01JAB3C4D5E6F7G8H9J0K1MNQ1"
+}

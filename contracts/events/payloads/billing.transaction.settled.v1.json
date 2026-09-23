@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.transaction.settled.v1.json",
+  "title": "BillingTransactionSettledPayload",
+  "description": "billing.transaction.settled v1 (OpenVibe.Billing server/ops/purchases.js summary(); emitted by purchases, transfers, subscriptions, cashouts recycle and admin adjustments). A journal transaction was posted. Envelope: subject { type: transaction, id: txn_… }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "required": ["transaction_id", "type", "test", "from_subject", "to_subject", "provider", "metadata"],
+  "additionalProperties": false,
+  "properties": {
+    "transaction_id": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "type": {
+      "enum": ["purchase", "donation", "subscription", "subscription_share", "cashout_request", "cashout_paid", "cashout_denied", "recycle", "refund", "chargeback", "adjustment", "import"]
+    },
+    "test": { "type": "boolean", "description": "Test money: never counted." },
+    "from_subject": { "type": ["string", "null"], "description": "Subject id (usr_…) value moved from, null for provider money." },
+    "to_subject": { "type": ["string", "null"], "description": "Subject id (usr_…) value moved to." },
+    "provider": { "type": ["string", "null"], "description": "stripe, paypal, powerchat…; null for credit movements." },
+    "metadata": {
+      "type": "object",
+      "description": "Transaction metadata as posted (amount_bits, paid_cents, value_cents, target EntityRef, intent_id, message, donor_name, rates…). Its keys depend on the transaction type."
+    }
+  }
+}

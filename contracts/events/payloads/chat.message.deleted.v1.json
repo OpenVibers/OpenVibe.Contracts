@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/chat.message.deleted.v1.json",
+  "title": "ChatMessageDeletedPayload",
+  "description": "chat.message.deleted v1 (OpenVibe.Chat server/db/database.js _announceDeleted). Public messages were deleted: by a moderator, through Live's bridge, the author's or an anon's history, a time-range purge or the auto-delete sweep. Envelope: subject { type: chat_message, id: <first id> }, visibility public, priority important, actor service:chat. One event per 500 ids. Carries only ids, never the text, the author or who deleted it; payload.redacts makes OpenVibe.Events tombstone the chat.message.created of each id.",
+  "type": "object",
+  "required": ["message_ids", "redacts"],
+  "additionalProperties": false,
+  "properties": {
+    "message_ids": {
+      "type": "array", "minItems": 1, "maxItems": 500, "uniqueItems": true,
+      "items": { "type": "integer", "minimum": 1 },
+      "description": "Chat message ids (the id in chat.message.created)."
+    },
+    "redacts": {
+      "$ref": "../redaction-directive.v1.json",
+      "description": "{ subject_type: chat_message, subject_ids: message_ids as strings }."
+    }
+  }
+}

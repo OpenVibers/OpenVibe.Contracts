@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.receipt.external.v1.json",
+  "title": "BillingReceiptExternalPayload",
+  "description": "billing.receipt.external v1 (OpenVibe.Billing server/ops/external.js record). An EXTERNAL receipt (ADR-012): a tip paid on a creator's own provider account (PowerChat route direct). The money never touches OpenVibe (no journal entry); Billing announces it once per payment, only when BILLING_AUTHORITY=billing and the receiving account is mapped to a creator. OpenVibe.Tips celebrates it (chat line, overlay alert, goal). Envelope: subject { type: provider_receipt, id: <provider>:<payment id> }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "required": ["classification", "provider", "receipt_ref", "provider_event_id", "delivery_id", "streamer", "receiving_account", "amount_cents", "currency", "value_bits", "donor_name", "anonymous", "message", "app_ref", "app_purpose", "occurred_at", "test", "rates"],
+  "additionalProperties": false,
+  "properties": {
+    "classification": { "const": "EXTERNAL" },
+    "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,39}$" },
+    "receipt_ref": { "type": "string", "description": "<provider>:<payment id>, e.g. powerchat:…" },
+    "provider_event_id": { "type": "string", "minLength": 1, "maxLength": 200, "description": "The provider's id of the payment, stable across redeliveries." },
+    "delivery_id": { "type": "string", "description": "The webhook delivery that carried it." },
+    "streamer": { "$ref": "../../identity/subject-ref.v1.json" },
+    "receiving_account": {
+      "type": "object",
+      "required": ["provider", "id", "username"],
+      "additionalProperties": false,
+      "properties": { "provider": { "type": "string" }, "id": { "type": ["string", "null"] }, "username": { "type": ["string", "null"] } }
+    },
+    "amount_cents": { "type": "integer", "minimum": 1, "maximum": 100000000 },
+    "currency": { "const": "usd-cents" },
+    "value_bits": { "type": "integer", "minimum": 0, "description": "Billing's value of the money in bits." },
+    "donor_name": { "type": ["string", "null"], "maxLength": 80, "description": "null when anonymous." },
+    "anonymous": { "type": "boolean" },
+    "message": { "type": ["string", "null"], "maxLength": 500 },
+    "app_ref": { "type": ["string", "null"] },
+    "app_purpose": { "type": ["string", "null"], "maxLength": 120 },
+    "occurred_at": { "type": ["string", "null"], "description": "The provider's timestamp as it sent it." },
+    "test": { "type": "boolean" },
+    "rates": { "type": "object", "required": ["bits_per_usd"], "properties": { "bits_per_usd": { "type": "number" } }, "description": "Rate snapshot." }
+  }
+}

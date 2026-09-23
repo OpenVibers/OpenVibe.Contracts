@@ -1,0 +1,29 @@
+{
+  "classification": "EXTERNAL",
+  "provider": "powerchat",
+  "receipt_ref": "powerchat:ext-1",
+  "provider_event_id": "ext-1",
+  "delivery_id": "dlv-ext-1",
+  "streamer": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "receiving_account": {
+    "provider": "powerchat",
+    "id": "981",
+    "username": "japaneseoldguy"
+  },
+  "amount_cents": 0,
+  "currency": "usd-cents",
+  "value_bits": 1234,
+  "donor_name": "Generous Fan",
+  "anonymous": false,
+  "message": "love the stream",
+  "app_ref": null,
+  "app_purpose": "goal:12",
+  "occurred_at": "2026-09-23T20:00:00Z",
+  "test": false,
+  "rates": {
+    "bits_per_usd": 100
+  }
+}

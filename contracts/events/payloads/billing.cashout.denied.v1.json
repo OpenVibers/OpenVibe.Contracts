@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.cashout.denied.v1.json",
+  "title": "BillingCashoutDeniedPayload",
+  "description": "billing.cashout.denied v1 (OpenVibe.Billing server/ops/cashouts.js deny). Staff denied a cash-out; the escrowed bits went back (a billing.transaction.reversed follows in the same transaction). Envelope: subject { type: cashout, id: co_… }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "required": ["cashout", "transaction_id"],
+  "additionalProperties": false,
+  "properties": {
+    "cashout": {
+      "type": "object",
+      "required": ["id", "subject", "amount_bits", "value_cents", "status", "payout_method", "escrow_until", "request_txn", "settle_txn", "payout_provider", "payout_reference", "reason", "created_at", "updated_at"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^co_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "subject": { "$ref": "../../identity/subject-ref.v1.json" },
+        "amount_bits": { "type": "integer", "minimum": 1 },
+        "value_cents": { "type": "integer" },
+        "status": { "const": "denied" },
+        "payout_method": { "type": "object", "description": "{ type, address } as the creator entered it (e.g. a PayPal email)." },
+        "escrow_until": { "type": "string" },
+        "request_txn": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "settle_txn": { "type": ["string", "null"], "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "payout_provider": { "type": ["string", "null"] },
+        "payout_reference": { "type": ["string", "null"] },
+        "reason": { "type": ["string", "null"] },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      }
+    },
+    "transaction_id": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The cashout_denied transaction." }
+  }
+}

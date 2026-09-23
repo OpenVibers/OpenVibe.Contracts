@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/deals.watch.matched.v1.json",
+  "title": "DealsWatchMatchedPayload",
+  "description": "deals.watch.matched v1 (OpenVibe.Deals server/domain/watches.js onObservation). A person's keyword, product or price-below watch matched a fresh observation of an active offer, inside the transaction that recorded the observation. At most one event per (watch, observation); a keyword/product watch notifies once per offer, a price-below watch again only for a lower price. Saved searches (kind search) never notify. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:deals. OpenVibe.Network turns it into a DEAL_WATCH_MATCH notification for payload.recipient (server/notifications/events-consumer.js). A price is the decimal exactly as stated, never inferred; null when the observation stated none.",
+  "type": "object",
+  "required": ["watch_id", "recipient", "kind", "query", "product_id", "max_price", "currency", "offer_id", "offer_url", "title", "observation"],
+  "additionalProperties": false,
+  "properties": {
+    "watch_id": { "type": "string", "pattern": "^dwt_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "recipient": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The watch owner's user subject id: who is notified." },
+    "kind": { "enum": ["keyword", "product", "price_below"] },
+    "query": { "type": ["string", "null"], "maxLength": 200, "description": "Keywords of a keyword watch, or of a price-below watch without a product." },
+    "product_id": { "type": ["string", "null"], "maxLength": 64, "description": "Deals product id of a product or price-below watch." },
+    "max_price": { "type": ["string", "null"], "maxLength": 40, "description": "Price-below threshold as entered (decimal text, e.g. 19.99)." },
+    "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$", "description": "ISO 4217 currency of max_price." },
+    "offer_id": { "type": "string", "minLength": 1, "maxLength": 64, "description": "The canonical (root) offer id (dof_…)." },
+    "offer_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical offer page URL on Deals." },
+    "title": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "observation": {
+      "type": "object", "required": ["id", "observed_at", "price", "currency", "availability"], "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^dpo_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "price": { "type": ["string", "null"], "maxLength": 40, "description": "Decimal text as stated; null when the observation stated no price." },
+        "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
+        "availability": { "enum": ["in_stock", "out_of_stock", "preorder", "discontinued", "limited", "sold_out", "online_only", "in_store_only", null] }
+      }
+    }
+  }
+}

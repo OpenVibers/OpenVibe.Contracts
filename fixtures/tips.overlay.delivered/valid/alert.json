@@ -1,0 +1,10 @@
+{
+  "delivery_id": "tovd_01JAB3C4D5E6F7G8H9J0K1MNPT",
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "kind": "alert",
+  "interaction_id": "tint_01JAB3C4D5E6F7G8H9J0K1MNPQ",
+  "goal_id": null
+}

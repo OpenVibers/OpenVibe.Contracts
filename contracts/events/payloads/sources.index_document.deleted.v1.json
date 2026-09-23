@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/sources.index_document.deleted.v1.json",
+  "title": "SourcesIndexDocumentDeletedPayload",
+  "description": "sources.index_document.deleted v1 (OpenVibe.Sources server/items.js indexEvent). An item of a source with search_visibility was removed; OpenVibe.Search stores a tombstone at this revision. Envelope: subject { type: item, id: <item id>, revision }, visibility internal, priority important, actor service:sources.",
+  "type": "object",
+  "required": ["type", "id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "item" },
+    "id": { "type": "string", "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "revision": { "type": "integer", "minimum": 1 }
+  }
+}

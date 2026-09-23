@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/tips.interaction.ready.v1.json",
+  "title": "TipsInteractionReadyPayload",
+  "description": "tips.interaction.ready v1 (OpenVibe.Tips server/domain/interactions.js settle, summary()). The interaction settled: it is active and its effects (overlay alert, chat line, paid message, TTS, media request) are queued. Envelope: subject { type: interaction, id: tint_… }, visibility internal, priority important, actor service:tips. Never emitted for tests or imports.",
+  "type": "object",
+  "required": ["interaction_id", "creator", "supporter", "supporter_name", "kind", "amount", "currency", "settlement", "payment_state", "delivery_state", "billing_txn_id", "test"],
+  "additionalProperties": false,
+  "properties": {
+    "interaction_id": { "type": "string", "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "creator": { "$ref": "../../identity/subject-ref.v1.json" },
+    "supporter": {
+      "anyOf": [{ "$ref": "../../identity/subject-ref.v1.json" }, { "type": "null" }],
+      "description": "The supporter, null when external, anonymous or unmapped."
+    },
+    "supporter_name": { "type": ["string", "null"], "description": "Display name at the time." },
+    "kind": { "enum": ["tip", "paid_message", "tts", "media_request"] },
+    "amount": { "type": "integer", "minimum": 1, "description": "Integer amount in currency minor units (Vibes bits)." },
+    "currency": { "type": "string", "description": "vibes-bits today." },
+    "settlement": { "enum": ["billing", "external", "simulated", "imported"] },
+    "payment_state": { "enum": ["pending", "settled", "reversed", "failed"] },
+    "delivery_state": { "enum": ["awaiting_payment", "queued", "delivered", "failed", "cancelled"] },
+    "billing_txn_id": { "type": ["string", "null"], "description": "The Billing transaction (txn_…) that settled it." },
+    "test": { "type": "boolean", "description": "Simulations never emit events, so false in practice." }
+  }
+}

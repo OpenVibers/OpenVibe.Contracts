@@ -1,0 +1,26 @@
+{
+  "plan_id": "vpl_01JAB3C4D5E6F7G8H9J0K1MNPV",
+  "slug": "supporters",
+  "version": 2,
+  "version_id": "vpv_01JAB3C4D5E6F7G8H9J0K1MNPW",
+  "creator": {
+    "id": "network",
+    "kind": "network",
+    "subject": null,
+    "username": null,
+    "display_name": "OpenVibe",
+    "bio": null,
+    "status": "active"
+  },
+  "billing_kind": null,
+  "terms": {
+    "name": "Supporters",
+    "description": "Back the channel.",
+    "benefits": null,
+    "perks": [],
+    "billing_kind": null,
+    "price": null,
+    "digest": "3f9a0c1d2e4b5a67"
+  },
+  "published_at": "2026-09-23T10:00:00.000Z"
+}

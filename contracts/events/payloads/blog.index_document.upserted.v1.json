@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/blog.index_document.upserted.v1.json",
+  "title": "BlogIndexDocumentUpsertedPayload",
+  "description": "blog.index_document.upserted v1 (OpenVibe.Blog server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published, public, listable post, sent whenever what Search should hold changed (the revision grows with every change). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: post, id, revision: <document revision> }, visibility internal, priority important, actor service:blog.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object", "required": ["owner", "type", "deleted"],
+      "properties": { "owner": { "const": "blog" }, "type": { "const": "post" }, "id": { "type": "string", "pattern": "^pst_[0-9A-HJKMNP-TV-Z]{26}$" }, "deleted": { "const": false } }
+    }
+  ]
+}

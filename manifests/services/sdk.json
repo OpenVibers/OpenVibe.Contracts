@@ -1,16 +1,13 @@
 {
-  "version": "0.1.0",
-  "contractRanges": {
-    "openvibe-contracts": "^0.1.0"
-  },
+  "version": "0.2.0",
   "id": "sdk",
   "name": "OpenVibe.SDK",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.SDK",
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
-  "notes": "Supported browser and server clients for the OpenVibe platform. Charter only; no runtime."
+  "notes": "Supported browser and server clients for the OpenVibe platform (openvibe-sdk). A released library, not a runtime: tagged releases installed from https://codeload.github.com/OpenVibers/OpenVibe.SDK/tar.gz/refs/tags/<tag> (v0.4.0 on 2026-09-23). Nothing to deploy or poll."
 }

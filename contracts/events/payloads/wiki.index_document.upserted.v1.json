@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/wiki.index_document.upserted.v1.json",
+  "title": "WikiIndexDocumentUpsertedPayload",
+  "description": "wiki.index_document.upserted v1 (OpenVibe.Wiki server/wiki/service.js sync, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published, public, listable page, sent whenever what Search should hold changed (the revision grows with every change). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: page, id, revision: <document revision> }, visibility internal, priority important, actor service:wiki.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object", "required": ["owner", "type", "deleted"],
+      "properties": { "owner": { "const": "wiki" }, "type": { "const": "page" }, "id": { "type": "string", "pattern": "^pg_[0-9A-HJKMNP-TV-Z]{26}$" }, "deleted": { "const": false } }
+    }
+  ]
+}

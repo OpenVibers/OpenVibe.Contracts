@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/tips.overlay.failed.v1.json",
+  "title": "TipsOverlayFailedPayload",
+  "description": "tips.overlay.failed v1 (OpenVibe.Tips server/domain/overlays.js sweepFailed). No overlay showed the delivery within the delivery window. Envelope: subject { type: overlay_delivery, id: tovd_… }, visibility internal, priority important, actor service:tips. Never for tests.",
+  "type": "object",
+  "required": ["delivery_id", "creator", "kind", "interaction_id", "goal_id", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "delivery_id": { "type": "string", "pattern": "^tovd_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "creator": { "$ref": "../../identity/subject-ref.v1.json" },
+    "kind": { "enum": ["alert", "goal"] },
+    "interaction_id": { "type": ["string", "null"] },
+    "goal_id": { "type": ["string", "null"] },
+    "reason": { "type": "string" }
+  }
+}

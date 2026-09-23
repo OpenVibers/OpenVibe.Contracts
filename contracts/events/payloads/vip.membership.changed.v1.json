@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/vip.membership.changed.v1.json",
+  "title": "VipMembershipChangedPayload",
+  "description": "vip.membership.changed v1 (OpenVibe.VIP server/domain/entitlements.js emitChanged). A member's standing with a creator changed as projected from Billing (granted, renewed, cancel scheduled, expired, refunded…): active, expires_at or cancel_at_period_end differ from before, or a first look found an active membership. Names the plan version the membership was bought under. Envelope: subject { type: membership, id: <member usr_…>:<creator usr_…> }, visibility internal, priority important, actor service:vip.",
+  "type": "object",
+  "required": ["member", "creator", "kind", "active", "expires_at", "cancel_at_period_end", "previous", "reason", "source", "billing_event_id", "membership_id", "plan_id", "plan_version_id", "plan_version", "subscription_id"],
+  "additionalProperties": false,
+  "properties": {
+    "member": { "$ref": "../../identity/subject-ref.v1.json" },
+    "creator": { "$ref": "../../identity/subject-ref.v1.json" },
+    "kind": { "type": "string", "description": "Billing entitlement kind; channel_subscription today." },
+    "active": { "type": "boolean" },
+    "expires_at": { "type": ["string", "null"] },
+    "cancel_at_period_end": { "type": "boolean" },
+    "previous": {
+      "type": ["object", "null"],
+      "required": ["active", "expires_at", "cancel_at_period_end"],
+      "additionalProperties": false,
+      "properties": { "active": { "type": "boolean" }, "expires_at": { "type": ["string", "null"] }, "cancel_at_period_end": { "type": "boolean" } },
+      "description": "The projection before the change; null on first sight."
+    },
+    "reason": { "type": ["string", "null"], "description": "Billing's reason (granted, renewed, refund, expired…) or VIP's (checked, cancel_scheduled)." },
+    "source": { "enum": ["event", "billing_check", "import"] },
+    "billing_event_id": { "type": ["string", "null"], "description": "The Billing event (evt_…) behind the change, when it came from one." },
+    "membership_id": { "type": ["string", "null"], "pattern": "^vms_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "plan_id": { "type": ["string", "null"] },
+    "plan_version_id": { "type": ["string", "null"] },
+    "plan_version": { "type": ["integer", "null"], "minimum": 1 },
+    "subscription_id": { "type": ["string", "null"], "description": "The Billing subscription (sub_…)." }
+  }
+}

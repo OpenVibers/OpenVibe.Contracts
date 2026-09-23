@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.entitlement.changed.v1.json",
+  "title": "BillingEntitlementChangedPayload",
+  "description": "billing.entitlement.changed v1 (OpenVibe.Billing server/ops/subscriptions.js pay, setStatus, revokeForTxn; entitlement()). A subscriber's channel-subscription entitlement to a streamer changed: a period was granted or renewed, the subscription ended or expired, or a reversed payment revoked a period. The payload is the entitlement as of now. Envelope: subject { type: entitlement, id: <subscriber usr_…>:channel_subscription:<streamer usr_…> }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "required": ["subject", "streamer", "kind", "active", "expires_at", "subscription", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "subject": { "$ref": "../../identity/subject-ref.v1.json" },
+    "streamer": { "$ref": "../../identity/subject-ref.v1.json" },
+    "kind": { "const": "channel_subscription" },
+    "active": { "type": "boolean" },
+    "expires_at": { "type": ["string", "null"], "format": "date-time" },
+    "subscription": {
+      "type": ["object", "null"],
+      "required": ["id", "status", "auto_renew", "cancel_at_period_end", "provider"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^sub_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "status": { "enum": ["active", "canceled", "expired"] },
+        "auto_renew": { "type": "boolean" },
+        "cancel_at_period_end": { "type": "boolean" },
+        "provider": { "type": "string" }
+      }
+    },
+    "reason": {
+      "type": "string",
+      "description": "granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback."
+    },
+    "transaction_id": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$", "description": "granted/renewed: the transaction that paid the period." },
+    "revoked_period": {
+      "type": "object",
+      "required": ["starts_at", "ends_at"],
+      "additionalProperties": false,
+      "properties": { "starts_at": { "type": "string", "format": "date-time" }, "ends_at": { "type": "string", "format": "date-time" } },
+      "description": "refund/chargeback: the period the reversed payment had granted."
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/run-request.v1.json",
+  "title": "AiRunRequest",
+  "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.",
+  "type": "object",
+  "required": ["workflow"],
+  "additionalProperties": false,
+  "properties": {
+    "workflow": {
+      "type": "string", "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)+$", "maxLength": 200,
+      "description": "Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…)."
+    },
+    "version": { "type": "integer", "minimum": 1, "description": "Pin a workflow version (active or deprecated). Omitted: the newest active version." },
+    "input": { "type": "object", "description": "Workflow input; validated against the workflow version's input_schema. Default {}." },
+    "target": { "$ref": "../common/entity-ref.v1.json" },
+    "attribution": { "$ref": "../common/entity-ref.v1.json" },
+    "on_behalf_of": { "$ref": "../identity/subject-ref.v1.json" },
+    "idempotency_key": {
+      "type": "string", "pattern": "^[A-Za-z0-9._:-]{8,128}$",
+      "description": "Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent."
+    },
+    "options": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "cache": { "type": "boolean", "default": true, "description": "false skips the scoped cache lookup and store." },
+        "debug": { "type": "boolean", "default": false, "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on." }
+      }
+    }
+  }
+}

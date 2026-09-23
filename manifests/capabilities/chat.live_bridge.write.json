@@ -14,7 +14,8 @@
   "quotaClass": "internal-write",
   "events": [
     "chat.message.created",
-    "chat.moderation.action"
+    "chat.moderation.action",
+    "chat.message.deleted"
   ],
   "implementedBy": [
     "POST /internal/live/calls"

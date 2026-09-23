@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/blog.post.created.v1.json",
+  "title": "BlogPostCreatedPayload",
+  "description": "blog.post.created v1 (OpenVibe.Blog server/domain/posts.js create). A post exists as a draft (its first revision). Envelope: subject { type: post, id: pst_…, revision: 1 }, visibility internal, priority low, actor the person or the calling service.",
+  "type": "object",
+  "required": ["blog", "state", "visibility", "authorship"],
+  "additionalProperties": false,
+  "properties": {
+    "blog": {
+      "type": "object", "required": ["id", "handle"], "additionalProperties": false,
+      "properties": { "id": { "type": "string", "pattern": "^blg_[0-9A-HJKMNP-TV-Z]{26}$" }, "handle": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{1,39}$" } }
+    },
+    "state": { "const": "draft" },
+    "visibility": { "enum": ["public", "unlisted", "members", "private"] },
+    "authorship": { "enum": ["human", "ai", "hybrid", "imported"], "description": "openvibe-publishing authorship mode (not Search's vocabulary)." },
+    "workflow": {
+      "type": "object", "required": ["id", "runId"], "additionalProperties": false,
+      "description": "The OpenVibe.AI workflow and run behind ai and hybrid posts; absent for human posts.",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$" },
+        "runId": { "type": "string", "minLength": 1 },
+        "version": { "type": ["integer", "string"] },
+        "model": { "type": "string" }
+      }
+    }
+  }
+}
