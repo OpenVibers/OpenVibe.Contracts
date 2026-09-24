@@ -1,6 +1,6 @@
 # ADR-012: Billing vs loyalty, credits and currency classification
 
-**Status:** Accepted 2026-09-22. Gates Wave 8 (OpenVibe.Billing), Wave 9 (Tips) and Wave 10 (VIP).
+**Status:** Accepted 2026-09-22. Gates Wave 8 (OpenVibe.Billing), Wave 9 (Tips) and Wave 10 (VIP). Amended 2026-09-24: ledger transaction types mapped to the roadmap's names; OpenCoins stays in Network; the payouts/refunds/plans table substitution.
 
 ## Context and current evidence
 
@@ -70,3 +70,52 @@ Until cutover, Live remains authoritative and Billing only shadows (imports and 
 - Creator payables reconcile exactly to the ledger; imported opening balances equal the Live columns at cutover, with every adjustment listed.
 - The freeze switch refuses writes and serves reads.
 - Entitlements are queryable with Live offline.
+
+## Amendment 2026-09-24: transaction types, OpenCoins, table substitution
+
+### Ledger transaction types (roadmap §28.3, §28.4 item 23)
+
+The roadmap asks for named types: platform fee, creator earning, payout hold and release, and the
+compensating reversals. Billing does not add them as new `transactions.type` values. Each of them
+is a **leg** (an entry on an account kind) of an existing, named type. The mapping is binding, and
+reports and events use these names:
+
+| Roadmap name | Billing type(s) | Leg (account kind) | Where |
+|---|---|---|---|
+| **Platform fee** (purchase spread, retained subscription share, site-route fee) | `purchase`, `subscription`, site-routed tips from receipts | credit to `platform_revenue` (cents or bits). The provider's own fee is kept as `fee_cents` in metadata, never as revenue. | `server/ops/common.js` receiptEntries, `ops/subscriptions.js` |
+| **Creator earning** | `donation` (tip, donation, paid interaction), `subscription` (the creator's share), `import` / `subscription_share` for imported Live history | credit to `creator_payable:<subject>` | `ops/transfers.js`, `ops/subscriptions.js`, `importer/live.js` |
+| **Payout hold** | `cashout_request` | `creator_payable` → `payouts_pending`, with `escrow_until`. Billing refuses approval during escrow (rule 10). | `ops/cashouts.js` request |
+| **Payout release** (paid out) | `cashout_paid` | `payouts_pending` → `provider_clearing:<provider>_payouts` (bits to cents through `fx_conversion`), with the provider's payout reference required | `ops/cashouts.js` approve |
+| **Payout release** (returned) | `cashout_denied` | `payouts_pending` → `creator_payable`, and `reverses_txn` → the request | `ops/cashouts.js` deny |
+| **Compensating reversals** | `refund`, `chargeback` (with `reverses_txn` → the original); `refund` of a transfer (a media request that never played); `adjustment` (staff, with a reason) | back to `user_credit` or out through `refunds` / `chargeback_loss`. A creator's payable is never clawed back for credit already given away: the loss is booked and flagged for review. | `ops/reversals.js`, `ops/transfers.js` refund, `ops/admin.js` |
+| (MONEY → CREDIT) | `recycle` | `creator_payable` → `user_credit` (rule 4) | `ops/cashouts.js` recycle |
+
+A new money movement gets a new `type` value only when no existing type and leg describes it.
+Adding one is additive in Billing's CHECK and in `billing.transaction.settled@1`.
+
+### OpenCoins stays in Network (supersession)
+
+Roadmap Wave 8 (line 692) says "Network's OpenCoins wallet becomes a Billing client". **This ADR
+supersedes that line.** OpenCoins are LOYALTY. Network owns them, with their own ledger, and
+Billing does not hold, mirror or proxy them (see Decision, and Migration consequences: "OpenCoins
+and channel points are **not** migrated into Billing in Wave 8"). A Billing loyalty ledger, if it
+ever comes, is a separate step with its own ADR amendment, and it never shares accounts with MONEY
+or CREDIT. The Network requirement ledger (D28) and the roadmap crosswalk should cite this
+paragraph instead of listing the line as remaining.
+
+### Table substitution (roadmap §11.1.1)
+
+The roadmap's minimal entity list names twelve tables. Billing has nine of them under those names:
+`accounts`, `ledger_entries`, `transactions`, `provider_events`, `payment_intents`, `subscriptions`,
+`entitlements`, `reconciliation_runs` and `idempotency_keys`. It deliberately substitutes the other
+three:
+
+| Roadmap entity | Billing's equivalent | Why |
+|---|---|---|
+| `payouts` | `cashouts` (`server/db.js`), with the `cashout_request` / `cashout_paid` / `cashout_denied` journal transactions | The product calls them cashouts. The row holds the payout method, escrow and provider payout reference. |
+| `refunds` | reversal transactions (`type refund` or `chargeback`, `reverses_txn` → the original) plus the `refunds` and `chargeback_loss` accounts (`server/ops/reversals.js`) | A refund is a journal fact, not a separate mutable record. Partial and cumulative reversals are checked against the original. |
+| `plans` | VIP's `vip_plans` (OpenVibe.VIP) | Plans and perks are VIP's (see the ENTITLEMENT row in the Decision). Billing holds only the entitlement truth. |
+
+Billing also has `external_receipts` (EXTERNAL-class PowerChat tips, recorded without liability)
+and `account_balances` (a projection of the journal, checked by reconciliation). Thin `payouts` or
+`refunds` views may be added for reporting. They are not required.

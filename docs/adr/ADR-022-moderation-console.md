@@ -1,6 +1,6 @@
 # ADR-022: Moderation and policy console
 
-**Status:** Accepted 2026-09-23. Revisit at Wave 12.
+**Status:** Accepted 2026-09-23. Revisited at Wave 12 (2026-09-24): the decision stands, with no moderation service; next revisit at Wave 22 or when the trigger below is met.
 
 ## Context and current evidence
 
@@ -33,3 +33,38 @@ The events are additive.
 
 - Every staff action in Live, Community and Chat appears in the audit log with actor and reason.
 - A service without the moderate capability cannot vouch for staff.
+
+## Revisit at Wave 12 (2026-09-24): outcome
+
+Wave 12 (Games and mods) was the named revisit point, because mods could have made moderation a
+multi-product workflow. **Outcome: the decision stands.** Network stays the staff directory and
+the moderation audit log, enforcement stays with each owner, and no moderation service is created.
+
+Evidence:
+
+- **No cross-product workflow exists.** Each moderated thing has one owner:
+  - Chat moderates chat (channel-scoped bans, deletions; it emits `chat.moderation.action`).
+  - Community moderates pastes, threads and comments (`community.*.moderate`).
+  - Tips moderates interactions (`tips.interaction.moderated`).
+  - Billing logs staff money actions (`billing.staff.action`).
+  - Games installs, grants and revokes mods itself: installing is staff-only, audited in its own
+    `mod_audit`.
+
+  No queue, appeal or case spans two of them.
+- **Mods did not change that.** Games' mods are declarative packs installed by staff. There is no
+  self-service publishing, so there is no review queue. Mod signing and review are open owner
+  decisions (ADR-013 amendment of 2026-09-24).
+- **What is still missing is inside this decision, not a reason to change it.**
+  - Network does not consume `*.moderation.action` yet (requirement D05-R2), so the audit log has
+    no entries.
+  - Services still check raw roles. v0.34.0 adds the staff capability map
+    (`manifests/policy/staff-roles.json`): `user < streamer < global_mod < admin < owner` and the
+    `staff.*` capabilities each role holds. Network issues it as claims, and Live, Chat and
+    Community replace their raw checks with it.
+
+**Trigger for the next revisit** (at Wave 22 at the latest): the first workflow that no single
+owner can host, for example:
+
+- an appeal that crosses products;
+- one report queue for Chat, Community and Media;
+- a public mod marketplace with review.
