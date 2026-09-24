@@ -1,0 +1,30 @@
+{
+  "id": "live.discovery.read",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read Live's discovery surfaces (roadmap §30.2 live.discovery.*): the featured rotation, \"watch instead\" picks, the star of the day, the digest, home numbers, recently online streamers, recent VODs, and the content and AI-moments feeds. Public items only. There is no category directory and no channel search route yet; channel search belongs to OpenVibe.Search once Live publishes index documents.",
+  "permissions": [
+    "live:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "live-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/home/featured",
+    "GET /api/home/discover",
+    "GET /api/home/star",
+    "GET /api/home/digest",
+    "GET /api/home/hero",
+    "GET /api/home/stats-live",
+    "GET /api/home/stats/series/:metric",
+    "GET /api/home/pulse",
+    "GET /api/streams/recently-online",
+    "GET /api/streams/recent-vods",
+    "GET /api/content/feed",
+    "GET /api/content/moments"
+  ]
+}

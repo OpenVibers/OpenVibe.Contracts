@@ -1,0 +1,22 @@
+{
+  "id": "community.vote.set",
+  "version": "1.0",
+  "owner": "community",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED as its own grant: up-vote, down-vote or clear a vote (value 1, -1 or 0; 0 removes it, so there is no separate vote.remove) on a thread or a comment as the acting person (roadmap §30.2 community.vote.set|remove). Locked threads refuse; 60 votes a minute per person. The routes serve production today, guarded by community.post.create (threads) and community.comment.write (comments), which keep covering them.",
+  "inputSchema": "common.entity-ref@1",
+  "permissions": [
+    "community:vote"
+  ],
+  "resourceConstraints": [
+    "space_member"
+  ],
+  "quotaClass": "community-vote",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/spaces/:space/threads/:slug/votes",
+    "POST /api/v1/comments/:commentId/votes",
+    "POST /s/:space/t/:slug/vote"
+  ]
+}

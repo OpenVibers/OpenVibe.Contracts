@@ -1,0 +1,23 @@
+{
+  "id": "live.stream.read",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read broadcasts: who is live now with viewer counts, one stream with its endpoint, cameras and controls, recently ended streams with their public VOD, a slot's current session, and the went-live stream (/api/live-events, open CORS). Stream keys and the home ZIP are redacted. Anonymous callers are served; no grant is checked at Live's boundary (roadmap §30.2, sdk-live).",
+  "permissions": [
+    "live:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "live-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/streams",
+    "GET /api/streams/:id",
+    "GET /api/streams/recent",
+    "GET /api/streams/channel/:username/resolve/:ref",
+    "GET /api/live-events"
+  ]
+}

@@ -20,7 +20,11 @@
     "live.chat_mirror.write",
     "live.follower.read",
     "live.lineage.resolve",
-    "live.tips_delivery.write"
+    "live.tips_delivery.write",
+    "live.channel.read",
+    "live.stream.read",
+    "live.discovery.read",
+    "live.owner.resolve"
   ],
   "eventsProduced": [
     "live.stream.started",

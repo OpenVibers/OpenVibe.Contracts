@@ -1,0 +1,30 @@
+{
+  "id": "media.upload.create",
+  "version": "1.0",
+  "owner": "media",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED as its own grant: upload an object through the v2 objects API (roadmap §30.2 media.upload.init|sign|complete|abort, one grant because the steps share chained upload tokens): start a single presigned PUT or a resumable multipart session, send the bytes with the session token, then complete it (hash, quota and content-type checks, then ready) or abort it. The routes serve production today but Media's tenantAuth checks media.object.upload on them; a token holding only this id is refused until Media's guard accepts it.",
+  "permissions": [
+    "media:write"
+  ],
+  "resourceConstraints": [
+    "namespace",
+    "owner"
+  ],
+  "quotaClass": "media-upload",
+  "events": [
+    "media.object.uploaded"
+  ],
+  "implementedBy": [
+    "POST /api/v2/:app/objects",
+    "POST /api/v2/:app/objects/:id/upload-url",
+    "PUT /api/v2/:app/objects/:id/content",
+    "POST /api/v2/:app/objects/:id/complete",
+    "POST /api/v2/:app/objects/:id/multipart",
+    "GET /api/v2/:app/objects/:id/multipart/:uploadId",
+    "PUT /api/v2/:app/objects/:id/multipart/:uploadId/parts/:n",
+    "POST /api/v2/:app/objects/:id/multipart/:uploadId/complete",
+    "DELETE /api/v2/:app/objects/:id/multipart/:uploadId"
+  ]
+}

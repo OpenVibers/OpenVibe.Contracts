@@ -352,6 +352,33 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(/Package signing/.test(adr) && /Review process/.test(adr) && /open decisions for the owner/.test(adr) && /Monetization only through Billing/.test(adr), 'ADR-013 names signing and review as open owner decisions and monetization through Billing');
 }
 
+// ── Capability catalog gaps (v0.34.0, roadmap §30.2) ──────────────────────
+// Public reads that production serves to anyone are active; an action whose routes exist but are
+// guarded by an older id today is planned as its own grant, names those routes, and says which id
+// guards them; the package-only Publishing registers no capabilities.
+{
+    const gaps = {
+        'live.channel.read': 'active', 'live.stream.read': 'active', 'live.discovery.read': 'active', 'live.owner.resolve': 'planned',
+        'media.upload.create': 'planned', 'media.derivative.create': 'planned', 'media.derivative.read': 'planned', 'media.lifecycle.read': 'planned', 'media.lifecycle.transition': 'planned',
+        'community.space.read': 'active', 'community.space.manage': 'planned', 'community.thread.read': 'active', 'community.vote.set': 'planned', 'community.pulse.read': 'active',
+        'search.query.run': 'active',
+    };
+    for (const [id, status] of Object.entries(gaps)) {
+        const c = capabilities.get(id);
+        ok(c && c.status === status && id.startsWith(`${c.owner}.`), `${id} is ${status} and owned by its prefix`);
+        if (status === 'planned') ok(c.description.startsWith('PLANNED'), `${id}: a planned capability says so first`);
+        if (status === 'active') ok(c.visibility === 'public' && c.implementedBy.every(r => r.startsWith('GET ')), `${id}: an active §30.2 read is a public GET`);
+    }
+    for (const id of ['media.upload.create', 'media.derivative.create']) ok(/media\.object\.upload/.test(capabilities.get(id).description) && capabilities.get(id).implementedBy.length > 0, `${id} names its routes and the id that guards them today`);
+    ok(/media\.object\.read/.test(capabilities.get('media.lifecycle.read').description), 'media.lifecycle.read says media.object.read guards its routes today');
+    ok(/community\.post\.create/.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/.test(capabilities.get('community.vote.set').description), 'community.vote.set says which grants cover its routes today');
+    ok(capabilities.get('live.owner.resolve').implementedBy.length === 0 && capabilities.get('live.owner.resolve').outputSchema === 'lineage.resolution@1', 'live.owner.resolve has no public route yet and answers lineage.resolution@1');
+    ok(JSON.stringify(capabilities.get('search.query.run').implementedBy) === JSON.stringify(capabilities.get('search.query.delegate').implementedBy), 'search.query.run and search.query.delegate are the same routes, asked anonymously or for a person');
+    const pub = services.get('publishing');
+    ok(pub && pub.capabilities.length === 0 && pub.domains.length === 0 && !pub.health && /not registered as capabilities/.test(pub.notes), 'publishing is a library manifest with no capabilities (ADR-019)');
+    ok(!capabilities.manifests.some(c => c.id.startsWith('publishing.')), 'no publishing.* capability: the product capabilities cover those routes');
+}
+
 // ── Retired services (v0.34.0) ───────────────────────────────────────────
 // A retired manifest offers nothing: no domain, capability, event or namespace. Realtime was closed
 // by ADR-005 (realtime runs inside OpenVibe.Events), so it is retired, not a placeholder.

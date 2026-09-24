@@ -1,0 +1,19 @@
+{
+  "id": "live.owner.resolve",
+  "version": "1.0",
+  "owner": "live",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: the public form of the channel/owner resolver (roadmap §30.2, §15.10): which channel (id, slug, owner subject) a slug, slot, stream, or public VOD or clip belongs to, and how that was decided, answering unresolved rather than guessing; a display name alone resolves nothing. Unlike the internal live.lineage.resolve (GET|POST /internal/lineage/resolve, loopback, service token) it refuses legacy, Network and Media ids and treats private VODs and clips as not found. No public route exists yet; GET /api/streams/:id and GET /api/vods/:id/context answer part of it.",
+  "inputSchema": "lineage.resolve-request@1",
+  "outputSchema": "lineage.resolution@1",
+  "permissions": [
+    "live:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "live-read",
+  "events": [],
+  "implementedBy": []
+}

@@ -1,0 +1,19 @@
+{
+  "id": "community.space.manage",
+  "version": "1.0",
+  "owner": "community",
+  "status": "planned",
+  "visibility": "internal",
+  "description": "PLANNED: staff administration of spaces: create, rename, set visibility, and gate a space to one creator's VIP members. Only the members-only gate exists today (checked with community.comment.moderate plus a moderator); spaces are seeded by Community's database setup and nothing creates or edits them.",
+  "permissions": [
+    "community:moderate"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "community-moderate",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/spaces/:space/members-only"
+  ]
+}

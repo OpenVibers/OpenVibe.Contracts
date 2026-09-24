@@ -1,0 +1,21 @@
+{
+  "id": "community.pulse.read",
+  "version": "1.0",
+  "owner": "community",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read the network's public activity feed (Pulse): entity reference, title, URL and origin (user, ai or system), newest first with a cursor. Only public items are ever stored. Served to anyone (CORS allow-list for browsers). Live's /api/home/pulse is a different, Live-only feed.",
+  "outputSchema": "common.entity-ref@1",
+  "permissions": [
+    "community:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "community-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/pulse",
+    "GET /pulse"
+  ]
+}

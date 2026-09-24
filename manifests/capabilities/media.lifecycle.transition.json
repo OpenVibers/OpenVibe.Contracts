@@ -1,0 +1,24 @@
+{
+  "id": "media.lifecycle.transition",
+  "version": "1.0",
+  "owner": "media",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "PLANNED as its own grant: change an object's lifecycle (roadmap §30.2 media.lifecycle.transition): restore a soft-deleted object within retention, place or release retention holds (moderation, dmca, creator_pin, admin, evidence), and move VOD bytes between storage tiers. Soft delete itself is DELETE /api/v2/:app/objects/:id; no route sets archived. Today restore checks media.object.upload and holds and tier moves take an app key only.",
+  "permissions": [
+    "media:write"
+  ],
+  "resourceConstraints": [
+    "namespace",
+    "owner"
+  ],
+  "quotaClass": "media-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v2/:app/objects/:id/restore",
+    "POST /api/v2/:app/objects/:id/holds",
+    "DELETE /api/v2/:app/objects/:id/holds/:holdId",
+    "POST /api/v1/:app/admin/storage/tiers/move",
+    "POST /api/v1/:app/admin/storage/tiers/bulk-move"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "media.derivative.read",
+  "version": "1.0",
+  "owner": "media",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: list an object's derivatives and variants with how they relate (derived_from, variant kind), and read public thumbnails and live frames. Nothing returns the relationship and variant tables yet; the public thumbnail and live-frame routes and the job list filtered by object are the nearest reads today.",
+  "permissions": [
+    "media:read"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "media-read",
+  "events": [],
+  "implementedBy": [
+    "GET /t/:id",
+    "GET /live/:sel/frame.jpg",
+    "GET /api/v2/:app/jobs?object_id="
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "media.derivative.create",
+  "version": "1.0",
+  "owner": "media",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED as its own grant: derive new objects from an existing one as idempotent jobs (roadmap §30.2 media.derivative.*): object.split, object.remux or thumbnail.regenerate, and approve a proposed job. Derived objects are private and linked derived_from; the source never changes. Waveforms, sprites and previews are not built yet (roadmap §28.3 m3). The routes serve production today but Media checks media.object.upload on the jobs API (and an app key on the v1 thumbnail route); a token holding only this id is refused until Media's guard accepts it.",
+  "permissions": [
+    "media:write"
+  ],
+  "resourceConstraints": [
+    "namespace",
+    "owner"
+  ],
+  "quotaClass": "media-job",
+  "events": [
+    "media.job.proposed",
+    "media.job.queued",
+    "media.job.started",
+    "media.job.retrying",
+    "media.job.succeeded",
+    "media.job.failed",
+    "media.job.cancelled"
+  ],
+  "implementedBy": [
+    "POST /api/v2/:app/jobs",
+    "POST /api/v2/:app/jobs/:jobId/approve",
+    "POST /api/v1/:app/thumbnails/:kind/:id"
+  ]
+}

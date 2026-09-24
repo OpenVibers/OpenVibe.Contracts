@@ -1,0 +1,13 @@
+{
+  "version": "0.2.1",
+  "id": "publishing",
+  "name": "OpenVibe.Publishing",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Publishing",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "notes": "Shared publishing packages for the publication products (openvibe-publishing, ADR-019): revisions and diffs, scheduling, taxonomy, citations and the fact gate, media attachments, discussion references, the SEO indexability gate, feeds, redirects, authorship, index hooks (the *.index_document.* and publication events) and SSR helpers. A released library, not a runtime or an authority: tagged releases installed from https://codeload.github.com/OpenVibers/OpenVibe.Publishing/tar.gz/refs/tags/<tag> (v0.2.1 on 2026-09-23) and used by Wiki, Blog, News, Reviews, Deals, Coupons and Trade. Nothing to deploy or poll. The roadmap §30.2 Publishing row (publishing.revision.*, schedule.*, citation.*, seo.evaluate, feed.read, redirect.resolve) is deliberately not registered as capabilities: a package has no boundary where a grant could be checked, and every route that performs those actions belongs to a product that already names it (wiki.page.read|create, wiki.revision.propose|publish|revert, wiki.citation.attach, blog.post.*, blog.feed.read, news.story.read|revise|publish|retract, news.source.attach). The SDK's publishing subpath wraps those product capabilities."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "live.channel.read",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read a channel's public profile by username (the /@username page's data): metadata, owner display fields, follower count, live streams with playback endpoints, slots, and its public VODs and clips from Media. The owner and staff also see private listings; ingest keys are never returned. Anonymous callers are served (optionalAuth); no grant is checked at Live's boundary, and /api allows only OpenVibe origins for browsers. There is no public lookup by channel id yet (roadmap §30.2, sdk-live).",
+  "permissions": [
+    "live:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "live-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/streams/channel/:username",
+    "GET /api/streams/channel/:username/live",
+    "GET /api/streams/channel/:username/popular",
+    "GET /api/streams/channel/:username/clips-taken",
+    "GET /api/streams/channel/:username/bio-en",
+    "GET /api/auth/user/:username"
+  ]
+}

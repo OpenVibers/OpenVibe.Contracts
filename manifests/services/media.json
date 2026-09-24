@@ -14,7 +14,12 @@
   "health": "/healthz",
   "capabilities": [
     "media.object.upload",
-    "media.object.read"
+    "media.object.read",
+    "media.upload.create",
+    "media.derivative.create",
+    "media.derivative.read",
+    "media.lifecycle.read",
+    "media.lifecycle.transition"
   ],
   "eventsProduced": [
     "media.clip.failed",

@@ -1,0 +1,21 @@
+{
+  "id": "search.query.run",
+  "version": "1.0",
+  "owner": "search",
+  "status": "active",
+  "visibility": "public",
+  "description": "Query the network index as anyone (roadmap §30.2 search.query, search.suggest, search.facets.read): anonymous callers get public, published documents only, and a signed-in person's Network token adds the documents whose access list names them or their role. Covers title suggestions, facet counts (facets=, facet.<key>=) and reading one document; a document the caller may not see is the same 404 as a missing one. Served publicly at search.openvibe.network. A first-party service asking for a person uses search.query.delegate (today Search requires that id for any service token).",
+  "permissions": [
+    "search:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "search-query",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/search",
+    "GET /api/v1/suggest",
+    "GET /api/v1/documents/:owner/:type/:id"
+  ]
+}

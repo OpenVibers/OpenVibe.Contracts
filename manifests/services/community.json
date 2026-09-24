@@ -19,7 +19,12 @@
     "community.post.create",
     "community.comment.write",
     "community.comment.moderate",
-    "community.pulse.write"
+    "community.pulse.write",
+    "community.space.read",
+    "community.space.manage",
+    "community.thread.read",
+    "community.vote.set",
+    "community.pulse.read"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],
