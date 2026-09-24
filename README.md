@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.33.1 (first released in Wave 1). 95 schemas (66 of them event payloads), 30 service manifests, 176 capability manifests and 6 namespace manifests. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
+**Status:** alpha, v0.34.0 (first released in Wave 1). 147 schemas (117 of them event payloads), 31 service manifests, 191 capability manifests, 6 namespace manifests and the staff capability map. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -60,7 +60,7 @@ TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json).
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (30 services as of v0.30.0: 23 `alpha`, 1 `beta`, 5 `stable` and 1 `placeholder`, realtime; SDK and Shared are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (176 capabilities as of v0.33.0; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
+Manifests: `manifests/services/` (31 services as of v0.34.0: 24 `alpha`, 1 `beta`, 5 `stable` and 1 `retired`, realtime, which ADR-005 closed; SDK, Shared and Publishing are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (191 capabilities as of v0.34.0, 18 of them `planned`; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
@@ -84,7 +84,7 @@ Three `public` capabilities let a developer app (ADR-014) use OpenVibe.Events wi
 
 ## Event payload contracts (v0.30)
 
-Every event type has a payload contract, named after the type. The envelope's `version` is the contract's major, and the file is `contracts/events/payloads/<event_type>.v<version>.json`. The owner is the producing service, whose manifest lists the type in `eventsProduced`. Contracts with status `planned` describe events the owner does not emit yet (`ai.run.*`). `tools.job.*` are `active` since v0.33.0, because Tools publishes them.
+An event type's payload contract is named after the type. The envelope's `version` is the contract's major, and the file is `contracts/events/payloads/<event_type>.v<version>.json`. The owner is the producing service, whose manifest lists the type in `eventsProduced`. Contracts with status `planned` describe events the owner does not emit yet (`ai.run.*`). `tools.job.*` are `active` since v0.33.0, because Tools publishes them. v0.34.0 added News, Reviews, Coupons, Deals, Trade, Games and `media.object.deleted|visibility_changed` (51, all emitted today). Listed events still without a contract: `chat.message.created`, `chat.dm.created`, `chat.moderation.action`, `codes.app.*` (3), `host.deploy.*` and `host.domain.verified` (4), `media.vod.*`, `media.clip.*`, `media.object.uploaded`, `media.storage.*` (7), `network.app.*`, `network.credential.*`, `network.grant.changed` (5) and `openre.*` (7).
 
 ```js
 if (env.payload.redacted === true) return;                               // a tombstone (events.tombstone-payload@1)
@@ -123,6 +123,32 @@ One resolver answers "which channel, and whose, is this?" for channel, stream, V
 | 8 | `legacy_ids` | `legacy_map` | legacy_map |
 
 The first input that resolves decides. Every other input that resolves must name the same channel, or the answer is `unresolved` with reason `conflict`. A clip belongs to the clipped channel, never to the clipper. A display name never resolves anything: a request holding only one is answered `unresolved`, `display_name_only`.
+
+## Staff capability map (v0.34)
+
+Staff roles and what each may do are one contract, `policy.staff-role-map@1`, and one map,
+`manifests/policy/staff-roles.json` (ADR-022). OpenVibe.Network owns the roles and issues the
+capabilities as claims in its user tokens, and every service checks a `staff.*` capability instead of
+comparing role names:
+
+```js
+contracts.staff.can(req.user, 'staff.moderation.bans');   // claims { role, is_owner, staff_caps? }
+contracts.staff.capabilitiesOf('global_mod');             // what a role holds
+```
+
+- Roles, lowest first: `user < streamer < global_mod < admin < owner`. A role holds everything below
+  it. `user` and `streamer` hold no staff capability.
+- `owner` is not a stored role. Tokens carry `role: admin` plus `is_owner: true`, and a role claim of
+  `owner` counts as `user`.
+- Secrets, money, loyalty grants and making admins are the owner's alone.
+- Until Network issues `staff_caps`, `can()` derives them from the role, so the answer is the same
+  before and after.
+- Channel powers stay with the product and are not staff capabilities: channel owner, channel
+  moderators, stream owner and call creator are listed under `local`.
+- Each capability lists the role checks it replaces (`gates`, per service, file:line), so adoption in
+  Live, Chat and Community is a mechanical swap.
+- Staff capabilities never appear in service, app or mod tokens, and are never delegated
+  (ADR-003 amendment).
 
 ## Tools platform API (v0.33)
 

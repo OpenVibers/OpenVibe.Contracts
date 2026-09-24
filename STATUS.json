@@ -5,5 +5,5 @@
   "wave": "W1",
   "dependsOn": ["OpenVibe.Network"],
   "plan": "OpenVibe Development Roadmap (combined), Wave 1; implementation plan rev 3 section 3.1",
-  "updated": "2026-09-23"
+  "updated": "2026-09-24"
 }

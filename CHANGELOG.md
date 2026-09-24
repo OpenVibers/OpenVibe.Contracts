@@ -4,6 +4,151 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.34.0 — 2026-09-24
+
+Additive: `compat.js` reports no breaking change against v0.33.1. Closes the Contracts rows of the
+roadmap completeness audit (§28.3, §30.2, W1 D7, W12, W22).
+
+**51 event payload contracts**, all `active`: every one is emitted by its producer's code today.
+Each was read from the emitter and its call sites. News, Reviews and Deals were also checked against
+envelopes captured from their own code, and Trade against its one production outbox row.
+
+- News (11): `news.source.ingested|failed`, `news.cluster.updated`,
+  `news.story.created|flagged|published|updated|unpublished|retracted`, `news.index_document.*`.
+- Reviews (9): `reviews.entity.merged|split`, `reviews.signal.added|removed`,
+  `reviews.summary.published|updated|unpublished`, `reviews.index_document.*`.
+- Coupons (8): `coupons.coupon.created|updated|expired|disabled`, `coupons.report.created`,
+  `coupons.confidence.changed`, `coupons.index_document.*`.
+- Deals (6): `deals.offer.created|updated|expired`, `deals.vote.changed`, `deals.index_document.*`.
+- Trade (5): `trade.observation.created`, `trade.source.stale|recovered`, `trade.index_document.*`.
+- Games (10): `games.player.joined|left`, `games.skill.leveled`, `games.blueprint.unlocked`,
+  `games.world.saved`, `games.mod.installed|enabled|disabled|grants_changed|revoked`.
+- Media (2): `media.object.deleted` and `media.object.visibility_changed` (OpenVibe.Media 039dc48).
+  Triggers stage them in the transaction that changes the object, and the outbox writes them there.
+  They carry identity and state only: never the title, owner, storage keys or size. A
+  visibility change never repeats the value. The media manifest now lists both.
+
+Every `*.index_document.upserted` is a `search.index-document@1` with the owner fixed. Every
+`.deleted` is a `{ type, id, revision }` tombstone.
+
+Community lists no `eventsProduced`, because it emits nothing yet, so there is no `community.*`
+contract. 29 listed events still have no contract:
+
+- chat: 3
+- codes: 3
+- host: 4
+- media: `vod.*`, `clip.*`, `object.uploaded` and `storage.*`, 7 in all
+- network: 5
+- openre: 7
+
+Found while reading the producers (fixes belong in those repos):
+
+- **News drops some flag events.** `stories.js:238` sends `priority: 'normal'` for `source_updated`
+  flags. The envelope allows only `critical|important|low`, so Events refuses them.
+- **Coupons can publish service notes.** A calling service's note is copied into the public event's
+  `reason`.
+- **Deals under-reports changes.** On the importer paths, `changed` can leave out a `product_id` or
+  `expires_at` change.
+
+**ADR amendments** (dated 2026-09-24):
+
+- **ADR-003, delegated authorization.**
+  - Who may name the acting person, and the rule that a call gets the intersection of the app's
+    grants, the approved scopes and the person's own rights.
+  - Staff power and money are never delegated. Tokens last 5 minutes and cannot be refreshed. Audit
+    names both the app and the person.
+  - The approval UX in force today, and what Network still owes: the capability list on the chooser,
+    stored authorizations, and connected apps with revoke.
+- **ADR-006:**
+  - four placement classes: canonical, hot cache, asset origin, local scratch;
+  - `local` as the first-class dev provider;
+  - the infrequent-access tier deferred at 2,839 objects / 481 GB.
+- **ADR-007:**
+  - PgBouncer transaction pooling;
+  - replicas only for reads that tolerate lag;
+  - SERIALIZABLE plus ordered row locks and 40001 retries on money paths;
+  - Redis never authoritative.
+- **ADR-012:**
+  - The roadmap's ledger names mapped to Billing's transaction types and legs: platform fee,
+    creator earning, payout hold and release, compensating reversals.
+  - OpenCoins stays in Network. This supersedes the Wave 8 line "Network's OpenCoins wallet becomes
+    a Billing client".
+  - Billing's `cashouts`, reversal transactions and VIP plans replace the roadmap's `payouts`,
+    `refunds` and `plans` tables.
+- **ADR-013:**
+  - Package signing and review are named as open owner decisions.
+  - Mod monetization goes only through Billing and VIP primitives.
+  - The manifest 1.1.0 fields (below).
+- **ADR-021, extraction decided.** There is no analytics service. Analytics stays per service through
+  `openvibe-shared/analytics`, and the schema stays in Shared. The decision rests on measured volume:
+  Live has 1.78M raw events in 30 days (58k a day, 502 MB). The ADR names the triggers for a revisit.
+- **ADR-022, the Wave 12 revisit.** The decision stands. The ADR names the trigger for the next
+  revisit.
+
+**Realtime is `retired`** (ADR-005), not a placeholder. A retired manifest offers no domain,
+capability, event, namespace or health path.
+
+**Staff capability map** (W1 D7, ADR-022): a new contract, `policy.staff-role-map@1` (owner `network`), and the map
+in force, `manifests/policy/staff-roles.json`.
+
+- **Roles:** `user < streamer < global_mod < admin < owner`. `owner` is never a stored role: it is
+  `role: admin` plus the `is_owner` claim. `user` and `streamer` hold no staff capability.
+- **32 `staff.<area>.<action>` capabilities**, each with the lowest role that holds it:
+  - 12 for `global_mod`, including `staff.moderation.chat|calls|channels|bans|ip|logs|bypass|pastes|discussions`,
+    `staff.content.view_private` and `staff.content.hide`;
+  - 15 for `admin`, including `staff.users.manage`, `staff.roles.assign`, `staff.site.view|configure`
+    and `staff.streams.end|manage`;
+  - 5 for `owner`: `staff.roles.grant_admin`, `staff.secrets.manage`,
+    `staff.money.freeze|cashouts` and `staff.loyalty.grant`.
+
+  Each lists the file:line role checks it replaces in Live (210 sites inventoried), Chat, Community,
+  Network and Billing.
+- **Local powers:** channel and self powers stay with the product and are not staff capabilities.
+  They are listed under `local`.
+- **Claims** that Network issues: `role`, `is_owner` and `staff_caps`.
+- **Rules** that a capability alone does not express:
+  - rank and owner protection;
+  - no staff power in service, app or mod tokens, and none through delegation;
+  - vouching only with the moderate capability;
+  - roles change only in Network;
+  - every action is reported to the moderation log.
+- **`contracts.staff`:** `roles`, `effectiveRole`, `atLeast`, `capabilitiesOf` and `can`. Issued
+  `staff_caps` win over the role. A family grant (`staff.moderation.*`) stays inside one area, and
+  there is no `staff.*` wildcard.
+- **Adoption comes later:** Network issuing the claims, and Live, Chat and Community replacing
+  their raw role checks.
+
+**Capability catalog gaps** (roadmap §30.2), 15 capabilities checked against each service's routes
+and production:
+
+- **Active:** public reads that production serves to anyone:
+  - `live.channel.read`, `live.stream.read` and `live.discovery.read`;
+  - `community.space.read`, `community.thread.read` and `community.pulse.read`;
+  - `search.query.run`: the public index query, suggest and document read. Service tokens keep using
+    `search.query.delegate`.
+- **Planned:** each names its current routes and the id that guards them today:
+  - `live.owner.resolve`: there is no public route yet; `live.lineage.resolve` stays internal;
+  - `media.upload.create`, `media.derivative.create`, `media.derivative.read`,
+    `media.lifecycle.read` and `media.lifecycle.transition`: Media's guard checks
+    `media.object.upload` / `media.object.read` until it accepts these ids;
+  - `community.space.manage`;
+  - `community.vote.set`: value 0 removes a vote, so there is no `vote.remove`.
+- **New `publishing` library manifest** (openvibe-publishing v0.2.1, ADR-019), with no `publishing.*`
+  capability. A package has no grant boundary, and the product capabilities (`wiki.*`, `blog.*`,
+  `news.*`) already cover those routes. Network's registry-exposure test needs a `publishing` entry
+  before Network moves to this release.
+
+**`mods.mod-manifest@1` 1.0.0 → 1.1.0** (roadmap §28.3 m6). Every 1.0.0 manifest stays valid. The new
+fields are all optional:
+
+- `permissions.readGrants` / `writeGrants` split namespace access into read-only and read-write.
+- `billingHooks`: `[{ kind: entitlement|checkout, key, description? }]`, never a price.
+- `dependencies`: `[{ id: mod_…, version: <range>, optional? }]`.
+
+Games still validates a local 1.0.0 copy.
+
+**Manifests:** the Deals notes now say that Network consumes `deals.watch.matched`.
+
 ## 0.33.1 — 2026-09-23
 
 Additive: `compat.js` reports no breaking change against v0.33.0.
