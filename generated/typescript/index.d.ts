@@ -3451,9 +3451,9 @@ export interface SourceItem {
   revisions?: unknown[];
 }
 
-/** mods.mod-manifest@1.0.0 (owner: contracts) */
+/** mods.mod-manifest@1.1.0 (owner: contracts) */
 /**
- * A mod as the platform knows it (ADR-013): who publishes it, which runtime runs it, which capabilities it asks for and the resources it may use. Requested capabilities are only a request: the install's approved subset is the grant, and trust tiers are install metadata that never change a grant check. The runtime-specific payload (a data pack, a script bundle) is not part of the manifest.
+ * A mod as the platform knows it (ADR-013): who publishes it, which runtime runs it, which capabilities it asks for and the resources it may use. Requested capabilities are only a request: the install's approved subset is the grant, and trust tiers are install metadata that never change a grant check. The runtime-specific payload (a data pack, a script bundle) is not part of the manifest. 1.1.0 (openvibe-contracts v0.34.0) adds the optional permissions.readGrants and writeGrants, billingHooks and dependencies (ADR-013 amendment of 2026-09-24); every 1.0.0 manifest stays valid.
  */
 export interface ModManifest {
   /**
@@ -3489,17 +3489,51 @@ export interface ModManifest {
      */
     events?: string[];
     /**
-     * User-module namespaces the mod wants to read or write (a trailing .* names a family).
+     * User-module namespaces the mod wants to read or write (a trailing .* names a family). A namespace listed here may be read and written; readGrants and writeGrants (1.1.0) say which.
      *
      * @maxItems 32
      */
     modules?: string[];
     /**
-     * Media namespaces the mod wants to read or write.
+     * Media namespaces the mod wants to read or write. A namespace listed here may be read and written; readGrants and writeGrants (1.1.0) say which.
      *
      * @maxItems 32
      */
     mediaNamespaces?: string[];
+    /**
+     * 1.1.0: namespaces the mod may only read. A namespace that is only here is read-only. The install's approved subset is still the grant.
+     */
+    readGrants?: {
+      /**
+       * User-module namespaces (a trailing .* names a family).
+       *
+       * @maxItems 32
+       */
+      modules?: string[];
+      /**
+       * Media namespaces.
+       *
+       * @maxItems 32
+       */
+      mediaNamespaces?: string[];
+    };
+    /**
+     * 1.1.0: namespaces the mod may read and write. A write needs the namespace here, or in the older modules and mediaNamespaces lists, which mean read and write.
+     */
+    writeGrants?: {
+      /**
+       * User-module namespaces (a trailing .* names a family).
+       *
+       * @maxItems 32
+       */
+      modules?: string[];
+      /**
+       * Media namespaces.
+       *
+       * @maxItems 32
+       */
+      mediaNamespaces?: string[];
+    };
   };
   /**
    * The budget the mod asks for. Runtimes meter it; the sandbox that enforces it lives in OpenVibe.Host (Stage C).
@@ -3535,6 +3569,35 @@ export interface ModManifest {
     contracts?: string;
   };
   homepage?: string;
+  /**
+   * 1.1.0: how the mod takes part in money, only through Billing and VIP primitives (ADR-013 amendment, ADR-012). entitlement: the mod checks that the person holds this entitlement (billing.entitlement.check or vip.entitlement.check, granted like any other capability). checkout: the mod sends the person to the platform's own checkout for this plan (vip.membership.checkout or a Billing intent). A mod never takes payment, sees payment details or holds a balance. Prices live in Billing and VIP, never in the manifest.
+   *
+   * @maxItems 32
+   */
+  billingHooks?: {
+    kind: "entitlement" | "checkout";
+    /**
+     * The entitlement or plan key as Billing and VIP name it, e.g. vip.plan:pln_01jab… (lowercase, the form search.index-document@1 acl.entitlements uses).
+     */
+    key: string;
+    /**
+     * What it unlocks or sells, shown at install.
+     */
+    description?: string;
+  }[];
+  /**
+   * 1.1.0: other mods this release needs. A runtime refuses to enable the mod while a required dependency is not installed, not enabled or outside its range. An optional one is used only when present.
+   *
+   * @maxItems 32
+   */
+  dependencies?: {
+    id: string;
+    /**
+     * Semver range of the dependency's releases this release works with, e.g. ">=1.2.0 <2.0.0".
+     */
+    version: string;
+    optional?: boolean;
+  }[];
 }
 
 /** codes.app-manifest@1.0.0 (owner: codes) */

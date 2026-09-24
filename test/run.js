@@ -305,6 +305,30 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     }
 }
 
+// ── Mod manifest 1.1.0 (v0.34.0, ADR-013 amendment) ──────────────────────
+// Read/write grants, billing hooks and dependencies are optional, so every 1.0.0 manifest stays
+// valid; the split uses exactly the namespace patterns of the older lists; money goes only through
+// Billing/VIP keys, never a price in the manifest.
+{
+    const fixture = (kind, f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/mods.mod-manifest', kind, f), 'utf8'));
+    const M = (v) => contracts.validate('mods.mod-manifest@1', v).valid;
+    const s = contracts.schema('mods.mod-manifest');
+    ok(contracts.resolve('mods.mod-manifest').version === '1.1.0', 'mods.mod-manifest is 1.1.0');
+    const full = fixture('valid', 'market-stall-1.1.json');
+    ok(M(full) && full.billingHooks && full.dependencies && full.permissions.readGrants && full.permissions.writeGrants, 'a 1.1.0 manifest with every new field is valid');
+    const { billingHooks, dependencies, ...v10 } = full;
+    const { readGrants, writeGrants, ...perms10 } = full.permissions;
+    ok(M({ ...v10, permissions: perms10 }) && M(fixture('valid', 'town-square.json')), 'a manifest without the 1.1.0 fields (1.0.0) stays valid');
+    ok(['billingHooks', 'dependencies'].every(k => !s.required.includes(k)) && !s.properties.permissions.required.some(k => /Grants$/.test(k)), 'the 1.1.0 fields are optional');
+    const p = s.properties.permissions.properties;
+    for (const k of ['readGrants', 'writeGrants']) ok(p[k].properties.modules.items.pattern === p.modules.items.pattern && p[k].properties.mediaNamespaces.items.pattern === p.mediaNamespaces.items.pattern, `${k} takes the same namespace patterns as modules/mediaNamespaces`);
+    ok(s.properties.billingHooks.items.properties.key.pattern === contracts.schema('search.index-document').properties.acl.properties.entitlements.items.pattern, 'a billing hook key is an entitlement key as Search and VIP write it');
+    ok(JSON.stringify(s.properties.billingHooks.items.properties.kind.enum) === '["entitlement","checkout"]' && !M({ ...full, billingHooks: [{ ...full.billingHooks[1], amount_cents: 499 }] }), 'a billing hook checks an entitlement or opens a platform checkout; it never carries a price');
+    ok(!M({ ...full, dependencies: [{ id: full.id }] }) && M({ ...full, dependencies: [{ id: full.dependencies[0].id, version: '*', optional: false }] }), 'a dependency names a mod and a range');
+    const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/ADR-013-mod-manifest.md'), 'utf8');
+    ok(/Package signing/.test(adr) && /Review process/.test(adr) && /open decisions for the owner/.test(adr) && /Monetization only through Billing/.test(adr), 'ADR-013 names signing and review as open owner decisions and monetization through Billing');
+}
+
 // ── Retired services (v0.34.0) ───────────────────────────────────────────
 // A retired manifest offers nothing: no domain, capability, event or namespace. Realtime was closed
 // by ADR-005 (realtime runs inside OpenVibe.Events), so it is retired, not a placeholder.

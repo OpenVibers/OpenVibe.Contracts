@@ -1,0 +1,24 @@
+{
+  "id": "mod_01JABCDEFGHJKMNPQRSTVWXYZ1",
+  "name": "Market Stall",
+  "version": "1.2.0",
+  "description": "A members-only stall that reads the player's profile summary and keeps its own notes.",
+  "publisher": { "type": "user", "id": "usr_01JABCDEFGHJKMNPQRSTVWXYZ0" },
+  "target": "games.browser",
+  "runtime": "games-content@1",
+  "permissions": {
+    "capabilities": ["games.prop.place", "vip.entitlement.check"],
+    "readGrants": { "modules": ["games.progress.summary"], "mediaNamespaces": ["games.maps"] },
+    "writeGrants": { "modules": ["games.market_stall.*"] }
+  },
+  "resources": { "cpuMs": 2, "memoryMb": 16, "storageMb": 5 },
+  "compatibility": { "runtime": ">=1.0.0 <2.0.0", "contracts": ">=0.34.0 <1.0.0" },
+  "billingHooks": [
+    { "kind": "entitlement", "key": "vip.plan:pln_01jabcdefghjkmnpqrstvwxyz2", "description": "Opens the stall for the creator's VIP members." },
+    { "kind": "checkout", "key": "vip.plan:pln_01jabcdefghjkmnpqrstvwxyz2" }
+  ],
+  "dependencies": [
+    { "id": "mod_01JABCDEFGHJKMNPQRSTVWXYZ0", "version": ">=1.0.0 <2.0.0" },
+    { "id": "mod_01JABCDEFGHJKMNPQRSTVWXYZ3", "version": "^0.3.0", "optional": true }
+  ]
+}

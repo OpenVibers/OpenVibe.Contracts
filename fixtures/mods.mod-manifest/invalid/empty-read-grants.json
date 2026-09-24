@@ -1,0 +1,1 @@
+{ "id": "mod_01JABCDEFGHJKMNPQRSTVWXYZ1", "name": "X", "version": "1.0.0", "publisher": { "type": "user", "id": "usr_01JABCDEFGHJKMNPQRSTVWXYZ0" }, "target": "games.browser", "runtime": "games-content@1", "resources": { "cpuMs": 1, "memoryMb": 0, "storageMb": 0 }, "compatibility": { "runtime": ">=1.0.0" }, "permissions": { "capabilities": [], "readGrants": {} } }
