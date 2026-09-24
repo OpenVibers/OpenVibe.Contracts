@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "roles": [
     {
       "id": "user",
@@ -193,6 +193,34 @@
       }
     },
     {
+      "id": "staff.content.moderate",
+      "minRole": "global_mod",
+      "since": "1.1.0",
+      "description": "Moderate what people publish on the content products: see private, draft and suspended items; hide, unpublish, disable, retract, take down or delete someone else's blog posts, deals, coupons, Codes releases and projects, and Host sites; decide flags and review queues. Never the owner's content. Every use is reported as <service>.moderation.action.",
+      "gates": {
+        "blog": [
+          "domain/access.js:105,106,120,130 isStaff (moderation on any blog; suspended blogs)",
+          "http/editor.js:79,86,97; http/api.js:66,69,234,293; http/public.js:64,74; domain/posts.js:215"
+        ],
+        "deals": [
+          "auth/viewer.js:71 STAFF_ROLES admin|global_mod",
+          "domain/access.js:18,25; domain/offers.js:281 requireStaff; domain/flags.js:67; http/api.js:76,145; http/pages.js:172,367"
+        ],
+        "coupons": [
+          "auth/viewer.js:43 role admin",
+          "http/public.js:296 /staff review pages"
+        ],
+        "codes": [
+          "auth/sso.js:109 role admin",
+          "domain/releases.js:71 revoke any release; http/portal.js:248,646 delete any project, revoke"
+        ],
+        "host": [
+          "auth/viewer.js:67 STAFF_ROLES admin",
+          "domain/access.js:73 read/maintain/delete any project; domain/takedowns.js:49,55 takedowns"
+        ]
+      }
+    },
+    {
       "id": "staff.site.view",
       "minRole": "admin",
       "description": "Read operations data: diagnostics, statistics, all streams, storage, analytics, OpenRe status, money state and AI usage.",
@@ -220,6 +248,57 @@
         ],
         "chat": [
           "chat/tts-routes.js:112,117,130,140,162"
+        ],
+        "codes": [
+          "domain/trust.js:23 app trust tiers; http/pages.js:244,257 /staff"
+        ],
+        "host": [
+          "domain/access.js:68 quotas (domain/projects.js:128 setQuota)"
+        ],
+        "vip": [
+          "api/auth.js:72 VIP_STAFF_ROLES → network plans and other creators' plans (api/v1.js:64,68,78; web/routes.js:31,119)"
+        ]
+      }
+    },
+    {
+      "id": "staff.editorial.manage",
+      "minRole": "admin",
+      "since": "1.1.0",
+      "description": "Editorial powers over the network's own publications: own the official blog and official wiki spaces and create official spaces; write, publish and retract News stories and manage clusters; curate Reviews entities (create, edit, merge, split, confirm, import); write and retract Trade context and instruments; manage Coupons merchants, whose submissions publish as staff. Products may also name their own editors (a product role, not staff).",
+      "gates": {
+        "blog": [
+          "domain/access.js:42 official blog owner"
+        ],
+        "wiki": [
+          "auth/viewer.js:86 STAFF_ROLES admin|global_mod",
+          "wiki/access.js:36 owner of official spaces; wiki/service.js:497 create official spaces; http/pages.js:117,123"
+        ],
+        "news": [
+          "auth/viewer.js:71 STAFF_ROLES admin",
+          "domain/access.js:20 editor powers"
+        ],
+        "reviews": [
+          "auth/viewer.js:86 STAFF_ROLES admin|global_mod",
+          "reviews/access.js:29 isEditor"
+        ],
+        "trade": [
+          "auth/viewer.js:72 role admin",
+          "domain/context.js:76,181; http/api.js:91,174; http/editor.js:31; http/pages.js:108"
+        ],
+        "coupons": [
+          "http/api.js:105 requireStaffOrService (merchants, coupon status); http/public.js:250 and api.js:164 staff-origin submissions"
+        ]
+      }
+    },
+    {
+      "id": "staff.games.manage",
+      "minRole": "admin",
+      "since": "1.1.0",
+      "description": "Operate OpenVibe.Games: the map editor and noclip edit mode, and installing, enabling and revoking mods and their grants.",
+      "gates": {
+        "games": [
+          "apps/server/src/net/networkAuth.ts:91-103 owner by username, role admin → canEditMap",
+          "httpServer.ts:85; editorWs.ts:250; platform/staffAuth.ts:94; game/gameServer.ts:561"
         ]
       }
     },
@@ -452,7 +531,8 @@
   "claims": {
     "role": "role",
     "owner": "is_owner",
-    "capabilities": "staff_caps"
+    "capabilities": "staff_caps",
+    "map": "staff_map"
   },
   "local": [
     {

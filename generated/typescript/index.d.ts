@@ -5280,6 +5280,10 @@ export interface StaffRoleMap {
        * The lowest role that holds it; must be a staff role in roles.
        */
       minRole: string;
+      /**
+       * The map version that added this capability. A token whose issued staff_caps come from an older map (its staff_map claim is lower, or absent = 1.0.0) is judged for it by its role instead, so an addition reaches existing tokens at once.
+       */
+      since?: string;
       description: string;
       /**
        * Where the raw role check this capability replaces lives today, per service (file:line and what it guards). Adoption swaps each for a capability check.
@@ -5300,6 +5304,10 @@ export interface StaffRoleMap {
        * The lowest role that holds it; must be a staff role in roles.
        */
       minRole: string;
+      /**
+       * The map version that added this capability. A token whose issued staff_caps come from an older map (its staff_map claim is lower, or absent = 1.0.0) is judged for it by its role instead, so an addition reaches existing tokens at once.
+       */
+      since?: string;
       description: string;
       /**
        * Where the raw role check this capability replaces lives today, per service (file:line and what it guards). Adoption swaps each for a capability check.
@@ -5328,6 +5336,10 @@ export interface StaffRoleMap {
      * Array claim of the staff capabilities the effective role holds, issued only to staff.
      */
     capabilities: string;
+    /**
+     * String claim: the version of this map the issued capabilities come from (absent means 1.0.0).
+     */
+    map?: string;
   };
   /**
    * Channel-scoped or self-scoped powers that are not staff capabilities and stay with the product that owns the resource.

@@ -36,6 +36,7 @@
         "properties": {
           "id": { "type": "string", "pattern": "^staff\\.[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$", "description": "staff.<area>.<action>." },
           "minRole": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "The lowest role that holds it; must be a staff role in roles." },
+          "since": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "The map version that added this capability. A token whose issued staff_caps come from an older map (its staff_map claim is lower, or absent = 1.0.0) is judged for it by its role instead, so an addition reaches existing tokens at once." },
           "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
           "gates": {
             "type": "object",
@@ -54,7 +55,8 @@
       "properties": {
         "role": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "The stored role (user, streamer, global_mod or admin). owner is never stored as a role." },
         "owner": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "Boolean claim, true only for the owner account. With role admin it makes the effective role owner; on any other role it is ignored." },
-        "capabilities": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "Array claim of the staff capabilities the effective role holds, issued only to staff." }
+        "capabilities": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "Array claim of the staff capabilities the effective role holds, issued only to staff." },
+        "map": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "String claim: the version of this map the issued capabilities come from (absent means 1.0.0)." }
       }
     },
     "local": {

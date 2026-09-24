@@ -388,7 +388,16 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(staff.can({ role: 'user', staff_caps: ['staff.moderation.*'] }, 'staff.moderation.bans') && !staff.can({ role: 'admin', staff_caps: ['staff.moderation.*'] }, 'staff.users.manage'), 'issued staff_caps win over the role, and a family grant stays in its area');
     ok(!staff.can({ staff_caps: ['staff.*'] }, 'staff.money.freeze') && !staff.can({ staff_caps: ['staff.moderation'] }, 'staff.moderation.chat'), 'there is no staff-wide wildcard, and a prefix without .* grants nothing');
     assert.throws(() => staff.can(owner, 'staff.nope.nope'), /unknown staff capability/);
-    ok(JSON.stringify(map.claims) === '{"role":"role","owner":"is_owner","capabilities":"staff_caps"}', 'claims: role, is_owner, staff_caps');
+    ok(JSON.stringify(map.claims) === '{"role":"role","owner":"is_owner","capabilities":"staff_caps","map":"staff_map"}', 'claims: role, is_owner, staff_caps, staff_map');
+    // Additions reach tokens issued from an older map through the role (v0.38.0, map 1.1.0).
+    const ver = (x) => x.split('.').map(Number).reduce((a, n) => a * 1000 + n, 0);
+    ok(map.capabilities.every(c => !c.since || ver(c.since) <= ver(map.version)), 'no capability is newer than the map');
+    for (const id of ['staff.content.moderate', 'staff.editorial.manage', 'staff.games.manage']) ok(staff.get(id) && staff.get(id).since === '1.1.0', `${id} arrived in map 1.1.0`);
+    const oldAdmin = { role: 'admin', staff_caps: staff.capabilitiesOf('admin').filter(id => !staff.get(id).since) };
+    ok(staff.can(oldAdmin, 'staff.editorial.manage') && staff.can({ ...oldAdmin, staff_map: '1.0.0' }, 'staff.games.manage'), 'a token from map 1.0.0 gets 1.1.0 capabilities from its role');
+    ok(!staff.can({ ...oldAdmin, staff_map: '1.1.0' }, 'staff.editorial.manage'), 'a token from map 1.1.0 holds only what was issued');
+    ok(!staff.can({ role: 'global_mod', staff_caps: ['staff.moderation.chat'] }, 'staff.editorial.manage') && staff.can({ role: 'global_mod', staff_caps: ['staff.moderation.chat'] }, 'staff.content.moderate'), 'the role decides, never more than it holds');
+    ok(!staff.can({ role: 'admin', staff_caps: ['staff.moderation.chat'] }, 'staff.users.manage'), 'capabilities from map 1.0.0 still come only from what was issued');
     ok(map.rules.some(x => /never delegated/.test(x)) && map.rules.some(x => /equal or higher/.test(x)) && map.rules.some(x => /owner's account/.test(x)), 'rules: no delegation, rank protection, owner protection');
     const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/ADR-022-moderation-console.md'), 'utf8');
     ok(/manifests\/policy\/staff-roles\.json/.test(adr), 'ADR-022 points at the staff map');

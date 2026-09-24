@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.38.0 — 2026-09-24
+
+Staff map 1.1.0 (ADR-022), so the content products and Games can check staff capabilities instead of comparing role names:
+
+- **`staff.content.moderate`** (global_mod): moderate what people publish on Blog, Deals, Coupons, Codes and Host.
+- **`staff.editorial.manage`** (admin): the network's own publications: the official blog and wiki spaces, News stories, Reviews entities, Trade context, Coupons merchants.
+- **`staff.games.manage`** (admin): the Games map editor and mod administration.
+- **`since` and the `staff_map` claim.** Capabilities record the map version that added them, and Network issues `staff_map` with `staff_caps`. `staff.can()` judges a capability newer than a token's map by the token's role, so an addition reaches existing tokens (which live for days) at once. What a token was issued still wins for everything its map knew.
+
+Additive.
+
 ## 0.37.0 — 2026-09-24
 
 `network.integration.github.read` (first-party only) lets a service read the network's GitHub API token. The owner sets the token in Network's admin panel, or in `GITHUB_TOKEN`. OpenVibe.Blog's network changelog uses it, so its GitHub calls do not share the host's anonymous rate limit. It is never granted to apps or mods. Additive.
