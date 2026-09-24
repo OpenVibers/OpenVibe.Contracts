@@ -16101,6 +16101,162 @@
           }
         }
       }
+    },
+    "chat.moderation.action": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/chat.moderation.action.v1.json",
+        "title": "ChatModerationActionPayload",
+        "description": "chat.moderation.action v1 (OpenVibe.Chat server/db/database.js logModerationAction). A staff or channel moderator action in chat or in Live (Live's moderation log is written through the chat bridge): bans and unbans (site, channel, IP/CIDR), timeouts, message deletes and purges, slow/sub-only modes, and the like. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).",
+        "type": "object",
+        "required": [
+          "action_id",
+          "action_type",
+          "scope_type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "action_type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "ban, unban, timeout, delete_message, purge, slow_mode, ip_ban, … as Chat and Live name them."
+          },
+          "scope_type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "description": "site, channel, stream, room, …"
+          },
+          "scope_id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "actor_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Legacy Live user id of the actor (kept while subjects are adopted)."
+          },
+          "actor_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "target_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "details": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "community.moderation.action": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/community.moderation.action.v1.json",
+        "title": "CommunityModerationActionPayload",
+        "description": "community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "type": "object",
+        "required": [
+          "action",
+          "target",
+          "actor_subject"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "paste.edited",
+              "paste.deleted",
+              "paste.visibility_changed",
+              "paste.censored",
+              "pastes.bulk",
+              "forks.deleted",
+              "comment.deleted",
+              "thread.deleted",
+              "thread.locked",
+              "thread.unlocked",
+              "post.deleted"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "enum": [
+                  "paste",
+                  "paste_comment",
+                  "comment",
+                  "thread",
+                  "post",
+                  "pastes"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "owner_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Whose content it was, when known."
+              }
+            }
+          },
+          "actor_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The staff member (null only for a service acting without a person)."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "details": {
+            "type": "object",
+            "description": "Per action: the fields changed, a bulk action's name and count, … never the content."
+          }
+        }
+      }
     }
   }
 }

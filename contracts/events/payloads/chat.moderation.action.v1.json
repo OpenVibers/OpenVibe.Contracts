@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/chat.moderation.action.v1.json",
+  "title": "ChatModerationActionPayload",
+  "description": "chat.moderation.action v1 (OpenVibe.Chat server/db/database.js logModerationAction). A staff or channel moderator action in chat or in Live (Live's moderation log is written through the chat bridge): bans and unbans (site, channel, IP/CIDR), timeouts, message deletes and purges, slow/sub-only modes, and the like. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).",
+  "type": "object",
+  "required": ["action_id", "action_type", "scope_type"],
+  "additionalProperties": false,
+  "properties": {
+    "action_id": { "type": "integer", "minimum": 1 },
+    "action_type": { "type": "string", "minLength": 1, "maxLength": 64, "description": "ban, unban, timeout, delete_message, purge, slow_mode, ip_ban, … as Chat and Live name them." },
+    "scope_type": { "type": "string", "minLength": 1, "maxLength": 32, "description": "site, channel, stream, room, …" },
+    "scope_id": { "type": ["string", "integer", "null"] },
+    "actor_user_id": { "type": ["integer", "null"], "description": "Legacy Live user id of the actor (kept while subjects are adopted)." },
+    "actor_subject": { "type": ["string", "null"] },
+    "target_user_id": { "type": ["integer", "null"] },
+    "target_subject": { "type": ["string", "null"] },
+    "details": { "type": "object" }
+  }
+}

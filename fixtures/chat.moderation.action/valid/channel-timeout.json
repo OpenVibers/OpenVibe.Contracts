@@ -1,0 +1,11 @@
+{
+  "action_id": 813,
+  "action_type": "timeout",
+  "scope_type": "channel",
+  "scope_id": "327",
+  "actor_user_id": null,
+  "actor_subject": null,
+  "target_user_id": null,
+  "target_subject": null,
+  "details": {}
+}

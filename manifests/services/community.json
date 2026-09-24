@@ -28,6 +28,7 @@
   ],
   "eventsProduced": [
     "community.comment.created",
+    "community.moderation.action",
     "community.paste.created",
     "community.paste.deleted",
     "community.paste.updated",

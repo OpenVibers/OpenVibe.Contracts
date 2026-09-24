@@ -1,0 +1,11 @@
+{
+  "action_id": 812,
+  "action_type": "ban",
+  "scope_type": "site",
+  "scope_id": null,
+  "actor_user_id": 1,
+  "actor_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "target_user_id": 44,
+  "target_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "details": { "reason": "spam", "duration": null }
+}

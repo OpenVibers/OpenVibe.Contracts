@@ -1445,6 +1445,26 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "chat.moderation.action",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "events/payloads/chat.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
+      "id": "community.moderation.action",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     }
   ]
 }

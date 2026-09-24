@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.36.0 — 2026-09-24
+
+The moderation audit log (ADR-022):
+
+- **`chat.moderation.action`** now has a payload contract, matching what OpenVibe.Chat already sends for chat and Live moderation.
+- **`community.moderation.action`** is new: staff actions on other people's content in Community.
+
+OpenVibe.Network's manifest consumes both, plus `tips.interaction.moderated` and `billing.staff.action`, for the audit log staff can read in admin. Fixtures cover valid and invalid payloads. Additive.
+
 ## 0.35.0 — 2026-09-24
 
 - OpenVibe.Community publishes events: `community.paste.created|updated|deleted`, `community.thread.created`,

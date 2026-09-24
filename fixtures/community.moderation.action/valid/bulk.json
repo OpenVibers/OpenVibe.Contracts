@@ -1,0 +1,6 @@
+{
+  "action": "pastes.bulk",
+  "target": { "type": "pastes", "id": "bulk" },
+  "actor_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "details": { "bulk_action": "private", "done": 12, "skipped": 1 }
+}

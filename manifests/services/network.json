@@ -38,8 +38,12 @@
     "network.module.updated"
   ],
   "eventsConsumed": [
+    "billing.staff.action",
+    "chat.moderation.action",
+    "community.moderation.action",
     "deals.watch.matched",
     "live.stream.started",
+    "tips.interaction.moderated",
     "trade.alert.triggered"
   ],
   "namespacesOwned": [

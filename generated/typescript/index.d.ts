@@ -13131,3 +13131,64 @@ export interface CommunityCommentCreatedPayload {
    */
   url: string | null;
 }
+
+/** chat.moderation.action@1.0.0 (owner: chat) */
+/**
+ * chat.moderation.action v1 (OpenVibe.Chat server/db/database.js logModerationAction). A staff or channel moderator action in chat or in Live (Live's moderation log is written through the chat bridge): bans and unbans (site, channel, IP/CIDR), timeouts, message deletes and purges, slow/sub-only modes, and the like. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).
+ */
+export interface ChatModerationActionPayload {
+  action_id: number;
+  /**
+   * ban, unban, timeout, delete_message, purge, slow_mode, ip_ban, … as Chat and Live name them.
+   */
+  action_type: string;
+  /**
+   * site, channel, stream, room, …
+   */
+  scope_type: string;
+  scope_id?: string | number | null;
+  /**
+   * Legacy Live user id of the actor (kept while subjects are adopted).
+   */
+  actor_user_id?: number | null;
+  actor_subject?: string | null;
+  target_user_id?: number | null;
+  target_subject?: string | null;
+  details?: {};
+}
+
+/** community.moderation.action@1.0.0 (owner: community) */
+/**
+ * community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface CommunityModerationActionPayload {
+  action:
+    | "paste.edited"
+    | "paste.deleted"
+    | "paste.visibility_changed"
+    | "paste.censored"
+    | "pastes.bulk"
+    | "forks.deleted"
+    | "comment.deleted"
+    | "thread.deleted"
+    | "thread.locked"
+    | "thread.unlocked"
+    | "post.deleted";
+  target: {
+    type: "paste" | "paste_comment" | "comment" | "thread" | "post" | "pastes";
+    id: string;
+    /**
+     * Whose content it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, a bulk action's name and count, … never the content.
+   */
+  details?: {};
+}
