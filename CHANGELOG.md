@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.34.1 — 2026-09-24
+
+- `tools.tool.run` and `tools.net.probe` are **active**: the run API (`POST /api/v1/tools/:id/run`) and the gateway
+  jobs facade shipped in OpenVibe.Tools 5ac8309 and are deployed. The SDK v0.6.0 tools client passes against them.
+- `tools.run@1` lists the problem codes the run API emits beyond 0.33.1's: tools.input.too_large (413),
+  tools.run.timeout (504), tools.origin.refused (403), tools.session_required (401), tools.run.file_not_found (404),
+  tools.run.failed (500). Additive; no schema change.
+
 ## 0.34.0 — 2026-09-24
 
 Additive: `compat.js` reports no breaking change against v0.33.1. Closes the Contracts rows of the

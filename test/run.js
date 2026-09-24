@@ -284,7 +284,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(D({ ...byId.jsonminify, input: { ...byId.jsonminify.input, $id: 'https://openvibe.tools/api/v1/tools/jsonminify/schema' }, examples: [{ input: { text: '{}' } }] }) && D({ ...byId.port, input: { ...byId.port.input, $id: 'https://openvibe.tools/api/v1/tools/jsonminify/schema' }, examples: [{ input: { host: 'a.example', ports: [1] } }] }), 'input schemas that carry the same $id do not clash');
 
     // v0.33.1: the registry is served (tools.tool.read active); the run API and probes are not yet.
-    ok(readCap.status === 'active' && runCap.status === 'planned' && probeCap.status === 'planned', 'tools.tool.read is active; tools.tool.run and tools.net.probe stay planned until the run API ships');
+    ok(readCap.status === 'active' && runCap.status === 'active' && probeCap.status === 'active', 'tools.tool.read, tools.tool.run and tools.net.probe are active (the run API shipped in Tools 5ac8309, 2026-09-24)');
     const statuses = contracts.schema('tools.tool').properties.status.enum;
     ok(!statuses.includes('planned') && /no planned status/.test(contracts.schema('tools.tool').description) && /planned placeholders are not tools and are not listed/.test(contracts.schema('tools.tool-list').description), 'there is no planned status: planned entries are not tools, and the contracts say so');
 

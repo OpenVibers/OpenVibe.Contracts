@@ -2,7 +2,7 @@
   "id": "tools.net.probe",
   "version": "1.0",
   "owner": "tools",
-  "status": "planned",
+  "status": "active",
   "visibility": "partner",
   "description": "Run the network probe tools through the run API (ADR-027): the tools whose descriptor names auth.capability tools.net.probe (port checks, ping, traceroute, mtr, latency, bulk header and TLS checks), which send traffic to a host the caller chose. Only app and service principals holding this capability run them through the API or the SDK: partner visibility, so Network grants it to a developer project only when staff add it to that project's allowance by hand, and first-party services hold it through their own grants. People keep using the probe pages, which have a per-target throttle. Every run is throttled per target across all callers (limits.perTargetPerMinute) and written to the pseudonymous abuse log. Planned until the gateway serves the route.",
   "inputSchema": "tools.run-request@1",
