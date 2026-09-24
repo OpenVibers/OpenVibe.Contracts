@@ -39,7 +39,9 @@
     "media.vod.failed",
     "media.vod.ready"
   ],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.user.token_valid_after"
+  ],
   "namespacesOwned": [
     "media.*"
   ]

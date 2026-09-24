@@ -27,7 +27,9 @@
     "tools.job.succeeded",
     "tools.job.failed"
   ],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.user.token_valid_after"
+  ],
   "namespacesOwned": [
     "tools.*"
   ],

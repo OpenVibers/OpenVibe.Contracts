@@ -33,10 +33,11 @@
   "eventsProduced": [
     "network.app.created",
     "network.app.revoked",
-    "network.credential.rotated",
     "network.credential.revoked",
+    "network.credential.rotated",
     "network.grant.changed",
-    "network.module.updated"
+    "network.module.updated",
+    "network.user.token_valid_after"
   ],
   "eventsConsumed": [
     "billing.staff.action",

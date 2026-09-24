@@ -35,7 +35,8 @@
     "openre.session.*",
     "media.vod.*",
     "media.clip.*",
-    "media.storage.*"
+    "media.storage.*",
+    "network.user.token_valid_after"
   ],
   "namespacesOwned": [
     "live.*"

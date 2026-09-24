@@ -9330,6 +9330,29 @@ export interface NetworkModuleUpdatedPayload {
       };
 }
 
+/** network.user.token_valid_after@1.0.0 (owner: network) */
+/**
+ * network.user.token_valid_after v1 (OpenVibe.Network server/auth/revocation.js). A person's tokens issued before valid_after are no longer good: every service that accepts Network user tokens refuses one whose iat (seconds) * 1000 is less than valid_after (milliseconds), exactly as Network does, drops what it cached for that person's older tokens and closes the sockets they opened. Emitted in the transaction that moves the cutoff: a password change or reset, sign out everywhere, a ban, an account deletion, or staff ending someone's sessions. Consumers keep the latest valid_after per subject and ignore an older one (events can arrive out of order). Envelope: subject { type: user, id }, visibility internal, actor the person (their own change) or the staff member / system:network.
+ */
+export interface NetworkUserTokenValidAfterPayload {
+  /**
+   * The person (identity.subject-ref@1, a user).
+   */
+  subject: {
+    type: "user";
+    id: string;
+  };
+  /**
+   * Tokens issued before this instant are refused (compare iat * 1000 < Date.parse(valid_after)).
+   */
+  valid_after: string;
+  /**
+   * Why the cutoff moved. Consumers treat every reason the same; it is for logs and support.
+   */
+  reason:
+    "password_changed" | "password_reset" | "signed_out_everywhere" | "banned" | "account_deleted" | "staff_revoked";
+}
+
 /** tools.tool@1.1.0 (owner: tools) */
 /**
  * One tool on openvibe.tools as its registry describes it (GET /api/v1/tools/:id, and each item of GET /api/v1/tools; capability tools.tool.read; ADR-027). There is one descriptor per catalogue tool (GET /api/catalog.json tools[].id), built from the tool's own code, so its page, the run API, openvibe-sdk/tools, the OpenAPI document and the docs all read the same facts. EXECUTION is where the tool's engine runs for its page: client (in the browser; nothing leaves it), sync (a server request answered inline) or job (an asynchronous job on a satellite, tools.job@1). API says whether POST /api/v1/tools/{id}/run exposes the tool. A client tool has api true only when it also has a server engine (a pure transform that runs in Node), and its page stays browser-only. A page-only tool (yt) has api false and run null. A job tool's run creates a job of run.job.type whose input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). INPUT is the JSON Schema (2020-12) that a run request's input must match, embedded or as { $ref: https://openvibe.tools/api/v1/tools/{id}/schema#/$defs/input }. GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, and the list uses the $ref form. When api is false, $defs.input is false (the schema that accepts nothing), since there is no run to take an input. OUTPUT.SCHEMA describes result.data for every execution: inline and job tools alike. KEYWORDS (the catalogue's search terms) and EXAMPLES (sample runs for the docs and the OpenAPI document) are optional. NOT A TOOL: there is no planned status. A planned catalogue entry has no descriptor and is not listed, and neither is a mirror (a second build of another tool). GET /api/v1/tools/:id and /schema answer 404 tools.tool.not_found for either, with a detail that says the id is planned or names the tool it mirrors, as for an id that does not exist. RULES this schema enforces: api false has no run and no examples, and api true has a run and an input; an API job tool names its job, and only job tools name one; an API tool whose output is a file runs as a job (its results are served as job files); a tools.net.probe tool fetches (egress) and is never anonymous; an anonymous egress tool has a per-target throttle (limits.perTargetPerMinute); a client tool never fetches; an unavailable tool says why (statusReason); JSON output has a schema. contracts.tools.checkDescriptor(d) also checks what depends on the id (run.path, $ref targets), files.min <= files.max, and each example: its input against an embedded input schema and limits.maxInputBytes, and its files against files (count and accept).

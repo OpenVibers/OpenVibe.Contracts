@@ -28,7 +28,7 @@
     "games.mod.grants_changed",
     "games.mod.revoked"
   ],
-  "eventsConsumed": [],
+  "eventsConsumed": ["network.user.token_valid_after"],
   "namespacesOwned": ["games.*"],
   "notes": "Scraplandia (browser runtime). Players are keyed by canonical Network subjects (ADR-0006 in the repo). Calls Events (events.event.publish), Media (media.object.upload, namespace games: map-editor assets) and Network identity (identity.subject.resolve, batch legacy adoption) with the games client-credentials principal. Mods: games-content@1 declarative packs only; executable mods wait for OpenVibe.Host Stage C. No achievement system exists, so there are no games.achievement.* events."
 }

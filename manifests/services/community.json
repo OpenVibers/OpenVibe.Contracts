@@ -35,7 +35,9 @@
     "community.post.created",
     "community.thread.created"
   ],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.user.token_valid_after"
+  ],
   "namespacesOwned": [
     "community.*"
   ],

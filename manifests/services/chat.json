@@ -19,7 +19,9 @@
     "chat.dm.created",
     "chat.moderation.action"
   ],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.user.token_valid_after"
+  ],
   "namespacesOwned": [
     "chat.preferences"
   ],

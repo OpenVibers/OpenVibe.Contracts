@@ -9947,6 +9947,60 @@
         }
       }
     },
+    "network.user.token_valid_after": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.user.token_valid_after.v1.json",
+        "title": "NetworkUserTokenValidAfterPayload",
+        "description": "network.user.token_valid_after v1 (OpenVibe.Network server/auth/revocation.js). A person's tokens issued before valid_after are no longer good: every service that accepts Network user tokens refuses one whose iat (seconds) * 1000 is less than valid_after (milliseconds), exactly as Network does, drops what it cached for that person's older tokens and closes the sockets they opened. Emitted in the transaction that moves the cutoff: a password change or reset, sign out everywhere, a ban, an account deletion, or staff ending someone's sessions. Consumers keep the latest valid_after per subject and ignore an older one (events can arrive out of order). Envelope: subject { type: user, id }, visibility internal, actor the person (their own change) or the staff member / system:network.",
+        "type": "object",
+        "required": [
+          "subject",
+          "valid_after",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "object",
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "description": "The person (identity.subject-ref@1, a user)."
+          },
+          "valid_after": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Tokens issued before this instant are refused (compare iat * 1000 < Date.parse(valid_after))."
+          },
+          "reason": {
+            "enum": [
+              "password_changed",
+              "password_reset",
+              "signed_out_everywhere",
+              "banned",
+              "account_deleted",
+              "staff_revoked"
+            ],
+            "description": "Why the cutoff moved. Consumers treat every reason the same; it is for logs and support."
+          }
+        }
+      }
+    },
     "tools.tool": {
       "version": "1.1.0",
       "owner": "tools",

@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.39.0 — 2026-09-24
+
+**`network.user.token_valid_after`** (revocation propagation, roadmap WS-B task 4): when a person's tokens stop being good (a password change or reset, sign out everywhere, a ban, an account deletion or staff ending their sessions), Network moves their cutoff and emits this event in the same transaction. Every service that accepts Network user tokens refuses one whose `iat * 1000 < Date.parse(valid_after)` (Network's own rule), drops what it cached for those tokens and closes the sockets they opened. Consumers keep the latest cutoff per subject. Network produces it; Chat, Community, Live, Media, Tools and Games consume it. Fixtures cover valid and invalid payloads. Additive.
+
 ## 0.38.0 — 2026-09-24
 
 Staff map 1.1.0 (ADR-022), so the content products and Games can check staff capabilities instead of comparing role names:
