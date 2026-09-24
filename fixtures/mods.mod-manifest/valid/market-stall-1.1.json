@@ -7,7 +7,7 @@
   "target": "games.browser",
   "runtime": "games-content@1",
   "permissions": {
-    "capabilities": ["games.prop.place", "vip.entitlement.check"],
+    "capabilities": ["games.prop.place", "vip.perk.list"],
     "readGrants": { "modules": ["games.progress.summary"], "mediaNamespaces": ["games.maps"] },
     "writeGrants": { "modules": ["games.market_stall.*"] }
   },

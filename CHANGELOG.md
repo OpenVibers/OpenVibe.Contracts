@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.34.2 — 2026-09-24
+
+- Fixture fix: the valid mod-manifest 1.1 example (`market-stall-1.1.json`) asked for the first-party
+  `vip.entitlement.check`, which is never granted to apps or mods; it now asks for the public `vip.perk.list`.
+
 ## 0.34.1 — 2026-09-24
 
 - `tools.tool.run` and `tools.net.probe` are **active**: the run API (`POST /api/v1/tools/:id/run`) and the gateway
