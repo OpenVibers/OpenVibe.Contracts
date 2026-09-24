@@ -5,12 +5,12 @@
   },
   "id": "realtime",
   "name": "OpenVibe.Realtime",
-  "status": "placeholder",
+  "status": "retired",
   "repository": "OpenVibers/OpenVibe.Realtime",
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
-  "notes": "Browser delivery plane for events: authorised WS/SSE topics with cursors, resume and presence. Charter only; no runtime."
+  "notes": "Closed by ADR-005 (accepted 2026-09-22): browser realtime is a delivery plane inside OpenVibe.Events (SSE /realtime/stream with per-topic authorisation, Last-Event-ID resume and gap markers), so OpenVibe.Realtime is not built. The repository holds its charter and the closure note only: no runtime, domain, capability or event. Reopened only as ADR-005 says (measured connection counts or fan-out latency that need an independently scaled process), by a new ADR."
 }

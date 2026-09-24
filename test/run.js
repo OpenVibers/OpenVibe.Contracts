@@ -305,6 +305,17 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     }
 }
 
+// ── Retired services (v0.34.0) ───────────────────────────────────────────
+// A retired manifest offers nothing: no domain, capability, event or namespace. Realtime was closed
+// by ADR-005 (realtime runs inside OpenVibe.Events), so it is retired, not a placeholder.
+{
+    for (const m of services.manifests.filter(s => s.status === 'retired')) {
+        ok(['domains', 'capabilities', 'eventsProduced', 'eventsConsumed', 'namespacesOwned'].every(k => m[k].length === 0) && !m.publicOrigin && !m.health && !m.ready, `retired ${m.id} offers nothing`);
+    }
+    const rt = services.get('realtime');
+    ok(rt.status === 'retired' && /ADR-005/.test(rt.notes) && /OpenVibe\.Events/.test(rt.notes), 'realtime is retired by ADR-005: realtime runs inside OpenVibe.Events');
+}
+
 // ── Ids ──────────────────────────────────────────────────────────────────
 for (const kind of ['user', 'guest', 'app', 'mod']) {
     const id = ids.newId(kind);
