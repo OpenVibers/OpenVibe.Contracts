@@ -1,0 +1,1 @@
+{ "version": "1.0.0", "roles": [{ "id": "user", "staff": false, "description": "u" }, { "id": "admin", "staff": true, "description": "a" }], "claims": { "role": "role", "owner": "is_owner", "capabilities": "staff_caps" }, "capabilities": [{ "id": "staff.users.manage", "description": "no minRole" }] }

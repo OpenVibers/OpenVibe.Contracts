@@ -352,6 +352,48 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(/Package signing/.test(adr) && /Review process/.test(adr) && /open decisions for the owner/.test(adr) && /Monetization only through Billing/.test(adr), 'ADR-013 names signing and review as open owner decisions and monetization through Billing');
 }
 
+// ── Staff capability map (v0.34.0, W1 D7, ADR-022) ───────────────────────
+// Network owns the roles and issues staff capabilities as claims; services check a capability, not
+// a role name. Roles are ordered, a higher role holds everything below it, non-staff roles hold
+// nothing, secrets and money are the owner's alone, and channel powers stay local.
+{
+    const { staff } = contracts;
+    const map = staff.map;
+    const r = contracts.validate('policy.staff-role-map@1', map);
+    ok(r.valid, `manifests/policy/staff-roles.json is a policy.staff-role-map@1: ${JSON.stringify(r.errors)}`);
+    ok(JSON.stringify(staff.roles) === '["user","streamer","global_mod","admin","owner"]', 'roles: user < streamer < global_mod < admin < owner');
+    ok(new Set(map.capabilities.map(c => c.id)).size === map.capabilities.length, 'staff capability ids are unique');
+    for (const c of map.capabilities) {
+        const role = map.roles.find(x => x.id === c.minRole);
+        ok(role && role.staff, `${c.id}: minRole ${c.minRole} is a staff role`);
+        ok(!capabilities.get(c.id), `${c.id} is not a service capability (staff.* are person claims)`);
+        for (const svc of Object.keys(c.gates || {})) ok(serviceIds.has(svc), `${c.id} gates name a registered service (${svc})`);
+    }
+    for (const x of map.local) ok(!x.id.startsWith('staff.') && serviceIds.has(x.id.split('.')[0]), `local power ${x.id} belongs to a product, not to staff`);
+    ok(staff.capabilitiesOf('user').length === 0 && staff.capabilitiesOf('streamer').length === 0, 'user and streamer hold no staff capability');
+    for (let i = 1; i < staff.roles.length; i++) {
+        const lower = staff.capabilitiesOf(staff.roles[i - 1]), higher = staff.capabilitiesOf(staff.roles[i]);
+        ok(lower.every(c => higher.includes(c)), `${staff.roles[i]} holds everything ${staff.roles[i - 1]} holds`);
+    }
+    ok(staff.capabilitiesOf('owner').length === map.capabilities.length, 'the owner holds every staff capability');
+    const ownerOnly = map.capabilities.filter(c => /^staff\.(money|secrets|loyalty)\./.test(c.id) || c.id === 'staff.roles.grant_admin');
+    ok(ownerOnly.length >= 5 && ownerOnly.every(c => c.minRole === 'owner'), 'money, secrets, loyalty grants and making admins are owner-only');
+    for (const id of ['staff.moderation.chat', 'staff.content.hide', 'staff.users.manage', 'staff.money.freeze']) ok(staff.get(id), `${id} is in the map`);
+    // Claims: the owner is role admin plus is_owner; issued staff_caps win; family grants stay inside one area.
+    const gm = { role: 'global_mod' }, admin = { role: 'admin' }, owner = { role: 'admin', is_owner: true };
+    ok(staff.effectiveRole(owner) === 'owner' && staff.effectiveRole(admin) === 'admin' && staff.effectiveRole({ role: 'nope' }) === 'user' && staff.effectiveRole(null) === 'user', 'effectiveRole: owner claim, role claim, unknown is user');
+    ok(staff.can(gm, 'staff.content.hide') && staff.can(gm, 'staff.moderation.chat') && !staff.can(gm, 'staff.users.manage'), 'a global_mod moderates but does not manage accounts');
+    ok(staff.can(admin, 'staff.users.manage') && !staff.can(admin, 'staff.money.freeze') && !staff.can(admin, 'staff.secrets.manage'), 'an admin manages accounts but holds no money or secrets');
+    ok(staff.can(owner, 'staff.money.freeze') && staff.can('owner', 'staff.roles.grant_admin') && !staff.can({ role: 'owner' }, 'staff.money.freeze') && staff.effectiveRole({ role: 'global_mod', is_owner: true }) === 'global_mod', 'owner is role admin plus the is_owner claim, never a role value or the claim alone');
+    ok(staff.can({ role: 'user', staff_caps: ['staff.moderation.*'] }, 'staff.moderation.bans') && !staff.can({ role: 'admin', staff_caps: ['staff.moderation.*'] }, 'staff.users.manage'), 'issued staff_caps win over the role, and a family grant stays in its area');
+    ok(!staff.can({ staff_caps: ['staff.*'] }, 'staff.money.freeze') && !staff.can({ staff_caps: ['staff.moderation'] }, 'staff.moderation.chat'), 'there is no staff-wide wildcard, and a prefix without .* grants nothing');
+    assert.throws(() => staff.can(owner, 'staff.nope.nope'), /unknown staff capability/);
+    ok(JSON.stringify(map.claims) === '{"role":"role","owner":"is_owner","capabilities":"staff_caps"}', 'claims: role, is_owner, staff_caps');
+    ok(map.rules.some(x => /never delegated/.test(x)) && map.rules.some(x => /equal or higher/.test(x)) && map.rules.some(x => /owner's account/.test(x)), 'rules: no delegation, rank protection, owner protection');
+    const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/ADR-022-moderation-console.md'), 'utf8');
+    ok(/manifests\/policy\/staff-roles\.json/.test(adr), 'ADR-022 points at the staff map');
+}
+
 // ── Capability catalog gaps (v0.34.0, roadmap §30.2) ──────────────────────
 // Public reads that production serves to anyone are active; an action whose routes exist but are
 // guarded by an older id today is planned as its own grant, names those routes, and says which id

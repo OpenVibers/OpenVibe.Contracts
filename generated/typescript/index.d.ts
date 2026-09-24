@@ -3600,6 +3600,1758 @@ export interface ModManifest {
   }[];
 }
 
+/** policy.staff-role-map@1.0.0 (owner: network) */
+/**
+ * The staff roles and the staff capabilities each one holds (ADR-022; roadmap W1 D7, D05). OpenVibe.Network owns the roles and issues the capabilities as claims in its user tokens; every service checks a staff capability instead of comparing role names. Roles are ordered lowest first, and a role holds every capability whose minRole is at or below it. Channel-scoped powers (a channel's owner and its moderators) are not staff capabilities: they stay with the product that owns the channel and are listed under local. The map in force is manifests/policy/staff-roles.json; contracts.staff reads it.
+ */
+export interface StaffRoleMap {
+  /**
+   * Version of the map. Adding a capability or lowering a minRole is a minor; removing one or raising a minRole is a major.
+   */
+  version: string;
+  /**
+   * Lowest first. Each role holds every capability of the roles before it.
+   *
+   * @minItems 2
+   * @maxItems 16
+   */
+  roles:
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        },
+        {
+          id: string;
+          /**
+           * Whether holders are staff. Non-staff roles hold no staff capability.
+           */
+          staff: boolean;
+          description: string;
+          /**
+           * Where the role is stored and how a token carries it today.
+           */
+          source?: string;
+        }
+      ];
+  /**
+   * @minItems 1
+   * @maxItems 200
+   */
+  capabilities: [
+    {
+      /**
+       * staff.<area>.<action>.
+       */
+      id: string;
+      /**
+       * The lowest role that holds it; must be a staff role in roles.
+       */
+      minRole: string;
+      description: string;
+      /**
+       * Where the raw role check this capability replaces lives today, per service (file:line and what it guards). Adoption swaps each for a capability check.
+       */
+      gates?: {
+        /**
+         * @maxItems 100
+         */
+        [k: string]: string[] | undefined;
+      };
+    },
+    ...{
+      /**
+       * staff.<area>.<action>.
+       */
+      id: string;
+      /**
+       * The lowest role that holds it; must be a staff role in roles.
+       */
+      minRole: string;
+      description: string;
+      /**
+       * Where the raw role check this capability replaces lives today, per service (file:line and what it guards). Adoption swaps each for a capability check.
+       */
+      gates?: {
+        /**
+         * @maxItems 100
+         */
+        [k: string]: string[] | undefined;
+      };
+    }[]
+  ];
+  /**
+   * Claim names in OpenVibe.Network user tokens.
+   */
+  claims: {
+    /**
+     * The stored role (user, streamer, global_mod or admin). owner is never stored as a role.
+     */
+    role: string;
+    /**
+     * Boolean claim, true only for the owner account. With role admin it makes the effective role owner; on any other role it is ignored.
+     */
+    owner: string;
+    /**
+     * Array claim of the staff capabilities the effective role holds, issued only to staff.
+     */
+    capabilities: string;
+  };
+  /**
+   * Channel-scoped or self-scoped powers that are not staff capabilities and stay with the product that owns the resource.
+   *
+   * @maxItems 50
+   */
+  local?: {
+    id: string;
+    description: string;
+    gates?: {
+      /**
+       * @maxItems 100
+       */
+      [k: string]: string[] | undefined;
+    };
+  }[];
+  /**
+   * Rules a capability check alone does not express, which every service applies on top.
+   *
+   * @maxItems 30
+   */
+  rules?: string[];
+}
+
 /** codes.app-manifest@1.0.0 (owner: codes) */
 /**
  * PROPOSAL (OpenVibe.Codes, roadmap Wave 20): an app release as the platform knows it. The app is a Network developer app (ADR-014): its id is the Network app id, its capabilities are only a request (the grants in Network are the authority), and trust tiers are metadata that never change a grant check. OpenVibe.Codes validates with this schema, loaded into openvibe-contracts' validator, until Contracts publishes it as codes.app-manifest@1.

@@ -1,0 +1,512 @@
+{
+  "version": "1.0.0",
+  "roles": [
+    {
+      "id": "user",
+      "staff": false,
+      "description": "Everyone signed in. No staff capability.",
+      "source": "Network users.role 'user' (the default); the role claim."
+    },
+    {
+      "id": "streamer",
+      "staff": false,
+      "description": "Someone who has streamed. Not staff and holds no staff capability; no server gates on it today (Live's manage_own_channel UI flag only). Anything a streamer needs is a product capability, never staff.*.",
+      "source": "Network users.role 'streamer'; Live promotes a user on their first real feed (db/database.js:3755)."
+    },
+    {
+      "id": "global_mod",
+      "staff": true,
+      "description": "Site-wide moderator: moderation across every channel and product, no configuration, accounts, secrets or money.",
+      "source": "Network users.role 'global_mod'; the role claim."
+    },
+    {
+      "id": "admin",
+      "staff": true,
+      "description": "Administrator: everything a global_mod holds plus site configuration, accounts, non-admin roles, streams and hardware of others. No secrets, no money, cannot make admins.",
+      "source": "Network users.role 'admin'; the role claim."
+    },
+    {
+      "id": "owner",
+      "staff": true,
+      "description": "The platform owner: an admin who alone holds secrets, money, loyalty grants and the admin role. Not a stored role: exactly one account.",
+      "source": "Network derives it from OWNER_USERNAME (auth/routes.js sanitizeUser, auth/owner-guard.js); Live stores users.is_owner with role admin. Tokens carry role admin plus the owner claim is_owner: true."
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "staff.console.access",
+      "minRole": "global_mod",
+      "description": "Open the staff console and see the staff capability map. What each page shows is gated by the capabilities below; a console page with no capability behind it is admin-only today.",
+      "gates": {
+        "live": [
+          "auth/routes.js:105,667 getCapabilities",
+          "admin/routes.js:52 router.use(requireAdmin) (admins only today; global_mods get the map but not /api/admin)"
+        ],
+        "network": [
+          "index.js:548-549 /api/admin/streamer-mod → /api/mod (admin|global_mod)"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.chat",
+      "minRole": "global_mod",
+      "description": "Moderate chat in any channel (delete, timeout, ban from the channel, slow and follower modes) as if a channel moderator, and override any person's TTS voice.",
+      "gates": {
+        "live": [
+          "mod-routes.js:205,288,377,380,383,427,432,492,499,547,548,570,889,910,940",
+          "admin/channel-mod-routes.js:41,329",
+          "chat/live-context-routes.js:366,497",
+          "chat/chat-server.js:521,825,1183,1414,1427,1554,1563,1983 (rollback path)"
+        ],
+        "chat": [
+          "chat/chat-server.js:511,739,1220,1431,1443,1578,1596,1605,1696,2077 (target guard 1717)"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.bypass",
+      "minRole": "global_mod",
+      "description": "Chat restrictions do not apply to the holder: IP approval, link blocking, followers-only, the age gate and the slur filter.",
+      "gates": {
+        "live": [
+          "chat/chat-server.js:672,718,719,735,760,769,778 (rollback path)"
+        ],
+        "chat": [
+          "chat/chat-server.js:664,959,960,976,1001,1010,1019,1047"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.logs",
+      "minRole": "global_mod",
+      "description": "Read any person's, guest's or relay user's chat logs, one person at a time.",
+      "gates": {
+        "live": [
+          "mod-routes.js:315,346",
+          "chat/routes.js:328,348,432,448",
+          "ai/viewers/routes.js:243,258"
+        ],
+        "chat": [
+          "chat/routes.js:340,361,413,429"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.calls",
+      "minRole": "global_mod",
+      "description": "Moderate voice calls on any stream: see private calls, force-mute, kick or ban a participant, end a call, delete a call channel.",
+      "gates": {
+        "live": [
+          "streaming/call-server.js:121,201,345,348,478 (+ helper uses 272,411,419,428,437,448,467)"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.channels",
+      "minRole": "global_mod",
+      "description": "Act as a channel's owner for its moderation settings: owner-policy keys, IP-approval decisions, the media queue, channel emotes and sounds, and the TTS and sound queue.",
+      "gates": {
+        "live": [
+          "admin/channel-mod-routes.js:172",
+          "mod-routes.js:619,676,708",
+          "media/routes.js:31,44 (+ 78,349,375,392,407)",
+          "emotes/routes.js:314,424,482",
+          "chat/sounds-routes.js:175,294,327"
+        ],
+        "chat": [
+          "chat/tts-routes.js:194,198,199"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.bans",
+      "minRole": "global_mod",
+      "description": "Ban and unban across the whole site (account, IP and alt cascade) and list site bans. Never against an equal or higher role; banning an admin needs owner.",
+      "gates": {
+        "live": [
+          "mod-routes.js:42,146,159,169,276,813 (rank guard 85; cascade skips staff 119; db/database.js:7077)",
+          "admin/routes.js:248,286,429 (admin today; owner guard 256)",
+          "chat/live-context-routes.js:322,327 (guard 341)",
+          "chat/chat-server.js:1643 (guard 1665)"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.ip",
+      "minRole": "global_mod",
+      "description": "Look up the IP addresses, alts and IP log behind an account.",
+      "gates": {
+        "live": [
+          "mod-routes.js:730,755,786,801,853"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.pastes",
+      "minRole": "global_mod",
+      "description": "Moderate pastes: see private, hidden and others' unlisted pastes, edit, pin or delete any paste, view its versions, delete any paste comment.",
+      "gates": {
+        "live": [
+          "media-proxy/pastes.js:271 (X-OV-Staff to Community)"
+        ],
+        "community": [
+          "pastes/service.js:76,89,312,348,349,364,444,455,466,476,486,562"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.discussions",
+      "minRole": "global_mod",
+      "description": "Moderate discussions: see hidden comments and threads, delete any comment or post, post in locked threads, hide, lock and pin threads, open staff spaces and administer the Discord relay.",
+      "gates": {
+        "live": [
+          "media-proxy/comments.js:81,186 (X-OV-Staff)"
+        ],
+        "community": [
+          "comments/service.js:81,105,129,214,216,224,237,264,273,275,295",
+          "forum/service.js:59,60,77,100,107,136,173,203,220,221,261,263,264,265,301,319,320,330,338,367,386,390,399",
+          "forum/api.js:49",
+          "relay/api.js:25-30"
+        ]
+      }
+    },
+    {
+      "id": "staff.content.view_private",
+      "minRole": "global_mod",
+      "description": "See private and hidden VODs and clips (and their thumbnails and pages) that belong to someone else.",
+      "gates": {
+        "live": [
+          "media-proxy/access.js:36 (canView: vods.js:95,172,268,413,581,740; clips.js:30,209,260; thumbnails.js:56; comments.js:62; web/page-status.js:121)",
+          "streaming/routes.js:243,569 (dead moderate_global branch)"
+        ]
+      }
+    },
+    {
+      "id": "staff.content.hide",
+      "minRole": "global_mod",
+      "description": "Edit, hide, delete or re-cut someone else's VODs and clips. Never the owner's content.",
+      "gates": {
+        "live": [
+          "media-proxy/vods.js:169,551 (→521,566)",
+          "media-proxy/clips.js:99,100,115,116 (→127,252,253,276,297,323,342,361)"
+        ]
+      }
+    },
+    {
+      "id": "staff.site.view",
+      "minRole": "admin",
+      "description": "Read operations data: diagnostics, statistics, all streams, storage, analytics, OpenRe status, money state and AI usage.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 55,67,305,483,522,569,969,1025,1125",
+          "index.js:732,741",
+          "openre/routes.js:18"
+        ]
+      }
+    },
+    {
+      "id": "staff.site.configure",
+      "minRole": "admin",
+      "description": "Change non-secret site settings and run operations actions: TTS and news configuration, the star rotation, a broadcast to every chat, integrations. Secret settings need staff.secrets.manage.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 510,641,697,714,847,857,900,1170,1229,1251,1284,1295",
+          "chat/tts-routes.js:64,81,110",
+          "chat/live-context-routes.js:400",
+          "news/news-routes.js:36,44",
+          "home/routes.js:551",
+          "index.js:852",
+          "integrations/powerchat-routes.js:339"
+        ],
+        "chat": [
+          "chat/tts-routes.js:112,117,130,140,162"
+        ]
+      }
+    },
+    {
+      "id": "staff.users.manage",
+      "minRole": "admin",
+      "description": "Administer accounts: list them with email and balances, rename, set stream-slot limits. The owner's account needs owner.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 121,158 (owner-account guard 168)"
+        ]
+      }
+    },
+    {
+      "id": "staff.roles.assign",
+      "minRole": "admin",
+      "description": "Give or take the non-admin roles (user, streamer, global_mod), and assign moderators on any channel. Never to or from an equal or higher role.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 158,731,743,770 (target checks 750,751,774)",
+          "admin/channel-mod-routes.js:95,134",
+          "internal/routes.js:72 (Network push, owner kept 88)"
+        ],
+        "network": [
+          "admin/routes.js:689"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.vpn",
+      "minRole": "admin",
+      "description": "Review the VPN and proxy queue and decide its entries.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 445,461"
+        ]
+      }
+    },
+    {
+      "id": "staff.moderation.purge",
+      "minRole": "admin",
+      "description": "Browse and export every stream's chat log, see deleted messages and purge ranges of messages.",
+      "gates": {
+        "live": [
+          "chat/routes.js:649,680,724,745,759"
+        ],
+        "chat": [
+          "chat/routes.js:633,664,708,729,744"
+        ]
+      }
+    },
+    {
+      "id": "staff.limits.exempt",
+      "minRole": "admin",
+      "description": "The holder is exempt from IP bans and per-IP connection caps (the owner shares networks with banned users).",
+      "gates": {
+        "live": [
+          "index.js:421,422 (used at 449,459,1014,1066)",
+          "chat/chat-server.js:122,332",
+          "streaming/call-server.js:299 (admin and global_mod today)"
+        ],
+        "chat": [
+          "app.js:171,216",
+          "chat/chat-server.js:124,296"
+        ]
+      }
+    },
+    {
+      "id": "staff.channels.enforce",
+      "minRole": "admin",
+      "description": "Enforce channel policy: force a channel NSFW, turn off its VOD recording.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 370,387,418"
+        ]
+      }
+    },
+    {
+      "id": "staff.streams.end",
+      "minRole": "admin",
+      "description": "Force-end any stream. Never the owner's.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 324 (owner guard 333)",
+          "streaming/routes.js:2123 (no owner guard today)"
+        ]
+      }
+    },
+    {
+      "id": "staff.streams.manage",
+      "minRole": "admin",
+      "description": "Act on another streamer's streams, slots, keys, analytics and VOD uploads. Never the owner's; stream keys are shown only to their owner and to this capability.",
+      "gates": {
+        "live": [
+          "streaming/routes.js:96,1665,1825,1850,1933,1977,2072,2170,2268,2286,2403",
+          "streaming/whip-handler.js:811",
+          "streaming/restream-routes.js:493",
+          "recap/routes.js:48",
+          "streaming/analytics-routes.js:162",
+          "media-proxy/vods.js:189,242,605",
+          "media-proxy/thumbnails.js:35,57",
+          "openre/routes.js:35"
+        ]
+      }
+    },
+    {
+      "id": "staff.hardware.manage",
+      "minRole": "admin",
+      "description": "Operate any user's robot controls and ONVIF cameras, and discover cameras on the LAN.",
+      "gates": {
+        "live": [
+          "controls/routes.js:1022,1037,1057,1077,1127,1169,1187,1212,1216,1395,1421,1435,1443,1496,1510",
+          "controls/onvif-routes.js:70,147,218,271,332,357,380,427"
+        ]
+      }
+    },
+    {
+      "id": "staff.content.bulk",
+      "minRole": "admin",
+      "description": "Bulk and heavy content tools: paste statistics, forks, bulk actions and censoring, and bulk storage deletes of VODs and clips.",
+      "gates": {
+        "live": [
+          "media-proxy/pastes.js:171,172,173,223,313,314,315,316",
+          "admin/routes.js:1044,1055,1075,1087"
+        ],
+        "community": [
+          "pastes/api.js:77-80 (→114,115,116,117,129; global_mod today)"
+        ]
+      }
+    },
+    {
+      "id": "staff.assets.manage",
+      "minRole": "admin",
+      "description": "Manage global emotes, and edit or delete any emote, sound or theme.",
+      "gates": {
+        "live": [
+          "emotes/routes.js:351,420,478",
+          "chat/sounds-routes.js:291,330",
+          "themes/routes.js:149 (→ theme-service.js:264)"
+        ],
+        "chat": [
+          "chat/sounds-routes.js:189,306,309,343,346"
+        ]
+      }
+    },
+    {
+      "id": "staff.ai.manage",
+      "minRole": "admin",
+      "description": "Administer AI features: any channel's AI viewers, the per-user AI explorer, overviews, Arena persona and image regeneration, backfills.",
+      "gates": {
+        "live": [
+          "admin/routes.js:52 → 532,550,560,580,617,626",
+          "arena/routes.js:69,80"
+        ]
+      }
+    },
+    {
+      "id": "staff.cosmetics.grant",
+      "minRole": "admin",
+      "description": "Unlock a cosmetic for someone without payment (COSMETIC-ENTITLEMENT, ADR-012; never money).",
+      "gates": {
+        "live": [
+          "monetization/cosmetics-routes.js:49 (→ cosmetics.js:202)"
+        ]
+      }
+    },
+    {
+      "id": "staff.roles.grant_admin",
+      "minRole": "owner",
+      "description": "Grant or revoke the admin role, list admins, and change the owner's own account.",
+      "gates": {
+        "live": [
+          "admin/routes.js:171,796,806,825 (guards 812,829,830)"
+        ],
+        "network": [
+          "admin/routes.js:524,697-700"
+        ]
+      }
+    },
+    {
+      "id": "staff.secrets.manage",
+      "minRole": "owner",
+      "description": "See and change secrets: API keys, provider credentials and every ai_, stripe_, ccbill_, crypto_, tts_google_ and money_ setting, TTS and news credentials, yt-dlp arguments; Network's secret and email settings.",
+      "gates": {
+        "live": [
+          "admin/routes.js:513,647,658,688,703,716,1265",
+          "chat/tts-routes.js:68,91",
+          "chat/live-context-routes.js:403",
+          "news/news-routes.js:23,38,51,54,64"
+        ],
+        "chat": [
+          "chat/tts-routes.js (credentials, owner-only)"
+        ]
+      }
+    },
+    {
+      "id": "staff.money.freeze",
+      "minRole": "owner",
+      "description": "Freeze and unfreeze money writes (money_writes_frozen) and resolve pending Billing actions.",
+      "gates": {
+        "live": [
+          "admin/routes.js:491,497"
+        ]
+      }
+    },
+    {
+      "id": "staff.money.cashouts",
+      "minRole": "owner",
+      "description": "List, approve and deny cashouts (money leaving the platform; ADR-012 rule 10).",
+      "gates": {
+        "live": [
+          "monetization/routes.js:298,309,320"
+        ],
+        "billing": [
+          "console/index.js:48,117 (BILLING_STAFF_SUBJECTS, admin today)"
+        ]
+      }
+    },
+    {
+      "id": "staff.loyalty.grant",
+      "minRole": "owner",
+      "description": "Grant OpenCoins to someone (LOYALTY, ADR-012: never money, never bought).",
+      "gates": {
+        "live": [
+          "monetization/coins-routes.js:310"
+        ]
+      }
+    }
+  ],
+  "claims": {
+    "role": "role",
+    "owner": "is_owner",
+    "capabilities": "staff_caps"
+  },
+  "local": [
+    {
+      "id": "live.channel.owner",
+      "description": "A channel's owner over their own channel: the about page, owner-policy keys, IP-approval decisions, the hardware whitelist, and assigning the channel's moderators.",
+      "gates": {
+        "live": [
+          "streaming/routes.js:242,455,777,781,812",
+          "admin/channel-mod-routes.js:95,134,172",
+          "mod-routes.js:619,676,708",
+          "controls/control-server.js:392-397",
+          "chat/chat-server.js:673"
+        ]
+      }
+    },
+    {
+      "id": "live.channel.moderator",
+      "description": "A channel moderator (and the owner) inside that channel: chat moderation, the call rules and the clip rules through canModerateChannel, canModerateStream and canModerateCall, and the pending IP-approval queue.",
+      "gates": {
+        "live": [
+          "auth/permissions.js canModerateChannel|Stream|Call",
+          "mod-routes.js:570,589",
+          "media-proxy/clips.js:94-96,106-111,295-296"
+        ],
+        "chat": [
+          "chat/chat-server.js:821 (passes the owner's user id where a channel id belongs)"
+        ]
+      }
+    },
+    {
+      "id": "live.stream.owner",
+      "description": "A streamer over their own streams, slots, keys, VODs and clips (the stream.user_id === the person half of every staff.streams.* check)."
+    },
+    {
+      "id": "live.call.creator",
+      "description": "The person who started a voice call, over that call.",
+      "gates": {
+        "live": [
+          "streaming/call-server.js:346,420,478"
+        ]
+      }
+    },
+    {
+      "id": "community.content.author",
+      "description": "A person over their own pastes, posts and comments (edit, delete, votes)."
+    }
+  ],
+  "rules": [
+    "Nobody acts against an equal or higher effective role: bans, role changes and moderation of a global_mod need admin, of an admin need owner.",
+    "The owner's account, streams, keys, content and admin role are protected from everyone but the owner, whatever capability the actor holds.",
+    "Staff are never swept up by IP or alt cascades.",
+    "Staff capabilities are carried only by Network user tokens. A service, app or mod token never holds one, and they are never delegated (ADR-003 amendment 2026-09-24).",
+    "A service may vouch for its user as staff (X-OV-Staff) only while it holds the owning service's moderate capability, and the vouch is logged (ADR-022).",
+    "Roles change only in Network. A product that changes a role locally must push it to Network, or the next token undoes it.",
+    "Every staff action is reported to Network's moderation audit log as a <service>.moderation.action event (ADR-022)."
+  ]
+}

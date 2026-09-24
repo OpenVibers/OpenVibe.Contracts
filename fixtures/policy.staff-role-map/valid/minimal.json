@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "roles": [
+    { "id": "user", "staff": false, "description": "Everyone signed in." },
+    { "id": "global_mod", "staff": true, "description": "Site-wide moderator." }
+  ],
+  "capabilities": [
+    { "id": "staff.moderation.chat", "minRole": "global_mod", "description": "Moderate chat in any channel.", "gates": { "chat": ["chat/chat-server.js:511"] } }
+  ],
+  "claims": { "role": "role", "owner": "is_owner", "capabilities": "staff_caps" },
+  "local": [{ "id": "live.channel.moderator", "description": "A channel moderator inside that channel." }],
+  "rules": ["Nobody acts against an equal or higher effective role."]
+}

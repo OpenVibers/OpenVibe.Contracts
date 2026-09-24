@@ -177,6 +177,16 @@
       "adr": "ADR-013"
     },
     {
+      "id": "policy.staff-role-map",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "policy/staff-role-map.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "codes.app-manifest",
       "version": "1.0.0",
       "owner": "codes",

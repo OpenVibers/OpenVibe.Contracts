@@ -7,6 +7,7 @@
  *   contracts.ids.newId('user');                       // 'usr_01J...'
  *   contracts.http.problem(403, 'capability.denied');  // RFC 9457 body
  *   contracts.capabilities.check(tokenClaims, 'media.object.read', { namespace: 'live' });
+ *   contracts.staff.can(userTokenClaims, 'staff.moderation.chat');  // staff roles → staff capabilities
  */
 const registry = require('./lib/registry');
 
@@ -23,4 +24,5 @@ module.exports = {
     serviceAuth: require('./lib/service-auth'),
     modules: require('./lib/modules'),
     tools: require('./lib/tools'),
+    staff: require('./lib/staff'),
 };

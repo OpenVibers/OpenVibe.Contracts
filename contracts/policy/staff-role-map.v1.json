@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/policy/staff-role-map.v1.json",
+  "title": "StaffRoleMap",
+  "description": "The staff roles and the staff capabilities each one holds (ADR-022; roadmap W1 D7, D05). OpenVibe.Network owns the roles and issues the capabilities as claims in its user tokens; every service checks a staff capability instead of comparing role names. Roles are ordered lowest first, and a role holds every capability whose minRole is at or below it. Channel-scoped powers (a channel's owner and its moderators) are not staff capabilities: they stay with the product that owns the channel and are listed under local. The map in force is manifests/policy/staff-roles.json; contracts.staff reads it.",
+  "type": "object",
+  "required": ["version", "roles", "capabilities", "claims"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Version of the map. Adding a capability or lowering a minRole is a minor; removing one or raising a minRole is a major." },
+    "roles": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 16,
+      "description": "Lowest first. Each role holds every capability of the roles before it.",
+      "items": {
+        "type": "object",
+        "required": ["id", "staff", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$" },
+          "staff": { "type": "boolean", "description": "Whether holders are staff. Non-staff roles hold no staff capability." },
+          "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "source": { "type": "string", "maxLength": 1000, "description": "Where the role is stored and how a token carries it today." }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": ["id", "minRole", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^staff\\.[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$", "description": "staff.<area>.<action>." },
+          "minRole": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "The lowest role that holds it; must be a staff role in roles." },
+          "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "gates": {
+            "type": "object",
+            "description": "Where the raw role check this capability replaces lives today, per service (file:line and what it guards). Adoption swaps each for a capability check.",
+            "propertyNames": { "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+            "additionalProperties": { "type": "array", "maxItems": 100, "items": { "type": "string", "minLength": 1, "maxLength": 300 } }
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "required": ["role", "owner", "capabilities"],
+      "additionalProperties": false,
+      "description": "Claim names in OpenVibe.Network user tokens.",
+      "properties": {
+        "role": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "The stored role (user, streamer, global_mod or admin). owner is never stored as a role." },
+        "owner": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "Boolean claim, true only for the owner account. With role admin it makes the effective role owner; on any other role it is ignored." },
+        "capabilities": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,31}$", "description": "Array claim of the staff capabilities the effective role holds, issued only to staff." }
+      }
+    },
+    "local": {
+      "type": "array",
+      "maxItems": 50,
+      "description": "Channel-scoped or self-scoped powers that are not staff capabilities and stay with the product that owns the resource.",
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){1,}$" },
+          "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "gates": {
+            "type": "object",
+            "propertyNames": { "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+            "additionalProperties": { "type": "array", "maxItems": 100, "items": { "type": "string", "minLength": 1, "maxLength": 300 } }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "maxItems": 30,
+      "description": "Rules a capability check alone does not express, which every service applies on top.",
+      "items": { "type": "string", "minLength": 1, "maxLength": 1000 }
+    }
+  }
+}
