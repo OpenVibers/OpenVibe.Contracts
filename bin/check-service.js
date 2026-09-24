@@ -53,7 +53,7 @@ for (const d of srcDirs) (function walk(dir) {
     for (const e of ents) {
         if (e.name === 'node_modules' || e.name.startsWith('.')) continue;
         const p = path.join(dir, e.name);
-        if (e.isDirectory()) walk(p); else if (/\.[cm]?[jt]s$/.test(e.name)) files.push(p);
+        if (e.isDirectory()) walk(p); else if (/\.[cm]?[jt]s$/.test(e.name) && !/\.(test|spec)\.[cm]?[jt]s$/.test(e.name)) files.push(p);   // tests mint tokens for other owners on purpose
     }
 })(d);
 

@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.34.3 — 2026-09-24
+
+- `openvibe-contracts-check` skips `*.test.*` and `*.spec.*` files: tests mint tokens carrying other owners'
+  capabilities on purpose, and repositories that keep tests next to the code (Games) could not run the check.
+
 ## 0.34.2 — 2026-09-24
 
 - Fixture fix: the valid mod-manifest 1.1 example (`market-stall-1.1.json`) asked for the first-party
