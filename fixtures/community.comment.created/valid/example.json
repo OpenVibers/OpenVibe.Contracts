@@ -1,0 +1,15 @@
+{
+  "comment_id": 20,
+  "thread_access_id": "ct_abc123",
+  "ref": {
+    "service": "live",
+    "type": "vod",
+    "id": "906"
+  },
+  "author": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "visibility": "public",
+  "url": "https://openvibe.community/c/ct_abc123"
+}

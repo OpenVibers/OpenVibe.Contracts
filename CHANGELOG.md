@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.35.0 — 2026-09-24
+
+- OpenVibe.Community publishes events: `community.paste.created|updated|deleted`, `community.thread.created`,
+  `community.post.created`, `community.comment.created` (payload contracts with fixtures; the community manifest
+  0.2.0 lists them). Payloads carry ids, owner or author subject, visibility and the public URL, never a body,
+  title or content: consumers (Search, Pulse, Live's Content feed) read the item itself.
+
 ## 0.34.3 — 2026-09-24
 
 - `openvibe-contracts-check` skips `*.test.*` and `*.spec.*` files: tests mint tokens carrying other owners'

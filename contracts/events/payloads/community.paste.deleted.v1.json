@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.paste.deleted.v1.json",
+  "title": "CommunityPasteDeletedPayload",
+  "description": "community.paste.deleted v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste was deleted (its content and image link are gone; the slug stays reserved). Consumers that indexed or cached it drop it. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.",
+  "type": "object",
+  "required": [
+    "paste_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "paste_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    }
+  }
+}

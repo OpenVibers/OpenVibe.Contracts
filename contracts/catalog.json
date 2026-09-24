@@ -1391,6 +1391,60 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "community.paste.created",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.paste.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste.updated",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.paste.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste.deleted",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.paste.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.thread.created",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.thread.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.post.created",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.post.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.comment.created",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.comment.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

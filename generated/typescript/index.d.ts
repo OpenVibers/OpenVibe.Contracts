@@ -13029,3 +13029,105 @@ export interface MediaObjectVisibilityChangedPayload {
    */
   changed_at: string;
 }
+
+/** community.paste.created@1.0.0 (owner: community) */
+/**
+ * community.paste.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste (text or screenshot) was created. Never the content or title. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
+ */
+export interface CommunityPasteCreatedPayload {
+  /**
+   * The paste's slug.
+   */
+  paste_id: string;
+  type: "paste" | "screenshot";
+  /**
+   * ai: written by OpenVibe's AI (Moments); never shown as a person's work.
+   */
+  origin: "user" | "ai" | "import";
+  visibility: "public" | "unlisted" | "private" | "hidden" | "deleted";
+  owner: SubjectRef | null;
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}
+
+/** community.paste.updated@1.0.0 (owner: community) */
+/**
+ * community.paste.updated v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste changed: its title, content or language (a new revision), or its visibility, NSFW flag or pin. Names what changed, never the values of text fields. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
+ */
+export interface CommunityPasteUpdatedPayload {
+  paste_id: string;
+  /**
+   * @minItems 1
+   */
+  changed: [
+    "title" | "content" | "language" | "visibility" | "is_nsfw" | "pinned",
+    ...("title" | "content" | "language" | "visibility" | "is_nsfw" | "pinned")[]
+  ];
+  visibility: "public" | "unlisted" | "private" | "hidden" | "deleted";
+  revision: number;
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}
+
+/** community.paste.deleted@1.0.0 (owner: community) */
+/**
+ * community.paste.deleted v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste was deleted (its content and image link are gone; the slug stays reserved). Consumers that indexed or cached it drop it. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
+ */
+export interface CommunityPasteDeletedPayload {
+  paste_id: string;
+}
+
+/** community.thread.created@1.0.0 (owner: community) */
+/**
+ * community.thread.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A forum thread was started in a space. Envelope: subject { type: thread, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
+ */
+export interface CommunityThreadCreatedPayload {
+  thread_id: number;
+  space: string;
+  author: SubjectRef | null;
+  visibility: "public" | "members" | "hidden";
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}
+
+/** community.post.created@1.0.0 (owner: community) */
+/**
+ * community.post.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A reply was posted in a forum thread. Never the body. Envelope: subject { type: post, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
+ */
+export interface CommunityPostCreatedPayload {
+  post_id: number;
+  thread_id: number;
+  space: string;
+  author: SubjectRef | null;
+  visibility: "public" | "members" | "hidden";
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}
+
+/** community.comment.created@1.0.0 (owner: community) */
+/**
+ * community.comment.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A comment was added to a comment thread attached to something on another service (a Live VOD or clip, a channel) or to a paste. Never the body. Envelope: subject { type: comment, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
+ */
+export interface CommunityCommentCreatedPayload {
+  comment_id: number;
+  thread_access_id: string;
+  ref: {
+    service: string;
+    type: string;
+    id: string;
+  };
+  author: SubjectRef | null;
+  visibility: "public" | "hidden" | "locked";
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}

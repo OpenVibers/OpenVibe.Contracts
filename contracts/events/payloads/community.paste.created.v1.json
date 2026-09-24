@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.paste.created.v1.json",
+  "title": "CommunityPasteCreatedPayload",
+  "description": "community.paste.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste (text or screenshot) was created. Never the content or title. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.",
+  "type": "object",
+  "required": [
+    "paste_id",
+    "type",
+    "origin",
+    "visibility",
+    "owner",
+    "url"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "paste_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$",
+      "description": "The paste's slug."
+    },
+    "type": {
+      "enum": [
+        "paste",
+        "screenshot"
+      ]
+    },
+    "origin": {
+      "enum": [
+        "user",
+        "ai",
+        "import"
+      ],
+      "description": "ai: written by OpenVibe's AI (Moments); never shown as a person's work."
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "private",
+        "hidden",
+        "deleted"
+      ]
+    },
+    "owner": {
+      "oneOf": [
+        {
+          "$ref": "../../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500,
+      "description": "The public page, or null when the item is not public."
+    }
+  }
+}

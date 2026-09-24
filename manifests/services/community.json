@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.5.0 <1.0.0"
   },
@@ -26,7 +26,14 @@
     "community.vote.set",
     "community.pulse.read"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "community.comment.created",
+    "community.paste.created",
+    "community.paste.deleted",
+    "community.paste.updated",
+    "community.post.created",
+    "community.thread.created"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "community.*"

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.paste.updated.v1.json",
+  "title": "CommunityPasteUpdatedPayload",
+  "description": "community.paste.updated v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste changed: its title, content or language (a new revision), or its visibility, NSFW flag or pin. Names what changed, never the values of text fields. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.",
+  "type": "object",
+  "required": [
+    "paste_id",
+    "changed",
+    "visibility",
+    "revision",
+    "url"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "paste_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "changed": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "title",
+          "content",
+          "language",
+          "visibility",
+          "is_nsfw",
+          "pinned"
+        ]
+      }
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "private",
+        "hidden",
+        "deleted"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500,
+      "description": "The public page, or null when the item is not public."
+    }
+  }
+}

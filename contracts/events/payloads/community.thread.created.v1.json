@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.thread.created.v1.json",
+  "title": "CommunityThreadCreatedPayload",
+  "description": "community.thread.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A forum thread was started in a space. Envelope: subject { type: thread, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.",
+  "type": "object",
+  "required": [
+    "thread_id",
+    "space",
+    "author",
+    "visibility",
+    "url"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "thread_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "space": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "author": {
+      "oneOf": [
+        {
+          "$ref": "../../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "members",
+        "hidden"
+      ]
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500,
+      "description": "The public page, or null when the item is not public."
+    }
+  }
+}

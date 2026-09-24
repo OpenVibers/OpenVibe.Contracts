@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.comment.created.v1.json",
+  "title": "CommunityCommentCreatedPayload",
+  "description": "community.comment.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A comment was added to a comment thread attached to something on another service (a Live VOD or clip, a channel) or to a paste. Never the body. Envelope: subject { type: comment, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.",
+  "type": "object",
+  "required": [
+    "comment_id",
+    "thread_access_id",
+    "ref",
+    "author",
+    "visibility",
+    "url"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "comment_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "thread_access_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "ref": {
+      "type": "object",
+      "required": [
+        "service",
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "service": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}$"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,39}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    "author": {
+      "oneOf": [
+        {
+          "$ref": "../../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "hidden",
+        "locked"
+      ]
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500,
+      "description": "The public page, or null when the item is not public."
+    }
+  }
+}
