@@ -7,7 +7,8 @@
   "name": "OpenVibe.Chat",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Chat",
-  "domains": [],
+  "domains": ["openvibe.chat"],
+  "publicOrigin": "https://openvibe.chat",
   "capabilities": [
     "chat.live_bridge.write",
     "chat.message.send",
@@ -25,7 +26,7 @@
   "namespacesOwned": [
     "chat.preferences"
   ],
-  "notes": "Wave 6: Live's chat (WebSocket, DMs, history, TTS, sounds, moderation) behind a service boundary on 127.0.0.1:4400. Alpha: runs beside Live; authority moves only when Live runs with CHAT_AUTHORITY=chat and nginx routes the chat paths (see OpenVibe.Chat docs/cutover.md).",
+  "notes": "Wave 6: Live's chat (WebSocket, DMs, history, TTS, sounds, moderation) behind a service boundary on 127.0.0.1:4400, serving Live's chat paths since 2026-09-23. Since 2026-09-24 also its own site, openvibe.chat (global chat, messages, settings, sign-in with the Network), which works while Live is down.",
   "health": "/health",
   "ready": "/ready"
 }

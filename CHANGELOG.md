@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.40.0 — 2026-09-24
+
+The chat manifest names its own domain: **openvibe.chat** (`domains`, `publicOrigin`). OpenVibe.Chat serves the site itself (global chat, messages, settings, sign-in with the Network), and Network's first-party CORS list, which comes from these manifests, now includes it. Additive.
+
 ## 0.39.0 — 2026-09-24
 
 **`network.user.token_valid_after`** (revocation propagation, roadmap WS-B task 4): when a person's tokens stop being good (a password change or reset, sign out everywhere, a ban, an account deletion or staff ending their sessions), Network moves their cutoff and emits this event in the same transaction. Every service that accepts Network user tokens refuses one whose `iat * 1000 < Date.parse(valid_after)` (Network's own rule), drops what it cached for those tokens and closes the sockets they opened. Consumers keep the latest cutoff per subject. Network produces it; Chat, Community, Live, Media, Tools and Games consume it. Fixtures cover valid and invalid payloads. Additive.
