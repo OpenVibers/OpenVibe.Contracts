@@ -1,0 +1,11 @@
+# gitleaks configuration, used by the shared security workflow
+# (OpenVibers/OpenVibe.Shared/.github/workflows/security.yml). The default rules stay on; every
+# allowlist below is one proven false positive, matched on path AND value so nothing else is hidden.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Sample Idempotency-Key value in a tools.run-request@1 fixture; an idempotency key is a caller-chosen dedupe token, not a secret"
+condition = "AND"
+paths = ['''^fixtures/tools\.run-request/valid/chained-job-file\.json$''']
+regexes = ['''^resize-01JAB2C3$''']
