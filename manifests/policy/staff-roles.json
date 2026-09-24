@@ -196,7 +196,7 @@
       "id": "staff.content.moderate",
       "minRole": "global_mod",
       "since": "1.1.0",
-      "description": "Moderate what people publish on the content products: see private, draft and suspended items; hide, unpublish, disable, retract, take down or delete someone else's blog posts, deals, coupons, Codes releases and projects, and Host sites; decide flags and review queues. Never the owner's content. Every use is reported as <service>.moderation.action.",
+      "description": "Moderate what people publish on the content products: see private, draft and suspended items; hide, unpublish, disable, retract, take down or delete someone else's blog posts and deals; decide flags and review queues. Never the owner's content. Every use is reported as <service>.moderation.action.",
       "gates": {
         "blog": [
           "domain/access.js:105,106,120,130 isStaff (moderation on any blog; suspended blogs)",
@@ -209,14 +209,6 @@
         "coupons": [
           "auth/viewer.js:43 role admin",
           "http/public.js:296 /staff review pages"
-        ],
-        "codes": [
-          "auth/sso.js:109 role admin",
-          "domain/releases.js:71 revoke any release; http/portal.js:248,646 delete any project, revoke"
-        ],
-        "host": [
-          "auth/viewer.js:67 STAFF_ROLES admin",
-          "domain/access.js:73 read/maintain/delete any project; domain/takedowns.js:49,55 takedowns"
         ]
       }
     },
@@ -250,10 +242,10 @@
           "chat/tts-routes.js:112,117,130,140,162"
         ],
         "codes": [
-          "domain/trust.js:23 app trust tiers; http/pages.js:244,257 /staff"
+          "auth/sso.js:109 role admin → staff: trust tiers (domain/trust.js:23), revoking any release (domain/releases.js:71, http/portal.js:646), deleting any project (http/portal.js:248), /staff"
         ],
         "host": [
-          "domain/access.js:68 quotas (domain/projects.js:128 setQuota)"
+          "auth/viewer.js:67 STAFF_ROLES admin → staff: quotas (domain/access.js:68), maintaining or deleting any project (access.js:73), takedowns (domain/takedowns.js:49,55)"
         ],
         "vip": [
           "api/auth.js:72 VIP_STAFF_ROLES → network plans and other creators' plans (api/v1.js:64,68,78; web/routes.js:31,119)"
@@ -286,7 +278,7 @@
           "domain/context.js:76,181; http/api.js:91,174; http/editor.js:31; http/pages.js:108"
         ],
         "coupons": [
-          "http/api.js:105 requireStaffOrService (merchants, coupon status); http/public.js:250 and api.js:164 staff-origin submissions"
+          "auth/viewer.js:43 role admin → staff: http/api.js:105 requireStaffOrService (merchants, coupon status); http/public.js:250,296 and api.js:164 (staff-origin submissions, /staff review)"
         ]
       }
     },
