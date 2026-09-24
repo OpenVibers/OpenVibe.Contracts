@@ -19,15 +19,16 @@
   "health": "/api/health",
   "capabilities": [
     "identity.subject.resolve",
+    "mods.grant.manage",
     "network.coins.credit",
     "network.coins.debit",
     "network.coins.transfer",
-    "network.notifications.push",
+    "network.integration.github.read",
     "network.modules.read",
     "network.modules.write",
-    "mods.grant.manage",
-    "network.project.read",
-    "network.project.manage"
+    "network.notifications.push",
+    "network.project.manage",
+    "network.project.read"
   ],
   "eventsProduced": [
     "network.app.created",

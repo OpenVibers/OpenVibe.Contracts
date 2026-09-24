@@ -1,0 +1,17 @@
+{
+  "id": "network.integration.github.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read the network's GitHub API token (read-only, public repositories), which the owner sets in Network's admin panel or in GITHUB_TOKEN. Used by OpenVibe.Blog's network changelog so its GitHub calls do not share the host's anonymous rate limit. Never granted to apps or mods.",
+  "permissions": [
+    "integrations:github:read"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "integration-secret",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/integrations/github-token"
+  ]
+}

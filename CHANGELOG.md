@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.37.0 — 2026-09-24
+
+`network.integration.github.read` (first-party only) lets a service read the network's GitHub API token. The owner sets the token in Network's admin panel, or in `GITHUB_TOKEN`. OpenVibe.Blog's network changelog uses it, so its GitHub calls do not share the host's anonymous rate limit. It is never granted to apps or mods. Additive.
+
 ## 0.36.0 — 2026-09-24
 
 The moderation audit log (ADR-022):
