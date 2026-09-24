@@ -1,0 +1,14 @@
+{
+  "player": {
+    "id": "01kz4a7r2p9b6g3e8v0z",
+    "slot": 0,
+    "name": "Guest 42",
+    "account": "guest",
+    "subject": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    }
+  },
+  "world": "openvibeville_v2",
+  "restored": false
+}

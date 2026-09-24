@@ -1,0 +1,12 @@
+{
+  "mod": {
+    "id": "mod_town_square",
+    "name": "Town Square",
+    "version": "1.0.0",
+    "target": "games.browser",
+    "trust_tier": "unreviewed"
+  },
+  "requested": [],
+  "granted": [],
+  "status": "enabled"
+}

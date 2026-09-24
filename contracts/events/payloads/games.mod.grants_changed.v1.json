@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/games.mod.grants_changed.v1.json",
+  "title": "GamesModGrantsChangedPayload",
+  "description": "games.mod.grants_changed v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.grant and ModRegistry.revokeGrant in mods/registry.ts; POST /api/v1/mods/:id/grants, DELETE /api/v1/mods/:id/grants/:capability). One capability of a non-revoked install was granted (granted: [capability], revoked: []) or one active grant was revoked (granted: [], revoked: [capability]); each call changes exactly one capability today. Not emitted when nothing changed. Revoking the whole install is games.mod.revoked instead. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).",
+  "type": "object",
+  "required": [
+    "mod",
+    "granted",
+    "revoked"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "mod": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version",
+        "target",
+        "trust_tier"
+      ],
+      "additionalProperties": false,
+      "description": "The install, from its validated mods/mod-manifest.v1 manifest.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "Mod id (manifest id). Also the envelope subject id."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$",
+          "description": "Semantic version of the installed release."
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}\\.[a-z][a-z0-9-]{1,39}$",
+          "description": "Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames)."
+        },
+        "trust_tier": {
+          "enum": [
+            "unreviewed",
+            "reviewed",
+            "first-party"
+          ],
+          "description": "Install metadata set at install; never consulted by a grant check."
+        }
+      }
+    },
+    "granted": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      },
+      "description": "Capabilities newly granted by this change."
+    },
+    "revoked": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      },
+      "description": "Capabilities whose grant this change revoked."
+    }
+  }
+}

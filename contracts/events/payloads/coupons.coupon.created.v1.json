@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.coupon.created.v1.json",
+  "title": "CouponsCouponCreatedPayload",
+  "description": "coupons.coupon.created v1 (OpenVibe.Coupons server/domain/coupons.js submit and importFromSource, payload from lifecyclePayload). A new code was recorded, in the transaction that inserted it: submitted by a member, by staff or by an AI extraction run (POST /api/v1/coupons/submit or the site form), or imported from an OpenVibe.Sources item (origin source). Submitting a code the merchant already has adds evidence and emits no created event. A new code always starts with status unknown and confidence null: a submission can never carry a status or a confidence. AI-extracted codes, imported codes (unless COUPONS_SOURCES_AUTO_PUBLISH is true and the merchant is active) and codes for a pending merchant start with review_state pending. Left out on purpose: the code text, title, description and restrictions (Search gets them from coupons.index_document.*) and who submitted it (submitters stay inside Coupons). Envelope: subject { type: coupon, id: cpn_… }, visibility public when the new code is publicly listed (published, merchant active, not expired), otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.",
+  "type": "object",
+  "required": ["merchant_id", "status", "confidence", "review_state", "expires_at", "canonical_url", "origin"],
+  "additionalProperties": false,
+  "properties": {
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merchant the code belongs to." },
+    "status": { "const": "unknown", "description": "Every new code starts unknown; only people's reports can move it to reported_working or reported_failed." },
+    "confidence": { "type": "null", "description": "Always null at creation: no counted report yet." },
+    "review_state": { "enum": ["pending", "published"], "description": "pending = waits for staff review (AI-extracted, imported without auto-publish, or merchant pending); published = eligible for active results." },
+    "expires_at": { "type": ["string", "null"], "format": "date-time", "description": "Known expiry (UTC; a date-only expiry is 23:59:59.999Z of that day). null = expiry unknown, never defaulted." },
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The code's page on Coupons (<origin>/c/<coupon id>)." },
+    "origin": { "enum": ["member", "staff", "source", "ai"], "description": "How the code arrived: a member's or a staff member's submission, an OpenVibe.Sources import, or an AI extraction run (X-OV-Origin: ai)." }
+  }
+}

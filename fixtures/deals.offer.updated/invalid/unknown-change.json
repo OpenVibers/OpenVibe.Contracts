@@ -1,0 +1,13 @@
+{
+  "offer_id": "dof_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "slug": "usb-c-charger-65w-k0mnpq",
+  "url": "https://openvibe.deals/d/usb-c-charger-65w-k0mnpq",
+  "title": "USB-C charger 65W",
+  "status": "active",
+  "store": "shop.example",
+  "product_id": null,
+  "latest_observation": { "price": "29.99", "currency": "USD", "availability": "in_stock", "observed_at": "2026-09-23T10:15:00.000Z" },
+  "freshness": "fresh",
+  "indexability": { "decision": "index", "reasons": [] },
+  "changed": ["price"]
+}

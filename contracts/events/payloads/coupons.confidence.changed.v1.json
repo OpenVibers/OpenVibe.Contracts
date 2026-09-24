@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.confidence.changed.v1.json",
+  "title": "CouponsConfidenceChangedPayload",
+  "description": "coupons.confidence.changed v1 (OpenVibe.Coupons server/domain/coupons.js recompute). A code's confidence moved, in the transaction of the recompute: a new or corrected report, evidence added or withdrawn (evidence on one of the merchant's own domains raises the prior), or the sweep letting old reports decay (to null once no report is younger than 30 days). confidence = (a0 + W) / (a0 + 1 + W + F), rounded to 2 decimals, over recency-weighted worked (W) and failed (F) reports (half-life 7 days, each reporter's latest report only; a0 = 1, or 1.5 with merchant evidence); null = no counted report in the 30-day window. from and to always differ. status is the code's status after the change; a status change also emits coupons.coupon.updated, .expired or .disabled. Never names a reporter. Envelope: subject { type: coupon, id: cpn_… }, visibility internal, priority important (not set: the Events default), actor service:coupons. No known consumers.",
+  "type": "object",
+  "required": ["merchant_id", "from", "to", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merchant the code belongs to." },
+    "from": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Confidence before; null = no counted report." },
+    "to": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Confidence after; null = no counted report left in the window." },
+    "status": { "enum": ["unknown", "reported_working", "reported_failed", "expired", "disabled"], "description": "The code's status after the change (reported_working at confidence >= 0.6, reported_failed at <= 0.4, given enough recent reports)." }
+  }
+}

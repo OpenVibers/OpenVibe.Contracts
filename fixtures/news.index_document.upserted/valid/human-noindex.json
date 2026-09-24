@@ -1,0 +1,39 @@
+{
+  "owner": "news",
+  "type": "story",
+  "id": "sty_01K5S1F5H7K9N1Q3S5V7X9Z1B3",
+  "revision": 1,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.news/stories/treatment-plant-expansion-approved",
+  "title": "Treatment plant expansion approved",
+  "summary": "The valley water authority approved the expansion of its treatment plant.",
+  "body": "The valley water authority approved the expansion of its treatment plant.",
+  "facets": {
+    "outlets": [
+      "Valley Courier"
+    ],
+    "sources": 1
+  },
+  "language": "en",
+  "authorship": "human",
+  "provenance": [
+    {
+      "service": "sources",
+      "type": "item",
+      "id": "itm_01K5RZ5A1B3C5D7E9F1G3H5J7K",
+      "label": "Water authority backs plant expansion",
+      "url": "https://valley-courier.example/water/plant",
+      "retrieved_at": "2026-09-22T09:15:00.000Z"
+    }
+  ],
+  "publication_state": "published",
+  "published_at": "2026-09-22T12:00:00.000Z",
+  "updated_at": "2026-09-22T12:00:00.000Z",
+  "indexability": {
+    "decision": "noindex",
+    "reasons": [
+      "unsourced"
+    ]
+  }
+}

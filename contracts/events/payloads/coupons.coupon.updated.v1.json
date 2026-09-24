@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.coupon.updated.v1.json",
+  "title": "CouponsCouponUpdatedPayload",
+  "description": "coupons.coupon.updated v1 (OpenVibe.Coupons server/domain/coupons.js recompute, approve and setExpiry, payload from lifecyclePayload). Emitted in the transaction of the change when (a) a code's status moved to unknown, reported_working or reported_failed: people's reports through the confidence formula (reason report), evidence added or withdrawn (evidence), old reports decaying (decay), or staff or a service re-enabling a disabled or expired code (staff, service:<client>[:<note>]); (b) staff published a code that waited for review (reason approved; status unchanged, so previous_status equals status and may be any status); or (c) the code's expiry was set or cleared (reason expiry_changed, no previous_status; setExpiry has no HTTP route yet). A move to expired or disabled is coupons.coupon.expired or coupons.coupon.disabled instead, and a confidence change without a status change emits only coupons.confidence.changed. Staff notes are reduced to reason staff; a service's note is copied into the reason. Never names a submitter, reporter or staff member. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code is publicly listed after the change (recompute: before or after), otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.",
+  "type": "object",
+  "required": ["merchant_id", "status", "confidence", "review_state", "expires_at", "canonical_url", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merchant the code belongs to." },
+    "status": { "enum": ["unknown", "reported_working", "reported_failed", "expired", "disabled"], "description": "Status after the change. expired and disabled occur only with reason approved or expiry_changed (neither moves the status)." },
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Report confidence after the change, rounded to 2 decimals; null = no counted report in the last 30 days." },
+    "review_state": { "enum": ["pending", "published"] },
+    "expires_at": { "type": ["string", "null"], "format": "date-time", "description": "Known expiry (UTC); null = expiry unknown." },
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The code's page on Coupons (<origin>/c/<coupon id>)." },
+    "previous_status": { "enum": ["unknown", "reported_working", "reported_failed", "expired", "disabled"], "description": "Status before the change. Absent with reason expiry_changed." },
+    "reason": {
+      "description": "Why it changed: report, evidence, decay, staff, approved, expiry_changed, or service:<client>[:<note>] when a service holding coupons.status.update re-enabled it.",
+      "anyOf": [
+        { "enum": ["report", "evidence", "decay", "staff", "approved", "expiry_changed"] },
+        { "type": "string", "pattern": "^service:[\\s\\S]+$", "description": "service:<client id>, plus :<note> (at most 200 characters, copied verbatim) when the service gave one." }
+      ]
+    }
+  }
+}

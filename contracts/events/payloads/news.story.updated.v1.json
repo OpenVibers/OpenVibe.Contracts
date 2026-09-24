@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.story.updated.v1.json",
+  "title": "NewsStoryUpdatedPayload",
+  "description": "news.story.updated v1 (OpenVibe.News server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). A published story now shows a different published revision (an editor published another revision, news.story.publish, stories.js publish) or its canonical URL changed, in the transaction of the change. Republishing the same revision with a correction note, and topic or noindex changes, emit no product event (only news.index_document.* when Search's copy changes). For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the text (Search gets that from news.index_document.*). Envelope: subject { type: story, id: sty_…, revision: <published revision> }, visibility public when the gate lets the story be listed, otherwise internal, priority important (the envelope default; News sets none), actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.",
+  "type": "object",
+  "required": ["canonical_url", "publication_state", "indexability"],
+  "additionalProperties": false,
+  "properties": {
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048 },
+    "publication_state": { "const": "published" },
+    "indexability": { "type": "object", "required": ["decision", "reasons"], "additionalProperties": false, "properties": { "decision": { "enum": ["index", "noindex"] }, "reasons": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" } } } },
+    "topic": { "type": "string", "minLength": 1, "maxLength": 60, "description": "Slug of the story's topic (news_topics); absent when it has none." }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.index_document.upserted.v1.json",
+  "title": "CouponsIndexDocumentUpsertedPayload",
+  "description": "coupons.index_document.upserted v1 (OpenVibe.Coupons server/domain/publication.js sendDocument, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a code in active results (type coupon: published, merchant active, not expired or disabled; title '<code> — <title> (<merchant>)', status and expiry in the summary, description and restrictions in the body, facets merchant, status and expiry_known, Sources items in provenance) or of an active merchant (type merchant: facets active_codes; indexability noindex thin_content while it has no active code). Sent in the transaction of every change to what Search should hold (coupons.js syncIndex and syncMerchant); the revision (coupons_index_revisions) grows only when the document changed, and an unchanged document is not sent again. Visibility is always public. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: coupon | merchant, id, revision: <document revision> }, visibility internal, priority important, actor service:coupons.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object", "required": ["owner", "type", "deleted"],
+      "properties": { "owner": { "const": "coupons" }, "type": { "enum": ["coupon", "merchant"] }, "id": { "type": "string", "pattern": "^(cpn|mer)_[0-9A-HJKMNP-TV-Z]{26}$" }, "deleted": { "const": false } }
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/games.skill.leveled.v1.json",
+  "title": "GamesSkillLeveledPayload",
+  "description": "games.skill.leveled v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts progressEvents, via GameEventRecorder.recordPlayersSaved from game/gameServer.ts flush and savePlayer). A persisted skill level went up: derived from what a save actually wrote, compared with the last committed save of that character (for a restored character first the database state at join, for a new one level 1), in the same transaction. One event per raised skill per save, so level can be more than previous_level + 1; never emitted for a decrease, and not re-emitted once the baseline advances on commit. Only for characters that joined while events were on. XP totals are left out. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.",
+  "type": "object",
+  "required": [
+    "player",
+    "world",
+    "skill",
+    "level",
+    "previous_level"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "player": {
+      "description": "The character. account network: a signed-in openvibe.network account, keyed by its canonical subject (user usr_..., or guest gst_... for a Network guest session). account guest: a local guest (browser token), or a Network sign-in whose token predates subject ids; no subject then.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "slot",
+            "name",
+            "account",
+            "subject"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-hjkmnp-tv-z]{20}$",
+              "description": "Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id."
+            },
+            "slot": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2,
+              "description": "Character slot under the account (0-2; a local guest only has slot 0)."
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24,
+              "description": "Character name from the client hello (1-24 characters); not unique."
+            },
+            "account": {
+              "const": "network"
+            },
+            "subject": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "id"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "user"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "id"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "guest"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^gst_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "slot",
+            "name",
+            "account"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-hjkmnp-tv-z]{20}$",
+              "description": "Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id."
+            },
+            "slot": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2,
+              "description": "Character slot under the account (0-2; a local guest only has slot 0)."
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24,
+              "description": "Character name from the client hello (1-24 characters); not unique."
+            },
+            "account": {
+              "const": "guest"
+            }
+          }
+        }
+      ]
+    },
+    "world": {
+      "type": "string",
+      "description": "World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved."
+    },
+    "skill": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$",
+      "description": "Content skill id (e.g. mining, woodcutting)."
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 2,
+      "description": "Level now persisted; always greater than previous_level."
+    },
+    "previous_level": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Level at the previous baseline (1 when the skill had none)."
+    }
+  }
+}

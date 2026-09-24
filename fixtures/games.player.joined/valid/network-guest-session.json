@@ -1,0 +1,14 @@
+{
+  "player": {
+    "id": "01kz4a7r2p9b6g3e8v0y",
+    "slot": 0,
+    "name": "Wanderer",
+    "account": "network",
+    "subject": {
+      "type": "guest",
+      "id": "gst_01JAC7T9W2X4Y6Z8A0B1C3D5E7"
+    }
+  },
+  "world": "openvibeville_v2",
+  "restored": false
+}

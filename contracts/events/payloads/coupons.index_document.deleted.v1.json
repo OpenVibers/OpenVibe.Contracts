@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.index_document.deleted.v1.json",
+  "title": "CouponsIndexDocumentDeletedPayload",
+  "description": "coupons.index_document.deleted v1 (OpenVibe.Coupons server/domain/publication.js sendDocument, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the code left active results (expired, disabled, its merchant disabled) or the merchant is no longer active, so Search drops it at this revision or older. Only sent for a resource Search was sent before: a code or merchant that was never indexed gets no tombstone. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: coupon | merchant, id, revision }, visibility internal, priority important, actor service:coupons.",
+  "type": "object",
+  "required": ["type", "id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "enum": ["coupon", "merchant"] },
+    "id": { "type": "string", "pattern": "^(cpn|mer)_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "revision": { "type": "integer", "minimum": 1, "maximum": 9007199254740991, "description": "Index revision of the tombstone; wins over any document at the same or an older revision." }
+  }
+}

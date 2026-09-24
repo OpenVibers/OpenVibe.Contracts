@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/trade.index_document.upserted.v1.json",
+  "title": "TradeIndexDocumentUpsertedPayload",
+  "description": "trade.index_document.upserted v1 (OpenVibe.Trade server/domain/indexing.js refresh, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of an instrument page (/i/<symbol>), the only public indexable object Trade has (watchlists, alert rules and deliveries never reach Search). Sent while the instrument is active and the SEO gate lets the page be listed (financial context is sensitive: the page is hidden until a person-reviewed context is published), whenever the document changed: after a recorded observation, a context publish, review or retraction, an instrument edit, and the worker's refresh pass. The sequencer (trade_index_revisions) gives an unchanged document its old revision and nothing is sent. A page whose newest monetary observation is too old stays as a noindex document (reason stale_price). Title '<symbol> — <name>', language en, facets kind, symbol, exchange; provenance lists Trade's own cited records. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: instrument, id, revision: <document revision> }, visibility internal, priority important, actor service:trade.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object",
+      "required": ["owner", "type", "deleted"],
+      "properties": {
+        "owner": { "const": "trade" },
+        "type": { "const": "instrument" },
+        "id": { "type": "string", "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "deleted": { "const": false }
+      }
+    }
+  ]
+}

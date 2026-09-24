@@ -305,6 +305,29 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     }
 }
 
+// ── Payload contracts added in v0.34.0 (News, Reviews, Coupons, Deals, Trade, Games, Media) ──
+// Every event these producers list has a payload contract; Search documents are index-document@1
+// with the owner fixed; Media's object events carry identity and state only.
+{
+    for (const svc of ['news', 'reviews', 'coupons', 'deals', 'trade', 'games']) {
+        for (const t of services.get(svc).eventsProduced) ok(contracts.catalog.some(c => c.id === t && c.owner === svc), `${t} has a payload contract owned by ${svc}`);
+    }
+    for (const c of contracts.catalog.filter(x => /\.index_document\.upserted$/.test(x.id))) {
+        const s = contracts.schema(c.id);
+        if (s.$ref) ok(s.$ref === '../../search/index-document.v1.json', `${c.id} is a search.index-document@1`);   // sources (v0.18): any owner
+        else ok(s.allOf && s.allOf[0].$ref === '../../search/index-document.v1.json' && s.allOf[1].properties.owner.const === c.owner && s.allOf[1].properties.deleted.const === false, `${c.id} is a search.index-document@1 owned by ${c.owner}`);
+        const del = contracts.schema(c.id.replace(/upserted$/, 'deleted'));
+        ok(JSON.stringify([...del.required].sort()) === '["id","revision","type"]' && del.additionalProperties === false, `${c.id.replace(/upserted$/, 'deleted')} is a { type, id, revision } tombstone`);
+    }
+    const objDel = contracts.schema('media.object.deleted'), objVis = contracts.schema('media.object.visibility_changed');
+    const leaks = ['title', 'description', 'metadata', 'owner_subject', 'owner_user_id', 'owner_app', 'namespace', 'key', 'storage_key', 'bucket', 'provider', 'size_bytes', 'content_hash', 'path'];
+    for (const s of [objDel, objVis]) ok(s.additionalProperties === false && leaks.every(k => !(k in s.properties)) && JSON.stringify([...s.required].sort()) === JSON.stringify(Object.keys(s.properties).sort()), `${s.title}: identity and state only, every field always present`);
+    ok(JSON.stringify(objVis.properties.visibility.enum) === JSON.stringify(objVis.properties.previous_visibility.enum), 'visibility and previous_visibility take the same values');
+    const vis = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/media.object.visibility_changed/valid/clip-made-private.json'), 'utf8'));
+    for (const v of objVis.properties.visibility.enum) ok(!contracts.validate('media.object.visibility_changed@1', { ...vis, visibility: v, previous_visibility: v }).valid, `visibility_changed never repeats the value (${v})`);
+    ok(services.get('media').eventsProduced.includes('media.object.deleted') && services.get('media').eventsProduced.includes('media.object.visibility_changed'), 'the media manifest lists its object events');
+}
+
 // ── Mod manifest 1.1.0 (v0.34.0, ADR-013 amendment) ──────────────────────
 // Read/write grants, billing hooks and dependencies are optional, so every 1.0.0 manifest stays
 // valid; the split uses exactly the namespace patterns of the older lists; money goes only through

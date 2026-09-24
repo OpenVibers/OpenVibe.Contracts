@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/trade.source.recovered.v1.json",
+  "title": "TradeSourceRecoveredPayload",
+  "description": "trade.source.recovered v1 (OpenVibe.Trade server/domain/freshness.js evaluate). A stale source is fresh again by Trade's own clock: a successful fetch younger than its staleness window is now known, reported through Sources' health during the sync (sync.js reportHealth) or proved by the retrieved_at of a newly recorded observation or filing (noteRetrieval). Sent only on a stale-to-fresh transition; a source that is already fresh the first time Trade evaluates it is not a recovery and sends nothing. Envelope: subject { type: source, id: <source_key> }, visibility public, priority low, actor service:trade.",
+  "type": "object",
+  "required": ["source_key", "stale", "stale_since", "last_success_at", "stale_after_sec", "upstream_status", "evaluated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "source_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$", "description": "OpenVibe.Sources source key." },
+    "stale": { "const": false },
+    "stale_since": { "type": "null", "description": "Always null: the source is fresh." },
+    "last_success_at": { "type": "string", "format": "date-time", "description": "The successful fetch that made it fresh (or a later one)." },
+    "stale_after_sec": { "type": "integer", "description": "The staleness window applied, in seconds." },
+    "upstream_status": {
+      "type": ["string", "null"],
+      "description": "Sources' own health status as last reported (healthy, stale, failing, never_fetched, disabled, manual); null if never reported."
+    },
+    "evaluated_at": { "type": "string", "format": "date-time" }
+  }
+}

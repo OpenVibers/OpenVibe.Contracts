@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.source.ingested.v1.json",
+  "title": "NewsSourceIngestedPayload",
+  "description": "news.source.ingested v1 (OpenVibe.News server/domain/ingest.js ingestedEvent, from apply and applyRemoval). An OpenVibe.Sources item of category news changed what News holds, in the transaction that applied it: created (a new news_source_items row, with its dedupe outcome and the cluster it joined; news.cluster.updated follows in the same transaction), updated (Sources sent a newer revision of an item News has; adds previous_revision) or removed (Sources removed the item: sticky, the stored summary is dropped; adds reason and origin). Items arrive through the Events webhook (sources.item.*) or the cursor pull; a replay, an older or equal revision, an item of another category, an update to a removed item and a removal of an item never ingested emit nothing, and an item without a title is news.source.failed (state rejected) instead. Deliberately left out: the headline, outlet, authors, published_at and licensed summary (GET /api/v1/source-items/:id with news.cluster.read) and the cluster_reason explanation. Envelope: subject { type: source_item, id: nsi_… }, visibility internal, priority low, actor service:news.",
+  "type": "object",
+  "required": ["item_id", "action", "status", "sources_item", "source_key", "canonical_url", "duplicate_of", "dedupe_rule", "cluster_id"],
+  "additionalProperties": false,
+  "properties": {
+    "item_id": { "type": "string", "pattern": "^nsi_[0-9A-HJKMNP-TV-Z]{26}$", "description": "News' own source item (news_source_items)." },
+    "action": { "enum": ["created", "updated", "removed"] },
+    "status": { "enum": ["active", "duplicate", "removed"], "description": "The item after the change: active or duplicate for created and updated, removed exactly when action is removed." },
+    "sources_item": {
+      "type": "object", "required": ["service", "type", "id", "revision"], "additionalProperties": false,
+      "description": "Typed reference (common/entity-ref@1 shape) to the OpenVibe.Sources item and the Sources revision News now holds.",
+      "properties": {
+        "service": { "const": "sources" },
+        "type": { "const": "item" },
+        "id": { "type": "string", "minLength": 1, "description": "The Sources item id (itm_…), as Sources gave it." },
+        "revision": { "type": "integer", "description": "Sources revision the stored fields came from (1 when Sources sent none)." }
+      }
+    },
+    "source_key": { "type": "string", "minLength": 1, "description": "The Sources source the item came from, as Sources gave it ('unknown' when it gave none)." },
+    "canonical_url": { "type": ["string", "null"], "description": "The item's canonical URL as Sources gave it (not validated by News); null when it had none." },
+    "duplicate_of": { "type": ["string", "null"], "pattern": "^nsi_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The original item when status is duplicate (the root of any duplicate chain); null otherwise." },
+    "dedupe_rule": { "enum": ["canonical_url", "content_hash", "near_title", null], "description": "Which dedupe rule matched when the item was first ingested: same normalised URL, same Sources content hash, or a near-identical headline within 48 h; null when it is not a duplicate." },
+    "cluster_id": { "type": ["string", "null"], "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The cluster the item belongs to (every ingested item is placed in one)." },
+    "previous_revision": { "type": "integer", "description": "action updated only: the Sources revision News held before." },
+    "reason": { "type": "string", "minLength": 1, "maxLength": 500, "description": "action removed only: why Sources removed it ('removed upstream' when it gave no reason)." },
+    "origin": { "enum": ["webhook", "pull"], "description": "action removed only: whether the removal came as a sources.item.removed delivery or through the cursor pull." }
+  }
+}

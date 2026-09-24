@@ -1,0 +1,14 @@
+{
+  "instrument": { "id": "ins_01JAB2C3D4E5F6G7H8J9K0MNPQ", "symbol": "ACME" },
+  "id": "obs_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "metric": "price.close",
+  "value": 10.5,
+  "unit": "USD",
+  "currency": "USD",
+  "period": null,
+  "observed_at": "2026-09-22T11:59:00.000Z",
+  "retrieved_at": "2026-09-22T12:00:00.000Z",
+  "recorded_at": "2026-09-22T12:00:03.412Z",
+  "max_age_sec": null,
+  "source": { "key": "test-feed", "item_id": null, "url": "https://example.org/acme/close", "ref": "r1" }
+}

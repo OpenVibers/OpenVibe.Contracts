@@ -1,0 +1,11 @@
+{
+  "origin": "sources",
+  "source_key": "wire-a",
+  "sources_item_id": null,
+  "state": "http_error",
+  "error_code": "http_503",
+  "http_status": 503,
+  "detail": null,
+  "run_id": "frn_01K5S3J8M0P2R4T6V8X0Z2B4D6",
+  "consecutive_failures": 3
+}

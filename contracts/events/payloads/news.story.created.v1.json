@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.story.created.v1.json",
+  "title": "NewsStoryCreatedPayload",
+  "description": "news.story.created v1 (OpenVibe.News server/domain/stories.js create). An editor opened a draft story (news.story.create), in the transaction that created it; when it was opened from a cluster, that cluster's active items (not duplicates, not removed upstream) were attached as its first sources. A first text sent with the request becomes revision 1 in the same transaction and is not announced here. Deliberately left out: the working headline, slug and any text (drafts are not public). Envelope: subject { type: story, id: sty_… }, visibility internal, priority low, actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.",
+  "type": "object",
+  "required": ["cluster_id", "topic", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "cluster_id": { "type": ["string", "null"], "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The cluster it was opened from, followed through merges; null for a story opened without one." },
+    "topic": { "type": ["string", "null"], "minLength": 1, "maxLength": 60, "description": "Slug of the story's topic (news_topics); null when none was given." },
+    "sources": { "type": "integer", "minimum": 0, "description": "How many source items were attached at creation." }
+  }
+}

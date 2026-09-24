@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.index_document.upserted.v1.json",
+  "title": "ReviewsIndexDocumentUpsertedPayload",
+  "description": "reviews.index_document.upserted v1 (OpenVibe.Reviews server/reviews/service.js syncEntity, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of an active entity page: the entity name as title, the published summary (or the entity description) as summary, the summary text and the aggregate's computation lines as body, facets kind / has_aggregate / sources, the published summary's authorship, provenance of up to 40 cited Sources items (plus the AI run of an AI-drafted summary), and the gate's indexability (noindex thin_content / unsourced until signals and a summary back the page). Sent whenever what Search should hold changed (the revision grows with every change), in the transaction of the change; the reconciliation at every start (reconcileIndex) re-sends only documents that differ. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: entity, id, revision: <document revision> }, visibility internal, priority important, actor service:reviews.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object", "required": ["owner", "type", "deleted"],
+      "properties": { "owner": { "const": "reviews" }, "type": { "const": "entity" }, "id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$" }, "deleted": { "const": false } }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.cluster.updated.v1.json",
+  "title": "NewsClusterUpdatedPayload",
+  "description": "news.cluster.updated v1 (OpenVibe.News server/domain/clusters.js emit, from assign, merge, split and reverse). A story cluster changed, in the transaction that changed it. action: created (a new item started it, adds item_id; or an editor's split made it, adds split_from and audit_id), item_added (an ingested item joined it, adds item_id and rule: duplicate_of when the item follows the item it duplicates, shared_terms with the score when it shares enough entities and terms), merged (an editor merged another cluster into it: absorbed, audit_id, moved), split (an editor moved items out of it into a new cluster: new_cluster, audit_id, moved), merge_reversed (a merge into it was undone: restored, audit_id), reopened (the cluster a reversed merge had absorbed is open again: audit_id) or split_reversed (a split off it was undone: dissolved, audit_id). audit_id is the news_cluster_audit row (cla_…) of the merge, split or reversal. label, status and item_count describe the cluster after the change. Deliberately left out: the key terms and entities, the time window and each member's cluster_reason (GET /api/v1/clusters/:id with news.cluster.read). Envelope: subject { type: cluster, id: clu_… }, visibility internal, priority low, actor service:news (also for an editor's merge, split or reversal; the editor is recorded on the audit row).",
+  "type": "object",
+  "required": ["cluster_id", "action", "status", "label", "item_count"],
+  "additionalProperties": false,
+  "properties": {
+    "cluster_id": { "type": "string", "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "action": { "enum": ["created", "item_added", "merged", "split", "merge_reversed", "reopened", "split_reversed"] },
+    "status": { "enum": ["open", "merged", "dissolved"], "description": "The cluster's status after the change (in practice open: merged and dissolved clusters are not announced by their own event)." },
+    "label": { "type": "string", "minLength": 1, "description": "Derived from the members' top entities (up to 3) or terms (up to 4), joined with ' · '; 'unlabelled' when there are none. Never written by a person or a model." },
+    "item_count": { "type": "integer", "minimum": 0, "description": "Every member item, duplicates and items removed upstream included." },
+    "item_id": { "type": "string", "pattern": "^nsi_[0-9A-HJKMNP-TV-Z]{26}$", "description": "created by ingestion and item_added: the item that started or joined the cluster." },
+    "rule": { "enum": ["duplicate_of", "shared_terms"], "description": "item_added only: why the item joined." },
+    "score": { "type": "integer", "minimum": 0, "description": "item_added with rule shared_terms only: 2 × shared entities + shared terms." },
+    "split_from": { "type": "string", "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "created by a split only: the cluster the items came from." },
+    "audit_id": { "type": "string", "pattern": "^cla_[0-9A-HJKMNP-TV-Z]{26}$", "description": "Every editor action (and created by a split): the news_cluster_audit row." },
+    "absorbed": { "type": "string", "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "merged only: the cluster merged into this one (now status merged)." },
+    "moved": { "type": "integer", "minimum": 0, "description": "merged and split only: how many items moved." },
+    "new_cluster": { "type": "string", "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "split only: the cluster the items moved into (announced by its own created event)." },
+    "restored": { "type": "string", "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "merge_reversed only: the absorbed cluster, open again (announced by its own reopened event)." },
+    "dissolved": { "type": ["string", "null"], "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$", "description": "split_reversed only: the split-off cluster when it was left empty and dissolved; null when items that joined it after the split keep it open." }
+  }
+}

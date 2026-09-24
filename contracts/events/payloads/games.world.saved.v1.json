@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/games.world.saved.v1.json",
+  "title": "GamesWorldSavedPayload",
+  "description": "games.world.saved v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts worldSavedEvent, via GameEventRecorder.recordWorldSaved from game/gameServer.ts flush). The authoritative world was written: a checkpoint at most once per WORLD_SAVED_EVENT_MINUTES (default 15) and only when something was written, and always on shutdown, in the transaction of the flush that triggers it. The counts are totals of the flushes since `since` (the previous event, or process start); players_written counts dirty characters saved by flushes, not the single-character saves on disconnect. Envelope: subject { type: world, id: <world> }, visibility internal, priority low, actor service:games. No consumer yet.",
+  "type": "object",
+  "required": [
+    "world",
+    "reason",
+    "entities_written",
+    "players_written",
+    "since"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "world": {
+      "type": "string",
+      "description": "World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved."
+    },
+    "reason": {
+      "enum": [
+        "checkpoint",
+        "shutdown"
+      ]
+    },
+    "entities_written": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "World entity rows written since `since`."
+    },
+    "players_written": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Character rows written by flushes since `since`."
+    },
+    "since": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start of the period these totals cover."
+    }
+  }
+}

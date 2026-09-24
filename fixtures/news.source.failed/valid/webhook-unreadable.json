@@ -1,0 +1,9 @@
+{
+  "origin": "webhook",
+  "source_key": "wire-a",
+  "sources_item_id": "itm_01K5RZ2V7W9Y1A3C5E7G9J1K3M",
+  "state": "failed",
+  "error_code": "sources.error",
+  "http_status": null,
+  "detail": "connect ECONNREFUSED 127.0.0.1:4700"
+}

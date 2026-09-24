@@ -1,0 +1,9 @@
+{
+  "origin": "pull",
+  "source_key": null,
+  "sources_item_id": null,
+  "state": "failed",
+  "error_code": "sources.http_503",
+  "http_status": 503,
+  "detail": "OpenVibe.Sources answered 503: down"
+}

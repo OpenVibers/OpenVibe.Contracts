@@ -1,0 +1,10 @@
+{
+  "origin": "pull",
+  "source_key": null,
+  "sources_item_id": null,
+  "state": "failed",
+  "error_code": "pull.error",
+  "http_status": null,
+  "detail": null,
+  "cursor": 42
+}

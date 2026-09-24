@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/trade.source.stale.v1.json",
+  "title": "TradeSourceStalePayload",
+  "description": "trade.source.stale v1 (OpenVibe.Trade server/domain/freshness.js evaluate). A source Trade shows data from went stale by Trade's own clock: its last successful fetch is older than its staleness window (Sources' stale_after_sec, else TRADE_DEFAULT_STALE_AFTER_SEC), or no success is known at all. Sent only on a transition (fresh to stale), or once when Trade first evaluates a source that is already stale; replays and further ticks send nothing. Evaluated when the Sources sync reports a source's health (sync.js reportHealth), when a recorded observation or filing proves a retrieval (noteRetrieval), and by the worker (evaluateAll). Sources' own health status is carried as upstream_status but is not the verdict. Envelope: subject { type: source, id: <source_key> }, visibility public, priority low, actor service:trade.",
+  "type": "object",
+  "required": ["source_key", "stale", "stale_since", "last_success_at", "stale_after_sec", "upstream_status", "evaluated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "source_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$", "description": "OpenVibe.Sources source key." },
+    "stale": { "const": true },
+    "stale_since": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last success + window, or when Trade first saw the source if it never succeeded."
+    },
+    "last_success_at": { "type": ["string", "null"], "format": "date-time", "description": "Last known successful fetch; null when none is known." },
+    "stale_after_sec": { "type": "integer", "description": "The staleness window applied, in seconds." },
+    "upstream_status": {
+      "type": ["string", "null"],
+      "description": "Sources' own health status as last reported (healthy, stale, failing, never_fetched, disabled, manual); null if never reported."
+    },
+    "evaluated_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/games.mod.revoked.v1.json",
+  "title": "GamesModRevokedPayload",
+  "description": "games.mod.revoked v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.revoke in mods/registry.ts; POST /api/v1/mods/:id/revoke). Terminal: every active grant of the install was revoked and its status set to revoked; the runtime retracts the mod's announcements and props on the next tick. revoked_grants lists the grants that were active (may be empty); reason is the staff-supplied text (cut to 500 characters), absent when none was given. Not emitted again for an install that is already revoked. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority important, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).",
+  "type": "object",
+  "required": [
+    "mod",
+    "revoked_grants"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "mod": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version",
+        "target",
+        "trust_tier"
+      ],
+      "additionalProperties": false,
+      "description": "The install, from its validated mods/mod-manifest.v1 manifest.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "Mod id (manifest id). Also the envelope subject id."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$",
+          "description": "Semantic version of the installed release."
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}\\.[a-z][a-z0-9-]{1,39}$",
+          "description": "Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames)."
+        },
+        "trust_tier": {
+          "enum": [
+            "unreviewed",
+            "reviewed",
+            "first-party"
+          ],
+          "description": "Install metadata set at install; never consulted by a grant check."
+        }
+      }
+    },
+    "revoked_grants": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      },
+      "description": "Grants active before the revoke, sorted."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "source_key": "sec-xbrl-filings",
+  "stale": true,
+  "stale_since": "2026-09-23T03:25:25.317Z",
+  "last_success_at": null,
+  "stale_after_sec": 2700,
+  "upstream_status": "disabled",
+  "evaluated_at": "2026-09-23T03:25:25.318Z"
+}

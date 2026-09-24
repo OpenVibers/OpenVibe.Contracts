@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/trade.index_document.deleted.v1.json",
+  "title": "TradeIndexDocumentDeletedPayload",
+  "description": "trade.index_document.deleted v1 (OpenVibe.Trade server/domain/indexing.js refresh, via openvibe-publishing/index-hooks indexEvent). A Search tombstone for an instrument page: the instrument was archived, or the page stopped being listable (e.g. its reviewed context was retracted). Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: instrument, id, revision }, visibility internal, priority important, actor service:trade.",
+  "type": "object",
+  "required": ["type", "id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "instrument" },
+    "id": { "type": "string", "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}

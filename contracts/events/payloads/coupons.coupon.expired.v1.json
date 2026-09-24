@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.coupon.expired.v1.json",
+  "title": "CouponsCouponExpiredPayload",
+  "description": "coupons.coupon.expired v1 (OpenVibe.Coupons server/domain/coupons.js recompute, payload from lifecyclePayload). A code's status became expired, in the transaction that recorded it: the sweep (server/worker.js, every COUPONS_SWEEP_INTERVAL_MS) saw its known expiry pass (reason expiry), a recompute for other work found it past its expiry first (evidence, report or decay), or staff or a service marked it expired (staff, service:<client>[:<note>]). Active lists do not wait for this event: they filter on expires_at at query time. When the code was in Search, a coupons.index_document.deleted tombstone and the merchant's updated document follow in the same transaction. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code was publicly listed before the change, otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.",
+  "type": "object",
+  "required": ["merchant_id", "status", "confidence", "review_state", "expires_at", "canonical_url", "previous_status", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merchant the code belongs to." },
+    "status": { "const": "expired" },
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Report confidence at the time (rounded to 2 decimals); null = no counted report in the last 30 days." },
+    "review_state": { "enum": ["pending", "published"] },
+    "expires_at": { "type": ["string", "null"], "format": "date-time", "description": "The known expiry that passed; null when staff or a service marked a code of unknown expiry expired." },
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The code's page on Coupons (<origin>/c/<coupon id>); it stays up, noindex." },
+    "previous_status": { "enum": ["unknown", "reported_working", "reported_failed"], "description": "Status before; a disabled code has to be re-enabled before it can be marked expired." },
+    "reason": {
+      "description": "expiry, evidence, report, decay, staff, or service:<client>[:<note>].",
+      "anyOf": [
+        { "enum": ["expiry", "evidence", "report", "decay", "staff"] },
+        { "type": "string", "pattern": "^service:[\\s\\S]+$", "description": "service:<client id>, plus :<note> (at most 200 characters, copied verbatim) when the service gave one." }
+      ]
+    }
+  }
+}

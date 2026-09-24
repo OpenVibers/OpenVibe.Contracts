@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.summary.published.v1.json",
+  "title": "ReviewsSummaryPublishedPayload",
+  "description": "reviews.summary.published v1 (OpenVibe.Reviews server/reviews/service.js publishSummary, via openvibe-publishing/index-hooks publicationEvent). An entity's summary that was not published became published (an editor publishing a revision, or approving one with publish on, which is how an AI-drafted revision gets published), in the transaction of the change. For subscribers other than Search: the entity page's canonical URL, publication state and Search-shaped indexability, the entity id and slug, and the revision's authorship; never the summary text or its citations (Search gets those in reviews.index_document.upserted) and never a rating (a summary cannot carry one). correction appears only when the revision published is a correction revision (normally that is reviews.summary.updated). Envelope: subject { type: summary, id: sum_…, revision: <published summary revision> }, visibility public when the entity page is listable by the gate, otherwise internal, priority important, actor the editor (user usr_…).",
+  "type": "object",
+  "required": ["canonical_url", "publication_state", "indexability", "entity_id", "entity_slug", "authorship"],
+  "additionalProperties": false,
+  "properties": {
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The entity page (/e/<slug>) that shows the summary." },
+    "publication_state": { "const": "published" },
+    "indexability": { "type": "object", "required": ["decision", "reasons"], "additionalProperties": false, "properties": { "decision": { "enum": ["index", "noindex"] }, "reasons": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" } } }, "description": "The gate's decision for the entity page after the change, in Search's vocabulary." },
+    "entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The entity the summary belongs to (one summary per entity)." },
+    "entity_slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 90 },
+    "authorship": { "enum": ["human", "ai_assisted", "ai_generated", null], "description": "Authorship of the published revision: human (editor-written), ai_generated (an OpenVibe.AI draft a person approved), ai_assisted (an AI draft a person corrected); null only for a revision without an authorship record." },
+    "correction": {
+      "type": "object", "required": ["note", "corrects"], "additionalProperties": false,
+      "description": "Present when the published revision is a correction: the public note and the revision it corrects.",
+      "properties": {
+        "note": { "type": "string", "minLength": 10, "maxLength": 2000, "description": "What was corrected, as readers see it." },
+        "corrects": { "type": "integer", "minimum": 1, "description": "The summary revision that was published when the correction was made." }
+      }
+    }
+  }
+}

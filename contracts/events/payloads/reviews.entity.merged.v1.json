@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.entity.merged.v1.json",
+  "title": "ReviewsEntityMergedPayload",
+  "description": "reviews.entity.merged v1 (OpenVibe.Reviews server/reviews/service.js merge → entityEvent). An editor merged one entity into another (POST /api/v1/entities/:ref/merge, capability reviews.entity.merge, a person only), in the transaction of the merge. Nothing is rewritten: the merged entity keeps its aliases and its signals keep their attribution; it becomes state merged with an active merged_into link (link_id) and the target's aggregate is recomputed over both, which is why reviews.entity.split restores attribution exactly. The same transaction sends Search the merged entity's tombstone and the target's new document (reviews.index_document.*); a published summary of the merged entity keeps its state and no reviews.summary.unpublished is sent. The signal ids, aliases and aggregate are left out (they are in the entity's history, GET /api/v1/entities/:ref/history). Envelope: subject { type: entity, id: <merged entity ent_…> }, visibility public, priority important, actor the editor (user usr_…).",
+  "type": "object",
+  "required": ["entity_id", "into_entity_id", "link_id", "signal_count", "url", "into_url", "note"],
+  "additionalProperties": false,
+  "properties": {
+    "entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merged entity (subject.id); now state merged." },
+    "into_entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The active entity it was merged into." },
+    "link_id": { "type": "string", "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merged_into link; a later reviews.entity.split ends this link." },
+    "signal_count": { "type": "integer", "minimum": 0, "description": "Active signals of the merged entity and of entities merged into it, now counted in the target's aggregate." },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical URL of the merged entity's page (/e/<slug>)." },
+    "into_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical URL of the target entity's page." },
+    "note": { "type": ["string", "null"], "maxLength": 500, "description": "The editor's note (clipped to 500 characters); null when none was given." }
+  }
+}

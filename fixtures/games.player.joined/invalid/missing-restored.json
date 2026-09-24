@@ -1,0 +1,13 @@
+{
+  "player": {
+    "id": "01kz3m8q4d7xw2ht5n9c",
+    "slot": 1,
+    "name": "Rustbucket",
+    "account": "network",
+    "subject": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    }
+  },
+  "world": "openvibeville_v2"
+}

@@ -8054,3 +8054,3226 @@ export interface ToolsJobRequest {
    */
   idempotency_key?: string;
 }
+
+/** news.source.ingested@1.0.0 (owner: news) */
+/**
+ * news.source.ingested v1 (OpenVibe.News server/domain/ingest.js ingestedEvent, from apply and applyRemoval). An OpenVibe.Sources item of category news changed what News holds, in the transaction that applied it: created (a new news_source_items row, with its dedupe outcome and the cluster it joined; news.cluster.updated follows in the same transaction), updated (Sources sent a newer revision of an item News has; adds previous_revision) or removed (Sources removed the item: sticky, the stored summary is dropped; adds reason and origin). Items arrive through the Events webhook (sources.item.*) or the cursor pull; a replay, an older or equal revision, an item of another category, an update to a removed item and a removal of an item never ingested emit nothing, and an item without a title is news.source.failed (state rejected) instead. Deliberately left out: the headline, outlet, authors, published_at and licensed summary (GET /api/v1/source-items/:id with news.cluster.read) and the cluster_reason explanation. Envelope: subject { type: source_item, id: nsi_… }, visibility internal, priority low, actor service:news.
+ */
+export interface NewsSourceIngestedPayload {
+  /**
+   * News' own source item (news_source_items).
+   */
+  item_id: string;
+  action: "created" | "updated" | "removed";
+  /**
+   * The item after the change: active or duplicate for created and updated, removed exactly when action is removed.
+   */
+  status: "active" | "duplicate" | "removed";
+  /**
+   * Typed reference (common/entity-ref@1 shape) to the OpenVibe.Sources item and the Sources revision News now holds.
+   */
+  sources_item: {
+    service: "sources";
+    type: "item";
+    /**
+     * The Sources item id (itm_…), as Sources gave it.
+     */
+    id: string;
+    /**
+     * Sources revision the stored fields came from (1 when Sources sent none).
+     */
+    revision: number;
+  };
+  /**
+   * The Sources source the item came from, as Sources gave it ('unknown' when it gave none).
+   */
+  source_key: string;
+  /**
+   * The item's canonical URL as Sources gave it (not validated by News); null when it had none.
+   */
+  canonical_url: string | null;
+  /**
+   * The original item when status is duplicate (the root of any duplicate chain); null otherwise.
+   */
+  duplicate_of: string | null;
+  /**
+   * Which dedupe rule matched when the item was first ingested: same normalised URL, same Sources content hash, or a near-identical headline within 48 h; null when it is not a duplicate.
+   */
+  dedupe_rule: "canonical_url" | "content_hash" | "near_title" | null;
+  /**
+   * The cluster the item belongs to (every ingested item is placed in one).
+   */
+  cluster_id: string | null;
+  /**
+   * action updated only: the Sources revision News held before.
+   */
+  previous_revision?: number;
+  /**
+   * action removed only: why Sources removed it ('removed upstream' when it gave no reason).
+   */
+  reason?: string;
+  /**
+   * action removed only: whether the removal came as a sources.item.removed delivery or through the cursor pull.
+   */
+  origin?: "webhook" | "pull";
+}
+
+/** news.source.failed@1.0.0 (owner: news) */
+/**
+ * news.source.failed v1 (OpenVibe.News server/domain/ingest.js failedEvent). Ingestion of news items failed and nothing was made in its place (no source item, cluster or story text); the same transaction records it in news_ingest_runs. Four call sites, told apart by origin and state: origin sources (ingest.js upstreamFailure: OpenVibe.Sources reported sources.fetch.failed for a news source; state, error_code and http_status are Sources' own, and run_id and consecutive_failures are added); origin pull with state failed (the cursor pull could not read Sources; once per outage, not once per retry); origin webhook with state failed (server/http/webhook.js: a sources.item.created|updated delivery whose item could not be read from Sources, on the first delivery attempt only); origin pull or webhook with state rejected and error_code item.no_headline (a Sources item without a title). Envelope: subject { type: source, id: <source_key> } when the source is known, otherwise { type: ingest, id: <origin> }, visibility internal, priority important, actor service:news.
+ */
+export interface NewsSourceFailedPayload {
+  /**
+   * webhook: an Events delivery; pull: the cursor pull; sources: a failure Sources reported.
+   */
+  origin: "webhook" | "pull" | "sources";
+  /**
+   * The Sources source, as given; null for a pull failure or when the delivery named none.
+   */
+  source_key: string | null;
+  /**
+   * The Sources item (itm_…) as given, for a rejected item or an unreadable delivery; null otherwise.
+   */
+  sources_item_id: string | null;
+  /**
+   * rejected (an unusable item), failed (News could not read Sources), or for origin sources the fetch state Sources sent, copied as sent (robots_denied, http_error, rate_limited, parse_error…; failed when it sent none).
+   */
+  state: string;
+  /**
+   * item.no_headline for a rejected item; the Sources client's error code (e.g. sources.http_503), else pull.error or sources.error, when Sources could not be read; Sources' own error_code for origin sources (null when it sent none).
+   */
+  error_code: string | null;
+  /**
+   * The HTTP status Sources answered (or reported for its fetch); null when there was none.
+   */
+  http_status: number | null;
+  /**
+   * The error message, cut to 500 characters; null for rejected items and origin sources.
+   */
+  detail: string | null;
+  /**
+   * origin sources only: Sources' fetch run (frn_…), as sent.
+   */
+  run_id?: string | null;
+  /**
+   * origin sources only: the source's consecutive failed runs Sources reported, null when it reported none.
+   */
+  consecutive_failures?: number | null;
+}
+
+/** news.cluster.updated@1.0.0 (owner: news) */
+/**
+ * news.cluster.updated v1 (OpenVibe.News server/domain/clusters.js emit, from assign, merge, split and reverse). A story cluster changed, in the transaction that changed it. action: created (a new item started it, adds item_id; or an editor's split made it, adds split_from and audit_id), item_added (an ingested item joined it, adds item_id and rule: duplicate_of when the item follows the item it duplicates, shared_terms with the score when it shares enough entities and terms), merged (an editor merged another cluster into it: absorbed, audit_id, moved), split (an editor moved items out of it into a new cluster: new_cluster, audit_id, moved), merge_reversed (a merge into it was undone: restored, audit_id), reopened (the cluster a reversed merge had absorbed is open again: audit_id) or split_reversed (a split off it was undone: dissolved, audit_id). audit_id is the news_cluster_audit row (cla_…) of the merge, split or reversal. label, status and item_count describe the cluster after the change. Deliberately left out: the key terms and entities, the time window and each member's cluster_reason (GET /api/v1/clusters/:id with news.cluster.read). Envelope: subject { type: cluster, id: clu_… }, visibility internal, priority low, actor service:news (also for an editor's merge, split or reversal; the editor is recorded on the audit row).
+ */
+export interface NewsClusterUpdatedPayload {
+  cluster_id: string;
+  action: "created" | "item_added" | "merged" | "split" | "merge_reversed" | "reopened" | "split_reversed";
+  /**
+   * The cluster's status after the change (in practice open: merged and dissolved clusters are not announced by their own event).
+   */
+  status: "open" | "merged" | "dissolved";
+  /**
+   * Derived from the members' top entities (up to 3) or terms (up to 4), joined with ' · '; 'unlabelled' when there are none. Never written by a person or a model.
+   */
+  label: string;
+  /**
+   * Every member item, duplicates and items removed upstream included.
+   */
+  item_count: number;
+  /**
+   * created by ingestion and item_added: the item that started or joined the cluster.
+   */
+  item_id?: string;
+  /**
+   * item_added only: why the item joined.
+   */
+  rule?: "duplicate_of" | "shared_terms";
+  /**
+   * item_added with rule shared_terms only: 2 × shared entities + shared terms.
+   */
+  score?: number;
+  /**
+   * created by a split only: the cluster the items came from.
+   */
+  split_from?: string;
+  /**
+   * Every editor action (and created by a split): the news_cluster_audit row.
+   */
+  audit_id?: string;
+  /**
+   * merged only: the cluster merged into this one (now status merged).
+   */
+  absorbed?: string;
+  /**
+   * merged and split only: how many items moved.
+   */
+  moved?: number;
+  /**
+   * split only: the cluster the items moved into (announced by its own created event).
+   */
+  new_cluster?: string;
+  /**
+   * merge_reversed only: the absorbed cluster, open again (announced by its own reopened event).
+   */
+  restored?: string;
+  /**
+   * split_reversed only: the split-off cluster when it was left empty and dissolved; null when items that joined it after the split keep it open.
+   */
+  dissolved?: string | null;
+}
+
+/** news.story.created@1.0.0 (owner: news) */
+/**
+ * news.story.created v1 (OpenVibe.News server/domain/stories.js create). An editor opened a draft story (news.story.create), in the transaction that created it; when it was opened from a cluster, that cluster's active items (not duplicates, not removed upstream) were attached as its first sources. A first text sent with the request becomes revision 1 in the same transaction and is not announced here. Deliberately left out: the working headline, slug and any text (drafts are not public). Envelope: subject { type: story, id: sty_… }, visibility internal, priority low, actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.
+ */
+export interface NewsStoryCreatedPayload {
+  /**
+   * The cluster it was opened from, followed through merges; null for a story opened without one.
+   */
+  cluster_id: string | null;
+  /**
+   * Slug of the story's topic (news_topics); null when none was given.
+   */
+  topic: string | null;
+  /**
+   * How many source items were attached at creation.
+   */
+  sources: number;
+}
+
+/** news.story.flagged@1.0.0 (owner: news) */
+/**
+ * news.story.flagged v1 (OpenVibe.News server/domain/stories.js flagEvent, from onUpstreamChange). A source item a story cites changed (source_updated) or was removed (source_removed) upstream in OpenVibe.Sources, inside the ingest transaction that applied it: the story has an open editorial flag and, when it has text, a pending system-prepared revision (same paragraphs, refreshed source table) for an editor to check and publish. The published revision does not change. One event per affected story; an open source_updated flag is reused (its pending revision moves on) and announced again, an open source_removed flag is not. Editor flags (correction, update) and retraction flags do not emit this event. Envelope: subject { type: story, id: sty_…, revision: <pending revision, else the published revision, else 0> }, visibility internal, priority important for source_removed and normal for source_updated (normal is not an events.event-envelope@1 priority, so that envelope is refused until News sends low or important), actor service:news.
+ */
+export interface NewsStoryFlaggedPayload {
+  /**
+   * The news_editorial_flags row.
+   */
+  flag_id: string;
+  kind: "source_updated" | "source_removed";
+  status: "open";
+  /**
+   * The News source item that changed or was removed.
+   */
+  source_item_id: string;
+  /**
+   * The revision News prepared for an editor; null when the story has no text yet or nothing new was prepared.
+   */
+  pending_revision: number | null;
+  /**
+   * The revision readers see; null when the story was never published.
+   */
+  published_revision: number | null;
+}
+
+/** news.story.published@1.0.0 (owner: news) */
+/**
+ * news.story.published v1 (OpenVibe.News server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). An editor published a story that was a draft or unpublished (news.story.publish, stories.js publish), in the transaction of the change. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the text (Search gets that from news.index_document.*). A story resting on fewer independent sources than NEWS_MIN_INDEPENDENT_SOURCES (default 2) is still published, with indexability noindex (unsourced). Envelope: subject { type: story, id: sty_…, revision: <published revision> }, visibility public when the gate lets the story be listed, otherwise internal, priority important (the envelope default; News sets none), actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.
+ */
+export interface NewsStoryPublishedPayload {
+  canonical_url: string;
+  publication_state: "published";
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * Slug of the story's topic (news_topics); absent when it has none.
+   */
+  topic?: string;
+}
+
+/** news.story.updated@1.0.0 (owner: news) */
+/**
+ * news.story.updated v1 (OpenVibe.News server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). A published story now shows a different published revision (an editor published another revision, news.story.publish, stories.js publish) or its canonical URL changed, in the transaction of the change. Republishing the same revision with a correction note, and topic or noindex changes, emit no product event (only news.index_document.* when Search's copy changes). For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the text (Search gets that from news.index_document.*). Envelope: subject { type: story, id: sty_…, revision: <published revision> }, visibility public when the gate lets the story be listed, otherwise internal, priority important (the envelope default; News sets none), actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.
+ */
+export interface NewsStoryUpdatedPayload {
+  canonical_url: string;
+  publication_state: "published";
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * Slug of the story's topic (news_topics); absent when it has none.
+   */
+  topic?: string;
+}
+
+/** news.story.unpublished@1.0.0 (owner: news) */
+/**
+ * news.story.unpublished v1 (OpenVibe.News server/domain/publication.js afterChange, via openvibe-publishing/index-hooks publicationEvent). An editor unpublished a published or retracted story (news.story.publish, stories.js unpublish), in the transaction of the change: it leaves the site, feeds and Search. For subscribers other than Search: canonical URL, publication state and Search-shaped indexability, never the text (Search gets the tombstone from news.index_document.deleted). Envelope: subject { type: story, id: sty_…, revision: <published revision> }, visibility internal, priority important (the envelope default; News sets none), actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.
+ */
+export interface NewsStoryUnpublishedPayload {
+  /**
+   * null: the event carries a tombstone, which has no URL.
+   */
+  canonical_url: string | null;
+  publication_state: "unpublished";
+  /**
+   * The gate's decision for the unpublished story (noindex, not_published), or null when its published revision cannot be read.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
+  /**
+   * Slug of the story's topic (news_topics); absent when it has none.
+   */
+  topic?: string;
+}
+
+/** news.story.retracted@1.0.0 (owner: news) */
+/**
+ * news.story.retracted v1 (OpenVibe.News server/domain/publication.js afterChange; the envelope is built there, not by index-hooks publicationEvent). An editor retracted a published story (news.story.retract, stories.js retract), in the transaction that stored the published retraction flag: the story stays at its URL with the retraction notice, is noindex, and leaves sitemaps and Search (news.index_document.deleted follows when Search had it). A retracted story stays retracted; unpublishing it later is news.story.unpublished. note is the public retraction notice and flag_id the news_editorial_flags row that holds it. The payload carries no topic. Envelope: subject { type: story, id: sty_…, revision: <published revision> }, visibility public when the gate still lets the story be listed (a retraction is noindex, not hidden), otherwise internal, priority important (the envelope default; News sets none), actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.
+ */
+export interface NewsStoryRetractedPayload {
+  /**
+   * Where the story, with its retraction notice, stays.
+   */
+  canonical_url: string;
+  publication_state: "retracted";
+  /**
+   * Search-shaped gate decision: always noindex, with retracted among the reasons.
+   */
+  indexability: {
+    decision: "noindex";
+    /**
+     * @minItems 1
+     * @maxItems 20
+     */
+    reasons:
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * The public retraction notice, whitespace collapsed.
+   */
+  note: string;
+  /**
+   * The retraction's news_editorial_flags row (kind retraction, status published).
+   */
+  flag_id: string;
+}
+
+/** news.index_document.upserted@1.0.0 (owner: news) */
+/**
+ * news.index_document.upserted v1 (OpenVibe.News server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published (not retracted), public, listable story, sent whenever what Search should hold changed (the revision grows with every change): a publication or new published revision, a topic or noindex change, a person's review of an AI revision, or a cited source changing upstream. The body is the published revision's paragraphs as plain text; facets { topic?, outlets, sources }; provenance names the cited Sources items (and the AI run of an AI draft); language en. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: story, id, revision: <document revision> }, visibility internal, priority important, actor service:news.
+ */
+export type NewsIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "news";
+  type: "story";
+  id?: string;
+  deleted: false;
+};
+
+/** news.index_document.deleted@1.0.0 (owner: news) */
+/**
+ * news.index_document.deleted v1 (OpenVibe.News server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the story is no longer published, public and listable (unpublished, retracted, or hidden by the gate, e.g. an AI revision no person has reviewed), so Search drops it at this revision or older. Only sent for a story Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: story, id, revision }, visibility internal, priority important, actor service:news.
+ */
+export interface NewsIndexDocumentDeletedPayload {
+  type: "story";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** reviews.entity.merged@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity.merged v1 (OpenVibe.Reviews server/reviews/service.js merge → entityEvent). An editor merged one entity into another (POST /api/v1/entities/:ref/merge, capability reviews.entity.merge, a person only), in the transaction of the merge. Nothing is rewritten: the merged entity keeps its aliases and its signals keep their attribution; it becomes state merged with an active merged_into link (link_id) and the target's aggregate is recomputed over both, which is why reviews.entity.split restores attribution exactly. The same transaction sends Search the merged entity's tombstone and the target's new document (reviews.index_document.*); a published summary of the merged entity keeps its state and no reviews.summary.unpublished is sent. The signal ids, aliases and aggregate are left out (they are in the entity's history, GET /api/v1/entities/:ref/history). Envelope: subject { type: entity, id: <merged entity ent_…> }, visibility public, priority important, actor the editor (user usr_…).
+ */
+export interface ReviewsEntityMergedPayload {
+  /**
+   * The merged entity (subject.id); now state merged.
+   */
+  entity_id: string;
+  /**
+   * The active entity it was merged into.
+   */
+  into_entity_id: string;
+  /**
+   * The merged_into link; a later reviews.entity.split ends this link.
+   */
+  link_id: string;
+  /**
+   * Active signals of the merged entity and of entities merged into it, now counted in the target's aggregate.
+   */
+  signal_count: number;
+  /**
+   * Canonical URL of the merged entity's page (/e/<slug>).
+   */
+  url: string;
+  /**
+   * Canonical URL of the target entity's page.
+   */
+  into_url: string;
+  /**
+   * The editor's note (clipped to 500 characters); null when none was given.
+   */
+  note: string | null;
+}
+
+/** reviews.entity.split@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity.split v1 (OpenVibe.Reviews server/reviews/service.js split → entityEvent). An editor undid a merge (POST /api/v1/entities/:ref/split, capability reviews.entity.split, a person only), in the transaction of the split: the merged_into link (link_id) is ended, the entity is active again with exactly the aliases and signals it had before the merge, and both aggregates are recomputed. A summary of the former target that cites signals which went back with the split is flagged and gets a pending revision in the same transaction; Search gets both entities' documents again (reviews.index_document.upserted). The signal ids are left out (they are in the entity's history). Envelope: subject { type: entity, id: <split entity ent_…> }, visibility public, priority important, actor the editor (user usr_…).
+ */
+export interface ReviewsEntitySplitPayload {
+  /**
+   * The entity split off again (subject.id); now state active.
+   */
+  entity_id: string;
+  /**
+   * The entity it had been merged into.
+   */
+  from_entity_id: string;
+  /**
+   * The merged_into link this split ended (the link_id of the reviews.entity.merged event).
+   */
+  link_id: string;
+  /**
+   * Active signals back with the entity (its own and those of entities merged into it).
+   */
+  signal_count: number;
+  /**
+   * Canonical URL of the split entity's page (/e/<slug>).
+   */
+  url: string;
+  /**
+   * Canonical URL of the former target's page; null only if that entity no longer exists.
+   */
+  from_url: string | null;
+  /**
+   * The editor's note (clipped to 500 characters); null when none was given.
+   */
+  note: string | null;
+}
+
+/** reviews.signal.added@1.0.0 (owner: reviews) */
+/**
+ * reviews.signal.added v1 (OpenVibe.Reviews server/reviews/service.js createSignal → signalEvent). A typed signal was recorded from one revision of an OpenVibe.Sources review item resolved to an entity (an import through POST /api/v1/signals/import or the Sources sync, a sources.item.created|updated event, or an editor resolving a queued item), in the transaction that stored it. Values and provenance are exactly what the source stated and never change afterwards. When the item already had an active signal (a newer item revision, or an editor reattributing the item), `replaces` names it and the reviews.signal.removed for it is written just before this event. Value fields depend on type: recommended (recommendation), positive_count and total_count (recommendation_tally), rating_value, rating_best, rating_worst and rating_count (rating, rating_aggregate); a scale the source did not state is null, never defaulted. Review text, the signal's trust metadata and the resulting aggregate are left out. Envelope: subject { type: signal, id: <signal_id> }, visibility public, priority important, actor the caller (the importing service, e.g. service:sources-sync, or the editor, user usr_…) or service:reviews for the Sources event consumer and sync worker.
+ */
+export interface ReviewsSignalAddedPayload {
+  signal_id: string;
+  /**
+   * The entity the signal is attributed to (never rewritten by a merge).
+   */
+  entity_id: string;
+  /**
+   * The entity it currently counts under: entity_id, or the entity it is merged into.
+   */
+  canonical_entity_id: string;
+  type: "recommendation" | "recommendation_tally" | "rating" | "rating_aggregate";
+  /**
+   * OpenVibe.Sources source key.
+   */
+  source_key: string;
+  source_item_id: string;
+  /**
+   * The Sources item revision the signal was read from.
+   */
+  item_revision: number;
+  /**
+   * When Sources retrieved that item revision (provenance.retrieved_at).
+   */
+  observed_at: string;
+  /**
+   * The item's published_at as Sources gave it; null when it gave none.
+   */
+  source_published_at: string | null;
+  /**
+   * The item's canonical URL as Sources gave it; null when it has none.
+   */
+  canonical_url: string | null;
+  /**
+   * Licence note recorded for the item in Sources; null when none.
+   */
+  license_note: string | null;
+  /**
+   * recommendation only: whether the reviewer recommends it.
+   */
+  recommended?: boolean;
+  /**
+   * recommendation_tally only: positive reviews the source counts.
+   */
+  positive_count?: number;
+  /**
+   * recommendation_tally only: all reviews the source counts (≥ positive_count).
+   */
+  total_count?: number;
+  /**
+   * rating and rating_aggregate only: the value as stated.
+   */
+  rating_value?: number;
+  /**
+   * rating and rating_aggregate only: top of the stated scale; null when the source states none.
+   */
+  rating_best?: number | null;
+  /**
+   * rating and rating_aggregate only: bottom of the stated scale; null when the source states none.
+   */
+  rating_worst?: number | null;
+  /**
+   * rating and rating_aggregate only: ratings behind the value (1 for a single review).
+   */
+  rating_count?: number;
+  /**
+   * Present when this signal replaced the item's previous active signal (see reviews.signal.removed).
+   */
+  replaces?: string;
+}
+
+/** reviews.signal.removed@1.0.0 (owner: reviews) */
+/**
+ * reviews.signal.removed v1 (OpenVibe.Reviews server/reviews/service.js withdrawSignal → signalEvent). A signal stopped being active, in the transaction of the change. status superseded: a newer revision of the same item replaced it for the same entity (replaced_by names the new signal, whose reviews.signal.added follows). status withdrawn: its source removed the item (sources.item.removed or a removed item on import), the item no longer states a signal, or an editor reattributed or unresolved the item. The payload repeats the signal as recorded (values and provenance never change) plus status and reason; summaries citing it are flagged and get a pending revision, and the entity's aggregate and Search document are refreshed, in the same transaction. Envelope: subject { type: signal, id: <signal_id> }, visibility public, priority important, actor the caller (the importing service, e.g. service:sources-sync, or the editor, user usr_…) or service:reviews for the Sources event consumer and sync worker.
+ */
+export interface ReviewsSignalRemovedPayload {
+  signal_id: string;
+  /**
+   * The entity the signal is attributed to (never rewritten by a merge).
+   */
+  entity_id: string;
+  /**
+   * The entity it counted under: entity_id, or the entity it is merged into.
+   */
+  canonical_entity_id: string;
+  type: "recommendation" | "recommendation_tally" | "rating" | "rating_aggregate";
+  /**
+   * OpenVibe.Sources source key.
+   */
+  source_key: string;
+  source_item_id: string;
+  /**
+   * The Sources item revision the signal was read from.
+   */
+  item_revision: number;
+  /**
+   * When Sources retrieved that item revision (provenance.retrieved_at).
+   */
+  observed_at: string;
+  /**
+   * The item's published_at as Sources gave it; null when it gave none.
+   */
+  source_published_at: string | null;
+  /**
+   * The item's canonical URL as Sources gave it; null when it has none.
+   */
+  canonical_url: string | null;
+  /**
+   * Licence note recorded for the item in Sources; null when none.
+   */
+  license_note: string | null;
+  /**
+   * recommendation only: whether the reviewer recommends it.
+   */
+  recommended?: boolean;
+  /**
+   * recommendation_tally only: positive reviews the source counts.
+   */
+  positive_count?: number;
+  /**
+   * recommendation_tally only: all reviews the source counts (≥ positive_count).
+   */
+  total_count?: number;
+  /**
+   * rating and rating_aggregate only: the value as stated.
+   */
+  rating_value?: number;
+  /**
+   * rating and rating_aggregate only: top of the stated scale; null when the source states none.
+   */
+  rating_best?: number | null;
+  /**
+   * rating and rating_aggregate only: bottom of the stated scale; null when the source states none.
+   */
+  rating_worst?: number | null;
+  /**
+   * rating and rating_aggregate only: ratings behind the value (1 for a single review).
+   */
+  rating_count?: number;
+  /**
+   * superseded: replaced by a newer revision of the same item; withdrawn: every other removal.
+   */
+  status: "superseded" | "withdrawn";
+  /**
+   * Why, in plain words (e.g. "removed by its source: <reason>", "source item revised (r1 → r2)").
+   */
+  reason: string;
+  /**
+   * status superseded only: the signal that replaced it.
+   */
+  replaced_by?: string;
+}
+
+/** reviews.summary.published@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary.published v1 (OpenVibe.Reviews server/reviews/service.js publishSummary, via openvibe-publishing/index-hooks publicationEvent). An entity's summary that was not published became published (an editor publishing a revision, or approving one with publish on, which is how an AI-drafted revision gets published), in the transaction of the change. For subscribers other than Search: the entity page's canonical URL, publication state and Search-shaped indexability, the entity id and slug, and the revision's authorship; never the summary text or its citations (Search gets those in reviews.index_document.upserted) and never a rating (a summary cannot carry one). correction appears only when the revision published is a correction revision (normally that is reviews.summary.updated). Envelope: subject { type: summary, id: sum_…, revision: <published summary revision> }, visibility public when the entity page is listable by the gate, otherwise internal, priority important, actor the editor (user usr_…).
+ */
+export interface ReviewsSummaryPublishedPayload {
+  /**
+   * The entity page (/e/<slug>) that shows the summary.
+   */
+  canonical_url: string;
+  publication_state: "published";
+  /**
+   * The gate's decision for the entity page after the change, in Search's vocabulary.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * The entity the summary belongs to (one summary per entity).
+   */
+  entity_id: string;
+  entity_slug: string;
+  /**
+   * Authorship of the published revision: human (editor-written), ai_generated (an OpenVibe.AI draft a person approved), ai_assisted (an AI draft a person corrected); null only for a revision without an authorship record.
+   */
+  authorship: "human" | "ai_assisted" | "ai_generated" | null;
+  /**
+   * Present when the published revision is a correction: the public note and the revision it corrects.
+   */
+  correction?: {
+    /**
+     * What was corrected, as readers see it.
+     */
+    note: string;
+    /**
+     * The summary revision that was published when the correction was made.
+     */
+    corrects: number;
+  };
+}
+
+/** reviews.summary.updated@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary.updated v1 (OpenVibe.Reviews server/reviews/service.js publishSummary, via openvibe-publishing/index-hooks publicationEvent). A published summary got a different published revision, in the transaction of the change: an editor published another revision, approved the pending revision prepared after a source change, or corrected the summary (POST …/summary/revisions with correction_note, or accepting a correction request), which publishes at once and carries correction. For subscribers other than Search: the entity page's canonical URL, publication state and Search-shaped indexability, the entity id and slug, and the revision's authorship; never the summary text or its citations (Search gets those in reviews.index_document.upserted) and never a rating. Envelope: subject { type: summary, id: sum_…, revision: <published summary revision> }, visibility public when the entity page is listable by the gate, otherwise internal, priority important, actor the editor (user usr_…).
+ */
+export interface ReviewsSummaryUpdatedPayload {
+  /**
+   * The entity page (/e/<slug>) that shows the summary.
+   */
+  canonical_url: string;
+  publication_state: "published";
+  /**
+   * The gate's decision for the entity page after the change, in Search's vocabulary.
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * The entity the summary belongs to (one summary per entity).
+   */
+  entity_id: string;
+  entity_slug: string;
+  /**
+   * Authorship of the published revision: human (editor-written), ai_generated (an OpenVibe.AI draft a person approved), ai_assisted (an AI draft a person corrected); null only for a revision without an authorship record.
+   */
+  authorship: "human" | "ai_assisted" | "ai_generated" | null;
+  /**
+   * Present when the published revision is a correction: the public note and the revision it corrects.
+   */
+  correction?: {
+    /**
+     * What was corrected, as readers see it.
+     */
+    note: string;
+    /**
+     * The summary revision that was published when the correction was made.
+     */
+    corrects: number;
+  };
+}
+
+/** reviews.summary.unpublished@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary.unpublished v1 (OpenVibe.Reviews server/reviews/service.js unpublishSummary, via openvibe-publishing/index-hooks publicationEvent). An editor took an entity's published summary down (POST /api/v1/entities/:ref/summary/unpublish), in the transaction of the change. The entity page stays up without the summary; its new Search document goes out as reviews.index_document.upserted. Only this action sends it: merging or deleting an entity leaves its summary's state alone and Search gets the entity's tombstone instead. For subscribers other than Search: publication state, the entity page's indexability after the change, and the entity id and slug; canonical_url is always null from Reviews (the helper is given a tombstone), and authorship and correction are not sent. Envelope: subject { type: summary, id: sum_…, revision: <the revision that was published> }, visibility internal, priority important, actor the editor (user usr_…).
+ */
+export interface ReviewsSummaryUnpublishedPayload {
+  /**
+   * null: the event carries a tombstone, which has no URL.
+   */
+  canonical_url: string | null;
+  publication_state: "unpublished";
+  /**
+   * The gate's decision for the entity page after the summary came down (Reviews always passes one, so it is never null here).
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * The entity the summary belongs to.
+   */
+  entity_id: string;
+  entity_slug: string;
+}
+
+/** reviews.index_document.upserted@1.0.0 (owner: reviews) */
+/**
+ * reviews.index_document.upserted v1 (OpenVibe.Reviews server/reviews/service.js syncEntity, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of an active entity page: the entity name as title, the published summary (or the entity description) as summary, the summary text and the aggregate's computation lines as body, facets kind / has_aggregate / sources, the published summary's authorship, provenance of up to 40 cited Sources items (plus the AI run of an AI-drafted summary), and the gate's indexability (noindex thin_content / unsourced until signals and a summary back the page). Sent whenever what Search should hold changed (the revision grows with every change), in the transaction of the change; the reconciliation at every start (reconcileIndex) re-sends only documents that differ. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: entity, id, revision: <document revision> }, visibility internal, priority important, actor service:reviews.
+ */
+export type ReviewsIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "reviews";
+  type: "entity";
+  id?: string;
+  deleted: false;
+};
+
+/** reviews.index_document.deleted@1.0.0 (owner: reviews) */
+/**
+ * reviews.index_document.deleted v1 (OpenVibe.Reviews server/reviews/service.js syncEntity, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the entity was merged into another or deleted (or the gate stopped listing its page), so Search drops it at this revision or older. Only sent for an entity Search was sent before (every entity gets a document when it is created); a split sends the entity's document again. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: entity, id, revision }, visibility internal, priority important, actor service:reviews.
+ */
+export interface ReviewsIndexDocumentDeletedPayload {
+  type: "entity";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** coupons.coupon.created@1.0.0 (owner: coupons) */
+/**
+ * coupons.coupon.created v1 (OpenVibe.Coupons server/domain/coupons.js submit and importFromSource, payload from lifecyclePayload). A new code was recorded, in the transaction that inserted it: submitted by a member, by staff or by an AI extraction run (POST /api/v1/coupons/submit or the site form), or imported from an OpenVibe.Sources item (origin source). Submitting a code the merchant already has adds evidence and emits no created event. A new code always starts with status unknown and confidence null: a submission can never carry a status or a confidence. AI-extracted codes, imported codes (unless COUPONS_SOURCES_AUTO_PUBLISH is true and the merchant is active) and codes for a pending merchant start with review_state pending. Left out on purpose: the code text, title, description and restrictions (Search gets them from coupons.index_document.*) and who submitted it (submitters stay inside Coupons). Envelope: subject { type: coupon, id: cpn_… }, visibility public when the new code is publicly listed (published, merchant active, not expired), otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
+ */
+export interface CouponsCouponCreatedPayload {
+  /**
+   * The merchant the code belongs to.
+   */
+  merchant_id: string;
+  /**
+   * Every new code starts unknown; only people's reports can move it to reported_working or reported_failed.
+   */
+  status: "unknown";
+  /**
+   * Always null at creation: no counted report yet.
+   */
+  confidence: null;
+  /**
+   * pending = waits for staff review (AI-extracted, imported without auto-publish, or merchant pending); published = eligible for active results.
+   */
+  review_state: "pending" | "published";
+  /**
+   * Known expiry (UTC; a date-only expiry is 23:59:59.999Z of that day). null = expiry unknown, never defaulted.
+   */
+  expires_at: string | null;
+  /**
+   * The code's page on Coupons (<origin>/c/<coupon id>).
+   */
+  canonical_url: string;
+  /**
+   * How the code arrived: a member's or a staff member's submission, an OpenVibe.Sources import, or an AI extraction run (X-OV-Origin: ai).
+   */
+  origin: "member" | "staff" | "source" | "ai";
+}
+
+/** coupons.coupon.updated@1.0.0 (owner: coupons) */
+/**
+ * coupons.coupon.updated v1 (OpenVibe.Coupons server/domain/coupons.js recompute, approve and setExpiry, payload from lifecyclePayload). Emitted in the transaction of the change when (a) a code's status moved to unknown, reported_working or reported_failed: people's reports through the confidence formula (reason report), evidence added or withdrawn (evidence), old reports decaying (decay), or staff or a service re-enabling a disabled or expired code (staff, service:<client>[:<note>]); (b) staff published a code that waited for review (reason approved; status unchanged, so previous_status equals status and may be any status); or (c) the code's expiry was set or cleared (reason expiry_changed, no previous_status; setExpiry has no HTTP route yet). A move to expired or disabled is coupons.coupon.expired or coupons.coupon.disabled instead, and a confidence change without a status change emits only coupons.confidence.changed. Staff notes are reduced to reason staff; a service's note is copied into the reason. Never names a submitter, reporter or staff member. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code is publicly listed after the change (recompute: before or after), otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
+ */
+export interface CouponsCouponUpdatedPayload {
+  /**
+   * The merchant the code belongs to.
+   */
+  merchant_id: string;
+  /**
+   * Status after the change. expired and disabled occur only with reason approved or expiry_changed (neither moves the status).
+   */
+  status: "unknown" | "reported_working" | "reported_failed" | "expired" | "disabled";
+  /**
+   * Report confidence after the change, rounded to 2 decimals; null = no counted report in the last 30 days.
+   */
+  confidence: number | null;
+  review_state: "pending" | "published";
+  /**
+   * Known expiry (UTC); null = expiry unknown.
+   */
+  expires_at: string | null;
+  /**
+   * The code's page on Coupons (<origin>/c/<coupon id>).
+   */
+  canonical_url: string;
+  /**
+   * Status before the change. Absent with reason expiry_changed.
+   */
+  previous_status?: "unknown" | "reported_working" | "reported_failed" | "expired" | "disabled";
+  /**
+   * Why it changed: report, evidence, decay, staff, approved, expiry_changed, or service:<client>[:<note>] when a service holding coupons.status.update re-enabled it.
+   */
+  reason: ("report" | "evidence" | "decay" | "staff" | "approved" | "expiry_changed") | string;
+}
+
+/** coupons.coupon.expired@1.0.0 (owner: coupons) */
+/**
+ * coupons.coupon.expired v1 (OpenVibe.Coupons server/domain/coupons.js recompute, payload from lifecyclePayload). A code's status became expired, in the transaction that recorded it: the sweep (server/worker.js, every COUPONS_SWEEP_INTERVAL_MS) saw its known expiry pass (reason expiry), a recompute for other work found it past its expiry first (evidence, report or decay), or staff or a service marked it expired (staff, service:<client>[:<note>]). Active lists do not wait for this event: they filter on expires_at at query time. When the code was in Search, a coupons.index_document.deleted tombstone and the merchant's updated document follow in the same transaction. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code was publicly listed before the change, otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
+ */
+export interface CouponsCouponExpiredPayload {
+  /**
+   * The merchant the code belongs to.
+   */
+  merchant_id: string;
+  status: "expired";
+  /**
+   * Report confidence at the time (rounded to 2 decimals); null = no counted report in the last 30 days.
+   */
+  confidence: number | null;
+  review_state: "pending" | "published";
+  /**
+   * The known expiry that passed; null when staff or a service marked a code of unknown expiry expired.
+   */
+  expires_at: string | null;
+  /**
+   * The code's page on Coupons (<origin>/c/<coupon id>); it stays up, noindex.
+   */
+  canonical_url: string;
+  /**
+   * Status before; a disabled code has to be re-enabled before it can be marked expired.
+   */
+  previous_status: "unknown" | "reported_working" | "reported_failed";
+  /**
+   * expiry, evidence, report, decay, staff, or service:<client>[:<note>].
+   */
+  reason: ("expiry" | "evidence" | "report" | "decay" | "staff") | string;
+}
+
+/** coupons.coupon.disabled@1.0.0 (owner: coupons) */
+/**
+ * coupons.coupon.disabled v1 (OpenVibe.Coupons server/domain/coupons.js recompute via withdrawSourceItem and setStatus, payload from lifecyclePayload). A code was taken down, in the transaction that recorded it: the last OpenVibe.Sources item that evidenced it was removed at the source (reason source_removed), or staff or a service holding coupons.status.update disabled it (staff, service:<client>[:<note>]). Its page answers 410, it cannot be resubmitted and nothing is deleted. Disabling a merchant does not emit this per code (its codes only get Search tombstones). When the code was in Search, a coupons.index_document.deleted tombstone follows in the same transaction. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code was publicly listed before the change, otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
+ */
+export interface CouponsCouponDisabledPayload {
+  /**
+   * The merchant the code belongs to.
+   */
+  merchant_id: string;
+  status: "disabled";
+  /**
+   * Report confidence at the time (rounded to 2 decimals); null = no counted report in the last 30 days.
+   */
+  confidence: number | null;
+  review_state: "pending" | "published";
+  /**
+   * Known expiry (UTC); null = expiry unknown.
+   */
+  expires_at: string | null;
+  /**
+   * The code's page on Coupons (<origin>/c/<coupon id>); it now answers 410.
+   */
+  canonical_url: string;
+  /**
+   * Status before it was disabled.
+   */
+  previous_status: "unknown" | "reported_working" | "reported_failed" | "expired";
+  /**
+   * source_removed, staff, or service:<client>[:<note>].
+   */
+  reason: ("source_removed" | "staff") | string;
+}
+
+/** coupons.report.created@1.0.0 (owner: coupons) */
+/**
+ * coupons.report.created v1 (OpenVibe.Coupons server/domain/reports.js report). A signed-in person (site form, a browser-helper install token with scope coupons.report, or a service acting for a person with X-OV-Subject) reported that an active code worked or failed, in the transaction that stored the report. One event per new (reporter, code, UTC day) row: a repeat the same day is deduplicated and a same-day switch to the other outcome corrects that row, and neither emits (both still recompute). The payload never identifies the reporter: not the subject, the HMAC reporter key or the install. reason is present only on failed reports that gave one. A coupons.confidence.changed and, when the status moved, a lifecycle event follow in the same transaction. Envelope: subject { type: coupon, id: cpn_… }, visibility internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
+ */
+export interface CouponsReportCreatedPayload {
+  /**
+   * The merchant of the reported code.
+   */
+  merchant_id: string;
+  outcome: "worked" | "failed";
+  /**
+   * Why a failed code failed, when the reporter said. Never on a worked report.
+   */
+  reason?: "invalid" | "expired" | "min_spend_not_met" | "not_eligible" | "other";
+  /**
+   * How the report arrived: the site form, a browser-helper install token, or the API (a Network token or a service acting for a person).
+   */
+  channel: "site" | "extension" | "api";
+  /**
+   * The UTC day of the report (YYYY-MM-DD), the deduplication bucket.
+   */
+  day: string;
+}
+
+/** coupons.confidence.changed@1.0.0 (owner: coupons) */
+/**
+ * coupons.confidence.changed v1 (OpenVibe.Coupons server/domain/coupons.js recompute). A code's confidence moved, in the transaction of the recompute: a new or corrected report, evidence added or withdrawn (evidence on one of the merchant's own domains raises the prior), or the sweep letting old reports decay (to null once no report is younger than 30 days). confidence = (a0 + W) / (a0 + 1 + W + F), rounded to 2 decimals, over recency-weighted worked (W) and failed (F) reports (half-life 7 days, each reporter's latest report only; a0 = 1, or 1.5 with merchant evidence); null = no counted report in the 30-day window. from and to always differ. status is the code's status after the change; a status change also emits coupons.coupon.updated, .expired or .disabled. Never names a reporter. Envelope: subject { type: coupon, id: cpn_… }, visibility internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
+ */
+export interface CouponsConfidenceChangedPayload {
+  /**
+   * The merchant the code belongs to.
+   */
+  merchant_id: string;
+  /**
+   * Confidence before; null = no counted report.
+   */
+  from: number | null;
+  /**
+   * Confidence after; null = no counted report left in the window.
+   */
+  to: number | null;
+  /**
+   * The code's status after the change (reported_working at confidence >= 0.6, reported_failed at <= 0.4, given enough recent reports).
+   */
+  status: "unknown" | "reported_working" | "reported_failed" | "expired" | "disabled";
+}
+
+/** coupons.index_document.upserted@1.0.0 (owner: coupons) */
+/**
+ * coupons.index_document.upserted v1 (OpenVibe.Coupons server/domain/publication.js sendDocument, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a code in active results (type coupon: published, merchant active, not expired or disabled; title '<code> — <title> (<merchant>)', status and expiry in the summary, description and restrictions in the body, facets merchant, status and expiry_known, Sources items in provenance) or of an active merchant (type merchant: facets active_codes; indexability noindex thin_content while it has no active code). Sent in the transaction of every change to what Search should hold (coupons.js syncIndex and syncMerchant); the revision (coupons_index_revisions) grows only when the document changed, and an unchanged document is not sent again. Visibility is always public. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: coupon | merchant, id, revision: <document revision> }, visibility internal, priority important, actor service:coupons.
+ */
+export type CouponsIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "coupons";
+  type: "coupon" | "merchant";
+  id?: string;
+  deleted: false;
+};
+
+/** coupons.index_document.deleted@1.0.0 (owner: coupons) */
+/**
+ * coupons.index_document.deleted v1 (OpenVibe.Coupons server/domain/publication.js sendDocument, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the code left active results (expired, disabled, its merchant disabled) or the merchant is no longer active, so Search drops it at this revision or older. Only sent for a resource Search was sent before: a code or merchant that was never indexed gets no tombstone. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: coupon | merchant, id, revision }, visibility internal, priority important, actor service:coupons.
+ */
+export interface CouponsIndexDocumentDeletedPayload {
+  type: "coupon" | "merchant";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** deals.offer.created@1.0.0 (owner: deals) */
+/**
+ * deals.offer.created v1 (OpenVibe.Deals server/domain/indexing.js emitOffer, called from server/domain/offers.js submit and createImported). A deal was posted: a person submitted a link (submit), or the Sources importer created an offer from a deals-category Sources item (createImported, the only caller that adds imported_from). Written in the transaction that inserted the offer and its first observation, next to deals.index_document.upserted. The payload describes the canonical offer as it now stands: canonical page URL, status, store domain, product, the latest observation (price text exactly as stated, never inferred; null where the source or person stated nothing) with its observed_at, the freshness verdict and the Search-shaped indexability decision. Deliberately left out: the description, the submitter's identity, vote counts and hotness. Envelope: subject { type: offer, id: <offer_id> }, visibility public when the offer is active and the SEO gate lets it be listed, otherwise internal, priority important (default), actor user:<submitter usr_…> for a submission, service:deals for an import. No consumer is built yet.
+ */
+export interface DealsOfferCreatedPayload {
+  /**
+   * The canonical (root) offer id.
+   */
+  offer_id: string;
+  /**
+   * Page slug: the slugified title plus the last six characters of the id.
+   */
+  slug: string;
+  /**
+   * Canonical offer page URL on Deals (/d/<slug>).
+   */
+  url: string;
+  title: string;
+  /**
+   * A new offer is always active.
+   */
+  status: "active";
+  /**
+   * Store domain: the offer link's host without a leading www.; null when none could be derived.
+   */
+  store: string | null;
+  /**
+   * Deals product the offer is attached to, if any.
+   */
+  product_id: string | null;
+  /**
+   * The newest observation across the offer's merge group; null only when the group has none.
+   */
+  latest_observation: {
+    /**
+     * Decimal text as stated; null when no price was stated (never 0).
+     */
+    price: string | null;
+    /**
+     * ISO 4217; never assumed.
+     */
+    currency: string | null;
+    availability:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+    observed_at: string;
+  } | null;
+  /**
+   * fresh while the latest observation is younger than DEALS_FRESHNESS_HOURS, stale after, unobserved without one.
+   */
+  freshness: "fresh" | "stale" | "unobserved";
+  /**
+   * The SEO gate decision in Search's shape (index-hooks searchIndexability).
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * Search reason names, e.g. stale_price, expired, takedown, owner_decision (imported or AI text awaiting review).
+     *
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * Only on imports: the OpenVibe.Sources item the offer was created from.
+   */
+  imported_from?: {
+    service: "sources";
+    type: "item";
+    id: string;
+  };
+}
+
+/** deals.offer.updated@1.0.0 (owner: deals) */
+/**
+ * deals.offer.updated v1 (OpenVibe.Deals server/domain/indexing.js emitOffer, called from server/domain/offers.js and server/domain/importer.js). Something about a canonical offer changed; `changed` says what, and a few call sites add one reference: an edit (offers.js update: the edited columns, among title, description, category, expires_at, product_id, ai_summary, review_state, text_origin); a price/availability report by a person (observe) or a newer or re-fetched Sources item (importer importItem) ([observation] + observation_id); a second Sources item with the same link attached to an existing offer ([sources] + observation_id); a Sources item removed at the source ([sources] + source_removed; an imported offer left with no live source is disabled in the same transaction, so status is then disabled); moderators disabling it or re-activating a disabled or expired offer ([status] + moderation); a person reviewing imported or AI text ([review_state]); a merge ([merged] + merged_offer_id, sent for the merge target); an unmerge (two events: [unmerged] + unmerged_offer_id for the former target, and [unmerged] + unmerged_from for the restored offer). Written in the transaction that made the change, next to the offer's (and its product's) deals.index_document.* event. The rest of the payload is the offer as it now stands, as in deals.offer.created. Deliberately left out: old values, the description text, identities and vote counts (deals.vote.changed carries those counts). Envelope: subject { type: offer, id: <offer_id> }, visibility public when the offer is active and the SEO gate lets it be listed, otherwise internal, priority important (default), actor user:<the person who acted, usr_…>, service:<calling service> when a service acts without a person, service:deals for the importer. No consumer is built yet.
+ */
+export interface DealsOfferUpdatedPayload {
+  /**
+   * The canonical (root) offer id.
+   */
+  offer_id: string;
+  /**
+   * Page slug: the slugified title plus the last six characters of the id.
+   */
+  slug: string;
+  /**
+   * Canonical offer page URL on Deals (/d/<slug>).
+   */
+  url: string;
+  title: string;
+  status: "active" | "expired" | "disabled";
+  /**
+   * Store domain: the offer link's host without a leading www.; null when none could be derived.
+   */
+  store: string | null;
+  /**
+   * Deals product the offer is attached to, if any.
+   */
+  product_id: string | null;
+  /**
+   * The newest observation across the offer's merge group; null only when the group has none.
+   */
+  latest_observation: {
+    /**
+     * Decimal text as stated; null when no price was stated (never 0).
+     */
+    price: string | null;
+    /**
+     * ISO 4217; never assumed.
+     */
+    currency: string | null;
+    availability:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+    observed_at: string;
+  } | null;
+  /**
+   * fresh while the latest observation is younger than DEALS_FRESHNESS_HOURS, stale after, unobserved without one.
+   */
+  freshness: "fresh" | "stale" | "unobserved";
+  /**
+   * The SEO gate decision in Search's shape (index-hooks searchIndexability).
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * Search reason names, e.g. stale_price, expired, takedown, owner_decision (imported or AI text awaiting review).
+     *
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * What changed: edited columns (update), or one of observation, sources, status, review_state, merged, unmerged.
+   *
+   * @minItems 1
+   */
+  changed: [
+    (
+      | "title"
+      | "description"
+      | "category"
+      | "expires_at"
+      | "product_id"
+      | "ai_summary"
+      | "review_state"
+      | "text_origin"
+      | "observation"
+      | "sources"
+      | "status"
+      | "merged"
+      | "unmerged"
+    ),
+    ...(
+      | "title"
+      | "description"
+      | "category"
+      | "expires_at"
+      | "product_id"
+      | "ai_summary"
+      | "review_state"
+      | "text_origin"
+      | "observation"
+      | "sources"
+      | "status"
+      | "merged"
+      | "unmerged"
+    )[]
+  ];
+  /**
+   * changed [observation] or [sources] from a report or an import: the observation just recorded.
+   */
+  observation_id?: string;
+  /**
+   * changed [sources] after a removal: the OpenVibe.Sources item that was removed (takedown, licence).
+   */
+  source_removed?: string;
+  /**
+   * changed [status] by a moderator: disabled, or enabled (a disabled or expired offer made active again).
+   */
+  moderation?: "disabled" | "enabled";
+  /**
+   * changed [merged]: the duplicate now merged into this offer.
+   */
+  merged_offer_id?: string;
+  /**
+   * changed [unmerged], on the former target: the offer split back out.
+   */
+  unmerged_offer_id?: string;
+  /**
+   * changed [unmerged], on the restored offer: the offer it had been merged into.
+   */
+  unmerged_from?: string;
+}
+
+/** deals.offer.expired@1.0.0 (owner: deals) */
+/**
+ * deals.offer.expired v1 (OpenVibe.Deals server/domain/indexing.js emitOffer, called from server/domain/offers.js expireRow). An active offer became expired: its submitter or a moderator marked it expired (POST /offers/:id/expire; reason submitter, moderator or "moderator: <note>"), or the worker found that its STATED end time has passed (expireDue; reason stated_expiry). Expiry is never inferred from missing data. Written in the transaction that set the status and the moderation_log row, next to deals.index_document.upserted (the page stays in Search as a noindex document with reason expired). The rest of the payload is the offer as it now stands, as in deals.offer.created. Envelope: subject { type: offer, id: <offer_id> }, visibility internal (an expired offer is never public), priority important (default), actor user:<usr_…> who marked it, service:<calling service> when a service acts without a person, service:deals for the worker. No consumer is built yet.
+ */
+export interface DealsOfferExpiredPayload {
+  /**
+   * The canonical (root) offer id.
+   */
+  offer_id: string;
+  /**
+   * Page slug: the slugified title plus the last six characters of the id.
+   */
+  slug: string;
+  /**
+   * Canonical offer page URL on Deals (/d/<slug>).
+   */
+  url: string;
+  title: string;
+  status: "expired";
+  /**
+   * Store domain: the offer link's host without a leading www.; null when none could be derived.
+   */
+  store: string | null;
+  /**
+   * Deals product the offer is attached to, if any.
+   */
+  product_id: string | null;
+  /**
+   * The newest observation across the offer's merge group; null only when the group has none.
+   */
+  latest_observation: {
+    /**
+     * Decimal text as stated; null when no price was stated (never 0).
+     */
+    price: string | null;
+    /**
+     * ISO 4217; never assumed.
+     */
+    currency: string | null;
+    availability:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+    observed_at: string;
+  } | null;
+  /**
+   * fresh while the latest observation is younger than DEALS_FRESHNESS_HOURS, stale after, unobserved without one.
+   */
+  freshness: "fresh" | "stale" | "unobserved";
+  /**
+   * The SEO gate decision in Search's shape (index-hooks searchIndexability).
+   */
+  indexability: {
+    decision: "index" | "noindex";
+    /**
+     * Search reason names, e.g. stale_price, expired, takedown, owner_decision (imported or AI text awaiting review).
+     *
+     * @maxItems 20
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * submitter, stated_expiry, moderator, or "moderator: <note>" (the note as the moderator wrote it, whitespace collapsed).
+   */
+  reason: string;
+}
+
+/** deals.vote.changed@1.0.0 (owner: deals) */
+/**
+ * deals.vote.changed v1 (OpenVibe.Deals server/domain/votes.js apply). A person's effective vote on an offer's merge group changed: set to +1 or -1 (PUT /offers/:id/vote, deals.vote.set) or removed, value 0 (DELETE /offers/:id/vote, deals.vote.remove). Nothing is sent when the vote did not change. Written in the transaction that stored the vote row and a hotness snapshot (reason vote). The payload carries counts and the recomputable hot@1 snapshot, not identities: the voter appears only as the envelope actor, and the IP hash and any vote-ring flags stay in Deals. Envelope: subject { type: offer, id: <canonical offer_id> }, visibility internal, priority important (default), actor user:<voter usr_…> (also when a service casts the vote for them). No consumer is built yet.
+ */
+export interface DealsVoteChangedPayload {
+  /**
+   * The canonical (root) offer of the merge group; the vote row is stored on it.
+   */
+  offer_id: string;
+  /**
+   * The offer the request addressed: the root, or an offer merged into it.
+   */
+  listing_id: string;
+  /**
+   * The new effective vote; 0 = removed.
+   */
+  value: 1 | -1 | 0;
+  /**
+   * The effective vote before; always different from value.
+   */
+  previous: 1 | -1 | 0;
+  /**
+   * Weight stored with this vote: 1, or DEALS_NEW_ACCOUNT_WEIGHT (default 0.25) for an account new to Deals.
+   */
+  weight: number;
+  /**
+   * Tally of effective votes across the merge group after the change (a voter counts once).
+   */
+  votes: {
+    up: number;
+    down: number;
+    /**
+     * Sum of the up voters' weights, 4 decimals.
+     */
+    up_weight: number;
+    /**
+     * Sum of the down voters' weights, 4 decimals.
+     */
+    down_weight: number;
+  };
+  /**
+   * The snapshot taken with this vote; its inputs are kept in deal_hotness_snapshots (GET /api/v1/offers/:id/hotness).
+   */
+  hotness: {
+    /**
+     * Currently hot@1: hot = round6(score / (ageHours + 2)^1.5).
+     */
+    formula: string;
+    hot: number;
+    /**
+     * up_weight - down_weight, 4 decimals.
+     */
+    score: number;
+  };
+}
+
+/** deals.index_document.upserted@1.0.0 (owner: deals) */
+/**
+ * deals.index_document.upserted v1 (OpenVibe.Deals server/domain/indexing.js indexOffer and indexProduct, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a canonical offer page (type offer, /d/<slug>) or a product page (type product, /p/<slug>), sent whenever what Search should hold changed: after every offer write (offers.js, importer.js), a product resolved through the API, and the worker's re-index pass when freshness moves. The sequencer (deal_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; expired offers, offers without a fresh observation and imported or AI text awaiting review stay in Search as noindex documents (reasons expired, stale_price, owner_decision). Offer facets: status, freshness, store, category, currency, product (slug); product facets: brand, category, offers (active offer count). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: offer | product, id, revision: <document revision> }, visibility internal, priority important, actor service:deals.
+ */
+export type DealsIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "deals";
+  type: "offer" | "product";
+  id?: string;
+  deleted: false;
+};
+
+/** deals.index_document.deleted@1.0.0 (owner: deals) */
+/**
+ * deals.index_document.deleted v1 (OpenVibe.Deals server/domain/indexing.js indexOffer, via openvibe-publishing/index-hooks indexEvent). A Search tombstone for an offer page: moderators disabled the offer (takedown, including an imported offer disabled because all its Sources items were removed), or the offer was merged into another one (the group is indexed under the target from then on). Sent when the tombstone's revision moved, so a repeat sends nothing. Product pages are never tombstoned: a product without a fresh offer stays in Search as a noindex document. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: offer, id, revision }, visibility internal, priority important, actor service:deals.
+ */
+export interface DealsIndexDocumentDeletedPayload {
+  type: "offer";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** trade.observation.created@1.0.0 (owner: trade) */
+/**
+ * trade.observation.created v1 (OpenVibe.Trade server/domain/observations.js record). A market observation was recorded: one value a source stated for an instrument (metric, the decimal exactly as stated, unit, currency when monetary, period), when it was true per the source (observed_at), when the source was fetched (retrieved_at) and when Trade recorded it, with the source reference. Recorded by a feed service through POST /api/v1/observations (trade.observation.write) or by the Sources sync (server/domain/sync.js). Only on creation: a replay of the same (source_key, source_ref) sends nothing, and a different value under the same reference is refused. Written in the transaction that inserted the immutable row, together with the source's freshness update (trade.source.recovered|stale), alert evaluation (trade.alert.triggered) and the instrument's Search document. Leaves out the freshness verdict (computed at read time) and recorded_by (the envelope actor). Envelope: subject { type: observation, id }, visibility public, priority low, actor service:<recording service> (service:trade for the Sources sync). Information only, not investment advice.
+ */
+export interface TradeObservationCreatedPayload {
+  instrument: {
+    id: string;
+    symbol: string;
+  };
+  id: string;
+  /**
+   * e.g. price.close, volume, us-gaap:Revenues.
+   */
+  metric: string;
+  /**
+   * The decimal exactly as the source stated it (text, never rounded).
+   */
+  value: string;
+  /**
+   * e.g. USD, shares, USD/shares.
+   */
+  unit: string;
+  /**
+   * ISO 4217 when the value is monetary; null otherwise.
+   */
+  currency: string | null;
+  /**
+   * The period the value covers when the source states one (e.g. a fiscal quarter).
+   */
+  period: string | null;
+  /**
+   * When the value was true, per the source.
+   */
+  observed_at: string;
+  /**
+   * When the source was fetched.
+   */
+  retrieved_at: string;
+  /**
+   * When Trade recorded the row.
+   */
+  recorded_at: string;
+  /**
+   * The value's own maximum age, when the recorder gave one.
+   */
+  max_age_sec: number | null;
+  source: {
+    /**
+     * OpenVibe.Sources source key.
+     */
+    key: string;
+    /**
+     * The Sources item the value came from, when there is one.
+     */
+    item_id: string | null;
+    /**
+     * The source's page for the value (absolute http(s) URL, normalised).
+     */
+    url: string | null;
+    /**
+     * The source's own reference for this datum; unique per source_key.
+     */
+    ref: string;
+  };
+}
+
+/** trade.source.stale@1.0.0 (owner: trade) */
+/**
+ * trade.source.stale v1 (OpenVibe.Trade server/domain/freshness.js evaluate). A source Trade shows data from went stale by Trade's own clock: its last successful fetch is older than its staleness window (Sources' stale_after_sec, else TRADE_DEFAULT_STALE_AFTER_SEC), or no success is known at all. Sent only on a transition (fresh to stale), or once when Trade first evaluates a source that is already stale; replays and further ticks send nothing. Evaluated when the Sources sync reports a source's health (sync.js reportHealth), when a recorded observation or filing proves a retrieval (noteRetrieval), and by the worker (evaluateAll). Sources' own health status is carried as upstream_status but is not the verdict. Envelope: subject { type: source, id: <source_key> }, visibility public, priority low, actor service:trade.
+ */
+export interface TradeSourceStalePayload {
+  /**
+   * OpenVibe.Sources source key.
+   */
+  source_key: string;
+  stale: true;
+  /**
+   * Last success + window, or when Trade first saw the source if it never succeeded.
+   */
+  stale_since: string;
+  /**
+   * Last known successful fetch; null when none is known.
+   */
+  last_success_at: string | null;
+  /**
+   * The staleness window applied, in seconds.
+   */
+  stale_after_sec: number;
+  /**
+   * Sources' own health status as last reported (healthy, stale, failing, never_fetched, disabled, manual); null if never reported.
+   */
+  upstream_status: string | null;
+  evaluated_at: string;
+}
+
+/** trade.source.recovered@1.0.0 (owner: trade) */
+/**
+ * trade.source.recovered v1 (OpenVibe.Trade server/domain/freshness.js evaluate). A stale source is fresh again by Trade's own clock: a successful fetch younger than its staleness window is now known, reported through Sources' health during the sync (sync.js reportHealth) or proved by the retrieved_at of a newly recorded observation or filing (noteRetrieval). Sent only on a stale-to-fresh transition; a source that is already fresh the first time Trade evaluates it is not a recovery and sends nothing. Envelope: subject { type: source, id: <source_key> }, visibility public, priority low, actor service:trade.
+ */
+export interface TradeSourceRecoveredPayload {
+  /**
+   * OpenVibe.Sources source key.
+   */
+  source_key: string;
+  stale: false;
+  /**
+   * Always null: the source is fresh.
+   */
+  stale_since: null;
+  /**
+   * The successful fetch that made it fresh (or a later one).
+   */
+  last_success_at: string;
+  /**
+   * The staleness window applied, in seconds.
+   */
+  stale_after_sec: number;
+  /**
+   * Sources' own health status as last reported (healthy, stale, failing, never_fetched, disabled, manual); null if never reported.
+   */
+  upstream_status: string | null;
+  evaluated_at: string;
+}
+
+/** trade.index_document.upserted@1.0.0 (owner: trade) */
+/**
+ * trade.index_document.upserted v1 (OpenVibe.Trade server/domain/indexing.js refresh, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of an instrument page (/i/<symbol>), the only public indexable object Trade has (watchlists, alert rules and deliveries never reach Search). Sent while the instrument is active and the SEO gate lets the page be listed (financial context is sensitive: the page is hidden until a person-reviewed context is published), whenever the document changed: after a recorded observation, a context publish, review or retraction, an instrument edit, and the worker's refresh pass. The sequencer (trade_index_revisions) gives an unchanged document its old revision and nothing is sent. A page whose newest monetary observation is too old stays as a noindex document (reason stale_price). Title '<symbol> — <name>', language en, facets kind, symbol, exchange; provenance lists Trade's own cited records. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: instrument, id, revision: <document revision> }, visibility internal, priority important, actor service:trade.
+ */
+export type TradeIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "trade";
+  type: "instrument";
+  id?: string;
+  deleted: false;
+};
+
+/** trade.index_document.deleted@1.0.0 (owner: trade) */
+/**
+ * trade.index_document.deleted v1 (OpenVibe.Trade server/domain/indexing.js refresh, via openvibe-publishing/index-hooks indexEvent). A Search tombstone for an instrument page: the instrument was archived, or the page stopped being listable (e.g. its reviewed context was retracted). Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: instrument, id, revision }, visibility internal, priority important, actor service:trade.
+ */
+export interface TradeIndexDocumentDeletedPayload {
+  type: "instrument";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** games.player.joined@1.0.0 (owner: games) */
+/**
+ * games.player.joined v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts playerJoinedEvent, via GameEventRecorder.recordJoin from game/gameServer.ts handleHello). A character entered the world: written to Games' event_outbox in a transaction of its own once the session exists and the welcome was sent (a new character's row is first written by its next save). restored is true when the character already existed in the database, false for a new one. Only emitted while Events publishing is configured. No position, appearance, inventory, rank or connection data. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.
+ */
+export interface GamesPlayerJoinedPayload {
+  /**
+   * The character. account network: a signed-in openvibe.network account, keyed by its canonical subject (user usr_..., or guest gst_... for a Network guest session). account guest: a local guest (browser token), or a Network sign-in whose token predates subject ids; no subject then.
+   */
+  player:
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "network";
+        subject:
+          | {
+              type: "user";
+              id: string;
+            }
+          | {
+              type: "guest";
+              id: string;
+            };
+      }
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "guest";
+      };
+  /**
+   * World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved.
+   */
+  world: string;
+  /**
+   * The character was loaded from the database (false: created by this join).
+   */
+  restored: boolean;
+}
+
+/** games.player.left@1.0.0 (owner: games) */
+/**
+ * games.player.left v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts playerLeftEvent, via GameEventRecorder.recordLeave from game/gameServer.ts onDisconnect -> savePlayer(session, true)). A character's connection closed: written in the same transaction as its final save, after any games.skill.leveled / games.blueprint.unlocked that save produced. session_seconds is the time since its games.player.joined in this process, rounded to whole seconds; 0 when the join was not tracked. No position, appearance, inventory, rank or connection data. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.
+ */
+export interface GamesPlayerLeftPayload {
+  /**
+   * The character. account network: a signed-in openvibe.network account, keyed by its canonical subject (user usr_..., or guest gst_... for a Network guest session). account guest: a local guest (browser token), or a Network sign-in whose token predates subject ids; no subject then.
+   */
+  player:
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "network";
+        subject:
+          | {
+              type: "user";
+              id: string;
+            }
+          | {
+              type: "guest";
+              id: string;
+            };
+      }
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "guest";
+      };
+  /**
+   * World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved.
+   */
+  world: string;
+  session_seconds: number;
+}
+
+/** games.skill.leveled@1.0.0 (owner: games) */
+/**
+ * games.skill.leveled v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts progressEvents, via GameEventRecorder.recordPlayersSaved from game/gameServer.ts flush and savePlayer). A persisted skill level went up: derived from what a save actually wrote, compared with the last committed save of that character (for a restored character first the database state at join, for a new one level 1), in the same transaction. One event per raised skill per save, so level can be more than previous_level + 1; never emitted for a decrease, and not re-emitted once the baseline advances on commit. Only for characters that joined while events were on. XP totals are left out. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.
+ */
+export interface GamesSkillLeveledPayload {
+  /**
+   * The character. account network: a signed-in openvibe.network account, keyed by its canonical subject (user usr_..., or guest gst_... for a Network guest session). account guest: a local guest (browser token), or a Network sign-in whose token predates subject ids; no subject then.
+   */
+  player:
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "network";
+        subject:
+          | {
+              type: "user";
+              id: string;
+            }
+          | {
+              type: "guest";
+              id: string;
+            };
+      }
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "guest";
+      };
+  /**
+   * World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved.
+   */
+  world: string;
+  /**
+   * Content skill id (e.g. mining, woodcutting).
+   */
+  skill: string;
+  /**
+   * Level now persisted; always greater than previous_level.
+   */
+  level: number;
+  /**
+   * Level at the previous baseline (1 when the skill had none).
+   */
+  previous_level: number;
+}
+
+/** games.blueprint.unlocked@1.0.0 (owner: games) */
+/**
+ * games.blueprint.unlocked v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts progressEvents, via GameEventRecorder.recordPlayersSaved from game/gameServer.ts flush and savePlayer). A blueprint recipe unlock (learned by consuming a blueprint item) was persisted: derived from the saved unlock set compared with the last committed save of that character, in the same transaction, one event per new recipe. Only for characters that joined while events were on. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.
+ */
+export interface GamesBlueprintUnlockedPayload {
+  /**
+   * The character. account network: a signed-in openvibe.network account, keyed by its canonical subject (user usr_..., or guest gst_... for a Network guest session). account guest: a local guest (browser token), or a Network sign-in whose token predates subject ids; no subject then.
+   */
+  player:
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "network";
+        subject:
+          | {
+              type: "user";
+              id: string;
+            }
+          | {
+              type: "guest";
+              id: string;
+            };
+      }
+    | {
+        /**
+         * Games character id (packages/shared/src/ids.ts newPlayerId: 10 time + 10 random characters, lowercase Crockford base32). Also the envelope subject id.
+         */
+        id: string;
+        /**
+         * Character slot under the account (0-2; a local guest only has slot 0).
+         */
+        slot: number;
+        /**
+         * Character name from the client hello (1-24 characters); not unique.
+         */
+        name: string;
+        account: "guest";
+      };
+  /**
+   * World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved.
+   */
+  world: string;
+  /**
+   * Content recipe id of the blueprint recipe (e.g. craft_scrap_pistol).
+   */
+  recipe: string;
+}
+
+/** games.world.saved@1.0.0 (owner: games) */
+/**
+ * games.world.saved v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts worldSavedEvent, via GameEventRecorder.recordWorldSaved from game/gameServer.ts flush). The authoritative world was written: a checkpoint at most once per WORLD_SAVED_EVENT_MINUTES (default 15) and only when something was written, and always on shutdown, in the transaction of the flush that triggers it. The counts are totals of the flushes since `since` (the previous event, or process start); players_written counts dirty characters saved by flushes, not the single-character saves on disconnect. Envelope: subject { type: world, id: <world> }, visibility internal, priority low, actor service:games. No consumer yet.
+ */
+export interface GamesWorldSavedPayload {
+  /**
+   * World id (the loaded content world, e.g. openvibeville_v2). Also the envelope subject id of games.world.saved.
+   */
+  world: string;
+  reason: "checkpoint" | "shutdown";
+  /**
+   * World entity rows written since `since`.
+   */
+  entities_written: number;
+  /**
+   * Character rows written by flushes since `since`.
+   */
+  players_written: number;
+  /**
+   * Start of the period these totals cover.
+   */
+  since: string;
+}
+
+/** games.mod.installed@1.0.0 (owner: games) */
+/**
+ * games.mod.installed v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.install in mods/registry.ts; POST /api/v1/mods). A games-content@1 mod was installed after its manifest and content pack were validated. requested is the manifest's capability list, granted the approved subset (only capabilities the games-content@1 runtime binds: games.world.announce, games.prop.place), status whether it was installed enabled. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
+ */
+export interface GamesModInstalledPayload {
+  /**
+   * The install, from its validated mods/mod-manifest.v1 manifest.
+   */
+  mod: {
+    /**
+     * Mod id (manifest id). Also the envelope subject id.
+     */
+    id: string;
+    name: string;
+    /**
+     * Semantic version of the installed release.
+     */
+    version: string;
+    /**
+     * Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames).
+     */
+    target: string;
+    /**
+     * Install metadata set at install; never consulted by a grant check.
+     */
+    trust_tier: "unreviewed" | "reviewed" | "first-party";
+  };
+  /**
+   * manifest.permissions.capabilities, sorted.
+   *
+   * @maxItems 64
+   */
+  requested: string[];
+  /**
+   * The approved subset of requested, sorted (may be empty).
+   *
+   * @maxItems 64
+   */
+  granted: string[];
+  status: "enabled" | "disabled";
+}
+
+/** games.mod.enabled@1.0.0 (owner: games) */
+/**
+ * games.mod.enabled v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.enable in mods/registry.ts; POST /api/v1/mods/:id/enable). A disabled install was enabled; its granted capabilities take effect on the next runtime reconcile. Not emitted when it was already enabled; a revoked install cannot be enabled. The payload is the mod only. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
+ */
+export interface GamesModEnabledPayload {
+  /**
+   * The install, from its validated mods/mod-manifest.v1 manifest.
+   */
+  mod: {
+    /**
+     * Mod id (manifest id). Also the envelope subject id.
+     */
+    id: string;
+    name: string;
+    /**
+     * Semantic version of the installed release.
+     */
+    version: string;
+    /**
+     * Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames).
+     */
+    target: string;
+    /**
+     * Install metadata set at install; never consulted by a grant check.
+     */
+    trust_tier: "unreviewed" | "reviewed" | "first-party";
+  };
+}
+
+/** games.mod.disabled@1.0.0 (owner: games) */
+/**
+ * games.mod.disabled v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.disable in mods/registry.ts; POST /api/v1/mods/:id/disable). An enabled install was disabled: no capability check passes for it until it is enabled again, grants are kept. Not emitted when it was already disabled; a revoked install cannot change status. The payload is the mod only. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
+ */
+export interface GamesModDisabledPayload {
+  /**
+   * The install, from its validated mods/mod-manifest.v1 manifest.
+   */
+  mod: {
+    /**
+     * Mod id (manifest id). Also the envelope subject id.
+     */
+    id: string;
+    name: string;
+    /**
+     * Semantic version of the installed release.
+     */
+    version: string;
+    /**
+     * Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames).
+     */
+    target: string;
+    /**
+     * Install metadata set at install; never consulted by a grant check.
+     */
+    trust_tier: "unreviewed" | "reviewed" | "first-party";
+  };
+}
+
+/** games.mod.grants_changed@1.0.0 (owner: games) */
+/**
+ * games.mod.grants_changed v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.grant and ModRegistry.revokeGrant in mods/registry.ts; POST /api/v1/mods/:id/grants, DELETE /api/v1/mods/:id/grants/:capability). One capability of a non-revoked install was granted (granted: [capability], revoked: []) or one active grant was revoked (granted: [], revoked: [capability]); each call changes exactly one capability today. Not emitted when nothing changed. Revoking the whole install is games.mod.revoked instead. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
+ */
+export interface GamesModGrantsChangedPayload {
+  /**
+   * The install, from its validated mods/mod-manifest.v1 manifest.
+   */
+  mod: {
+    /**
+     * Mod id (manifest id). Also the envelope subject id.
+     */
+    id: string;
+    name: string;
+    /**
+     * Semantic version of the installed release.
+     */
+    version: string;
+    /**
+     * Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames).
+     */
+    target: string;
+    /**
+     * Install metadata set at install; never consulted by a grant check.
+     */
+    trust_tier: "unreviewed" | "reviewed" | "first-party";
+  };
+  /**
+   * Capabilities newly granted by this change.
+   *
+   * @maxItems 64
+   */
+  granted: string[];
+  /**
+   * Capabilities whose grant this change revoked.
+   *
+   * @maxItems 64
+   */
+  revoked: string[];
+}
+
+/** games.mod.revoked@1.0.0 (owner: games) */
+/**
+ * games.mod.revoked v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.revoke in mods/registry.ts; POST /api/v1/mods/:id/revoke). Terminal: every active grant of the install was revoked and its status set to revoked; the runtime retracts the mod's announcements and props on the next tick. revoked_grants lists the grants that were active (may be empty); reason is the staff-supplied text (cut to 500 characters), absent when none was given. Not emitted again for an install that is already revoked. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority important, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
+ */
+export interface GamesModRevokedPayload {
+  /**
+   * The install, from its validated mods/mod-manifest.v1 manifest.
+   */
+  mod: {
+    /**
+     * Mod id (manifest id). Also the envelope subject id.
+     */
+    id: string;
+    name: string;
+    /**
+     * Semantic version of the installed release.
+     */
+    version: string;
+    /**
+     * Manifest target. Games only accepts games.browser today (mods/manifest.ts checkForGames).
+     */
+    target: string;
+    /**
+     * Install metadata set at install; never consulted by a grant check.
+     */
+    trust_tier: "unreviewed" | "reviewed" | "first-party";
+  };
+  /**
+   * Grants active before the revoke, sorted.
+   *
+   * @maxItems 64
+   */
+  revoked_grants: string[];
+  reason?: string;
+}
+
+/** media.object.deleted@1.0.0 (owner: media) */
+/**
+ * media.object.deleted v1 (OpenVibe.Media server/events.js objectChangeEvent and recordObjectChanges, commit 039dc48, from the media_object_changes rows that the AFTER UPDATE OF lifecycle_status trigger on media_objects writes). An object's lifecycle_status became deleted: a native object soft-deleted through DELETE /api/v2/:app/objects/:id, or an inherited vods/clips/files/pastes row removed, which marks its object deleted. Every write path counts (operator SQL included), and the event exists if and only if the change committed: the trigger row and the outbox envelope are written in the transaction of the change, or by the relay's drain for a change made outside Media's own transactions. Consumers drop any public copy, index entry or cache they hold for the object (roadmap §29.3). Deliberately minimal, identity and state only: never the title, description or metadata, the owner's ids or subject, storage keys, paths or providers, sizes or hashes. Developer-project sandbox tenants produce none. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority important, actor service:media.
+ */
+export interface MediaObjectDeletedPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  kind: "vod" | "clip" | "file" | "thumbnail" | "screenshot" | "avatar" | "asset";
+  /**
+   * The inherited row the object projects (legacy:<app>:<kind>:<id>, a media.media-ref@1 legacy id); null for a native v2 object.
+   */
+  legacy_ref: string | null;
+  /**
+   * When the change committed, ISO 8601 UTC.
+   */
+  deleted_at: string;
+}
+
+/** media.object.visibility_changed@1.0.0 (owner: media) */
+/**
+ * media.object.visibility_changed v1 (OpenVibe.Media server/events.js objectChangeEvent and recordObjectChanges, commit 039dc48, from the media_object_changes rows that the AFTER UPDATE OF visibility trigger on media_objects writes). An object's visibility changed to another value (public, unlisted or private), by any write path: the v2 objects API, the inherited vods/clips/files rows it projects, or operator SQL. Never emitted when the value did not change, nor for an object that is deleted at the time of the change (that object's last word is media.object.deleted). The event exists if and only if the change committed: the trigger row and the outbox envelope are written in the transaction of the change, or by the relay's drain for a change made outside Media's own transactions. Consumers that hold a public copy, index entry or cache of the object re-check it (roadmap §29.3); a move away from public means stop showing it. Deliberately minimal, identity and state only: never the title, description or metadata, the owner's ids or subject, storage keys, paths or providers, sizes or hashes. Developer-project sandbox tenants produce none. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority important, actor service:media.
+ */
+export interface MediaObjectVisibilityChangedPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…).
+   */
+  app_id: string;
+  kind: "vod" | "clip" | "file" | "thumbnail" | "screenshot" | "avatar" | "asset";
+  /**
+   * The inherited row the object projects (legacy:<app>:<kind>:<id>, a media.media-ref@1 legacy id); null for a native v2 object.
+   */
+  legacy_ref: string | null;
+  /**
+   * The new value.
+   */
+  visibility: "public" | "unlisted" | "private";
+  /**
+   * The value before the change; never equal to visibility.
+   */
+  previous_visibility: "public" | "unlisted" | "private";
+  /**
+   * When the change committed, ISO 8601 UTC.
+   */
+  changed_at: string;
+}

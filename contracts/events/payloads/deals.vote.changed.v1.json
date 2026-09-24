@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/deals.vote.changed.v1.json",
+  "title": "DealsVoteChangedPayload",
+  "description": "deals.vote.changed v1 (OpenVibe.Deals server/domain/votes.js apply). A person's effective vote on an offer's merge group changed: set to +1 or -1 (PUT /offers/:id/vote, deals.vote.set) or removed, value 0 (DELETE /offers/:id/vote, deals.vote.remove). Nothing is sent when the vote did not change. Written in the transaction that stored the vote row and a hotness snapshot (reason vote). The payload carries counts and the recomputable hot@1 snapshot, not identities: the voter appears only as the envelope actor, and the IP hash and any vote-ring flags stay in Deals. Envelope: subject { type: offer, id: <canonical offer_id> }, visibility internal, priority important (default), actor user:<voter usr_…> (also when a service casts the vote for them). No consumer is built yet.",
+  "type": "object",
+  "required": ["offer_id", "listing_id", "value", "previous", "weight", "votes", "hotness"],
+  "additionalProperties": false,
+  "properties": {
+    "offer_id": {
+      "type": "string",
+      "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The canonical (root) offer of the merge group; the vote row is stored on it."
+    },
+    "listing_id": {
+      "type": "string",
+      "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The offer the request addressed: the root, or an offer merged into it."
+    },
+    "value": { "enum": [1, -1, 0], "description": "The new effective vote; 0 = removed." },
+    "previous": { "enum": [1, -1, 0], "description": "The effective vote before; always different from value." },
+    "weight": { "type": "number", "description": "Weight stored with this vote: 1, or DEALS_NEW_ACCOUNT_WEIGHT (default 0.25) for an account new to Deals." },
+    "votes": {
+      "type": "object",
+      "required": ["up", "down", "up_weight", "down_weight"],
+      "additionalProperties": false,
+      "description": "Tally of effective votes across the merge group after the change (a voter counts once).",
+      "properties": {
+        "up": { "type": "integer", "minimum": 0 },
+        "down": { "type": "integer", "minimum": 0 },
+        "up_weight": { "type": "number", "description": "Sum of the up voters' weights, 4 decimals." },
+        "down_weight": { "type": "number", "description": "Sum of the down voters' weights, 4 decimals." }
+      }
+    },
+    "hotness": {
+      "type": "object",
+      "required": ["formula", "hot", "score"],
+      "additionalProperties": false,
+      "description": "The snapshot taken with this vote; its inputs are kept in deal_hotness_snapshots (GET /api/v1/offers/:id/hotness).",
+      "properties": {
+        "formula": { "type": "string", "pattern": "^hot@[0-9]+$", "description": "Currently hot@1: hot = round6(score / (ageHours + 2)^1.5)." },
+        "hot": { "type": "number" },
+        "score": { "type": "number", "description": "up_weight - down_weight, 4 decimals." }
+      }
+    }
+  }
+}

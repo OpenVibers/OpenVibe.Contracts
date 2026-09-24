@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.story.flagged.v1.json",
+  "title": "NewsStoryFlaggedPayload",
+  "description": "news.story.flagged v1 (OpenVibe.News server/domain/stories.js flagEvent, from onUpstreamChange). A source item a story cites changed (source_updated) or was removed (source_removed) upstream in OpenVibe.Sources, inside the ingest transaction that applied it: the story has an open editorial flag and, when it has text, a pending system-prepared revision (same paragraphs, refreshed source table) for an editor to check and publish. The published revision does not change. One event per affected story; an open source_updated flag is reused (its pending revision moves on) and announced again, an open source_removed flag is not. Editor flags (correction, update) and retraction flags do not emit this event. Envelope: subject { type: story, id: sty_…, revision: <pending revision, else the published revision, else 0> }, visibility internal, priority important for source_removed and normal for source_updated (normal is not an events.event-envelope@1 priority, so that envelope is refused until News sends low or important), actor service:news.",
+  "type": "object",
+  "required": ["flag_id", "kind", "status", "source_item_id", "pending_revision", "published_revision"],
+  "additionalProperties": false,
+  "properties": {
+    "flag_id": { "type": "string", "pattern": "^flg_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The news_editorial_flags row." },
+    "kind": { "enum": ["source_updated", "source_removed"] },
+    "status": { "const": "open" },
+    "source_item_id": { "type": "string", "pattern": "^nsi_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The News source item that changed or was removed." },
+    "pending_revision": { "type": ["integer", "null"], "minimum": 1, "description": "The revision News prepared for an editor; null when the story has no text yet or nothing new was prepared." },
+    "published_revision": { "type": ["integer", "null"], "minimum": 1, "description": "The revision readers see; null when the story was never published." }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.index_document.upserted.v1.json",
+  "title": "NewsIndexDocumentUpsertedPayload",
+  "description": "news.index_document.upserted v1 (OpenVibe.News server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a published (not retracted), public, listable story, sent whenever what Search should hold changed (the revision grows with every change): a publication or new published revision, a topic or noindex change, a person's review of an AI revision, or a cited source changing upstream. The body is the published revision's paragraphs as plain text; facets { topic?, outlets, sources }; provenance names the cited Sources items (and the AI run of an AI draft); language en. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: story, id, revision: <document revision> }, visibility internal, priority important, actor service:news.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object", "required": ["owner", "type", "deleted"],
+      "properties": { "owner": { "const": "news" }, "type": { "const": "story" }, "id": { "type": "string", "pattern": "^sty_[0-9A-HJKMNP-TV-Z]{26}$" }, "deleted": { "const": false } }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.source.failed.v1.json",
+  "title": "NewsSourceFailedPayload",
+  "description": "news.source.failed v1 (OpenVibe.News server/domain/ingest.js failedEvent). Ingestion of news items failed and nothing was made in its place (no source item, cluster or story text); the same transaction records it in news_ingest_runs. Four call sites, told apart by origin and state: origin sources (ingest.js upstreamFailure: OpenVibe.Sources reported sources.fetch.failed for a news source; state, error_code and http_status are Sources' own, and run_id and consecutive_failures are added); origin pull with state failed (the cursor pull could not read Sources; once per outage, not once per retry); origin webhook with state failed (server/http/webhook.js: a sources.item.created|updated delivery whose item could not be read from Sources, on the first delivery attempt only); origin pull or webhook with state rejected and error_code item.no_headline (a Sources item without a title). Envelope: subject { type: source, id: <source_key> } when the source is known, otherwise { type: ingest, id: <origin> }, visibility internal, priority important, actor service:news.",
+  "type": "object",
+  "required": ["origin", "source_key", "sources_item_id", "state", "error_code", "http_status", "detail"],
+  "additionalProperties": false,
+  "properties": {
+    "origin": { "enum": ["webhook", "pull", "sources"], "description": "webhook: an Events delivery; pull: the cursor pull; sources: a failure Sources reported." },
+    "source_key": { "type": ["string", "null"], "description": "The Sources source, as given; null for a pull failure or when the delivery named none." },
+    "sources_item_id": { "type": ["string", "null"], "description": "The Sources item (itm_…) as given, for a rejected item or an unreadable delivery; null otherwise." },
+    "state": { "type": "string", "minLength": 1, "description": "rejected (an unusable item), failed (News could not read Sources), or for origin sources the fetch state Sources sent, copied as sent (robots_denied, http_error, rate_limited, parse_error…; failed when it sent none)." },
+    "error_code": { "type": ["string", "null"], "description": "item.no_headline for a rejected item; the Sources client's error code (e.g. sources.http_503), else pull.error or sources.error, when Sources could not be read; Sources' own error_code for origin sources (null when it sent none)." },
+    "http_status": { "type": ["integer", "null"], "description": "The HTTP status Sources answered (or reported for its fetch); null when there was none." },
+    "detail": { "type": ["string", "null"], "maxLength": 500, "description": "The error message, cut to 500 characters; null for rejected items and origin sources." },
+    "run_id": { "type": ["string", "null"], "description": "origin sources only: Sources' fetch run (frn_…), as sent." },
+    "consecutive_failures": { "type": ["integer", "null"], "description": "origin sources only: the source's consecutive failed runs Sources reported, null when it reported none." }
+  }
+}

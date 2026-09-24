@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.report.created.v1.json",
+  "title": "CouponsReportCreatedPayload",
+  "description": "coupons.report.created v1 (OpenVibe.Coupons server/domain/reports.js report). A signed-in person (site form, a browser-helper install token with scope coupons.report, or a service acting for a person with X-OV-Subject) reported that an active code worked or failed, in the transaction that stored the report. One event per new (reporter, code, UTC day) row: a repeat the same day is deduplicated and a same-day switch to the other outcome corrects that row, and neither emits (both still recompute). The payload never identifies the reporter: not the subject, the HMAC reporter key or the install. reason is present only on failed reports that gave one. A coupons.confidence.changed and, when the status moved, a lifecycle event follow in the same transaction. Envelope: subject { type: coupon, id: cpn_… }, visibility internal, priority important (not set: the Events default), actor service:coupons. No known consumers.",
+  "type": "object",
+  "required": ["merchant_id", "outcome", "channel", "day"],
+  "additionalProperties": false,
+  "properties": {
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merchant of the reported code." },
+    "outcome": { "enum": ["worked", "failed"] },
+    "reason": { "enum": ["invalid", "expired", "min_spend_not_met", "not_eligible", "other"], "description": "Why a failed code failed, when the reporter said. Never on a worked report." },
+    "channel": { "enum": ["site", "extension", "api"], "description": "How the report arrived: the site form, a browser-helper install token, or the API (a Network token or a service acting for a person)." },
+    "day": { "type": "string", "format": "date", "description": "The UTC day of the report (YYYY-MM-DD), the deduplication bucket." }
+  },
+  "if": { "properties": { "outcome": { "const": "worked" } }, "required": ["outcome"] },
+  "then": { "not": { "required": ["reason"] } }
+}

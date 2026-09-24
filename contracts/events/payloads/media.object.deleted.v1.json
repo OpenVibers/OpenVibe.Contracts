@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.object.deleted.v1.json",
+  "title": "MediaObjectDeletedPayload",
+  "description": "media.object.deleted v1 (OpenVibe.Media server/events.js objectChangeEvent and recordObjectChanges, commit 039dc48, from the media_object_changes rows that the AFTER UPDATE OF lifecycle_status trigger on media_objects writes). An object's lifecycle_status became deleted: a native object soft-deleted through DELETE /api/v2/:app/objects/:id, or an inherited vods/clips/files/pastes row removed, which marks its object deleted. Every write path counts (operator SQL included), and the event exists if and only if the change committed: the trigger row and the outbox envelope are written in the transaction of the change, or by the relay's drain for a change made outside Media's own transactions. Consumers drop any public copy, index entry or cache they hold for the object (roadmap §29.3). Deliberately minimal, identity and state only: never the title, description or metadata, the owner's ids or subject, storage keys, paths or providers, sizes or hashes. Developer-project sandbox tenants produce none. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority important, actor service:media.",
+  "type": "object",
+  "required": [
+    "object_id",
+    "app_id",
+    "kind",
+    "legacy_ref",
+    "deleted_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "object_id": {
+      "type": "string",
+      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "app_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…)."
+    },
+    "kind": {
+      "enum": [
+        "vod",
+        "clip",
+        "file",
+        "thumbnail",
+        "screenshot",
+        "avatar",
+        "asset"
+      ]
+    },
+    "legacy_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300,
+      "description": "The inherited row the object projects (legacy:<app>:<kind>:<id>, a media.media-ref@1 legacy id); null for a native v2 object."
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change committed, ISO 8601 UTC."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/deals.offer.created.v1.json",
+  "title": "DealsOfferCreatedPayload",
+  "description": "deals.offer.created v1 (OpenVibe.Deals server/domain/indexing.js emitOffer, called from server/domain/offers.js submit and createImported). A deal was posted: a person submitted a link (submit), or the Sources importer created an offer from a deals-category Sources item (createImported, the only caller that adds imported_from). Written in the transaction that inserted the offer and its first observation, next to deals.index_document.upserted. The payload describes the canonical offer as it now stands: canonical page URL, status, store domain, product, the latest observation (price text exactly as stated, never inferred; null where the source or person stated nothing) with its observed_at, the freshness verdict and the Search-shaped indexability decision. Deliberately left out: the description, the submitter's identity, vote counts and hotness. Envelope: subject { type: offer, id: <offer_id> }, visibility public when the offer is active and the SEO gate lets it be listed, otherwise internal, priority important (default), actor user:<submitter usr_…> for a submission, service:deals for an import. No consumer is built yet.",
+  "type": "object",
+  "required": ["offer_id", "slug", "url", "title", "status", "store", "product_id", "latest_observation", "freshness", "indexability"],
+  "additionalProperties": false,
+  "properties": {
+    "offer_id": { "type": "string", "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The canonical (root) offer id." },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 80,
+      "description": "Page slug: the slugified title plus the last six characters of the id."
+    },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical offer page URL on Deals (/d/<slug>)." },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "status": { "const": "active", "description": "A new offer is always active." },
+    "store": { "type": ["string", "null"], "minLength": 1, "description": "Store domain: the offer link's host without a leading www.; null when none could be derived." },
+    "product_id": { "type": ["string", "null"], "pattern": "^dpr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "Deals product the offer is attached to, if any." },
+    "latest_observation": {
+      "type": ["object", "null"],
+      "required": ["price", "currency", "availability", "observed_at"],
+      "additionalProperties": false,
+      "description": "The newest observation across the offer's merge group; null only when the group has none.",
+      "properties": {
+        "price": { "type": ["string", "null"], "maxLength": 40, "description": "Decimal text as stated; null when no price was stated (never 0)." },
+        "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$", "description": "ISO 4217; never assumed." },
+        "availability": { "enum": ["in_stock", "out_of_stock", "preorder", "discontinued", "limited", "sold_out", "online_only", "in_store_only", null] },
+        "observed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "freshness": {
+      "enum": ["fresh", "stale", "unobserved"],
+      "description": "fresh while the latest observation is younger than DEALS_FRESHNESS_HOURS, stale after, unobserved without one."
+    },
+    "indexability": {
+      "type": "object",
+      "required": ["decision", "reasons"],
+      "additionalProperties": false,
+      "description": "The SEO gate decision in Search's shape (index-hooks searchIndexability).",
+      "properties": {
+        "decision": { "enum": ["index", "noindex"] },
+        "reasons": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+          "description": "Search reason names, e.g. stale_price, expired, takedown, owner_decision (imported or AI text awaiting review)."
+        }
+      }
+    },
+    "imported_from": {
+      "type": "object",
+      "required": ["service", "type", "id"],
+      "additionalProperties": false,
+      "description": "Only on imports: the OpenVibe.Sources item the offer was created from.",
+      "properties": { "service": { "const": "sources" }, "type": { "const": "item" }, "id": { "type": "string", "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$" } }
+    }
+  }
+}

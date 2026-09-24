@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/trade.observation.created.v1.json",
+  "title": "TradeObservationCreatedPayload",
+  "description": "trade.observation.created v1 (OpenVibe.Trade server/domain/observations.js record). A market observation was recorded: one value a source stated for an instrument (metric, the decimal exactly as stated, unit, currency when monetary, period), when it was true per the source (observed_at), when the source was fetched (retrieved_at) and when Trade recorded it, with the source reference. Recorded by a feed service through POST /api/v1/observations (trade.observation.write) or by the Sources sync (server/domain/sync.js). Only on creation: a replay of the same (source_key, source_ref) sends nothing, and a different value under the same reference is refused. Written in the transaction that inserted the immutable row, together with the source's freshness update (trade.source.recovered|stale), alert evaluation (trade.alert.triggered) and the instrument's Search document. Leaves out the freshness verdict (computed at read time) and recorded_by (the envelope actor). Envelope: subject { type: observation, id }, visibility public, priority low, actor service:<recording service> (service:trade for the Sources sync). Information only, not investment advice.",
+  "type": "object",
+  "required": ["instrument", "id", "metric", "value", "unit", "currency", "period", "observed_at", "retrieved_at", "recorded_at", "max_age_sec", "source"],
+  "additionalProperties": false,
+  "properties": {
+    "instrument": {
+      "type": "object",
+      "required": ["id", "symbol"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^ins_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "symbol": { "type": "string", "pattern": "^[A-Z0-9][A-Z0-9.-]{0,15}$" }
+      }
+    },
+    "id": { "type": "string", "pattern": "^obs_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "metric": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,79}$", "description": "e.g. price.close, volume, us-gaap:Revenues." },
+    "value": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?$",
+      "maxLength": 64,
+      "description": "The decimal exactly as the source stated it (text, never rounded)."
+    },
+    "unit": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9/%._-]{0,19}$", "description": "e.g. USD, shares, USD/shares." },
+    "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$", "description": "ISO 4217 when the value is monetary; null otherwise." },
+    "period": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "The period the value covers when the source states one (e.g. a fiscal quarter)."
+    },
+    "observed_at": { "type": "string", "format": "date-time", "description": "When the value was true, per the source." },
+    "retrieved_at": { "type": "string", "format": "date-time", "description": "When the source was fetched." },
+    "recorded_at": { "type": "string", "format": "date-time", "description": "When Trade recorded the row." },
+    "max_age_sec": {
+      "type": ["integer", "null"],
+      "minimum": 60,
+      "maximum": 315360000,
+      "description": "The value's own maximum age, when the recorder gave one."
+    },
+    "source": {
+      "type": "object",
+      "required": ["key", "item_id", "url", "ref"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$", "description": "OpenVibe.Sources source key." },
+        "item_id": {
+          "type": ["string", "null"],
+          "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "The Sources item the value came from, when there is one."
+        },
+        "url": { "type": ["string", "null"], "pattern": "^https?://", "description": "The source's page for the value (absolute http(s) URL, normalised)." },
+        "ref": { "type": "string", "minLength": 1, "maxLength": 300, "description": "The source's own reference for this datum; unique per source_key." }
+      }
+    }
+  }
+}

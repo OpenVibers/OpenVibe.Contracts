@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/deals.index_document.upserted.v1.json",
+  "title": "DealsIndexDocumentUpsertedPayload",
+  "description": "deals.index_document.upserted v1 (OpenVibe.Deals server/domain/indexing.js indexOffer and indexProduct, via openvibe-publishing/index-hooks indexEvent). The OpenVibe.Search document of a canonical offer page (type offer, /d/<slug>) or a product page (type product, /p/<slug>), sent whenever what Search should hold changed: after every offer write (offers.js, importer.js), a product resolved through the API, and the worker's re-index pass when freshness moves. The sequencer (deal_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; expired offers, offers without a fresh observation and imported or AI text awaiting review stay in Search as noindex documents (reasons expired, stale_price, owner_decision). Offer facets: status, freshness, store, category, currency, product (slug); product facets: brand, category, offers (active offer count). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: offer | product, id, revision: <document revision> }, visibility internal, priority important, actor service:deals.",
+  "allOf": [
+    { "$ref": "../../search/index-document.v1.json" },
+    {
+      "type": "object",
+      "required": ["owner", "type", "deleted"],
+      "properties": {
+        "owner": { "const": "deals" },
+        "type": { "enum": ["offer", "product"] },
+        "id": { "type": "string", "pattern": "^(dof|dpr)_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "deleted": { "const": false }
+      }
+    }
+  ]
+}

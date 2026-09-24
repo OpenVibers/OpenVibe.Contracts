@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.entity.split.v1.json",
+  "title": "ReviewsEntitySplitPayload",
+  "description": "reviews.entity.split v1 (OpenVibe.Reviews server/reviews/service.js split → entityEvent). An editor undid a merge (POST /api/v1/entities/:ref/split, capability reviews.entity.split, a person only), in the transaction of the split: the merged_into link (link_id) is ended, the entity is active again with exactly the aliases and signals it had before the merge, and both aggregates are recomputed. A summary of the former target that cites signals which went back with the split is flagged and gets a pending revision in the same transaction; Search gets both entities' documents again (reviews.index_document.upserted). The signal ids are left out (they are in the entity's history). Envelope: subject { type: entity, id: <split entity ent_…> }, visibility public, priority important, actor the editor (user usr_…).",
+  "type": "object",
+  "required": ["entity_id", "from_entity_id", "link_id", "signal_count", "url", "from_url", "note"],
+  "additionalProperties": false,
+  "properties": {
+    "entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The entity split off again (subject.id); now state active." },
+    "from_entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The entity it had been merged into." },
+    "link_id": { "type": "string", "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merged_into link this split ended (the link_id of the reviews.entity.merged event)." },
+    "signal_count": { "type": "integer", "minimum": 0, "description": "Active signals back with the entity (its own and those of entities merged into it)." },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical URL of the split entity's page (/e/<slug>)." },
+    "from_url": { "type": ["string", "null"], "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical URL of the former target's page; null only if that entity no longer exists." },
+    "note": { "type": ["string", "null"], "maxLength": 500, "description": "The editor's note (clipped to 500 characters); null when none was given." }
+  }
+}

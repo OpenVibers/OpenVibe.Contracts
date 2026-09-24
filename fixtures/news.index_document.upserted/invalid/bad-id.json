@@ -1,0 +1,20 @@
+{
+  "owner": "news",
+  "type": "story",
+  "id": "pst_01K5S1E4G6J8M0P2R4T6V8X0Z2",
+  "revision": 1,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.news/stories/europa-clipper-launches-for-jupiter",
+  "title": "Europa Clipper is on its way to Jupiter",
+  "body": "",
+  "facets": {},
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": null,
+  "updated_at": null,
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

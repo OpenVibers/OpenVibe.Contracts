@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.object.visibility_changed.v1.json",
+  "title": "MediaObjectVisibilityChangedPayload",
+  "description": "media.object.visibility_changed v1 (OpenVibe.Media server/events.js objectChangeEvent and recordObjectChanges, commit 039dc48, from the media_object_changes rows that the AFTER UPDATE OF visibility trigger on media_objects writes). An object's visibility changed to another value (public, unlisted or private), by any write path: the v2 objects API, the inherited vods/clips/files rows it projects, or operator SQL. Never emitted when the value did not change, nor for an object that is deleted at the time of the change (that object's last word is media.object.deleted). The event exists if and only if the change committed: the trigger row and the outbox envelope are written in the transaction of the change, or by the relay's drain for a change made outside Media's own transactions. Consumers that hold a public copy, index entry or cache of the object re-check it (roadmap §29.3); a move away from public means stop showing it. Deliberately minimal, identity and state only: never the title, description or metadata, the owner's ids or subject, storage keys, paths or providers, sizes or hashes. Developer-project sandbox tenants produce none. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority important, actor service:media.",
+  "type": "object",
+  "required": [
+    "object_id",
+    "app_id",
+    "kind",
+    "legacy_ref",
+    "visibility",
+    "previous_visibility",
+    "changed_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "object_id": {
+      "type": "string",
+      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "app_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…)."
+    },
+    "kind": {
+      "enum": [
+        "vod",
+        "clip",
+        "file",
+        "thumbnail",
+        "screenshot",
+        "avatar",
+        "asset"
+      ]
+    },
+    "legacy_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300,
+      "description": "The inherited row the object projects (legacy:<app>:<kind>:<id>, a media.media-ref@1 legacy id); null for a native v2 object."
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "private"
+      ],
+      "description": "The new value."
+    },
+    "previous_visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "private"
+      ],
+      "description": "The value before the change; never equal to visibility."
+    },
+    "changed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change committed, ISO 8601 UTC."
+    }
+  },
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "visibility",
+          "previous_visibility"
+        ],
+        "properties": {
+          "visibility": {
+            "const": "public"
+          },
+          "previous_visibility": {
+            "const": "public"
+          }
+        }
+      },
+      {
+        "required": [
+          "visibility",
+          "previous_visibility"
+        ],
+        "properties": {
+          "visibility": {
+            "const": "unlisted"
+          },
+          "previous_visibility": {
+            "const": "unlisted"
+          }
+        }
+      },
+      {
+        "required": [
+          "visibility",
+          "previous_visibility"
+        ],
+        "properties": {
+          "visibility": {
+            "const": "private"
+          },
+          "previous_visibility": {
+            "const": "private"
+          }
+        }
+      }
+    ]
+  }
+}

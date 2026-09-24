@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/deals.index_document.deleted.v1.json",
+  "title": "DealsIndexDocumentDeletedPayload",
+  "description": "deals.index_document.deleted v1 (OpenVibe.Deals server/domain/indexing.js indexOffer, via openvibe-publishing/index-hooks indexEvent). A Search tombstone for an offer page: moderators disabled the offer (takedown, including an imported offer disabled because all its Sources items were removed), or the offer was merged into another one (the group is indexed under the target from then on). Sent when the tombstone's revision moved, so a repeat sends nothing. Product pages are never tombstoned: a product without a fresh offer stays in Search as a noindex document. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: offer, id, revision }, visibility internal, priority important, actor service:deals.",
+  "type": "object",
+  "required": ["type", "id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "offer" },
+    "id": { "type": "string", "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "item_id": "nsi_01K5RZ4F0A6H3K8PQ2S5W7Y9ZE",
+  "action": "created",
+  "status": "duplicate",
+  "sources_item": {
+    "service": "sources",
+    "type": "item",
+    "id": "itm_01K5RZ3X8Y0Z2B4D6F8H0K2M4P",
+    "revision": 1
+  },
+  "source_key": "paper-b",
+  "canonical_url": "https://www.wire-a.example/space/europa-clipper-launch/?utm_source=feed",
+  "duplicate_of": "nsi_01K5RYX2C4E6G8J0M2P4R6T8VA",
+  "dedupe_rule": "canonical_url",
+  "cluster_id": "clu_01K5RZ3M8R5D1F7H3K9N2Q4S6T"
+}

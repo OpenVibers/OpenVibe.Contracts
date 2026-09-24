@@ -1,0 +1,11 @@
+{
+  "mod": {
+    "id": "mod_01JAD3F5G7H9K1M3N5P7Q9R1S3",
+    "name": "Town Square",
+    "version": "1.0.0",
+    "target": "games.browser",
+    "trust_tier": "unreviewed"
+  },
+  "granted": "games.world.announce",
+  "revoked": []
+}

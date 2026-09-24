@@ -1,0 +1,9 @@
+{
+  "source_key": "test-feed",
+  "stale": false,
+  "stale_since": null,
+  "last_success_at": null,
+  "stale_after_sec": 10800,
+  "upstream_status": "healthy",
+  "evaluated_at": "2026-09-23T15:30:04.000Z"
+}

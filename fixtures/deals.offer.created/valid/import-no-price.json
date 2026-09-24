@@ -1,0 +1,13 @@
+{
+  "offer_id": "dof_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "slug": "garden-hose-reel-weekend-sale-k0mnpr",
+  "url": "https://openvibe.deals/d/garden-hose-reel-weekend-sale-k0mnpr",
+  "title": "Garden hose reel weekend sale",
+  "status": "active",
+  "store": "garden.example",
+  "product_id": "dpr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "latest_observation": { "price": null, "currency": null, "availability": null, "observed_at": "2026-09-23T06:00:00.000Z" },
+  "freshness": "fresh",
+  "indexability": { "decision": "noindex", "reasons": ["owner_decision"] },
+  "imported_from": { "service": "sources", "type": "item", "id": "itm_01JAB2C3D4E5F6G7H8J9K0MNPW" }
+}

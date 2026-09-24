@@ -1,0 +1,9 @@
+{
+  "offer_id": "dof_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "listing_id": "dof_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "value": 2,
+  "previous": 0,
+  "weight": 1,
+  "votes": { "up": 3, "down": 1, "up_weight": 2.25, "down_weight": 1 },
+  "hotness": { "formula": "hot@1", "hot": 0.067496, "score": 1.25 }
+}

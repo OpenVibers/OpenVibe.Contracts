@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.story.retracted.v1.json",
+  "title": "NewsStoryRetractedPayload",
+  "description": "news.story.retracted v1 (OpenVibe.News server/domain/publication.js afterChange; the envelope is built there, not by index-hooks publicationEvent). An editor retracted a published story (news.story.retract, stories.js retract), in the transaction that stored the published retraction flag: the story stays at its URL with the retraction notice, is noindex, and leaves sitemaps and Search (news.index_document.deleted follows when Search had it). A retracted story stays retracted; unpublishing it later is news.story.unpublished. note is the public retraction notice and flag_id the news_editorial_flags row that holds it. The payload carries no topic. Envelope: subject { type: story, id: sty_…, revision: <published revision> }, visibility public when the gate still lets the story be listed (a retraction is noindex, not hidden), otherwise internal, priority important (the envelope default; News sets none), actor the editor { type: user } (also when a service acts for a signed-in editor), otherwise the calling service.",
+  "type": "object",
+  "required": ["canonical_url", "publication_state", "indexability", "note", "flag_id"],
+  "additionalProperties": false,
+  "properties": {
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Where the story, with its retraction notice, stays." },
+    "publication_state": { "const": "retracted" },
+    "indexability": {
+      "type": "object", "required": ["decision", "reasons"], "additionalProperties": false,
+      "description": "Search-shaped gate decision: always noindex, with retracted among the reasons.",
+      "properties": {
+        "decision": { "const": "noindex" },
+        "reasons": { "type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "contains": { "const": "retracted" }, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" } }
+      }
+    },
+    "note": { "type": "string", "minLength": 10, "maxLength": 2000, "description": "The public retraction notice, whitespace collapsed." },
+    "flag_id": { "type": "string", "pattern": "^flg_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The retraction's news_editorial_flags row (kind retraction, status published)." }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "owner": "news",
+  "type": "story",
+  "id": "sty_01K5S1E4G6J8M0P2R4T6V8X0Z2",
+  "revision": 3,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.news/stories/europa-clipper-launches-for-jupiter",
+  "title": "Europa Clipper is on its way to Jupiter",
+  "summary": "NASA launched the Europa Clipper spacecraft on a Falcon Heavy rocket from Kennedy Space Center, beginning a cruise of several years to Jupiter and its moon Europa.",
+  "body": "NASA launched the Europa Clipper spacecraft on a Falcon Heavy rocket from Kennedy Space Center, beginning a cruise of several years to Jupiter and its moon Europa.\n\nAccording to NASA the spacecraft should arrive at Jupiter in 2030, after which it will make repeated close passes of Europa to study its ice shell and the ocean beneath.",
+  "facets": {
+    "topic": "space",
+    "outlets": [
+      "Wire A",
+      "Paper B",
+      "Site C"
+    ],
+    "sources": 3
+  },
+  "language": "en",
+  "authorship": "ai_assisted",
+  "provenance": [
+    {
+      "service": "ai",
+      "type": "run",
+      "id": "run_01K5S4K9N1Q3S5V7X9Z1B3D5F7",
+      "label": "news.summarize_story"
+    },
+    {
+      "service": "sources",
+      "type": "item",
+      "id": "itm_01K5RZ2V7W9Y1A3C5E7G9J1K3M",
+      "label": "NASA launches Europa Clipper probe to Jupiter moon Europa",
+      "url": "https://wire-a.example/space/europa-clipper-launch",
+      "retrieved_at": "2026-09-22T11:00:00.000Z"
+    },
+    {
+      "service": "sources",
+      "type": "item",
+      "id": "itm_01K5RZ3X8Y0Z2B4D6F8H0K2M4P",
+      "label": "Europa Clipper lifts off as NASA begins long trip to Jupiter",
+      "url": "https://paper-b.example/2026/09/22/europa-clipper",
+      "retrieved_at": "2026-09-22T11:00:00.000Z"
+    }
+  ],
+  "publication_state": "published",
+  "published_at": "2026-09-22T12:00:00.000Z",
+  "updated_at": "2026-09-22T14:30:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

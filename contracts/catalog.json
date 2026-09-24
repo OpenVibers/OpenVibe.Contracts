@@ -922,6 +922,465 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-027"
+    },
+    {
+      "id": "news.source.ingested",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.source.ingested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.source.failed",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.source.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.cluster.updated",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.cluster.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story.created",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.story.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story.flagged",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.story.flagged.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story.published",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.story.published.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story.updated",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.story.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story.unpublished",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.story.unpublished.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story.retracted",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.story.retracted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity.merged",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.entity.merged.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity.split",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.entity.split.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.signal.added",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.signal.added.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.signal.removed",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.signal.removed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary.published",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.summary.published.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary.updated",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.summary.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary.unpublished",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.summary.unpublished.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.coupon.created",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.coupon.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.coupon.updated",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.coupon.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.coupon.expired",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.coupon.expired.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.coupon.disabled",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.coupon.disabled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.report.created",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.report.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.confidence.changed",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.confidence.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer.created",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.offer.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer.updated",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.offer.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer.expired",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.offer.expired.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.vote.changed",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.vote.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.observation.created",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.observation.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.source.stale",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.source.stale.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.source.recovered",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.source.recovered.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.player.joined",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.player.joined.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.player.left",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.player.left.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.skill.leveled",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.skill.leveled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.blueprint.unlocked",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.blueprint.unlocked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.world.saved",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.world.saved.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod.installed",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.mod.installed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod.enabled",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.mod.enabled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod.disabled",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.mod.disabled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod.grants_changed",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.mod.grants_changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod.revoked",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.mod.revoked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.object.deleted",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.object.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.object.visibility_changed",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.object.visibility_changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

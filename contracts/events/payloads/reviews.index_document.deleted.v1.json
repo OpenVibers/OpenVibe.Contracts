@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.index_document.deleted.v1.json",
+  "title": "ReviewsIndexDocumentDeletedPayload",
+  "description": "reviews.index_document.deleted v1 (OpenVibe.Reviews server/reviews/service.js syncEntity, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the entity was merged into another or deleted (or the gate stopped listing its page), so Search drops it at this revision or older. Only sent for an entity Search was sent before (every entity gets a document when it is created); a split sends the entity's document again. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: entity, id, revision }, visibility internal, priority important, actor service:reviews.",
+  "type": "object",
+  "required": ["type", "id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "entity" },
+    "id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "revision": { "type": "integer", "minimum": 1, "maximum": 9007199254740991, "description": "Index revision of the tombstone; wins over any document at the same or an older revision." }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "instrument": { "id": "ins_01JAB2C3D4E5F6G7H8J9K0MNPQ", "symbol": "ACME" },
+  "id": "obs_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "metric": "dei:EntityCommonStockSharesOutstanding",
+  "value": "152300000",
+  "unit": "shares",
+  "currency": null,
+  "period": "2026-06-30",
+  "observed_at": "2026-06-30T00:00:00.000Z",
+  "retrieved_at": "2026-09-23T03:10:00.000Z",
+  "recorded_at": "2026-09-23T03:10:02.000Z",
+  "max_age_sec": 7776000,
+  "source": {
+    "key": "sec-xbrl-filings",
+    "item_id": "itm_01JAB2C3D4E5F6G7H8J9K0MNPT",
+    "url": null,
+    "ref": "0000000000-26-000123:dei:EntityCommonStockSharesOutstanding"
+  }
+}

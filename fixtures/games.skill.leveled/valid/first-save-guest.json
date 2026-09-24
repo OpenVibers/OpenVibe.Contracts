@@ -1,0 +1,12 @@
+{
+  "player": {
+    "id": "01kz4a7r2p9b6g3e8v0z",
+    "slot": 0,
+    "name": "Guest 42",
+    "account": "guest"
+  },
+  "world": "openvibeville_v2",
+  "skill": "woodcutting",
+  "level": 3,
+  "previous_level": 1
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.coupon.disabled.v1.json",
+  "title": "CouponsCouponDisabledPayload",
+  "description": "coupons.coupon.disabled v1 (OpenVibe.Coupons server/domain/coupons.js recompute via withdrawSourceItem and setStatus, payload from lifecyclePayload). A code was taken down, in the transaction that recorded it: the last OpenVibe.Sources item that evidenced it was removed at the source (reason source_removed), or staff or a service holding coupons.status.update disabled it (staff, service:<client>[:<note>]). Its page answers 410, it cannot be resubmitted and nothing is deleted. Disabling a merchant does not emit this per code (its codes only get Search tombstones). When the code was in Search, a coupons.index_document.deleted tombstone follows in the same transaction. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code was publicly listed before the change, otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.",
+  "type": "object",
+  "required": ["merchant_id", "status", "confidence", "review_state", "expires_at", "canonical_url", "previous_status", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merchant the code belongs to." },
+    "status": { "const": "disabled" },
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Report confidence at the time (rounded to 2 decimals); null = no counted report in the last 30 days." },
+    "review_state": { "enum": ["pending", "published"] },
+    "expires_at": { "type": ["string", "null"], "format": "date-time", "description": "Known expiry (UTC); null = expiry unknown." },
+    "canonical_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The code's page on Coupons (<origin>/c/<coupon id>); it now answers 410." },
+    "previous_status": { "enum": ["unknown", "reported_working", "reported_failed", "expired"], "description": "Status before it was disabled." },
+    "reason": {
+      "description": "source_removed, staff, or service:<client>[:<note>].",
+      "anyOf": [
+        { "enum": ["source_removed", "staff"] },
+        { "type": "string", "pattern": "^service:[\\s\\S]+$", "description": "service:<client id>, plus :<note> (at most 200 characters, copied verbatim) when the service gave one." }
+      ]
+    }
+  }
+}

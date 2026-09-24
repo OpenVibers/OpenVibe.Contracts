@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.signal.added.v1.json",
+  "title": "ReviewsSignalAddedPayload",
+  "description": "reviews.signal.added v1 (OpenVibe.Reviews server/reviews/service.js createSignal → signalEvent). A typed signal was recorded from one revision of an OpenVibe.Sources review item resolved to an entity (an import through POST /api/v1/signals/import or the Sources sync, a sources.item.created|updated event, or an editor resolving a queued item), in the transaction that stored it. Values and provenance are exactly what the source stated and never change afterwards. When the item already had an active signal (a newer item revision, or an editor reattributing the item), `replaces` names it and the reviews.signal.removed for it is written just before this event. Value fields depend on type: recommended (recommendation), positive_count and total_count (recommendation_tally), rating_value, rating_best, rating_worst and rating_count (rating, rating_aggregate); a scale the source did not state is null, never defaulted. Review text, the signal's trust metadata and the resulting aggregate are left out. Envelope: subject { type: signal, id: <signal_id> }, visibility public, priority important, actor the caller (the importing service, e.g. service:sources-sync, or the editor, user usr_…) or service:reviews for the Sources event consumer and sync worker.",
+  "type": "object",
+  "required": ["signal_id", "entity_id", "canonical_entity_id", "type", "source_key", "source_item_id", "item_revision", "observed_at", "source_published_at", "canonical_url", "license_note"],
+  "additionalProperties": false,
+  "properties": {
+    "signal_id": { "type": "string", "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The entity the signal is attributed to (never rewritten by a merge)." },
+    "canonical_entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The entity it currently counts under: entity_id, or the entity it is merged into." },
+    "type": { "enum": ["recommendation", "recommendation_tally", "rating", "rating_aggregate"] },
+    "source_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$", "description": "OpenVibe.Sources source key." },
+    "source_item_id": { "type": "string", "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "item_revision": { "type": "integer", "minimum": 1, "description": "The Sources item revision the signal was read from." },
+    "observed_at": { "type": "string", "format": "date-time", "description": "When Sources retrieved that item revision (provenance.retrieved_at)." },
+    "source_published_at": { "type": ["string", "null"], "description": "The item's published_at as Sources gave it; null when it gave none." },
+    "canonical_url": { "type": ["string", "null"], "description": "The item's canonical URL as Sources gave it; null when it has none." },
+    "license_note": { "type": ["string", "null"], "description": "Licence note recorded for the item in Sources; null when none." },
+    "recommended": { "type": "boolean", "description": "recommendation only: whether the reviewer recommends it." },
+    "positive_count": { "type": "integer", "minimum": 0, "description": "recommendation_tally only: positive reviews the source counts." },
+    "total_count": { "type": "integer", "minimum": 0, "description": "recommendation_tally only: all reviews the source counts (≥ positive_count)." },
+    "rating_value": { "type": "number", "description": "rating and rating_aggregate only: the value as stated." },
+    "rating_best": { "type": ["number", "null"], "description": "rating and rating_aggregate only: top of the stated scale; null when the source states none." },
+    "rating_worst": { "type": ["number", "null"], "description": "rating and rating_aggregate only: bottom of the stated scale; null when the source states none." },
+    "rating_count": { "type": "integer", "minimum": 1, "description": "rating and rating_aggregate only: ratings behind the value (1 for a single review)." },
+    "replaces": { "type": "string", "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$", "description": "Present when this signal replaced the item's previous active signal (see reviews.signal.removed)." }
+  },
+  "if": { "properties": { "type": { "const": "recommendation" } }, "required": ["type"] },
+  "then": { "required": ["recommended"] },
+  "else": {
+    "if": { "properties": { "type": { "const": "recommendation_tally" } }, "required": ["type"] },
+    "then": { "required": ["positive_count", "total_count"] },
+    "else": { "required": ["rating_value", "rating_best", "rating_worst", "rating_count"] }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/news.index_document.deleted.v1.json",
+  "title": "NewsIndexDocumentDeletedPayload",
+  "description": "news.index_document.deleted v1 (OpenVibe.News server/domain/publication.js syncIndex, via openvibe-publishing/index-hooks indexEvent). A Search tombstone: the story is no longer published, public and listable (unpublished, retracted, or hidden by the gate, e.g. an AI revision no person has reviewed), so Search drops it at this revision or older. Only sent for a story Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: story, id, revision }, visibility internal, priority important, actor service:news.",
+  "type": "object",
+  "required": ["type", "id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "story" },
+    "id": { "type": "string", "pattern": "^sty_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "revision": { "type": "integer", "minimum": 1, "maximum": 9007199254740991, "description": "Index revision of the tombstone; wins over any document at the same or an older revision." }
+  }
+}

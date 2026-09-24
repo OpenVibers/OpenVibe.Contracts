@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/deals.offer.updated.v1.json",
+  "title": "DealsOfferUpdatedPayload",
+  "description": "deals.offer.updated v1 (OpenVibe.Deals server/domain/indexing.js emitOffer, called from server/domain/offers.js and server/domain/importer.js). Something about a canonical offer changed; `changed` says what, and a few call sites add one reference: an edit (offers.js update: the edited columns, among title, description, category, expires_at, product_id, ai_summary, review_state, text_origin); a price/availability report by a person (observe) or a newer or re-fetched Sources item (importer importItem) ([observation] + observation_id); a second Sources item with the same link attached to an existing offer ([sources] + observation_id); a Sources item removed at the source ([sources] + source_removed; an imported offer left with no live source is disabled in the same transaction, so status is then disabled); moderators disabling it or re-activating a disabled or expired offer ([status] + moderation); a person reviewing imported or AI text ([review_state]); a merge ([merged] + merged_offer_id, sent for the merge target); an unmerge (two events: [unmerged] + unmerged_offer_id for the former target, and [unmerged] + unmerged_from for the restored offer). Written in the transaction that made the change, next to the offer's (and its product's) deals.index_document.* event. The rest of the payload is the offer as it now stands, as in deals.offer.created. Deliberately left out: old values, the description text, identities and vote counts (deals.vote.changed carries those counts). Envelope: subject { type: offer, id: <offer_id> }, visibility public when the offer is active and the SEO gate lets it be listed, otherwise internal, priority important (default), actor user:<the person who acted, usr_…>, service:<calling service> when a service acts without a person, service:deals for the importer. No consumer is built yet.",
+  "type": "object",
+  "required": ["offer_id", "slug", "url", "title", "status", "store", "product_id", "latest_observation", "freshness", "indexability", "changed"],
+  "additionalProperties": false,
+  "properties": {
+    "offer_id": { "type": "string", "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The canonical (root) offer id." },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 80,
+      "description": "Page slug: the slugified title plus the last six characters of the id."
+    },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical offer page URL on Deals (/d/<slug>)." },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "status": { "enum": ["active", "expired", "disabled"] },
+    "store": { "type": ["string", "null"], "minLength": 1, "description": "Store domain: the offer link's host without a leading www.; null when none could be derived." },
+    "product_id": { "type": ["string", "null"], "pattern": "^dpr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "Deals product the offer is attached to, if any." },
+    "latest_observation": {
+      "type": ["object", "null"],
+      "required": ["price", "currency", "availability", "observed_at"],
+      "additionalProperties": false,
+      "description": "The newest observation across the offer's merge group; null only when the group has none.",
+      "properties": {
+        "price": { "type": ["string", "null"], "maxLength": 40, "description": "Decimal text as stated; null when no price was stated (never 0)." },
+        "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$", "description": "ISO 4217; never assumed." },
+        "availability": { "enum": ["in_stock", "out_of_stock", "preorder", "discontinued", "limited", "sold_out", "online_only", "in_store_only", null] },
+        "observed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "freshness": {
+      "enum": ["fresh", "stale", "unobserved"],
+      "description": "fresh while the latest observation is younger than DEALS_FRESHNESS_HOURS, stale after, unobserved without one."
+    },
+    "indexability": {
+      "type": "object",
+      "required": ["decision", "reasons"],
+      "additionalProperties": false,
+      "description": "The SEO gate decision in Search's shape (index-hooks searchIndexability).",
+      "properties": {
+        "decision": { "enum": ["index", "noindex"] },
+        "reasons": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+          "description": "Search reason names, e.g. stale_price, expired, takedown, owner_decision (imported or AI text awaiting review)."
+        }
+      }
+    },
+    "changed": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["title", "description", "category", "expires_at", "product_id", "ai_summary", "review_state", "text_origin", "observation", "sources", "status", "merged", "unmerged"]
+      },
+      "description": "What changed: edited columns (update), or one of observation, sources, status, review_state, merged, unmerged."
+    },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^dpo_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "changed [observation] or [sources] from a report or an import: the observation just recorded."
+    },
+    "source_removed": {
+      "type": "string",
+      "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "changed [sources] after a removal: the OpenVibe.Sources item that was removed (takedown, licence)."
+    },
+    "moderation": { "enum": ["disabled", "enabled"], "description": "changed [status] by a moderator: disabled, or enabled (a disabled or expired offer made active again)." },
+    "merged_offer_id": {
+      "type": "string",
+      "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "changed [merged]: the duplicate now merged into this offer."
+    },
+    "unmerged_offer_id": {
+      "type": "string",
+      "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "changed [unmerged], on the former target: the offer split back out."
+    },
+    "unmerged_from": {
+      "type": "string",
+      "pattern": "^dof_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "changed [unmerged], on the restored offer: the offer it had been merged into."
+    }
+  }
+}

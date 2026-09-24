@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/reviews.summary.unpublished.v1.json",
+  "title": "ReviewsSummaryUnpublishedPayload",
+  "description": "reviews.summary.unpublished v1 (OpenVibe.Reviews server/reviews/service.js unpublishSummary, via openvibe-publishing/index-hooks publicationEvent). An editor took an entity's published summary down (POST /api/v1/entities/:ref/summary/unpublish), in the transaction of the change. The entity page stays up without the summary; its new Search document goes out as reviews.index_document.upserted. Only this action sends it: merging or deleting an entity leaves its summary's state alone and Search gets the entity's tombstone instead. For subscribers other than Search: publication state, the entity page's indexability after the change, and the entity id and slug; canonical_url is always null from Reviews (the helper is given a tombstone), and authorship and correction are not sent. Envelope: subject { type: summary, id: sum_…, revision: <the revision that was published> }, visibility internal, priority important, actor the editor (user usr_…).",
+  "type": "object",
+  "required": ["canonical_url", "publication_state", "indexability", "entity_id", "entity_slug"],
+  "additionalProperties": false,
+  "properties": {
+    "canonical_url": { "type": ["string", "null"], "description": "null: the event carries a tombstone, which has no URL." },
+    "publication_state": { "const": "unpublished" },
+    "indexability": { "type": "object", "required": ["decision", "reasons"], "additionalProperties": false, "properties": { "decision": { "enum": ["index", "noindex"] }, "reasons": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" } } }, "description": "The gate's decision for the entity page after the summary came down (Reviews always passes one, so it is never null here)." },
+    "entity_id": { "type": "string", "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The entity the summary belongs to." },
+    "entity_slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 90 }
+  }
+}
