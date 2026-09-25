@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/admin-result.v1.json",
+  "title": "BillingAdminResult",
+  "description": "billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "frozen",
+        "reason",
+        "frozen_at",
+        "frozen_by"
+      ],
+      "properties": {
+        "frozen": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "frozen_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "frozen_by": {},
+        "processed_after_unfreeze": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "id",
+        "ok",
+        "checks"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "ok"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ok": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "warnings": {
+          "type": "array"
+        },
+        "totals": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "transaction"
+      ],
+      "properties": {
+        "transaction": {
+          "$ref": "transaction.v1.json"
+        },
+        "duplicate_receipt": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "events"
+      ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "provider"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "provider_event_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "processed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "result": {},
+              "attempts": {
+                "type": "integer"
+              },
+              "last_error": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "event"
+      ],
+      "properties": {
+        "event": {
+          "type": "object",
+          "required": [
+            "id",
+            "provider"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "renewed",
+        "expired",
+        "canceled",
+        "skipped"
+      ],
+      "properties": {
+        "renewed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expired": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "canceled": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skipped": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "holds"
+      ],
+      "properties": {
+        "holds": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ]
+}

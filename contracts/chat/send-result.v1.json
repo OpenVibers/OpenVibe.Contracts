@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/send-result.v1.json",
+  "title": "ChatSendResult",
+  "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "username",
+        "role",
+        "message",
+        "stream_id",
+        "channel_user_id",
+        "is_global",
+        "timestamp"
+      ],
+      "properties": {
+        "type": {
+          "const": "chat"
+        },
+        "id": {
+          "type": "integer",
+          "description": "The stored message id."
+        },
+        "username": {
+          "type": "string",
+          "description": "Display name, or the anonymous id."
+        },
+        "core_username": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The immutable login handle; null for an anonymous sender."
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "anon_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "description": "The sender's role, anon for an anonymous sender."
+        },
+        "message": {
+          "type": "string"
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "channel_user_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "is_global": {
+          "type": "boolean",
+          "description": "true for homepage global chat (no stream, no channel)."
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": "string"
+        },
+        "filtered": {
+          "type": "boolean"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "auto_delete_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "voiceChannelId": {
+          "type": "string"
+        },
+        "reply_to": {
+          "type": "object",
+          "required": [
+            "id",
+            "username",
+            "message"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "description": "The parent's text, cut to 100 characters."
+            }
+          }
+        },
+        "nameFX": {
+          "description": "Cosmetic name effect."
+        },
+        "particleFX": {
+          "description": "Cosmetic particle effect."
+        },
+        "hatFX": {
+          "description": "Cosmetic hat."
+        },
+        "voiceFX": {
+          "description": "Cosmetic TTS voice effect."
+        },
+        "tag": {
+          "description": "The sender's equipped tag."
+        },
+        "vip_badge": {
+          "description": "The channel's VIP member badge, when cached; otherwise a chat_vip_badge frame follows."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "message"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "system",
+            "error"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "results"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "ok"
+            ],
+            "properties": {
+              "seq": {
+                "type": "integer"
+              },
+              "ok": {
+                "type": "boolean"
+              },
+              "result": {},
+              "code": {
+                "type": "string"
+              },
+              "error": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

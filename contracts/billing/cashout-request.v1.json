@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/cashout-request.v1.json",
+  "title": "BillingCashoutRequest",
+  "description": "billing.cashout-request@1: bodies of billing.cashout.request on OpenVibe.Billing. POST /api/v1/cashouts: { subject, amount, payout_method: { type, address } } moves amount bits (at least the minimum cashout) from the person's payable into payouts pending, in escrow until staff pay it (a PayPal address must be an email). POST /api/v1/recycle: { subject, amount } turns payable back into the person's own spendable credit. GET /api/v1/cashouts/:id takes no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "subject",
+        "amount",
+        "payout_method"
+      ],
+      "properties": {
+        "subject": {
+          "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Bits."
+        },
+        "payout_method": {
+          "type": "object",
+          "required": [
+            "type",
+            "address"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]{1,39}$",
+              "description": "paypal, …"
+            },
+            "address": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 254
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "subject",
+        "amount"
+      ],
+      "properties": {
+        "subject": {
+          "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Bits."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

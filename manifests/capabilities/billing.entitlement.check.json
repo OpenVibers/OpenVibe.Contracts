@@ -17,5 +17,7 @@
     "GET /api/v1/entitlements/:subject",
     "GET /api/v1/subscriptions",
     "GET /api/v1/subscriptions/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "billing.entitlement-result@1"
 }

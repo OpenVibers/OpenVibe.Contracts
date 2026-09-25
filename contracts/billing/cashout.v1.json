@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/cashout.v1.json",
+  "title": "BillingCashout",
+  "description": "billing.cashout@1: one cashout as OpenVibe.Billing presents it (server/ops/cashouts.js present). Requested cashouts wait out an escrow; staff approve (with the provider's payout reference) or deny them.",
+  "type": "object",
+  "required": ["id", "subject", "amount_bits", "value_cents", "status", "payout_method", "escrow_until", "request_txn", "created_at"],
+  "properties": {
+    "id": { "type": "string" },
+    "subject": { "$ref": "../identity/subject-ref.v1.json" },
+    "amount_bits": { "type": "integer", "minimum": 1 },
+    "value_cents": { "type": "integer", "minimum": 0 },
+    "status": { "enum": ["requested", "paid", "denied"] },
+    "payout_method": {
+      "type": ["object", "null"],
+      "properties": {
+        "type": { "type": "string" },
+        "address": { "type": "string" }
+      }
+    },
+    "escrow_until": { "type": "string" },
+    "request_txn": { "type": "string" },
+    "settle_txn": { "type": ["string", "null"] },
+    "payout_provider": { "type": ["string", "null"] },
+    "payout_reference": { "type": ["string", "null"] },
+    "reason": { "type": ["string", "null"] },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": ["string", "null"] }
+  }
+}

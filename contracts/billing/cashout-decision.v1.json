@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/cashout-decision.v1.json",
+  "title": "BillingCashoutDecision",
+  "description": "billing.cashout-decision@1: bodies of billing.cashout.manage on OpenVibe.Billing (staff). POST /api/v1/cashouts/:id/approve: { payout_reference, payout_provider? } after the payout was sent (payout_provider defaults to paypal; refused while the cashout is in escrow). POST /api/v1/cashouts/:id/deny: { reason? } returns the bits to the person's payable. GET /api/v1/cashouts takes no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "payout_reference"
+      ],
+      "properties": {
+        "payout_reference": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The provider's payout id."
+        },
+        "payout_provider": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

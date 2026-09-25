@@ -17,5 +17,7 @@
     "POST /api/v1/intents",
     "GET /api/v1/intents/:id",
     "POST /api/v1/intents/:id/capture"
-  ]
+  ],
+  "inputSchema": "billing.intent-request@1",
+  "outputSchema": "billing.intent-result@1"
 }

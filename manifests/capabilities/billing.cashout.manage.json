@@ -21,5 +21,7 @@
     "GET /api/v1/cashouts",
     "POST /api/v1/cashouts/:id/approve",
     "POST /api/v1/cashouts/:id/deny"
-  ]
+  ],
+  "inputSchema": "billing.cashout-decision@1",
+  "outputSchema": "billing.cashout-result@1"
 }

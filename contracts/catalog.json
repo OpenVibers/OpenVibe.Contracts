@@ -818,6 +818,177 @@
       "adr": "ADR-012"
     },
     {
+      "id": "billing.admin-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/admin-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.admin-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/admin-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.balance-read-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/balance-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.balance",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/balance.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.cashout-decision",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/cashout-decision.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.cashout-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/cashout-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.cashout-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/cashout-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.cashout",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/cashout.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.entitlement-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/entitlement-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.entitlement",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/entitlement.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.intent-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/intent-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.intent-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/intent-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.intent",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/intent.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.subscription-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/subscription-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.subscription-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/subscription-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.subscription",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/subscription.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.transaction",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/transaction.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.transfer-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/transfer-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.transfer-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/transfer-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "deals.watch.matched",
       "version": "1.0.0",
       "owner": "deals",
@@ -1610,6 +1781,24 @@
       "adr": "ADR-022"
     },
     {
+      "id": "chat.send-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/send-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.send-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/send-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.moderation.action",
       "version": "1.0.0",
       "owner": "live",
@@ -1628,6 +1817,96 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-022"
+    },
+    {
+      "id": "community.paste-create-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste-moderate-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste-moderate-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste-moderate-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste-moderate-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste-write-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste-write-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.moderation-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/moderation-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.moderation-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/moderation-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.post-write-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/post-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.pulse-write-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/pulse-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

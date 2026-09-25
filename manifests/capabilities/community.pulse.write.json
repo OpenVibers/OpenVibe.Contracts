@@ -19,5 +19,6 @@
   "implementedBy": [
     "POST /api/v1/pulse/items",
     "DELETE /api/v1/pulse/items/:service/:type/:id"
-  ]
+  ],
+  "outputSchema": "community.pulse-write-result@1"
 }

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/intent-result.v1.json",
+  "title": "BillingIntentResult",
+  "description": "billing.intent-result@1: answers of billing.intent.create on OpenVibe.Billing. POST /api/v1/intents → { intent, checkout_url } (null when the provider has no hosted checkout); GET /api/v1/intents/:id → { intent }; POST /api/v1/intents/:id/capture → { result, intent } (the settlement the provider's capture produced).",
+  "type": "object",
+  "required": [
+    "intent"
+  ],
+  "properties": {
+    "intent": {
+      "$ref": "intent.v1.json"
+    },
+    "checkout_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result": {
+      "description": "Capture: what applying the provider's plan did."
+    }
+  }
+}

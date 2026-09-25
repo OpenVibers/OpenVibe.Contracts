@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/balance.v1.json",
+  "title": "BillingBalance",
+  "description": "billing.balance@1: a person's Vibes balances, GET /api/v1/balances/:subject on OpenVibe.Billing (also returned after a recycle). credit is spendable (bought or given back), payable is what others gave the person (the only balance that can be cashed out), pending_payouts is held for requested cashouts.",
+  "type": "object",
+  "required": ["subject", "currency", "credit", "payable", "pending_payouts", "payable_value_cents", "bits_per_usd"],
+  "properties": {
+    "subject": { "$ref": "../identity/subject-ref.v1.json" },
+    "currency": { "const": "vibes-bits" },
+    "credit": { "type": "integer" },
+    "payable": { "type": "integer" },
+    "pending_payouts": { "type": "integer" },
+    "payable_value_cents": { "type": "integer", "description": "What payable is worth in US cents at today's rate." },
+    "bits_per_usd": { "type": "number" }
+  }
+}

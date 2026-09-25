@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/intent-request.v1.json",
+  "title": "BillingIntentRequest",
+  "description": "billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer }; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "provider",
+        "kind",
+        "subject"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{1,39}$",
+          "description": "stripe, paypal, nowpayments, powerchat, ccbill (enabled ones only)."
+        },
+        "kind": {
+          "enum": [
+            "purchase",
+            "subscription"
+          ]
+        },
+        "subject": {
+          "description": "Who pays.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "bits": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Purchase: the Vibes to buy."
+        },
+        "streamer": {
+          "description": "Subscription: the channel's owner (never the payer).",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "route": {
+          "type": "string",
+          "description": "Subscription: direct, or the site route."
+        },
+        "receiving_account": {
+          "type": "string",
+          "description": "Direct PowerChat subscription: the streamer's PowerChat username."
+        },
+        "auto_renew": {
+          "type": [
+            "boolean",
+            "integer"
+          ]
+        },
+        "success_url": {
+          "type": "string"
+        },
+        "cancel_url": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

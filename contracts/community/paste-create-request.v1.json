@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/paste-create-request.v1.json",
+  "title": "CommunityPasteCreateRequest",
+  "description": "community.paste-create-request@1: the body of POST /api/pastes on OpenVibe.Community (community.paste.create). A JSON text paste needs content (non-blank, at most the configured size, 512 KB by default); a multipart body with a `screenshot` image part (PNG, JPEG, WebP or GIF, 8 MB by default; also POST /api/pastes/screenshot) makes an image paste. Visibility other than unlisted or private is public, and an ownerless private paste becomes unlisted. slug (public pastes only), metadata and ai_summary/ai_tags are honoured from a service token only; a browser's are ignored. Unknown fields are ignored. The answer is { id, slug, url, paste } with 201.",
+  "type": "object",
+  "anyOf": [
+    { "required": ["content"] },
+    { "required": ["screenshot"] }
+  ],
+  "properties": {
+    "content": { "type": "string", "minLength": 1, "description": "The text (trimmed)." },
+    "screenshot": { "type": "string", "contentEncoding": "binary", "description": "Multipart only: the image part." },
+    "title": { "type": ["string", "null"], "description": "Trimmed to 200 characters; Untitled (Screenshot for an image) when blank." },
+    "language": { "type": "string", "description": "A language hint; auto or absent sniffs it from the content." },
+    "visibility": { "type": "string", "description": "public (default), unlisted or private." },
+    "burn_after_read": { "type": ["boolean", "integer", "string"], "description": "Truthy (true, 1, '1', 'true', 'on'): gone after the first read by someone else." },
+    "is_nsfw": { "type": ["boolean", "integer", "string"] },
+    "stream_id": { "type": ["integer", "string"], "description": "The Live stream it was made during (digits)." },
+    "description": { "type": "string", "description": "Multipart screenshot: the text shown under the image." },
+    "page_url": { "type": "string", "description": "Multipart screenshot: the page it shows." },
+    "user_agent": { "type": "string", "description": "Multipart screenshot: the capturing browser." },
+    "slug": { "type": "string", "pattern": "^[A-Za-z0-9_-]{3,80}$", "description": "Service callers, public pastes only: the slug to use (409 if taken)." },
+    "metadata": { "type": ["object", "string"], "description": "Service callers only: a JSON object (at most 16 KB)." },
+    "ai_summary": { "type": "string", "description": "Service callers only (cut to 2000 characters)." },
+    "ai_tags": { "description": "Service callers only, with ai_summary: JSON text or a value to serialise." }
+  }
+}

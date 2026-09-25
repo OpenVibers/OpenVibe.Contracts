@@ -19,5 +19,7 @@
     "POST /api/pastes/:slug/censor",
     "POST /api/pastes/bulk",
     "DELETE /api/pastes/:slug/comments/:id"
-  ]
+  ],
+  "inputSchema": "community.paste-moderate-request@1",
+  "outputSchema": "community.paste-moderate-result@1"
 }

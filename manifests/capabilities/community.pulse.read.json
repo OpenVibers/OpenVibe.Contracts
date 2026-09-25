@@ -17,5 +17,6 @@
   "implementedBy": [
     "GET /api/v1/pulse",
     "GET /pulse"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

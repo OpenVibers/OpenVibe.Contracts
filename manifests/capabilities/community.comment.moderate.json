@@ -23,5 +23,7 @@
     "DELETE /api/v1/spaces/:space/threads/:slug",
     "PUT|DELETE /api/v1/posts/:id",
     "GET|POST|PUT /api/v1/relay/*"
-  ]
+  ],
+  "inputSchema": "community.moderation-request@1",
+  "outputSchema": "community.moderation-result@1"
 }

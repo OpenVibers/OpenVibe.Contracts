@@ -8795,6 +8795,573 @@ export interface BillingReceiptExternalPayload {
   };
 }
 
+/** billing.admin-request@1.0.0 (owner: billing) */
+/**
+ * billing.admin-request@1: bodies of billing.ledger.admin on OpenVibe.Billing (operators). POST /api/v1/admin/freeze: { on, reason? } (unfreezing processes the provider deliveries stored meanwhile; allowed while frozen). POST /api/v1/admin/adjustments: { from, to, amount, reason, relates_to? } moves value between two accounts of one currency. POST /api/v1/purchases/settle: { provider, provider_ref, subject?, amount_cents, bits, intent_id?, test? } books a provider receipt. POST /api/v1/admin/provider-events/:id/reprocess, POST /api/v1/admin/sweep and the GETs (freeze, reconcile, provider-events, import-holds) take no body. Adjustments and settlements need an Idempotency-Key and are refused while frozen.
+ */
+export type BillingAdminRequest =
+  | {
+      on: boolean;
+      reason?: string | null;
+    }
+  | {
+      from: {
+        kind:
+          | "user_credit"
+          | "creator_payable"
+          | "provider_clearing"
+          | "platform_revenue"
+          | "payouts_pending"
+          | "refunds"
+          | "import_adjustment"
+          | "chargeback_loss"
+          | "fx_conversion";
+        owner?: string | null;
+        currency: "vibes-bits" | "usd-cents";
+      };
+      to: {
+        kind:
+          | "user_credit"
+          | "creator_payable"
+          | "provider_clearing"
+          | "platform_revenue"
+          | "payouts_pending"
+          | "refunds"
+          | "import_adjustment"
+          | "chargeback_loss"
+          | "fx_conversion";
+        owner?: string | null;
+        currency: "vibes-bits" | "usd-cents";
+      };
+      /**
+       * In the accounts' currency (at most 1,000,000,000).
+       */
+      amount: number | string;
+      reason: string;
+      relates_to?: string | null;
+    }
+  | {
+      provider: string;
+      /**
+       * The provider's payment id.
+       */
+      provider_ref: string;
+      /**
+       * Who the Vibes are for.
+       */
+      subject?: SubjectRef | string;
+      /**
+       * Cents paid.
+       */
+      amount_cents?: number | string;
+      /**
+       * Vibes to credit.
+       */
+      bits?: number | string;
+      intent_id?: string;
+      test?: boolean;
+    }
+  | NoBody;
+
+/** billing.admin-result@1.0.0 (owner: billing) */
+/**
+ * billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }.
+ */
+export type BillingAdminResult =
+  | {
+      frozen: boolean;
+      reason: string | null;
+      frozen_at: string | null;
+      frozen_by: unknown;
+      processed_after_unfreeze?: unknown;
+    }
+  | {
+      id: string;
+      ok: boolean;
+      trigger?: string | null;
+      started_at?: string;
+      finished_at?: string;
+      checks: {
+        id: string;
+        ok: boolean;
+      }[];
+      warnings?: unknown[];
+      totals?: unknown;
+    }
+  | {
+      transaction: BillingTransaction;
+      duplicate_receipt?: boolean;
+    }
+  | {
+      events: {
+        id: number;
+        provider: string;
+        provider_event_id?: string | null;
+        type?: string | null;
+        processed_at?: string | null;
+        result?: unknown;
+        attempts?: number;
+        last_error?: string | null;
+      }[];
+    }
+  | {
+      event: {};
+    }
+  | {
+      renewed: string[];
+      expired: string[];
+      canceled: string[];
+      skipped: number;
+    }
+  | {
+      holds: {}[];
+    };
+
+/** billing.balance-read-result@1.0.0 (owner: billing) */
+/**
+ * billing.balance-read-result@1: answers of billing.balance.read on OpenVibe.Billing. GET /api/v1/balances/:subject → billing.balance@1; GET /api/v1/transactions?subject=&limit=&cursor= → { transactions, next_cursor } (newest first, at most 200 a page; subject is required); GET /api/v1/transactions/:id → { transaction, reversed_by } (ids of the transactions that reverse it).
+ */
+export type BillingBalanceReadResult =
+  | BillingBalance
+  | {
+      /**
+       * @maxItems 200
+       */
+      transactions: BillingTransaction[];
+      next_cursor: string | null;
+    }
+  | {
+      transaction: BillingTransaction;
+      reversed_by: string[];
+    };
+
+/** billing.balance@1.0.0 (owner: billing) */
+/**
+ * billing.balance@1: a person's Vibes balances, GET /api/v1/balances/:subject on OpenVibe.Billing (also returned after a recycle). credit is spendable (bought or given back), payable is what others gave the person (the only balance that can be cashed out), pending_payouts is held for requested cashouts.
+ */
+export interface BillingBalance {
+  subject: SubjectRef;
+  currency: "vibes-bits";
+  credit: number;
+  payable: number;
+  pending_payouts: number;
+  /**
+   * What payable is worth in US cents at today's rate.
+   */
+  payable_value_cents: number;
+  bits_per_usd: number;
+}
+
+/** billing.cashout-decision@1.0.0 (owner: billing) */
+/**
+ * billing.cashout-decision@1: bodies of billing.cashout.manage on OpenVibe.Billing (staff). POST /api/v1/cashouts/:id/approve: { payout_reference, payout_provider? } after the payout was sent (payout_provider defaults to paypal; refused while the cashout is in escrow). POST /api/v1/cashouts/:id/deny: { reason? } returns the bits to the person's payable. GET /api/v1/cashouts takes no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
+ */
+export type BillingCashoutDecision =
+  | {
+      /**
+       * The provider's payout id.
+       */
+      payout_reference: string;
+      payout_provider?: string;
+    }
+  | {
+      reason: string | null;
+    }
+  | NoBody;
+
+/** billing.cashout-request@1.0.0 (owner: billing) */
+/**
+ * billing.cashout-request@1: bodies of billing.cashout.request on OpenVibe.Billing. POST /api/v1/cashouts: { subject, amount, payout_method: { type, address } } moves amount bits (at least the minimum cashout) from the person's payable into payouts pending, in escrow until staff pay it (a PayPal address must be an email). POST /api/v1/recycle: { subject, amount } turns payable back into the person's own spendable credit. GET /api/v1/cashouts/:id takes no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
+ */
+export type BillingCashoutRequest =
+  | {
+      /**
+       * A user SubjectRef, or its bare id (usr_…). Guests hold no money.
+       */
+      subject: SubjectRef | string;
+      /**
+       * Bits.
+       */
+      amount: number | string;
+      payout_method: {
+        /**
+         * paypal, …
+         */
+        type: string;
+        address: string;
+      };
+    }
+  | {
+      /**
+       * A user SubjectRef, or its bare id (usr_…). Guests hold no money.
+       */
+      subject: SubjectRef | string;
+      /**
+       * Bits.
+       */
+      amount: number | string;
+    }
+  | NoBody;
+
+/** billing.cashout-result@1.0.0 (owner: billing) */
+/**
+ * billing.cashout-result@1: answers about cashouts on OpenVibe.Billing. POST /api/v1/cashouts (201), GET /api/v1/cashouts/:id, POST /api/v1/cashouts/:id/approve and /deny → { cashout }; GET /api/v1/cashouts?status=&subject=&limit= → { cashouts }; POST /api/v1/recycle (201) → { transaction, balance }. A cashout the Events stream carries names the payout method's type only; this API answers the caller who may see the address.
+ */
+export type BillingCashoutResult =
+  | {
+      cashout: BillingCashout;
+    }
+  | {
+      cashouts: BillingCashout[];
+    }
+  | {
+      transaction: BillingTransaction;
+      balance: BillingBalance;
+    };
+
+/** billing.cashout@1.0.0 (owner: billing) */
+/**
+ * billing.cashout@1: one cashout as OpenVibe.Billing presents it (server/ops/cashouts.js present). Requested cashouts wait out an escrow; staff approve (with the provider's payout reference) or deny them.
+ */
+export interface BillingCashout {
+  id: string;
+  subject: SubjectRef;
+  amount_bits: number;
+  value_cents: number;
+  status: "requested" | "paid" | "denied";
+  payout_method: {
+    type?: string;
+    address?: string;
+  } | null;
+  escrow_until: string;
+  request_txn: string;
+  settle_txn?: string | null;
+  payout_provider?: string | null;
+  payout_reference?: string | null;
+  reason?: string | null;
+  created_at: string;
+  updated_at?: string | null;
+}
+
+/** billing.entitlement-result@1.0.0 (owner: billing) */
+/**
+ * billing.entitlement-result@1: answers of billing.entitlement.check on OpenVibe.Billing. GET /api/v1/entitlements/:subject?streamer= → billing.entitlement@1; without streamer → { subject, entitlements } (every active one); GET /api/v1/subscriptions → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.
+ */
+export type BillingEntitlementResult =
+  | BillingEntitlement
+  | {
+      subject: SubjectRef;
+      entitlements: BillingEntitlement[];
+    }
+  | {
+      subscriptions: BillingSubscription[];
+    }
+  | {
+      subscription: BillingSubscription;
+      entitlement: BillingEntitlement;
+    };
+
+/** billing.entitlement@1.0.0 (owner: billing) */
+/**
+ * billing.entitlement@1: whether a person is entitled to a streamer's subscriber perks now (OpenVibe.Billing server/ops/subscriptions.js entitlement): GET /api/v1/entitlements/:subject?streamer=, and inside subscription answers. Chained, already-paid future periods extend expires_at.
+ */
+export interface BillingEntitlement {
+  subject: SubjectRef;
+  streamer: SubjectRef;
+  kind: string;
+  active: boolean;
+  expires_at: string | null;
+  subscription: {
+    id?: string;
+    status?: string;
+    auto_renew?: boolean | number;
+    cancel_at_period_end?: boolean | number;
+    provider?: string;
+  } | null;
+}
+
+/** billing.intent-request@1.0.0 (owner: billing) */
+/**
+ * billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer }; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
+ */
+export type BillingIntentRequest =
+  | {
+      /**
+       * stripe, paypal, nowpayments, powerchat, ccbill (enabled ones only).
+       */
+      provider: string;
+      kind: "purchase" | "subscription";
+      /**
+       * Who pays.
+       */
+      subject: SubjectRef | string;
+      /**
+       * Purchase: the Vibes to buy.
+       */
+      bits?: number | string;
+      /**
+       * Subscription: the channel's owner (never the payer).
+       */
+      streamer?: SubjectRef | string;
+      /**
+       * Subscription: direct, or the site route.
+       */
+      route?: string;
+      /**
+       * Direct PowerChat subscription: the streamer's PowerChat username.
+       */
+      receiving_account?: string;
+      auto_renew?: boolean | number;
+      success_url?: string;
+      cancel_url?: string;
+    }
+  | NoBody;
+
+/** billing.intent-result@1.0.0 (owner: billing) */
+/**
+ * billing.intent-result@1: answers of billing.intent.create on OpenVibe.Billing. POST /api/v1/intents → { intent, checkout_url } (null when the provider has no hosted checkout); GET /api/v1/intents/:id → { intent }; POST /api/v1/intents/:id/capture → { result, intent } (the settlement the provider's capture produced).
+ */
+export interface BillingIntentResult {
+  intent: BillingIntent;
+  checkout_url?: string | null;
+  /**
+   * Capture: what applying the provider's plan did.
+   */
+  result?: {
+    [k: string]: unknown | undefined;
+  };
+}
+
+/** billing.intent@1.0.0 (owner: billing) */
+/**
+ * billing.intent@1: a checkout intent as OpenVibe.Billing presents it (server/ops/intents.js present): what a person is about to pay a provider for (a Vibes purchase or a channel subscription), priced by Billing.
+ */
+export interface BillingIntent {
+  id: string;
+  provider: string;
+  provider_ref: string | null;
+  kind: "purchase" | "subscription";
+  subject: SubjectRef;
+  streamer: SubjectRef | null;
+  amount_cents: number;
+  fee_cents: number;
+  bits: number;
+  route: string | null;
+  auto_renew?: number | boolean;
+  /**
+   * created, settled, failed, …
+   */
+  status: string;
+  settled_txn: string | null;
+  created_at: string;
+  /**
+   * PowerChat only: pcorder:<id> or pcsub:<id>, echoed back by its webhook.
+   */
+  checkout_ref?: string;
+}
+
+/** billing.subscription-request@1.0.0 (owner: billing) */
+/**
+ * billing.subscription-request@1: the body of POST /api/v1/subscriptions on OpenVibe.Billing (billing.subscription.manage): pay one period of subscriber → streamer, from the subscriber's credit (source credit, the default) or from a provider receipt (source receipt, which also needs billing.ledger.admin: claiming money was received is operator grade). POST /api/v1/subscriptions/:id/cancel (cancels at the period end, with the provider too) and the GETs take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
+ */
+export type BillingSubscriptionRequest =
+  | {
+      /**
+       * A user SubjectRef, or its bare id (usr_…). Guests hold no money.
+       */
+      subscriber: SubjectRef | string;
+      /**
+       * A user SubjectRef, or its bare id (usr_…). Guests hold no money.
+       */
+      streamer: SubjectRef | string;
+      source?: "credit" | "receipt";
+      /**
+       * Default: Billing's subscription price.
+       */
+      price_cents?: number | string;
+      auto_renew?: boolean | number;
+      receipt?: {
+        provider: string;
+        provider_ref: string;
+        /**
+         * Cents paid.
+         */
+        amount_cents?: number | string;
+        fee_cents?: number | string;
+        route?: string;
+        subscription_ref?: string;
+        test?: boolean;
+      };
+    }
+  | NoBody;
+
+/** billing.subscription-result@1.0.0 (owner: billing) */
+/**
+ * billing.subscription-result@1: answers about subscriptions on OpenVibe.Billing. POST /api/v1/subscriptions (201) → { subscription, entitlement, transaction }; POST /api/v1/subscriptions/:id/cancel → { subscription, provider_sync }; GET /api/v1/subscriptions?subscriber=&streamer=&status= → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.
+ */
+export type BillingSubscriptionResult =
+  | {
+      subscription: BillingSubscription;
+      /**
+       * billing.entitlement@1 (the answer to POST /subscriptions carries the entitlement as booked).
+       */
+      entitlement?: {
+        [k: string]: unknown | undefined;
+      };
+      transaction?: BillingTransaction;
+      /**
+       * not_needed, or how the provider was told.
+       */
+      provider_sync?: string;
+    }
+  | {
+      subscriptions: BillingSubscription[];
+    };
+
+/** billing.subscription@1.0.0 (owner: billing) */
+/**
+ * billing.subscription@1: one channel subscription as OpenVibe.Billing presents it (server/ops/subscriptions.js present).
+ */
+export interface BillingSubscription {
+  id: string;
+  subscriber: SubjectRef;
+  streamer: SubjectRef;
+  tier?: unknown;
+  /**
+   * credit, or the provider that takes the payments.
+   */
+  provider: string;
+  provider_ref?: string | null;
+  /**
+   * site or direct (paid to the streamer's own provider account).
+   */
+  route?: string | null;
+  /**
+   * active, canceled, expired, …
+   */
+  status: string;
+  auto_renew: boolean;
+  cancel_at_period_end: boolean;
+  price_cents?: number | null;
+  current_period_end: string | null;
+  created_at?: string;
+  updated_at?: string | null;
+}
+
+/** billing.transaction@1.0.0 (owner: billing) */
+/**
+ * billing.transaction@1: one journal transaction as OpenVibe.Billing's /api/v1 presents it (server/ledger.js present). Amounts are integers: bits for vibes-bits, cents for usd-cents; each transaction's entries balance per currency. Subjects are bare Network subject ids.
+ */
+export interface BillingTransaction {
+  id: string;
+  type:
+    | "purchase"
+    | "donation"
+    | "subscription"
+    | "subscription_share"
+    | "cashout_request"
+    | "cashout_paid"
+    | "cashout_denied"
+    | "recycle"
+    | "refund"
+    | "chargeback"
+    | "adjustment"
+    | "import";
+  status: string;
+  /**
+   * Test money: never counted.
+   */
+  test: boolean;
+  reverses_txn: string | null;
+  from_subject: string | null;
+  to_subject: string | null;
+  provider: string | null;
+  /**
+   * <provider>:<provider payment id> for money that arrived from a provider.
+   */
+  receipt_ref: string | null;
+  /**
+   * Who posted it (as recorded).
+   */
+  actor?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Per type: amount_bits, paid_cents, target EntityRef, message, rates…
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+  created_at: string;
+  entries: {
+    account: {
+      kind:
+        | "user_credit"
+        | "creator_payable"
+        | "provider_clearing"
+        | "platform_revenue"
+        | "payouts_pending"
+        | "refunds"
+        | "import_adjustment"
+        | "chargeback_loss"
+        | "fx_conversion";
+      /**
+       * A subject id, a provider slug, or null for a platform account.
+       */
+      owner?: string | null;
+      currency: "vibes-bits" | "usd-cents";
+    };
+    /**
+     * Signed: negative leaves the account.
+     */
+    amount: number;
+  }[];
+}
+
+/** billing.transfer-request@1.0.0 (owner: billing) */
+/**
+ * billing.transfer-request@1: bodies of billing.transfer.create on OpenVibe.Billing. POST /api/v1/transfers: { from, to, amount, kind?, target?, message? } moves amount bits from the sender's credit to the recipient's payable (a tip, donation or paid interaction; never to oneself). POST /api/v1/transfers/:id/refund: { amount?, reason? } gives a credit-funded donation back (all that remains refundable when amount is absent). Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
+ */
+export type BillingTransferRequest =
+  | {
+      /**
+       * The sender (their credit pays).
+       */
+      from: SubjectRef | string;
+      /**
+       * The recipient (their payable receives).
+       */
+      to: SubjectRef | string;
+      /**
+       * Bits.
+       */
+      amount: number | string;
+      /**
+       * Default donation.
+       */
+      kind?: "tip" | "donation" | "paid_interaction";
+      target?: EntityRef;
+      message?: string | null;
+    }
+  | {
+      /**
+       * Bits to give back; default all that remains refundable.
+       */
+      amount?: number | string;
+      reason?: string | null;
+    };
+
+/** billing.transfer-result@1.0.0 (owner: billing) */
+/**
+ * billing.transfer-result@1: answers of billing.transfer.create on OpenVibe.Billing (201). POST /api/v1/transfers → { transaction, balance: { credit } } (the sender's credit after it); POST /api/v1/transfers/:id/refund → { transaction } (type refund, reverses_txn the donation).
+ */
+export interface BillingTransferResult {
+  transaction: BillingTransaction;
+  balance?: {
+    credit: number;
+  };
+}
+
 /** deals.watch.matched@1.0.0 (owner: deals) */
 /**
  * deals.watch.matched v1 (OpenVibe.Deals server/domain/watches.js onObservation). A person's keyword, product or price-below watch matched a fresh observation of an active offer, inside the transaction that recorded the observation. At most one event per (watch, observation); a keyword/product watch notifies once per offer, a price-below watch again only for a lower price. Saved searches (kind search) never notify. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:deals. OpenVibe.Network turns it into a DEAL_WATCH_MATCH notification for payload.recipient (server/notifications/events-consumer.js). A price is the decimal exactly as stated, never inferred; null when the observation stated none.
@@ -13682,6 +14249,158 @@ export interface ChatModerationActionPayload {
   details?: {};
 }
 
+/** chat.send-request@1.0.0 (owner: chat) */
+/**
+ * chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused.
+ */
+export type ChatSendRequest =
+  | {
+      type: "chat";
+      /**
+       * The text (trimmed by Chat).
+       */
+      message: string;
+      /**
+       * Id of a visible message in the room this replies to (parseInt; an unknown or deleted parent is ignored).
+       */
+      reply_to_id?: number | string;
+      /**
+       * Delete the line after this many minutes (clamped to Chat's minimum and maximum; ignored where the channel turned viewer auto-delete off).
+       */
+      auto_delete_minutes?: number | string;
+      /**
+       * The voice channel the sender is in, echoed on the broadcast.
+       */
+      voiceChannelId?: string;
+    }
+  | {
+      /**
+       * Live's boot id; placeholder message ids are mapped per boot.
+       */
+      boot?: string;
+      /**
+       * @maxItems 500
+       */
+      ops: {
+        /**
+         * Echoed on the result.
+         */
+        seq?: number;
+        /**
+         * A ChatServer method, a bridge-only op, or db (an allow-listed chat-table write named by args[0]).
+         */
+        op: string;
+        args?: unknown[];
+        /**
+         * Live's placeholder id for the row this op inserts.
+         */
+        ref?: number;
+        /**
+         * Idempotency key: applied once.
+         */
+        key?: string;
+      }[];
+    };
+
+/** chat.send-result@1.0.0 (owner: chat) */
+/**
+ * chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }.
+ */
+export type ChatSendResult =
+  | {
+      type: "chat";
+      /**
+       * The stored message id.
+       */
+      id?: number;
+      /**
+       * Display name, or the anonymous id.
+       */
+      username: string;
+      /**
+       * The immutable login handle; null for an anonymous sender.
+       */
+      core_username?: string | null;
+      user_id?: number | null;
+      anon_id?: string | null;
+      /**
+       * The sender's role, anon for an anonymous sender.
+       */
+      role: string;
+      message: string;
+      stream_id: number | null;
+      channel_user_id: number | null;
+      /**
+       * true for homepage global chat (no stream, no channel).
+       */
+      is_global: boolean;
+      avatar_url?: string | null;
+      profile_color?: string;
+      filtered?: boolean;
+      timestamp: string;
+      auto_delete_at?: string | null;
+      voiceChannelId?: string;
+      reply_to?: {
+        id: number;
+        username: string;
+        user_id?: number | null;
+        /**
+         * The parent's text, cut to 100 characters.
+         */
+        message: string;
+      };
+      /**
+       * Cosmetic name effect.
+       */
+      nameFX?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * Cosmetic particle effect.
+       */
+      particleFX?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * Cosmetic hat.
+       */
+      hatFX?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * Cosmetic TTS voice effect.
+       */
+      voiceFX?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * The sender's equipped tag.
+       */
+      tag?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * The channel's VIP member badge, when cached; otherwise a chat_vip_badge frame follows.
+       */
+      vip_badge?: {
+        [k: string]: unknown | undefined;
+      };
+    }
+  | {
+      type: "system" | "error";
+      message: string;
+    }
+  | {
+      ok: true;
+      results: {
+        seq?: number;
+        ok: boolean;
+        result?: unknown;
+        code?: string;
+        error?: string;
+      }[];
+    };
+
 /** live.moderation.action@1.0.0 (owner: live) */
 /**
  * live.moderation.action v1 (OpenVibe.Live server/db/database.js logModerationAction; ADR-022). A staff or channel moderator action taken on OpenVibe.Live outside chat: site and global bans, IP bans, message deletes and purges from Live's admin panel, a stream force-ended, relay users hidden, channel moderators added or removed. Not a person tidying their own messages or configuring their own channel. Written to Live's outbox in the transaction that records the action. OpenVibe.Network keeps it in the moderation audit log. Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).
@@ -13742,3 +14461,395 @@ export interface CommunityModerationActionPayload {
    */
   details?: {};
 }
+
+/** community.paste-create-request@1.0.0 (owner: community) */
+/**
+ * community.paste-create-request@1: the body of POST /api/pastes on OpenVibe.Community (community.paste.create). A JSON text paste needs content (non-blank, at most the configured size, 512 KB by default); a multipart body with a `screenshot` image part (PNG, JPEG, WebP or GIF, 8 MB by default; also POST /api/pastes/screenshot) makes an image paste. Visibility other than unlisted or private is public, and an ownerless private paste becomes unlisted. slug (public pastes only), metadata and ai_summary/ai_tags are honoured from a service token only; a browser's are ignored. Unknown fields are ignored. The answer is { id, slug, url, paste } with 201.
+ */
+export type CommunityPasteCreateRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The text (trimmed).
+   */
+  content?: string;
+  /**
+   * Multipart only: the image part.
+   */
+  screenshot?: string;
+  /**
+   * Trimmed to 200 characters; Untitled (Screenshot for an image) when blank.
+   */
+  title?: string | null;
+  /**
+   * A language hint; auto or absent sniffs it from the content.
+   */
+  language?: string;
+  /**
+   * public (default), unlisted or private.
+   */
+  visibility?: string;
+  /**
+   * Truthy (true, 1, '1', 'true', 'on'): gone after the first read by someone else.
+   */
+  burn_after_read?: boolean | number | string;
+  is_nsfw?: boolean | number | string;
+  /**
+   * The Live stream it was made during (digits).
+   */
+  stream_id?: number | string;
+  /**
+   * Multipart screenshot: the text shown under the image.
+   */
+  description?: string;
+  /**
+   * Multipart screenshot: the page it shows.
+   */
+  page_url?: string;
+  /**
+   * Multipart screenshot: the capturing browser.
+   */
+  user_agent?: string;
+  /**
+   * Service callers, public pastes only: the slug to use (409 if taken).
+   */
+  slug?: string;
+  /**
+   * Service callers only: a JSON object (at most 16 KB).
+   */
+  metadata?: {} | string;
+  /**
+   * Service callers only (cut to 2000 characters).
+   */
+  ai_summary?: string;
+  /**
+   * Service callers only, with ai_summary: JSON text or a value to serialise.
+   */
+  ai_tags?: {
+    [k: string]: unknown | undefined;
+  };
+};
+
+/** community.paste-moderate-request@1.0.0 (owner: community) */
+/**
+ * community.paste-moderate-request@1: bodies of the staff paste routes on OpenVibe.Community (community.paste.moderate; a browser must be staff, a service holds the capability). POST /api/pastes/bulk: { slugs, action } (at most 500 slugs are applied; unknown slugs are skipped). POST /api/pastes/:slug/censor: multipart with the replacement image in `screenshot` (PNG, JPEG or WebP), for a screenshot paste (slug or numeric id). DELETE /api/pastes/:slug/comments/:id (someone else's comment, X-OV-Staff for a service) takes no body.
+ */
+export type CommunityPasteModerateRequest =
+  | {
+      /**
+       * @minItems 1
+       */
+      slugs: [string, ...string[]];
+      action: "delete" | "public" | "unlisted" | "private";
+    }
+  | {
+      /**
+       * The multipart part named screenshot: the censored image.
+       */
+      screenshot: string;
+    }
+  | NoBody;
+
+/** community.paste-moderate-result@1.0.0 (owner: community) */
+/**
+ * community.paste-moderate-result@1: answers of the staff paste routes on OpenVibe.Community. POST /api/pastes/bulk → { done, skipped }; POST /api/pastes/:slug/censor → { paste } (the paste with its new image); DELETE /api/pastes/:slug/comments/:id → { message: 'Comment deleted' }. Each action is written to the moderation audit log (community.moderation.action).
+ */
+export type CommunityPasteModerateResult =
+  | {
+      done: number;
+      skipped: number;
+    }
+  | {
+      paste: CommunityPaste;
+    }
+  | {
+      message: string;
+    };
+
+/** community.paste-write-request@1.0.0 (owner: community) */
+/**
+ * community.paste-write-request@1: bodies of the paste writes done as the acting person (community.paste.write) on OpenVibe.Community. PUT /api/pastes/:slug (owner or staff): the fields to change, at least one (else 400 Nothing to update); content only on a text paste; pinned only from staff. POST /api/pastes/:slug/comments: { message, parent_id?, anon_name? } (message trimmed, at most 2000 characters; a reply to a reply is refused). DELETE /api/pastes/:slug, DELETE /api/pastes/:slug/comments/:id and POST /api/pastes/:slug/fork|like|copy take no body. Unknown fields are ignored.
+ */
+export type CommunityPasteWriteRequest =
+  | {
+      title?: string | null;
+      content?: string;
+      language?: string;
+      /**
+       * public, unlisted or private (anything else is public).
+       */
+      visibility?: string;
+      is_nsfw?: boolean | number | string;
+      /**
+       * Staff only; ignored otherwise.
+       */
+      pinned?: boolean | number | string;
+    }
+  | {
+      message: string;
+      /**
+       * The top-level comment this replies to.
+       */
+      parent_id?: number | string;
+      /**
+       * An anonymous commenter's name (letters, digits, space, _ and -; 32 characters; Anonymous by default).
+       */
+      anon_name?: string;
+    }
+  | NoBody;
+
+/** community.paste-write-result@1.0.0 (owner: community) */
+/**
+ * community.paste-write-result@1: answers of the community.paste.write routes on OpenVibe.Community. PUT /api/pastes/:slug → { paste }; DELETE → { success: true }; POST …/fork → 201 { id, slug, url, paste } (the new paste); POST …/like → { liked, likes } (a toggle); POST …/copy → { copies }; POST …/comments → 201 { comment }; DELETE …/comments/:id → { message }. Refusals are { error } with 400/401/403/404/429.
+ */
+export type CommunityPasteWriteResult =
+  | {
+      id?: number;
+      slug?: string;
+      url?: string;
+      paste: CommunityPaste;
+    }
+  | {
+      success: true;
+    }
+  | {
+      liked: boolean;
+      likes: number;
+    }
+  | {
+      copies: number;
+    }
+  | {
+      comment: {
+        id: number;
+        paste_id: number;
+        /**
+         * The author's subject; null for an anonymous comment.
+         */
+        user_id?: string | null;
+        author_subject?: string | null;
+        parent_id?: number | null;
+        anon_name?: string | null;
+        message: string;
+        is_deleted?: number | boolean;
+        created_at: string;
+        updated_at?: string | null;
+        username?: string | null;
+        display_name?: string | null;
+        avatar_url?: string | null;
+        profile_color?: string | null;
+      };
+    }
+  | {
+      message: string;
+    };
+
+/** community.paste@1.0.0 (owner: community) */
+/**
+ * community.paste@1: one paste as OpenVibe.Community's /api/pastes answers it (server/pastes/service.js shape: Media's pastePublic shape plus the author projection). user_id carries the owner's subject id (Community has no numeric user ids), so a falsy user_id still means anonymous. Times are SQLite UTC text. In lists, content is a 300-character preview (null for a screenshot).
+ */
+export interface CommunityPaste {
+  id: number;
+  app_id: "community";
+  slug: string;
+  /**
+   * The owner's subject (usr_…), or null for an anonymous paste.
+   */
+  user_id: string | null;
+  owner_subject: string | null;
+  /**
+   * user, or ai for a paste an AI service wrote.
+   */
+  origin: string;
+  type: "paste" | "screenshot";
+  title: string;
+  content?: string | null;
+  language?: string | null;
+  visibility: "public" | "unlisted" | "private";
+  /**
+   * The Live stream it was made during, when its stream_ref is one.
+   */
+  stream_id?: number | null;
+  /**
+   * An EntityRef of where it was made (a Live stream, or a service's own source).
+   */
+  stream_ref?: {} | null;
+  screenshot_url?: string | null;
+  /**
+   * Structured metadata a service attached (AI moments), or a screenshot's upload details.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+  burn_after_read?: boolean;
+  forked_from?: number | null;
+  pinned?: boolean;
+  views?: number;
+  unique_views?: number;
+  copies?: number;
+  likes?: number;
+  is_nsfw?: boolean;
+  ai_summary?: string | null;
+  /**
+   * JSON text as the AI pass wrote it.
+   */
+  ai_tags?: string | null;
+  ai_analyzed_at?: string | null;
+  revision?: number;
+  /**
+   * /p/<slug>
+   */
+  url: string;
+  /**
+   * /p/<slug>/raw
+   */
+  raw_url: string;
+  created_at: string;
+  updated_at?: string | null;
+  /**
+   * Whether the caller owns it.
+   */
+  is_owner: boolean;
+  username?: string | null;
+  /**
+   * OpenVibe AI for an AI paste.
+   */
+  display_name?: string | null;
+  avatar_url?: string | null;
+  profile_color?: string | null;
+}
+
+/** community.moderation-request@1.0.0 (owner: community) */
+/**
+ * community.moderation-request@1: bodies of the discussion moderation routes on OpenVibe.Community (community.comment.moderate; a browser must be a moderator). PUT /api/v1/comments/threads/:id/visibility: { visibility: public | hidden | locked }. PUT /api/v1/spaces/:space/threads/:slug/state: { pinned?, locked? }, at least one. PUT /api/v1/posts/:id: { body } (someone else's post). /api/v1/relay: POST /mappings { space, webhook_url_ref, enabled? } (webhook_url_ref is the NAME of an allow-listed environment variable, never a URL), PUT /mappings/:id { enabled }. DELETE /api/v1/comments/:commentId, DELETE /api/v1/spaces/:space/threads/:slug, DELETE /api/v1/posts/:id, POST /api/v1/relay/deliveries/:id/retry and the GETs take no body. Unknown fields are ignored.
+ */
+export type CommunityModerationRequest =
+  | {
+      visibility: "public" | "hidden" | "locked";
+    }
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      /**
+       * The space's slug.
+       */
+      space: string;
+      webhook_url_ref: string;
+      /**
+       * Default true.
+       */
+      enabled?: boolean;
+    }
+  | {
+      enabled: boolean;
+    }
+  | NoBody;
+
+/** community.moderation-result@1.0.0 (owner: community) */
+/**
+ * community.moderation-result@1: answers of the discussion moderation routes on OpenVibe.Community. PUT …/comments/threads/:id/visibility → { thread } (a comment thread: id, access_id, ref, visibility, comment_count); PUT …/threads/:slug/state → { thread } (a forum thread); PUT /api/v1/posts/:id → { post }; DELETE /api/v1/comments/:commentId and DELETE /api/v1/posts/:id → { ok, id }; deleting a thread (or its opening post) → { ok, id, deleted: 'thread' }; relay: GET /deliveries → { enabled, deliveries }, GET /mappings → { enabled, mappings }, POST|PUT /mappings → { mapping }, POST /deliveries/:id/retry → { ok }. Relay answers never carry a webhook URL.
+ */
+export type CommunityModerationResult =
+  | {
+      thread: {
+        id: number | string;
+        /**
+         * A comment thread's browser id (cth_…).
+         */
+        access_id?: string;
+        ref?: EntityRef;
+        visibility?: string;
+        comment_count?: number | null;
+        space?: string;
+        slug?: string;
+        title?: string;
+        pinned?: boolean;
+        locked?: boolean;
+      };
+    }
+  | {
+      post: {
+        id: number;
+        thread_id: number;
+        is_opening?: boolean;
+        origin?: string;
+        author?: {} | null;
+        body_markdown?: string | null;
+        body_html?: string | null;
+        revision: number;
+        deleted: boolean;
+        created_at?: string | null;
+        updated_at?: string | null;
+        can_edit?: boolean;
+        attachments?: unknown[];
+        pastes?: unknown[];
+      };
+    }
+  | {
+      ok: true;
+      id?: number;
+      deleted?: "thread";
+    }
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      mapping: {
+        id: number;
+        space: string;
+        direction?: string;
+        webhook_url_ref: string;
+        webhook_configured: boolean;
+        enabled: boolean;
+        created_at?: string | null;
+      };
+    };
+
+/** community.post-write-request@1.0.0 (owner: community) */
+/**
+ * community.post-write-request@1: bodies of the forum writes on OpenVibe.Community (community.post.create; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).
+ */
+export type CommunityPostWriteRequest =
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      /**
+       * A thread vote; 0 takes the vote back.
+       */
+      value: 1 | -1 | 0 | "1" | "-1" | "0";
+    }
+  | NoBody;
+
+/** community.pulse-write-result@1.0.0 (owner: community) */
+/**
+ * community.pulse-write-result@1: answers of the Pulse writes on OpenVibe.Community (community.pulse.write, service tokens only). POST /api/v1/pulse/items → { item, created } (201 when created, 200 when the service's item with that ref was updated); DELETE /api/v1/pulse/items/:service/:type/:id → { removed } (rows removed: 0 or 1). An AI item is labelled AI and names no actor; a system item names none either.
+ */
+export type CommunityPulseWriteResult =
+  | {
+      created: boolean;
+      item: {
+        id: number;
+        source: {
+          service: string;
+          type: string;
+          id: string;
+        };
+        title: string;
+        url: string;
+        origin: "user" | "ai" | "system";
+        label: "AI" | "System" | null;
+        actor: {
+          subject?: string | null;
+          username?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          profile_color?: string | null;
+        } | null;
+        occurred_at: string | null;
+      };
+    }
+  | {
+      removed: number;
+    };

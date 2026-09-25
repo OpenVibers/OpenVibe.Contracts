@@ -24,5 +24,7 @@
     "POST /api/v1/admin/provider-events/:id/reprocess",
     "POST /api/v1/admin/sweep",
     "GET /api/v1/admin/import-holds"
-  ]
+  ],
+  "inputSchema": "billing.admin-request@1",
+  "outputSchema": "billing.admin-result@1"
 }

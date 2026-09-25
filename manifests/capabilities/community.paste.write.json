@@ -19,5 +19,7 @@
   "implementedBy": [
     "PUT|DELETE /api/pastes/:slug",
     "POST /api/pastes/:slug/{fork,like,copy,comments}"
-  ]
+  ],
+  "inputSchema": "community.paste-write-request@1",
+  "outputSchema": "community.paste-write-result@1"
 }

@@ -19,5 +19,7 @@
   "implementedBy": [
     "POST /api/v1/transfers",
     "POST /api/v1/transfers/:id/refund"
-  ]
+  ],
+  "inputSchema": "billing.transfer-request@1",
+  "outputSchema": "billing.transfer-result@1"
 }

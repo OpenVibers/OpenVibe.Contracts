@@ -1,0 +1,1 @@
+{ "mapping": { "id": 3, "space": "announcements", "direction": "out", "webhook_url_ref": "DISCORD_WEBHOOK_ANNOUNCEMENTS", "webhook_configured": true, "enabled": true, "created_at": "2026-09-25T18:00:00.000Z" } }

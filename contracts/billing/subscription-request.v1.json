@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/subscription-request.v1.json",
+  "title": "BillingSubscriptionRequest",
+  "description": "billing.subscription-request@1: the body of POST /api/v1/subscriptions on OpenVibe.Billing (billing.subscription.manage): pay one period of subscriber → streamer, from the subscriber's credit (source credit, the default) or from a provider receipt (source receipt, which also needs billing.ledger.admin: claiming money was received is operator grade). POST /api/v1/subscriptions/:id/cancel (cancels at the period end, with the provider too) and the GETs take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "subscriber",
+        "streamer"
+      ],
+      "properties": {
+        "subscriber": {
+          "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "streamer": {
+          "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "source": {
+          "enum": [
+            "credit",
+            "receipt"
+          ]
+        },
+        "price_cents": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Default: Billing's subscription price."
+        },
+        "auto_renew": {
+          "type": [
+            "boolean",
+            "integer"
+          ]
+        },
+        "receipt": {
+          "type": "object",
+          "required": [
+            "provider",
+            "provider_ref"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string"
+            },
+            "provider_ref": {
+              "type": "string"
+            },
+            "amount_cents": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "minimum": 1,
+              "pattern": "^[1-9][0-9]*$",
+              "description": "Cents paid."
+            },
+            "fee_cents": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "route": {
+              "type": "string"
+            },
+            "subscription_ref": {
+              "type": "string"
+            },
+            "test": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

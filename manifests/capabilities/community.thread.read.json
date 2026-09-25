@@ -21,5 +21,6 @@
     "GET /s/:space/t/:slug",
     "GET /s/feed.xml",
     "GET /s/:space/feed.xml"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

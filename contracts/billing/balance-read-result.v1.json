@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/balance-read-result.v1.json",
+  "title": "BillingBalanceReadResult",
+  "description": "billing.balance-read-result@1: answers of billing.balance.read on OpenVibe.Billing. GET /api/v1/balances/:subject → billing.balance@1; GET /api/v1/transactions?subject=&limit=&cursor= → { transactions, next_cursor } (newest first, at most 200 a page; subject is required); GET /api/v1/transactions/:id → { transaction, reversed_by } (ids of the transactions that reverse it).",
+  "anyOf": [
+    {
+      "$ref": "balance.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "transactions",
+        "next_cursor"
+      ],
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "transaction.v1.json"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "transaction",
+        "reversed_by"
+      ],
+      "properties": {
+        "transaction": {
+          "$ref": "transaction.v1.json"
+        },
+        "reversed_by": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

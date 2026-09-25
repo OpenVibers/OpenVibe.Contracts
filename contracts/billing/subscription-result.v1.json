@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/subscription-result.v1.json",
+  "title": "BillingSubscriptionResult",
+  "description": "billing.subscription-result@1: answers about subscriptions on OpenVibe.Billing. POST /api/v1/subscriptions (201) → { subscription, entitlement, transaction }; POST /api/v1/subscriptions/:id/cancel → { subscription, provider_sync }; GET /api/v1/subscriptions?subscriber=&streamer=&status= → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "subscription"
+      ],
+      "properties": {
+        "subscription": {
+          "$ref": "subscription.v1.json"
+        },
+        "entitlement": {
+          "description": "billing.entitlement@1 (the answer to POST /subscriptions carries the entitlement as booked)."
+        },
+        "transaction": {
+          "$ref": "transaction.v1.json"
+        },
+        "provider_sync": {
+          "type": "string",
+          "description": "not_needed, or how the provider was told."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "subscriptions"
+      ],
+      "properties": {
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "subscription.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

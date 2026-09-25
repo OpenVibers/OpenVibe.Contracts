@@ -1,0 +1,1 @@
+{ "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR", "amount": 5000, "payout_method": { "type": "paypal", "address": "alice@example.com" } }

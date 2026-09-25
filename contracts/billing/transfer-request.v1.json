@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/transfer-request.v1.json",
+  "title": "BillingTransferRequest",
+  "description": "billing.transfer-request@1: bodies of billing.transfer.create on OpenVibe.Billing. POST /api/v1/transfers: { from, to, amount, kind?, target?, message? } moves amount bits from the sender's credit to the recipient's payable (a tip, donation or paid interaction; never to oneself). POST /api/v1/transfers/:id/refund: { amount?, reason? } gives a credit-funded donation back (all that remains refundable when amount is absent). Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "amount"
+      ],
+      "properties": {
+        "from": {
+          "description": "The sender (their credit pays).",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "to": {
+          "description": "The recipient (their payable receives).",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Bits."
+        },
+        "kind": {
+          "enum": [
+            "tip",
+            "donation",
+            "paid_interaction"
+          ],
+          "description": "Default donation."
+        },
+        "target": {
+          "$ref": "../common/entity-ref.v1.json",
+          "description": "What the money is for (a stream, a paid message, …)."
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Bits to give back; default all that remains refundable."
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    }
+  ]
+}

@@ -8338,6 +8338,1672 @@
         }
       }
     },
+    "billing.admin-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/admin-request.v1.json",
+        "title": "BillingAdminRequest",
+        "description": "billing.admin-request@1: bodies of billing.ledger.admin on OpenVibe.Billing (operators). POST /api/v1/admin/freeze: { on, reason? } (unfreezing processes the provider deliveries stored meanwhile; allowed while frozen). POST /api/v1/admin/adjustments: { from, to, amount, reason, relates_to? } moves value between two accounts of one currency. POST /api/v1/purchases/settle: { provider, provider_ref, subject?, amount_cents, bits, intent_id?, test? } books a provider receipt. POST /api/v1/admin/provider-events/:id/reprocess, POST /api/v1/admin/sweep and the GETs (freeze, reconcile, provider-events, import-holds) take no body. Adjustments and settlements need an Idempotency-Key and are refused while frozen.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "on"
+            ],
+            "properties": {
+              "on": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "amount",
+              "reason"
+            ],
+            "properties": {
+              "from": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "currency"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "user_credit",
+                      "creator_payable",
+                      "provider_clearing",
+                      "platform_revenue",
+                      "payouts_pending",
+                      "refunds",
+                      "import_adjustment",
+                      "chargeback_loss",
+                      "fx_conversion"
+                    ]
+                  },
+                  "owner": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "currency": {
+                    "enum": [
+                      "vibes-bits",
+                      "usd-cents"
+                    ]
+                  }
+                }
+              },
+              "to": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "currency"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "user_credit",
+                      "creator_payable",
+                      "provider_clearing",
+                      "platform_revenue",
+                      "payouts_pending",
+                      "refunds",
+                      "import_adjustment",
+                      "chargeback_loss",
+                      "fx_conversion"
+                    ]
+                  },
+                  "owner": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "currency": {
+                    "enum": [
+                      "vibes-bits",
+                      "usd-cents"
+                    ]
+                  }
+                }
+              },
+              "amount": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "In the accounts' currency (at most 1,000,000,000)."
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "relates_to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "provider",
+              "provider_ref"
+            ],
+            "properties": {
+              "provider": {
+                "type": "string"
+              },
+              "provider_ref": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The provider's payment id."
+              },
+              "subject": {
+                "description": "Who the Vibes are for.",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "amount_cents": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Cents paid."
+              },
+              "bits": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Vibes to credit."
+              },
+              "intent_id": {
+                "type": "string"
+              },
+              "test": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "billing.admin-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/admin-result.v1.json",
+        "title": "BillingAdminResult",
+        "description": "billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "frozen",
+              "reason",
+              "frozen_at",
+              "frozen_by"
+            ],
+            "properties": {
+              "frozen": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "frozen_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "frozen_by": {},
+              "processed_after_unfreeze": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "ok",
+              "checks"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ok": {
+                "type": "boolean"
+              },
+              "trigger": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "started_at": {
+                "type": "string"
+              },
+              "finished_at": {
+                "type": "string"
+              },
+              "checks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "ok"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "warnings": {
+                "type": "array"
+              },
+              "totals": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "transaction"
+            ],
+            "properties": {
+              "transaction": {
+                "$ref": "transaction.v1.json"
+              },
+              "duplicate_receipt": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "events"
+            ],
+            "properties": {
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "provider"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "provider_event_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "processed_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "result": {},
+                    "attempts": {
+                      "type": "integer"
+                    },
+                    "last_error": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "event"
+            ],
+            "properties": {
+              "event": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "provider"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "renewed",
+              "expired",
+              "canceled",
+              "skipped"
+            ],
+            "properties": {
+              "renewed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "expired": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "canceled": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "skipped": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "holds"
+            ],
+            "properties": {
+              "holds": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.balance-read-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/balance-read-result.v1.json",
+        "title": "BillingBalanceReadResult",
+        "description": "billing.balance-read-result@1: answers of billing.balance.read on OpenVibe.Billing. GET /api/v1/balances/:subject → billing.balance@1; GET /api/v1/transactions?subject=&limit=&cursor= → { transactions, next_cursor } (newest first, at most 200 a page; subject is required); GET /api/v1/transactions/:id → { transaction, reversed_by } (ids of the transactions that reverse it).",
+        "anyOf": [
+          {
+            "$ref": "balance.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "transactions",
+              "next_cursor"
+            ],
+            "properties": {
+              "transactions": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "$ref": "transaction.v1.json"
+                }
+              },
+              "next_cursor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "transaction",
+              "reversed_by"
+            ],
+            "properties": {
+              "transaction": {
+                "$ref": "transaction.v1.json"
+              },
+              "reversed_by": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.balance": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/balance.v1.json",
+        "title": "BillingBalance",
+        "description": "billing.balance@1: a person's Vibes balances, GET /api/v1/balances/:subject on OpenVibe.Billing (also returned after a recycle). credit is spendable (bought or given back), payable is what others gave the person (the only balance that can be cashed out), pending_payouts is held for requested cashouts.",
+        "type": "object",
+        "required": [
+          "subject",
+          "currency",
+          "credit",
+          "payable",
+          "pending_payouts",
+          "payable_value_cents",
+          "bits_per_usd"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "currency": {
+            "const": "vibes-bits"
+          },
+          "credit": {
+            "type": "integer"
+          },
+          "payable": {
+            "type": "integer"
+          },
+          "pending_payouts": {
+            "type": "integer"
+          },
+          "payable_value_cents": {
+            "type": "integer",
+            "description": "What payable is worth in US cents at today's rate."
+          },
+          "bits_per_usd": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "billing.cashout-decision": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/cashout-decision.v1.json",
+        "title": "BillingCashoutDecision",
+        "description": "billing.cashout-decision@1: bodies of billing.cashout.manage on OpenVibe.Billing (staff). POST /api/v1/cashouts/:id/approve: { payout_reference, payout_provider? } after the payout was sent (payout_provider defaults to paypal; refused while the cashout is in escrow). POST /api/v1/cashouts/:id/deny: { reason? } returns the bits to the person's payable. GET /api/v1/cashouts takes no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "payout_reference"
+            ],
+            "properties": {
+              "payout_reference": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "The provider's payout id."
+              },
+              "payout_provider": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "reason"
+            ],
+            "properties": {
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "billing.cashout-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/cashout-request.v1.json",
+        "title": "BillingCashoutRequest",
+        "description": "billing.cashout-request@1: bodies of billing.cashout.request on OpenVibe.Billing. POST /api/v1/cashouts: { subject, amount, payout_method: { type, address } } moves amount bits (at least the minimum cashout) from the person's payable into payouts pending, in escrow until staff pay it (a PayPal address must be an email). POST /api/v1/recycle: { subject, amount } turns payable back into the person's own spendable credit. GET /api/v1/cashouts/:id takes no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "subject",
+              "amount",
+              "payout_method"
+            ],
+            "properties": {
+              "subject": {
+                "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "amount": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Bits."
+              },
+              "payout_method": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "address"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_-]{1,39}$",
+                    "description": "paypal, …"
+                  },
+                  "address": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 254
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subject",
+              "amount"
+            ],
+            "properties": {
+              "subject": {
+                "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "amount": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Bits."
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "billing.cashout-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/cashout-result.v1.json",
+        "title": "BillingCashoutResult",
+        "description": "billing.cashout-result@1: answers about cashouts on OpenVibe.Billing. POST /api/v1/cashouts (201), GET /api/v1/cashouts/:id, POST /api/v1/cashouts/:id/approve and /deny → { cashout }; GET /api/v1/cashouts?status=&subject=&limit= → { cashouts }; POST /api/v1/recycle (201) → { transaction, balance }. A cashout the Events stream carries names the payout method's type only; this API answers the caller who may see the address.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "cashout"
+            ],
+            "properties": {
+              "cashout": {
+                "$ref": "cashout.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "cashouts"
+            ],
+            "properties": {
+              "cashouts": {
+                "type": "array",
+                "items": {
+                  "$ref": "cashout.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "transaction",
+              "balance"
+            ],
+            "properties": {
+              "transaction": {
+                "$ref": "transaction.v1.json"
+              },
+              "balance": {
+                "$ref": "balance.v1.json"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.cashout": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/cashout.v1.json",
+        "title": "BillingCashout",
+        "description": "billing.cashout@1: one cashout as OpenVibe.Billing presents it (server/ops/cashouts.js present). Requested cashouts wait out an escrow; staff approve (with the provider's payout reference) or deny them.",
+        "type": "object",
+        "required": [
+          "id",
+          "subject",
+          "amount_bits",
+          "value_cents",
+          "status",
+          "payout_method",
+          "escrow_until",
+          "request_txn",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "amount_bits": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "value_cents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "requested",
+              "paid",
+              "denied"
+            ]
+          },
+          "payout_method": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              }
+            }
+          },
+          "escrow_until": {
+            "type": "string"
+          },
+          "request_txn": {
+            "type": "string"
+          },
+          "settle_txn": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "payout_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "payout_reference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "billing.entitlement-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/entitlement-result.v1.json",
+        "title": "BillingEntitlementResult",
+        "description": "billing.entitlement-result@1: answers of billing.entitlement.check on OpenVibe.Billing. GET /api/v1/entitlements/:subject?streamer= → billing.entitlement@1; without streamer → { subject, entitlements } (every active one); GET /api/v1/subscriptions → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.",
+        "anyOf": [
+          {
+            "$ref": "entitlement.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "subject",
+              "entitlements"
+            ],
+            "properties": {
+              "subject": {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              "entitlements": {
+                "type": "array",
+                "items": {
+                  "$ref": "entitlement.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subscriptions"
+            ],
+            "properties": {
+              "subscriptions": {
+                "type": "array",
+                "items": {
+                  "$ref": "subscription.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subscription",
+              "entitlement"
+            ],
+            "properties": {
+              "subscription": {
+                "$ref": "subscription.v1.json"
+              },
+              "entitlement": {
+                "$ref": "entitlement.v1.json"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.entitlement": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/entitlement.v1.json",
+        "title": "BillingEntitlement",
+        "description": "billing.entitlement@1: whether a person is entitled to a streamer's subscriber perks now (OpenVibe.Billing server/ops/subscriptions.js entitlement): GET /api/v1/entitlements/:subject?streamer=, and inside subscription answers. Chained, already-paid future periods extend expires_at.",
+        "type": "object",
+        "required": [
+          "subject",
+          "streamer",
+          "kind",
+          "active",
+          "expires_at",
+          "subscription"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "streamer": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "subscription": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "auto_renew": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "cancel_at_period_end": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "provider": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "billing.intent-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/intent-request.v1.json",
+        "title": "BillingIntentRequest",
+        "description": "billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer }; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "provider",
+              "kind",
+              "subject"
+            ],
+            "properties": {
+              "provider": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_-]{1,39}$",
+                "description": "stripe, paypal, nowpayments, powerchat, ccbill (enabled ones only)."
+              },
+              "kind": {
+                "enum": [
+                  "purchase",
+                  "subscription"
+                ]
+              },
+              "subject": {
+                "description": "Who pays.",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "bits": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Purchase: the Vibes to buy."
+              },
+              "streamer": {
+                "description": "Subscription: the channel's owner (never the payer).",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "route": {
+                "type": "string",
+                "description": "Subscription: direct, or the site route."
+              },
+              "receiving_account": {
+                "type": "string",
+                "description": "Direct PowerChat subscription: the streamer's PowerChat username."
+              },
+              "auto_renew": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "success_url": {
+                "type": "string"
+              },
+              "cancel_url": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "billing.intent-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/intent-result.v1.json",
+        "title": "BillingIntentResult",
+        "description": "billing.intent-result@1: answers of billing.intent.create on OpenVibe.Billing. POST /api/v1/intents → { intent, checkout_url } (null when the provider has no hosted checkout); GET /api/v1/intents/:id → { intent }; POST /api/v1/intents/:id/capture → { result, intent } (the settlement the provider's capture produced).",
+        "type": "object",
+        "required": [
+          "intent"
+        ],
+        "properties": {
+          "intent": {
+            "$ref": "intent.v1.json"
+          },
+          "checkout_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "result": {
+            "description": "Capture: what applying the provider's plan did."
+          }
+        }
+      }
+    },
+    "billing.intent": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/intent.v1.json",
+        "title": "BillingIntent",
+        "description": "billing.intent@1: a checkout intent as OpenVibe.Billing presents it (server/ops/intents.js present): what a person is about to pay a provider for (a Vibes purchase or a channel subscription), priced by Billing.",
+        "type": "object",
+        "required": [
+          "id",
+          "provider",
+          "provider_ref",
+          "kind",
+          "subject",
+          "streamer",
+          "amount_cents",
+          "fee_cents",
+          "bits",
+          "route",
+          "status",
+          "settled_txn",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pi_"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "provider_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "enum": [
+              "purchase",
+              "subscription"
+            ]
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "streamer": {
+            "anyOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "amount_cents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fee_cents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bits": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "route": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "auto_renew": {
+            "type": [
+              "integer",
+              "boolean"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "created, settled, failed, …"
+          },
+          "settled_txn": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "checkout_ref": {
+            "type": "string",
+            "description": "PowerChat only: pcorder:<id> or pcsub:<id>, echoed back by its webhook."
+          }
+        }
+      }
+    },
+    "billing.subscription-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/subscription-request.v1.json",
+        "title": "BillingSubscriptionRequest",
+        "description": "billing.subscription-request@1: the body of POST /api/v1/subscriptions on OpenVibe.Billing (billing.subscription.manage): pay one period of subscriber → streamer, from the subscriber's credit (source credit, the default) or from a provider receipt (source receipt, which also needs billing.ledger.admin: claiming money was received is operator grade). POST /api/v1/subscriptions/:id/cancel (cancels at the period end, with the provider too) and the GETs take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "subscriber",
+              "streamer"
+            ],
+            "properties": {
+              "subscriber": {
+                "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "streamer": {
+                "description": "A user SubjectRef, or its bare id (usr_…). Guests hold no money.",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "source": {
+                "enum": [
+                  "credit",
+                  "receipt"
+                ]
+              },
+              "price_cents": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Default: Billing's subscription price."
+              },
+              "auto_renew": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "receipt": {
+                "type": "object",
+                "required": [
+                  "provider",
+                  "provider_ref"
+                ],
+                "properties": {
+                  "provider": {
+                    "type": "string"
+                  },
+                  "provider_ref": {
+                    "type": "string"
+                  },
+                  "amount_cents": {
+                    "type": [
+                      "integer",
+                      "string"
+                    ],
+                    "minimum": 1,
+                    "pattern": "^[1-9][0-9]*$",
+                    "description": "Cents paid."
+                  },
+                  "fee_cents": {
+                    "type": [
+                      "integer",
+                      "string"
+                    ]
+                  },
+                  "route": {
+                    "type": "string"
+                  },
+                  "subscription_ref": {
+                    "type": "string"
+                  },
+                  "test": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "billing.subscription-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/subscription-result.v1.json",
+        "title": "BillingSubscriptionResult",
+        "description": "billing.subscription-result@1: answers about subscriptions on OpenVibe.Billing. POST /api/v1/subscriptions (201) → { subscription, entitlement, transaction }; POST /api/v1/subscriptions/:id/cancel → { subscription, provider_sync }; GET /api/v1/subscriptions?subscriber=&streamer=&status= → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "subscription"
+            ],
+            "properties": {
+              "subscription": {
+                "$ref": "subscription.v1.json"
+              },
+              "entitlement": {
+                "description": "billing.entitlement@1 (the answer to POST /subscriptions carries the entitlement as booked)."
+              },
+              "transaction": {
+                "$ref": "transaction.v1.json"
+              },
+              "provider_sync": {
+                "type": "string",
+                "description": "not_needed, or how the provider was told."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subscriptions"
+            ],
+            "properties": {
+              "subscriptions": {
+                "type": "array",
+                "items": {
+                  "$ref": "subscription.v1.json"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.subscription": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/subscription.v1.json",
+        "title": "BillingSubscription",
+        "description": "billing.subscription@1: one channel subscription as OpenVibe.Billing presents it (server/ops/subscriptions.js present).",
+        "type": "object",
+        "required": [
+          "id",
+          "subscriber",
+          "streamer",
+          "provider",
+          "status",
+          "auto_renew",
+          "cancel_at_period_end",
+          "current_period_end"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "subscriber": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "streamer": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "tier": {},
+          "provider": {
+            "type": "string",
+            "description": "credit, or the provider that takes the payments."
+          },
+          "provider_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "route": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "site or direct (paid to the streamer's own provider account)."
+          },
+          "status": {
+            "type": "string",
+            "description": "active, canceled, expired, …"
+          },
+          "auto_renew": {
+            "type": "boolean"
+          },
+          "cancel_at_period_end": {
+            "type": "boolean"
+          },
+          "price_cents": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "current_period_end": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "billing.transaction": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/transaction.v1.json",
+        "title": "BillingTransaction",
+        "description": "billing.transaction@1: one journal transaction as OpenVibe.Billing's /api/v1 presents it (server/ledger.js present). Amounts are integers: bits for vibes-bits, cents for usd-cents; each transaction's entries balance per currency. Subjects are bare Network subject ids.",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "status",
+          "test",
+          "reverses_txn",
+          "from_subject",
+          "to_subject",
+          "provider",
+          "receipt_ref",
+          "created_at",
+          "entries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^txn_"
+          },
+          "type": {
+            "enum": [
+              "purchase",
+              "donation",
+              "subscription",
+              "subscription_share",
+              "cashout_request",
+              "cashout_paid",
+              "cashout_denied",
+              "recycle",
+              "refund",
+              "chargeback",
+              "adjustment",
+              "import"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "test": {
+            "type": "boolean",
+            "description": "Test money: never counted."
+          },
+          "reverses_txn": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "from_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "to_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "receipt_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "<provider>:<provider payment id> for money that arrived from a provider."
+          },
+          "actor": {
+            "description": "Who posted it (as recorded)."
+          },
+          "metadata": {
+            "description": "Per type: amount_bits, paid_cents, target EntityRef, message, rates…"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "account",
+                "amount"
+              ],
+              "properties": {
+                "account": {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "currency"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "user_credit",
+                        "creator_payable",
+                        "provider_clearing",
+                        "platform_revenue",
+                        "payouts_pending",
+                        "refunds",
+                        "import_adjustment",
+                        "chargeback_loss",
+                        "fx_conversion"
+                      ]
+                    },
+                    "owner": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "A subject id, a provider slug, or null for a platform account."
+                    },
+                    "currency": {
+                      "enum": [
+                        "vibes-bits",
+                        "usd-cents"
+                      ]
+                    }
+                  }
+                },
+                "amount": {
+                  "type": "integer",
+                  "description": "Signed: negative leaves the account."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "billing.transfer-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/transfer-request.v1.json",
+        "title": "BillingTransferRequest",
+        "description": "billing.transfer-request@1: bodies of billing.transfer.create on OpenVibe.Billing. POST /api/v1/transfers: { from, to, amount, kind?, target?, message? } moves amount bits from the sender's credit to the recipient's payable (a tip, donation or paid interaction; never to oneself). POST /api/v1/transfers/:id/refund: { amount?, reason? } gives a credit-funded donation back (all that remains refundable when amount is absent). Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "amount"
+            ],
+            "properties": {
+              "from": {
+                "description": "The sender (their credit pays).",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "to": {
+                "description": "The recipient (their payable receives).",
+                "anyOf": [
+                  {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                ]
+              },
+              "amount": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Bits."
+              },
+              "kind": {
+                "enum": [
+                  "tip",
+                  "donation",
+                  "paid_interaction"
+                ],
+                "description": "Default donation."
+              },
+              "target": {
+                "$ref": "../common/entity-ref.v1.json",
+                "description": "What the money is for (a stream, a paid message, …)."
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 500
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]*$",
+                "description": "Bits to give back; default all that remains refundable."
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.transfer-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/transfer-result.v1.json",
+        "title": "BillingTransferResult",
+        "description": "billing.transfer-result@1: answers of billing.transfer.create on OpenVibe.Billing (201). POST /api/v1/transfers → { transaction, balance: { credit } } (the sender's credit after it); POST /api/v1/transfers/:id/refund → { transaction } (type refund, reverses_txn the donation).",
+        "type": "object",
+        "required": [
+          "transaction"
+        ],
+        "properties": {
+          "transaction": {
+            "$ref": "transaction.v1.json"
+          },
+          "balance": {
+            "type": "object",
+            "required": [
+              "credit"
+            ],
+            "properties": {
+              "credit": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
     "deals.watch.matched": {
       "version": "1.0.0",
       "owner": "deals",
@@ -17203,6 +18869,305 @@
         }
       }
     },
+    "chat.send-request": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/send-request.v1.json",
+        "title": "ChatSendRequest",
+        "description": "chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "message"
+            ],
+            "properties": {
+              "type": {
+                "const": "chat"
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000,
+                "description": "The text (trimmed by Chat)."
+              },
+              "reply_to_id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "Id of a visible message in the room this replies to (parseInt; an unknown or deleted parent is ignored)."
+              },
+              "auto_delete_minutes": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "Delete the line after this many minutes (clamped to Chat's minimum and maximum; ignored where the channel turned viewer auto-delete off)."
+              },
+              "voiceChannelId": {
+                "type": "string",
+                "description": "The voice channel the sender is in, echoed on the broadcast."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ops"
+            ],
+            "properties": {
+              "boot": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Live's boot id; placeholder message ids are mapped per boot."
+              },
+              "ops": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "op"
+                  ],
+                  "properties": {
+                    "seq": {
+                      "type": "integer",
+                      "description": "Echoed on the result."
+                    },
+                    "op": {
+                      "type": "string",
+                      "description": "A ChatServer method, a bridge-only op, or db (an allow-listed chat-table write named by args[0])."
+                    },
+                    "args": {
+                      "type": "array"
+                    },
+                    "ref": {
+                      "type": "number",
+                      "description": "Live's placeholder id for the row this op inserts."
+                    },
+                    "key": {
+                      "type": "string",
+                      "maxLength": 80,
+                      "description": "Idempotency key: applied once."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "chat.send-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/send-result.v1.json",
+        "title": "ChatSendResult",
+        "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "username",
+              "role",
+              "message",
+              "stream_id",
+              "channel_user_id",
+              "is_global",
+              "timestamp"
+            ],
+            "properties": {
+              "type": {
+                "const": "chat"
+              },
+              "id": {
+                "type": "integer",
+                "description": "The stored message id."
+              },
+              "username": {
+                "type": "string",
+                "description": "Display name, or the anonymous id."
+              },
+              "core_username": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The immutable login handle; null for an anonymous sender."
+              },
+              "user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "anon_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "role": {
+                "type": "string",
+                "description": "The sender's role, anon for an anonymous sender."
+              },
+              "message": {
+                "type": "string"
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "channel_user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "is_global": {
+                "type": "boolean",
+                "description": "true for homepage global chat (no stream, no channel)."
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile_color": {
+                "type": "string"
+              },
+              "filtered": {
+                "type": "boolean"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "auto_delete_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "voiceChannelId": {
+                "type": "string"
+              },
+              "reply_to": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "username",
+                  "message"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "The parent's text, cut to 100 characters."
+                  }
+                }
+              },
+              "nameFX": {
+                "description": "Cosmetic name effect."
+              },
+              "particleFX": {
+                "description": "Cosmetic particle effect."
+              },
+              "hatFX": {
+                "description": "Cosmetic hat."
+              },
+              "voiceFX": {
+                "description": "Cosmetic TTS voice effect."
+              },
+              "tag": {
+                "description": "The sender's equipped tag."
+              },
+              "vip_badge": {
+                "description": "The channel's VIP member badge, when cached; otherwise a chat_vip_badge frame follows."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "message"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "system",
+                  "error"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "results"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "results": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "ok"
+                  ],
+                  "properties": {
+                    "seq": {
+                      "type": "integer"
+                    },
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "result": {},
+                    "code": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
     "live.moderation.action": {
       "version": "1.0.0",
       "owner": "live",
@@ -17357,6 +19322,1289 @@
             "description": "Per action: the fields changed, a bulk action's name and count, … never the content."
           }
         }
+      }
+    },
+    "community.paste-create-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/paste-create-request.v1.json",
+        "title": "CommunityPasteCreateRequest",
+        "description": "community.paste-create-request@1: the body of POST /api/pastes on OpenVibe.Community (community.paste.create). A JSON text paste needs content (non-blank, at most the configured size, 512 KB by default); a multipart body with a `screenshot` image part (PNG, JPEG, WebP or GIF, 8 MB by default; also POST /api/pastes/screenshot) makes an image paste. Visibility other than unlisted or private is public, and an ownerless private paste becomes unlisted. slug (public pastes only), metadata and ai_summary/ai_tags are honoured from a service token only; a browser's are ignored. Unknown fields are ignored. The answer is { id, slug, url, paste } with 201.",
+        "type": "object",
+        "anyOf": [
+          {
+            "required": [
+              "content"
+            ]
+          },
+          {
+            "required": [
+              "screenshot"
+            ]
+          }
+        ],
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The text (trimmed)."
+          },
+          "screenshot": {
+            "type": "string",
+            "contentEncoding": "binary",
+            "description": "Multipart only: the image part."
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Trimmed to 200 characters; Untitled (Screenshot for an image) when blank."
+          },
+          "language": {
+            "type": "string",
+            "description": "A language hint; auto or absent sniffs it from the content."
+          },
+          "visibility": {
+            "type": "string",
+            "description": "public (default), unlisted or private."
+          },
+          "burn_after_read": {
+            "type": [
+              "boolean",
+              "integer",
+              "string"
+            ],
+            "description": "Truthy (true, 1, '1', 'true', 'on'): gone after the first read by someone else."
+          },
+          "is_nsfw": {
+            "type": [
+              "boolean",
+              "integer",
+              "string"
+            ]
+          },
+          "stream_id": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The Live stream it was made during (digits)."
+          },
+          "description": {
+            "type": "string",
+            "description": "Multipart screenshot: the text shown under the image."
+          },
+          "page_url": {
+            "type": "string",
+            "description": "Multipart screenshot: the page it shows."
+          },
+          "user_agent": {
+            "type": "string",
+            "description": "Multipart screenshot: the capturing browser."
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{3,80}$",
+            "description": "Service callers, public pastes only: the slug to use (409 if taken)."
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "string"
+            ],
+            "description": "Service callers only: a JSON object (at most 16 KB)."
+          },
+          "ai_summary": {
+            "type": "string",
+            "description": "Service callers only (cut to 2000 characters)."
+          },
+          "ai_tags": {
+            "description": "Service callers only, with ai_summary: JSON text or a value to serialise."
+          }
+        }
+      }
+    },
+    "community.paste-moderate-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/paste-moderate-request.v1.json",
+        "title": "CommunityPasteModerateRequest",
+        "description": "community.paste-moderate-request@1: bodies of the staff paste routes on OpenVibe.Community (community.paste.moderate; a browser must be staff, a service holds the capability). POST /api/pastes/bulk: { slugs, action } (at most 500 slugs are applied; unknown slugs are skipped). POST /api/pastes/:slug/censor: multipart with the replacement image in `screenshot` (PNG, JPEG or WebP), for a screenshot paste (slug or numeric id). DELETE /api/pastes/:slug/comments/:id (someone else's comment, X-OV-Staff for a service) takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "slugs",
+              "action"
+            ],
+            "properties": {
+              "slugs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "action": {
+                "enum": [
+                  "delete",
+                  "public",
+                  "unlisted",
+                  "private"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "screenshot"
+            ],
+            "properties": {
+              "screenshot": {
+                "type": "string",
+                "contentEncoding": "binary",
+                "description": "The multipart part named screenshot: the censored image."
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "community.paste-moderate-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/paste-moderate-result.v1.json",
+        "title": "CommunityPasteModerateResult",
+        "description": "community.paste-moderate-result@1: answers of the staff paste routes on OpenVibe.Community. POST /api/pastes/bulk → { done, skipped }; POST /api/pastes/:slug/censor → { paste } (the paste with its new image); DELETE /api/pastes/:slug/comments/:id → { message: 'Comment deleted' }. Each action is written to the moderation audit log (community.moderation.action).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "done",
+              "skipped"
+            ],
+            "properties": {
+              "done": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "skipped": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "paste"
+            ],
+            "properties": {
+              "paste": {
+                "$ref": "paste.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "community.paste-write-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/paste-write-request.v1.json",
+        "title": "CommunityPasteWriteRequest",
+        "description": "community.paste-write-request@1: bodies of the paste writes done as the acting person (community.paste.write) on OpenVibe.Community. PUT /api/pastes/:slug (owner or staff): the fields to change, at least one (else 400 Nothing to update); content only on a text paste; pinned only from staff. POST /api/pastes/:slug/comments: { message, parent_id?, anon_name? } (message trimmed, at most 2000 characters; a reply to a reply is refused). DELETE /api/pastes/:slug, DELETE /api/pastes/:slug/comments/:id and POST /api/pastes/:slug/fork|like|copy take no body. Unknown fields are ignored.",
+        "anyOf": [
+          {
+            "type": "object",
+            "minProperties": 1,
+            "properties": {
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "content": {
+                "type": "string"
+              },
+              "language": {
+                "type": "string"
+              },
+              "visibility": {
+                "type": "string",
+                "description": "public, unlisted or private (anything else is public)."
+              },
+              "is_nsfw": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              },
+              "pinned": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ],
+                "description": "Staff only; ignored otherwise."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "parent_id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "The top-level comment this replies to."
+              },
+              "anon_name": {
+                "type": "string",
+                "description": "An anonymous commenter's name (letters, digits, space, _ and -; 32 characters; Anonymous by default)."
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "community.paste-write-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/paste-write-result.v1.json",
+        "title": "CommunityPasteWriteResult",
+        "description": "community.paste-write-result@1: answers of the community.paste.write routes on OpenVibe.Community. PUT /api/pastes/:slug → { paste }; DELETE → { success: true }; POST …/fork → 201 { id, slug, url, paste } (the new paste); POST …/like → { liked, likes } (a toggle); POST …/copy → { copies }; POST …/comments → 201 { comment }; DELETE …/comments/:id → { message }. Refusals are { error } with 400/401/403/404/429.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "paste"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "paste": {
+                "$ref": "paste.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "success"
+            ],
+            "properties": {
+              "success": {
+                "const": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "liked",
+              "likes"
+            ],
+            "properties": {
+              "liked": {
+                "type": "boolean"
+              },
+              "likes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "copies"
+            ],
+            "properties": {
+              "copies": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "comment"
+            ],
+            "properties": {
+              "comment": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "paste_id",
+                  "message",
+                  "created_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "paste_id": {
+                    "type": "integer"
+                  },
+                  "user_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "The author's subject; null for an anonymous comment."
+                  },
+                  "author_subject": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "parent_id": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "anon_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "is_deleted": {
+                    "type": [
+                      "integer",
+                      "boolean"
+                    ]
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "updated_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "username": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "display_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "avatar_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "profile_color": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "community.paste": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/paste.v1.json",
+        "title": "CommunityPaste",
+        "description": "community.paste@1: one paste as OpenVibe.Community's /api/pastes answers it (server/pastes/service.js shape: Media's pastePublic shape plus the author projection). user_id carries the owner's subject id (Community has no numeric user ids), so a falsy user_id still means anonymous. Times are SQLite UTC text. In lists, content is a 300-character preview (null for a screenshot).",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "slug",
+          "user_id",
+          "owner_subject",
+          "origin",
+          "type",
+          "title",
+          "visibility",
+          "url",
+          "raw_url",
+          "created_at",
+          "is_owner"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "app_id": {
+            "const": "community"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The owner's subject (usr_…), or null for an anonymous paste."
+          },
+          "owner_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "description": "user, or ai for a paste an AI service wrote."
+          },
+          "type": {
+            "enum": [
+              "paste",
+              "screenshot"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "language": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "private"
+            ]
+          },
+          "stream_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The Live stream it was made during, when its stream_ref is one."
+          },
+          "stream_ref": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "An EntityRef of where it was made (a Live stream, or a service's own source)."
+          },
+          "screenshot_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "metadata": {
+            "description": "Structured metadata a service attached (AI moments), or a screenshot's upload details."
+          },
+          "burn_after_read": {
+            "type": "boolean"
+          },
+          "forked_from": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unique_views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "copies": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "likes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "is_nsfw": {
+            "type": "boolean"
+          },
+          "ai_summary": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ai_tags": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "JSON text as the AI pass wrote it."
+          },
+          "ai_analyzed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "description": "/p/<slug>"
+          },
+          "raw_url": {
+            "type": "string",
+            "description": "/p/<slug>/raw"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "is_owner": {
+            "type": "boolean",
+            "description": "Whether the caller owns it."
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "OpenVibe AI for an AI paste."
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "profile_color": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "community.moderation-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/moderation-request.v1.json",
+        "title": "CommunityModerationRequest",
+        "description": "community.moderation-request@1: bodies of the discussion moderation routes on OpenVibe.Community (community.comment.moderate; a browser must be a moderator). PUT /api/v1/comments/threads/:id/visibility: { visibility: public | hidden | locked }. PUT /api/v1/spaces/:space/threads/:slug/state: { pinned?, locked? }, at least one. PUT /api/v1/posts/:id: { body } (someone else's post). /api/v1/relay: POST /mappings { space, webhook_url_ref, enabled? } (webhook_url_ref is the NAME of an allow-listed environment variable, never a URL), PUT /mappings/:id { enabled }. DELETE /api/v1/comments/:commentId, DELETE /api/v1/spaces/:space/threads/:slug, DELETE /api/v1/posts/:id, POST /api/v1/relay/deliveries/:id/retry and the GETs take no body. Unknown fields are ignored.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "visibility"
+            ],
+            "properties": {
+              "visibility": {
+                "enum": [
+                  "public",
+                  "hidden",
+                  "locked"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "pinned"
+                ]
+              },
+              {
+                "required": [
+                  "locked"
+                ]
+              }
+            ],
+            "properties": {
+              "pinned": {
+                "description": "Truthy pins the thread."
+              },
+              "locked": {
+                "description": "Truthy locks it (announced as thread.locked / thread.unlocked)."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "body"
+                ]
+              },
+              {
+                "required": [
+                  "body_markdown"
+                ]
+              }
+            ],
+            "properties": {
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40000
+              },
+              "body_markdown": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "space",
+              "webhook_url_ref"
+            ],
+            "properties": {
+              "space": {
+                "type": "string",
+                "description": "The space's slug."
+              },
+              "webhook_url_ref": {
+                "type": "string",
+                "pattern": "^[A-Z0-9_]+$"
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "Default true."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "enabled"
+            ],
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "community.moderation-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/moderation-result.v1.json",
+        "title": "CommunityModerationResult",
+        "description": "community.moderation-result@1: answers of the discussion moderation routes on OpenVibe.Community. PUT …/comments/threads/:id/visibility → { thread } (a comment thread: id, access_id, ref, visibility, comment_count); PUT …/threads/:slug/state → { thread } (a forum thread); PUT /api/v1/posts/:id → { post }; DELETE /api/v1/comments/:commentId and DELETE /api/v1/posts/:id → { ok, id }; deleting a thread (or its opening post) → { ok, id, deleted: 'thread' }; relay: GET /deliveries → { enabled, deliveries }, GET /mappings → { enabled, mappings }, POST|PUT /mappings → { mapping }, POST /deliveries/:id/retry → { ok }. Relay answers never carry a webhook URL.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "thread"
+            ],
+            "properties": {
+              "thread": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": [
+                      "integer",
+                      "string"
+                    ]
+                  },
+                  "access_id": {
+                    "type": "string",
+                    "description": "A comment thread's browser id (cth_…)."
+                  },
+                  "ref": {
+                    "$ref": "../common/entity-ref.v1.json"
+                  },
+                  "visibility": {
+                    "type": "string"
+                  },
+                  "comment_count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "space": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "pinned": {
+                    "type": "boolean"
+                  },
+                  "locked": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "post"
+            ],
+            "properties": {
+              "post": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "thread_id",
+                  "revision",
+                  "deleted"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "thread_id": {
+                    "type": "integer"
+                  },
+                  "is_opening": {
+                    "type": "boolean"
+                  },
+                  "origin": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "body_markdown": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "body_html": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "deleted": {
+                    "type": "boolean"
+                  },
+                  "created_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "updated_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "can_edit": {
+                    "type": "boolean"
+                  },
+                  "attachments": {
+                    "type": "array"
+                  },
+                  "pastes": {
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "id": {
+                "type": "integer"
+              },
+              "deleted": {
+                "const": "thread"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "enabled"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "deliveries"
+                ]
+              },
+              {
+                "required": [
+                  "mappings"
+                ]
+              }
+            ],
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "deliveries": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "mappings": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "mapping"
+            ],
+            "properties": {
+              "mapping": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "space",
+                  "webhook_url_ref",
+                  "webhook_configured",
+                  "enabled"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "space": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string"
+                  },
+                  "webhook_url_ref": {
+                    "type": "string"
+                  },
+                  "webhook_configured": {
+                    "type": "boolean"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "created_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "community.post-write-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/post-write-request.v1.json",
+        "title": "CommunityPostWriteRequest",
+        "description": "community.post-write-request@1: bodies of the forum writes on OpenVibe.Community (community.post.create; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "body"
+                ]
+              },
+              {
+                "required": [
+                  "body_markdown"
+                ]
+              }
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "A new thread's title."
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40000,
+                "description": "Markdown."
+              },
+              "body_markdown": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40000,
+                "description": "Read when body is absent."
+              },
+              "members_only": {
+                "description": "A new thread only: true gates it to the author's own VIP members; { owner: usr_… } (or the subject itself) names the creator (moderators, or the author naming themselves); null or false: open.",
+                "anyOf": [
+                  {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "owner"
+                    ],
+                    "properties": {
+                      "owner": {
+                        "type": "string",
+                        "pattern": "^usr_"
+                      }
+                    }
+                  }
+                ]
+              },
+              "category": {
+                "type": "string",
+                "description": "A new thread only: the slug of one of the space's categories."
+              },
+              "attachments": {
+                "description": "At most 4 images the writer uploaded (POST /api/v1/spaces/:space/attachments) and has not used yet, by media id. People only.",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  {
+                    "type": "array",
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  }
+                ]
+              },
+              "pastes": {
+                "description": "At most 4 shareable pastes (not private, not burn-after-read) by slug or /p/<slug> link: an array, or one string separated by spaces or commas.",
+                "type": [
+                  "array",
+                  "string"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "value": {
+                "enum": [
+                  1,
+                  -1,
+                  0,
+                  "1",
+                  "-1",
+                  "0"
+                ],
+                "description": "A thread vote; 0 takes the vote back."
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "community.pulse-write-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/pulse-write-result.v1.json",
+        "title": "CommunityPulseWriteResult",
+        "description": "community.pulse-write-result@1: answers of the Pulse writes on OpenVibe.Community (community.pulse.write, service tokens only). POST /api/v1/pulse/items → { item, created } (201 when created, 200 when the service's item with that ref was updated); DELETE /api/v1/pulse/items/:service/:type/:id → { removed } (rows removed: 0 or 1). An AI item is labelled AI and names no actor; a system item names none either.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "item",
+              "created"
+            ],
+            "properties": {
+              "created": {
+                "type": "boolean"
+              },
+              "item": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "source",
+                  "title",
+                  "url",
+                  "origin",
+                  "label",
+                  "actor",
+                  "occurred_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "source": {
+                    "type": "object",
+                    "required": [
+                      "service",
+                      "type",
+                      "id"
+                    ],
+                    "properties": {
+                      "service": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "title": {
+                    "type": "string",
+                    "maxLength": 300
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "origin": {
+                    "enum": [
+                      "user",
+                      "ai",
+                      "system"
+                    ]
+                  },
+                  "label": {
+                    "enum": [
+                      "AI",
+                      "System",
+                      null
+                    ]
+                  },
+                  "actor": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "subject": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "username": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "display_name": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "avatar_url": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "profile_color": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  "occurred_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "removed"
+            ],
+            "properties": {
+              "removed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        ]
       }
     }
   }

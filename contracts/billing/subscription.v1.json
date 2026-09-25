@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/subscription.v1.json",
+  "title": "BillingSubscription",
+  "description": "billing.subscription@1: one channel subscription as OpenVibe.Billing presents it (server/ops/subscriptions.js present).",
+  "type": "object",
+  "required": ["id", "subscriber", "streamer", "provider", "status", "auto_renew", "cancel_at_period_end", "current_period_end"],
+  "properties": {
+    "id": { "type": "string" },
+    "subscriber": { "$ref": "../identity/subject-ref.v1.json" },
+    "streamer": { "$ref": "../identity/subject-ref.v1.json" },
+    "tier": {},
+    "provider": { "type": "string", "description": "credit, or the provider that takes the payments." },
+    "provider_ref": { "type": ["string", "null"] },
+    "route": { "type": ["string", "null"], "description": "site or direct (paid to the streamer's own provider account)." },
+    "status": { "type": "string", "description": "active, canceled, expired, …" },
+    "auto_renew": { "type": "boolean" },
+    "cancel_at_period_end": { "type": "boolean" },
+    "price_cents": { "type": ["integer", "null"] },
+    "current_period_end": { "type": ["string", "null"] },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": ["string", "null"] }
+  }
+}

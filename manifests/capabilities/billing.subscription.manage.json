@@ -22,5 +22,7 @@
     "POST /api/v1/subscriptions/:id/cancel",
     "GET /api/v1/subscriptions",
     "GET /api/v1/subscriptions/:id"
-  ]
+  ],
+  "inputSchema": "billing.subscription-request@1",
+  "outputSchema": "billing.subscription-result@1"
 }

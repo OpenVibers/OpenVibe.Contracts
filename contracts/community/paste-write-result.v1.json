@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/paste-write-result.v1.json",
+  "title": "CommunityPasteWriteResult",
+  "description": "community.paste-write-result@1: answers of the community.paste.write routes on OpenVibe.Community. PUT /api/pastes/:slug → { paste }; DELETE → { success: true }; POST …/fork → 201 { id, slug, url, paste } (the new paste); POST …/like → { liked, likes } (a toggle); POST …/copy → { copies }; POST …/comments → 201 { comment }; DELETE …/comments/:id → { message }. Refusals are { error } with 400/401/403/404/429.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": ["paste"],
+      "properties": {
+        "id": { "type": "integer" },
+        "slug": { "type": "string" },
+        "url": { "type": "string" },
+        "paste": { "$ref": "paste.v1.json" }
+      }
+    },
+    { "type": "object", "required": ["success"], "properties": { "success": { "const": true } } },
+    { "type": "object", "required": ["liked", "likes"], "properties": { "liked": { "type": "boolean" }, "likes": { "type": "integer", "minimum": 0 } } },
+    { "type": "object", "required": ["copies"], "properties": { "copies": { "type": "integer", "minimum": 0 } } },
+    {
+      "type": "object",
+      "required": ["comment"],
+      "properties": {
+        "comment": {
+          "type": "object",
+          "required": ["id", "paste_id", "message", "created_at"],
+          "properties": {
+            "id": { "type": "integer" },
+            "paste_id": { "type": "integer" },
+            "user_id": { "type": ["string", "null"], "description": "The author's subject; null for an anonymous comment." },
+            "author_subject": { "type": ["string", "null"] },
+            "parent_id": { "type": ["integer", "null"] },
+            "anon_name": { "type": ["string", "null"] },
+            "message": { "type": "string" },
+            "is_deleted": { "type": ["integer", "boolean"] },
+            "created_at": { "type": "string" },
+            "updated_at": { "type": ["string", "null"] },
+            "username": { "type": ["string", "null"] },
+            "display_name": { "type": ["string", "null"] },
+            "avatar_url": { "type": ["string", "null"] },
+            "profile_color": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    { "type": "object", "required": ["message"], "properties": { "message": { "type": "string" } } }
+  ]
+}

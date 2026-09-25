@@ -23,5 +23,6 @@
     "POST /api/v1/spaces/:space/threads/:slug/votes",
     "PUT|DELETE /api/v1/posts/:id",
     "DELETE /api/v1/spaces/:space/threads/:slug"
-  ]
+  ],
+  "inputSchema": "community.post-write-request@1"
 }

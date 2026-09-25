@@ -17,5 +17,7 @@
     "GET /api/v1/balances/:subject",
     "GET /api/v1/transactions",
     "GET /api/v1/transactions/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "billing.balance-read-result@1"
 }

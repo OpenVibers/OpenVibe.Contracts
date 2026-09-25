@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/transfer-result.v1.json",
+  "title": "BillingTransferResult",
+  "description": "billing.transfer-result@1: answers of billing.transfer.create on OpenVibe.Billing (201). POST /api/v1/transfers → { transaction, balance: { credit } } (the sender's credit after it); POST /api/v1/transfers/:id/refund → { transaction } (type refund, reverses_txn the donation).",
+  "type": "object",
+  "required": [
+    "transaction"
+  ],
+  "properties": {
+    "transaction": {
+      "$ref": "transaction.v1.json"
+    },
+    "balance": {
+      "type": "object",
+      "required": [
+        "credit"
+      ],
+      "properties": {
+        "credit": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

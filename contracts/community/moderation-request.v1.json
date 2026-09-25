@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/moderation-request.v1.json",
+  "title": "CommunityModerationRequest",
+  "description": "community.moderation-request@1: bodies of the discussion moderation routes on OpenVibe.Community (community.comment.moderate; a browser must be a moderator). PUT /api/v1/comments/threads/:id/visibility: { visibility: public | hidden | locked }. PUT /api/v1/spaces/:space/threads/:slug/state: { pinned?, locked? }, at least one. PUT /api/v1/posts/:id: { body } (someone else's post). /api/v1/relay: POST /mappings { space, webhook_url_ref, enabled? } (webhook_url_ref is the NAME of an allow-listed environment variable, never a URL), PUT /mappings/:id { enabled }. DELETE /api/v1/comments/:commentId, DELETE /api/v1/spaces/:space/threads/:slug, DELETE /api/v1/posts/:id, POST /api/v1/relay/deliveries/:id/retry and the GETs take no body. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": ["visibility"],
+      "properties": { "visibility": { "enum": ["public", "hidden", "locked"] } }
+    },
+    {
+      "type": "object",
+      "anyOf": [
+        { "required": ["pinned"] },
+        { "required": ["locked"] }
+      ],
+      "properties": {
+        "pinned": { "description": "Truthy pins the thread." },
+        "locked": { "description": "Truthy locks it (announced as thread.locked / thread.unlocked)." }
+      }
+    },
+    {
+      "type": "object",
+      "anyOf": [
+        { "required": ["body"] },
+        { "required": ["body_markdown"] }
+      ],
+      "properties": {
+        "body": { "type": "string", "minLength": 1, "maxLength": 40000 },
+        "body_markdown": { "type": "string", "minLength": 1, "maxLength": 40000 }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["space", "webhook_url_ref"],
+      "properties": {
+        "space": { "type": "string", "description": "The space's slug." },
+        "webhook_url_ref": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
+        "enabled": { "type": "boolean", "description": "Default true." }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": { "enabled": { "type": "boolean" } }
+    },
+    { "$ref": "../common/no-body.v1.json" }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/paste-moderate-request.v1.json",
+  "title": "CommunityPasteModerateRequest",
+  "description": "community.paste-moderate-request@1: bodies of the staff paste routes on OpenVibe.Community (community.paste.moderate; a browser must be staff, a service holds the capability). POST /api/pastes/bulk: { slugs, action } (at most 500 slugs are applied; unknown slugs are skipped). POST /api/pastes/:slug/censor: multipart with the replacement image in `screenshot` (PNG, JPEG or WebP), for a screenshot paste (slug or numeric id). DELETE /api/pastes/:slug/comments/:id (someone else's comment, X-OV-Staff for a service) takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "slugs",
+        "action"
+      ],
+      "properties": {
+        "slugs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "action": {
+          "enum": [
+            "delete",
+            "public",
+            "unlisted",
+            "private"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "screenshot"
+      ],
+      "properties": {
+        "screenshot": {
+          "type": "string",
+          "contentEncoding": "binary",
+          "description": "The multipart part named screenshot: the censored image."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

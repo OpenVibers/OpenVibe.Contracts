@@ -1,0 +1,1 @@
+{ "ok": true, "results": [{ "seq": 1, "ok": true, "result": null }, { "seq": 2, "ok": false, "code": "capability.denied", "error": "chat.message.send not granted" }] }

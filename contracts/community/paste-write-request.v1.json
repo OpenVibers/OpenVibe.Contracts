@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/paste-write-request.v1.json",
+  "title": "CommunityPasteWriteRequest",
+  "description": "community.paste-write-request@1: bodies of the paste writes done as the acting person (community.paste.write) on OpenVibe.Community. PUT /api/pastes/:slug (owner or staff): the fields to change, at least one (else 400 Nothing to update); content only on a text paste; pinned only from staff. POST /api/pastes/:slug/comments: { message, parent_id?, anon_name? } (message trimmed, at most 2000 characters; a reply to a reply is refused). DELETE /api/pastes/:slug, DELETE /api/pastes/:slug/comments/:id and POST /api/pastes/:slug/fork|like|copy take no body. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string",
+          "description": "public, unlisted or private (anything else is public)."
+        },
+        "is_nsfw": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "pinned": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "Staff only; ignored otherwise."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "parent_id": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "The top-level comment this replies to."
+        },
+        "anon_name": {
+          "type": "string",
+          "description": "An anonymous commenter's name (letters, digits, space, _ and -; 32 characters; Anonymous by default)."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

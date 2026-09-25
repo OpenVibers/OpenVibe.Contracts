@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/post-write-request.v1.json",
+  "title": "CommunityPostWriteRequest",
+  "description": "community.post-write-request@1: bodies of the forum writes on OpenVibe.Community (community.post.create; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "anyOf": [
+        { "required": ["body"] },
+        { "required": ["body_markdown"] }
+      ],
+      "properties": {
+        "title": { "type": "string", "description": "A new thread's title." },
+        "body": { "type": "string", "minLength": 1, "maxLength": 40000, "description": "Markdown." },
+        "body_markdown": { "type": "string", "minLength": 1, "maxLength": 40000, "description": "Read when body is absent." },
+        "members_only": {
+          "description": "A new thread only: true gates it to the author's own VIP members; { owner: usr_… } (or the subject itself) names the creator (moderators, or the author naming themselves); null or false: open.",
+          "anyOf": [
+            { "type": ["boolean", "null"] },
+            { "type": "string", "pattern": "^usr_" },
+            { "type": "object", "required": ["owner"], "properties": { "owner": { "type": "string", "pattern": "^usr_" } } }
+          ]
+        },
+        "category": { "type": "string", "description": "A new thread only: the slug of one of the space's categories." },
+        "attachments": {
+          "description": "At most 4 images the writer uploaded (POST /api/v1/spaces/:space/attachments) and has not used yet, by media id. People only.",
+          "anyOf": [
+            { "type": "string", "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$" },
+            { "type": "array", "maxItems": 4, "items": { "type": "string", "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$" } }
+          ]
+        },
+        "pastes": {
+          "description": "At most 4 shareable pastes (not private, not burn-after-read) by slug or /p/<slug> link: an array, or one string separated by spaces or commas.",
+          "type": ["array", "string"],
+          "items": { "type": "string" }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": { "enum": [1, -1, 0, "1", "-1", "0"], "description": "A thread vote; 0 takes the vote back." }
+      }
+    },
+    { "$ref": "../common/no-body.v1.json" }
+  ]
+}

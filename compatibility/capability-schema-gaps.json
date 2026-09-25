@@ -29,62 +29,6 @@
       ]
     },
     {
-      "id": "billing.balance.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.cashout.manage",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.cashout.request",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.entitlement.check",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.intent.create",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.ledger.admin",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.subscription.manage",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "billing.transfer.create",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
       "id": "blog.blog.configure",
       "missing": [
         "inputSchema",
@@ -169,13 +113,6 @@
       ]
     },
     {
-      "id": "chat.message.send",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
       "id": "codes.release.manage",
       "missing": [
         "outputSchema"
@@ -183,63 +120,6 @@
     },
     {
       "id": "codes.release.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "community.comment.moderate",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "community.paste.create",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "community.paste.moderate",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "community.paste.write",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "community.post.create",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "community.pulse.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "community.pulse.write",
-      "missing": [
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "community.space.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "community.thread.read",
       "missing": [
         "inputSchema"
       ]

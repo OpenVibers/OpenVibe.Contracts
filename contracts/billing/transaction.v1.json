@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/transaction.v1.json",
+  "title": "BillingTransaction",
+  "description": "billing.transaction@1: one journal transaction as OpenVibe.Billing's /api/v1 presents it (server/ledger.js present). Amounts are integers: bits for vibes-bits, cents for usd-cents; each transaction's entries balance per currency. Subjects are bare Network subject ids.",
+  "type": "object",
+  "required": ["id", "type", "status", "test", "reverses_txn", "from_subject", "to_subject", "provider", "receipt_ref", "created_at", "entries"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^txn_" },
+    "type": { "enum": ["purchase", "donation", "subscription", "subscription_share", "cashout_request", "cashout_paid", "cashout_denied", "recycle", "refund", "chargeback", "adjustment", "import"] },
+    "status": { "type": "string" },
+    "test": { "type": "boolean", "description": "Test money: never counted." },
+    "reverses_txn": { "type": ["string", "null"] },
+    "from_subject": { "type": ["string", "null"] },
+    "to_subject": { "type": ["string", "null"] },
+    "provider": { "type": ["string", "null"] },
+    "receipt_ref": { "type": ["string", "null"], "description": "<provider>:<provider payment id> for money that arrived from a provider." },
+    "actor": { "description": "Who posted it (as recorded)." },
+    "metadata": { "description": "Per type: amount_bits, paid_cents, target EntityRef, message, rates…" },
+    "created_at": { "type": "string" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["account", "amount"],
+        "properties": {
+          "account": {
+            "type": "object",
+            "required": ["kind", "currency"],
+            "properties": {
+              "kind": { "enum": ["user_credit", "creator_payable", "provider_clearing", "platform_revenue", "payouts_pending", "refunds", "import_adjustment", "chargeback_loss", "fx_conversion"] },
+              "owner": { "type": ["string", "null"], "description": "A subject id, a provider slug, or null for a platform account." },
+              "currency": { "enum": ["vibes-bits", "usd-cents"] }
+            }
+          },
+          "amount": { "type": "integer", "description": "Signed: negative leaves the account." }
+        }
+      }
+    }
+  }
+}

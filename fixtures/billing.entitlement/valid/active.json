@@ -1,0 +1,1 @@
+{ "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" }, "streamer": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" }, "kind": "channel_subscription", "active": true, "expires_at": "2026-10-25T18:00:00.000Z", "subscription": { "id": "sub_01JAB2C3D4E5F6G7H8J9K0MNPW", "status": "active", "auto_renew": 1, "cancel_at_period_end": 0, "provider": "credit" } }

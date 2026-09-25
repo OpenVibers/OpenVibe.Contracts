@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/entitlement.v1.json",
+  "title": "BillingEntitlement",
+  "description": "billing.entitlement@1: whether a person is entitled to a streamer's subscriber perks now (OpenVibe.Billing server/ops/subscriptions.js entitlement): GET /api/v1/entitlements/:subject?streamer=, and inside subscription answers. Chained, already-paid future periods extend expires_at.",
+  "type": "object",
+  "required": ["subject", "streamer", "kind", "active", "expires_at", "subscription"],
+  "properties": {
+    "subject": { "$ref": "../identity/subject-ref.v1.json" },
+    "streamer": { "$ref": "../identity/subject-ref.v1.json" },
+    "kind": { "type": "string" },
+    "active": { "type": "boolean" },
+    "expires_at": { "type": ["string", "null"] },
+    "subscription": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "type": "string" },
+        "auto_renew": { "type": ["boolean", "integer"] },
+        "cancel_at_period_end": { "type": ["boolean", "integer"] },
+        "provider": { "type": "string" }
+      }
+    }
+  }
+}

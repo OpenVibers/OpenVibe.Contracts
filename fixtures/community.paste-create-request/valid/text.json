@@ -1,0 +1,1 @@
+{ "title": "ffmpeg restream flags", "content": "ffmpeg -re -i in.flv -c copy -f flv rtmp://example/live", "language": "auto", "visibility": "unlisted", "stream_id": "812" }

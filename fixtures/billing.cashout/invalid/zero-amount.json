@@ -1,0 +1,1 @@
+{ "id": "co_1", "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" }, "amount_bits": 0, "value_cents": 0, "status": "requested", "payout_method": null, "escrow_until": "x", "request_txn": "t", "created_at": "x" }

@@ -1,0 +1,1 @@
+{ "provider": "stripe", "kind": "purchase", "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ", "bits": 1000, "success_url": "https://openvibe.live/wallet?ok=1" }

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/cashout-result.v1.json",
+  "title": "BillingCashoutResult",
+  "description": "billing.cashout-result@1: answers about cashouts on OpenVibe.Billing. POST /api/v1/cashouts (201), GET /api/v1/cashouts/:id, POST /api/v1/cashouts/:id/approve and /deny → { cashout }; GET /api/v1/cashouts?status=&subject=&limit= → { cashouts }; POST /api/v1/recycle (201) → { transaction, balance }. A cashout the Events stream carries names the payout method's type only; this API answers the caller who may see the address.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "cashout"
+      ],
+      "properties": {
+        "cashout": {
+          "$ref": "cashout.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "cashouts"
+      ],
+      "properties": {
+        "cashouts": {
+          "type": "array",
+          "items": {
+            "$ref": "cashout.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "transaction",
+        "balance"
+      ],
+      "properties": {
+        "transaction": {
+          "$ref": "transaction.v1.json"
+        },
+        "balance": {
+          "$ref": "balance.v1.json"
+        }
+      }
+    }
+  ]
+}

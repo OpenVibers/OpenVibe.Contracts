@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/intent.v1.json",
+  "title": "BillingIntent",
+  "description": "billing.intent@1: a checkout intent as OpenVibe.Billing presents it (server/ops/intents.js present): what a person is about to pay a provider for (a Vibes purchase or a channel subscription), priced by Billing.",
+  "type": "object",
+  "required": ["id", "provider", "provider_ref", "kind", "subject", "streamer", "amount_cents", "fee_cents", "bits", "route", "status", "settled_txn", "created_at"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^pi_" },
+    "provider": { "type": "string" },
+    "provider_ref": { "type": ["string", "null"] },
+    "kind": { "enum": ["purchase", "subscription"] },
+    "subject": { "$ref": "../identity/subject-ref.v1.json" },
+    "streamer": { "anyOf": [{ "$ref": "../identity/subject-ref.v1.json" }, { "type": "null" }] },
+    "amount_cents": { "type": "integer", "minimum": 0 },
+    "fee_cents": { "type": "integer", "minimum": 0 },
+    "bits": { "type": "integer", "minimum": 0 },
+    "route": { "type": ["string", "null"] },
+    "auto_renew": { "type": ["integer", "boolean"] },
+    "status": { "type": "string", "description": "created, settled, failed, …" },
+    "settled_txn": { "type": ["string", "null"] },
+    "created_at": { "type": "string" },
+    "checkout_ref": { "type": "string", "description": "PowerChat only: pcorder:<id> or pcsub:<id>, echoed back by its webhook." }
+  }
+}

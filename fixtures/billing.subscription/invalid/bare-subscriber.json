@@ -1,0 +1,1 @@
+{ "id": "sub_1", "subscriber": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ", "streamer": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" }, "provider": "credit", "status": "active", "auto_renew": true, "cancel_at_period_end": false, "current_period_end": null }

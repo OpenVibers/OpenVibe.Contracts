@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/moderation-result.v1.json",
+  "title": "CommunityModerationResult",
+  "description": "community.moderation-result@1: answers of the discussion moderation routes on OpenVibe.Community. PUT …/comments/threads/:id/visibility → { thread } (a comment thread: id, access_id, ref, visibility, comment_count); PUT …/threads/:slug/state → { thread } (a forum thread); PUT /api/v1/posts/:id → { post }; DELETE /api/v1/comments/:commentId and DELETE /api/v1/posts/:id → { ok, id }; deleting a thread (or its opening post) → { ok, id, deleted: 'thread' }; relay: GET /deliveries → { enabled, deliveries }, GET /mappings → { enabled, mappings }, POST|PUT /mappings → { mapping }, POST /deliveries/:id/retry → { ok }. Relay answers never carry a webhook URL.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": ["thread"],
+      "properties": {
+        "thread": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": { "type": ["integer", "string"] },
+            "access_id": { "type": "string", "description": "A comment thread's browser id (cth_…)." },
+            "ref": { "$ref": "../common/entity-ref.v1.json" },
+            "visibility": { "type": "string" },
+            "comment_count": { "type": ["integer", "null"] },
+            "space": { "type": "string" },
+            "slug": { "type": "string" },
+            "title": { "type": "string" },
+            "pinned": { "type": "boolean" },
+            "locked": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["post"],
+      "properties": {
+        "post": {
+          "type": "object",
+          "required": ["id", "thread_id", "revision", "deleted"],
+          "properties": {
+            "id": { "type": "integer" },
+            "thread_id": { "type": "integer" },
+            "is_opening": { "type": "boolean" },
+            "origin": { "type": "string" },
+            "author": { "type": ["object", "null"] },
+            "body_markdown": { "type": ["string", "null"] },
+            "body_html": { "type": ["string", "null"] },
+            "revision": { "type": "integer" },
+            "deleted": { "type": "boolean" },
+            "created_at": { "type": ["string", "null"] },
+            "updated_at": { "type": ["string", "null"] },
+            "can_edit": { "type": "boolean" },
+            "attachments": { "type": "array" },
+            "pastes": { "type": "array" }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["ok"],
+      "properties": {
+        "ok": { "const": true },
+        "id": { "type": "integer" },
+        "deleted": { "const": "thread" }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["enabled"],
+      "anyOf": [
+        { "required": ["deliveries"] },
+        { "required": ["mappings"] }
+      ],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "deliveries": { "type": "array", "items": { "type": "object" } },
+        "mappings": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["mapping"],
+      "properties": {
+        "mapping": {
+          "type": "object",
+          "required": ["id", "space", "webhook_url_ref", "webhook_configured", "enabled"],
+          "properties": {
+            "id": { "type": "integer" },
+            "space": { "type": "string" },
+            "direction": { "type": "string" },
+            "webhook_url_ref": { "type": "string" },
+            "webhook_configured": { "type": "boolean" },
+            "enabled": { "type": "boolean" },
+            "created_at": { "type": ["string", "null"] }
+          }
+        }
+      }
+    }
+  ]
+}

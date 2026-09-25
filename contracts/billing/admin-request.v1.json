@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/admin-request.v1.json",
+  "title": "BillingAdminRequest",
+  "description": "billing.admin-request@1: bodies of billing.ledger.admin on OpenVibe.Billing (operators). POST /api/v1/admin/freeze: { on, reason? } (unfreezing processes the provider deliveries stored meanwhile; allowed while frozen). POST /api/v1/admin/adjustments: { from, to, amount, reason, relates_to? } moves value between two accounts of one currency. POST /api/v1/purchases/settle: { provider, provider_ref, subject?, amount_cents, bits, intent_id?, test? } books a provider receipt. POST /api/v1/admin/provider-events/:id/reprocess, POST /api/v1/admin/sweep and the GETs (freeze, reconcile, provider-events, import-holds) take no body. Adjustments and settlements need an Idempotency-Key and are refused while frozen.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "on"
+      ],
+      "properties": {
+        "on": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "amount",
+        "reason"
+      ],
+      "properties": {
+        "from": {
+          "type": "object",
+          "required": [
+            "kind",
+            "currency"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "user_credit",
+                "creator_payable",
+                "provider_clearing",
+                "platform_revenue",
+                "payouts_pending",
+                "refunds",
+                "import_adjustment",
+                "chargeback_loss",
+                "fx_conversion"
+              ]
+            },
+            "owner": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "currency": {
+              "enum": [
+                "vibes-bits",
+                "usd-cents"
+              ]
+            }
+          }
+        },
+        "to": {
+          "type": "object",
+          "required": [
+            "kind",
+            "currency"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "user_credit",
+                "creator_payable",
+                "provider_clearing",
+                "platform_revenue",
+                "payouts_pending",
+                "refunds",
+                "import_adjustment",
+                "chargeback_loss",
+                "fx_conversion"
+              ]
+            },
+            "owner": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "currency": {
+              "enum": [
+                "vibes-bits",
+                "usd-cents"
+              ]
+            }
+          }
+        },
+        "amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "In the accounts' currency (at most 1,000,000,000)."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "relates_to": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "provider",
+        "provider_ref"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "provider_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The provider's payment id."
+        },
+        "subject": {
+          "description": "Who the Vibes are for.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "amount_cents": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Cents paid."
+        },
+        "bits": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "description": "Vibes to credit."
+        },
+        "intent_id": {
+          "type": "string"
+        },
+        "test": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

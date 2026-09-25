@@ -18,5 +18,6 @@
   ],
   "implementedBy": [
     "POST /api/pastes (Community)"
-  ]
+  ],
+  "inputSchema": "community.paste-create-request@1"
 }

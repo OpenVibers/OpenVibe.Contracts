@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/entitlement-result.v1.json",
+  "title": "BillingEntitlementResult",
+  "description": "billing.entitlement-result@1: answers of billing.entitlement.check on OpenVibe.Billing. GET /api/v1/entitlements/:subject?streamer= → billing.entitlement@1; without streamer → { subject, entitlements } (every active one); GET /api/v1/subscriptions → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.",
+  "anyOf": [
+    {
+      "$ref": "entitlement.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "subject",
+        "entitlements"
+      ],
+      "properties": {
+        "subject": {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        "entitlements": {
+          "type": "array",
+          "items": {
+            "$ref": "entitlement.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "subscriptions"
+      ],
+      "properties": {
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "subscription.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "subscription",
+        "entitlement"
+      ],
+      "properties": {
+        "subscription": {
+          "$ref": "subscription.v1.json"
+        },
+        "entitlement": {
+          "$ref": "entitlement.v1.json"
+        }
+      }
+    }
+  ]
+}

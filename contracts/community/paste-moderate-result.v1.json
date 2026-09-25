@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/paste-moderate-result.v1.json",
+  "title": "CommunityPasteModerateResult",
+  "description": "community.paste-moderate-result@1: answers of the staff paste routes on OpenVibe.Community. POST /api/pastes/bulk → { done, skipped }; POST /api/pastes/:slug/censor → { paste } (the paste with its new image); DELETE /api/pastes/:slug/comments/:id → { message: 'Comment deleted' }. Each action is written to the moderation audit log (community.moderation.action).",
+  "anyOf": [
+    { "type": "object", "required": ["done", "skipped"], "properties": { "done": { "type": "integer", "minimum": 0 }, "skipped": { "type": "integer", "minimum": 0 } } },
+    { "type": "object", "required": ["paste"], "properties": { "paste": { "$ref": "paste.v1.json" } } },
+    { "type": "object", "required": ["message"], "properties": { "message": { "type": "string" } } }
+  ]
+}

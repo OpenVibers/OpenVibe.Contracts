@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/pulse-write-result.v1.json",
+  "title": "CommunityPulseWriteResult",
+  "description": "community.pulse-write-result@1: answers of the Pulse writes on OpenVibe.Community (community.pulse.write, service tokens only). POST /api/v1/pulse/items → { item, created } (201 when created, 200 when the service's item with that ref was updated); DELETE /api/v1/pulse/items/:service/:type/:id → { removed } (rows removed: 0 or 1). An AI item is labelled AI and names no actor; a system item names none either.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": ["item", "created"],
+      "properties": {
+        "created": { "type": "boolean" },
+        "item": {
+          "type": "object",
+          "required": ["id", "source", "title", "url", "origin", "label", "actor", "occurred_at"],
+          "properties": {
+            "id": { "type": "integer" },
+            "source": {
+              "type": "object",
+              "required": ["service", "type", "id"],
+              "properties": {
+                "service": { "type": "string" },
+                "type": { "type": "string" },
+                "id": { "type": "string" }
+              }
+            },
+            "title": { "type": "string", "maxLength": 300 },
+            "url": { "type": "string" },
+            "origin": { "enum": ["user", "ai", "system"] },
+            "label": { "enum": ["AI", "System", null] },
+            "actor": {
+              "type": ["object", "null"],
+              "properties": {
+                "subject": { "type": ["string", "null"] },
+                "username": { "type": ["string", "null"] },
+                "display_name": { "type": ["string", "null"] },
+                "avatar_url": { "type": ["string", "null"] },
+                "profile_color": { "type": ["string", "null"] }
+              }
+            },
+            "occurred_at": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["removed"],
+      "properties": { "removed": { "type": "integer", "minimum": 0, "maximum": 1 } }
+    }
+  ]
+}
