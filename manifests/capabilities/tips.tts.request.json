@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/tts-requests"
-  ]
+  ],
+  "inputSchema": "tips.paid-request@1",
+  "outputSchema": "tips.paid-result@1"
 }

@@ -1,0 +1,12 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "provider": "powerchat",
+  "provider_ref": "pcevt_7730021",
+  "amount_cents": 500,
+  "supporter_name": "moosefan",
+  "message": "Love the stream",
+  "announce": false
+}

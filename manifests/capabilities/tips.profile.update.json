@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "PATCH /api/v1/profiles/:creator"
-  ]
+  ],
+  "inputSchema": "tips.profile-update-request@1",
+  "outputSchema": "tips.profile-result@1"
 }

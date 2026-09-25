@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/overlay-config-request.v1.json",
+  "title": "TipsOverlayConfigRequest",
+  "description": "tips.overlay-config-request@1: bodies of tips.overlay.config.update on OpenVibe.Tips. POST /api/v1/overlay-configs: { kind, creator?, name?, goal_id?, …settings } creates a config (kind alerts or goal; settings a kind does not use are ignored; a service names the creator). PATCH /api/v1/overlay-configs/:id: { revision?, name?, goal_id?, …settings } changes one (revision, when given, must be current: 409 tips.revision_conflict); open overlays using it receive the change at once. The settings are top-level fields. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (a bad kind or an out-of-range setting) or tips.text_too_long; 404 tips.goal_not_found, tips.overlay_config_not_found or tips.creator_not_found; 403 capability.denied or tips.forbidden. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "alerts",
+            "goal"
+          ]
+        },
+        "creator": {
+          "description": "The creator (default: the signed-in person).",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "A usr_ id or the creator's Tips handle."
+            }
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "goal_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "goal: the goal it shows."
+        },
+        "min_amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "maximum": 10000000,
+          "description": "alerts: the smallest tip that alerts (1 to 10000000)."
+        },
+        "duration_ms": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1000,
+          "maximum": 60000,
+          "pattern": "^[0-9]+$",
+          "description": "alerts: 1000 to 60000."
+        },
+        "show_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "alerts"
+        },
+        "show_amount": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "alerts"
+        },
+        "speak_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "alerts"
+        },
+        "sound_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://",
+          "description": "alerts: an https URL; empty or null clears it."
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://",
+          "description": "alerts: an https URL; empty or null clears it."
+        },
+        "template": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120,
+          "description": "alerts: e.g. {name} tipped {amount} Vibes."
+        },
+        "show_amounts": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "goal"
+        },
+        "show_percent": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "goal"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "goal_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "goal: the goal it shows; empty or null clears it."
+        },
+        "min_amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "maximum": 10000000,
+          "description": "alerts: the smallest tip that alerts (1 to 10000000)."
+        },
+        "duration_ms": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1000,
+          "maximum": 60000,
+          "pattern": "^[0-9]+$",
+          "description": "alerts: 1000 to 60000."
+        },
+        "show_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "alerts"
+        },
+        "show_amount": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "alerts"
+        },
+        "speak_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "alerts"
+        },
+        "sound_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://",
+          "description": "alerts: an https URL; empty or null clears it."
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://",
+          "description": "alerts: an https URL; empty or null clears it."
+        },
+        "template": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120,
+          "description": "alerts: e.g. {name} tipped {amount} Vibes."
+        },
+        "show_amounts": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "goal"
+        },
+        "show_percent": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "goal"
+        }
+      }
+    }
+  ]
+}

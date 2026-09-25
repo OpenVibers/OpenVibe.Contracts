@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/creators/:ref/members"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vip.members-result@1"
 }

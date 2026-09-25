@@ -20,5 +20,7 @@
     "GET /api/v1/moderation/log",
     "POST /api/v1/interactions/:id/hide",
     "POST /api/v1/interactions/:id/restore"
-  ]
+  ],
+  "inputSchema": "tips.moderation-request@1",
+  "outputSchema": "tips.moderation-result@1"
 }

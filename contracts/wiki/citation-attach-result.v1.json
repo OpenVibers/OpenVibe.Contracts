@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/citation-attach-result.v1.json",
+  "title": "WikiCitationAttachResult",
+  "description": "wiki.citation-attach-result@1: the answer of POST /api/v1/pages/:id/revisions/:n/citations on OpenVibe.Wiki: 201 { citations } (the citations attached).",
+  "type": "object",
+  "required": [
+    "citations"
+  ],
+  "properties": {
+    "citations": {
+      "type": "array",
+      "items": {
+        "$ref": "citation.v1.json"
+      }
+    }
+  }
+}

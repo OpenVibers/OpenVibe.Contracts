@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/plan.v1.json",
+  "title": "VipPlan",
+  "description": "vip.plan@1: a membership plan on OpenVibe.VIP (server/domain/plans.js present). status draft (not offered), published (what new members buy) or archived (no new members; existing members keep their terms until Billing ends their membership). current_version is the published terms; draft_version is a newer unpublished version, if any. purchasable: published and sold through a Billing product (billing_kind). The API adds creator to a single plan it answers about.",
+  "type": "object",
+  "required": [
+    "id",
+    "creator_id",
+    "slug",
+    "status",
+    "billing_kind",
+    "purchasable",
+    "current_version",
+    "draft_version",
+    "created_at",
+    "updated_at",
+    "archived_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "creator_id": {
+      "type": "string",
+      "pattern": "^(vcr_[0-9A-HJKMNP-TV-Z]{26}|network)$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,47}$"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ]
+    },
+    "billing_kind": {
+      "enum": [
+        "channel_subscription",
+        null
+      ],
+      "description": "The Billing product that sells it; null for a plan Billing does not sell (network plans)."
+    },
+    "purchasable": {
+      "type": "boolean"
+    },
+    "current_version": {
+      "anyOf": [
+        {
+          "$ref": "plan-version.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "draft_version": {
+      "anyOf": [
+        {
+          "$ref": "plan-version.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "archived_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "creator": {
+      "$ref": "creator.v1.json",
+      "description": "Present when the API answers about one plan (GET/POST/PATCH /api/v1/plans…)."
+    }
+  }
+}

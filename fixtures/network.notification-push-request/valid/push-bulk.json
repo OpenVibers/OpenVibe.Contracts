@@ -1,0 +1,13 @@
+{
+  "user_ids": [
+    1042,
+    2210,
+    3301
+  ],
+  "type": "STREAM_LIVE",
+  "title": "Maintenance tonight",
+  "message": "Streams restart at 03:00 UTC.",
+  "category": "system",
+  "priority": "high",
+  "service": "live"
+}

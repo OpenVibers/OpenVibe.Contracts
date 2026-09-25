@@ -1,0 +1,19 @@
+{
+  "id": "vgr_01JAB2C3D4E5F6G7H8J9K0MNPY",
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "creator_id": "vcr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "resource": {
+    "service": "blog",
+    "type": "post",
+    "id": "pst_01JAB2C3D4E5F6G7H8J9K0MNPZ"
+  },
+  "requirement": "perk",
+  "plan_id": null,
+  "perk_key": "chat-badge",
+  "sensitive": false,
+  "status": "active",
+  "updated_at": "2026-09-20T18:04:11.402Z"
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/space-write-request.v1.json",
+  "title": "WikiSpaceWriteRequest",
+  "description": "wiki.space-write-request@1: bodies of wiki.space.create on OpenVibe.Wiki. POST /api/v1/spaces: { name, slug?, description?, kind?, visibility? } (the slug defaults from the name: 2-63 lowercase letters, digits and dashes; kind official is for staff; visibility public, members or private). PATCH /api/v1/spaces/:space: { name?, description?, visibility?, slug? } (an owner; a retired slug keeps leading to its old space). PUT /api/v1/spaces/:space/roles/:subject: { role: owner | editor | viewer | null } (an owner; null removes; a user space keeps at least one owner).",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "official",
+            "user"
+          ]
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "members",
+            "private"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "owner",
+            "editor",
+            "viewer",
+            null
+          ]
+        }
+      }
+    }
+  ]
+}

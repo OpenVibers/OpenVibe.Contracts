@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/coins-transfer-result.v1.json",
+  "title": "NetworkCoinsTransferResult",
+  "description": "network.coins-transfer-result@1: the answer of network.coins.transfer on OpenVibe.Network. POST /internal/coins/transfer → { from_balance, to_balance }: both wallets right after the transfer (a replayed idempotency_key answers the balances of the original transfer). Refusals are listed on network.coins-transfer-request@1.",
+  "type": "object",
+  "required": [
+    "from_balance",
+    "to_balance"
+  ],
+  "properties": {
+    "from_balance": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "to_balance": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

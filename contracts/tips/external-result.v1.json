@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/external-result.v1.json",
+  "title": "TipsExternalResult",
+  "description": "tips.external-result@1: the answer of tips.interaction.record on OpenVibe.Tips. POST /api/v1/interactions/external → { interaction, duplicate } (201 when recorded; 200 with duplicate true when that provider_ref was recorded before, answering the first interaction). The interaction is funding external, settlement external, in the service view.",
+  "type": "object",
+  "required": [
+    "interaction",
+    "duplicate"
+  ],
+  "properties": {
+    "interaction": {
+      "$ref": "interaction.v1.json"
+    },
+    "duplicate": {
+      "type": "boolean"
+    }
+  }
+}

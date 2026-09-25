@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/perk.v1.json",
+  "title": "VipPerk",
+  "description": "vip.perk@1: a perk on OpenVibe.VIP (server/domain/perks.js present): a benefit a creator (or the network) defines once and includes in plan versions, with its product bindings (how a product recognises it: Live's chat badge, a Chat room, a gated Blog post, …). Editing a perk never rewrites the plan versions that include it.",
+  "type": "object",
+  "required": [
+    "id",
+    "key",
+    "name",
+    "description",
+    "kind",
+    "status",
+    "scope",
+    "creator_id",
+    "bindings",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vpk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,47}$"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "kind": {
+      "enum": [
+        "badge",
+        "emote",
+        "gated_content",
+        "room",
+        "role",
+        "other"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "retired"
+      ]
+    },
+    "scope": {
+      "enum": [
+        "creator",
+        "network"
+      ]
+    },
+    "creator_id": {
+      "type": "string",
+      "pattern": "^(vcr_[0-9A-HJKMNP-TV-Z]{26}|network)$"
+    },
+    "bindings": {
+      "type": "array",
+      "description": "Active bindings, by product then binding.",
+      "items": {
+        "type": "object",
+        "required": [
+          "product",
+          "binding",
+          "config"
+        ],
+        "properties": {
+          "product": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "binding": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]{1,63}$"
+          },
+          "config": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /internal/coins/credit"
-  ]
+  ],
+  "inputSchema": "network.coins-change-request@1",
+  "outputSchema": "network.coins-balance-result@1"
 }

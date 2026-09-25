@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/page-write-result.v1.json",
+  "title": "WikiPageWriteResult",
+  "description": "wiki.page-write-result@1: answers of wiki.page.create on OpenVibe.Wiki. Creating a page → 201 { page, revision, citations }; a new revision → { page, revision, created, citations } (201 when a revision was made, 200 when nothing changed); PATCH and DELETE /api/v1/pages/:id → { page }; POST …/media → 201 { attachment }; POST …/media/verify → { results }; POST …/import → 201 { space, published, skipped, created } (each created page with its revision number).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "page",
+        "revision"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "page.v1.json"
+        },
+        "revision": {
+          "$ref": "revision.v1.json"
+        },
+        "created": {
+          "type": "boolean"
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "citation.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "page"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "page.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "attachment"
+      ],
+      "properties": {
+        "attachment": {
+          "type": "object",
+          "required": [
+            "id",
+            "media_id"
+          ],
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "media_id": {
+              "type": "string"
+            },
+            "alt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "caption": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "state": {
+              "type": "string"
+            },
+            "broken_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "checked_at": {},
+            "attached_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "results"
+      ],
+      "properties": {
+        "results": {
+          "type": "array"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "space",
+        "created"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "space.v1.json"
+        },
+        "published": {},
+        "skipped": {},
+        "created": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "revision"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/overlay-token.v1.json",
+  "title": "TipsOverlayToken",
+  "description": "tips.overlay-token@1: an overlay token on OpenVibe.Tips (server/domain/overlays.js presentToken), without its secret: a scoped, revocable credential an OBS browser source holds in its URL (scopes alerts, goals), optionally bound to one overlay config. Never a creator cookie; only its hash is stored.",
+  "type": "object",
+  "required": [
+    "id",
+    "creator",
+    "scopes",
+    "label",
+    "config_id",
+    "created_at",
+    "last_used_at",
+    "revoked_at",
+    "active"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tovt_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "creator": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "alerts",
+          "goals"
+        ]
+      }
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "config_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "last_used_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "active": {
+      "type": "boolean"
+    }
+  }
+}

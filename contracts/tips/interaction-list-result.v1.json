@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/interaction-list-result.v1.json",
+  "title": "TipsInteractionListResult",
+  "description": "tips.interaction-list-result@1: answers of tips.interaction.list on OpenVibe.Tips. GET /api/v1/interactions?creator=&supporter=&include_test=&cursor=&limit= → { interactions, next_cursor }: newest first, at most 200 a page (50 by default); a service names a creator or a supporter (422 tips.invalid_input otherwise); a person gets their own receipts, or with ?as=creator the tips they received. include_test=0 leaves simulations out. GET /api/v1/profiles/:creator/totals → { creator, totals }: derived from settled interactions; settled_via_billing is what must equal Billing's books (minus what Billing took back), external and simulations are reported apart.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "interactions",
+        "next_cursor"
+      ],
+      "properties": {
+        "interactions": {
+          "type": "array",
+          "items": {
+            "$ref": "interaction.v1.json"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "creator",
+        "totals"
+      ],
+      "properties": {
+        "creator": {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        "totals": {
+          "type": "object",
+          "required": [
+            "currency",
+            "settled_via_billing",
+            "external",
+            "interactions",
+            "simulations",
+            "pending"
+          ],
+          "properties": {
+            "currency": {
+              "const": "vibes-bits"
+            },
+            "settled_via_billing": {
+              "type": "integer",
+              "description": "Bits settled through Billing (or imported from Live's ledger), less reversals."
+            },
+            "external": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Bits of EXTERNAL tips (the creator's own PowerChat): no Billing liability."
+            },
+            "interactions": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Settled or reversed interactions, simulations excluded."
+            },
+            "simulations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "pending": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/interactions/external"
-  ]
+  ],
+  "inputSchema": "tips.external-request@1",
+  "outputSchema": "tips.external-result@1"
 }

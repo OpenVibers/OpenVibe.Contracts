@@ -1,0 +1,11 @@
+{
+  "user_id": 1042,
+  "type": "FOLLOW",
+  "title": "New follower",
+  "message": "moosefan followed you",
+  "sender_id": 2210,
+  "sender_name": "moosefan",
+  "service": "live",
+  "url": "https://openvibe.live/@moosefan",
+  "actor_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+}

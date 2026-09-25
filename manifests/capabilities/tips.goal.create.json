@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/goals"
-  ]
+  ],
+  "inputSchema": "tips.goal-create-request@1",
+  "outputSchema": "tips.goal-result@1"
 }

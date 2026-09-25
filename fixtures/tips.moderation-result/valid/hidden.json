@@ -1,0 +1,39 @@
+{
+  "interaction": {
+    "id": "tint_01JAB2C3D4E5F6G7H8J9K0MNQ5",
+    "kind": "paid_message",
+    "created_at": "2026-09-25T09:12:40.118Z",
+    "settled_at": "2026-09-25T09:12:41.530Z",
+    "payment_state": "settled",
+    "test": false,
+    "moderation": {
+      "state": "hidden",
+      "at": "2026-09-25T09:20:02.771Z",
+      "filtered": false
+    },
+    "supporter_name": "moosefan",
+    "amount": 500,
+    "message": "Great stream tonight!",
+    "tts_text": null,
+    "media_url": null,
+    "public": {
+      "interaction_id": "tint_01JAB2C3D4E5F6G7H8J9K0MNQ5",
+      "kind": "paid_message",
+      "amount": null,
+      "amount_hidden": false,
+      "currency": "vibes-bits",
+      "settlement": "billing",
+      "test": false,
+      "at": "2026-09-25T09:12:41.530Z",
+      "supporter_name": null,
+      "message": null,
+      "tts": null,
+      "media": null,
+      "hidden": true
+    }
+  },
+  "changed": true,
+  "cancelled_effects": [
+    "paid_message"
+  ]
+}

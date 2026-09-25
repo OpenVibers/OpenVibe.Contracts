@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/simulate"
-  ]
+  ],
+  "inputSchema": "tips.simulation-request@1",
+  "outputSchema": "tips.interaction-result@1"
 }

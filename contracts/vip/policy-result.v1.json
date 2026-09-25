@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/policy-result.v1.json",
+  "title": "VipPolicyResult",
+  "description": "vip.policy-result@1: answers about gated-resource rules on OpenVibe.VIP (vip.resource.policy.get, vip.resource.policy.set). GET /api/v1/policies?service=&type=&id=&owner= → { rule }: the owner's active rule for that resource (owner, the creator's usr_ id or network, is required for services; a person defaults to themselves; 404 vip.rule_not_found when there is none); GET /api/v1/policies[?creator=] → { rules }: a creator's active rules, newest first; GET /api/v1/policies/:id → { rule }; POST /api/v1/policies (201) → { rule }; DELETE /api/v1/policies/:id → { rule } (now disabled).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "rule"
+      ],
+      "properties": {
+        "rule": {
+          "$ref": "policy-rule.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "rules"
+      ],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "policy-rule.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

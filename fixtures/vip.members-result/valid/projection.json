@@ -1,0 +1,17 @@
+{
+  "creator": {
+    "id": "vcr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "kind": "creator",
+    "subject": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "username": "moosefan",
+    "display_name": "Moose Fan",
+    "bio": "Late-night builds and chill.",
+    "status": "active"
+  },
+  "source": "projection",
+  "note": "Billing did not answer; this list is VIP's projection (fresh rows only) and may be incomplete",
+  "members": []
+}

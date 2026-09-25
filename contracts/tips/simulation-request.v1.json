@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/simulation-request.v1.json",
+  "title": "TipsSimulationRequest",
+  "description": "tips.simulation-request@1: the body of tips.simulation.run on OpenVibe.Tips. POST /api/v1/simulate: { creator?, kind?, amount?, message?, tts?, media?, goal_id?, supporter_name?, privacy? } runs the full effect path (overlay alert, goal widget, delivery) flagged test, with no Billing call, never counted in any total and never emitted as a durable event. A service names the creator; a person simulates on their own page. The creator's rules apply as for a real request, except that a creator who is not accepting tips can still simulate. kind defaults to tip, amount to the creator's minimum or 100 bits, supporter_name to \"Test supporter\". Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json (422 tips.invalid_input, tips.amount_too_small, tips.invalid_media, …; 409 tips.tts_disabled or tips.media_disabled; 404 tips.creator_not_found). Unknown fields are ignored.",
+  "type": "object",
+  "properties": {
+    "creator": {
+      "description": "The creator whose overlays show it (default: the signed-in person).",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "A usr_ id or the creator's Tips handle."
+        }
+      ]
+    },
+    "kind": {
+      "enum": [
+        "tip",
+        "paid_message",
+        "tts",
+        "media_request"
+      ]
+    },
+    "amount": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$",
+      "maximum": 10000000,
+      "description": "Vibes bits."
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tts": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "voice": {
+          "enum": [
+            "gary",
+            "brian",
+            "amy",
+            "emma",
+            "joey",
+            "justin",
+            "matthew",
+            "salli",
+            "kimberly",
+            "kendra",
+            "ivy",
+            "joanna"
+          ],
+          "description": "Default: the creator's voice."
+        }
+      },
+      "description": "Text-to-speech (kind tts): the text to read (default: message) and the voice."
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "pattern": "^https://",
+          "maxLength": 500,
+          "description": "An https link on an allowed host (TIPS_MEDIA_HOSTS; YouTube by default)."
+        }
+      },
+      "description": "A media request (kind media_request)."
+    },
+    "goal_id": {
+      "type": "string"
+    },
+    "supporter_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "anonymous": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "The name reads \"Anonymous\" to everyone but the supporter."
+        },
+        "hide_amount": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "The amount is left out of overlays, chat lines and public pages."
+        },
+        "private_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "A tip's message is for the creator only (tips only; 422 for the other kinds)."
+        }
+      },
+      "additionalProperties": false,
+      "description": "The supporter's choices; any other field is refused (422 tips.invalid_input). true, 1, \"1\", \"true\" and \"on\" count as yes."
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/membership.v1.json",
+  "title": "VipMembership",
+  "description": "vip.membership@1: VIP's record of a membership (server/domain/memberships.js present): which plan version the member bought, the perk keys that version grants and how the membership was filed (checkout: the member's own VIP checkout; billing: a Billing subscription bought elsewhere; import). Whether it is active is never stored here: that is Billing's entitlement (vip.entitlement@1).",
+  "type": "object",
+  "required": [
+    "id",
+    "member",
+    "creator_id",
+    "plan_id",
+    "plan_version",
+    "perks",
+    "origin",
+    "joined_at",
+    "terms_since"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vms_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "member": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "creator_id": {
+      "type": "string",
+      "pattern": "^(vcr_[0-9A-HJKMNP-TV-Z]{26}|network)$"
+    },
+    "plan_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "null when Billing granted a membership for a creator with no VIP plan."
+    },
+    "plan_version": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "version",
+            "name",
+            "terms"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^vpv_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string"
+            },
+            "terms": {
+              "type": "object",
+              "description": "The version's terms snapshot (vip.plan-version@1 terms)."
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "perks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Perk keys of the plan version."
+    },
+    "origin": {
+      "enum": [
+        "checkout",
+        "billing",
+        "import"
+      ]
+    },
+    "joined_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "terms_since": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

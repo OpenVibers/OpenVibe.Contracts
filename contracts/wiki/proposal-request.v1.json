@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/proposal-request.v1.json",
+  "title": "WikiProposalRequest",
+  "description": "wiki.proposal-request@1: the body of POST /api/v1/proposals on OpenVibe.Wiki (wiki.revision.propose; first-party service principals only, i.e. OpenVibe.AI): an AI-written revision of an existing page (page_id, optionally expected_revision: a stale one is 412) or a new page in a space (space and title). It names the OpenVibe.AI workflow and run that wrote it; it is never published until a person approves it.",
+  "type": "object",
+  "required": [
+    "workflow"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "page_id"
+      ]
+    },
+    {
+      "required": [
+        "space"
+      ]
+    }
+  ],
+  "properties": {
+    "space": {
+      "type": "string"
+    },
+    "page_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "body": {
+      "type": "string",
+      "maxLength": 200000
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "infobox": {
+      "type": "array",
+      "description": "Infobox rows: key, type (text, number, date, url, boolean, page, media) and value.",
+      "items": {
+        "type": "object"
+      }
+    },
+    "citations": {
+      "type": "array",
+      "maxItems": 50,
+      "description": "At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_item_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retrieved_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cut to 5000 characters."
+          },
+          "license_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "anchor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "run_id"
+          ]
+        },
+        {
+          "required": [
+            "runId"
+          ]
+        }
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        },
+        "version": {},
+        "model": {}
+      }
+    },
+    "stub_provider": {
+      "type": "boolean"
+    },
+    "expected_revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

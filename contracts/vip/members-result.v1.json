@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/members-result.v1.json",
+  "title": "VipMembersResult",
+  "description": "vip.members-result@1: the answer of vip.creator.members.list on OpenVibe.VIP. GET /api/v1/creators/:ref/members → { creator, source, note?, members }: the creator's active members with the membership VIP filed for each (the plan version they joined under; null when VIP has none). source billing: Billing's active subscriptions to the creator; source projection: Billing did not answer and the list is VIP's fresh projection rows, possibly incomplete (note says so). For the creator, staff or a service holding the capability; 404 vip.creator_not_found.",
+  "type": "object",
+  "required": [
+    "creator",
+    "source",
+    "members"
+  ],
+  "properties": {
+    "creator": {
+      "$ref": "creator.v1.json"
+    },
+    "source": {
+      "enum": [
+        "billing",
+        "projection"
+      ]
+    },
+    "note": {
+      "type": "string"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "member",
+          "current_period_end",
+          "cancel_at_period_end",
+          "subscription_id",
+          "membership"
+        ],
+        "properties": {
+          "member": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "current_period_end": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cancel_at_period_end": {
+            "type": "boolean"
+          },
+          "subscription_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The Billing subscription (sub_…)."
+          },
+          "membership": {
+            "anyOf": [
+              {
+                "$ref": "membership.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

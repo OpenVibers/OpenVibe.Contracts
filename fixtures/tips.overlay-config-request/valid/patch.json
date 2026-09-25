@@ -1,0 +1,5 @@
+{
+  "revision": 1,
+  "show_amount": false,
+  "template": "{name} sent {amount}!"
+}

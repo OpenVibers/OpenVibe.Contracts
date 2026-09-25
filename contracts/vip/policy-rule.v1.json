@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/policy-rule.v1.json",
+  "title": "VipPolicyRule",
+  "description": "vip.policy-rule@1: a gated-resource rule on OpenVibe.VIP (server/domain/policies.js present): resource R (an EntityRef the product owns) is for members of creator C (requirement member), members of one plan (plan, plan_id), or members whose plan version includes a perk (perk, perk_key). sensitive rules always ask Billing, never the projection. A rule that was replaced or removed is disabled.",
+  "type": "object",
+  "required": [
+    "id",
+    "creator",
+    "creator_id",
+    "resource",
+    "requirement",
+    "plan_id",
+    "perk_key",
+    "sensitive",
+    "status",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vgr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "creator": {
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "creator_id": {
+      "type": "string",
+      "pattern": "^vcr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "resource": {
+      "$ref": "../common/entity-ref.v1.json"
+    },
+    "requirement": {
+      "enum": [
+        "member",
+        "plan",
+        "perk"
+      ]
+    },
+    "plan_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "perk_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sensitive": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "disabled"
+      ]
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

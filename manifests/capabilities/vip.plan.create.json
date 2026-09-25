@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/plans"
-  ]
+  ],
+  "inputSchema": "vip.plan-create-request@1",
+  "outputSchema": "vip.plan-result@1"
 }

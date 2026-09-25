@@ -1,0 +1,12 @@
+{
+  "log": [
+    {
+      "interaction_id": "tint_01JAB2C3D4E5F6G7H8J9K0MNQ5",
+      "action": "hidden",
+      "by_role": "moderator",
+      "actor": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+      "reason": "spam link",
+      "created_at": "2026-09-25T09:20:02.771Z"
+    }
+  ]
+}

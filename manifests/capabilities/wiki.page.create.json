@@ -25,5 +25,7 @@
     "POST /api/v1/pages/:id/media",
     "POST /api/v1/pages/:id/media/verify",
     "POST /api/v1/spaces/:space/import"
-  ]
+  ],
+  "inputSchema": "wiki.page-write-request@1",
+  "outputSchema": "wiki.page-write-result@1"
 }

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/blocks-result.v1.json",
+  "title": "NetworkBlocksResult",
+  "description": "network.blocks-result@1: the answer of network.blocks.read on OpenVibe.Network. GET /internal/blocks?subject=usr_… (a service token holding network.blocks.read; the shared internal key is refused) → { subject, blocks, blocked_by }: the people the subject has blocked and the people who have blocked the subject, as usr_ subjects in subject order, active blocks only (a person may hold at most 5000). Answered with Cache-Control: no-store. A subject that is not a usr_ id is refused with 400 blocks.bad_subject (problem+json).",
+  "type": "object",
+  "required": [
+    "subject",
+    "blocks",
+    "blocked_by"
+  ],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person asked about."
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "description": "Whom the subject blocked."
+    },
+    "blocked_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "description": "Who blocked the subject."
+    }
+  }
+}

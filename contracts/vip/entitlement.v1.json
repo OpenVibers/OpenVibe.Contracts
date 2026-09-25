@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/entitlement.v1.json",
+  "title": "VipEntitlement",
+  "description": "vip.entitlement@1: an entitlement answer of OpenVibe.VIP (server/domain/entitlements.js check): is the member a member of the creator right now, from VIP's short-lived projection of OpenVibe.Billing's entitlements (source projection, stale when past valid_until but within the grace period) or from Billing itself (source billing). status unknown (source none) means VIP could not confirm it and never authorizes; active is true only for status active. A creator asked about themselves is inactive with a reason.",
+  "type": "object",
+  "required": [
+    "member",
+    "creator",
+    "kind",
+    "status",
+    "active",
+    "expires_at",
+    "cancel_at_period_end",
+    "source",
+    "stale",
+    "valid_until",
+    "checked_at",
+    "membership"
+  ],
+  "properties": {
+    "member": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "creator": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "kind": {
+      "type": "string",
+      "description": "The Billing entitlement kind; channel_subscription today."
+    },
+    "status": {
+      "enum": [
+        "active",
+        "inactive",
+        "unknown"
+      ]
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "End of the paid period, as Billing reported it."
+    },
+    "cancel_at_period_end": {
+      "type": "boolean"
+    },
+    "source": {
+      "enum": [
+        "projection",
+        "billing",
+        "none"
+      ]
+    },
+    "stale": {
+      "type": "boolean"
+    },
+    "valid_until": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "Until when the projection may answer without asking Billing; null for unknown."
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "membership": {
+      "anyOf": [
+        {
+          "$ref": "membership.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why it is unknown or inactive: no_projection, projection_expired, billing_unavailable, self (as text), …"
+    }
+  }
+}

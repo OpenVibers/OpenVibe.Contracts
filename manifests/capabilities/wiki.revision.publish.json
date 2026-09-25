@@ -25,5 +25,7 @@
     "POST /api/v1/pages/:id/unpublish",
     "POST /api/v1/proposals/:id/review",
     "POST /api/v1/pages/:id/revisions/:n/review"
-  ]
+  ],
+  "inputSchema": "wiki.publish-request@1",
+  "outputSchema": "wiki.publish-result@1"
 }

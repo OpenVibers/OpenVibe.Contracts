@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/search-result.v1.json",
+  "title": "WikiSearchResult",
+  "description": "wiki.search-result@1: the answer of GET /api/v1/search?q=&space=&limit= on OpenVibe.Wiki (wiki.search.query): { results } — pages the caller may read that match, each with its summary.",
+  "type": "object",
+  "required": [
+    "results"
+  ],
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "space",
+          "slug",
+          "title",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "space": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

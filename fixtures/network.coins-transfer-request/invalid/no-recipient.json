@@ -1,0 +1,5 @@
+{
+  "from_user_id": 1042,
+  "amount": 10,
+  "idempotency_key": "games:wager:m_8814"
+}

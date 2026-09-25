@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/publish-request.v1.json",
+  "title": "WikiPublishRequest",
+  "description": "wiki.publish-request@1: bodies of wiki.revision.publish on OpenVibe.Wiki (editors). POST /api/v1/pages/:id/publish: { revision? } (default the head; an AI revision needs a person's approval first). POST /api/v1/pages/:id/schedule: { run_at, revision? } (ISO 8601). POST /api/v1/pages/:id/revisions/:n/review and POST /api/v1/proposals/:id/review: { decision: approved | rejected, note?, publish? } (a person; a proposal is published on approval unless publish is false). POST /api/v1/pages/:id/unpublish takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "run_at": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "decision"
+      ],
+      "properties": {
+        "decision": {
+          "enum": [
+            "approved",
+            "rejected"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publish": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

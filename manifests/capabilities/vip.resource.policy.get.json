@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/policies",
     "GET /api/v1/policies/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vip.policy-result@1"
 }

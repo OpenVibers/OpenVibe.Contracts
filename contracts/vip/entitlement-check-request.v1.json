@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/entitlement-check-request.v1.json",
+  "title": "VipEntitlementCheckRequest",
+  "description": "vip.entitlement-check-request@1: the question of vip.entitlement.check on OpenVibe.VIP. POST /api/v1/entitlements/check: { creator, subject?, mode?, product? }; GET /api/v1/entitlements/check takes the same fields in its query string and no body. creator is a user SubjectRef, usr_ id (asked of Billing even when VIP has never seen the creator) or VIP username; subject is the member (required for services; a person asks about themselves). mode auto (default: the projection when fresh, else Billing), projection (never asks Billing) or authoritative (always asks Billing). product (a service id such as chat or blog) adds what the membership means there. Refusals are problem+json: 422 vip.invalid_input (no creator VIP can resolve, a bad product) or vip.invalid_subject; 403 capability.denied or vip.not_yours. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "creator"
+      ],
+      "properties": {
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "A usr_ id or VIP username."
+            }
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "mode": {
+          "enum": [
+            "auto",
+            "projection",
+            "authoritative"
+          ]
+        },
+        "product": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}$"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

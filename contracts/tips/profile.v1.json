@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/profile.v1.json",
+  "title": "TipsProfile",
+  "description": "tips.profile@1: a creator's tip profile on OpenVibe.Tips (server/domain/profiles.js present). page_enabled is the creator's switch for the public page (off: it answers 404 to everyone else); accepting takes new tips; minimums are in Vibes bits (tts and media_request null while switched off); page is what the public pages show. The creator and granted services also get filter (the word filter for paid messages), revision, created_at and updated_at.",
+  "type": "object",
+  "required": [
+    "creator",
+    "handle",
+    "display_name",
+    "avatar_url",
+    "headline",
+    "page_enabled",
+    "accepting",
+    "url",
+    "minimums",
+    "tts",
+    "media_requests",
+    "page",
+    "supporters_url",
+    "currency"
+  ],
+  "properties": {
+    "creator": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "handle": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]{0,39}$"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "headline": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "page_enabled": {
+      "type": "boolean"
+    },
+    "accepting": {
+      "type": "boolean"
+    },
+    "url": {
+      "type": "string"
+    },
+    "minimums": {
+      "type": "object",
+      "required": [
+        "tip",
+        "paid_message",
+        "tts",
+        "media_request"
+      ],
+      "properties": {
+        "tip": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "paid_message": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tts": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "media_request": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    "tts": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "max_chars",
+        "voice"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "max_chars": {
+          "type": "integer"
+        },
+        "voice": {
+          "type": "string"
+        }
+      }
+    },
+    "media_requests": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "max_seconds"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "max_seconds": {
+          "type": "integer"
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "required": [
+        "goal_amounts",
+        "goal_supporters",
+        "supporters_page",
+        "supporters_amounts",
+        "supporters_messages"
+      ],
+      "properties": {
+        "goal_amounts": {
+          "type": "boolean"
+        },
+        "goal_supporters": {
+          "type": "boolean"
+        },
+        "supporters_page": {
+          "type": "boolean"
+        },
+        "supporters_amounts": {
+          "type": "boolean"
+        },
+        "supporters_messages": {
+          "type": "boolean"
+        }
+      }
+    },
+    "supporters_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "currency": {
+      "const": "vibes-bits"
+    },
+    "filter": {
+      "type": "object",
+      "required": [
+        "words",
+        "action",
+        "links"
+      ],
+      "properties": {
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "action": {
+          "enum": [
+            "mask",
+            "hold"
+          ]
+        },
+        "links": {
+          "type": "boolean"
+        }
+      }
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    }
+  }
+}

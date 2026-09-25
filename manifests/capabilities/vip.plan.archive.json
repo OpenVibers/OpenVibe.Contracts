@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/plans/:id/archive"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vip.plan-result@1"
 }

@@ -1,0 +1,13 @@
+{
+  "subject": null,
+  "resource": {
+    "service": "community",
+    "type": "thread",
+    "id": "thr_01JAB2C3D4E5F6G7H8J9K0MNQ4"
+  },
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "mode": "authoritative"
+}

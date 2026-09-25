@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/perk-result.v1.json",
+  "title": "VipPerkResult",
+  "description": "vip.perk-result@1: the answer of vip.perk.create and vip.perk.update on OpenVibe.VIP. POST /api/v1/perks (201) and PATCH /api/v1/perks/:id → { perk } with its active bindings.",
+  "type": "object",
+  "required": [
+    "perk"
+  ],
+  "properties": {
+    "perk": {
+      "$ref": "perk.v1.json"
+    }
+  }
+}

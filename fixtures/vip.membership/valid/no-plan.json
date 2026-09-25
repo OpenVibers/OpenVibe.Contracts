@@ -1,0 +1,14 @@
+{
+  "id": "vms_01JAB2C3D4E5F6G7H8J9K0MNPX",
+  "member": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "creator_id": "vcr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "plan_id": null,
+  "plan_version": null,
+  "perks": [],
+  "origin": "billing",
+  "joined_at": "2026-09-20T18:04:11.402Z",
+  "terms_since": "2026-09-20T18:04:11.402Z"
+}

@@ -19,5 +19,7 @@
     "POST /api/v1/spaces",
     "PATCH /api/v1/spaces/:space",
     "PUT /api/v1/spaces/:space/roles/:subject"
-  ]
+  ],
+  "inputSchema": "wiki.space-write-request@1",
+  "outputSchema": "wiki.space-write-result@1"
 }

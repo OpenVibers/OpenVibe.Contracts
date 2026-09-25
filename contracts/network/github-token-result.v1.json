@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/github-token-result.v1.json",
+  "title": "NetworkGithubTokenResult",
+  "description": "network.github-token-result@1: the answer of network.integration.github.read on OpenVibe.Network. GET /internal/integrations/github-token (a service token holding the capability; the shared internal key is refused) → { token, source }: the network's read-only GitHub API token and where it is set (GITHUB_TOKEN in the environment, or the value the owner saved in admin). Answered with Cache-Control: no-store; 404 { error: not_configured, detail } when no token is set.",
+  "type": "object",
+  "required": [
+    "token",
+    "source"
+  ],
+  "properties": {
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A GitHub token (ghp_…, github_pat_…). A secret: never log or show it."
+    },
+    "source": {
+      "enum": [
+        "env",
+        "database",
+        "unset"
+      ],
+      "description": "env: GITHUB_TOKEN; database: saved in admin (Settings → GitHub)."
+    }
+  }
+}

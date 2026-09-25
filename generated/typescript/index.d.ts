@@ -10621,6 +10621,550 @@ export interface WikiIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** wiki.citation-attach-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.citation-attach-request@1: the body of POST /api/v1/pages/:id/revisions/:n/citations on OpenVibe.Wiki (wiki.citation.attach, editors): sources for the newest revision while it is unpublished (a published revision's sources are fixed: 409 citation.revision_published; an older one is 409 citation.not_head). A URL citation needs retrieved_at; a Sources item id brings its own URL, title and retrieval time.
+ */
+export interface WikiCitationAttachRequest {
+  /**
+   * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
+   *
+   * @maxItems 50
+   */
+  citations: {
+    url?: string | null;
+    title?: string | null;
+    source_item_id?: string | null;
+    retrieved_at?: string | null;
+    /**
+     * Cut to 5000 characters.
+     */
+    quote?:
+      | string
+      | {
+          text?: string;
+        }
+      | null;
+    license_note?: string | null;
+    anchor?: string | null;
+  }[];
+}
+
+/** wiki.citation-attach-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.citation-attach-result@1: the answer of POST /api/v1/pages/:id/revisions/:n/citations on OpenVibe.Wiki: 201 { citations } (the citations attached).
+ */
+export interface WikiCitationAttachResult {
+  citations: WikiCitation[];
+}
+
+/** wiki.citation@1.0.0 (owner: wiki) */
+/**
+ * wiki.citation@1: one source cited by a page revision (server/http/api.js serializeCitation), a URL read at a time or a OpenVibe.Sources item, with an optional quote and licence note. Citations of a published revision are fixed.
+ */
+export interface WikiCitation {
+  id: string | number;
+  revision: number;
+  url?: string | null;
+  title?: string | null;
+  source_item_id?: string | null;
+  retrieved_at?: string | number | null;
+  quote?: unknown;
+  license_note?: string | null;
+  carried_from?: unknown;
+  attached_by?: string | null;
+  attached_at?: string | number | null;
+}
+
+/** wiki.page-read-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread }; GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.
+ */
+export type WikiPageReadResult =
+  | {
+      page: WikiPage;
+      revision: WikiRevision;
+      citations: WikiCitation[];
+      infobox?: unknown;
+      attachments?: unknown[];
+      links?: {
+        space?: string;
+        slug?: string;
+        label?: string | null;
+      }[];
+      indexability: {
+        indexable: boolean;
+        reasons?: string[];
+      };
+      discussion_thread?: unknown;
+    }
+  | {
+      revisions: WikiRevision[];
+    }
+  | {
+      revision: WikiRevision;
+      citations: WikiCitation[];
+      infobox?: unknown;
+    }
+  | {
+      diff: {};
+    }
+  | {
+      citations: WikiCitation[];
+    }
+  | {
+      proposal: {
+        id: string;
+        page_id: string;
+        space_id?: string;
+        revision?: number;
+        base_revision?: number;
+        workflow_id?: string;
+        run_id?: string;
+        status: "pending" | "approved" | "rejected";
+      };
+    };
+
+/** wiki.page-write-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000). POST /api/v1/pages/:id/revisions: { expected_revision, body?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.
+ */
+export type WikiPageWriteRequest =
+  | {
+      title: string;
+      body?: string;
+      summary?: string | null;
+      /**
+       * Infobox rows: key, type (text, number, date, url, boolean, page, media) and value.
+       */
+      infobox?: {}[];
+      parent_id?: string | null;
+      visibility?: "public" | "members" | "private";
+      /**
+       * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
+       *
+       * @maxItems 50
+       */
+      citations?: {
+        url?: string | null;
+        title?: string | null;
+        source_item_id?: string | null;
+        retrieved_at?: string | null;
+        /**
+         * Cut to 5000 characters.
+         */
+        quote?:
+          | string
+          | {
+              text?: string;
+            }
+          | null;
+        license_note?: string | null;
+        anchor?: string | null;
+      }[];
+      message?: string | null;
+    }
+  | {
+      expected_revision: number;
+      title?: string;
+      body?: string;
+      summary?: string | null;
+      /**
+       * Infobox rows: key, type (text, number, date, url, boolean, page, media) and value.
+       */
+      infobox?: {}[];
+      /**
+       * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
+       *
+       * @maxItems 50
+       */
+      citations?: {
+        url?: string | null;
+        title?: string | null;
+        source_item_id?: string | null;
+        retrieved_at?: string | null;
+        /**
+         * Cut to 5000 characters.
+         */
+        quote?:
+          | string
+          | {
+              text?: string;
+            }
+          | null;
+        license_note?: string | null;
+        anchor?: string | null;
+      }[];
+      /**
+       * Which earlier citations carry over: all (default) or a list.
+       */
+      keep_citations?: {
+        [k: string]: unknown | undefined;
+      };
+      message?: string | null;
+    }
+  | {
+      slug?: string;
+      parent_id?: string | null;
+      visibility?: "public" | "members" | "private";
+      noindex?: boolean;
+    }
+  | {
+      media_id: string;
+      alt?: string | null;
+      caption?: string | null;
+    }
+  | {
+      /**
+       * @minItems 1
+       */
+      pages: [
+        {
+          title: string;
+          body?: string;
+          summary?: string | null;
+          parent?: string | null;
+          /**
+           * Infobox rows: key, type (text, number, date, url, boolean, page, media) and value.
+           */
+          infobox?: {}[];
+          /**
+           * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
+           *
+           * @maxItems 50
+           */
+          citations?: {
+            url?: string | null;
+            title?: string | null;
+            source_item_id?: string | null;
+            retrieved_at?: string | null;
+            /**
+             * Cut to 5000 characters.
+             */
+            quote?:
+              | string
+              | {
+                  text?: string;
+                }
+              | null;
+            license_note?: string | null;
+            anchor?: string | null;
+          }[];
+          visibility?: "public" | "members" | "private";
+          message?: string | null;
+        },
+        ...{
+          title: string;
+          body?: string;
+          summary?: string | null;
+          parent?: string | null;
+          /**
+           * Infobox rows: key, type (text, number, date, url, boolean, page, media) and value.
+           */
+          infobox?: {}[];
+          /**
+           * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
+           *
+           * @maxItems 50
+           */
+          citations?: {
+            url?: string | null;
+            title?: string | null;
+            source_item_id?: string | null;
+            retrieved_at?: string | null;
+            /**
+             * Cut to 5000 characters.
+             */
+            quote?:
+              | string
+              | {
+                  text?: string;
+                }
+              | null;
+            license_note?: string | null;
+            anchor?: string | null;
+          }[];
+          visibility?: "public" | "members" | "private";
+          message?: string | null;
+        }[]
+      ];
+      publish?: boolean;
+      on_existing?: "fail" | "skip";
+      source?: unknown;
+      original_author?: unknown;
+      ai_assisted?: unknown;
+      space?: unknown;
+    }
+  | NoBody;
+
+/** wiki.page-write-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.page-write-result@1: answers of wiki.page.create on OpenVibe.Wiki. Creating a page → 201 { page, revision, citations }; a new revision → { page, revision, created, citations } (201 when a revision was made, 200 when nothing changed); PATCH and DELETE /api/v1/pages/:id → { page }; POST …/media → 201 { attachment }; POST …/media/verify → { results }; POST …/import → 201 { space, published, skipped, created } (each created page with its revision number).
+ */
+export type WikiPageWriteResult =
+  | {
+      page: WikiPage;
+      revision: WikiRevision;
+      created?: boolean;
+      citations?: WikiCitation[];
+    }
+  | {
+      page: WikiPage;
+    }
+  | {
+      attachment: {
+        id: string | number;
+        media_id: string;
+        alt?: string | null;
+        caption?: string | null;
+        state?: string;
+        broken_reason?: string | null;
+        checked_at?: unknown;
+        attached_by?: string | null;
+      };
+    }
+  | {
+      results: unknown[];
+    }
+  | {
+      space: WikiSpace;
+      published?: unknown;
+      skipped?: unknown;
+      created: {
+        id: string;
+        revision: number;
+      }[];
+    };
+
+/** wiki.page@1.0.0 (owner: wiki) */
+/**
+ * wiki.page@1: one wiki page as OpenVibe.Wiki's API shows it (server/http/api.js serializePage); in a space's page tree each page also lists its children.
+ */
+export interface WikiPage {
+  id: string;
+  space: string;
+  slug: string;
+  title: string;
+  parent_id: string | null;
+  /**
+   * draft, published, deleted, …
+   */
+  state: string;
+  visibility: "public" | "members" | "private";
+  noindex: boolean;
+  published_revision: number | null;
+  published_at?: string | null;
+  revision_published_at?: string | null;
+  updated_at: string;
+  url: string;
+  children?: {}[];
+}
+
+/** wiki.proposal-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.proposal-request@1: the body of POST /api/v1/proposals on OpenVibe.Wiki (wiki.revision.propose; first-party service principals only, i.e. OpenVibe.AI): an AI-written revision of an existing page (page_id, optionally expected_revision: a stale one is 412) or a new page in a space (space and title). It names the OpenVibe.AI workflow and run that wrote it; it is never published until a person approves it.
+ */
+export type WikiProposalRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  space?: string;
+  page_id?: string | null;
+  title?: string;
+  body?: string;
+  summary?: string | null;
+  /**
+   * Infobox rows: key, type (text, number, date, url, boolean, page, media) and value.
+   */
+  infobox?: {}[];
+  /**
+   * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
+   *
+   * @maxItems 50
+   */
+  citations?: {
+    url?: string | null;
+    title?: string | null;
+    source_item_id?: string | null;
+    retrieved_at?: string | null;
+    /**
+     * Cut to 5000 characters.
+     */
+    quote?:
+      | string
+      | {
+          text?: string;
+        }
+      | null;
+    license_note?: string | null;
+    anchor?: string | null;
+  }[];
+  workflow: {
+    [k: string]: unknown | undefined;
+  };
+  stub_provider?: boolean;
+  expected_revision?: number | null;
+  note?: string | null;
+};
+
+/** wiki.proposal-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.proposal-result@1: the answer of POST /api/v1/proposals on OpenVibe.Wiki: 201 { proposal, page, revision } (the proposal is pending; the page's watchers are told).
+ */
+export interface WikiProposalResult {
+  proposal: {
+    id: string;
+    status: string;
+  };
+  page: WikiPage;
+  revision: WikiRevision;
+}
+
+/** wiki.publish-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.publish-request@1: bodies of wiki.revision.publish on OpenVibe.Wiki (editors). POST /api/v1/pages/:id/publish: { revision? } (default the head; an AI revision needs a person's approval first). POST /api/v1/pages/:id/schedule: { run_at, revision? } (ISO 8601). POST /api/v1/pages/:id/revisions/:n/review and POST /api/v1/proposals/:id/review: { decision: approved | rejected, note?, publish? } (a person; a proposal is published on approval unless publish is false). POST /api/v1/pages/:id/unpublish takes no body.
+ */
+export type WikiPublishRequest =
+  | {
+      revision?: number | null;
+      run_at?: string;
+    }
+  | {
+      decision: "approved" | "rejected";
+      note?: string | null;
+      publish?: boolean;
+    };
+
+/** wiki.publish-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.publish-result@1: answers of wiki.revision.publish on OpenVibe.Wiki. POST …/publish and …/unpublish → { page, action }; POST …/schedule → { job, created } (201 when created); POST …/revisions/:n/review → 201 { review, page, action, indexable, reasons }; POST /api/v1/proposals/:id/review → { proposal, published }.
+ */
+export type WikiPublishResult =
+  | {
+      page: WikiPage;
+      action: unknown;
+      review?: {};
+      indexable?: boolean;
+      reasons?: unknown[];
+    }
+  | {
+      job: {};
+      created: boolean;
+    }
+  | {
+      proposal: {
+        id: string;
+        status: "pending" | "approved" | "rejected";
+      };
+      published: boolean;
+    };
+
+/** wiki.revert-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.revert-request@1: the body of POST /api/v1/pages/:id/revert on OpenVibe.Wiki (wiki.revision.revert, editors): a new revision with the content of to_revision; expected_revision is the head you saw (a stale one is refused); publish republishes when the page was published.
+ */
+export interface WikiRevertRequest {
+  to_revision: number;
+  expected_revision?: number;
+  message?: string | null;
+  publish?: boolean | null;
+}
+
+/** wiki.revert-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.revert-result@1: the answer of POST /api/v1/pages/:id/revert on OpenVibe.Wiki: 201 { page, revision, published } (the new revision and whether it was published).
+ */
+export interface WikiRevertResult {
+  page: WikiPage;
+  revision: WikiRevision;
+  published: boolean;
+}
+
+/** wiki.revision@1.0.0 (owner: wiki) */
+/**
+ * wiki.revision@1: one revision of a wiki page (server/http/api.js serializeRevision): its number, kind, parent, fields, Markdown body and authorship (human, AI-assisted or AI with the workflow and run). History lists leave the body out.
+ */
+export interface WikiRevision {
+  number: number;
+  id: string;
+  kind: string;
+  parent_number?: number | null;
+  reverted_to?: number | null;
+  title: string;
+  summary?: string | null;
+  infobox?: unknown[];
+  body?: string;
+  authorship?: {} | null;
+  author: string | null;
+  message?: string | null;
+  created_at: string | number;
+  published?: boolean;
+  citation_count?: number;
+  proposal?: {} | null;
+}
+
+/** wiki.search-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.search-result@1: the answer of GET /api/v1/search?q=&space=&limit= on OpenVibe.Wiki (wiki.search.query): { results } — pages the caller may read that match, each with its summary.
+ */
+export interface WikiSearchResult {
+  results: {
+    id: string;
+    space: string;
+    slug: string;
+    title: string;
+    url: string;
+    summary?: string | null;
+  }[];
+}
+
+/** wiki.space-write-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.space-write-request@1: bodies of wiki.space.create on OpenVibe.Wiki. POST /api/v1/spaces: { name, slug?, description?, kind?, visibility? } (the slug defaults from the name: 2-63 lowercase letters, digits and dashes; kind official is for staff; visibility public, members or private). PATCH /api/v1/spaces/:space: { name?, description?, visibility?, slug? } (an owner; a retired slug keeps leading to its old space). PUT /api/v1/spaces/:space/roles/:subject: { role: owner | editor | viewer | null } (an owner; null removes; a user space keeps at least one owner).
+ */
+export type WikiSpaceWriteRequest =
+  | {
+      name?: string;
+      slug?: string;
+      description?: string | null;
+      kind?: "official" | "user";
+      visibility?: "public" | "members" | "private";
+    }
+  | {
+      role: "owner" | "editor" | "viewer" | null;
+    };
+
+/** wiki.space-write-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.space-write-result@1: answers of wiki.space.create on OpenVibe.Wiki: POST /api/v1/spaces → 201 { space }; PATCH → { space }; PUT …/roles/:subject → { roles } (every role in the space after the change: subject, role, granted_by, granted_at).
+ */
+export type WikiSpaceWriteResult =
+  | {
+      space: WikiSpace;
+    }
+  | {
+      roles: {
+        subject: string;
+        role: "owner" | "editor" | "viewer";
+        granted_by?: string | null;
+        granted_at?: string | null;
+      }[];
+    };
+
+/** wiki.space@1.0.0 (owner: wiki) */
+/**
+ * wiki.space@1: one wiki space as OpenVibe.Wiki's API shows it (server/http/api.js serializeSpace).
+ */
+export interface WikiSpace {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string | null;
+  kind: "official" | "user";
+  visibility: "public" | "members" | "private";
+  created_at: string;
+  updated_at: string;
+}
+
 /** live.index_document.upserted@1.0.0 (owner: live) */
 /**
  * live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of one of Live's canonical pages: a streamer's channel (type channel, openvibe.live/@username: its name, bio, what it streams and whether it is live), or a public VOD or clip of a Live stream (types vod and clip, openvibe.live/vod/<id> and /clip/<id>: title, channel, AI overview and transcript; the id is the Media id; AI clips are noindex). Sent whenever what Search should hold changed; a banned channel, or a VOD or clip that is deleted, made private or failed, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.
@@ -12236,6 +12780,903 @@ export interface TipsOverlayFailedPayload {
   reason: string;
 }
 
+/** tips.external-request@1.0.0 (owner: tips) */
+/**
+ * tips.external-request@1: the body of tips.interaction.record on OpenVibe.Tips (services only). POST /api/v1/interactions/external: { creator, provider, provider_ref, amount_cents, supporter?, supporter_name?, message?, goal_id?, privacy?, announce?, test? } records a tip that never touched OpenVibe money (ADR-012 EXTERNAL: a tip on the creator's own PowerChat), once per (provider, provider_ref); no Billing liability, excluded from Billing reconciliation. It settles at once (overlay alert, goal); announce true also has Tips post the chat line. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (no provider or provider_ref), tips.invalid_amount, tips.text_too_long or tips.invalid_subject; 404 tips.creator_not_found; 403 capability.denied. Unknown fields are ignored.
+ */
+export interface TipsExternalRequest {
+  /**
+   * The creator tipped.
+   */
+  creator: SubjectRef | string;
+  /**
+   * Lowercased: powerchat, …
+   */
+  provider: string;
+  /**
+   * The provider's event id.
+   */
+  provider_ref: string;
+  /**
+   * The money that arrived, in cents (at most 100000000); recorded as the amount too.
+   */
+  amount_cents: number | string;
+  /**
+   * The supporter, when known.
+   */
+  supporter?: SubjectRef | string;
+  supporter_name?: string | null;
+  message?: string | null;
+  goal_id?: string;
+  /**
+   * The supporter's choices; any other field is refused (422 tips.invalid_input). true, 1, "1", "true" and "on" count as yes.
+   */
+  privacy?: {
+    /**
+     * The name reads "Anonymous" to everyone but the supporter.
+     */
+    anonymous?: boolean | number | string;
+    /**
+     * The amount is left out of overlays, chat lines and public pages.
+     */
+    hide_amount?: boolean | number | string;
+    /**
+     * A tip's message is for the creator only (tips only; 422 for the other kinds).
+     */
+    private_message?: boolean | number | string;
+  };
+  /**
+   * true: Tips delivers the chat line itself (the provider did not announce it).
+   */
+  announce?: boolean;
+  /**
+   * Test money: never counted.
+   */
+  test?: boolean | number | string;
+}
+
+/** tips.external-result@1.0.0 (owner: tips) */
+/**
+ * tips.external-result@1: the answer of tips.interaction.record on OpenVibe.Tips. POST /api/v1/interactions/external → { interaction, duplicate } (201 when recorded; 200 with duplicate true when that provider_ref was recorded before, answering the first interaction). The interaction is funding external, settlement external, in the service view.
+ */
+export interface TipsExternalResult {
+  interaction: TipsInteraction;
+  duplicate: boolean;
+}
+
+/** tips.goal-create-request@1.0.0 (owner: tips) */
+/**
+ * tips.goal-create-request@1: the body of tips.goal.create on OpenVibe.Tips. POST /api/v1/goals: { creator?, title, target_amount, description?, image_url?, sort_order? } opens a goal (a service names the creator; a person opens one on their own page). Its total is derived from settled interactions only. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (no title, a bad image_url or sort_order), tips.invalid_amount or tips.text_too_long; 409 tips.too_many_goals (20 active at most); 404 tips.creator_not_found; 403 capability.denied or tips.forbidden. Unknown fields are ignored.
+ */
+export interface TipsGoalCreateRequest {
+  /**
+   * The creator (default: the signed-in person).
+   */
+  creator?: SubjectRef | string;
+  title: string;
+  /**
+   * Vibes bits, at most TIPS_MAX_BITS (10000000 by default).
+   */
+  target_amount: number | string;
+  description?: string | null;
+  /**
+   * An https URL; empty or null clears it.
+   */
+  image_url?: string | null;
+  sort_order?: number | string;
+}
+
+/** tips.goal-result@1.0.0 (owner: tips) */
+/**
+ * tips.goal-result@1: one goal on OpenVibe.Tips (tips.goal.create, tips.goal.update, tips.goal.close). POST /api/v1/goals (201), PATCH /api/v1/goals/:id and POST /api/v1/goals/:id/close → { goal } (closing keeps its history; closing a closed goal changes nothing). GET /api/v1/goals/:id → { goal }: with contributions for the creator and granted services, else the public shape (404 tips.goal_not_found when the page is off).
+ */
+export interface TipsGoalResult {
+  goal: TipsGoal;
+}
+
+/** tips.goal-update-request@1.0.0 (owner: tips) */
+/**
+ * tips.goal-update-request@1: bodies of tips.goal.update on OpenVibe.Tips. PATCH /api/v1/goals/:id: { title?, target_amount?, description?, image_url?, sort_order?, revision? } edits an active goal; revision, when given, must be the goal's current revision (409 tips.revision_conflict). Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. GET /api/v1/goals/:id (reading it, with contributions for the creator and granted services) takes no body. Refusals are problem+json: 404 tips.goal_not_found; 409 tips.goal_closed or tips.revision_conflict; 422 tips.invalid_input, tips.invalid_amount or tips.text_too_long. Unknown fields are ignored.
+ */
+export type TipsGoalUpdateRequest =
+  | {
+      title?: string;
+      /**
+       * Vibes bits, at most TIPS_MAX_BITS (10000000 by default).
+       */
+      target_amount?: number | string;
+      description?: string | null;
+      /**
+       * An https URL; empty or null clears it.
+       */
+      image_url?: string | null;
+      sort_order?: number | string;
+      revision?: number | string;
+    }
+  | NoBody;
+
+/** tips.goal@1.0.0 (owner: tips) */
+/**
+ * tips.goal@1: a creator's goal on OpenVibe.Tips (server/domain/goals.js present, publicGoal). current_amount is derived from settled contributions (plus an amount carried over from Live), never from pending or simulated tips; percent is capped at 100. Anyone but the creator and granted services gets the public shape under the creator's page settings: amounts null with amounts_hidden when goal amounts are off, and supporters (the latest ten, their privacy applying) when goal supporters are on. GET /api/v1/goals/:id adds contributions for the creator and granted services.
+ */
+export interface TipsGoal {
+  id: string;
+  creator: SubjectRef;
+  title: string;
+  description: string | null;
+  target_amount: number | null;
+  current_amount: number | null;
+  currency: string;
+  /**
+   * Contributions counted.
+   */
+  supporters_count: number;
+  carried_over_amount: number | null;
+  percent: number;
+  reached: boolean;
+  reached_at: string | null;
+  image_url: string | null;
+  status: "active" | "closed";
+  sort_order: number;
+  revision: number;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  amounts_hidden?: true;
+  supporters?: {
+    name: string;
+    amount: number | null;
+    at: string;
+  }[];
+  contributions?: {
+    interaction_id: string;
+    amount: number;
+    reversed_amount: number;
+    created_at: string;
+    supporter_name: string;
+  }[];
+}
+
+/** tips.interaction-list-result@1.0.0 (owner: tips) */
+/**
+ * tips.interaction-list-result@1: answers of tips.interaction.list on OpenVibe.Tips. GET /api/v1/interactions?creator=&supporter=&include_test=&cursor=&limit= → { interactions, next_cursor }: newest first, at most 200 a page (50 by default); a service names a creator or a supporter (422 tips.invalid_input otherwise); a person gets their own receipts, or with ?as=creator the tips they received. include_test=0 leaves simulations out. GET /api/v1/profiles/:creator/totals → { creator, totals }: derived from settled interactions; settled_via_billing is what must equal Billing's books (minus what Billing took back), external and simulations are reported apart.
+ */
+export type TipsInteractionListResult =
+  | {
+      interactions: TipsInteraction[];
+      next_cursor: string | null;
+    }
+  | {
+      creator: SubjectRef;
+      totals: {
+        currency: "vibes-bits";
+        /**
+         * Bits settled through Billing (or imported from Live's ledger), less reversals.
+         */
+        settled_via_billing: number;
+        /**
+         * Bits of EXTERNAL tips (the creator's own PowerChat): no Billing liability.
+         */
+        external: number;
+        /**
+         * Settled or reversed interactions, simulations excluded.
+         */
+        interactions: number;
+        simulations: number;
+        pending: number;
+      };
+    };
+
+/** tips.interaction-result@1.0.0 (owner: tips) */
+/**
+ * tips.interaction-result@1: one interaction on OpenVibe.Tips (tips.interaction.get, tips.simulation.run). GET /api/v1/interactions/:id → { interaction } in the reader's view (a service, the creator, or the supporter; anyone else 404 tips.interaction_not_found). POST /api/v1/simulate (201) → { interaction }: the simulated interaction (test true, settlement simulated), in the creator's view.
+ */
+export interface TipsInteractionResult {
+  interaction: TipsInteraction;
+}
+
+/** tips.interaction@1.0.0 (owner: tips) */
+/**
+ * tips.interaction@1: a tip interaction on OpenVibe.Tips (server/domain/interactions.js present): one act of support (a tip, a paid chat message, text-to-speech or a media request) with two separate states: payment (mirrored from OpenVibe.Billing: pending, settled, reversed or failed) and delivery (awaiting_payment, queued, delivered, failed or cancelled). Only the supporter sees who an anonymous supporter is; public is what may be shown to the public and privacy the supporter's choices. A checkout-funded interaction adds checkout; the creator and services also get effects, provider, provider_ref and legacy_source. Amounts are Vibes bits.
+ */
+export interface TipsInteraction {
+  id: string;
+  creator: SubjectRef;
+  /**
+   * null for an anonymous supporter (to anyone but them), an erased one, a simulation or an external tip without one.
+   */
+  supporter: SubjectRef | null;
+  supporter_name: string | null;
+  kind: "tip" | "paid_message" | "tts" | "media_request";
+  amount: number;
+  /**
+   * vibes-bits.
+   */
+  currency: string;
+  message: string | null;
+  tts: {
+    text: string;
+    voice: string;
+  } | null;
+  media: {
+    url: string;
+    provider?: string;
+  } | null;
+  /**
+   * The goal the supporter picked.
+   */
+  goal_id: string | null;
+  funding: "credit" | "checkout" | "provider" | "external" | "none";
+  settlement: "billing" | "external" | "simulated" | "imported";
+  origin: "tips" | "billing" | "billing-external" | "external" | "import";
+  /**
+   * A simulation or Billing test money: never counted.
+   */
+  test: boolean;
+  privacy: {
+    anonymous: boolean;
+    hide_amount: boolean;
+    private_message: boolean;
+  };
+  public: TipsPublicInteraction;
+  /**
+   * When the supporter erased their data from it.
+   */
+  erased_at: string | null;
+  moderation: {
+    state: "visible" | "held" | "hidden";
+    filtered: boolean;
+    at: string | null;
+  };
+  payment: {
+    state: "pending" | "settled" | "reversed" | "failed";
+    billing_txn_id: string | null;
+    reversal_txn_ids: string[];
+    reversed_amount: number;
+    failure: string | null;
+    settled_at: string | null;
+    reversed_at: string | null;
+  };
+  delivery: {
+    state: "awaiting_payment" | "queued" | "delivered" | "failed" | "cancelled";
+    delivered_at: string | null;
+  };
+  created_at: string;
+  updated_at: string;
+  /**
+   * Checkout-funded interactions only.
+   */
+  checkout?: {
+    url: string | null;
+    ref: string | null;
+    provider: string | null;
+    intent_id: string | null;
+  };
+  /**
+   * The creator and services only: the delivery effects.
+   */
+  effects?: {
+    effect: "chat_line" | "paid_message" | "tts" | "media_request" | "overlay_alert";
+    adapter: string;
+    state: "queued" | "delivered" | "failed" | "cancelled";
+    attempts: number;
+    last_error: string | null;
+    updated_at: string;
+  }[];
+  provider?: string | null;
+  provider_ref?: string | null;
+  legacy_source?: string | null;
+}
+
+/** tips.moderation-request@1.0.0 (owner: tips) */
+/**
+ * tips.moderation-request@1: bodies of tips.interaction.moderate on OpenVibe.Tips. POST /api/v1/interactions/:id/hide and /restore: { reason? } (at most 200 characters, kept in the moderation log). GET /api/v1/moderation?creator=&state=held|hidden|visible|all&cursor=&limit= and GET /api/v1/moderation/log?creator= take no body. The creator, one of their moderators, or a service holding the capability moderates (the log is for the creator and services). Hide and restore need an Idempotency-Key header (as every write). Refusals are problem+json: 404 tips.interaction_not_found, 403 tips.forbidden or capability.denied, 422 tips.text_too_long.
+ */
+export type TipsModerationRequest =
+  | {
+      reason?: string | null;
+    }
+  | NoBody;
+
+/** tips.moderation-result@1.0.0 (owner: tips) */
+/**
+ * tips.moderation-result@1: answers of tips.interaction.moderate on OpenVibe.Tips. Moderation never touches the money (no refund, no uncounting). GET /api/v1/moderation → { creator, interactions, next_cursor }: the review queue, newest first (moderators' view). GET /api/v1/moderation/log → { log }: the latest 100 outcomes (held and filtered by the word filter at settlement; hidden and restored by the creator, a moderator or a service). POST /api/v1/interactions/:id/hide → { interaction, changed, cancelled_effects } (chat, TTS and media deliveries still queued are cancelled; overlays drop the alert); POST …/restore → the same, cancelled_effects empty (a held interaction is released now; what a hide cancelled stays cancelled). changed false when it already was in that state.
+ */
+export type TipsModerationResult =
+  | {
+      creator: SubjectRef;
+      interactions: TipsModerationView[];
+      next_cursor: string | null;
+    }
+  | {
+      log: {
+        interaction_id: string;
+        action: "held" | "filtered" | "hidden" | "restored";
+        by_role: "filter" | "creator" | "moderator" | "service";
+        /**
+         * usr_… or svc:…; null for the filter.
+         */
+        actor: string | null;
+        reason: string | null;
+        created_at: string;
+      }[];
+    }
+  | {
+      interaction: TipsModerationView;
+      changed: boolean;
+      cancelled_effects: ("chat_line" | "paid_message" | "tts" | "media_request")[];
+    };
+
+/** tips.moderation-view@1.0.0 (owner: tips) */
+/**
+ * tips.moderation-view@1: a tip interaction as its moderators see it on OpenVibe.Tips (server/domain/moderation.js present): what was written (never a private message, nor anything the supporter erased), the moderation state, and what the public sees (public). An anonymous supporter reads Anonymous; a hidden amount is null.
+ */
+export interface TipsModerationView {
+  id: string;
+  kind: "tip" | "paid_message" | "tts" | "media_request";
+  created_at: string;
+  settled_at: string | null;
+  payment_state: "pending" | "settled" | "reversed" | "failed";
+  test: boolean;
+  moderation: {
+    state: "visible" | "held" | "hidden";
+    at: string | null;
+    filtered: boolean;
+  };
+  supporter_name: string;
+  amount: number | null;
+  message: string | null;
+  tts_text: string | null;
+  media_url: string | null;
+  public: TipsPublicInteraction;
+}
+
+/** tips.overlay-config-request@1.0.0 (owner: tips) */
+/**
+ * tips.overlay-config-request@1: bodies of tips.overlay.config.update on OpenVibe.Tips. POST /api/v1/overlay-configs: { kind, creator?, name?, goal_id?, …settings } creates a config (kind alerts or goal; settings a kind does not use are ignored; a service names the creator). PATCH /api/v1/overlay-configs/:id: { revision?, name?, goal_id?, …settings } changes one (revision, when given, must be current: 409 tips.revision_conflict); open overlays using it receive the change at once. The settings are top-level fields. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (a bad kind or an out-of-range setting) or tips.text_too_long; 404 tips.goal_not_found, tips.overlay_config_not_found or tips.creator_not_found; 403 capability.denied or tips.forbidden. Unknown fields are ignored.
+ */
+export type TipsOverlayConfigRequest =
+  | {
+      kind: "alerts" | "goal";
+      /**
+       * The creator (default: the signed-in person).
+       */
+      creator?: SubjectRef | string;
+      name?: string | null;
+      /**
+       * goal: the goal it shows.
+       */
+      goal_id?: string | null;
+      /**
+       * alerts: the smallest tip that alerts (1 to 10000000).
+       */
+      min_amount?: number | string;
+      /**
+       * alerts: 1000 to 60000.
+       */
+      duration_ms?: number | string;
+      /**
+       * alerts
+       */
+      show_message?: boolean | number | string;
+      /**
+       * alerts
+       */
+      show_amount?: boolean | number | string;
+      /**
+       * alerts
+       */
+      speak_message?: boolean | number | string;
+      /**
+       * alerts: an https URL; empty or null clears it.
+       */
+      sound_url?: string | null;
+      /**
+       * alerts: an https URL; empty or null clears it.
+       */
+      image_url?: string | null;
+      /**
+       * alerts: e.g. {name} tipped {amount} Vibes.
+       */
+      template?: string | null;
+      /**
+       * goal
+       */
+      show_amounts?: boolean | number | string;
+      /**
+       * goal
+       */
+      show_percent?: boolean | number | string;
+    }
+  | {
+      revision?: number | string;
+      name?: string | null;
+      /**
+       * goal: the goal it shows; empty or null clears it.
+       */
+      goal_id?: string | null;
+      /**
+       * alerts: the smallest tip that alerts (1 to 10000000).
+       */
+      min_amount?: number | string;
+      /**
+       * alerts: 1000 to 60000.
+       */
+      duration_ms?: number | string;
+      /**
+       * alerts
+       */
+      show_message?: boolean | number | string;
+      /**
+       * alerts
+       */
+      show_amount?: boolean | number | string;
+      /**
+       * alerts
+       */
+      speak_message?: boolean | number | string;
+      /**
+       * alerts: an https URL; empty or null clears it.
+       */
+      sound_url?: string | null;
+      /**
+       * alerts: an https URL; empty or null clears it.
+       */
+      image_url?: string | null;
+      /**
+       * alerts: e.g. {name} tipped {amount} Vibes.
+       */
+      template?: string | null;
+      /**
+       * goal
+       */
+      show_amounts?: boolean | number | string;
+      /**
+       * goal
+       */
+      show_percent?: boolean | number | string;
+    };
+
+/** tips.overlay-config-result@1.0.0 (owner: tips) */
+/**
+ * tips.overlay-config-result@1: answers about overlay configs on OpenVibe.Tips (tips.overlay.config.get, tips.overlay.config.update). GET /api/v1/overlay-configs?creator= → { configs } (oldest first); GET /api/v1/overlay-configs/:id, POST /api/v1/overlay-configs (201) and PATCH /api/v1/overlay-configs/:id → { config }. For the creator or a service holding the capability; 404 tips.overlay_config_not_found.
+ */
+export type TipsOverlayConfigResult =
+  | {
+      config: TipsOverlayConfig;
+    }
+  | {
+      configs: TipsOverlayConfig[];
+    };
+
+/** tips.overlay-config@1.0.0 (owner: tips) */
+/**
+ * tips.overlay-config@1: an overlay config on OpenVibe.Tips (server/domain/overlays.js presentConfig): how a creator's alerts overlay (kind alerts: min_amount, duration_ms, show_message, show_amount, speak_message, sound_url, image_url, template) or goal widget (kind goal: show_amounts, show_percent, optionally one goal) looks. Open overlays using it receive every change at once.
+ */
+export interface TipsOverlayConfig {
+  id: string;
+  creator: SubjectRef;
+  kind: "alerts" | "goal";
+  name: string;
+  settings: {
+    min_amount?: number;
+    duration_ms?: number;
+    show_message?: boolean;
+    show_amount?: boolean;
+    speak_message?: boolean;
+    sound_url?: string | null;
+    image_url?: string | null;
+    template?: string | null;
+    show_amounts?: boolean;
+    show_percent?: boolean;
+  };
+  goal_id: string | null;
+  revision: number;
+  created_at: string;
+  updated_at: string;
+}
+
+/** tips.overlay-token-request@1.0.0 (owner: tips) */
+/**
+ * tips.overlay-token-request@1: bodies of tips.overlay.token.create on OpenVibe.Tips. POST /api/v1/overlay-tokens: { creator?, scopes?, label?, config_id? } mints a token (scopes default to alerts and goals; config_id must be one of the creator's overlay configs); a service names the creator, a person mints for their own page. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. GET /api/v1/overlay-tokens?creator= takes no body. Refusals are problem+json: 422 tips.invalid_input or tips.text_too_long; 404 tips.overlay_config_not_found or tips.creator_not_found; 409 tips.too_many_tokens (25 active at most); 403 capability.denied or tips.forbidden. Unknown fields are ignored.
+ */
+export type TipsOverlayTokenRequest =
+  | {
+      /**
+       * The creator (default: the signed-in person).
+       */
+      creator?: SubjectRef | string;
+      scopes?: ("alerts" | "goals")[];
+      label?: string | null;
+      config_id?: string | null;
+    }
+  | NoBody;
+
+/** tips.overlay-token-result@1.0.0 (owner: tips) */
+/**
+ * tips.overlay-token-result@1: answers about overlay tokens on OpenVibe.Tips (tips.overlay.token.create, tips.overlay.token.revoke). POST /api/v1/overlay-tokens (201) → { token, secret, overlay_url, events_url }: the secret (tovl_…) and the URLs that carry it are shown once; a replay of the same Idempotency-Key answers them as null with a note (revoke that token and create another). GET /api/v1/overlay-tokens → { tokens } (without secrets; active first). POST /api/v1/overlay-tokens/:id/revoke → { token }: revoked at once, and every open overlay stream using it is closed.
+ */
+export type TipsOverlayTokenResult =
+  | {
+      token: TipsOverlayToken;
+      /**
+       * A secret: keep it out of logs.
+       */
+      secret: string | null;
+      overlay_url: string | null;
+      events_url: string | null;
+      note?: string;
+    }
+  | {
+      tokens: TipsOverlayToken[];
+    }
+  | {
+      token: TipsOverlayToken;
+    };
+
+/** tips.overlay-token@1.0.0 (owner: tips) */
+/**
+ * tips.overlay-token@1: an overlay token on OpenVibe.Tips (server/domain/overlays.js presentToken), without its secret: a scoped, revocable credential an OBS browser source holds in its URL (scopes alerts, goals), optionally bound to one overlay config. Never a creator cookie; only its hash is stored.
+ */
+export interface TipsOverlayToken {
+  id: string;
+  creator: SubjectRef;
+  scopes: ("alerts" | "goals")[];
+  label: string | null;
+  config_id: string | null;
+  created_at: string;
+  last_used_at: string | null;
+  revoked_at: string | null;
+  active: boolean;
+}
+
+/** tips.paid-request@1.0.0 (owner: tips) */
+/**
+ * tips.paid-request@1: bodies of the paid requests on OpenVibe.Tips: POST /api/v1/checkout (tips.checkout.create: a tip), POST /api/v1/paid-messages (tips.superchat.create: needs message; paid_message_min applies), POST /api/v1/tts-requests (tips.tts.request: needs text to read, tts.text or message, within the creator's TTS settings) and POST /api/v1/media-requests (tips.media_request.create: needs media.url; the creator's minimum and length apply): { creator, amount, supporter?, supporter_name?, message?, pay_with?, provider?, tts?, media?, goal_id?, target?, privacy? }. The route sets the kind. A service names the supporter; a person pays as themselves. pay_with credit (default) pays from the supporter's Billing credit at once; checkout starts a Billing checkout (from TIPS_MIN_CHECKOUT_BITS, 100 bits by default). Tips never prices money; Billing does. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input, tips.invalid_amount, tips.amount_too_small, tips.text_too_long (message over TIPS_MESSAGE_CHARS, 300 by default), tips.invalid_media, tips.invalid_subject, tips.name_taken, tips.goal_not_found or tips.self_dealing; 409 tips.not_accepting, tips.tts_disabled or tips.media_disabled; 409 tips.payment_failed (a replay of a request whose payment failed) and Billing's own refusal code (409 billing.insufficient_funds, else 422), both with the interaction in details; 404 tips.creator_not_found; 429 tips.too_many_pending; 502 tips.billing_unavailable. Unknown fields are ignored.
+ */
+export interface TipsPaidRequest {
+  /**
+   * The creator tipped.
+   */
+  creator: SubjectRef | string;
+  /**
+   * Vibes bits, at most TIPS_MAX_BITS (10000000 by default).
+   */
+  amount: number | string;
+  /**
+   * The supporter: required for services; ignored for a person.
+   */
+  supporter?: SubjectRef | string;
+  /**
+   * The name to show (at most 80 characters kept); never the creator's own name or handle.
+   */
+  supporter_name?: string | null;
+  message?: string | null;
+  pay_with?: "credit" | "checkout";
+  /**
+   * pay_with checkout: one of TIPS_CHECKOUT_PROVIDERS (powerchat by default).
+   */
+  provider?: string;
+  /**
+   * Text-to-speech (kind tts): the text to read (default: message) and the voice.
+   */
+  tts?: {
+    text?: string;
+    /**
+     * Default: the creator's voice.
+     */
+    voice?:
+      | "gary"
+      | "brian"
+      | "amy"
+      | "emma"
+      | "joey"
+      | "justin"
+      | "matthew"
+      | "salli"
+      | "kimberly"
+      | "kendra"
+      | "ivy"
+      | "joanna";
+  };
+  /**
+   * A media request (kind media_request).
+   */
+  media?: {
+    /**
+     * An https link on an allowed host (TIPS_MEDIA_HOSTS; YouTube by default).
+     */
+    url: string;
+  };
+  /**
+   * One of the creator's open goals.
+   */
+  goal_id?: string;
+  target?: EntityRef;
+  /**
+   * The supporter's choices; any other field is refused (422 tips.invalid_input). true, 1, "1", "true" and "on" count as yes.
+   */
+  privacy?: {
+    /**
+     * The name reads "Anonymous" to everyone but the supporter.
+     */
+    anonymous?: boolean | number | string;
+    /**
+     * The amount is left out of overlays, chat lines and public pages.
+     */
+    hide_amount?: boolean | number | string;
+    /**
+     * A tip's message is for the creator only (tips only; 422 for the other kinds).
+     */
+    private_message?: boolean | number | string;
+  };
+}
+
+/** tips.paid-result@1.0.0 (owner: tips) */
+/**
+ * tips.paid-result@1: the answer of the paid requests on OpenVibe.Tips (tips.checkout.create, tips.superchat.create, tips.tts.request, tips.media_request.create). POST /api/v1/checkout, /paid-messages, /tts-requests and /media-requests → { interaction, checkout_url, checkout_ref } (201; 200 for a replay of the same Idempotency-Key). Paid from credit, the interaction is settled at once, or still pending while Billing is retried. Through a checkout, it is pending and the supporter pays at checkout_url (https only; a PowerChat checkout may come as checkout_ref only); the paid message, TTS or media request exists only after Billing settles it. A service sees the interaction as a service (no subject for an anonymous supporter); a person as its supporter.
+ */
+export interface TipsPaidResult {
+  interaction: TipsInteraction;
+  checkout_url: string | null;
+  checkout_ref: string | null;
+}
+
+/** tips.profile-result@1.0.0 (owner: tips) */
+/**
+ * tips.profile-result@1: a creator's tip profile on OpenVibe.Tips (tips.profile.get, tips.profile.update). GET /api/v1/profiles/:creator → { profile, goals }: the profile and its active goals, in full for the creator and services holding tips.profile.get, else in the public shape (a page that is switched off is 404 tips.creator_not_found to everyone else). PATCH /api/v1/profiles/:creator → { profile } in the creator's view.
+ */
+export interface TipsProfileResult {
+  profile: TipsProfile;
+  /**
+   * GET only (always there): the active goals.
+   */
+  goals?: TipsGoal[];
+}
+
+/** tips.profile-update-request@1.0.0 (owner: tips) */
+/**
+ * tips.profile-update-request@1: the body of tips.profile.update on OpenVibe.Tips. PATCH /api/v1/profiles/:creator (a usr_ id or handle; me for the signed-in person, creating their profile on first use): any of the settings below; revision, when given, must be the profile's current revision (409 tips.revision_conflict). A service opening a profile for a creator Tips has not seen (a usr_ id in the path) must give handle (and may give display_name and avatar_url). Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (a value out of range, an unknown voice, an unknown page or filter setting, an empty display_name, no handle when creating) or tips.text_too_long; 404 tips.creator_not_found; 403 capability.denied or tips.forbidden. Unknown top-level fields are ignored.
+ */
+export interface TipsProfileUpdateRequest {
+  revision?: number | string;
+  /**
+   * The public page and its indexing. true, 1, "1" and "on" count as yes; anything else as no.
+   */
+  page_enabled?: boolean | number | string;
+  /**
+   * Take new tips. true, 1, "1" and "on" count as yes; anything else as no.
+   */
+  accepting?: boolean | number | string;
+  /**
+   * Text-to-speech requests. true, 1, "1" and "on" count as yes; anything else as no.
+   */
+  tts_enabled?: boolean | number | string;
+  /**
+   * Media requests. true, 1, "1" and "on" count as yes; anything else as no.
+   */
+  media_requests_enabled?: boolean | number | string;
+  /**
+   * The smallest tip (1 to 1000000 bits).
+   */
+  min_amount?: number | string;
+  /**
+   * The smallest paid message (1 to 1000000 bits).
+   */
+  paid_message_min?: number | string;
+  /**
+   * The smallest text-to-speech request (1 to 1000000 bits).
+   */
+  tts_min_amount?: number | string;
+  /**
+   * The smallest media request (1 to 1000000 bits).
+   */
+  media_request_min?: number | string;
+  /**
+   * The longest media request (10 to 10800 seconds).
+   */
+  media_max_seconds?: number | string;
+  /**
+   * At least 20, at most TIPS_TTS_HARD_CAP (1200 by default).
+   */
+  tts_max_chars?: number | string;
+  tts_voice?:
+    | "gary"
+    | "brian"
+    | "amy"
+    | "emma"
+    | "joey"
+    | "justin"
+    | "matthew"
+    | "salli"
+    | "kimberly"
+    | "kendra"
+    | "ivy"
+    | "joanna";
+  headline?: string | null;
+  display_name?: string;
+  /**
+   * What the public pages show; any other setting is refused.
+   */
+  page?: {
+    goal_amounts?: boolean | number | string;
+    goal_supporters?: boolean | number | string;
+    supporters_page?: boolean | number | string;
+    supporters_amounts?: boolean | number | string;
+    supporters_messages?: boolean | number | string;
+  };
+  /**
+   * The word filter for paid messages; any other setting is refused.
+   */
+  filter?: {
+    /**
+     * Blocked words or phrases: a list, or one string separated by commas or new lines.
+     */
+    words?: string[] | string;
+    /**
+     * mask stars them out; hold keeps the paid message back for review.
+     */
+    action?: "mask" | "hold";
+    /**
+     * Links in paid messages shown as [link].
+     */
+    links?: boolean | number | string;
+  };
+  /**
+   * Creating a profile as a service: the creator's handle (their Network username).
+   */
+  handle?: string;
+  /**
+   * Creating a profile as a service: an https URL.
+   */
+  avatar_url?: string | null;
+}
+
+/** tips.profile@1.0.0 (owner: tips) */
+/**
+ * tips.profile@1: a creator's tip profile on OpenVibe.Tips (server/domain/profiles.js present). page_enabled is the creator's switch for the public page (off: it answers 404 to everyone else); accepting takes new tips; minimums are in Vibes bits (tts and media_request null while switched off); page is what the public pages show. The creator and granted services also get filter (the word filter for paid messages), revision, created_at and updated_at.
+ */
+export interface TipsProfile {
+  creator: SubjectRef;
+  handle: string;
+  display_name: string;
+  avatar_url: string | null;
+  headline: string | null;
+  page_enabled: boolean;
+  accepting: boolean;
+  url: string;
+  minimums: {
+    tip: number;
+    paid_message: number;
+    tts: number | null;
+    media_request: number | null;
+  };
+  tts: {
+    enabled: boolean;
+    max_chars: number;
+    voice: string;
+  };
+  media_requests: {
+    enabled: boolean;
+    max_seconds: number;
+  };
+  page: {
+    goal_amounts: boolean;
+    goal_supporters: boolean;
+    supporters_page: boolean;
+    supporters_amounts: boolean;
+    supporters_messages: boolean;
+  };
+  supporters_url: string | null;
+  currency: "vibes-bits";
+  filter?: {
+    words: string[];
+    action: "mask" | "hold";
+    links: boolean;
+  };
+  revision?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+/** tips.public-interaction@1.0.0 (owner: tips) */
+/**
+ * tips.public-interaction@1: the public shape of a tip interaction on OpenVibe.Tips (server/domain/privacy.js publicView): what overlay alerts, chat lines, the supporters and goals pages and the public block of API answers show. The supporter's choices apply (an anonymous one reads Anonymous, a hidden amount is null, a private message is null) and the creator's word filter stars blocked words out. A held or hidden interaction (moderation) shows nothing but hidden: true.
+ */
+export interface TipsPublicInteraction {
+  interaction_id: string;
+  kind: "tip" | "paid_message" | "tts" | "media_request";
+  /**
+   * Vibes bits; null when hidden.
+   */
+  amount: number | null;
+  amount_hidden: boolean;
+  currency: string;
+  settlement: "billing" | "external" | "simulated" | "imported";
+  test: boolean;
+  /**
+   * When it settled (else when it was created).
+   */
+  at: string;
+  supporter_name: string | null;
+  message: string | null;
+  tts: {
+    text: string;
+    voice: string;
+  } | null;
+  media: {
+    url: string;
+  } | null;
+  hidden: boolean;
+}
+
+/** tips.simulation-request@1.0.0 (owner: tips) */
+/**
+ * tips.simulation-request@1: the body of tips.simulation.run on OpenVibe.Tips. POST /api/v1/simulate: { creator?, kind?, amount?, message?, tts?, media?, goal_id?, supporter_name?, privacy? } runs the full effect path (overlay alert, goal widget, delivery) flagged test, with no Billing call, never counted in any total and never emitted as a durable event. A service names the creator; a person simulates on their own page. The creator's rules apply as for a real request, except that a creator who is not accepting tips can still simulate. kind defaults to tip, amount to the creator's minimum or 100 bits, supporter_name to "Test supporter". Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json (422 tips.invalid_input, tips.amount_too_small, tips.invalid_media, …; 409 tips.tts_disabled or tips.media_disabled; 404 tips.creator_not_found). Unknown fields are ignored.
+ */
+export interface TipsSimulationRequest {
+  /**
+   * The creator whose overlays show it (default: the signed-in person).
+   */
+  creator?: SubjectRef | string;
+  kind?: "tip" | "paid_message" | "tts" | "media_request";
+  /**
+   * Vibes bits.
+   */
+  amount?: number | string;
+  message?: string | null;
+  /**
+   * Text-to-speech (kind tts): the text to read (default: message) and the voice.
+   */
+  tts?: {
+    text?: string;
+    /**
+     * Default: the creator's voice.
+     */
+    voice?:
+      | "gary"
+      | "brian"
+      | "amy"
+      | "emma"
+      | "joey"
+      | "justin"
+      | "matthew"
+      | "salli"
+      | "kimberly"
+      | "kendra"
+      | "ivy"
+      | "joanna";
+  };
+  /**
+   * A media request (kind media_request).
+   */
+  media?: {
+    /**
+     * An https link on an allowed host (TIPS_MEDIA_HOSTS; YouTube by default).
+     */
+    url: string;
+  };
+  goal_id?: string;
+  supporter_name?: string | null;
+  /**
+   * The supporter's choices; any other field is refused (422 tips.invalid_input). true, 1, "1", "true" and "on" count as yes.
+   */
+  privacy?: {
+    /**
+     * The name reads "Anonymous" to everyone but the supporter.
+     */
+    anonymous?: boolean | number | string;
+    /**
+     * The amount is left out of overlays, chat lines and public pages.
+     */
+    hide_amount?: boolean | number | string;
+    /**
+     * A tip's message is for the creator only (tips only; 422 for the other kinds).
+     */
+    private_message?: boolean | number | string;
+  };
+}
+
 /** vip.plan.published@1.0.0 (owner: vip) */
 /**
  * vip.plan.published v1 (OpenVibe.VIP server/domain/plans.js emitPublished). A plan version became what new members buy: the plan was published, or a published plan was edited (a new immutable version). Carries the version's full terms, never a price (Billing prices and charges). Envelope: subject { type: plan, id: vpl_…, revision: <version> }, visibility public, priority important, actor service:vip.
@@ -12463,6 +13904,6937 @@ export interface VipMembershipChangedPayload {
    */
   subscription_id: string | null;
 }
+
+/** vip.checkout-request@1.0.0 (owner: vip) */
+/**
+ * vip.checkout-request@1: the body of vip.membership.checkout on OpenVibe.VIP. POST /api/v1/checkout: { plan_id, provider, subject?, success_url?, cancel_url?, auto_renew? } starts joining a published plan: VIP records the plan version and hands off to OpenVibe.Billing (provider credit: a period paid from the member's credit at once; any other provider: a Billing payment intent and its checkout). A service names the member (subject); a person joins as themselves, and their return URLs must be pages of VIP's own site. Refusals are problem+json: 404 vip.plan_not_found (no published plan with that id); 409 vip.checkout.unavailable, vip.already_member, vip.checkout.insufficient_credit or vip.checkout.provider_unavailable; 422 vip.checkout.provider_unavailable (a provider VIP does not offer), vip.checkout.self, vip.invalid_subject or vip.invalid_input; 503 vip.billing_frozen or vip.billing_unavailable. Unknown fields are ignored.
+ */
+export interface VipCheckoutRequest {
+  plan_id: string;
+  /**
+   * One of VIP_CHECKOUT_PROVIDERS (powerchat and credit by default); case-insensitive.
+   */
+  provider: string;
+  /**
+   * The member: required for services; a person may only name themselves.
+   */
+  subject?: SubjectRef | string;
+  /**
+   * Where the provider sends the buyer after paying; default the member's VIP page.
+   */
+  success_url?: string | null;
+  /**
+   * Where the provider sends the buyer after cancelling; default the creator's VIP page.
+   */
+  cancel_url?: string | null;
+  /**
+   * Default true.
+   */
+  auto_renew?: boolean | number | string;
+}
+
+/** vip.checkout-result@1.0.0 (owner: vip) */
+/**
+ * vip.checkout-result@1: the answer of vip.membership.checkout on OpenVibe.VIP. POST /api/v1/checkout (201) → { checkout, membership_started, checkout_url, checkout_ref, amount_cents? }. With provider credit the period is paid at once (membership_started true when Billing granted it; no checkout link). Otherwise the member finishes at checkout_url (always http(s) when present; a PowerChat checkout may come as checkout_ref only) and the membership starts when Billing's settlement arrives; amount_cents is what Billing's intent asks for.
+ */
+export interface VipCheckoutResult {
+  checkout: VipCheckout;
+  membership_started: boolean;
+  checkout_url: string | null;
+  checkout_ref: string | null;
+  amount_cents?: number | null;
+}
+
+/** vip.checkout@1.0.0 (owner: vip) */
+/**
+ * vip.checkout@1: a checkout hand-off on OpenVibe.VIP (server/domain/checkout.js present): the plan version a member chose, recorded before VIP hands the purchase to OpenVibe.Billing (a subscription paid from credit, or a Billing payment intent). status created → handed_off (sent to the provider) or paid (credit) → used (the membership was filed under it); failed when Billing refused.
+ */
+export interface VipCheckout {
+  id: string;
+  member: SubjectRef;
+  creator_id: string;
+  plan_id: string;
+  plan_version_id: string | null;
+  /**
+   * A checkout provider VIP offers (VIP_CHECKOUT_PROVIDERS; powerchat and credit by default).
+   */
+  provider: string;
+  status: "created" | "handed_off" | "paid" | "failed" | "used";
+  billing_intent_id: string | null;
+  billing_subscription_id: string | null;
+  checkout_url: string | null;
+  checkout_ref: string | null;
+  created_at: string;
+}
+
+/** vip.creator@1.0.0 (owner: vip) */
+/**
+ * vip.creator@1: a creator as OpenVibe.VIP presents it (server/domain/creators.js present): someone who offers memberships, named by their Network subject, or the network itself (id network, no subject; staff manage its plans and perks). The username is a cached handle for the public page; display_name falls back to it (OpenVibe for the network).
+ */
+export interface VipCreator {
+  id: string;
+  kind: "creator" | "network";
+  /**
+   * null for the network.
+   */
+  subject: SubjectRef | null;
+  username: string | null;
+  display_name: string | null;
+  bio: string | null;
+  status: "active" | "suspended";
+}
+
+/** vip.entitlement-check-request@1.0.0 (owner: vip) */
+/**
+ * vip.entitlement-check-request@1: the question of vip.entitlement.check on OpenVibe.VIP. POST /api/v1/entitlements/check: { creator, subject?, mode?, product? }; GET /api/v1/entitlements/check takes the same fields in its query string and no body. creator is a user SubjectRef, usr_ id (asked of Billing even when VIP has never seen the creator) or VIP username; subject is the member (required for services; a person asks about themselves). mode auto (default: the projection when fresh, else Billing), projection (never asks Billing) or authoritative (always asks Billing). product (a service id such as chat or blog) adds what the membership means there. Refusals are problem+json: 422 vip.invalid_input (no creator VIP can resolve, a bad product) or vip.invalid_subject; 403 capability.denied or vip.not_yours. Unknown fields are ignored.
+ */
+export type VipEntitlementCheckRequest =
+  | {
+      creator: SubjectRef | string;
+      subject?: SubjectRef | string;
+      mode?: "auto" | "projection" | "authoritative";
+      product?: string;
+    }
+  | NoBody;
+
+/** vip.entitlement-check-result@1.0.0 (owner: vip) */
+/**
+ * vip.entitlement-check-result@1: the answer of vip.entitlement.check on OpenVibe.VIP. GET or POST /api/v1/entitlements/check → an entitlement answer (vip.entitlement@1); unknown never authorizes. With product it adds { product, product_perks, preferences }: the perks of the member's plan version that have bindings for that product (none unless active), and the member's badge and listing preferences for the creator.
+ */
+export type VipEntitlementCheckResult = VipEntitlement & {
+  product?: string;
+  product_perks?: {
+    key: string;
+    name: string;
+    kind: "badge" | "emote" | "gated_content" | "room" | "role" | "other";
+    scope: "creator" | "network";
+    bindings: {
+      binding: string;
+      config: {};
+    }[];
+  }[];
+  preferences?: {
+    show_badge: boolean;
+    listed: boolean;
+  };
+};
+
+/** vip.entitlement@1.0.0 (owner: vip) */
+/**
+ * vip.entitlement@1: an entitlement answer of OpenVibe.VIP (server/domain/entitlements.js check): is the member a member of the creator right now, from VIP's short-lived projection of OpenVibe.Billing's entitlements (source projection, stale when past valid_until but within the grace period) or from Billing itself (source billing). status unknown (source none) means VIP could not confirm it and never authorizes; active is true only for status active. A creator asked about themselves is inactive with a reason.
+ */
+export interface VipEntitlement {
+  member: SubjectRef;
+  creator: SubjectRef;
+  /**
+   * The Billing entitlement kind; channel_subscription today.
+   */
+  kind: string;
+  status: "active" | "inactive" | "unknown";
+  active: boolean;
+  /**
+   * End of the paid period, as Billing reported it.
+   */
+  expires_at: string | null;
+  cancel_at_period_end: boolean;
+  source: "projection" | "billing" | "none";
+  stale: boolean;
+  /**
+   * Until when the projection may answer without asking Billing; null for unknown.
+   */
+  valid_until: string | null;
+  checked_at: string;
+  membership: VipMembership | null;
+  /**
+   * Why it is unknown or inactive: no_projection, projection_expired, billing_unavailable, self (as text), …
+   */
+  reason?: string;
+}
+
+/** vip.members-result@1.0.0 (owner: vip) */
+/**
+ * vip.members-result@1: the answer of vip.creator.members.list on OpenVibe.VIP. GET /api/v1/creators/:ref/members → { creator, source, note?, members }: the creator's active members with the membership VIP filed for each (the plan version they joined under; null when VIP has none). source billing: Billing's active subscriptions to the creator; source projection: Billing did not answer and the list is VIP's fresh projection rows, possibly incomplete (note says so). For the creator, staff or a service holding the capability; 404 vip.creator_not_found.
+ */
+export interface VipMembersResult {
+  creator: VipCreator;
+  source: "billing" | "projection";
+  note?: string;
+  members: {
+    member: SubjectRef;
+    current_period_end: string | null;
+    cancel_at_period_end: boolean;
+    /**
+     * The Billing subscription (sub_…).
+     */
+    subscription_id: string | null;
+    membership: VipMembership | null;
+  }[];
+}
+
+/** vip.membership-status-result@1.0.0 (owner: vip) */
+/**
+ * vip.membership-status-result@1: the answer of vip.membership.status on OpenVibe.VIP. GET /api/v1/memberships/:subject?mode=projection|authoritative → { member, memberships }: every membership VIP has filed for the member, newest first, each with its creator, the member's preferences for it and the entitlement answer (mode auto by default: the projection when fresh, else Billing). A person may only ask about themselves (403 vip.not_yours); a service needs vip.membership.status.
+ */
+export interface VipMembershipStatusResult {
+  member: SubjectRef;
+  memberships: (VipMembership & {
+    creator: VipCreator | null;
+    /**
+     * null when the creator has no subject (the network).
+     */
+    entitlement: VipEntitlement | null;
+    preferences: {
+      show_badge: boolean;
+      listed: boolean;
+    };
+  })[];
+}
+
+/** vip.membership@1.0.0 (owner: vip) */
+/**
+ * vip.membership@1: VIP's record of a membership (server/domain/memberships.js present): which plan version the member bought, the perk keys that version grants and how the membership was filed (checkout: the member's own VIP checkout; billing: a Billing subscription bought elsewhere; import). Whether it is active is never stored here: that is Billing's entitlement (vip.entitlement@1).
+ */
+export interface VipMembership {
+  id: string;
+  member: SubjectRef;
+  creator_id: string;
+  /**
+   * null when Billing granted a membership for a creator with no VIP plan.
+   */
+  plan_id: string | null;
+  plan_version: {
+    id: string;
+    version: number;
+    name: string;
+    /**
+     * The version's terms snapshot (vip.plan-version@1 terms).
+     */
+    terms: {};
+  } | null;
+  /**
+   * Perk keys of the plan version.
+   */
+  perks: string[];
+  origin: "checkout" | "billing" | "import";
+  joined_at: string;
+  terms_since: string;
+}
+
+/** vip.perk-create-request@1.0.0 (owner: vip) */
+/**
+ * vip.perk-create-request@1: the body of vip.perk.create on OpenVibe.VIP. POST /api/v1/perks: { creator?, key?, name, description?, kind?, bindings? } defines a perk for a creator (a service names the creator; a person defines their own; staff may name network). key defaults to the name, and must read as a slug (1-48 of a-z, 0-9 and -, lowercased); kind defaults to other. Refusals are problem+json: 422 vip.invalid_input (no name, a bad key, kind or binding) or vip.text_too_long; 409 vip.perk_exists (the key is taken); 403 capability.denied or vip.not_yours. Unknown fields are ignored.
+ */
+export interface VipPerkCreateRequest {
+  /**
+   * The creator the perk belongs to (a user SubjectRef, or network for staff).
+   */
+  creator?: SubjectRef | string;
+  key?: string;
+  name: string;
+  description?: string | null;
+  kind?: "badge" | "emote" | "gated_content" | "room" | "role" | "other";
+  /**
+   * Replaces the perk's active bindings (a binding left out is removed). Each (product, binding) at most once.
+   *
+   * @maxItems 20
+   */
+  bindings?:
+    | []
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ];
+}
+
+/** vip.perk-list-result@1.0.0 (owner: vip) */
+/**
+ * vip.perk-list-result@1: the answer of vip.perk.list on OpenVibe.VIP. GET /api/v1/perks?creator=&network=&retired= → { perks }: a creator's active perks plus the network's (network=0 leaves those out), ordered creator first then by name; retired=1 adds retired perks for the creator, staff or a service holding vip.perk.list. 404 vip.creator_not_found (problem+json) when creator names nobody.
+ */
+export interface VipPerkListResult {
+  perks: VipPerk[];
+}
+
+/** vip.perk-result@1.0.0 (owner: vip) */
+/**
+ * vip.perk-result@1: the answer of vip.perk.create and vip.perk.update on OpenVibe.VIP. POST /api/v1/perks (201) and PATCH /api/v1/perks/:id → { perk } with its active bindings.
+ */
+export interface VipPerkResult {
+  perk: VipPerk;
+}
+
+/** vip.perk-update-request@1.0.0 (owner: vip) */
+/**
+ * vip.perk-update-request@1: the body of vip.perk.update on OpenVibe.VIP. PATCH /api/v1/perks/:id: { name?, description?, kind?, status?, bindings? } renames, describes or retires a perk, or replaces its product bindings. Published plan versions keep the perk snapshot they were written with. Refusals are problem+json: 404 vip.perk_not_found; 422 vip.invalid_input or vip.text_too_long; 403 capability.denied. Unknown fields are ignored.
+ */
+export interface VipPerkUpdateRequest {
+  name?: string;
+  description?: string | null;
+  kind?: "badge" | "emote" | "gated_content" | "room" | "role" | "other";
+  status?: "active" | "retired";
+  /**
+   * Replaces the perk's active bindings (a binding left out is removed). Each (product, binding) at most once.
+   *
+   * @maxItems 20
+   */
+  bindings?:
+    | []
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        },
+        {
+          /**
+           * A service id: live, chat, community, blog, …
+           */
+          product: string;
+          /**
+           * chat_badge, room_access, gated_post, …
+           */
+          binding: string;
+          /**
+           * Under 2 KB of JSON; default {}.
+           */
+          config?: {} | null;
+        }
+      ];
+}
+
+/** vip.perk@1.0.0 (owner: vip) */
+/**
+ * vip.perk@1: a perk on OpenVibe.VIP (server/domain/perks.js present): a benefit a creator (or the network) defines once and includes in plan versions, with its product bindings (how a product recognises it: Live's chat badge, a Chat room, a gated Blog post, …). Editing a perk never rewrites the plan versions that include it.
+ */
+export interface VipPerk {
+  id: string;
+  key: string;
+  name: string;
+  description: string | null;
+  kind: "badge" | "emote" | "gated_content" | "room" | "role" | "other";
+  status: "active" | "retired";
+  scope: "creator" | "network";
+  creator_id: string;
+  /**
+   * Active bindings, by product then binding.
+   */
+  bindings: {
+    product: string;
+    binding: string;
+    config: {};
+  }[];
+  updated_at: string;
+}
+
+/** vip.plan-create-request@1.0.0 (owner: vip) */
+/**
+ * vip.plan-create-request@1: the body of vip.plan.create on OpenVibe.VIP. POST /api/v1/plans: { creator?, name, slug?, description?, benefits?, perks?, billing_kind?, publish?, change_note? } creates a plan and its version 1 (published at once with publish). A service must name the creator (a user SubjectRef or network); a person creates for themselves (staff may name another creator or network). billing_kind defaults to channel_subscription for a creator and null for the network (Billing has no network product yet). Refusals are problem+json: 422 vip.invalid_input (no name, a bad slug or billing_kind), vip.text_too_long, vip.perk_not_found or vip.invalid_subject; 409 vip.plan_exists (the slug is taken) or vip.plan.billing_product_taken (the creator already has a published plan sold as a channel subscription); 403 capability.denied or vip.not_yours. Unknown fields are ignored.
+ */
+export interface VipPlanCreateRequest {
+  /**
+   * The creator the plan belongs to (a user SubjectRef, or network for staff).
+   */
+  creator?: SubjectRef | string;
+  name: string;
+  /**
+   * Default: made from the name.
+   */
+  slug?: string;
+  description?: string | null;
+  /**
+   * At most 20, each at most 200 characters: a list, or one string with one benefit per line.
+   */
+  benefits?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | string;
+  /**
+   * Perk ids (vpk_…) or keys: the creator's own active perks or the network's (422 vip.perk_not_found otherwise).
+   *
+   * @maxItems 30
+   */
+  perks?: string[];
+  billing_kind?: "channel_subscription" | null;
+  /**
+   * true (or 1, yes, on) publishes version 1 at once.
+   */
+  publish?: boolean | number | string;
+  /**
+   * Default: created.
+   */
+  change_note?: string | null;
+}
+
+/** vip.plan-list-result@1.0.0 (owner: vip) */
+/**
+ * vip.plan-list-result@1: answers of vip.plan.list on OpenVibe.VIP. Published plans are public; the creator, staff or a service holding vip.plan.list also see drafts and archived plans. GET /api/v1/plans?creator=&include=drafts,archived → { creator, plans }; GET /api/v1/plans/:id → { plan } (with its creator); GET /api/v1/plans/:id/versions → { plan_id, versions } (newest first; only published versions for others); GET /api/v1/creators/:ref → { creator, plans, perks } (the creator's public page: plans, drafts included for its manager, and the creator's own active perks). A creator is named by usr_ id, VIP username or network; 404 vip.creator_not_found or vip.plan_not_found (problem+json).
+ */
+export type VipPlanListResult =
+  | {
+      creator: VipCreator;
+      plans: VipPlan[];
+      perks: VipPerk[];
+    }
+  | {
+      creator: VipCreator;
+      plans: VipPlan[];
+    }
+  | {
+      plan: VipPlan;
+    }
+  | {
+      plan_id: string;
+      versions: VipPlanVersion[];
+    };
+
+/** vip.plan-result@1.0.0 (owner: vip) */
+/**
+ * vip.plan-result@1: answers about one plan on OpenVibe.VIP (vip.plan.create, vip.plan.update, vip.plan.archive). POST /api/v1/plans (201) and POST /api/v1/plans/:id/archive → { plan }; PATCH /api/v1/plans/:id → { plan, version, unchanged } (version: the version written, or the latest when unchanged); POST /api/v1/plans/:id/publish → { plan, replay } (replay: it was already published). The plan carries its creator.
+ */
+export type VipPlanResult =
+  | {
+      plan: VipPlan;
+      version: VipPlanVersion;
+      unchanged: boolean;
+    }
+  | {
+      plan: VipPlan;
+      replay: boolean;
+    }
+  | {
+      plan: VipPlan;
+    };
+
+/** vip.plan-update-request@1.0.0 (owner: vip) */
+/**
+ * vip.plan-update-request@1: bodies of vip.plan.update on OpenVibe.VIP. PATCH /api/v1/plans/:id: { name?, description?, benefits?, perks?, change_note? } writes version N+1 from the latest terms plus these changes (published at once when the plan is published; nothing is written when nothing changed). POST /api/v1/plans/:id/publish takes no body and publishes the latest version. Refusals are problem+json: 404 vip.plan_not_found; 409 vip.plan_archived or vip.plan.billing_product_taken; 422 vip.invalid_input, vip.text_too_long or vip.perk_not_found; 403 capability.denied. Unknown fields are ignored.
+ */
+export type VipPlanUpdateRequest =
+  | {
+      name?: string;
+      description?: string | null;
+      /**
+       * At most 20, each at most 200 characters: a list, or one string with one benefit per line.
+       */
+      benefits?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | string;
+      /**
+       * Perk ids (vpk_…) or keys: the creator's own active perks or the network's (422 vip.perk_not_found otherwise).
+       *
+       * @maxItems 30
+       */
+      perks?: string[];
+      change_note?: string | null;
+    }
+  | NoBody;
+
+/** vip.plan-version@1.0.0 (owner: vip) */
+/**
+ * vip.plan-version@1: one immutable version of a membership plan on OpenVibe.VIP (server/domain/plans.js presentVersion). An edit always creates version N+1; members keep the version they joined under. terms is the snapshot a member buys (never a price: OpenVibe.Billing prices and charges); perks lists the perks this version includes, by the id, key and name they had when it was written.
+ */
+export interface VipPlanVersion {
+  id: string;
+  version: number;
+  name: string;
+  description: string | null;
+  /**
+   * @maxItems 20
+   */
+  benefits:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  perks: {
+    id: string;
+    key: string;
+    name: string;
+  }[];
+  terms: {
+    name: string;
+    description: string | null;
+    benefits: string[] | null;
+    perks: {
+      key: string;
+      name: string;
+      kind: "badge" | "emote" | "gated_content" | "room" | "role" | "other";
+      scope: "creator" | "network";
+    }[];
+    billing_kind: "channel_subscription" | null;
+    /**
+     * Never an amount: a note that Billing sets and charges the price, or null.
+     */
+    price: string | null;
+    digest: string;
+  };
+  change_note: string | null;
+  created_at: string;
+  /**
+   * null while a draft.
+   */
+  published_at: string | null;
+}
+
+/** vip.plan@1.0.0 (owner: vip) */
+/**
+ * vip.plan@1: a membership plan on OpenVibe.VIP (server/domain/plans.js present). status draft (not offered), published (what new members buy) or archived (no new members; existing members keep their terms until Billing ends their membership). current_version is the published terms; draft_version is a newer unpublished version, if any. purchasable: published and sold through a Billing product (billing_kind). The API adds creator to a single plan it answers about.
+ */
+export interface VipPlan {
+  id: string;
+  creator_id: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
+  /**
+   * The Billing product that sells it; null for a plan Billing does not sell (network plans).
+   */
+  billing_kind: "channel_subscription" | null;
+  purchasable: boolean;
+  current_version: VipPlanVersion | null;
+  draft_version: VipPlanVersion | null;
+  created_at: string;
+  updated_at: string;
+  archived_at: string | null;
+  creator?: VipCreator;
+}
+
+/** vip.policy-evaluate-request@1.0.0 (owner: vip) */
+/**
+ * vip.policy-evaluate-request@1: the question of vip.resource.policy.evaluate on OpenVibe.VIP. POST /api/v1/policies/evaluate: { resource, owner, subject?, rule_id?, mode?, fallback? }: may subject see resource, owned (says the product) by creator owner? Only the owner's rule applies; rule_id pins the rule the product expects. fallback is the product's own default gate, used only when the owner has no active rule. A person asks about themselves (403 vip.not_yours otherwise); a service may leave subject out (a signed-out viewer: the answer is no). Nothing is refused for a bad resource, owner or fallback: the answer is allow false with the reason (invalid_resource, owner_required, invalid_fallback, no_rule). Unknown fields are ignored.
+ */
+export interface VipPolicyEvaluateRequest {
+  resource?: EntityRef;
+  /**
+   * The creator who owns the resource: a user SubjectRef, usr_ id, or network.
+   */
+  owner?: SubjectRef | string;
+  /**
+   * The viewer; null or absent for a signed-out viewer (services only).
+   */
+  subject?: SubjectRef | string | null;
+  /**
+   * The rule the product believes applies (vgr_…); a mismatch denies.
+   */
+  rule_id?: string;
+  /**
+   * authoritative always asks Billing; a sensitive rule always does.
+   */
+  mode?: "auto" | "authoritative";
+  /**
+   * The product's default gate: { requirement: member, binding?: "product:binding" } (or just "member"); null or false for none.
+   */
+  fallback?:
+    | {
+        requirement: "member";
+        binding?: string | null;
+      }
+    | "member"
+    | (null | false);
+}
+
+/** vip.policy-evaluate-result@1.0.0 (owner: vip) */
+/**
+ * vip.policy-evaluate-result@1: the answer of vip.resource.policy.evaluate on OpenVibe.VIP. POST /api/v1/policies/evaluate → { allow, reason, rule?, entitlement?, fallback? }. It fails closed: no owner, no rule, a disabled rule, a suspended creator, an entitlement VIP cannot confirm, a missing plan or perk, or any error is allow false with the reason. allow true only for the owner themselves (reason owner) or a member meeting the rule (member). fallback true when the product's default gate decided (rule null).
+ */
+export interface VipPolicyEvaluateResult {
+  allow: boolean;
+  reason:
+    | "owner"
+    | "member"
+    | "invalid_resource"
+    | "invalid_fallback"
+    | "owner_required"
+    | "no_rule"
+    | "rule_mismatch"
+    | "owner_mismatch"
+    | "rule_disabled"
+    | "creator_unavailable"
+    | "not_signed_in"
+    | "not_a_member"
+    | "entitlement_unknown"
+    | "plan_required"
+    | "perk_missing";
+  rule?: VipPolicyRule | null;
+  entitlement?: VipEntitlement | null;
+  fallback?: true;
+}
+
+/** vip.policy-result@1.0.0 (owner: vip) */
+/**
+ * vip.policy-result@1: answers about gated-resource rules on OpenVibe.VIP (vip.resource.policy.get, vip.resource.policy.set). GET /api/v1/policies?service=&type=&id=&owner= → { rule }: the owner's active rule for that resource (owner, the creator's usr_ id or network, is required for services; a person defaults to themselves; 404 vip.rule_not_found when there is none); GET /api/v1/policies[?creator=] → { rules }: a creator's active rules, newest first; GET /api/v1/policies/:id → { rule }; POST /api/v1/policies (201) → { rule }; DELETE /api/v1/policies/:id → { rule } (now disabled).
+ */
+export type VipPolicyResult =
+  | {
+      rule: VipPolicyRule;
+    }
+  | {
+      rules: VipPolicyRule[];
+    };
+
+/** vip.policy-rule@1.0.0 (owner: vip) */
+/**
+ * vip.policy-rule@1: a gated-resource rule on OpenVibe.VIP (server/domain/policies.js present): resource R (an EntityRef the product owns) is for members of creator C (requirement member), members of one plan (plan, plan_id), or members whose plan version includes a perk (perk, perk_key). sensitive rules always ask Billing, never the projection. A rule that was replaced or removed is disabled.
+ */
+export interface VipPolicyRule {
+  id: string;
+  creator: SubjectRef | null;
+  creator_id: string;
+  resource: EntityRef;
+  requirement: "member" | "plan" | "perk";
+  plan_id: string | null;
+  perk_key: string | null;
+  sensitive: boolean;
+  status: "active" | "disabled";
+  updated_at: string;
+}
+
+/** vip.policy-set-request@1.0.0 (owner: vip) */
+/**
+ * vip.policy-set-request@1: bodies of vip.resource.policy.set on OpenVibe.VIP. POST /api/v1/policies: { resource, creator?, requirement?, plan_id?, perk_key?, sensitive? } creates the creator's rule for a resource, replacing (disabling) the creator's active rule for the same resource; a service names the creator (a user SubjectRef), a person sets rules for themselves. requirement member (default), plan (members of plan_id, one of the creator's plans) or perk (members whose plan version includes perk_key). DELETE /api/v1/policies/:id takes no body and disables the rule. Refusals are problem+json: 422 vip.invalid_input (no EntityRef resource, a bad requirement, the network as creator), vip.plan_not_found or vip.perk_not_found; 404 vip.rule_not_found; 403 capability.denied or vip.not_yours. Unknown fields are ignored.
+ */
+export type VipPolicySetRequest =
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | NoBody;
 
 /** billing.transaction.settled@1.0.0 (owner: billing) */
 /**
@@ -14408,6 +22780,304 @@ export interface NetworkUserTokenValidAfterPayload {
    */
   reason:
     "password_changed" | "password_reset" | "signed_out_everywhere" | "banned" | "account_deleted" | "staff_revoked";
+}
+
+/** network.blocks-result@1.0.0 (owner: network) */
+/**
+ * network.blocks-result@1: the answer of network.blocks.read on OpenVibe.Network. GET /internal/blocks?subject=usr_… (a service token holding network.blocks.read; the shared internal key is refused) → { subject, blocks, blocked_by }: the people the subject has blocked and the people who have blocked the subject, as usr_ subjects in subject order, active blocks only (a person may hold at most 5000). Answered with Cache-Control: no-store. A subject that is not a usr_ id is refused with 400 blocks.bad_subject (problem+json).
+ */
+export interface NetworkBlocksResult {
+  /**
+   * The person asked about.
+   */
+  subject: string;
+  /**
+   * Whom the subject blocked.
+   */
+  blocks: string[];
+  /**
+   * Who blocked the subject.
+   */
+  blocked_by: string[];
+}
+
+/** network.coins-balance-result@1.0.0 (owner: network) */
+/**
+ * network.coins-balance-result@1: the answer of network.coins.credit and network.coins.debit on OpenVibe.Network. POST /internal/coins/credit and POST /internal/coins/debit → { balance }: the wallet's OpenCoins right after this mutation (a replayed idempotency_key answers the balance right after the original one). Refusals are listed on network.coins-change-request@1.
+ */
+export interface NetworkCoinsBalanceResult {
+  balance: number;
+}
+
+/** network.coins-change-request@1.0.0 (owner: network) */
+/**
+ * network.coins-change-request@1: bodies of network.coins.credit and network.coins.debit on OpenVibe.Network (OpenCoins: loyalty, never money). POST /internal/coins/credit and POST /internal/coins/debit: { user_id, app_id?, amount, reason?, ref?, idempotency_key }. user_id is the Network user id (the integer, never a subject). Refusals are { error } bodies: 400 invalid_user_id, invalid_amount or missing_idempotency_key; 404 user_not_found; a debit larger than the balance is 409 { error: insufficient_funds, balance }. Unknown fields are ignored.
+ */
+export interface NetworkCoinsChangeRequest {
+  /**
+   * The Network user id whose wallet changes.
+   */
+  user_id: number | string;
+  /**
+   * The app the coins move for. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied. The shared internal key may name any.
+   */
+  app_id?: string;
+  /**
+   * OpenCoins, a positive whole number (a string is refused: 400 invalid_amount).
+   */
+  amount: number;
+  /**
+   * Why, kept on the ledger row.
+   */
+  reason?: string | null;
+  /**
+   * The caller's reference for the row (an order, a game, …).
+   */
+  ref?: string | null;
+  /**
+   * Unique per mutation. A replay returns the first answer and changes nothing (400 missing_idempotency_key without it).
+   */
+  idempotency_key: string;
+}
+
+/** network.coins-transfer-request@1.0.0 (owner: network) */
+/**
+ * network.coins-transfer-request@1: the body of network.coins.transfer on OpenVibe.Network. POST /internal/coins/transfer: { from_user_id, to_user_id, app_id?, amount, reason?, ref?, idempotency_key } moves OpenCoins between two Network users atomically (the two ids are Network user ids and must differ). Refusals are { error } bodies: 400 invalid_from_user_id, invalid_to_user_id, invalid_transfer (the same person), invalid_amount or missing_idempotency_key; 404 user_not_found; 409 { error: insufficient_funds, balance } when the sender cannot cover it. Unknown fields are ignored.
+ */
+export interface NetworkCoinsTransferRequest {
+  /**
+   * The Network user id that pays.
+   */
+  from_user_id: number | string;
+  /**
+   * The Network user id that receives.
+   */
+  to_user_id: number | string;
+  /**
+   * The app the coins move for. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied. The shared internal key may name any.
+   */
+  app_id?: string;
+  /**
+   * OpenCoins, a positive whole number (a string is refused: 400 invalid_amount).
+   */
+  amount: number;
+  /**
+   * Why, kept on the ledger row.
+   */
+  reason?: string | null;
+  /**
+   * The caller's reference for the row (an order, a game, …).
+   */
+  ref?: string | null;
+  /**
+   * Unique per mutation. A replay returns the first answer and changes nothing (400 missing_idempotency_key without it).
+   */
+  idempotency_key: string;
+}
+
+/** network.coins-transfer-result@1.0.0 (owner: network) */
+/**
+ * network.coins-transfer-result@1: the answer of network.coins.transfer on OpenVibe.Network. POST /internal/coins/transfer → { from_balance, to_balance }: both wallets right after the transfer (a replayed idempotency_key answers the balances of the original transfer). Refusals are listed on network.coins-transfer-request@1.
+ */
+export interface NetworkCoinsTransferResult {
+  from_balance: number;
+  to_balance: number;
+}
+
+/** network.github-token-result@1.0.0 (owner: network) */
+/**
+ * network.github-token-result@1: the answer of network.integration.github.read on OpenVibe.Network. GET /internal/integrations/github-token (a service token holding the capability; the shared internal key is refused) → { token, source }: the network's read-only GitHub API token and where it is set (GITHUB_TOKEN in the environment, or the value the owner saved in admin). Answered with Cache-Control: no-store; 404 { error: not_configured, detail } when no token is set.
+ */
+export interface NetworkGithubTokenResult {
+  /**
+   * A GitHub token (ghp_…, github_pat_…). A secret: never log or show it.
+   */
+  token: string;
+  /**
+   * env: GITHUB_TOKEN; database: saved in admin (Settings → GitHub).
+   */
+  source: "env" | "database" | "unset";
+}
+
+/** network.notification-push-request@1.0.0 (owner: network) */
+/**
+ * network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability, or the internal key). POST /internal/notifications/push: { user_id, type?, title?, message?, … } creates one notification (400 { error: user_id required } without user_id). POST /internal/notifications/push-bulk: { user_ids, …same fields } creates it for each recipient (400 without a non-empty user_ids, or with more than 1000). Recipients are Network user ids. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.
+ */
+export type NetworkNotificationPushRequest =
+  | {
+      /**
+       * A Network user id (already translated from the caller's own ids).
+       */
+      user_id: number | string;
+      /**
+       * A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent.
+       */
+      type?: string;
+      /**
+       * Default: the type's title, else "Notification".
+       */
+      title?: string;
+      message?: string | null;
+      /**
+       * Default: the type's icon.
+       */
+      icon?: string;
+      /**
+       * The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing.
+       */
+      sender_id?: number | string | null;
+      sender_name?: string | null;
+      sender_avatar?: string | null;
+      /**
+       * The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied.
+       */
+      service?: string;
+      /**
+       * Where the notification leads.
+       */
+      url?: string | null;
+      /**
+       * low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal.
+       */
+      priority?: string;
+      /**
+       * Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block.
+       */
+      category?: string;
+      /**
+       * Any JSON value, stored and returned as given.
+       */
+      rich_content?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * When it may be deleted (SQLite datetime, UTC).
+       */
+      expires_at?: string | null;
+      /**
+       * The actor as a usr_ subject for the block check; null: no known person (no block check).
+       */
+      actor_subject?: string | null;
+    }
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 1000
+       */
+      user_ids: [number | string, ...(number | string)[]];
+      /**
+       * A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent.
+       */
+      type?: string;
+      /**
+       * Default: the type's title, else "Notification".
+       */
+      title?: string;
+      message?: string | null;
+      /**
+       * Default: the type's icon.
+       */
+      icon?: string;
+      /**
+       * The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing.
+       */
+      sender_id?: number | string | null;
+      sender_name?: string | null;
+      sender_avatar?: string | null;
+      /**
+       * The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied.
+       */
+      service?: string;
+      /**
+       * Where the notification leads.
+       */
+      url?: string | null;
+      /**
+       * low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal.
+       */
+      priority?: string;
+      /**
+       * Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block.
+       */
+      category?: string;
+      /**
+       * Any JSON value, stored and returned as given.
+       */
+      rich_content?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * When it may be deleted (SQLite datetime, UTC).
+       */
+      expires_at?: string | null;
+      /**
+       * The actor as a usr_ subject for the block check; null: no known person (no block check).
+       */
+      actor_subject?: string | null;
+    };
+
+/** network.notification-push-result@1.0.0 (owner: network) */
+/**
+ * network.notification-push-result@1: answers of network.notifications.push on OpenVibe.Network. POST /internal/notifications/push → { ok: true, notification } (the stored notification), or { ok: true, skipped: true, reason } when nothing was created (the recipient switched the category off, blocked the actor, or already got a go-live notification from the same streamer within the hour). POST /internal/notifications/push-bulk → { ok: true, sent, total } (sent: notifications created; total: recipients named). Errors are { error } bodies (400, 500; 503 when the notification service is not running).
+ */
+export type NetworkNotificationPushResult =
+  | {
+      ok: true;
+      notification: {
+        id: string;
+        user_id: number | string;
+        type?: string;
+        category: string;
+        priority: string;
+        title: string;
+        message?: string | null;
+        icon: string;
+        service?: string | null;
+        url?: string | null;
+        /**
+         * As sent.
+         */
+        rich_content?: {
+          [k: string]: unknown | undefined;
+        };
+        is_read: 0;
+        created_at: string;
+      };
+    }
+  | {
+      ok: true;
+      skipped: true;
+      reason: string;
+    }
+  | {
+      ok: true;
+      sent: number;
+      total: number;
+    };
+
+/** network.staff-list-result@1.0.0 (owner: network) */
+/**
+ * network.staff-list-result@1: the answer of network.staff.read on OpenVibe.Network. GET /api/v1/staff/moderators[?service=chat|live|community|pastes|calls] (a service token holding network.staff.read, or a signed-in person holding staff.moderation.logs) → { service, staff }: the network's global moderators, admins and the owner who are not banned, with the staff capabilities their role holds in the contracts staff map; ?service keeps those holding the capability that moderates that service (another service name keeps those holding staff.content.moderate; an invalid value is ignored and answered as null). Answered with Cache-Control: private, no-store; a person without staff.moderation.logs gets 403 { error: forbidden }.
+ */
+export interface NetworkStaffListResult {
+  /**
+   * The service filter applied, or null.
+   */
+  service: string | null;
+  staff: {
+    /**
+     * null for an account that has no subject yet.
+     */
+    subject: string | null;
+    username: string;
+    display_name: string;
+    role: "global_mod" | "admin" | "owner";
+    is_owner: boolean;
+    /**
+     * Staff capability ids, sorted.
+     */
+    capabilities: string[];
+  }[];
 }
 
 /** tools.tool@1.1.0 (owner: tools) */

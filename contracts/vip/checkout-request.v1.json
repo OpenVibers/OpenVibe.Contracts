@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/checkout-request.v1.json",
+  "title": "VipCheckoutRequest",
+  "description": "vip.checkout-request@1: the body of vip.membership.checkout on OpenVibe.VIP. POST /api/v1/checkout: { plan_id, provider, subject?, success_url?, cancel_url?, auto_renew? } starts joining a published plan: VIP records the plan version and hands off to OpenVibe.Billing (provider credit: a period paid from the member's credit at once; any other provider: a Billing payment intent and its checkout). A service names the member (subject); a person joins as themselves, and their return URLs must be pages of VIP's own site. Refusals are problem+json: 404 vip.plan_not_found (no published plan with that id); 409 vip.checkout.unavailable, vip.already_member, vip.checkout.insufficient_credit or vip.checkout.provider_unavailable; 422 vip.checkout.provider_unavailable (a provider VIP does not offer), vip.checkout.self, vip.invalid_subject or vip.invalid_input; 503 vip.billing_frozen or vip.billing_unavailable. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "provider"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "provider": {
+      "type": "string",
+      "description": "One of VIP_CHECKOUT_PROVIDERS (powerchat and credit by default); case-insensitive."
+    },
+    "subject": {
+      "description": "The member: required for services; a person may only name themselves.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      ]
+    },
+    "success_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Where the provider sends the buyer after paying; default the member's VIP page."
+    },
+    "cancel_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Where the provider sends the buyer after cancelling; default the creator's VIP page."
+    },
+    "auto_renew": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "Default true."
+    }
+  }
+}

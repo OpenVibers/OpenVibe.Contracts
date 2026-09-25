@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/goal.v1.json",
+  "title": "TipsGoal",
+  "description": "tips.goal@1: a creator's goal on OpenVibe.Tips (server/domain/goals.js present, publicGoal). current_amount is derived from settled contributions (plus an amount carried over from Live), never from pending or simulated tips; percent is capped at 100. Anyone but the creator and granted services gets the public shape under the creator's page settings: amounts null with amounts_hidden when goal amounts are off, and supporters (the latest ten, their privacy applying) when goal supporters are on. GET /api/v1/goals/:id adds contributions for the creator and granted services.",
+  "type": "object",
+  "required": [
+    "id",
+    "creator",
+    "title",
+    "description",
+    "target_amount",
+    "current_amount",
+    "currency",
+    "supporters_count",
+    "carried_over_amount",
+    "percent",
+    "reached",
+    "reached_at",
+    "image_url",
+    "status",
+    "sort_order",
+    "revision",
+    "created_at",
+    "updated_at",
+    "closed_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tgoal_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "creator": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_amount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "current_amount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string"
+    },
+    "supporters_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Contributions counted."
+    },
+    "carried_over_amount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "percent": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "reached": {
+      "type": "boolean"
+    },
+    "reached_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "image_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "closed"
+      ]
+    },
+    "sort_order": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "closed_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "amounts_hidden": {
+      "const": true
+    },
+    "supporters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "amount",
+          "at"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "contributions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "interaction_id",
+          "amount",
+          "reversed_amount",
+          "created_at",
+          "supporter_name"
+        ],
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reversed_amount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "supporter_name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

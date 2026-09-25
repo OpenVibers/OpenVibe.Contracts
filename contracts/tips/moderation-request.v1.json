@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/moderation-request.v1.json",
+  "title": "TipsModerationRequest",
+  "description": "tips.moderation-request@1: bodies of tips.interaction.moderate on OpenVibe.Tips. POST /api/v1/interactions/:id/hide and /restore: { reason? } (at most 200 characters, kept in the moderation log). GET /api/v1/moderation?creator=&state=held|hidden|visible|all&cursor=&limit= and GET /api/v1/moderation/log?creator= take no body. The creator, one of their moderators, or a service holding the capability moderates (the log is for the creator and services). Hide and restore need an Idempotency-Key header (as every write). Refusals are problem+json: 404 tips.interaction_not_found, 403 tips.forbidden or capability.denied, 422 tips.text_too_long.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

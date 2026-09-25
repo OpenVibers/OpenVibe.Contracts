@@ -1,0 +1,16 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "name": "Supporter",
+  "slug": "supporter",
+  "description": "Back the stream every month.",
+  "benefits": [
+    "Supporter badge in chat"
+  ],
+  "perks": [
+    "chat-badge"
+  ],
+  "publish": true
+}

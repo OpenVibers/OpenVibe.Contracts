@@ -1,0 +1,11 @@
+{
+  "resource": {
+    "service": "blog",
+    "type": "post",
+    "id": "p1"
+  },
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "fallback": {
+    "requirement": "follower"
+  }
+}

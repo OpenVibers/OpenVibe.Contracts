@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/public-interaction.v1.json",
+  "title": "TipsPublicInteraction",
+  "description": "tips.public-interaction@1: the public shape of a tip interaction on OpenVibe.Tips (server/domain/privacy.js publicView): what overlay alerts, chat lines, the supporters and goals pages and the public block of API answers show. The supporter's choices apply (an anonymous one reads Anonymous, a hidden amount is null, a private message is null) and the creator's word filter stars blocked words out. A held or hidden interaction (moderation) shows nothing but hidden: true.",
+  "type": "object",
+  "required": [
+    "interaction_id",
+    "kind",
+    "amount",
+    "amount_hidden",
+    "currency",
+    "settlement",
+    "test",
+    "at",
+    "supporter_name",
+    "message",
+    "tts",
+    "media",
+    "hidden"
+  ],
+  "properties": {
+    "interaction_id": {
+      "type": "string",
+      "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "enum": [
+        "tip",
+        "paid_message",
+        "tts",
+        "media_request"
+      ]
+    },
+    "amount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "Vibes bits; null when hidden."
+    },
+    "amount_hidden": {
+      "type": "boolean"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "settlement": {
+      "enum": [
+        "billing",
+        "external",
+        "simulated",
+        "imported"
+      ]
+    },
+    "test": {
+      "type": "boolean"
+    },
+    "at": {
+      "type": "string",
+      "description": "When it settled (else when it was created)."
+    },
+    "supporter_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tts": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "voice"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "voice": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "media": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hidden": {
+      "type": "boolean"
+    }
+  }
+}

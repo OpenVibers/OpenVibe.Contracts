@@ -1,0 +1,11 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "scopes": [
+    "alerts"
+  ],
+  "label": "OBS main scene",
+  "config_id": "tovc_01JAB2C3D4E5F6G7H8J9K0MNQB"
+}

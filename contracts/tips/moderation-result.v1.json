@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/moderation-result.v1.json",
+  "title": "TipsModerationResult",
+  "description": "tips.moderation-result@1: answers of tips.interaction.moderate on OpenVibe.Tips. Moderation never touches the money (no refund, no uncounting). GET /api/v1/moderation → { creator, interactions, next_cursor }: the review queue, newest first (moderators' view). GET /api/v1/moderation/log → { log }: the latest 100 outcomes (held and filtered by the word filter at settlement; hidden and restored by the creator, a moderator or a service). POST /api/v1/interactions/:id/hide → { interaction, changed, cancelled_effects } (chat, TTS and media deliveries still queued are cancelled; overlays drop the alert); POST …/restore → the same, cancelled_effects empty (a held interaction is released now; what a hide cancelled stays cancelled). changed false when it already was in that state.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "creator",
+        "interactions",
+        "next_cursor"
+      ],
+      "properties": {
+        "creator": {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        "interactions": {
+          "type": "array",
+          "items": {
+            "$ref": "moderation-view.v1.json"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "log"
+      ],
+      "properties": {
+        "log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "interaction_id",
+              "action",
+              "by_role",
+              "actor",
+              "reason",
+              "created_at"
+            ],
+            "properties": {
+              "interaction_id": {
+                "type": "string"
+              },
+              "action": {
+                "enum": [
+                  "held",
+                  "filtered",
+                  "hidden",
+                  "restored"
+                ]
+              },
+              "by_role": {
+                "enum": [
+                  "filter",
+                  "creator",
+                  "moderator",
+                  "service"
+                ]
+              },
+              "actor": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "usr_… or svc:…; null for the filter."
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "interaction",
+        "changed",
+        "cancelled_effects"
+      ],
+      "properties": {
+        "interaction": {
+          "$ref": "moderation-view.v1.json"
+        },
+        "changed": {
+          "type": "boolean"
+        },
+        "cancelled_effects": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "chat_line",
+              "paid_message",
+              "tts",
+              "media_request"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -16,5 +16,7 @@
   "implementedBy": [
     "POST /api/v1/overlay-tokens",
     "GET /api/v1/overlay-tokens"
-  ]
+  ],
+  "inputSchema": "tips.overlay-token-request@1",
+  "outputSchema": "tips.overlay-token-result@1"
 }

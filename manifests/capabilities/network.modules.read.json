@@ -16,5 +16,6 @@
   "events": [],
   "implementedBy": [
     "GET /internal/modules/:namespace/:subject"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

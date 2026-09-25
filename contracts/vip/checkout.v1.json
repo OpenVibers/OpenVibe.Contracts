@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/checkout.v1.json",
+  "title": "VipCheckout",
+  "description": "vip.checkout@1: a checkout hand-off on OpenVibe.VIP (server/domain/checkout.js present): the plan version a member chose, recorded before VIP hands the purchase to OpenVibe.Billing (a subscription paid from credit, or a Billing payment intent). status created → handed_off (sent to the provider) or paid (credit) → used (the membership was filed under it); failed when Billing refused.",
+  "type": "object",
+  "required": [
+    "id",
+    "member",
+    "creator_id",
+    "plan_id",
+    "plan_version_id",
+    "provider",
+    "status",
+    "billing_intent_id",
+    "billing_subscription_id",
+    "checkout_url",
+    "checkout_ref",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vco_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "member": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "creator_id": {
+      "type": "string",
+      "pattern": "^vcr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "plan_version_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "description": "A checkout provider VIP offers (VIP_CHECKOUT_PROVIDERS; powerchat and credit by default)."
+    },
+    "status": {
+      "enum": [
+        "created",
+        "handed_off",
+        "paid",
+        "failed",
+        "used"
+      ]
+    },
+    "billing_intent_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "billing_subscription_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "checkout_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "checkout_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

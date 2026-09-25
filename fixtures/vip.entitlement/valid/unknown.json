@@ -1,0 +1,21 @@
+{
+  "member": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "kind": "channel_subscription",
+  "status": "unknown",
+  "active": false,
+  "expires_at": null,
+  "cancel_at_period_end": false,
+  "source": "none",
+  "stale": false,
+  "valid_until": null,
+  "checked_at": "2026-09-25T09:12:40.118Z",
+  "reason": "billing_unavailable",
+  "membership": null
+}

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/moderation-view.v1.json",
+  "title": "TipsModerationView",
+  "description": "tips.moderation-view@1: a tip interaction as its moderators see it on OpenVibe.Tips (server/domain/moderation.js present): what was written (never a private message, nor anything the supporter erased), the moderation state, and what the public sees (public). An anonymous supporter reads Anonymous; a hidden amount is null.",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "created_at",
+    "settled_at",
+    "payment_state",
+    "test",
+    "moderation",
+    "supporter_name",
+    "amount",
+    "message",
+    "tts_text",
+    "media_url",
+    "public"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "enum": [
+        "tip",
+        "paid_message",
+        "tts",
+        "media_request"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "settled_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payment_state": {
+      "enum": [
+        "pending",
+        "settled",
+        "reversed",
+        "failed"
+      ]
+    },
+    "test": {
+      "type": "boolean"
+    },
+    "moderation": {
+      "type": "object",
+      "required": [
+        "state",
+        "at",
+        "filtered"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "visible",
+            "held",
+            "hidden"
+          ]
+        },
+        "at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filtered": {
+          "type": "boolean"
+        }
+      }
+    },
+    "supporter_name": {
+      "type": "string"
+    },
+    "amount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tts_text": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "media_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "public": {
+      "$ref": "public-interaction.v1.json"
+    }
+  }
+}

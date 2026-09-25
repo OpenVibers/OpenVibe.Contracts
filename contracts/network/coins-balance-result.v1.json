@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/coins-balance-result.v1.json",
+  "title": "NetworkCoinsBalanceResult",
+  "description": "network.coins-balance-result@1: the answer of network.coins.credit and network.coins.debit on OpenVibe.Network. POST /internal/coins/credit and POST /internal/coins/debit → { balance }: the wallet's OpenCoins right after this mutation (a replayed idempotency_key answers the balance right after the original one). Refusals are listed on network.coins-change-request@1.",
+  "type": "object",
+  "required": [
+    "balance"
+  ],
+  "properties": {
+    "balance": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

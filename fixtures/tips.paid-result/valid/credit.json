@@ -1,0 +1,89 @@
+{
+  "interaction": {
+    "id": "tint_01JAB2C3D4E5F6G7H8J9K0MNQ5",
+    "creator": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "supporter": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+    },
+    "supporter_name": "moosefan",
+    "kind": "paid_message",
+    "amount": 500,
+    "currency": "vibes-bits",
+    "message": "Great stream tonight!",
+    "tts": null,
+    "media": null,
+    "goal_id": null,
+    "funding": "credit",
+    "settlement": "billing",
+    "origin": "tips",
+    "test": false,
+    "privacy": {
+      "anonymous": false,
+      "hide_amount": false,
+      "private_message": false
+    },
+    "public": {
+      "interaction_id": "tint_01JAB2C3D4E5F6G7H8J9K0MNQ5",
+      "kind": "paid_message",
+      "amount": 500,
+      "amount_hidden": false,
+      "currency": "vibes-bits",
+      "settlement": "billing",
+      "test": false,
+      "at": "2026-09-25T09:12:41.530Z",
+      "supporter_name": "moosefan",
+      "message": "Great stream tonight!",
+      "tts": null,
+      "media": null,
+      "hidden": false
+    },
+    "erased_at": null,
+    "moderation": {
+      "state": "visible",
+      "filtered": false,
+      "at": null
+    },
+    "payment": {
+      "state": "settled",
+      "billing_txn_id": "txn_01JAB2C3D4E5F6G7H8J9K0MNQ6",
+      "reversal_txn_ids": [],
+      "reversed_amount": 0,
+      "failure": null,
+      "settled_at": "2026-09-25T09:12:41.530Z",
+      "reversed_at": null
+    },
+    "delivery": {
+      "state": "delivered",
+      "delivered_at": "2026-09-25T09:12:43.004Z"
+    },
+    "created_at": "2026-09-25T09:12:40.118Z",
+    "updated_at": "2026-09-25T09:12:43.004Z",
+    "effects": [
+      {
+        "effect": "overlay_alert",
+        "adapter": "overlay",
+        "state": "delivered",
+        "attempts": 1,
+        "last_error": null,
+        "updated_at": "2026-09-25T09:12:41.530Z"
+      },
+      {
+        "effect": "paid_message",
+        "adapter": "live-chat",
+        "state": "delivered",
+        "attempts": 1,
+        "last_error": null,
+        "updated_at": "2026-09-25T09:12:43.004Z"
+      }
+    ],
+    "provider": null,
+    "provider_ref": null,
+    "legacy_source": null
+  },
+  "checkout_url": null,
+  "checkout_ref": null
+}

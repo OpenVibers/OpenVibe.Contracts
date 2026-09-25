@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/creator.v1.json",
+  "title": "VipCreator",
+  "description": "vip.creator@1: a creator as OpenVibe.VIP presents it (server/domain/creators.js present): someone who offers memberships, named by their Network subject, or the network itself (id network, no subject; staff manage its plans and perks). The username is a cached handle for the public page; display_name falls back to it (OpenVibe for the network).",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "subject",
+    "username",
+    "display_name",
+    "bio",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(vcr_[0-9A-HJKMNP-TV-Z]{26}|network)$"
+    },
+    "kind": {
+      "enum": [
+        "creator",
+        "network"
+      ]
+    },
+    "subject": {
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "null for the network."
+    },
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "display_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "bio": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "suspended"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/interaction-result.v1.json",
+  "title": "TipsInteractionResult",
+  "description": "tips.interaction-result@1: one interaction on OpenVibe.Tips (tips.interaction.get, tips.simulation.run). GET /api/v1/interactions/:id → { interaction } in the reader's view (a service, the creator, or the supporter; anyone else 404 tips.interaction_not_found). POST /api/v1/simulate (201) → { interaction }: the simulated interaction (test true, settlement simulated), in the creator's view.",
+  "type": "object",
+  "required": [
+    "interaction"
+  ],
+  "properties": {
+    "interaction": {
+      "$ref": "interaction.v1.json"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "supporter": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "supporter_name": "moosefan",
+  "amount": 250,
+  "message": "For the new mic!",
+  "goal_id": "tgoal_01JAB2C3D4E5F6G7H8J9K0MNQ9",
+  "target": {
+    "service": "live",
+    "type": "stream",
+    "id": "8812"
+  }
+}

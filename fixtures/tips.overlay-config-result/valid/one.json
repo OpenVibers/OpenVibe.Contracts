@@ -1,0 +1,25 @@
+{
+  "config": {
+    "id": "tovc_01JAB2C3D4E5F6G7H8J9K0MNQB",
+    "creator": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "kind": "alerts",
+    "name": "Alerts",
+    "settings": {
+      "min_amount": 1,
+      "duration_ms": 8000,
+      "show_message": true,
+      "show_amount": true,
+      "speak_message": false,
+      "sound_url": null,
+      "image_url": null,
+      "template": "{name} tipped {amount} Vibes"
+    },
+    "goal_id": null,
+    "revision": 1,
+    "created_at": "2026-09-25T09:12:40.118Z",
+    "updated_at": "2026-09-25T09:12:40.118Z"
+  }
+}

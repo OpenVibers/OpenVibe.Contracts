@@ -1,0 +1,18 @@
+{
+  "revision": 4,
+  "page_enabled": true,
+  "tts_enabled": true,
+  "tts_min_amount": 100,
+  "tts_voice": "amy",
+  "page": {
+    "supporters_page": true,
+    "supporters_messages": true
+  },
+  "filter": {
+    "words": [
+      "spoiler",
+      "ending"
+    ],
+    "action": "hold"
+  }
+}

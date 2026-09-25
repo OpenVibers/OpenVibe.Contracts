@@ -13,5 +13,7 @@
   "events": [],
   "implementedBy": [
     "GET /internal/integrations/github-token"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.github-token-result@1"
 }

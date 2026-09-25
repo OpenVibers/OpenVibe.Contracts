@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/external-request.v1.json",
+  "title": "TipsExternalRequest",
+  "description": "tips.external-request@1: the body of tips.interaction.record on OpenVibe.Tips (services only). POST /api/v1/interactions/external: { creator, provider, provider_ref, amount_cents, supporter?, supporter_name?, message?, goal_id?, privacy?, announce?, test? } records a tip that never touched OpenVibe money (ADR-012 EXTERNAL: a tip on the creator's own PowerChat), once per (provider, provider_ref); no Billing liability, excluded from Billing reconciliation. It settles at once (overlay alert, goal); announce true also has Tips post the chat line. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (no provider or provider_ref), tips.invalid_amount, tips.text_too_long or tips.invalid_subject; 404 tips.creator_not_found; 403 capability.denied. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "creator",
+    "provider",
+    "provider_ref",
+    "amount_cents"
+  ],
+  "properties": {
+    "creator": {
+      "description": "The creator tipped.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "A usr_ id or the creator's Tips handle."
+        }
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{1,39}$",
+      "description": "Lowercased: powerchat, …"
+    },
+    "provider_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The provider's event id."
+    },
+    "amount_cents": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$",
+      "maximum": 100000000,
+      "description": "The money that arrived, in cents (at most 100000000); recorded as the amount too."
+    },
+    "supporter": {
+      "description": "The supporter, when known.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      ]
+    },
+    "supporter_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "goal_id": {
+      "type": "string"
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "anonymous": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "The name reads \"Anonymous\" to everyone but the supporter."
+        },
+        "hide_amount": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "The amount is left out of overlays, chat lines and public pages."
+        },
+        "private_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "A tip's message is for the creator only (tips only; 422 for the other kinds)."
+        }
+      },
+      "additionalProperties": false,
+      "description": "The supporter's choices; any other field is refused (422 tips.invalid_input). true, 1, \"1\", \"true\" and \"on\" count as yes."
+    },
+    "announce": {
+      "type": "boolean",
+      "description": "true: Tips delivers the chat line itself (the provider did not announce it)."
+    },
+    "test": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "Test money: never counted."
+    }
+  }
+}

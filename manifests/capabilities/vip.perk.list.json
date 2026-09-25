@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/perks"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vip.perk-list-result@1"
 }

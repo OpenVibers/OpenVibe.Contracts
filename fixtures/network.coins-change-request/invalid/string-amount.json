@@ -1,0 +1,5 @@
+{
+  "user_id": 1042,
+  "amount": "25",
+  "idempotency_key": "k1"
+}

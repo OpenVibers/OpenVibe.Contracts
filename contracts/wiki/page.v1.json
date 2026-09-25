@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/page.v1.json",
+  "title": "WikiPage",
+  "description": "wiki.page@1: one wiki page as OpenVibe.Wiki's API shows it (server/http/api.js serializePage); in a space's page tree each page also lists its children.",
+  "type": "object",
+  "required": [
+    "id",
+    "space",
+    "slug",
+    "title",
+    "parent_id",
+    "state",
+    "visibility",
+    "noindex",
+    "published_revision",
+    "updated_at",
+    "url"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^pg_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "space": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "parent_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "description": "draft, published, deleted, …"
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "members",
+        "private"
+      ]
+    },
+    "noindex": {
+      "type": "boolean"
+    },
+    "published_revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "revision_published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "url": {
+      "type": "string"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

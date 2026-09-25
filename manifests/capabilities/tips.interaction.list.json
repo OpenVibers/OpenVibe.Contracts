@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/interactions",
     "GET /api/v1/profiles/:creator/totals"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "tips.interaction-list-result@1"
 }

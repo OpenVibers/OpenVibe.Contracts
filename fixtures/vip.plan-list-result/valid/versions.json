@@ -1,0 +1,44 @@
+{
+  "plan_id": "vpl_01JAB2C3D4E5F6G7H8J9K0MNPW",
+  "versions": [
+    {
+      "id": "vpv_01JAB2C3D4E5F6G7H8J9K0MNPT",
+      "version": 2,
+      "name": "Supporter",
+      "description": "Back the stream every month.",
+      "benefits": [
+        "Supporter badge in chat",
+        "Members-only VOD chapters"
+      ],
+      "perks": [
+        {
+          "id": "vpk_01JAB2C3D4E5F6G7H8J9K0MNPV",
+          "key": "chat-badge",
+          "name": "Chat badge"
+        }
+      ],
+      "terms": {
+        "name": "Supporter",
+        "description": "Back the stream every month.",
+        "benefits": [
+          "Supporter badge in chat",
+          "Members-only VOD chapters"
+        ],
+        "perks": [
+          {
+            "key": "chat-badge",
+            "name": "Chat badge",
+            "kind": "badge",
+            "scope": "creator"
+          }
+        ],
+        "billing_kind": "channel_subscription",
+        "price": "set and charged by OpenVibe.Billing",
+        "digest": "3fa9c0d27e5b8814"
+      },
+      "change_note": "added VOD chapters",
+      "created_at": "2026-09-20T18:04:11.402Z",
+      "published_at": "2026-09-20T18:04:11.402Z"
+    }
+  ]
+}

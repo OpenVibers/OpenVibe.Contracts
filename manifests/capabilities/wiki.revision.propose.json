@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/proposals"
-  ]
+  ],
+  "inputSchema": "wiki.proposal-request@1",
+  "outputSchema": "wiki.proposal-result@1"
 }

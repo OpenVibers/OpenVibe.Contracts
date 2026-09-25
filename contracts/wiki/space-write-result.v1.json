@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/space-write-result.v1.json",
+  "title": "WikiSpaceWriteResult",
+  "description": "wiki.space-write-result@1: answers of wiki.space.create on OpenVibe.Wiki: POST /api/v1/spaces → 201 { space }; PATCH → { space }; PUT …/roles/:subject → { roles } (every role in the space after the change: subject, role, granted_by, granted_at).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "space"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "space.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "roles"
+      ],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "role"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_"
+              },
+              "role": {
+                "enum": [
+                  "owner",
+                  "editor",
+                  "viewer"
+                ]
+              },
+              "granted_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "granted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

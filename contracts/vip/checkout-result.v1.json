@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/checkout-result.v1.json",
+  "title": "VipCheckoutResult",
+  "description": "vip.checkout-result@1: the answer of vip.membership.checkout on OpenVibe.VIP. POST /api/v1/checkout (201) → { checkout, membership_started, checkout_url, checkout_ref, amount_cents? }. With provider credit the period is paid at once (membership_started true when Billing granted it; no checkout link). Otherwise the member finishes at checkout_url (always http(s) when present; a PowerChat checkout may come as checkout_ref only) and the membership starts when Billing's settlement arrives; amount_cents is what Billing's intent asks for.",
+  "type": "object",
+  "required": [
+    "checkout",
+    "membership_started",
+    "checkout_url",
+    "checkout_ref"
+  ],
+  "properties": {
+    "checkout": {
+      "$ref": "checkout.v1.json"
+    },
+    "membership_started": {
+      "type": "boolean"
+    },
+    "checkout_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "checkout_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "amount_cents": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    }
+  }
+}

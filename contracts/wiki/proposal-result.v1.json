@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/proposal-result.v1.json",
+  "title": "WikiProposalResult",
+  "description": "wiki.proposal-result@1: the answer of POST /api/v1/proposals on OpenVibe.Wiki: 201 { proposal, page, revision } (the proposal is pending; the page's watchers are told).",
+  "type": "object",
+  "required": [
+    "proposal",
+    "page",
+    "revision"
+  ],
+  "properties": {
+    "proposal": {
+      "type": "object",
+      "required": [
+        "id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "page": {
+      "$ref": "page.v1.json"
+    },
+    "revision": {
+      "$ref": "revision.v1.json"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "kind": "alerts",
+  "name": "Big tips only",
+  "min_amount": 1000,
+  "duration_ms": 12000,
+  "speak_message": true,
+  "sound_url": "https://openvibe.media/f/cheer.mp3"
+}

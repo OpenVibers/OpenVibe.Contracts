@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/plan-create-request.v1.json",
+  "title": "VipPlanCreateRequest",
+  "description": "vip.plan-create-request@1: the body of vip.plan.create on OpenVibe.VIP. POST /api/v1/plans: { creator?, name, slug?, description?, benefits?, perks?, billing_kind?, publish?, change_note? } creates a plan and its version 1 (published at once with publish). A service must name the creator (a user SubjectRef or network); a person creates for themselves (staff may name another creator or network). billing_kind defaults to channel_subscription for a creator and null for the network (Billing has no network product yet). Refusals are problem+json: 422 vip.invalid_input (no name, a bad slug or billing_kind), vip.text_too_long, vip.perk_not_found or vip.invalid_subject; 409 vip.plan_exists (the slug is taken) or vip.plan.billing_product_taken (the creator already has a published plan sold as a channel subscription); 403 capability.denied or vip.not_yours. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "creator": {
+      "description": "The creator the plan belongs to (a user SubjectRef, or network for staff).",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "A usr_ id, a VIP username, or network."
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,47}$",
+      "description": "Default: made from the name."
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    },
+    "benefits": {
+      "description": "At most 20, each at most 200 characters: a list, or one string with one benefit per line.",
+      "anyOf": [
+        {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "perks": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "string"
+      },
+      "description": "Perk ids (vpk_…) or keys: the creator's own active perks or the network's (422 vip.perk_not_found otherwise)."
+    },
+    "billing_kind": {
+      "enum": [
+        "channel_subscription",
+        null
+      ]
+    },
+    "publish": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "true (or 1, yes, on) publishes version 1 at once."
+    },
+    "change_note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Default: created."
+    }
+  }
+}

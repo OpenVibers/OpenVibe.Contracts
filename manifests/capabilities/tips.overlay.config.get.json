@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/overlay-configs",
     "GET /api/v1/overlay-configs/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "tips.overlay-config-result@1"
 }

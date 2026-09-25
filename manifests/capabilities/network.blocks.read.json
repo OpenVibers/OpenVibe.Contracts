@@ -9,5 +9,7 @@
   "resourceConstraints": [],
   "quotaClass": "blocks-read",
   "events": ["network.block.changed"],
-  "implementedBy": ["GET /internal/blocks?subject=usr_…"]
+  "implementedBy": ["GET /internal/blocks?subject=usr_…"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.blocks-result@1"
 }

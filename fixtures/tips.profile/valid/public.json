@@ -1,0 +1,37 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "handle": "moosefan",
+  "display_name": "Moose Fan",
+  "avatar_url": "https://openvibe.media/avatar/moosefan",
+  "headline": "Late-night builds and chill.",
+  "page_enabled": true,
+  "accepting": true,
+  "url": "https://openvibe.tips/moosefan",
+  "minimums": {
+    "tip": 1,
+    "paid_message": 100,
+    "tts": 100,
+    "media_request": null
+  },
+  "tts": {
+    "enabled": true,
+    "max_chars": 200,
+    "voice": "gary"
+  },
+  "media_requests": {
+    "enabled": false,
+    "max_seconds": 600
+  },
+  "page": {
+    "goal_amounts": true,
+    "goal_supporters": false,
+    "supporters_page": true,
+    "supporters_amounts": false,
+    "supporters_messages": true
+  },
+  "supporters_url": "https://openvibe.tips/moosefan/supporters",
+  "currency": "vibes-bits"
+}

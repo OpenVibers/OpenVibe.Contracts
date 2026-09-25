@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/plan-update-request.v1.json",
+  "title": "VipPlanUpdateRequest",
+  "description": "vip.plan-update-request@1: bodies of vip.plan.update on OpenVibe.VIP. PATCH /api/v1/plans/:id: { name?, description?, benefits?, perks?, change_note? } writes version N+1 from the latest terms plus these changes (published at once when the plan is published; nothing is written when nothing changed). POST /api/v1/plans/:id/publish takes no body and publishes the latest version. Refusals are problem+json: 404 vip.plan_not_found; 409 vip.plan_archived or vip.plan.billing_product_taken; 422 vip.invalid_input, vip.text_too_long or vip.perk_not_found; 403 capability.denied. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "benefits": {
+          "description": "At most 20, each at most 200 characters: a list, or one string with one benefit per line.",
+          "anyOf": [
+            {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "perks": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "string"
+          },
+          "description": "Perk ids (vpk_…) or keys: the creator's own active perks or the network's (422 vip.perk_not_found otherwise)."
+        },
+        "change_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

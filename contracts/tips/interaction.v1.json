@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/interaction.v1.json",
+  "title": "TipsInteraction",
+  "description": "tips.interaction@1: a tip interaction on OpenVibe.Tips (server/domain/interactions.js present): one act of support (a tip, a paid chat message, text-to-speech or a media request) with two separate states: payment (mirrored from OpenVibe.Billing: pending, settled, reversed or failed) and delivery (awaiting_payment, queued, delivered, failed or cancelled). Only the supporter sees who an anonymous supporter is; public is what may be shown to the public and privacy the supporter's choices. A checkout-funded interaction adds checkout; the creator and services also get effects, provider, provider_ref and legacy_source. Amounts are Vibes bits.",
+  "type": "object",
+  "required": [
+    "id",
+    "creator",
+    "supporter",
+    "supporter_name",
+    "kind",
+    "amount",
+    "currency",
+    "message",
+    "tts",
+    "media",
+    "goal_id",
+    "funding",
+    "settlement",
+    "origin",
+    "test",
+    "privacy",
+    "public",
+    "erased_at",
+    "moderation",
+    "payment",
+    "delivery",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tint_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "creator": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "supporter": {
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "null for an anonymous supporter (to anyone but them), an erased one, a simulation or an external tip without one."
+    },
+    "supporter_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "tip",
+        "paid_message",
+        "tts",
+        "media_request"
+      ]
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "currency": {
+      "type": "string",
+      "description": "vibes-bits."
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tts": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "voice"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "voice": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "media": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "provider": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "goal_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The goal the supporter picked."
+    },
+    "funding": {
+      "enum": [
+        "credit",
+        "checkout",
+        "provider",
+        "external",
+        "none"
+      ]
+    },
+    "settlement": {
+      "enum": [
+        "billing",
+        "external",
+        "simulated",
+        "imported"
+      ]
+    },
+    "origin": {
+      "enum": [
+        "tips",
+        "billing",
+        "billing-external",
+        "external",
+        "import"
+      ]
+    },
+    "test": {
+      "type": "boolean",
+      "description": "A simulation or Billing test money: never counted."
+    },
+    "privacy": {
+      "type": "object",
+      "required": [
+        "anonymous",
+        "hide_amount",
+        "private_message"
+      ],
+      "properties": {
+        "anonymous": {
+          "type": "boolean"
+        },
+        "hide_amount": {
+          "type": "boolean"
+        },
+        "private_message": {
+          "type": "boolean"
+        }
+      }
+    },
+    "public": {
+      "$ref": "public-interaction.v1.json"
+    },
+    "erased_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "When the supporter erased their data from it."
+    },
+    "moderation": {
+      "type": "object",
+      "required": [
+        "state",
+        "filtered",
+        "at"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "visible",
+            "held",
+            "hidden"
+          ]
+        },
+        "filtered": {
+          "type": "boolean"
+        },
+        "at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": [
+        "state",
+        "billing_txn_id",
+        "reversal_txn_ids",
+        "reversed_amount",
+        "failure",
+        "settled_at",
+        "reversed_at"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "pending",
+            "settled",
+            "reversed",
+            "failed"
+          ]
+        },
+        "billing_txn_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reversal_txn_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reversed_amount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failure": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "settled_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reversed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": [
+        "state",
+        "delivered_at"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "awaiting_payment",
+            "queued",
+            "delivered",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "delivered_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "checkout": {
+      "type": "object",
+      "required": [
+        "url",
+        "ref",
+        "provider",
+        "intent_id"
+      ],
+      "properties": {
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intent_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "description": "Checkout-funded interactions only."
+    },
+    "effects": {
+      "type": "array",
+      "description": "The creator and services only: the delivery effects.",
+      "items": {
+        "type": "object",
+        "required": [
+          "effect",
+          "adapter",
+          "state",
+          "attempts",
+          "last_error",
+          "updated_at"
+        ],
+        "properties": {
+          "effect": {
+            "enum": [
+              "chat_line",
+              "paid_message",
+              "tts",
+              "media_request",
+              "overlay_alert"
+            ]
+          },
+          "adapter": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "delivered",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "last_error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "provider": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "legacy_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

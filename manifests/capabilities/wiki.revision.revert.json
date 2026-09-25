@@ -18,5 +18,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/pages/:id/revert"
-  ]
+  ],
+  "inputSchema": "wiki.revert-request@1",
+  "outputSchema": "wiki.revert-result@1"
 }

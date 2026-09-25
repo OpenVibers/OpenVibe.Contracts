@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/overlay-token-result.v1.json",
+  "title": "TipsOverlayTokenResult",
+  "description": "tips.overlay-token-result@1: answers about overlay tokens on OpenVibe.Tips (tips.overlay.token.create, tips.overlay.token.revoke). POST /api/v1/overlay-tokens (201) → { token, secret, overlay_url, events_url }: the secret (tovl_…) and the URLs that carry it are shown once; a replay of the same Idempotency-Key answers them as null with a note (revoke that token and create another). GET /api/v1/overlay-tokens → { tokens } (without secrets; active first). POST /api/v1/overlay-tokens/:id/revoke → { token }: revoked at once, and every open overlay stream using it is closed.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "token",
+        "secret",
+        "overlay_url",
+        "events_url"
+      ],
+      "properties": {
+        "token": {
+          "$ref": "overlay-token.v1.json"
+        },
+        "secret": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^tovl_[A-Za-z0-9_-]{43}$",
+          "description": "A secret: keep it out of logs."
+        },
+        "overlay_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "events_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "tokens"
+      ],
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "overlay-token.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "$ref": "overlay-token.v1.json"
+        }
+      }
+    }
+  ]
+}

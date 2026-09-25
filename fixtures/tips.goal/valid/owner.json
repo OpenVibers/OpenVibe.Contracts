@@ -1,0 +1,33 @@
+{
+  "id": "tgoal_01JAB2C3D4E5F6G7H8J9K0MNQ9",
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "title": "New microphone",
+  "description": "Help me sound less like a tin can.",
+  "target_amount": 20000,
+  "current_amount": 7350,
+  "currency": "vibes-bits",
+  "supporters_count": 12,
+  "carried_over_amount": 0,
+  "percent": 36,
+  "reached": false,
+  "reached_at": null,
+  "image_url": null,
+  "status": "active",
+  "sort_order": 0,
+  "revision": 13,
+  "created_at": "2026-09-10T20:00:00.000Z",
+  "updated_at": "2026-09-25T09:12:41.530Z",
+  "closed_at": null,
+  "contributions": [
+    {
+      "interaction_id": "tint_01JAB2C3D4E5F6G7H8J9K0MNQ5",
+      "amount": 500,
+      "reversed_amount": 0,
+      "created_at": "2026-09-25T09:12:41.530Z",
+      "supporter_name": "moosefan"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/profile-result.v1.json",
+  "title": "TipsProfileResult",
+  "description": "tips.profile-result@1: a creator's tip profile on OpenVibe.Tips (tips.profile.get, tips.profile.update). GET /api/v1/profiles/:creator → { profile, goals }: the profile and its active goals, in full for the creator and services holding tips.profile.get, else in the public shape (a page that is switched off is 404 tips.creator_not_found to everyone else). PATCH /api/v1/profiles/:creator → { profile } in the creator's view.",
+  "type": "object",
+  "required": [
+    "profile"
+  ],
+  "properties": {
+    "profile": {
+      "$ref": "profile.v1.json"
+    },
+    "goals": {
+      "type": "array",
+      "items": {
+        "$ref": "goal.v1.json"
+      },
+      "description": "GET only (always there): the active goals."
+    }
+  }
+}

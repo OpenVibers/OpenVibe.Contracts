@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/entitlements/check",
     "POST /api/v1/entitlements/check"
-  ]
+  ],
+  "inputSchema": "vip.entitlement-check-request@1",
+  "outputSchema": "vip.entitlement-check-result@1"
 }

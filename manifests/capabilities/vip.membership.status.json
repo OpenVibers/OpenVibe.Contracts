@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/memberships/:subject"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vip.membership-status-result@1"
 }

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/perk-list-result.v1.json",
+  "title": "VipPerkListResult",
+  "description": "vip.perk-list-result@1: the answer of vip.perk.list on OpenVibe.VIP. GET /api/v1/perks?creator=&network=&retired= → { perks }: a creator's active perks plus the network's (network=0 leaves those out), ordered creator first then by name; retired=1 adds retired perks for the creator, staff or a service holding vip.perk.list. 404 vip.creator_not_found (problem+json) when creator names nobody.",
+  "type": "object",
+  "required": [
+    "perks"
+  ],
+  "properties": {
+    "perks": {
+      "type": "array",
+      "items": {
+        "$ref": "perk.v1.json"
+      }
+    }
+  }
+}

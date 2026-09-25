@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/pages/:id/revisions/:n/citations"
-  ]
+  ],
+  "inputSchema": "wiki.citation-attach-request@1",
+  "outputSchema": "wiki.citation-attach-result@1"
 }

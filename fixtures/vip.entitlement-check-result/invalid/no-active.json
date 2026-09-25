@@ -1,0 +1,58 @@
+{
+  "member": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "kind": "channel_subscription",
+  "status": "active",
+  "expires_at": "2026-10-20T18:04:11.000Z",
+  "cancel_at_period_end": false,
+  "source": "projection",
+  "stale": false,
+  "valid_until": "2026-09-25T09:17:40.118Z",
+  "checked_at": "2026-09-25T09:12:40.118Z",
+  "membership": {
+    "id": "vms_01JAB2C3D4E5F6G7H8J9K0MNPX",
+    "member": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+    },
+    "creator_id": "vcr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "plan_id": "vpl_01JAB2C3D4E5F6G7H8J9K0MNPW",
+    "plan_version": {
+      "id": "vpv_01JAB2C3D4E5F6G7H8J9K0MNPT",
+      "version": 2,
+      "name": "Supporter",
+      "terms": {
+        "name": "Supporter",
+        "description": "Back the stream every month.",
+        "benefits": [
+          "Supporter badge in chat",
+          "Members-only VOD chapters"
+        ],
+        "perks": [
+          {
+            "key": "chat-badge",
+            "name": "Chat badge",
+            "kind": "badge",
+            "scope": "creator"
+          }
+        ],
+        "billing_kind": "channel_subscription",
+        "price": "set and charged by OpenVibe.Billing",
+        "digest": "3fa9c0d27e5b8814"
+      }
+    },
+    "perks": [
+      "chat-badge"
+    ],
+    "origin": "checkout",
+    "joined_at": "2026-09-20T18:04:11.402Z",
+    "terms_since": "2026-09-20T18:04:11.402Z"
+  },
+  "product": "chat"
+}

@@ -1,0 +1,9 @@
+{
+  "from_user_id": 1042,
+  "to_user_id": 2210,
+  "app_id": "games",
+  "amount": 40,
+  "reason": "wager",
+  "ref": "match:m_8812",
+  "idempotency_key": "games:wager:m_8812"
+}

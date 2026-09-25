@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/policies/evaluate"
-  ]
+  ],
+  "inputSchema": "vip.policy-evaluate-request@1",
+  "outputSchema": "vip.policy-evaluate-result@1"
 }

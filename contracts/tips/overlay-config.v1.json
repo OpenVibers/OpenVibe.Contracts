@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/overlay-config.v1.json",
+  "title": "TipsOverlayConfig",
+  "description": "tips.overlay-config@1: an overlay config on OpenVibe.Tips (server/domain/overlays.js presentConfig): how a creator's alerts overlay (kind alerts: min_amount, duration_ms, show_message, show_amount, speak_message, sound_url, image_url, template) or goal widget (kind goal: show_amounts, show_percent, optionally one goal) looks. Open overlays using it receive every change at once.",
+  "type": "object",
+  "required": [
+    "id",
+    "creator",
+    "kind",
+    "name",
+    "settings",
+    "goal_id",
+    "revision",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tovc_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "creator": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "kind": {
+      "enum": [
+        "alerts",
+        "goal"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "min_amount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "duration_ms": {
+          "type": "integer"
+        },
+        "show_message": {
+          "type": "boolean"
+        },
+        "show_amount": {
+          "type": "boolean"
+        },
+        "speak_message": {
+          "type": "boolean"
+        },
+        "sound_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "show_amounts": {
+          "type": "boolean"
+        },
+        "show_percent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "goal_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    }
+  }
+}

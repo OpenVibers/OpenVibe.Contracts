@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/paid-request.v1.json",
+  "title": "TipsPaidRequest",
+  "description": "tips.paid-request@1: bodies of the paid requests on OpenVibe.Tips: POST /api/v1/checkout (tips.checkout.create: a tip), POST /api/v1/paid-messages (tips.superchat.create: needs message; paid_message_min applies), POST /api/v1/tts-requests (tips.tts.request: needs text to read, tts.text or message, within the creator's TTS settings) and POST /api/v1/media-requests (tips.media_request.create: needs media.url; the creator's minimum and length apply): { creator, amount, supporter?, supporter_name?, message?, pay_with?, provider?, tts?, media?, goal_id?, target?, privacy? }. The route sets the kind. A service names the supporter; a person pays as themselves. pay_with credit (default) pays from the supporter's Billing credit at once; checkout starts a Billing checkout (from TIPS_MIN_CHECKOUT_BITS, 100 bits by default). Tips never prices money; Billing does. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input, tips.invalid_amount, tips.amount_too_small, tips.text_too_long (message over TIPS_MESSAGE_CHARS, 300 by default), tips.invalid_media, tips.invalid_subject, tips.name_taken, tips.goal_not_found or tips.self_dealing; 409 tips.not_accepting, tips.tts_disabled or tips.media_disabled; 409 tips.payment_failed (a replay of a request whose payment failed) and Billing's own refusal code (409 billing.insufficient_funds, else 422), both with the interaction in details; 404 tips.creator_not_found; 429 tips.too_many_pending; 502 tips.billing_unavailable. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "creator",
+    "amount"
+  ],
+  "properties": {
+    "creator": {
+      "description": "The creator tipped.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "A usr_ id or the creator's Tips handle."
+        }
+      ]
+    },
+    "amount": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$",
+      "maximum": 10000000,
+      "description": "Vibes bits, at most TIPS_MAX_BITS (10000000 by default)."
+    },
+    "supporter": {
+      "description": "The supporter: required for services; ignored for a person.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      ]
+    },
+    "supporter_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name to show (at most 80 characters kept); never the creator's own name or handle."
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pay_with": {
+      "enum": [
+        "credit",
+        "checkout"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "description": "pay_with checkout: one of TIPS_CHECKOUT_PROVIDERS (powerchat by default)."
+    },
+    "tts": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "voice": {
+          "enum": [
+            "gary",
+            "brian",
+            "amy",
+            "emma",
+            "joey",
+            "justin",
+            "matthew",
+            "salli",
+            "kimberly",
+            "kendra",
+            "ivy",
+            "joanna"
+          ],
+          "description": "Default: the creator's voice."
+        }
+      },
+      "description": "Text-to-speech (kind tts): the text to read (default: message) and the voice."
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "pattern": "^https://",
+          "maxLength": 500,
+          "description": "An https link on an allowed host (TIPS_MEDIA_HOSTS; YouTube by default)."
+        }
+      },
+      "description": "A media request (kind media_request)."
+    },
+    "goal_id": {
+      "type": "string",
+      "description": "One of the creator's open goals."
+    },
+    "target": {
+      "$ref": "../common/entity-ref.v1.json",
+      "description": "What the tip is for (a Live stream, …)."
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "anonymous": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "The name reads \"Anonymous\" to everyone but the supporter."
+        },
+        "hide_amount": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "The amount is left out of overlays, chat lines and public pages."
+        },
+        "private_message": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "A tip's message is for the creator only (tips only; 422 for the other kinds)."
+        }
+      },
+      "additionalProperties": false,
+      "description": "The supporter's choices; any other field is refused (422 tips.invalid_input). true, 1, \"1\", \"true\" and \"on\" count as yes."
+    }
+  }
+}

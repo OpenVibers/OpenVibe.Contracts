@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/staff-list-result.v1.json",
+  "title": "NetworkStaffListResult",
+  "description": "network.staff-list-result@1: the answer of network.staff.read on OpenVibe.Network. GET /api/v1/staff/moderators[?service=chat|live|community|pastes|calls] (a service token holding network.staff.read, or a signed-in person holding staff.moderation.logs) → { service, staff }: the network's global moderators, admins and the owner who are not banned, with the staff capabilities their role holds in the contracts staff map; ?service keeps those holding the capability that moderates that service (another service name keeps those holding staff.content.moderate; an invalid value is ignored and answered as null). Answered with Cache-Control: private, no-store; a person without staff.moderation.logs gets 403 { error: forbidden }.",
+  "type": "object",
+  "required": [
+    "service",
+    "staff"
+  ],
+  "properties": {
+    "service": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The service filter applied, or null."
+    },
+    "staff": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "subject",
+          "username",
+          "display_name",
+          "role",
+          "is_owner",
+          "capabilities"
+        ],
+        "properties": {
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^usr_",
+            "description": "null for an account that has no subject yet."
+          },
+          "username": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "global_mod",
+              "admin",
+              "owner"
+            ]
+          },
+          "is_owner": {
+            "type": "boolean"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^staff\\."
+            },
+            "description": "Staff capability ids, sorted."
+          }
+        }
+      }
+    }
+  }
+}

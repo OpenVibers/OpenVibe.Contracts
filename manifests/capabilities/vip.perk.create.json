@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/perks"
-  ]
+  ],
+  "inputSchema": "vip.perk-create-request@1",
+  "outputSchema": "vip.perk-result@1"
 }

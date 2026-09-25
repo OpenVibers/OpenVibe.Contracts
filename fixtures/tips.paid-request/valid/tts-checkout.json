@@ -1,0 +1,13 @@
+{
+  "creator": "moosefan",
+  "amount": "1000",
+  "pay_with": "checkout",
+  "provider": "powerchat",
+  "tts": {
+    "text": "Hello from the chat",
+    "voice": "amy"
+  },
+  "privacy": {
+    "anonymous": true
+  }
+}

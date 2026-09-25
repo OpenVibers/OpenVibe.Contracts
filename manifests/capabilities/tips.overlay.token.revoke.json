@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/overlay-tokens/:id/revoke"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "tips.overlay-token-result@1"
 }

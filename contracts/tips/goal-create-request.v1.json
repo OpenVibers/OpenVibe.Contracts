@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/goal-create-request.v1.json",
+  "title": "TipsGoalCreateRequest",
+  "description": "tips.goal-create-request@1: the body of tips.goal.create on OpenVibe.Tips. POST /api/v1/goals: { creator?, title, target_amount, description?, image_url?, sort_order? } opens a goal (a service names the creator; a person opens one on their own page). Its total is derived from settled interactions only. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (no title, a bad image_url or sort_order), tips.invalid_amount or tips.text_too_long; 409 tips.too_many_goals (20 active at most); 404 tips.creator_not_found; 403 capability.denied or tips.forbidden. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "title",
+    "target_amount"
+  ],
+  "properties": {
+    "creator": {
+      "description": "The creator (default: the signed-in person).",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "A usr_ id or the creator's Tips handle."
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "target_amount": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$",
+      "maximum": 10000000,
+      "description": "Vibes bits, at most TIPS_MAX_BITS (10000000 by default)."
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "image_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "An https URL; empty or null clears it."
+    },
+    "sort_order": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 0,
+      "maximum": 1000,
+      "pattern": "^[0-9]{1,4}$"
+    }
+  }
+}

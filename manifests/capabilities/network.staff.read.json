@@ -13,5 +13,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/staff/moderators"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.staff-list-result@1"
 }

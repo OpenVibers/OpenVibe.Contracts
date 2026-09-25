@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/publish-result.v1.json",
+  "title": "WikiPublishResult",
+  "description": "wiki.publish-result@1: answers of wiki.revision.publish on OpenVibe.Wiki. POST …/publish and …/unpublish → { page, action }; POST …/schedule → { job, created } (201 when created); POST …/revisions/:n/review → 201 { review, page, action, indexable, reasons }; POST /api/v1/proposals/:id/review → { proposal, published }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "page",
+        "action"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "page.v1.json"
+        },
+        "action": {},
+        "review": {
+          "type": "object"
+        },
+        "indexable": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "job",
+        "created"
+      ],
+      "properties": {
+        "job": {
+          "type": "object"
+        },
+        "created": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "proposal",
+        "published"
+      ],
+      "properties": {
+        "proposal": {
+          "type": "object",
+          "required": [
+            "id",
+            "status"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "approved",
+                "rejected"
+              ]
+            }
+          }
+        },
+        "published": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

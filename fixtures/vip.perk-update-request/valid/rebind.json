@@ -1,0 +1,15 @@
+{
+  "bindings": [
+    {
+      "product": "live",
+      "binding": "chat_badge"
+    },
+    {
+      "product": "chat",
+      "binding": "chat_badge",
+      "config": {
+        "icon": "crown"
+      }
+    }
+  ]
+}

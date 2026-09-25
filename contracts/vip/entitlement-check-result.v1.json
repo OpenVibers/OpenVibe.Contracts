@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/entitlement-check-result.v1.json",
+  "title": "VipEntitlementCheckResult",
+  "description": "vip.entitlement-check-result@1: the answer of vip.entitlement.check on OpenVibe.VIP. GET or POST /api/v1/entitlements/check → an entitlement answer (vip.entitlement@1); unknown never authorizes. With product it adds { product, product_perks, preferences }: the perks of the member's plan version that have bindings for that product (none unless active), and the member's badge and listing preferences for the creator.",
+  "allOf": [
+    {
+      "$ref": "entitlement.v1.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "product": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}$"
+        },
+        "product_perks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "name",
+              "kind",
+              "scope",
+              "bindings"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "badge",
+                  "emote",
+                  "gated_content",
+                  "room",
+                  "role",
+                  "other"
+                ]
+              },
+              "scope": {
+                "enum": [
+                  "creator",
+                  "network"
+                ]
+              },
+              "bindings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "binding",
+                    "config"
+                  ],
+                  "properties": {
+                    "binding": {
+                      "type": "string"
+                    },
+                    "config": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "preferences": {
+          "type": "object",
+          "required": [
+            "show_badge",
+            "listed"
+          ],
+          "properties": {
+            "show_badge": {
+              "type": "boolean"
+            },
+            "listed": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

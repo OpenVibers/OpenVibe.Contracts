@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/perk-create-request.v1.json",
+  "title": "VipPerkCreateRequest",
+  "description": "vip.perk-create-request@1: the body of vip.perk.create on OpenVibe.VIP. POST /api/v1/perks: { creator?, key?, name, description?, kind?, bindings? } defines a perk for a creator (a service names the creator; a person defines their own; staff may name network). key defaults to the name, and must read as a slug (1-48 of a-z, 0-9 and -, lowercased); kind defaults to other. Refusals are problem+json: 422 vip.invalid_input (no name, a bad key, kind or binding) or vip.text_too_long; 409 vip.perk_exists (the key is taken); 403 capability.denied or vip.not_yours. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "creator": {
+      "description": "The creator the perk belongs to (a user SubjectRef, or network for staff).",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "A usr_ id, a VIP username, or network."
+        }
+      ]
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,47}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "kind": {
+      "enum": [
+        "badge",
+        "emote",
+        "gated_content",
+        "room",
+        "role",
+        "other"
+      ]
+    },
+    "bindings": {
+      "type": "array",
+      "maxItems": 20,
+      "description": "Replaces the perk's active bindings (a binding left out is removed). Each (product, binding) at most once.",
+      "items": {
+        "type": "object",
+        "required": [
+          "product",
+          "binding"
+        ],
+        "properties": {
+          "product": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "A service id: live, chat, community, blog, …"
+          },
+          "binding": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]{1,63}$",
+            "description": "chat_badge, room_access, gated_post, …"
+          },
+          "config": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Under 2 KB of JSON; default {}."
+          }
+        }
+      }
+    }
+  }
+}

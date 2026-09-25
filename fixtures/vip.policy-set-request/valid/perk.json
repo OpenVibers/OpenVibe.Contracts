@@ -1,0 +1,13 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "resource": {
+    "service": "blog",
+    "type": "post",
+    "id": "pst_01JAB2C3D4E5F6G7H8J9K0MNPZ"
+  },
+  "requirement": "perk",
+  "perk_key": "chat-badge"
+}

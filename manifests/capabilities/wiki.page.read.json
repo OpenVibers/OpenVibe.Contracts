@@ -20,5 +20,7 @@
     "GET /api/v1/pages/:id/diff",
     "GET /api/v1/pages/:id/revisions/:n/citations",
     "GET /api/v1/proposals/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "wiki.page-read-result@1"
 }

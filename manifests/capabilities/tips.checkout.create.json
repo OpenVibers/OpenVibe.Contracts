@@ -18,5 +18,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/checkout"
-  ]
+  ],
+  "inputSchema": "tips.paid-request@1",
+  "outputSchema": "tips.paid-result@1"
 }

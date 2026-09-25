@@ -1,0 +1,5 @@
+{
+  "user_id": "77",
+  "amount": 5,
+  "idempotency_key": "games:prize:77:rnd_551"
+}

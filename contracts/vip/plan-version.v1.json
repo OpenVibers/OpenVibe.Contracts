@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/plan-version.v1.json",
+  "title": "VipPlanVersion",
+  "description": "vip.plan-version@1: one immutable version of a membership plan on OpenVibe.VIP (server/domain/plans.js presentVersion). An edit always creates version N+1; members keep the version they joined under. terms is the snapshot a member buys (never a price: OpenVibe.Billing prices and charges); perks lists the perks this version includes, by the id, key and name they had when it was written.",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "name",
+    "description",
+    "benefits",
+    "perks",
+    "terms",
+    "change_note",
+    "created_at",
+    "published_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vpv_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    },
+    "benefits": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "maxLength": 200
+      }
+    },
+    "perks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^vpk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "key": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "terms": {
+      "type": "object",
+      "required": [
+        "name",
+        "description",
+        "benefits",
+        "perks",
+        "billing_kind",
+        "price",
+        "digest"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "benefits": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "perks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "name",
+              "kind",
+              "scope"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "badge",
+                  "emote",
+                  "gated_content",
+                  "room",
+                  "role",
+                  "other"
+                ]
+              },
+              "scope": {
+                "enum": [
+                  "creator",
+                  "network"
+                ]
+              }
+            }
+          }
+        },
+        "billing_kind": {
+          "enum": [
+            "channel_subscription",
+            null
+          ]
+        },
+        "price": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Never an amount: a note that Billing sets and charges the price, or null."
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16}$"
+        }
+      }
+    },
+    "change_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "null while a draft."
+    }
+  }
+}

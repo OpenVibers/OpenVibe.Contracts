@@ -1,0 +1,14 @@
+{
+  "creator": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "totals": {
+    "currency": "vibes-bits",
+    "settled_via_billing": 73500,
+    "external": 1200,
+    "interactions": 88,
+    "simulations": 4,
+    "pending": 1
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/revert-request.v1.json",
+  "title": "WikiRevertRequest",
+  "description": "wiki.revert-request@1: the body of POST /api/v1/pages/:id/revert on OpenVibe.Wiki (wiki.revision.revert, editors): a new revision with the content of to_revision; expected_revision is the head you saw (a stale one is refused); publish republishes when the page was published.",
+  "type": "object",
+  "required": [
+    "to_revision"
+  ],
+  "properties": {
+    "to_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "expected_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "publish": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    }
+  }
+}

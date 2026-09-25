@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/profile-update-request.v1.json",
+  "title": "TipsProfileUpdateRequest",
+  "description": "tips.profile-update-request@1: the body of tips.profile.update on OpenVibe.Tips. PATCH /api/v1/profiles/:creator (a usr_ id or handle; me for the signed-in person, creating their profile on first use): any of the settings below; revision, when given, must be the profile's current revision (409 tips.revision_conflict). A service opening a profile for a creator Tips has not seen (a usr_ id in the path) must give handle (and may give display_name and avatar_url). Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input (a value out of range, an unknown voice, an unknown page or filter setting, an empty display_name, no handle when creating) or tips.text_too_long; 404 tips.creator_not_found; 403 capability.denied or tips.forbidden. Unknown top-level fields are ignored.",
+  "type": "object",
+  "properties": {
+    "revision": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "page_enabled": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "The public page and its indexing. true, 1, \"1\" and \"on\" count as yes; anything else as no."
+    },
+    "accepting": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "Take new tips. true, 1, \"1\" and \"on\" count as yes; anything else as no."
+    },
+    "tts_enabled": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "Text-to-speech requests. true, 1, \"1\" and \"on\" count as yes; anything else as no."
+    },
+    "media_requests_enabled": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ],
+      "description": "Media requests. true, 1, \"1\" and \"on\" count as yes; anything else as no."
+    },
+    "min_amount": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "maximum": 1000000,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "The smallest tip (1 to 1000000 bits)."
+    },
+    "paid_message_min": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "maximum": 1000000,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "The smallest paid message (1 to 1000000 bits)."
+    },
+    "tts_min_amount": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "maximum": 1000000,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "The smallest text-to-speech request (1 to 1000000 bits)."
+    },
+    "media_request_min": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "maximum": 1000000,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "The smallest media request (1 to 1000000 bits)."
+    },
+    "media_max_seconds": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 10,
+      "maximum": 10800,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "The longest media request (10 to 10800 seconds)."
+    },
+    "tts_max_chars": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 20,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "At least 20, at most TIPS_TTS_HARD_CAP (1200 by default)."
+    },
+    "tts_voice": {
+      "enum": [
+        "gary",
+        "brian",
+        "amy",
+        "emma",
+        "joey",
+        "justin",
+        "matthew",
+        "salli",
+        "kimberly",
+        "kendra",
+        "ivy",
+        "joanna"
+      ]
+    },
+    "headline": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 280
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "goal_amounts": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "goal_supporters": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "supporters_page": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "supporters_amounts": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "supporters_messages": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "description": "What the public pages show; any other setting is refused."
+    },
+    "filter": {
+      "type": "object",
+      "properties": {
+        "words": {
+          "description": "Blocked words or phrases: a list, or one string separated by commas or new lines.",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "action": {
+          "enum": [
+            "mask",
+            "hold"
+          ],
+          "description": "mask stars them out; hold keeps the paid message back for review."
+        },
+        "links": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "Links in paid messages shown as [link]."
+        }
+      },
+      "additionalProperties": false,
+      "description": "The word filter for paid messages; any other setting is refused."
+    },
+    "handle": {
+      "type": "string",
+      "description": "Creating a profile as a service: the creator's handle (their Network username)."
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Creating a profile as a service: an https URL."
+    }
+  }
+}

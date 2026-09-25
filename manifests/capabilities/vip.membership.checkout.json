@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/checkout"
-  ]
+  ],
+  "inputSchema": "vip.checkout-request@1",
+  "outputSchema": "vip.checkout-result@1"
 }

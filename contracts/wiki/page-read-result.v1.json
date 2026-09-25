@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/page-read-result.v1.json",
+  "title": "WikiPageReadResult",
+  "description": "wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread }; GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "page",
+        "revision",
+        "citations",
+        "indexability"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "page.v1.json"
+        },
+        "revision": {
+          "$ref": "revision.v1.json"
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "citation.v1.json"
+          }
+        },
+        "infobox": {},
+        "attachments": {
+          "type": "array"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "space": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "indexability": {
+          "type": "object",
+          "required": [
+            "indexable"
+          ],
+          "properties": {
+            "indexable": {
+              "type": "boolean"
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "discussion_thread": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revisions"
+      ],
+      "properties": {
+        "revisions": {
+          "type": "array",
+          "items": {
+            "$ref": "revision.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revision",
+        "citations"
+      ],
+      "properties": {
+        "revision": {
+          "$ref": "revision.v1.json"
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "citation.v1.json"
+          }
+        },
+        "infobox": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "diff"
+      ],
+      "properties": {
+        "diff": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "citations"
+      ],
+      "properties": {
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "citation.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "proposal"
+      ],
+      "properties": {
+        "proposal": {
+          "type": "object",
+          "required": [
+            "id",
+            "page_id",
+            "status"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "page_id": {
+              "type": "string"
+            },
+            "space_id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer"
+            },
+            "base_revision": {
+              "type": "integer"
+            },
+            "workflow_id": {
+              "type": "string"
+            },
+            "run_id": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "approved",
+                "rejected"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

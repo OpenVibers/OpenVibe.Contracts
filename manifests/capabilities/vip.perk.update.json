@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "PATCH /api/v1/perks/:id"
-  ]
+  ],
+  "inputSchema": "vip.perk-update-request@1",
+  "outputSchema": "vip.perk-result@1"
 }

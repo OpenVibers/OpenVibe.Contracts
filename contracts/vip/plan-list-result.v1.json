@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/plan-list-result.v1.json",
+  "title": "VipPlanListResult",
+  "description": "vip.plan-list-result@1: answers of vip.plan.list on OpenVibe.VIP. Published plans are public; the creator, staff or a service holding vip.plan.list also see drafts and archived plans. GET /api/v1/plans?creator=&include=drafts,archived → { creator, plans }; GET /api/v1/plans/:id → { plan } (with its creator); GET /api/v1/plans/:id/versions → { plan_id, versions } (newest first; only published versions for others); GET /api/v1/creators/:ref → { creator, plans, perks } (the creator's public page: plans, drafts included for its manager, and the creator's own active perks). A creator is named by usr_ id, VIP username or network; 404 vip.creator_not_found or vip.plan_not_found (problem+json).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "creator",
+        "plans",
+        "perks"
+      ],
+      "properties": {
+        "creator": {
+          "$ref": "creator.v1.json"
+        },
+        "plans": {
+          "type": "array",
+          "items": {
+            "$ref": "plan.v1.json"
+          }
+        },
+        "perks": {
+          "type": "array",
+          "items": {
+            "$ref": "perk.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "creator",
+        "plans"
+      ],
+      "properties": {
+        "creator": {
+          "$ref": "creator.v1.json"
+        },
+        "plans": {
+          "type": "array",
+          "items": {
+            "$ref": "plan.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan"
+      ],
+      "properties": {
+        "plan": {
+          "$ref": "plan.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "versions"
+      ],
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "plan-version.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

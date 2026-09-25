@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/goal-result.v1.json",
+  "title": "TipsGoalResult",
+  "description": "tips.goal-result@1: one goal on OpenVibe.Tips (tips.goal.create, tips.goal.update, tips.goal.close). POST /api/v1/goals (201), PATCH /api/v1/goals/:id and POST /api/v1/goals/:id/close → { goal } (closing keeps its history; closing a closed goal changes nothing). GET /api/v1/goals/:id → { goal }: with contributions for the creator and granted services, else the public shape (404 tips.goal_not_found when the page is off).",
+  "type": "object",
+  "required": [
+    "goal"
+  ],
+  "properties": {
+    "goal": {
+      "$ref": "goal.v1.json"
+    }
+  }
+}

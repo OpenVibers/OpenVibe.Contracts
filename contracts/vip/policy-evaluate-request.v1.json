@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/policy-evaluate-request.v1.json",
+  "title": "VipPolicyEvaluateRequest",
+  "description": "vip.policy-evaluate-request@1: the question of vip.resource.policy.evaluate on OpenVibe.VIP. POST /api/v1/policies/evaluate: { resource, owner, subject?, rule_id?, mode?, fallback? }: may subject see resource, owned (says the product) by creator owner? Only the owner's rule applies; rule_id pins the rule the product expects. fallback is the product's own default gate, used only when the owner has no active rule. A person asks about themselves (403 vip.not_yours otherwise); a service may leave subject out (a signed-out viewer: the answer is no). Nothing is refused for a bad resource, owner or fallback: the answer is allow false with the reason (invalid_resource, owner_required, invalid_fallback, no_rule). Unknown fields are ignored.",
+  "type": "object",
+  "properties": {
+    "resource": {
+      "$ref": "../common/entity-ref.v1.json"
+    },
+    "owner": {
+      "description": "The creator who owns the resource: a user SubjectRef, usr_ id, or network.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string",
+          "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|network)$"
+        }
+      ]
+    },
+    "subject": {
+      "description": "The viewer; null or absent for a signed-out viewer (services only).",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rule_id": {
+      "type": "string",
+      "description": "The rule the product believes applies (vgr_…); a mismatch denies."
+    },
+    "mode": {
+      "enum": [
+        "auto",
+        "authoritative"
+      ],
+      "description": "authoritative always asks Billing; a sensitive rule always does."
+    },
+    "fallback": {
+      "description": "The product's default gate: { requirement: member, binding?: \"product:binding\" } (or just \"member\"); null or false for none.",
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "requirement"
+          ],
+          "properties": {
+            "requirement": {
+              "const": "member"
+            },
+            "binding": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-z][a-z0-9-]{1,39}[: ][a-z][a-z0-9_.]{1,63}$"
+            }
+          }
+        },
+        {
+          "const": "member"
+        },
+        {
+          "enum": [
+            null,
+            false
+          ]
+        }
+      ]
+    }
+  }
+}

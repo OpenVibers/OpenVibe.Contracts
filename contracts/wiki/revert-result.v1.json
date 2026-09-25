@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/revert-result.v1.json",
+  "title": "WikiRevertResult",
+  "description": "wiki.revert-result@1: the answer of POST /api/v1/pages/:id/revert on OpenVibe.Wiki: 201 { page, revision, published } (the new revision and whether it was published).",
+  "type": "object",
+  "required": [
+    "page",
+    "revision",
+    "published"
+  ],
+  "properties": {
+    "page": {
+      "$ref": "page.v1.json"
+    },
+    "revision": {
+      "$ref": "revision.v1.json"
+    },
+    "published": {
+      "type": "boolean"
+    }
+  }
+}

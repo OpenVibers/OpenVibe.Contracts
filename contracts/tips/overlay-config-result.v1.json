@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/overlay-config-result.v1.json",
+  "title": "TipsOverlayConfigResult",
+  "description": "tips.overlay-config-result@1: answers about overlay configs on OpenVibe.Tips (tips.overlay.config.get, tips.overlay.config.update). GET /api/v1/overlay-configs?creator= → { configs } (oldest first); GET /api/v1/overlay-configs/:id, POST /api/v1/overlay-configs (201) and PATCH /api/v1/overlay-configs/:id → { config }. For the creator or a service holding the capability; 404 tips.overlay_config_not_found.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "config"
+      ],
+      "properties": {
+        "config": {
+          "$ref": "overlay-config.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "configs"
+      ],
+      "properties": {
+        "configs": {
+          "type": "array",
+          "items": {
+            "$ref": "overlay-config.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

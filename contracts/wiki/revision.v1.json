@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/revision.v1.json",
+  "title": "WikiRevision",
+  "description": "wiki.revision@1: one revision of a wiki page (server/http/api.js serializeRevision): its number, kind, parent, fields, Markdown body and authorship (human, AI-assisted or AI with the workflow and run). History lists leave the body out.",
+  "type": "object",
+  "required": [
+    "number",
+    "id",
+    "kind",
+    "title",
+    "author",
+    "created_at"
+  ],
+  "properties": {
+    "number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "id": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "parent_number": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "reverted_to": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "infobox": {
+      "type": "array"
+    },
+    "body": {
+      "type": "string"
+    },
+    "authorship": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "published": {
+      "type": "boolean"
+    },
+    "citation_count": {
+      "type": "integer"
+    },
+    "proposal": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  }
+}

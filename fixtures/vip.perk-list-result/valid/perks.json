@@ -1,0 +1,41 @@
+{
+  "perks": [
+    {
+      "id": "vpk_01JAB2C3D4E5F6G7H8J9K0MNPV",
+      "key": "chat-badge",
+      "name": "Chat badge",
+      "description": "A supporter badge next to your name in chat.",
+      "kind": "badge",
+      "status": "active",
+      "scope": "creator",
+      "creator_id": "vcr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "bindings": [
+        {
+          "product": "chat",
+          "binding": "chat_badge",
+          "config": {
+            "icon": "star"
+          }
+        },
+        {
+          "product": "live",
+          "binding": "chat_badge",
+          "config": {}
+        }
+      ],
+      "updated_at": "2026-09-20T18:04:11.402Z"
+    },
+    {
+      "id": "vpk_01JAB2C3D4E5F6G7H8J9K0MNQ2",
+      "key": "founder",
+      "name": "Founder",
+      "description": null,
+      "kind": "role",
+      "status": "active",
+      "scope": "network",
+      "creator_id": "network",
+      "bindings": [],
+      "updated_at": "2026-09-20T18:04:11.402Z"
+    }
+  ]
+}

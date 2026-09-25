@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/policy-evaluate-result.v1.json",
+  "title": "VipPolicyEvaluateResult",
+  "description": "vip.policy-evaluate-result@1: the answer of vip.resource.policy.evaluate on OpenVibe.VIP. POST /api/v1/policies/evaluate → { allow, reason, rule?, entitlement?, fallback? }. It fails closed: no owner, no rule, a disabled rule, a suspended creator, an entitlement VIP cannot confirm, a missing plan or perk, or any error is allow false with the reason. allow true only for the owner themselves (reason owner) or a member meeting the rule (member). fallback true when the product's default gate decided (rule null).",
+  "type": "object",
+  "required": [
+    "allow",
+    "reason"
+  ],
+  "properties": {
+    "allow": {
+      "type": "boolean"
+    },
+    "reason": {
+      "enum": [
+        "owner",
+        "member",
+        "invalid_resource",
+        "invalid_fallback",
+        "owner_required",
+        "no_rule",
+        "rule_mismatch",
+        "owner_mismatch",
+        "rule_disabled",
+        "creator_unavailable",
+        "not_signed_in",
+        "not_a_member",
+        "entitlement_unknown",
+        "plan_required",
+        "perk_missing"
+      ]
+    },
+    "rule": {
+      "anyOf": [
+        {
+          "$ref": "policy-rule.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "entitlement": {
+      "anyOf": [
+        {
+          "$ref": "entitlement.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "fallback": {
+      "const": true
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/policy-set-request.v1.json",
+  "title": "VipPolicySetRequest",
+  "description": "vip.policy-set-request@1: bodies of vip.resource.policy.set on OpenVibe.VIP. POST /api/v1/policies: { resource, creator?, requirement?, plan_id?, perk_key?, sensitive? } creates the creator's rule for a resource, replacing (disabling) the creator's active rule for the same resource; a service names the creator (a user SubjectRef), a person sets rules for themselves. requirement member (default), plan (members of plan_id, one of the creator's plans) or perk (members whose plan version includes perk_key). DELETE /api/v1/policies/:id takes no body and disables the rule. Refusals are problem+json: 422 vip.invalid_input (no EntityRef resource, a bad requirement, the network as creator), vip.plan_not_found or vip.perk_not_found; 404 vip.rule_not_found; 403 capability.denied or vip.not_yours. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "resource"
+      ],
+      "properties": {
+        "resource": {
+          "$ref": "../common/entity-ref.v1.json"
+        },
+        "creator": {
+          "description": "The creator the rule belongs to.",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          ]
+        },
+        "requirement": {
+          "enum": [
+            "member",
+            "plan",
+            "perk"
+          ]
+        },
+        "plan_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Required with requirement plan."
+        },
+        "perk_key": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 48,
+          "description": "Required with requirement perk: a key of the creator's perks or the network's."
+        },
+        "sensitive": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "Always ask Billing (never the projection) when evaluating."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "requirement"
+            ],
+            "properties": {
+              "requirement": {
+                "const": "plan"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "plan_id"
+            ],
+            "properties": {
+              "plan_id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "requirement"
+            ],
+            "properties": {
+              "requirement": {
+                "const": "perk"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "perk_key"
+            ],
+            "properties": {
+              "perk_key": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

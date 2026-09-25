@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/overlay-token-request.v1.json",
+  "title": "TipsOverlayTokenRequest",
+  "description": "tips.overlay-token-request@1: bodies of tips.overlay.token.create on OpenVibe.Tips. POST /api/v1/overlay-tokens: { creator?, scopes?, label?, config_id? } mints a token (scopes default to alerts and goals; config_id must be one of the creator's overlay configs); a service names the creator, a person mints for their own page. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. GET /api/v1/overlay-tokens?creator= takes no body. Refusals are problem+json: 422 tips.invalid_input or tips.text_too_long; 404 tips.overlay_config_not_found or tips.creator_not_found; 409 tips.too_many_tokens (25 active at most); 403 capability.denied or tips.forbidden. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "creator": {
+          "description": "The creator (default: the signed-in person).",
+          "anyOf": [
+            {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "A usr_ id or the creator's Tips handle."
+            }
+          ]
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "alerts",
+              "goals"
+            ]
+          }
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "config_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

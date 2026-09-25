@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/goal-update-request.v1.json",
+  "title": "TipsGoalUpdateRequest",
+  "description": "tips.goal-update-request@1: bodies of tips.goal.update on OpenVibe.Tips. PATCH /api/v1/goals/:id: { title?, target_amount?, description?, image_url?, sort_order?, revision? } edits an active goal; revision, when given, must be the goal's current revision (409 tips.revision_conflict). Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. GET /api/v1/goals/:id (reading it, with contributions for the creator and granted services) takes no body. Refusals are problem+json: 404 tips.goal_not_found; 409 tips.goal_closed or tips.revision_conflict; 422 tips.invalid_input, tips.invalid_amount or tips.text_too_long. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "target_amount": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$",
+          "maximum": 10000000,
+          "description": "Vibes bits, at most TIPS_MAX_BITS (10000000 by default)."
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "An https URL; empty or null clears it."
+        },
+        "sort_order": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 1000,
+          "pattern": "^[0-9]{1,4}$"
+        },
+        "revision": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "pattern": "^[1-9][0-9]*$"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

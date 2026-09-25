@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /internal/coins/transfer"
-  ]
+  ],
+  "inputSchema": "network.coins-transfer-request@1",
+  "outputSchema": "network.coins-transfer-result@1"
 }

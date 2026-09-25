@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/membership-status-result.v1.json",
+  "title": "VipMembershipStatusResult",
+  "description": "vip.membership-status-result@1: the answer of vip.membership.status on OpenVibe.VIP. GET /api/v1/memberships/:subject?mode=projection|authoritative → { member, memberships }: every membership VIP has filed for the member, newest first, each with its creator, the member's preferences for it and the entitlement answer (mode auto by default: the projection when fresh, else Billing). A person may only ask about themselves (403 vip.not_yours); a service needs vip.membership.status.",
+  "type": "object",
+  "required": [
+    "member",
+    "memberships"
+  ],
+  "properties": {
+    "member": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "memberships": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "membership.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "creator",
+              "entitlement",
+              "preferences"
+            ],
+            "properties": {
+              "creator": {
+                "anyOf": [
+                  {
+                    "$ref": "creator.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "entitlement": {
+                "anyOf": [
+                  {
+                    "$ref": "entitlement.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "null when the creator has no subject (the network)."
+              },
+              "preferences": {
+                "type": "object",
+                "required": [
+                  "show_badge",
+                  "listed"
+                ],
+                "properties": {
+                  "show_badge": {
+                    "type": "boolean"
+                  },
+                  "listed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/notification-push-result.v1.json",
+  "title": "NetworkNotificationPushResult",
+  "description": "network.notification-push-result@1: answers of network.notifications.push on OpenVibe.Network. POST /internal/notifications/push → { ok: true, notification } (the stored notification), or { ok: true, skipped: true, reason } when nothing was created (the recipient switched the category off, blocked the actor, or already got a go-live notification from the same streamer within the hour). POST /internal/notifications/push-bulk → { ok: true, sent, total } (sent: notifications created; total: recipients named). Errors are { error } bodies (400, 500; 503 when the notification service is not running).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "notification"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "notification": {
+          "type": "object",
+          "required": [
+            "id",
+            "user_id",
+            "category",
+            "priority",
+            "title",
+            "icon",
+            "is_read",
+            "created_at"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "user_id": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "type": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "priority": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "message": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "icon": {
+              "type": "string"
+            },
+            "service": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rich_content": {
+              "description": "As sent."
+            },
+            "is_read": {
+              "const": 0
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "skipped",
+        "reason"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "skipped": {
+          "const": true
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "sent",
+        "total"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "sent": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  ]
+}

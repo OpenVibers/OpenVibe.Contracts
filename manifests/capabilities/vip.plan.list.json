@@ -18,5 +18,7 @@
     "GET /api/v1/plans/:id",
     "GET /api/v1/plans/:id/versions",
     "GET /api/v1/creators/:ref"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vip.plan-list-result@1"
 }

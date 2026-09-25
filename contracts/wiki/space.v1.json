@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/space.v1.json",
+  "title": "WikiSpace",
+  "description": "wiki.space@1: one wiki space as OpenVibe.Wiki's API shows it (server/http/api.js serializeSpace).",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "name",
+    "kind",
+    "visibility",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "official",
+        "user"
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "members",
+        "private"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

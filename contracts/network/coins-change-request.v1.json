@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/coins-change-request.v1.json",
+  "title": "NetworkCoinsChangeRequest",
+  "description": "network.coins-change-request@1: bodies of network.coins.credit and network.coins.debit on OpenVibe.Network (OpenCoins: loyalty, never money). POST /internal/coins/credit and POST /internal/coins/debit: { user_id, app_id?, amount, reason?, ref?, idempotency_key }. user_id is the Network user id (the integer, never a subject). Refusals are { error } bodies: 400 invalid_user_id, invalid_amount or missing_idempotency_key; 404 user_not_found; a debit larger than the balance is 409 { error: insufficient_funds, balance }. Unknown fields are ignored.",
+  "type": "object",
+  "required": [
+    "user_id",
+    "amount",
+    "idempotency_key"
+  ],
+  "properties": {
+    "user_id": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "The Network user id whose wallet changes."
+    },
+    "app_id": {
+      "type": "string",
+      "description": "The app the coins move for. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied. The shared internal key may name any."
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "OpenCoins, a positive whole number (a string is refused: 400 invalid_amount)."
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Why, kept on the ledger row."
+    },
+    "ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The caller's reference for the row (an order, a game, …)."
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique per mutation. A replay returns the first answer and changes nothing (400 missing_idempotency_key without it)."
+    }
+  }
+}

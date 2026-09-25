@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/interactions/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "tips.interaction-result@1"
 }

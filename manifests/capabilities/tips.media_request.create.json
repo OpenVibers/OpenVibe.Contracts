@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/media-requests"
-  ]
+  ],
+  "inputSchema": "tips.paid-request@1",
+  "outputSchema": "tips.paid-result@1"
 }

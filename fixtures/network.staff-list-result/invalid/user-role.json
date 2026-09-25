@@ -1,0 +1,13 @@
+{
+  "service": null,
+  "staff": [
+    {
+      "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+      "username": "viewer",
+      "display_name": "Viewer",
+      "role": "user",
+      "is_owner": false,
+      "capabilities": []
+    }
+  ]
+}

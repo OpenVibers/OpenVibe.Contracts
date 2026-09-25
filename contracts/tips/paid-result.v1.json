@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tips/paid-result.v1.json",
+  "title": "TipsPaidResult",
+  "description": "tips.paid-result@1: the answer of the paid requests on OpenVibe.Tips (tips.checkout.create, tips.superchat.create, tips.tts.request, tips.media_request.create). POST /api/v1/checkout, /paid-messages, /tts-requests and /media-requests → { interaction, checkout_url, checkout_ref } (201; 200 for a replay of the same Idempotency-Key). Paid from credit, the interaction is settled at once, or still pending while Billing is retried. Through a checkout, it is pending and the supporter pays at checkout_url (https only; a PowerChat checkout may come as checkout_ref only); the paid message, TTS or media request exists only after Billing settles it. A service sees the interaction as a service (no subject for an anonymous supporter); a person as its supporter.",
+  "type": "object",
+  "required": [
+    "interaction",
+    "checkout_url",
+    "checkout_ref"
+  ],
+  "properties": {
+    "interaction": {
+      "$ref": "interaction.v1.json"
+    },
+    "checkout_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "checkout_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

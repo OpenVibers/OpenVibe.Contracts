@@ -16,5 +16,7 @@
   "implementedBy": [
     "POST /api/v1/overlay-configs",
     "PATCH /api/v1/overlay-configs/:id"
-  ]
+  ],
+  "inputSchema": "tips.overlay-config-request@1",
+  "outputSchema": "tips.overlay-config-result@1"
 }

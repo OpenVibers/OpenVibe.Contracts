@@ -18,5 +18,7 @@
   "implementedBy": [
     "PATCH /api/v1/goals/:id",
     "GET /api/v1/goals/:id"
-  ]
+  ],
+  "inputSchema": "tips.goal-update-request@1",
+  "outputSchema": "tips.goal-result@1"
 }

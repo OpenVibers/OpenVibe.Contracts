@@ -1,0 +1,8 @@
+{
+  "user_id": 1042,
+  "app_id": "live",
+  "amount": 25,
+  "reason": "watch_streak",
+  "ref": "stream:8812",
+  "idempotency_key": "live:streak:1042:2026-09-25"
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vip/plan-result.v1.json",
+  "title": "VipPlanResult",
+  "description": "vip.plan-result@1: answers about one plan on OpenVibe.VIP (vip.plan.create, vip.plan.update, vip.plan.archive). POST /api/v1/plans (201) and POST /api/v1/plans/:id/archive → { plan }; PATCH /api/v1/plans/:id → { plan, version, unchanged } (version: the version written, or the latest when unchanged); POST /api/v1/plans/:id/publish → { plan, replay } (replay: it was already published). The plan carries its creator.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "plan",
+        "version",
+        "unchanged"
+      ],
+      "properties": {
+        "plan": {
+          "$ref": "plan.v1.json"
+        },
+        "version": {
+          "$ref": "plan-version.v1.json"
+        },
+        "unchanged": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan",
+        "replay"
+      ],
+      "properties": {
+        "plan": {
+          "$ref": "plan.v1.json"
+        },
+        "replay": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan"
+      ],
+      "properties": {
+        "plan": {
+          "$ref": "plan.v1.json"
+        }
+      }
+    }
+  ]
+}

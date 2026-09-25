@@ -1,0 +1,27 @@
+{
+  "service": "chat",
+  "staff": [
+    {
+      "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+      "username": "nightmod",
+      "display_name": "Night Mod",
+      "role": "global_mod",
+      "is_owner": false,
+      "capabilities": [
+        "staff.console.access",
+        "staff.content.hide",
+        "staff.content.moderate",
+        "staff.content.view_private",
+        "staff.moderation.bans",
+        "staff.moderation.bypass",
+        "staff.moderation.calls",
+        "staff.moderation.channels",
+        "staff.moderation.chat",
+        "staff.moderation.discussions",
+        "staff.moderation.ip",
+        "staff.moderation.logs",
+        "staff.moderation.pastes"
+      ]
+    }
+  ]
+}

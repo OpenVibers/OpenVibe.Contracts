@@ -16,5 +16,7 @@
   "implementedBy": [
     "POST /api/v1/policies",
     "DELETE /api/v1/policies/:id"
-  ]
+  ],
+  "inputSchema": "vip.policy-set-request@1",
+  "outputSchema": "vip.policy-result@1"
 }

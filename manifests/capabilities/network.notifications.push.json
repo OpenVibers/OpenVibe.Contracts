@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /internal/notifications/*"
-  ]
+  ],
+  "inputSchema": "network.notification-push-request@1",
+  "outputSchema": "network.notification-push-result@1"
 }
