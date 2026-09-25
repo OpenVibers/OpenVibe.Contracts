@@ -1,6 +1,6 @@
 # ADR-008: Shared package publication and release manifests
 
-**Status:** Accepted 2026-09-22; implementation in progress (OpenVibe.Shared)
+**Status:** Accepted 2026-09-22; implementation in progress (OpenVibe.Shared). Amended 2026-09-25 (one copy: libraries take openvibe-shared as a peer).
 
 ## Context and current evidence
 
@@ -29,3 +29,16 @@ A consumer can pin the previous tag.
 ## Acceptance tests
 
 No repository contains a vendored copy (CI drift check); navbar stays under its size budget.
+
+## Amendment 2026-09-25: libraries take openvibe-shared as a peer (one copy per product)
+
+**Context.** `openvibe-publishing` pinned its own `openvibe-shared` tag, so a product that used both could install two copies. It then had to bump both pins in lockstep, or serve one Frame with another library's helpers.
+
+**Decision.**
+- A library that builds on `openvibe-shared` declares it an **optional peer** with a floor (`"peerDependencies": { "openvibe-shared": ">=1.5.0" }`, `peerDependenciesMeta.optional`), never a dependency. `openvibe-publishing` has done so since 0.4.0 (2026-09-24).
+- The product that installs the library pins the one `openvibe-shared` tag everything uses. The library resolves it from the product's install.
+- A product installs **exactly one** `openvibe-shared` per package root. The shared CI workflow's pin-drift step (`OpenVibe.Shared` `scripts/pin-drift.js`, run from main in every repository after install) counts the installed copies. It covers npm nesting and pnpm's store, with symlinks resolved, and fails when a root has more than one, naming each copy's version and path.
+
+**Consequences.** Bumping Shared is one pin per product. A library that needs a newer Shared raises its peer floor, and the product's CI then fails until it upgrades. It never ends up with a silent second copy. The same rule applies to any future library built on Shared.
+
+**Acceptance.** `test/pin-drift.test.js` in OpenVibe.Shared: a nested second copy fails; one hoisted copy and a pnpm store linked from two places pass. On 2026-09-25 every consumer checked had one copy: Blog, Wiki, Network, and each of the eight Tools apps.
