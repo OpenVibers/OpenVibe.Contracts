@@ -601,6 +601,30 @@ export interface ReleaseManifest {
   metrics_url?: string | null;
 }
 
+/** common.no-body@1.0.0 (owner: common) */
+/**
+ * common.no-body@1: the capability's request carries no body; its parameters are the path and query of the routes in implementedBy (an id, a page cursor). An input schema that says so explicitly, so every active capability names one (roadmap WS-C task 4).
+ */
+export interface NoBody {}
+
+/** common.binary@1.0.0 (owner: common) */
+/**
+ * common.binary@1: the response is the resource's bytes, not JSON — Content-Type names the media type, Content-Length (or Range with 206) the size. An error is still an application/problem+json body. A declaration for capabilities that serve files (roadmap WS-C task 4); there is nothing to validate but the headers.
+ */
+export type Binary = string;
+
+/** media.file-upload@1.0.0 (owner: media) */
+/**
+ * media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.media-ref@1.
+ */
+export interface MediaFileUpload {
+  /**
+   * The multipart part named file (filename and Content-Type from the part).
+   */
+  file: string;
+  [k: string]: unknown | undefined;
+}
+
 /** search.index-document@1.0.0 (owner: search) */
 /**
  * What an owning service tells OpenVibe.Search about one of its resources (roadmap §15.12, §4.2 A). The owner stays the source of truth; Search keeps a revision-ordered, permission-aware copy for discovery. A document with deleted=true is a tombstone: it removes the resource from every result and wins over any upsert with the same or an older revision.

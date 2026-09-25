@@ -16,5 +16,6 @@
   "events": [],
   "implementedBy": [
     "DELETE /api/v1/jobs/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

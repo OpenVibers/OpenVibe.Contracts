@@ -137,6 +137,33 @@
       "adr": "ADR-016"
     },
     {
+      "id": "common.no-body",
+      "version": "1.0.0",
+      "owner": "common",
+      "schema": "common/no-body.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "common.binary",
+      "version": "1.0.0",
+      "owner": "common",
+      "schema": "common/binary.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.file-upload",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/file-upload.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "search.index-document",
       "version": "1.0.0",
       "owner": "search",

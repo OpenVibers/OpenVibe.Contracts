@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/no-body.v1.json",
+  "title": "NoBody",
+  "description": "common.no-body@1: the capability's request carries no body; its parameters are the path and query of the routes in implementedBy (an id, a page cursor). An input schema that says so explicitly, so every active capability names one (roadmap WS-C task 4).",
+  "type": "object",
+  "maxProperties": 0
+}

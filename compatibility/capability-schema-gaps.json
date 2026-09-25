@@ -1,0 +1,1122 @@
+{
+  "_about": "Active capabilities still without an input or output schema (roadmap WS-C task 4). test/capability-schemas.test.js fails on any active capability missing a schema that is not listed here, and on a listed one that has since gained it (remove it from this list). The list only shrinks: fill a capability's schemas, then delete its row. A request with no body names common.no-body@1; a response of bytes names common.binary@1.",
+  "gaps": [
+    {
+      "id": "ai.provider.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "ai.run.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "ai.usage.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "ai.workflow.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.balance.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.cashout.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.cashout.request",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.entitlement.check",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.intent.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.ledger.admin",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.subscription.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "billing.transfer.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.blog.configure",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.blog.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.feed.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.member.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.delete",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.publish",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.schedule",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.unpublish",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.post.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "blog.theme.set",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "chat.message.send",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "codes.release.manage",
+      "missing": [
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "codes.release.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "community.comment.moderate",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "community.paste.create",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "community.paste.moderate",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "community.paste.write",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "community.post.create",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "community.pulse.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "community.pulse.write",
+      "missing": [
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "community.space.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "community.thread.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "coupons.coupon.lookup",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "coupons.coupon.submit",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "coupons.merchant.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "coupons.merchant.resolve",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "coupons.report.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "coupons.status.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.flag.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.offer.expire",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.offer.merge",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.offer.moderate",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.offer.submit",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.offer.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.product.resolve",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.vote.remove",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.vote.set",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.watch.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.watch.delete",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "deals.watch.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "events.app.publish",
+      "missing": [
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "events.app.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "events.app.subscribe",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "events.delivery.admin",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "events.event.publish",
+      "missing": [
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "events.event.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "events.subscription.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "games.mod.manage",
+      "missing": [
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "games.mod.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "games.prop.place",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "games.world.announce",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "host.deploy.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "host.domain.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "host.site.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "live.channel.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "live.discovery.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "live.follower.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "live.stream.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "live.tips_delivery.write",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.blocks.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.coins.credit",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.coins.debit",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.coins.transfer",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.integration.github.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.modules.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "network.notifications.push",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "network.staff.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.cluster.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.cluster.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.perspective.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.source.attach",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.story.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.story.publish",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.story.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.story.retract",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.story.revise",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.timeline.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.topic.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.key.rotate",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.output.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.output.write",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.session.end",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.session.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.stream.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "openre.stream.write",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.correction.submit",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.entity.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.entity.merge",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.entity.resolve",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.entity.split",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.signal.import",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.summary.propose",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "reviews.summary.publish",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "sources.item.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "sources.source.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "sources.source.read",
+      "missing": [
+        "inputSchema"
+      ]
+    },
+    {
+      "id": "tips.checkout.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.goal.close",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.goal.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.goal.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.interaction.get",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.interaction.list",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.interaction.moderate",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.interaction.record",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.media_request.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.overlay.config.get",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.overlay.config.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.overlay.token.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.overlay.token.revoke",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.profile.get",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.profile.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.simulation.run",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.superchat.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "tips.tts.request",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.alert.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.alert.delete",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.alert.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.context.propose",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.context.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.instrument.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.instrument.resolve",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.observation.write",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.watchlist.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.watchlist.delete",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.watchlist.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "trade.watchlist.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.creator.members.list",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.entitlement.check",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.membership.checkout",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.membership.status",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.perk.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.perk.list",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.perk.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.plan.archive",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.plan.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.plan.list",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.plan.update",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.resource.policy.evaluate",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.resource.policy.get",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "vip.resource.policy.set",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.citation.attach",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.page.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.page.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.revision.propose",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.revision.publish",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.revision.revert",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.search.query",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.space.create",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    }
+  ]
+}

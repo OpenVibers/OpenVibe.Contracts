@@ -18,5 +18,6 @@
     "GET /api/v1/jobs/:id",
     "GET /api/v1/jobs/:id/events",
     "GET /api/v1/jobs/:id/files/:n"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

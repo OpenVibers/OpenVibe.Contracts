@@ -632,6 +632,9 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     fs.rmSync(tmp, { recursive: true, force: true });
 }
 
+// ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──
+execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js')], { stdio: 'inherit' });
+
 // ── Generated output and compatibility gate ──────────────────────────────
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/compat.js')], { stdio: 'inherit' });

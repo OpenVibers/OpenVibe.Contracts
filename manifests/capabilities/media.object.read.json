@@ -17,5 +17,6 @@
   "implementedBy": [
     "GET /api/v1/:app/files/:key",
     "GET /f/:key"
-  ]
+  ],
+  "outputSchema": "common.binary@1"
 }

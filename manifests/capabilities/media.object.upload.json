@@ -19,5 +19,6 @@
   ],
   "implementedBy": [
     "POST /api/v1/:app/files"
-  ]
+  ],
+  "inputSchema": "media.file-upload@1"
 }

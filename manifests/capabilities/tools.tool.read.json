@@ -18,5 +18,6 @@
     "GET /api/v1/tools",
     "GET /api/v1/tools/:id",
     "GET /api/v1/tools/:id/schema"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }
