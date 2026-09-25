@@ -18,5 +18,7 @@
     "GET /api/v1/sessions/:id",
     "GET /api/v1/sessions/:id/playback",
     "GET /api/v1/workers"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "openre.session-read-result@1"
 }

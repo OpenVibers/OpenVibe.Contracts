@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/discovery-result.v1.json",
+  "title": "LiveDiscoveryResult",
+  "description": "live.discovery-result@1: answers of live.discovery.read on OpenVibe.Live (public home and discovery reads; the same answer for everyone except /discover and /digest, which personalise for a signed-in viewer). GET /api/home/featured → { stream, moment, count, index, next_in_ms } ({ stream: null, count: 0 } when nobody is live); /api/home/stats-live → { liveNow, viewersNow, weeklyActive, users, …, concurrency, recent }; /api/home/hero → { stats, media, moments, slogans }; /api/home/star → { star } (null when there is none); /api/home/digest → { since, signed_in, liveNow, streamed, stats, hot }; /api/home/discover → { channel, live, clips, recaps, star, similar }; /api/home/pulse → Live's activity pulse with moments and latestUpdate; /api/home/stats/series/:metric?days= → { metric, kind, days, points, peak, … } (404 { error, metrics } for an unknown metric, 503 when Media's series are unavailable); /api/streams/recently-online → { streamers, total, limit, offset, hasMore }; /api/streams/recent-vods → { vods, total, limit, offset, hasMore }; /api/content/feed and /api/content/moments → { feed, type, sort, window, items, next, sources, partial }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "stream",
+        "count"
+      ],
+      "properties": {
+        "stream": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "moment": {},
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "index": {
+          "type": "integer"
+        },
+        "next_in_ms": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "liveNow",
+        "viewersNow"
+      ],
+      "properties": {
+        "liveNow": {
+          "type": "integer"
+        },
+        "viewersNow": {
+          "type": "integer"
+        },
+        "weeklyActive": {},
+        "users": {},
+        "weeklyVisitors": {},
+        "concurrency": {},
+        "recent": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "stats",
+        "media",
+        "moments",
+        "slogans"
+      ],
+      "properties": {
+        "stats": {
+          "type": "object"
+        },
+        "media": {
+          "type": "array"
+        },
+        "moments": {
+          "type": "array"
+        },
+        "slogans": {
+          "type": "array"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "star"
+      ],
+      "properties": {
+        "star": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "display_name": {
+              "type": "string"
+            },
+            "live": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "rotates": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "since",
+        "signed_in",
+        "liveNow",
+        "streamed",
+        "stats",
+        "hot"
+      ],
+      "properties": {
+        "since": {},
+        "signed_in": {
+          "type": "boolean"
+        },
+        "liveNow": {},
+        "streamed": {},
+        "stats": {},
+        "hot": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "channel",
+        "live",
+        "clips",
+        "recaps",
+        "star",
+        "similar"
+      ],
+      "properties": {
+        "channel": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "live": {},
+        "clips": {},
+        "recaps": {},
+        "star": {},
+        "similar": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "moments",
+        "latestUpdate"
+      ],
+      "properties": {
+        "moments": {
+          "type": "array",
+          "maxItems": 10
+        },
+        "latestUpdate": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "metric",
+        "kind",
+        "points"
+      ],
+      "properties": {
+        "metric": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "days": {
+          "type": "integer"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "peak": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "streamers",
+        "total",
+        "limit",
+        "offset",
+        "hasMore"
+      ],
+      "properties": {
+        "streamers": {
+          "type": "array"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "limit": {
+          "type": "integer"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "hasMore": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "vods",
+        "total",
+        "limit",
+        "offset",
+        "hasMore"
+      ],
+      "properties": {
+        "vods": {
+          "type": "array"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "limit": {
+          "type": "integer"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "hasMore": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "feed",
+        "items",
+        "next",
+        "sources",
+        "partial"
+      ],
+      "properties": {
+        "feed": {
+          "type": "string"
+        },
+        "type": {},
+        "sort": {
+          "type": "string"
+        },
+        "window": {},
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "id": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              },
+              "href": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sources": {
+          "type": "object"
+        },
+        "partial": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

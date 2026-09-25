@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/stream-read-result.v1.json",
+  "title": "OpenreStreamReadResult",
+  "description": "openre.stream-read-result@1: answers of openre.stream.read on OpenRe.Stream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "streams"
+      ],
+      "properties": {
+        "streams": {
+          "type": "array",
+          "items": {
+            "$ref": "stream.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "stream"
+      ],
+      "properties": {
+        "stream": {
+          "$ref": "stream.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "keys"
+      ],
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "hint": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "grace",
+                  "revoked"
+                ]
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "grace_until": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "revoked_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_used_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/stream-read-result.v1.json",
+  "title": "LiveStreamReadResult",
+  "description": "live.stream-read-result@1: answers of live.stream.read on OpenVibe.Live (public, parameters in the path and query). GET /api/streams → { streams } (live now, with each slot's external viewers and total_viewer_count); GET /api/streams/recent?limit= → { streams } (recently ended, with their public VOD from OpenVibe.Media); GET /api/streams/:id → { stream } (plus endpoint while live, cameras, controls, pip_overlay, follower_count, isFollowing for a signed-in viewer); GET /api/streams/channel/:username/resolve/:ref → { managed_stream, live_stream_id, is_live }; GET /api/live-events is a Server-Sent Events feed whose stream-live messages carry { repeat, username, display_name, avatar_url, title, stream_id, slug, managed_id, at }. Ingest keys are never included.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "streams"
+      ],
+      "properties": {
+        "streams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "user_id"
+            ],
+            "description": "A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "user_id": {
+                "type": "integer"
+              },
+              "channel_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "managed_stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "protocol": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_live": {
+                "type": [
+                  "integer",
+                  "boolean"
+                ]
+              },
+              "is_nsfw": {
+                "type": [
+                  "integer",
+                  "boolean"
+                ]
+              },
+              "viewer_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "peak_viewers": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "thumbnail_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ended_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "channel": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The public channel projection."
+              },
+              "endpoint": {
+                "type": "object",
+                "description": "While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl)."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "stream"
+      ],
+      "properties": {
+        "stream": {
+          "type": "object",
+          "required": [
+            "id",
+            "user_id"
+          ],
+          "description": "A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "user_id": {
+              "type": "integer"
+            },
+            "channel_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "managed_stream_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "category": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "protocol": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "is_live": {
+              "type": [
+                "integer",
+                "boolean"
+              ]
+            },
+            "is_nsfw": {
+              "type": [
+                "integer",
+                "boolean"
+              ]
+            },
+            "viewer_count": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "peak_viewers": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "thumbnail_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "started_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ended_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "channel": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "The public channel projection."
+            },
+            "endpoint": {
+              "type": "object",
+              "description": "While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl)."
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "managed_stream",
+        "live_stream_id",
+        "is_live"
+      ],
+      "properties": {
+        "managed_stream": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "slug": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "protocol": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "live_stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "is_live": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "stream_id",
+        "username",
+        "at"
+      ],
+      "description": "An SSE stream-live message (event: stream-live).",
+      "properties": {
+        "repeat": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stream_id": {
+          "type": "integer"
+        },
+        "slug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "managed_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "at": {
+          "type": "integer",
+          "description": "ms epoch."
+        }
+      }
+    }
+  ]
+}

@@ -86,18 +86,6 @@
       ]
     },
     {
-      "id": "codes.release.manage",
-      "missing": [
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "codes.release.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
       "id": "coupons.coupon.lookup",
       "missing": [
         "inputSchema",
@@ -224,32 +212,6 @@
       ]
     },
     {
-      "id": "games.mod.manage",
-      "missing": [
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "games.mod.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "games.prop.place",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "games.world.announce",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
       "id": "host.deploy.create",
       "missing": [
         "inputSchema",
@@ -265,41 +227,6 @@
     },
     {
       "id": "host.site.manage",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "live.channel.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "live.discovery.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "live.follower.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "live.stream.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "live.tips_delivery.write",
       "missing": [
         "inputSchema",
         "outputSchema"
@@ -438,55 +365,6 @@
       ]
     },
     {
-      "id": "openre.key.rotate",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "openre.output.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "openre.output.write",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "openre.session.end",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "openre.session.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "openre.stream.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "openre.stream.write",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
       "id": "reviews.correction.submit",
       "missing": [
         "inputSchema",
@@ -540,25 +418,6 @@
       "missing": [
         "inputSchema",
         "outputSchema"
-      ]
-    },
-    {
-      "id": "sources.item.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "sources.source.manage",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "sources.source.read",
-      "missing": [
-        "inputSchema"
       ]
     },
     {

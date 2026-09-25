@@ -251,6 +251,24 @@
       "adr": "ADR-014"
     },
     {
+      "id": "codes.release-manage-result",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/release-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.release",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/release.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "events.redaction-directive",
       "version": "1.0.0",
       "owner": "events",
@@ -411,6 +429,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-017"
+    },
+    {
+      "id": "sources.source-manage-result",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/source-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "sources.source-write-request",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/source-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "search.document.indexed",
@@ -1834,6 +1870,51 @@
       "status": "active"
     },
     {
+      "id": "games.announce-frame",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/announce-frame.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.announcement",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/announcement.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod-manage-result",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/mod-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.prop-placement-result",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/prop-placement-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.prop-placement",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/prop-placement.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.object.deleted",
       "version": "1.0.0",
       "owner": "media",
@@ -1944,6 +2025,60 @@
       "adr": "ADR-022"
     },
     {
+      "id": "live.channel-read-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/channel-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.discovery-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/discovery-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.follower-page",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/follower-page.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.stream-read-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/stream-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.tips-delivery-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/tips-delivery-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.tips-delivery-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/tips-delivery-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "community.moderation.action",
       "version": "1.0.0",
       "owner": "community",
@@ -2039,6 +2174,123 @@
       "version": "1.0.0",
       "owner": "community",
       "schema": "community/pulse-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.destination",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/destination.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.key-rotate-request",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/key-rotate-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.key-rotate-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/key-rotate-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.output-read-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/output-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.output-write-request",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/output-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.output-write-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/output-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.output",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/output.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.session-end-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/session-end-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.session-read-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/session-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.stream-read-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/stream-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.stream-write-request",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/stream-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.stream-write-result",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/stream-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "openre.stream",
+      "version": "1.0.0",
+      "owner": "openre",
+      "schema": "openre/stream.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

@@ -1,0 +1,1 @@
+{ "title": "Main cam", "protocols": ["rtmp", "whip"], "recording_mode": "vod", "external_refs": [ { "service": "live", "type": "managed_stream", "id": "12" } ] }

@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/sessions/:id/end"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "openre.session-end-result@1"
 }

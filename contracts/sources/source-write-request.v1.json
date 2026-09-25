@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sources/source-write-request.v1.json",
+  "title": "SourcesSourceWriteRequest",
+  "description": "sources.source-write-request@1: bodies of sources.source.manage on OpenVibe.Sources. POST /api/v1/sources registers a source (key, name, type and category required; the other sources.source@1 fields take their defaults; endpoints may be given as bare URLs; a manual source has none, any other at least one) and PATCH /api/v1/sources/:key changes one (merged over the stored source and validated again; key never changes, type not once it has items). Both refuse unknown fields. POST /api/v1/sources/:key/items adds an item to a manual source: url (the evidence) and title required. DELETE /api/v1/items/:id takes { reason } (takedown, licence, error…). DELETE /api/v1/sources/:key (only a source that never produced an item) and POST /api/v1/sources/:key/fetch take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "type": {
+          "enum": [
+            "rss",
+            "atom",
+            "sitemap",
+            "jsonld",
+            "api",
+            "manual"
+          ]
+        },
+        "category": {
+          "enum": [
+            "news",
+            "blog",
+            "reviews",
+            "deals",
+            "coupons",
+            "trade"
+          ]
+        },
+        "homepage_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "endpoints": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^https?://",
+                "description": "Shorthand for { url }."
+              },
+              {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https?://"
+                  },
+                  "format": {
+                    "enum": [
+                      "json",
+                      "xml"
+                    ]
+                  },
+                  "items_path": {
+                    "type": "string"
+                  },
+                  "item_kind": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                  },
+                  "fields": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "extra": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "auth": {
+          "type": "object",
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "none",
+                "header",
+                "bearer",
+                "query"
+              ]
+            },
+            "env": {
+              "type": "string",
+              "pattern": "^SOURCES_CRED_[A-Z0-9_]{2,60}$",
+              "description": "Name of the environment variable holding the credential. Never a value."
+            },
+            "header": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9-]{0,63}$"
+            },
+            "param": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]{1,64}$"
+            }
+          }
+        },
+        "robots_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "terms_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "license_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "min_interval_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Rate limit: the least time between two requests to this source (the per-host floor and robots Crawl-delay may raise it)."
+        },
+        "poll_interval_sec": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stale_after_sec": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_items": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "review_required": {
+          "type": "boolean",
+          "description": "Products must review what they derive from this source before it can be indexable."
+        },
+        "sensitivity": {
+          "enum": [
+            "none",
+            "financial",
+            "health",
+            "political",
+            "legal",
+            "adult"
+          ]
+        },
+        "default_indexability": {
+          "enum": [
+            "index",
+            "noindex"
+          ],
+          "description": "What a product's indexability gate starts from for content derived from this source."
+        },
+        "search_visibility": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "members",
+            null
+          ],
+          "description": "members = raw items are indexed in OpenVibe.Search for staff only (never indexable)."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "url",
+        "title"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "pattern": "^https?://",
+          "description": "Where this was published."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,39}$",
+          "default": "record"
+        },
+        "identity": {
+          "type": "string",
+          "description": "Stable identity within the source; the canonical URL by default."
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        },
+        "authors": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A date the source states."
+        },
+        "updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fields": {
+          "type": "object",
+          "maxProperties": 30,
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]{0,39}$"
+          },
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

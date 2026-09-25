@@ -11,5 +11,7 @@
   "events": [],
   "implementedBy": [
     "mod runtime binding ModApi.placeProp / ModApi.removeProp (apps/server/src/mods/runtime.ts)"
-  ]
+  ],
+  "inputSchema": "games.prop-placement@1",
+  "outputSchema": "games.prop-placement-result@1"
 }

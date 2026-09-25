@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/follower-page.v1.json",
+  "title": "LiveFollowerPage",
+  "description": "live.follower-page@1: the answer of GET /internal/followers?stream_id=&limit=&after= on OpenVibe.Live (live.follower.read, service token, loopback): the followers of the channel that streams stream_id, for Network's go-live notifications. A follower is named by their Network subject when Live knows it, else their Network user id. next is the cursor for the following page (null on the last). 400 without stream_id, 404 for an unknown stream.",
+  "type": "object",
+  "required": [
+    "stream_id",
+    "channel",
+    "followers",
+    "next"
+  ],
+  "properties": {
+    "stream_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "channel": {
+      "type": "object",
+      "required": [
+        "subject"
+      ],
+      "properties": {
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "followers": {
+      "type": "array",
+      "maxItems": 5000,
+      "items": {
+        "type": "object",
+        "required": [
+          "subject",
+          "network_user_id"
+        ],
+        "properties": {
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^usr_"
+          },
+          "network_user_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "next": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  }
+}

@@ -26,5 +26,7 @@
     "GET /api/streams/recent-vods",
     "GET /api/content/feed",
     "GET /api/content/moments"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "live.discovery-result@1"
 }

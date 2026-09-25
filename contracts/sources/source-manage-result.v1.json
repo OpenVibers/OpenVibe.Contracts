@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sources/source-manage-result.v1.json",
+  "title": "SourcesSourceManageResult",
+  "description": "sources.source-manage-result@1: answers of sources.source.manage on OpenVibe.Sources. POST /api/v1/sources → 201 { source }; PATCH /api/v1/sources/:key → { source } (sources.source@1 with health); DELETE /api/v1/sources/:key → 204 with no body; POST /api/v1/sources/:key/fetch → { runs } (one fetch run per endpoint; 409 for a manual source or a run in flight); POST /api/v1/sources/:key/items → { outcome, item } (201 when created); DELETE /api/v1/items/:id → { item } (the tombstoned item).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "source.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "outcome",
+        "item"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "created",
+            "updated",
+            "removed",
+            "unchanged"
+          ]
+        },
+        "item": {
+          "$ref": "item.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "item": {
+          "$ref": "item.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "runs"
+      ],
+      "properties": {
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source_key",
+              "state"
+            ],
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_key": {
+                "type": "string"
+              },
+              "endpoint_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "trigger": {
+                "type": "string"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "finished_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bytes": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "items": {
+                "type": "object",
+                "properties": {
+                  "seen": {},
+                  "created": {},
+                  "updated": {},
+                  "unchanged": {},
+                  "skipped": {}
+                }
+              },
+              "seq": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

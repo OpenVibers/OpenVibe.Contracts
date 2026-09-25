@@ -1,0 +1,350 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/channel-read-result.v1.json",
+  "title": "LiveChannelReadResult",
+  "description": "live.channel-read-result@1: answers of live.channel.read on OpenVibe.Live (public; the channel is addressed by username). GET /api/streams/channel/:username → the channel page: { channel, language, stream, streams, managed_streams (public projection), vods, clips, aiClips, … with totals and paging }; GET …/:username/live → { channel: { username, display_name, user_id }, streams }; GET …/:username/popular → { vod, clip, vods, clips, ranges }; GET …/:username/clips-taken → { clips, total, facets, limit, offset, hasMore, sort, of, includeSelf }; GET …/:username/bio-en → { from, to: en, text } (from and text null when there is nothing to translate); GET /api/auth/user/:username → { user } (the public profile). Unknown channels are 404 { error }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "channel",
+        "stream",
+        "streams",
+        "managed_streams",
+        "vods",
+        "clips"
+      ],
+      "properties": {
+        "channel": {
+          "type": "object"
+        },
+        "language": {},
+        "stream": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "streams": {
+          "type": "array"
+        },
+        "managed_streams": {
+          "type": "array"
+        },
+        "vods": {
+          "type": "array"
+        },
+        "vodTotal": {
+          "type": "integer"
+        },
+        "clips": {
+          "type": "array"
+        },
+        "clipTotal": {
+          "type": "integer"
+        },
+        "aiClips": {
+          "type": "array"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "channel",
+        "streams"
+      ],
+      "properties": {
+        "channel": {
+          "type": "object",
+          "required": [
+            "username",
+            "user_id"
+          ],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "display_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "user_id": {
+              "type": "integer"
+            }
+          }
+        },
+        "streams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "user_id"
+            ],
+            "description": "A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "user_id": {
+                "type": "integer"
+              },
+              "channel_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "managed_stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "protocol": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_live": {
+                "type": [
+                  "integer",
+                  "boolean"
+                ]
+              },
+              "is_nsfw": {
+                "type": [
+                  "integer",
+                  "boolean"
+                ]
+              },
+              "viewer_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "peak_viewers": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "thumbnail_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ended_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "channel": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The public channel projection."
+              },
+              "endpoint": {
+                "type": "object",
+                "description": "While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl)."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "vods",
+        "clips",
+        "ranges"
+      ],
+      "properties": {
+        "vod": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "clip": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "vods": {
+          "type": "array"
+        },
+        "clips": {
+          "type": "array"
+        },
+        "ranges": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "clips",
+        "total",
+        "limit",
+        "offset",
+        "hasMore"
+      ],
+      "properties": {
+        "clips": {
+          "type": "array"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "facets": {},
+        "limit": {
+          "type": "integer"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "hasMore": {
+          "type": "boolean"
+        },
+        "sort": {
+          "type": "string"
+        },
+        "of": {},
+        "includeSelf": {}
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "text"
+      ],
+      "properties": {
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "const": "en"
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "from_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flag": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "type": "object",
+          "required": [
+            "id",
+            "username"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "display_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "avatar_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "bio": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "role": {
+              "type": "string"
+            },
+            "profile_color": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "created_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "capabilities": {
+              "type": "array"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

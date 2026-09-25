@@ -17,5 +17,6 @@
   "implementedBy": [
     "GET /api/v1/items",
     "GET /api/v1/items/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

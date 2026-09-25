@@ -15,5 +15,6 @@
     "POST /api/v1/releases/:id/publish",
     "POST /api/v1/releases/:id/deprecate",
     "POST /api/v1/releases/:id/revoke"
-  ]
+  ],
+  "outputSchema": "codes.release-manage-result@1"
 }

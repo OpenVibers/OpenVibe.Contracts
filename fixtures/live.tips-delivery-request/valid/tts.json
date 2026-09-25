@@ -1,0 +1,1 @@
+{ "effect": "tts", "creator": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" }, "supporter": { "name": "bob" }, "interaction": { "id": "int_01JAB2C3D4E5F6G7H8J9K0MNPS" }, "tts": { "text": "hello from bob", "voice": null } }

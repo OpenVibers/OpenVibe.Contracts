@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/release-manage-result.v1.json",
+  "title": "CodesReleaseManageResult",
+  "description": "codes.release-manage-result@1: answers of codes.release.manage on OpenVibe.Codes (an app token managing its own releases). POST /api/v1/apps/:app/releases → 201 { release, warnings } (a draft, or published at once with publish: true; manifest validation warnings); POST /api/v1/releases/:id/publish | deprecate | revoke → { release, event_id } (the codes.release.* event announcing it; null when a revoke announced nothing). Refusals are problem+json: 401 auth.required, 403 release.forbidden (another app's release), 409 release.not_draft, 422 with validation errors.",
+  "type": "object",
+  "required": [
+    "release"
+  ],
+  "properties": {
+    "release": {
+      "$ref": "release.v1.json"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {}
+    },
+    "event_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

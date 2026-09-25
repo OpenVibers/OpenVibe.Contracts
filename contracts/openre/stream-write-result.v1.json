@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/stream-write-result.v1.json",
+  "title": "OpenreStreamWriteResult",
+  "description": "openre.stream-write-result@1: answers of openre.stream.write on OpenRe.Stream. POST /api/v1/streams → 201 { stream, key } where key is the first ingest key, shown once (Cache-Control no-store); PATCH /api/v1/streams/:id → { stream }; DELETE /api/v1/streams/:id → 204 with no body.",
+  "type": "object",
+  "required": [
+    "stream"
+  ],
+  "properties": {
+    "stream": {
+      "$ref": "stream.v1.json"
+    },
+    "key": {
+      "type": "object",
+      "required": [
+        "id",
+        "key",
+        "hint",
+        "shown_once"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string",
+          "description": "The plain ingest key: only in this answer."
+        },
+        "hint": {
+          "type": "string"
+        },
+        "shown_once": {
+          "const": true
+        }
+      }
+    }
+  }
+}

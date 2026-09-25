@@ -23,5 +23,7 @@
     "POST /api/v1/destinations/:id/test",
     "POST /api/v1/destinations/:id/start",
     "POST /api/v1/destinations/:id/stop"
-  ]
+  ],
+  "inputSchema": "openre.output-write-request@1",
+  "outputSchema": "openre.output-write-result@1"
 }

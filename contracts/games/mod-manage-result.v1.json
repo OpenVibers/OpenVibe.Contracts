@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/mod-manage-result.v1.json",
+  "title": "GamesModManageResult",
+  "description": "games.mod-manage-result@1: answers of games.mod.manage on OpenVibe.Games (staff: an owner/admin session, or a service token with games.mod.manage). POST /api/v1/mods → 201 the installed mod's public view; POST /api/v1/mods/:id/enable|disable|revoke, POST /api/v1/mods/:id/grants and DELETE /api/v1/mods/:id/grants/:capability → 200 the mod's public view after the change (revoke is terminal); GET /api/v1/mods/:id/audit?limit= → { audit } (install, grant, use, deny and revoke entries, at most 500). Errors are problem+json (mod.not_found, mod.invalid_request, capability.denied, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version",
+        "target",
+        "runtime",
+        "trust_tier",
+        "status",
+        "requested",
+        "granted",
+        "installed_at",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^mod_"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string",
+          "description": "e.g. games.browser"
+        },
+        "runtime": {
+          "type": "string",
+          "description": "e.g. games-content@1"
+        },
+        "trust_tier": {
+          "enum": [
+            "unreviewed",
+            "reviewed",
+            "first-party"
+          ]
+        },
+        "status": {
+          "enum": [
+            "enabled",
+            "disabled",
+            "revoked"
+          ]
+        },
+        "requested": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Capabilities the manifest asks for."
+        },
+        "granted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Capabilities approved and not revoked."
+        },
+        "installed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "audit"
+      ],
+      "properties": {
+        "audit": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "type": "object",
+            "required": [
+              "modId",
+              "action",
+              "actor",
+              "at"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "modId": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string"
+              },
+              "capability": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "actor": {
+                "type": "string"
+              },
+              "detail": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": "integer",
+                "description": "ms epoch."
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

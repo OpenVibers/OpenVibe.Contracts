@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/session-end-result.v1.json",
+  "title": "OpenreSessionEndResult",
+  "description": "openre.session-end-result@1: the answer of POST /api/v1/sessions/:id/end on OpenRe.Stream (openre.session.end): 202 { requested: true, state } when the owning worker was asked to disconnect the encoder, 409 { requested: false, state } when the session could not be ended (already ending or over).",
+  "type": "object",
+  "required": [
+    "requested",
+    "state"
+  ],
+  "properties": {
+    "requested": {
+      "type": "boolean"
+    },
+    "state": {
+      "type": "string"
+    }
+  }
+}

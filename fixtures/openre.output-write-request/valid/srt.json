@@ -1,0 +1,1 @@
+{ "platform": "custom", "name": "Backup", "server_url": "srt://backup.example.net:9000", "srt_passphrase": "correct-horse-battery", "srt_latency_ms": 200, "auto_start": false }

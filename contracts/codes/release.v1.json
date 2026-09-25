@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/release.v1.json",
+  "title": "CodesRelease",
+  "description": "codes.release@1: one release of an app or mod as OpenVibe.Codes presents it (server/domain/releases.js view): its lifecycle (draft → published → deprecated or revoked), compatibility ranges and the app's trust tier (metadata only; grants in OpenVibe.Network are the authority). The manifest itself is served separately (codes.app-manifest@1).",
+  "type": "object",
+  "required": [
+    "id",
+    "app_id",
+    "kind",
+    "name",
+    "version",
+    "status",
+    "manifest_id",
+    "created_at",
+    "trust"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^rel_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "app_id": {
+      "type": "string",
+      "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environment": {
+      "enum": [
+        "production",
+        "sandbox"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "app",
+        "mod"
+      ]
+    },
+    "subject_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published",
+        "deprecated",
+        "revoked"
+      ]
+    },
+    "manifest_id": {
+      "type": "string"
+    },
+    "compatibility": {
+      "type": "object"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "created_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "deprecated_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "deprecation_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "replacement": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revocation_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "trust": {
+      "type": "object",
+      "required": [
+        "tier"
+      ],
+      "properties": {
+        "tier": {
+          "type": "string"
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "set_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "set_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

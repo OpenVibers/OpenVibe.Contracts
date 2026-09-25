@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/announcement.v1.json",
+  "title": "GamesAnnouncement",
+  "description": "games.announcement@1: what a mod announces through games.world.announce on OpenVibe.Games. Not an HTTP route: the mod runtime binding ModApi.announce(text) (apps/server/src/mods/runtime.ts), driven by the announcements section of the mod's games-content@1 pack (validated strictly: text 1-200 characters, repeated every everySeconds, 60 to 86400). The text is whitespace-collapsed and cut to 200 characters; an empty one is dropped.",
+  "type": "object",
+  "required": [
+    "text",
+    "everySeconds"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "everySeconds": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 86400
+    }
+  }
+}

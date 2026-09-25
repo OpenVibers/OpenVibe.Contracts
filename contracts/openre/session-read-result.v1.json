@@ -1,0 +1,336 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/session-read-result.v1.json",
+  "title": "OpenreSessionReadResult",
+  "description": "openre.session-read-result@1: answers of openre.session.read on OpenRe.Stream. GET /api/v1/sessions?stream_id=&state=&limit=&before= → { sessions } (the owner's; a service sees those of the subject it acts for); GET /api/v1/sessions/:id → { session } with transitions, outputs, recording and playback; GET /api/v1/sessions/:id/playback → { playback } (where to watch: flv and rtmp URLs, internal loopback and public); GET /api/v1/workers → { workers } (worker generations; staff and services only).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "sessions"
+      ],
+      "properties": {
+        "sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "stream_id",
+              "protocol",
+              "state",
+              "created_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "stream_id": {
+                "type": "string"
+              },
+              "protocol": {
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "starting",
+                  "live",
+                  "ending",
+                  "ended",
+                  "failed"
+                ]
+              },
+              "desired_state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "worker": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "lease_expires_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "key_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "end_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "failure_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "media_info": {},
+              "revision": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "live_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "ended_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "duration_seconds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "transitions": {
+                "type": "array",
+                "description": "GET /sessions/:id only."
+              },
+              "outputs": {
+                "type": "array"
+              },
+              "recording": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "playback": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "session"
+      ],
+      "properties": {
+        "session": {
+          "type": "object",
+          "required": [
+            "id",
+            "stream_id",
+            "protocol",
+            "state",
+            "created_at"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "stream_id": {
+              "type": "string"
+            },
+            "protocol": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "starting",
+                "live",
+                "ending",
+                "ended",
+                "failed"
+              ]
+            },
+            "desired_state": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "worker": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "lease_expires_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "key_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "end_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "failure_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "media_info": {},
+            "revision": {
+              "type": "integer"
+            },
+            "created_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "live_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "ended_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "duration_seconds": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "transitions": {
+              "type": "array",
+              "description": "GET /sessions/:id only."
+            },
+            "outputs": {
+              "type": "array"
+            },
+            "recording": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "playback": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "playback"
+      ],
+      "properties": {
+        "playback": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "session_id",
+            "protocol",
+            "state",
+            "live"
+          ],
+          "properties": {
+            "session_id": {
+              "type": "string"
+            },
+            "protocol": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "live": {
+              "type": "boolean"
+            },
+            "worker": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "flv": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "internal_url": {
+                  "type": "string"
+                },
+                "public_url": {
+                  "type": "string"
+                },
+                "content_type": {
+                  "type": "string"
+                }
+              }
+            },
+            "rtmp": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "webrtc": {},
+            "hls": {}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "workers"
+      ],
+      "properties": {
+        "workers": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ]
+}

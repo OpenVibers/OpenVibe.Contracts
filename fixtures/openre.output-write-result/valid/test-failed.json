@@ -1,0 +1,1 @@
+{ "ok": false, "checks": [ { "check": "url", "ok": true, "detail": "rtmp" }, { "check": "tcp", "ok": false, "detail": "timeout after 5000 ms" } ] }

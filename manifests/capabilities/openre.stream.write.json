@@ -17,5 +17,7 @@
     "POST /api/v1/streams",
     "PATCH /api/v1/streams/:id",
     "DELETE /api/v1/streams/:id"
-  ]
+  ],
+  "inputSchema": "openre.stream-write-request@1",
+  "outputSchema": "openre.stream-write-result@1"
 }

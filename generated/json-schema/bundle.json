@@ -3264,6 +3264,193 @@
         }
       }
     },
+    "codes.release-manage-result": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/release-manage-result.v1.json",
+        "title": "CodesReleaseManageResult",
+        "description": "codes.release-manage-result@1: answers of codes.release.manage on OpenVibe.Codes (an app token managing its own releases). POST /api/v1/apps/:app/releases → 201 { release, warnings } (a draft, or published at once with publish: true; manifest validation warnings); POST /api/v1/releases/:id/publish | deprecate | revoke → { release, event_id } (the codes.release.* event announcing it; null when a revoke announced nothing). Refusals are problem+json: 401 auth.required, 403 release.forbidden (another app's release), 409 release.not_draft, 422 with validation errors.",
+        "type": "object",
+        "required": [
+          "release"
+        ],
+        "properties": {
+          "release": {
+            "$ref": "release.v1.json"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {}
+          },
+          "event_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "codes.release": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/release.v1.json",
+        "title": "CodesRelease",
+        "description": "codes.release@1: one release of an app or mod as OpenVibe.Codes presents it (server/domain/releases.js view): its lifecycle (draft → published → deprecated or revoked), compatibility ranges and the app's trust tier (metadata only; grants in OpenVibe.Network are the authority). The manifest itself is served separately (codes.app-manifest@1).",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "kind",
+          "name",
+          "version",
+          "status",
+          "manifest_id",
+          "created_at",
+          "trust"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^rel_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "app_id": {
+            "type": "string",
+            "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "environment": {
+            "enum": [
+              "production",
+              "sandbox"
+            ]
+          },
+          "kind": {
+            "enum": [
+              "app",
+              "mod"
+            ]
+          },
+          "subject_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "published",
+              "deprecated",
+              "revoked"
+            ]
+          },
+          "manifest_id": {
+            "type": "string"
+          },
+          "compatibility": {
+            "type": "object"
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deprecated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deprecation_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "replacement": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revocation_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "trust": {
+            "type": "object",
+            "required": [
+              "tier"
+            ],
+            "properties": {
+              "tier": {
+                "type": "string"
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "set_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "set_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "events.redaction-directive": {
       "version": "1.0.0",
       "owner": "events",
@@ -4309,6 +4496,453 @@
             "minimum": 1
           }
         }
+      }
+    },
+    "sources.source-manage-result": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/sources/source-manage-result.v1.json",
+        "title": "SourcesSourceManageResult",
+        "description": "sources.source-manage-result@1: answers of sources.source.manage on OpenVibe.Sources. POST /api/v1/sources → 201 { source }; PATCH /api/v1/sources/:key → { source } (sources.source@1 with health); DELETE /api/v1/sources/:key → 204 with no body; POST /api/v1/sources/:key/fetch → { runs } (one fetch run per endpoint; 409 for a manual source or a run in flight); POST /api/v1/sources/:key/items → { outcome, item } (201 when created); DELETE /api/v1/items/:id → { item } (the tombstoned item).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "source"
+            ],
+            "properties": {
+              "source": {
+                "$ref": "source.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "outcome",
+              "item"
+            ],
+            "properties": {
+              "outcome": {
+                "enum": [
+                  "created",
+                  "updated",
+                  "removed",
+                  "unchanged"
+                ]
+              },
+              "item": {
+                "$ref": "item.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "item"
+            ],
+            "properties": {
+              "item": {
+                "$ref": "item.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "runs"
+            ],
+            "properties": {
+              "runs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "source_key",
+                    "state"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": [
+                        "string",
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "source_key": {
+                      "type": "string"
+                    },
+                    "endpoint_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "trigger": {
+                      "type": "string"
+                    },
+                    "started_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "finished_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "http_status": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "error_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "detail": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "bytes": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "seen": {},
+                        "created": {},
+                        "updated": {},
+                        "unchanged": {},
+                        "skipped": {}
+                      }
+                    },
+                    "seq": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "sources.source-write-request": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/sources/source-write-request.v1.json",
+        "title": "SourcesSourceWriteRequest",
+        "description": "sources.source-write-request@1: bodies of sources.source.manage on OpenVibe.Sources. POST /api/v1/sources registers a source (key, name, type and category required; the other sources.source@1 fields take their defaults; endpoints may be given as bare URLs; a manual source has none, any other at least one) and PATCH /api/v1/sources/:key changes one (merged over the stored source and validated again; key never changes, type not once it has items). Both refuse unknown fields. POST /api/v1/sources/:key/items adds an item to a manual source: url (the evidence) and title required. DELETE /api/v1/items/:id takes { reason } (takedown, licence, error…). DELETE /api/v1/sources/:key (only a source that never produced an item) and POST /api/v1/sources/:key/fetch take no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{1,63}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "type": {
+                "enum": [
+                  "rss",
+                  "atom",
+                  "sitemap",
+                  "jsonld",
+                  "api",
+                  "manual"
+                ]
+              },
+              "category": {
+                "enum": [
+                  "news",
+                  "blog",
+                  "reviews",
+                  "deals",
+                  "coupons",
+                  "trade"
+                ]
+              },
+              "homepage_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "endpoints": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^https?://",
+                      "description": "Shorthand for { url }."
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "url"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri",
+                          "pattern": "^https?://"
+                        },
+                        "format": {
+                          "enum": [
+                            "json",
+                            "xml"
+                          ]
+                        },
+                        "items_path": {
+                          "type": "string"
+                        },
+                        "item_kind": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "extra": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "auth": {
+                "type": "object",
+                "required": [
+                  "mode"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "none",
+                      "header",
+                      "bearer",
+                      "query"
+                    ]
+                  },
+                  "env": {
+                    "type": "string",
+                    "pattern": "^SOURCES_CRED_[A-Z0-9_]{2,60}$",
+                    "description": "Name of the environment variable holding the credential. Never a value."
+                  },
+                  "header": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9-]{0,63}$"
+                  },
+                  "param": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,64}$"
+                  }
+                }
+              },
+              "robots_note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 2000
+              },
+              "terms_note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 2000
+              },
+              "license_note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 2000
+              },
+              "min_interval_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Rate limit: the least time between two requests to this source (the per-host floor and robots Crawl-delay may raise it)."
+              },
+              "poll_interval_sec": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "stale_after_sec": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_items": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "review_required": {
+                "type": "boolean",
+                "description": "Products must review what they derive from this source before it can be indexable."
+              },
+              "sensitivity": {
+                "enum": [
+                  "none",
+                  "financial",
+                  "health",
+                  "political",
+                  "legal",
+                  "adult"
+                ]
+              },
+              "default_indexability": {
+                "enum": [
+                  "index",
+                  "noindex"
+                ],
+                "description": "What a product's indexability gate starts from for content derived from this source."
+              },
+              "search_visibility": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "members",
+                  null
+                ],
+                "description": "members = raw items are indexed in OpenVibe.Search for staff only (never indexable)."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "url",
+              "title"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "^https?://",
+                "description": "Where this was published."
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "kind": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{1,39}$",
+                "default": "record"
+              },
+              "identity": {
+                "type": "string",
+                "description": "Stable identity within the source; the canonical URL by default."
+              },
+              "summary": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 1000
+              },
+              "authors": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "A date the source states."
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fields": {
+                "type": "object",
+                "maxProperties": 30,
+                "propertyNames": {
+                  "pattern": "^[a-z][a-z0-9_]{0,39}$"
+                },
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean",
+                    "null"
+                  ],
+                  "maxLength": 500
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "reason"
+            ],
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
       }
     },
     "search.document.indexed": {
@@ -20064,6 +20698,274 @@
         }
       }
     },
+    "games.announce-frame": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/games/announce-frame.v1.json",
+        "title": "GamesAnnounceFrame",
+        "description": "games.announce-frame@1: the frame OpenVibe.Games broadcasts to every connected player for an announcement (gameServer broadcastAll): { t: announce, text }. A mod's announcement text is prefixed with its name in brackets ([Mod name] text); the binding itself returns nothing.",
+        "type": "object",
+        "required": [
+          "t",
+          "text"
+        ],
+        "properties": {
+          "t": {
+            "const": "announce"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "games.announcement": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/games/announcement.v1.json",
+        "title": "GamesAnnouncement",
+        "description": "games.announcement@1: what a mod announces through games.world.announce on OpenVibe.Games. Not an HTTP route: the mod runtime binding ModApi.announce(text) (apps/server/src/mods/runtime.ts), driven by the announcements section of the mod's games-content@1 pack (validated strictly: text 1-200 characters, repeated every everySeconds, 60 to 86400). The text is whitespace-collapsed and cut to 200 characters; an empty one is dropped.",
+        "type": "object",
+        "required": [
+          "text",
+          "everySeconds"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "everySeconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 86400
+          }
+        }
+      }
+    },
+    "games.mod-manage-result": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/games/mod-manage-result.v1.json",
+        "title": "GamesModManageResult",
+        "description": "games.mod-manage-result@1: answers of games.mod.manage on OpenVibe.Games (staff: an owner/admin session, or a service token with games.mod.manage). POST /api/v1/mods → 201 the installed mod's public view; POST /api/v1/mods/:id/enable|disable|revoke, POST /api/v1/mods/:id/grants and DELETE /api/v1/mods/:id/grants/:capability → 200 the mod's public view after the change (revoke is terminal); GET /api/v1/mods/:id/audit?limit= → { audit } (install, grant, use, deny and revoke entries, at most 500). Errors are problem+json (mod.not_found, mod.invalid_request, capability.denied, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "version",
+              "target",
+              "runtime",
+              "trust_tier",
+              "status",
+              "requested",
+              "granted",
+              "installed_at",
+              "updated_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^mod_"
+              },
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string",
+                "description": "e.g. games.browser"
+              },
+              "runtime": {
+                "type": "string",
+                "description": "e.g. games-content@1"
+              },
+              "trust_tier": {
+                "enum": [
+                  "unreviewed",
+                  "reviewed",
+                  "first-party"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "enabled",
+                  "disabled",
+                  "revoked"
+                ]
+              },
+              "requested": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Capabilities the manifest asks for."
+              },
+              "granted": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Capabilities approved and not revoked."
+              },
+              "installed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "audit"
+            ],
+            "properties": {
+              "audit": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "modId",
+                    "action",
+                    "actor",
+                    "at"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "modId": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    },
+                    "capability": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "actor": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "at": {
+                      "type": "integer",
+                      "description": "ms epoch."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "games.prop-placement-result": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/games/prop-placement-result.v1.json",
+        "title": "GamesPropPlacementResult",
+        "description": "games.prop-placement-result@1: what the games.prop.place binding returns on OpenVibe.Games: placeProp → the placed entity's id (null when the host placed nothing); removeProp → true when a prop with that key was removed, false when there was none. A mod without the grant gets a capability.denied error instead; every use is audited.",
+        "type": [
+          "string",
+          "null",
+          "boolean"
+        ]
+      }
+    },
+    "games.prop-placement": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/games/prop-placement.v1.json",
+        "title": "GamesPropPlacement",
+        "description": "games.prop-placement@1: what a mod asks through games.prop.place on OpenVibe.Games. Not an HTTP route: the mod runtime binding ModApi.placeProp(key, item, pos, yaw) / removeProp(key) (apps/server/src/mods/runtime.ts), driven by the props section of the mod's games-content@1 pack, which the registry validates strictly (unknown fields refused). A placement puts an inert prop owned by the mod at pos (re-placing the one with the same key); the item must be placeable by mods and the numbers finite. A removal names only the key.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "item",
+              "pos"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$"
+              },
+              "item": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "pos": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number",
+                  "minimum": -4096,
+                  "maximum": 4096
+                }
+              },
+              "yaw": {
+                "type": "number",
+                "minimum": -10,
+                "maximum": 10,
+                "default": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$"
+              }
+            }
+          }
+        ]
+      }
+    },
     "media.object.deleted": {
       "version": "1.0.0",
       "owner": "media",
@@ -21026,6 +21928,1281 @@
           },
           "details": {
             "type": "object"
+          }
+        }
+      }
+    },
+    "live.channel-read-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/channel-read-result.v1.json",
+        "title": "LiveChannelReadResult",
+        "description": "live.channel-read-result@1: answers of live.channel.read on OpenVibe.Live (public; the channel is addressed by username). GET /api/streams/channel/:username → the channel page: { channel, language, stream, streams, managed_streams (public projection), vods, clips, aiClips, … with totals and paging }; GET …/:username/live → { channel: { username, display_name, user_id }, streams }; GET …/:username/popular → { vod, clip, vods, clips, ranges }; GET …/:username/clips-taken → { clips, total, facets, limit, offset, hasMore, sort, of, includeSelf }; GET …/:username/bio-en → { from, to: en, text } (from and text null when there is nothing to translate); GET /api/auth/user/:username → { user } (the public profile). Unknown channels are 404 { error }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "channel",
+              "stream",
+              "streams",
+              "managed_streams",
+              "vods",
+              "clips"
+            ],
+            "properties": {
+              "channel": {
+                "type": "object"
+              },
+              "language": {},
+              "stream": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "streams": {
+                "type": "array"
+              },
+              "managed_streams": {
+                "type": "array"
+              },
+              "vods": {
+                "type": "array"
+              },
+              "vodTotal": {
+                "type": "integer"
+              },
+              "clips": {
+                "type": "array"
+              },
+              "clipTotal": {
+                "type": "integer"
+              },
+              "aiClips": {
+                "type": "array"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "channel",
+              "streams"
+            ],
+            "properties": {
+              "channel": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "user_id"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "user_id": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "streams": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "user_id"
+                  ],
+                  "description": "A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "user_id": {
+                      "type": "integer"
+                    },
+                    "channel_id": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "managed_stream_id": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "title": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "category": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "protocol": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "is_live": {
+                      "type": [
+                        "integer",
+                        "boolean"
+                      ]
+                    },
+                    "is_nsfw": {
+                      "type": [
+                        "integer",
+                        "boolean"
+                      ]
+                    },
+                    "viewer_count": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "peak_viewers": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "thumbnail_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "started_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "ended_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "channel": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "description": "The public channel projection."
+                    },
+                    "endpoint": {
+                      "type": "object",
+                      "description": "While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl)."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "vods",
+              "clips",
+              "ranges"
+            ],
+            "properties": {
+              "vod": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "clip": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "vods": {
+                "type": "array"
+              },
+              "clips": {
+                "type": "array"
+              },
+              "ranges": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "clips",
+              "total",
+              "limit",
+              "offset",
+              "hasMore"
+            ],
+            "properties": {
+              "clips": {
+                "type": "array"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "facets": {},
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "hasMore": {
+                "type": "boolean"
+              },
+              "sort": {
+                "type": "string"
+              },
+              "of": {},
+              "includeSelf": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "text"
+            ],
+            "properties": {
+              "from": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "const": "en"
+              },
+              "text": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "from_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flag": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "user"
+            ],
+            "properties": {
+              "user": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "username"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "avatar_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "bio": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "profile_color": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "created_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "capabilities": {
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.discovery-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/discovery-result.v1.json",
+        "title": "LiveDiscoveryResult",
+        "description": "live.discovery-result@1: answers of live.discovery.read on OpenVibe.Live (public home and discovery reads; the same answer for everyone except /discover and /digest, which personalise for a signed-in viewer). GET /api/home/featured → { stream, moment, count, index, next_in_ms } ({ stream: null, count: 0 } when nobody is live); /api/home/stats-live → { liveNow, viewersNow, weeklyActive, users, …, concurrency, recent }; /api/home/hero → { stats, media, moments, slogans }; /api/home/star → { star } (null when there is none); /api/home/digest → { since, signed_in, liveNow, streamed, stats, hot }; /api/home/discover → { channel, live, clips, recaps, star, similar }; /api/home/pulse → Live's activity pulse with moments and latestUpdate; /api/home/stats/series/:metric?days= → { metric, kind, days, points, peak, … } (404 { error, metrics } for an unknown metric, 503 when Media's series are unavailable); /api/streams/recently-online → { streamers, total, limit, offset, hasMore }; /api/streams/recent-vods → { vods, total, limit, offset, hasMore }; /api/content/feed and /api/content/moments → { feed, type, sort, window, items, next, sources, partial }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "stream",
+              "count"
+            ],
+            "properties": {
+              "stream": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "moment": {},
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "index": {
+                "type": "integer"
+              },
+              "next_in_ms": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "liveNow",
+              "viewersNow"
+            ],
+            "properties": {
+              "liveNow": {
+                "type": "integer"
+              },
+              "viewersNow": {
+                "type": "integer"
+              },
+              "weeklyActive": {},
+              "users": {},
+              "weeklyVisitors": {},
+              "concurrency": {},
+              "recent": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "stats",
+              "media",
+              "moments",
+              "slogans"
+            ],
+            "properties": {
+              "stats": {
+                "type": "object"
+              },
+              "media": {
+                "type": "array"
+              },
+              "moments": {
+                "type": "array"
+              },
+              "slogans": {
+                "type": "array"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "star"
+            ],
+            "properties": {
+              "star": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "live": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "rotates": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "since",
+              "signed_in",
+              "liveNow",
+              "streamed",
+              "stats",
+              "hot"
+            ],
+            "properties": {
+              "since": {},
+              "signed_in": {
+                "type": "boolean"
+              },
+              "liveNow": {},
+              "streamed": {},
+              "stats": {},
+              "hot": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "channel",
+              "live",
+              "clips",
+              "recaps",
+              "star",
+              "similar"
+            ],
+            "properties": {
+              "channel": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "live": {},
+              "clips": {},
+              "recaps": {},
+              "star": {},
+              "similar": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "moments",
+              "latestUpdate"
+            ],
+            "properties": {
+              "moments": {
+                "type": "array",
+                "maxItems": 10
+              },
+              "latestUpdate": {}
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "metric",
+              "kind",
+              "points"
+            ],
+            "properties": {
+              "metric": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "days": {
+                "type": "integer"
+              },
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "peak": {
+                "type": "number"
+              },
+              "source": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "streamers",
+              "total",
+              "limit",
+              "offset",
+              "hasMore"
+            ],
+            "properties": {
+              "streamers": {
+                "type": "array"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "hasMore": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "vods",
+              "total",
+              "limit",
+              "offset",
+              "hasMore"
+            ],
+            "properties": {
+              "vods": {
+                "type": "array"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "hasMore": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "feed",
+              "items",
+              "next",
+              "sources",
+              "partial"
+            ],
+            "properties": {
+              "feed": {
+                "type": "string"
+              },
+              "type": {},
+              "sort": {
+                "type": "string"
+              },
+              "window": {},
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": [
+                        "string",
+                        "integer"
+                      ]
+                    },
+                    "href": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "next": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sources": {
+                "type": "object"
+              },
+              "partial": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.follower-page": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/follower-page.v1.json",
+        "title": "LiveFollowerPage",
+        "description": "live.follower-page@1: the answer of GET /internal/followers?stream_id=&limit=&after= on OpenVibe.Live (live.follower.read, service token, loopback): the followers of the channel that streams stream_id, for Network's go-live notifications. A follower is named by their Network subject when Live knows it, else their Network user id. next is the cursor for the following page (null on the last). 400 without stream_id, 404 for an unknown stream.",
+        "type": "object",
+        "required": [
+          "stream_id",
+          "channel",
+          "followers",
+          "next"
+        ],
+        "properties": {
+          "stream_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "channel": {
+            "type": "object",
+            "required": [
+              "subject"
+            ],
+            "properties": {
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "followers": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "type": "object",
+              "required": [
+                "subject",
+                "network_user_id"
+              ],
+              "properties": {
+                "subject": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^usr_"
+                },
+                "network_user_id": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "next": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "live.stream-read-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/stream-read-result.v1.json",
+        "title": "LiveStreamReadResult",
+        "description": "live.stream-read-result@1: answers of live.stream.read on OpenVibe.Live (public, parameters in the path and query). GET /api/streams → { streams } (live now, with each slot's external viewers and total_viewer_count); GET /api/streams/recent?limit= → { streams } (recently ended, with their public VOD from OpenVibe.Media); GET /api/streams/:id → { stream } (plus endpoint while live, cameras, controls, pip_overlay, follower_count, isFollowing for a signed-in viewer); GET /api/streams/channel/:username/resolve/:ref → { managed_stream, live_stream_id, is_live }; GET /api/live-events is a Server-Sent Events feed whose stream-live messages carry { repeat, username, display_name, avatar_url, title, stream_id, slug, managed_id, at }. Ingest keys are never included.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "streams"
+            ],
+            "properties": {
+              "streams": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "user_id"
+                  ],
+                  "description": "A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "user_id": {
+                      "type": "integer"
+                    },
+                    "channel_id": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "managed_stream_id": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "title": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "category": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "protocol": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "is_live": {
+                      "type": [
+                        "integer",
+                        "boolean"
+                      ]
+                    },
+                    "is_nsfw": {
+                      "type": [
+                        "integer",
+                        "boolean"
+                      ]
+                    },
+                    "viewer_count": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "peak_viewers": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "thumbnail_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "started_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "ended_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "channel": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "description": "The public channel projection."
+                    },
+                    "endpoint": {
+                      "type": "object",
+                      "description": "While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl)."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "stream"
+            ],
+            "properties": {
+              "stream": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "user_id"
+                ],
+                "description": "A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "channel_id": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "managed_stream_id": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "title": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "category": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "protocol": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "is_live": {
+                    "type": [
+                      "integer",
+                      "boolean"
+                    ]
+                  },
+                  "is_nsfw": {
+                    "type": [
+                      "integer",
+                      "boolean"
+                    ]
+                  },
+                  "viewer_count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "peak_viewers": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "thumbnail_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "started_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ended_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "channel": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "description": "The public channel projection."
+                  },
+                  "endpoint": {
+                    "type": "object",
+                    "description": "While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl)."
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "managed_stream",
+              "live_stream_id",
+              "is_live"
+            ],
+            "properties": {
+              "managed_stream": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "slug": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "title": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "protocol": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "live_stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "is_live": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "stream_id",
+              "username",
+              "at"
+            ],
+            "description": "An SSE stream-live message (event: stream-live).",
+            "properties": {
+              "repeat": {
+                "type": "boolean"
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "stream_id": {
+                "type": "integer"
+              },
+              "slug": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "managed_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": "integer",
+                "description": "ms epoch."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.tips-delivery-request": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/tips-delivery-request.v1.json",
+        "title": "LiveTipsDeliveryRequest",
+        "description": "live.tips-delivery-request@1: the body of POST /internal/tips/deliveries on OpenVibe.Live (live.tips_delivery.write; OpenVibe.Tips' live-chat delivery adapter, loopback only). The money already moved in OpenVibe.Billing; this only shows it on the creator's channel. Needs an Idempotency-Key header (<interaction id>:<effect>, 8-200 of A-Z a-z 0-9 _ : . -); a repeat answers the first result. effect chat_line or paid_message: a donation event in the channel room and global chat, saved as a donation chat message, with the alert sound; tts: tts.text spoken on the live stream (or the offline channel room); media_request: media.url into the channel's media queue at cost 0. The creator must have a Live channel (404 otherwise); an unknown effect or a failure is 422.",
+        "type": "object",
+        "required": [
+          "effect",
+          "creator"
+        ],
+        "properties": {
+          "delivery_id": {
+            "type": "string"
+          },
+          "effect": {
+            "enum": [
+              "chat_line",
+              "paid_message",
+              "tts",
+              "media_request"
+            ]
+          },
+          "test": {
+            "type": "boolean"
+          },
+          "creator": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            }
+          },
+          "supporter": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Shown (80 characters); Someone when absent."
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "interaction": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "amount": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "currency": {
+                "type": "string"
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Cut to 500 characters."
+              }
+            }
+          },
+          "text": {
+            "type": "string",
+            "description": "The chat line to save (1000 characters); a default names the supporter and amount."
+          },
+          "tts": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1200
+              },
+              "voice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "media": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "properties": {
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "highlight_seconds": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "description": "A live stream of the creator ({ service: live, type: stream, id }); otherwise the creator's current live stream.",
+            "properties": {
+              "service": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "live.tips-delivery-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/tips-delivery-result.v1.json",
+        "title": "LiveTipsDeliveryResult",
+        "description": "live.tips-delivery-result@1: the answer of POST /internal/tips/deliveries on OpenVibe.Live: 200 { ok: true, ref } naming what was made (the saved chat message for chat_line/paid_message, the stream spoken on for tts, the queued media request); the same answer again for a repeated Idempotency-Key. Refusals are { error }: 400 without an Idempotency-Key, 404 creator without a Live channel (permanent), 409 the same delivery is still running (retry), 422 unknown effect, no text, or a media request that failed.",
+        "type": "object",
+        "required": [
+          "ok",
+          "ref"
+        ],
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "ref": {
+            "type": "object",
+            "properties": {
+              "chat_message_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "media_request_id": {
+                "type": "integer"
+              }
+            }
           }
         }
       }
@@ -22396,6 +24573,1523 @@
             }
           }
         ]
+      }
+    },
+    "openre.destination": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/destination.v1.json",
+        "title": "OpenreDestination",
+        "description": "openre.destination@1: one restream destination of a stream on OpenRe.Stream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.",
+        "type": "object",
+        "required": [
+          "id",
+          "stream_id",
+          "platform",
+          "server_url",
+          "transport",
+          "has_stream_key",
+          "enabled",
+          "auto_start"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "stream_id": {
+            "type": "string"
+          },
+          "platform": {
+            "enum": [
+              "youtube",
+              "twitch",
+              "kick",
+              "custom"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "server_url": {
+            "type": "string"
+          },
+          "transport": {
+            "enum": [
+              "rtmp",
+              "srt"
+            ]
+          },
+          "has_stream_key": {
+            "type": "boolean"
+          },
+          "stream_key_hint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "has_srt_passphrase": {
+            "type": "boolean"
+          },
+          "srt_latency_ms": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "auto_start": {
+            "type": "boolean"
+          },
+          "quality_preset": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "custom_video_bitrate": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "custom_audio_bitrate": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "custom_fps": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "custom_encoder_preset": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hold_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "consecutive_failures": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "cooldown_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "cooldown_ms": {
+            "type": "integer"
+          },
+          "last_error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_failed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "openre.key-rotate-request": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/key-rotate-request.v1.json",
+        "title": "OpenreKeyRotateRequest",
+        "description": "openre.key-rotate-request@1: the body of POST /api/v1/streams/:id/keys/rotate on OpenRe.Stream (openre.key.rotate). grace_seconds (0 by default, at most 7 days) keeps the old key working that long; end_sessions true also ends the stream's open sessions. An empty body rotates with no grace.",
+        "type": "object",
+        "properties": {
+          "grace_seconds": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "minimum": 0,
+            "description": "Clamped to 0..604800."
+          },
+          "end_sessions": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "openre.key-rotate-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/key-rotate-result.v1.json",
+        "title": "OpenreKeyRotateResult",
+        "description": "openre.key-rotate-result@1: the answer of POST /api/v1/streams/:id/keys/rotate on OpenRe.Stream: the new key (shown once, Cache-Control no-store), the keys it retired (grace or revoked), when the grace ends, how many sessions were asked to end, and the ingest endpoints. openre.key.rotated is announced.",
+        "type": "object",
+        "required": [
+          "key",
+          "retired",
+          "grace_until",
+          "sessions_ending",
+          "ingest"
+        ],
+        "properties": {
+          "key": {
+            "type": "object",
+            "required": [
+              "id",
+              "key",
+              "hint",
+              "shown_once"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string",
+                "description": "The plain ingest key: only in this answer."
+              },
+              "hint": {
+                "type": "string"
+              },
+              "shown_once": {
+                "const": true
+              }
+            }
+          },
+          "retired": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "status"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "hint": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "grace",
+                    "revoked"
+                  ]
+                }
+              }
+            }
+          },
+          "grace_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "sessions_ending": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ingest": {
+            "type": "object",
+            "description": "Where an encoder publishes (never the key).",
+            "properties": {
+              "rtmp": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string"
+                  },
+                  "key_hint": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "key_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "openre.output-read-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/output-read-result.v1.json",
+        "title": "OpenreOutputReadResult",
+        "description": "openre.output-read-result@1: answers of openre.output.read on OpenRe.Stream. GET /api/v1/streams/:id/destinations → { destinations }; GET /api/v1/sessions/:id/outputs → { outputs } (with health); GET /api/v1/destinations/:id/logs and GET /api/v1/outputs/:id/logs?limit= → { logs } (newest first, at most 500).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "destinations"
+            ],
+            "properties": {
+              "destinations": {
+                "type": "array",
+                "items": {
+                  "$ref": "destination.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "outputs"
+            ],
+            "properties": {
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "$ref": "output.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "logs"
+            ],
+            "properties": {
+              "logs": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "message",
+                    "at"
+                  ],
+                  "properties": {
+                    "output_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "level": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "openre.output-write-request": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/output-write-request.v1.json",
+        "title": "OpenreOutputWriteRequest",
+        "description": "openre.output-write-request@1: the body of POST /api/v1/streams/:id/destinations (platform and server_url required) and PATCH /api/v1/destinations/:id (fields left out keep their value) on OpenRe.Stream (openre.output.write). server_url must pass the destination URL rules (rtmp, rtmps or srt, public hosts); stream_key (at most 512 characters, no spaces) and srt_passphrase (10 to 79 characters) are sealed and never read back — __keep__ leaves them unchanged, empty clears them. Numbers out of range become null: srt_latency_ms 20-8000, custom_video_bitrate 500-50000, custom_audio_bitrate 32-512, custom_fps 15-120; an unknown custom_encoder_preset becomes null. DELETE /api/v1/destinations/:id and POST /api/v1/destinations/:id/test|start|stop take no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "platform": {
+                "enum": [
+                  "youtube",
+                  "twitch",
+                  "kick",
+                  "custom"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "server_url": {
+                "type": "string"
+              },
+              "stream_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "srt_passphrase": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "srt_latency_ms": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "enabled": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "auto_start": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "quality_preset": {
+                "enum": [
+                  "auto",
+                  "low",
+                  "medium",
+                  "high",
+                  "ultra",
+                  "source"
+                ]
+              },
+              "custom_video_bitrate": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "custom_audio_bitrate": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "custom_fps": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "custom_encoder_preset": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "openre.output-write-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/output-write-result.v1.json",
+        "title": "OpenreOutputWriteResult",
+        "description": "openre.output-write-result@1: answers of openre.output.write on OpenRe.Stream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "destination"
+            ],
+            "properties": {
+              "destination": {
+                "$ref": "destination.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "checks"
+            ],
+            "properties": {
+              "ok": {
+                "type": "boolean"
+              },
+              "checks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "check",
+                    "ok"
+                  ],
+                  "properties": {
+                    "check": {
+                      "type": "string"
+                    },
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "detail": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "output"
+            ],
+            "properties": {
+              "output": {
+                "$ref": "output.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "stopping"
+            ],
+            "properties": {
+              "stopping": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "openre.output": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/output.v1.json",
+        "title": "OpenreOutput",
+        "description": "openre.output@1: one restream output (a destination running for a live session) on OpenRe.Stream (server/store/outputs.js publicOutput), with its desired and actual state, restarts and progress.",
+        "type": "object",
+        "required": [
+          "id",
+          "session_id",
+          "destination_id",
+          "desired",
+          "state"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "destination_id": {
+            "type": "string"
+          },
+          "desired": {
+            "enum": [
+              "run",
+              "stop"
+            ]
+          },
+          "state": {
+            "type": "string"
+          },
+          "worker": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "restart_attempts": {
+            "type": "integer"
+          },
+          "max_restart_attempts": {
+            "type": "integer"
+          },
+          "next_restart_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "ever_live": {
+            "type": "boolean"
+          },
+          "last_error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "progress": {},
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "live_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "uptime_ms": {
+            "type": "integer"
+          },
+          "ended_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "openre.session-end-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/session-end-result.v1.json",
+        "title": "OpenreSessionEndResult",
+        "description": "openre.session-end-result@1: the answer of POST /api/v1/sessions/:id/end on OpenRe.Stream (openre.session.end): 202 { requested: true, state } when the owning worker was asked to disconnect the encoder, 409 { requested: false, state } when the session could not be ended (already ending or over).",
+        "type": "object",
+        "required": [
+          "requested",
+          "state"
+        ],
+        "properties": {
+          "requested": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "openre.session-read-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/session-read-result.v1.json",
+        "title": "OpenreSessionReadResult",
+        "description": "openre.session-read-result@1: answers of openre.session.read on OpenRe.Stream. GET /api/v1/sessions?stream_id=&state=&limit=&before= → { sessions } (the owner's; a service sees those of the subject it acts for); GET /api/v1/sessions/:id → { session } with transitions, outputs, recording and playback; GET /api/v1/sessions/:id/playback → { playback } (where to watch: flv and rtmp URLs, internal loopback and public); GET /api/v1/workers → { workers } (worker generations; staff and services only).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "sessions"
+            ],
+            "properties": {
+              "sessions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "stream_id",
+                    "protocol",
+                    "state",
+                    "created_at"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "stream_id": {
+                      "type": "string"
+                    },
+                    "protocol": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "enum": [
+                        "starting",
+                        "live",
+                        "ending",
+                        "ended",
+                        "failed"
+                      ]
+                    },
+                    "desired_state": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "worker": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "lease_expires_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "key_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "end_reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "failure_reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "media_info": {},
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "live_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "ended_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "duration_seconds": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "transitions": {
+                      "type": "array",
+                      "description": "GET /sessions/:id only."
+                    },
+                    "outputs": {
+                      "type": "array"
+                    },
+                    "recording": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "playback": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "session"
+            ],
+            "properties": {
+              "session": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "stream_id",
+                  "protocol",
+                  "state",
+                  "created_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "stream_id": {
+                    "type": "string"
+                  },
+                  "protocol": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "enum": [
+                      "starting",
+                      "live",
+                      "ending",
+                      "ended",
+                      "failed"
+                    ]
+                  },
+                  "desired_state": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "worker": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "lease_expires_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "key_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "end_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "failure_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "media_info": {},
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "created_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "live_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "ended_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "duration_seconds": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "transitions": {
+                    "type": "array",
+                    "description": "GET /sessions/:id only."
+                  },
+                  "outputs": {
+                    "type": "array"
+                  },
+                  "recording": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "playback": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "playback"
+            ],
+            "properties": {
+              "playback": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "session_id",
+                  "protocol",
+                  "state",
+                  "live"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string"
+                  },
+                  "protocol": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "live": {
+                    "type": "boolean"
+                  },
+                  "worker": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "flv": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "internal_url": {
+                        "type": "string"
+                      },
+                      "public_url": {
+                        "type": "string"
+                      },
+                      "content_type": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "rtmp": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "webrtc": {},
+                  "hls": {}
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "workers"
+            ],
+            "properties": {
+              "workers": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "openre.stream-read-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/stream-read-result.v1.json",
+        "title": "OpenreStreamReadResult",
+        "description": "openre.stream-read-result@1: answers of openre.stream.read on OpenRe.Stream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "streams"
+            ],
+            "properties": {
+              "streams": {
+                "type": "array",
+                "items": {
+                  "$ref": "stream.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "stream"
+            ],
+            "properties": {
+              "stream": {
+                "$ref": "stream.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "keys"
+            ],
+            "properties": {
+              "keys": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "status"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "hint": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "active",
+                        "grace",
+                        "revoked"
+                      ]
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "grace_until": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "revoked_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "last_used_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "openre.stream-write-request": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/stream-write-request.v1.json",
+        "title": "OpenreStreamWriteRequest",
+        "description": "openre.stream-write-request@1: the body of POST /api/v1/streams and PATCH /api/v1/streams/:id on OpenRe.Stream (openre.stream.write). A person creates streams for themselves; a service names the owner with X-OV-Subject (or owner_subject, which must then match). title is cleaned and cut to 140 characters (Untitled stream when blank), description to 2000; protocols is a non-empty subset of rtmp, whip, webrtc, jsmpeg; external_refs (create only, at most 10, each bound to one stream) link it to another service's record, e.g. { service: live, type: managed_stream, id: 12 }; state (update only) is active or disabled. Fields left out keep their value. DELETE /api/v1/streams/:id (archive; refused while live) takes no body. Refusals are 400 openre.invalid_* and 409 openre.ref_taken / openre.stream_live.",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "owner_subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "protocols": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "rtmp",
+                    "whip",
+                    "webrtc",
+                    "jsmpeg"
+                  ]
+                }
+              },
+              "recording_mode": {
+                "enum": [
+                  "vod",
+                  "clips",
+                  "none"
+                ]
+              },
+              "recording_visibility": {
+                "enum": [
+                  "public",
+                  "unlisted",
+                  "private"
+                ]
+              },
+              "playback_visibility": {
+                "enum": [
+                  "public",
+                  "unlisted",
+                  "private"
+                ]
+              },
+              "mirror_to_live": {
+                "type": [
+                  "boolean",
+                  "integer"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              },
+              "external_refs": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "service",
+                    "type",
+                    "id"
+                  ],
+                  "properties": {
+                    "service": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": [
+                        "string",
+                        "integer"
+                      ]
+                    },
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "openre.stream-write-result": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/stream-write-result.v1.json",
+        "title": "OpenreStreamWriteResult",
+        "description": "openre.stream-write-result@1: answers of openre.stream.write on OpenRe.Stream. POST /api/v1/streams → 201 { stream, key } where key is the first ingest key, shown once (Cache-Control no-store); PATCH /api/v1/streams/:id → { stream }; DELETE /api/v1/streams/:id → 204 with no body.",
+        "type": "object",
+        "required": [
+          "stream"
+        ],
+        "properties": {
+          "stream": {
+            "$ref": "stream.v1.json"
+          },
+          "key": {
+            "type": "object",
+            "required": [
+              "id",
+              "key",
+              "hint",
+              "shown_once"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string",
+                "description": "The plain ingest key: only in this answer."
+              },
+              "hint": {
+                "type": "string"
+              },
+              "shown_once": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "openre.stream": {
+      "version": "1.0.0",
+      "owner": "openre",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/openre/stream.v1.json",
+        "title": "OpenreStream",
+        "description": "openre.stream@1: one stream definition as OpenRe.Stream's API shows it (server/api/v1.js publicDefinition): the owner's stream with its protocols, recording and playback settings, ingest endpoints, key metadata (hints only, never a key) and the open session if any.",
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "owner",
+          "protocols",
+          "recording_mode",
+          "state",
+          "revision",
+          "ingest",
+          "keys",
+          "session",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 140
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "owner": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "protocols": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "rtmp",
+                "whip",
+                "webrtc",
+                "jsmpeg"
+              ]
+            }
+          },
+          "recording_mode": {
+            "enum": [
+              "vod",
+              "clips",
+              "none"
+            ]
+          },
+          "recording_visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "private"
+            ]
+          },
+          "playback_visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "private"
+            ]
+          },
+          "mirror_to_live": {
+            "type": [
+              "integer",
+              "boolean"
+            ]
+          },
+          "state": {
+            "enum": [
+              "active",
+              "disabled",
+              "archived"
+            ]
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "external_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "service",
+                "type",
+                "id"
+              ],
+              "properties": {
+                "service": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "label": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "ingest": {
+            "type": "object",
+            "description": "Where an encoder publishes (never the key).",
+            "properties": {
+              "rtmp": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string"
+                  },
+                  "key_hint": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "key_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "hint",
+                "status"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "hint": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "active",
+                    "grace",
+                    "revoked"
+                  ]
+                },
+                "grace_until": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "created_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "last_used_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "session": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "protocol": {
+                "type": "string"
+              },
+              "live_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
       }
     }
   }

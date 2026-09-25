@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/stream-write-request.v1.json",
+  "title": "OpenreStreamWriteRequest",
+  "description": "openre.stream-write-request@1: the body of POST /api/v1/streams and PATCH /api/v1/streams/:id on OpenRe.Stream (openre.stream.write). A person creates streams for themselves; a service names the owner with X-OV-Subject (or owner_subject, which must then match). title is cleaned and cut to 140 characters (Untitled stream when blank), description to 2000; protocols is a non-empty subset of rtmp, whip, webrtc, jsmpeg; external_refs (create only, at most 10, each bound to one stream) link it to another service's record, e.g. { service: live, type: managed_stream, id: 12 }; state (update only) is active or disabled. Fields left out keep their value. DELETE /api/v1/streams/:id (archive; refused while live) takes no body. Refusals are 400 openre.invalid_* and 409 openre.ref_taken / openre.stream_live.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "owner_subject": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "protocols": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "rtmp",
+              "whip",
+              "webrtc",
+              "jsmpeg"
+            ]
+          }
+        },
+        "recording_mode": {
+          "enum": [
+            "vod",
+            "clips",
+            "none"
+          ]
+        },
+        "recording_visibility": {
+          "enum": [
+            "public",
+            "unlisted",
+            "private"
+          ]
+        },
+        "playback_visibility": {
+          "enum": [
+            "public",
+            "unlisted",
+            "private"
+          ]
+        },
+        "mirror_to_live": {
+          "type": [
+            "boolean",
+            "integer"
+          ]
+        },
+        "state": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        },
+        "external_refs": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "service",
+              "type",
+              "id"
+            ],
+            "properties": {
+              "service": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

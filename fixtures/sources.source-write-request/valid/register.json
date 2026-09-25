@@ -1,0 +1,1 @@
+{ "key": "example-news", "name": "Example News", "type": "rss", "category": "news", "homepage_url": "https://news.example.com/", "endpoints": ["https://news.example.com/feed.xml"], "poll_interval_sec": 900, "enabled": false }

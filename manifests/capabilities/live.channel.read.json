@@ -20,5 +20,7 @@
     "GET /api/streams/channel/:username/clips-taken",
     "GET /api/streams/channel/:username/bio-en",
     "GET /api/auth/user/:username"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "live.channel-read-result@1"
 }

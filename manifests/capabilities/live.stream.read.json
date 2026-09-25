@@ -19,5 +19,7 @@
     "GET /api/streams/recent",
     "GET /api/streams/channel/:username/resolve/:ref",
     "GET /api/live-events"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "live.stream-read-result@1"
 }

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/prop-placement.v1.json",
+  "title": "GamesPropPlacement",
+  "description": "games.prop-placement@1: what a mod asks through games.prop.place on OpenVibe.Games. Not an HTTP route: the mod runtime binding ModApi.placeProp(key, item, pos, yaw) / removeProp(key) (apps/server/src/mods/runtime.ts), driven by the props section of the mod's games-content@1 pack, which the registry validates strictly (unknown fields refused). A placement puts an inert prop owned by the mod at pos (re-placing the one with the same key); the item must be placeable by mods and the numbers finite. A removal names only the key.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "item",
+        "pos"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$"
+        },
+        "item": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "pos": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": -4096,
+            "maximum": 4096
+          }
+        },
+        "yaw": {
+          "type": "number",
+          "minimum": -10,
+          "maximum": 10,
+          "default": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$"
+        }
+      }
+    }
+  ]
+}

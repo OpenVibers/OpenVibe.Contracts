@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/tips-delivery-request.v1.json",
+  "title": "LiveTipsDeliveryRequest",
+  "description": "live.tips-delivery-request@1: the body of POST /internal/tips/deliveries on OpenVibe.Live (live.tips_delivery.write; OpenVibe.Tips' live-chat delivery adapter, loopback only). The money already moved in OpenVibe.Billing; this only shows it on the creator's channel. Needs an Idempotency-Key header (<interaction id>:<effect>, 8-200 of A-Z a-z 0-9 _ : . -); a repeat answers the first result. effect chat_line or paid_message: a donation event in the channel room and global chat, saved as a donation chat message, with the alert sound; tts: tts.text spoken on the live stream (or the offline channel room); media_request: media.url into the channel's media queue at cost 0. The creator must have a Live channel (404 otherwise); an unknown effect or a failure is 422.",
+  "type": "object",
+  "required": [
+    "effect",
+    "creator"
+  ],
+  "properties": {
+    "delivery_id": {
+      "type": "string"
+    },
+    "effect": {
+      "enum": [
+        "chat_line",
+        "paid_message",
+        "tts",
+        "media_request"
+      ]
+    },
+    "test": {
+      "type": "boolean"
+    },
+    "creator": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "const": "user"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      }
+    },
+    "supporter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Shown (80 characters); Someone when absent."
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "amount": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "currency": {
+          "type": "string"
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        }
+      }
+    },
+    "text": {
+      "type": "string",
+      "description": "The chat line to save (1000 characters); a default names the supporter and amount."
+    },
+    "tts": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        },
+        "voice": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "highlight_seconds": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "description": "A live stream of the creator ({ service: live, type: stream, id }); otherwise the creator's current live stream.",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{ "metric": "chat_messages", "kind": "count", "days": 30, "points": [ { "day": "2026-09-24", "value": 5210 } ], "total": 5210, "peak": 5210 }

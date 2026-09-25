@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /internal/followers"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "live.follower-page@1"
 }

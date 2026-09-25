@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/destination.v1.json",
+  "title": "OpenreDestination",
+  "description": "openre.destination@1: one restream destination of a stream on OpenRe.Stream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.",
+  "type": "object",
+  "required": [
+    "id",
+    "stream_id",
+    "platform",
+    "server_url",
+    "transport",
+    "has_stream_key",
+    "enabled",
+    "auto_start"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "stream_id": {
+      "type": "string"
+    },
+    "platform": {
+      "enum": [
+        "youtube",
+        "twitch",
+        "kick",
+        "custom"
+      ]
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "server_url": {
+      "type": "string"
+    },
+    "transport": {
+      "enum": [
+        "rtmp",
+        "srt"
+      ]
+    },
+    "has_stream_key": {
+      "type": "boolean"
+    },
+    "stream_key_hint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "has_srt_passphrase": {
+      "type": "boolean"
+    },
+    "srt_latency_ms": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "auto_start": {
+      "type": "boolean"
+    },
+    "quality_preset": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "custom_video_bitrate": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "custom_audio_bitrate": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "custom_fps": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "custom_encoder_preset": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "hold_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "consecutive_failures": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "cooldown_until": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "cooldown_ms": {
+      "type": "integer"
+    },
+    "last_error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_failed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

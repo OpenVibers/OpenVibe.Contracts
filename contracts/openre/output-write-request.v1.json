@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/output-write-request.v1.json",
+  "title": "OpenreOutputWriteRequest",
+  "description": "openre.output-write-request@1: the body of POST /api/v1/streams/:id/destinations (platform and server_url required) and PATCH /api/v1/destinations/:id (fields left out keep their value) on OpenRe.Stream (openre.output.write). server_url must pass the destination URL rules (rtmp, rtmps or srt, public hosts); stream_key (at most 512 characters, no spaces) and srt_passphrase (10 to 79 characters) are sealed and never read back — __keep__ leaves them unchanged, empty clears them. Numbers out of range become null: srt_latency_ms 20-8000, custom_video_bitrate 500-50000, custom_audio_bitrate 32-512, custom_fps 15-120; an unknown custom_encoder_preset becomes null. DELETE /api/v1/destinations/:id and POST /api/v1/destinations/:id/test|start|stop take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "enum": [
+            "youtube",
+            "twitch",
+            "kick",
+            "custom"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "server_url": {
+          "type": "string"
+        },
+        "stream_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "srt_passphrase": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "srt_latency_ms": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "enabled": {
+          "type": [
+            "boolean",
+            "integer"
+          ]
+        },
+        "auto_start": {
+          "type": [
+            "boolean",
+            "integer"
+          ]
+        },
+        "quality_preset": {
+          "enum": [
+            "auto",
+            "low",
+            "medium",
+            "high",
+            "ultra",
+            "source"
+          ]
+        },
+        "custom_video_bitrate": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "custom_audio_bitrate": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "custom_fps": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "custom_encoder_preset": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

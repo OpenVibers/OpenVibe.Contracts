@@ -1,0 +1,1 @@
+{ "audit": [ { "id": 41, "modId": "mod_01JAB2C3D4E5F6G7H8J9K0MNPQ", "action": "grant", "capability": "games.prop.place", "actor": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR", "detail": null, "at": 1790370001000 } ] }

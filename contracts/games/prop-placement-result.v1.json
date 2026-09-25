@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/prop-placement-result.v1.json",
+  "title": "GamesPropPlacementResult",
+  "description": "games.prop-placement-result@1: what the games.prop.place binding returns on OpenVibe.Games: placeProp → the placed entity's id (null when the host placed nothing); removeProp → true when a prop with that key was removed, false when there was none. A mod without the grant gets a capability.denied error instead; every use is audited.",
+  "type": [
+    "string",
+    "null",
+    "boolean"
+  ]
+}

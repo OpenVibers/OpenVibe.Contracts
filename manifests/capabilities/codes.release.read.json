@@ -14,5 +14,6 @@
     "GET /api/v1/apps/:app/releases",
     "GET /api/v1/apps/:app/trust",
     "GET /api/v1/releases/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1"
 }

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/tips-delivery-result.v1.json",
+  "title": "LiveTipsDeliveryResult",
+  "description": "live.tips-delivery-result@1: the answer of POST /internal/tips/deliveries on OpenVibe.Live: 200 { ok: true, ref } naming what was made (the saved chat message for chat_line/paid_message, the stream spoken on for tts, the queued media request); the same answer again for a repeated Idempotency-Key. Refusals are { error }: 400 without an Idempotency-Key, 404 creator without a Live channel (permanent), 409 the same delivery is still running (retry), 422 unknown effect, no text, or a media request that failed.",
+  "type": "object",
+  "required": [
+    "ok",
+    "ref"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "ref": {
+      "type": "object",
+      "properties": {
+        "chat_message_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "media_request_id": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

@@ -10,5 +10,6 @@
   "resourceConstraints": ["none"],
   "quotaClass": "games-read",
   "events": [],
-  "implementedBy": ["GET /api/v1/mods", "GET /api/v1/mods/:id"]
+  "implementedBy": ["GET /api/v1/mods", "GET /api/v1/mods/:id"],
+  "inputSchema": "common.no-body@1"
 }

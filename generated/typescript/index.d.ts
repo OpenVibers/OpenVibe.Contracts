@@ -5755,6 +5755,49 @@ export interface AppManifest {
   };
 }
 
+/** codes.release-manage-result@1.0.0 (owner: codes) */
+/**
+ * codes.release-manage-result@1: answers of codes.release.manage on OpenVibe.Codes (an app token managing its own releases). POST /api/v1/apps/:app/releases → 201 { release, warnings } (a draft, or published at once with publish: true; manifest validation warnings); POST /api/v1/releases/:id/publish | deprecate | revoke → { release, event_id } (the codes.release.* event announcing it; null when a revoke announced nothing). Refusals are problem+json: 401 auth.required, 403 release.forbidden (another app's release), 409 release.not_draft, 422 with validation errors.
+ */
+export interface CodesReleaseManageResult {
+  release: CodesRelease;
+  warnings?: unknown[];
+  event_id?: string | null;
+}
+
+/** codes.release@1.0.0 (owner: codes) */
+/**
+ * codes.release@1: one release of an app or mod as OpenVibe.Codes presents it (server/domain/releases.js view): its lifecycle (draft → published → deprecated or revoked), compatibility ranges and the app's trust tier (metadata only; grants in OpenVibe.Network are the authority). The manifest itself is served separately (codes.app-manifest@1).
+ */
+export interface CodesRelease {
+  id: string;
+  app_id: string;
+  project_id?: string | null;
+  environment?: "production" | "sandbox";
+  kind: "app" | "mod";
+  subject_id?: string | null;
+  name: string;
+  version: string;
+  status: "draft" | "published" | "deprecated" | "revoked";
+  manifest_id: string;
+  compatibility?: {};
+  notes?: string | null;
+  created_at: string;
+  created_by?: string | null;
+  published_at?: string | null;
+  deprecated_at?: string | null;
+  deprecation_reason?: string | null;
+  replacement?: string | null;
+  revoked_at?: string | null;
+  revocation_reason?: string | null;
+  trust: {
+    tier: string;
+    note?: string | null;
+    set_by?: string | null;
+    set_at?: string | null;
+  };
+}
+
 /** events.redaction-directive@1.0.0 (owner: events) */
 /**
  * payload.redacts (ADR-026): a producer takes back events it published earlier. Any event may carry it, normally the producer's own *.deleted event. It names event_ids, or subject_type + subject_ids, or both, never an empty list. event_ids names events directly; subject_type + subject_ids names every stored event of the same source (for an app, the same project and environment) about those subjects. OpenVibe.Events rewrites each target into a tombstone (events.tombstone-payload@1) in the transaction that stores the directive. Naming another source's event is 403 events.redaction_not_allowed (the whole batch is refused); a malformed directive is 422 events.invalid_redaction. An event that carries a directive is never redacted itself.
@@ -6319,6 +6362,3460 @@ export interface SourcesIndexDocumentDeletedPayload {
   id: string;
   revision: number;
 }
+
+/** sources.source-manage-result@1.0.0 (owner: sources) */
+/**
+ * sources.source-manage-result@1: answers of sources.source.manage on OpenVibe.Sources. POST /api/v1/sources → 201 { source }; PATCH /api/v1/sources/:key → { source } (sources.source@1 with health); DELETE /api/v1/sources/:key → 204 with no body; POST /api/v1/sources/:key/fetch → { runs } (one fetch run per endpoint; 409 for a manual source or a run in flight); POST /api/v1/sources/:key/items → { outcome, item } (201 when created); DELETE /api/v1/items/:id → { item } (the tombstoned item).
+ */
+export type SourcesSourceManageResult =
+  | {
+      source: Source;
+    }
+  | {
+      outcome: "created" | "updated" | "removed" | "unchanged";
+      item: SourceItem;
+    }
+  | {
+      item: SourceItem;
+    }
+  | {
+      runs: {
+        id?: string | number | null;
+        source_key: string;
+        endpoint_url?: string | null;
+        trigger?: string;
+        started_at?: string | null;
+        finished_at?: string | null;
+        state: string;
+        http_status?: number | null;
+        error_code?: string | null;
+        detail?: string | null;
+        bytes?: number | null;
+        items?: {
+          seen?: unknown;
+          created?: unknown;
+          updated?: unknown;
+          unchanged?: unknown;
+          skipped?: unknown;
+        };
+        seq?: number | null;
+      }[];
+    };
+
+/** sources.source-write-request@1.0.0 (owner: sources) */
+/**
+ * sources.source-write-request@1: bodies of sources.source.manage on OpenVibe.Sources. POST /api/v1/sources registers a source (key, name, type and category required; the other sources.source@1 fields take their defaults; endpoints may be given as bare URLs; a manual source has none, any other at least one) and PATCH /api/v1/sources/:key changes one (merged over the stored source and validated again; key never changes, type not once it has items). Both refuse unknown fields. POST /api/v1/sources/:key/items adds an item to a manual source: url (the evidence) and title required. DELETE /api/v1/items/:id takes { reason } (takedown, licence, error…). DELETE /api/v1/sources/:key (only a source that never produced an item) and POST /api/v1/sources/:key/fetch take no body.
+ */
+export type SourcesSourceWriteRequest =
+  | {
+      key?: string;
+      name?: string;
+      type?: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "manual";
+      category?: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+      homepage_url?: string | null;
+      /**
+       * @maxItems 20
+       */
+      endpoints?:
+        | []
+        | [
+            | string
+            | {
+                url: string;
+                format?: "json" | "xml";
+                items_path?: string;
+                item_kind?: string;
+                fields?: {
+                  [k: string]: string | undefined;
+                };
+                extra?: {
+                  [k: string]: string | undefined;
+                };
+              }
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ];
+      auth?: {
+        mode: "none" | "header" | "bearer" | "query";
+        /**
+         * Name of the environment variable holding the credential. Never a value.
+         */
+        env?: string;
+        header?: string;
+        param?: string;
+      };
+      robots_note?: string | null;
+      terms_note?: string | null;
+      license_note?: string | null;
+      /**
+       * Rate limit: the least time between two requests to this source (the per-host floor and robots Crawl-delay may raise it).
+       */
+      min_interval_ms?: number;
+      poll_interval_sec?: number;
+      stale_after_sec?: number;
+      max_items?: number;
+      enabled?: boolean;
+      /**
+       * Products must review what they derive from this source before it can be indexable.
+       */
+      review_required?: boolean;
+      sensitivity?: "none" | "financial" | "health" | "political" | "legal" | "adult";
+      /**
+       * What a product's indexability gate starts from for content derived from this source.
+       */
+      default_indexability?: "index" | "noindex";
+      /**
+       * members = raw items are indexed in OpenVibe.Search for staff only (never indexable).
+       */
+      search_visibility?: "members" | null;
+    }
+  | {
+      /**
+       * Where this was published.
+       */
+      url: string;
+      title: string;
+      kind?: string;
+      /**
+       * Stable identity within the source; the canonical URL by default.
+       */
+      identity?: string;
+      summary?: string | null;
+      /**
+       * @maxItems 20
+       */
+      authors?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ];
+      /**
+       * A date the source states.
+       */
+      published_at?: string | null;
+      updated_at?: string | null;
+      fields?: {
+        [k: string]: (string | number | boolean | null) | undefined;
+      };
+    }
+  | {
+      reason: string;
+    }
+  | NoBody;
 
 /** search.document.indexed@1.0.0 (owner: search) */
 /**
@@ -14575,6 +18072,97 @@ export interface GamesModRevokedPayload {
   reason?: string;
 }
 
+/** games.announce-frame@1.0.0 (owner: games) */
+/**
+ * games.announce-frame@1: the frame OpenVibe.Games broadcasts to every connected player for an announcement (gameServer broadcastAll): { t: announce, text }. A mod's announcement text is prefixed with its name in brackets ([Mod name] text); the binding itself returns nothing.
+ */
+export interface GamesAnnounceFrame {
+  t: "announce";
+  text: string;
+}
+
+/** games.announcement@1.0.0 (owner: games) */
+/**
+ * games.announcement@1: what a mod announces through games.world.announce on OpenVibe.Games. Not an HTTP route: the mod runtime binding ModApi.announce(text) (apps/server/src/mods/runtime.ts), driven by the announcements section of the mod's games-content@1 pack (validated strictly: text 1-200 characters, repeated every everySeconds, 60 to 86400). The text is whitespace-collapsed and cut to 200 characters; an empty one is dropped.
+ */
+export interface GamesAnnouncement {
+  text: string;
+  everySeconds: number;
+}
+
+/** games.mod-manage-result@1.0.0 (owner: games) */
+/**
+ * games.mod-manage-result@1: answers of games.mod.manage on OpenVibe.Games (staff: an owner/admin session, or a service token with games.mod.manage). POST /api/v1/mods → 201 the installed mod's public view; POST /api/v1/mods/:id/enable|disable|revoke, POST /api/v1/mods/:id/grants and DELETE /api/v1/mods/:id/grants/:capability → 200 the mod's public view after the change (revoke is terminal); GET /api/v1/mods/:id/audit?limit= → { audit } (install, grant, use, deny and revoke entries, at most 500). Errors are problem+json (mod.not_found, mod.invalid_request, capability.denied, …).
+ */
+export type GamesModManageResult =
+  | {
+      id: string;
+      name: string;
+      version: string;
+      /**
+       * e.g. games.browser
+       */
+      target: string;
+      /**
+       * e.g. games-content@1
+       */
+      runtime: string;
+      trust_tier: "unreviewed" | "reviewed" | "first-party";
+      status: "enabled" | "disabled" | "revoked";
+      /**
+       * Capabilities the manifest asks for.
+       */
+      requested: string[];
+      /**
+       * Capabilities approved and not revoked.
+       */
+      granted: string[];
+      installed_at: string;
+      updated_at: string;
+    }
+  | {
+      /**
+       * @maxItems 500
+       */
+      audit: {
+        id?: number;
+        modId: string;
+        action: string;
+        capability?: string | null;
+        actor: string;
+        detail?: {} | null;
+        /**
+         * ms epoch.
+         */
+        at: number;
+      }[];
+    };
+
+/** games.prop-placement-result@1.0.0 (owner: games) */
+/**
+ * games.prop-placement-result@1: what the games.prop.place binding returns on OpenVibe.Games: placeProp → the placed entity's id (null when the host placed nothing); removeProp → true when a prop with that key was removed, false when there was none. A mod without the grant gets a capability.denied error instead; every use is audited.
+ */
+export type GamesPropPlacementResult = string | null | boolean;
+
+/** games.prop-placement@1.0.0 (owner: games) */
+/**
+ * games.prop-placement@1: what a mod asks through games.prop.place on OpenVibe.Games. Not an HTTP route: the mod runtime binding ModApi.placeProp(key, item, pos, yaw) / removeProp(key) (apps/server/src/mods/runtime.ts), driven by the props section of the mod's games-content@1 pack, which the registry validates strictly (unknown fields refused). A placement puts an inert prop owned by the mod at pos (re-placing the one with the same key); the item must be placeable by mods and the numbers finite. A removal names only the key.
+ */
+export type GamesPropPlacement =
+  | {
+      key: string;
+      item: string;
+      /**
+       * @minItems 3
+       * @maxItems 3
+       */
+      pos: [number, number, number];
+      yaw?: number;
+    }
+  | {
+      key: string;
+    };
+
 /** media.object.deleted@1.0.0 (owner: media) */
 /**
  * media.object.deleted v1 (OpenVibe.Media server/events.js objectChangeEvent and recordObjectChanges, commit 039dc48, from the media_object_changes rows that the AFTER UPDATE OF lifecycle_status trigger on media_objects writes). An object's lifecycle_status became deleted: a native object soft-deleted through DELETE /api/v2/:app/objects/:id, or an inherited vods/clips/files/pastes row removed, which marks its object deleted. Every write path counts (operator SQL included), and the event exists if and only if the change committed: the trigger row and the outbox envelope are written in the transaction of the change, or by the relay's drain for a change made outside Media's own transactions. Consumers drop any public copy, index entry or cache they hold for the object (roadmap §29.3). Deliberately minimal, identity and state only: never the title, description or metadata, the owner's ids or subject, storage keys, paths or providers, sizes or hashes. Developer-project sandbox tenants produce none. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority important, actor service:media.
@@ -14927,6 +18515,371 @@ export interface LiveModerationActionPayload {
   target_user_id?: number | null;
   target_subject?: string | null;
   details?: {};
+}
+
+/** live.channel-read-result@1.0.0 (owner: live) */
+/**
+ * live.channel-read-result@1: answers of live.channel.read on OpenVibe.Live (public; the channel is addressed by username). GET /api/streams/channel/:username → the channel page: { channel, language, stream, streams, managed_streams (public projection), vods, clips, aiClips, … with totals and paging }; GET …/:username/live → { channel: { username, display_name, user_id }, streams }; GET …/:username/popular → { vod, clip, vods, clips, ranges }; GET …/:username/clips-taken → { clips, total, facets, limit, offset, hasMore, sort, of, includeSelf }; GET …/:username/bio-en → { from, to: en, text } (from and text null when there is nothing to translate); GET /api/auth/user/:username → { user } (the public profile). Unknown channels are 404 { error }.
+ */
+export type LiveChannelReadResult =
+  | {
+      channel: {};
+      language?: unknown;
+      stream: {} | null;
+      streams: unknown[];
+      managed_streams: unknown[];
+      vods: unknown[];
+      vodTotal?: number;
+      clips: unknown[];
+      clipTotal?: number;
+      aiClips?: unknown[];
+    }
+  | {
+      channel: {
+        username: string;
+        display_name?: string | null;
+        user_id: number;
+      };
+      streams: {
+        id: number;
+        user_id: number;
+        channel_id?: number | null;
+        managed_stream_id?: number | null;
+        title?: string | null;
+        description?: string | null;
+        category?: string | null;
+        protocol?: string | null;
+        is_live?: number | boolean;
+        is_nsfw?: number | boolean;
+        viewer_count?: number | null;
+        peak_viewers?: number | null;
+        thumbnail_url?: string | null;
+        started_at?: string | null;
+        ended_at?: string | null;
+        /**
+         * The public channel projection.
+         */
+        channel?: {} | null;
+        /**
+         * While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl).
+         */
+        endpoint?: {};
+      }[];
+    }
+  | {
+      vod?: {} | null;
+      clip?: {} | null;
+      vods: unknown[];
+      clips: unknown[];
+      ranges: {};
+    }
+  | {
+      clips: unknown[];
+      total: number;
+      facets?: unknown;
+      limit: number;
+      offset: number;
+      hasMore: boolean;
+      sort?: string;
+      of?: unknown;
+      includeSelf?: unknown;
+    }
+  | {
+      from: string | null;
+      to: "en";
+      text: string | null;
+      from_name?: string | null;
+      flag?: string | null;
+    }
+  | {
+      user: {
+        id: number;
+        username: string;
+        display_name?: string | null;
+        avatar_url?: string | null;
+        bio?: string | null;
+        role?: string;
+        profile_color?: string | null;
+        created_at?: string | null;
+        capabilities?: unknown[];
+      };
+    };
+
+/** live.discovery-result@1.0.0 (owner: live) */
+/**
+ * live.discovery-result@1: answers of live.discovery.read on OpenVibe.Live (public home and discovery reads; the same answer for everyone except /discover and /digest, which personalise for a signed-in viewer). GET /api/home/featured → { stream, moment, count, index, next_in_ms } ({ stream: null, count: 0 } when nobody is live); /api/home/stats-live → { liveNow, viewersNow, weeklyActive, users, …, concurrency, recent }; /api/home/hero → { stats, media, moments, slogans }; /api/home/star → { star } (null when there is none); /api/home/digest → { since, signed_in, liveNow, streamed, stats, hot }; /api/home/discover → { channel, live, clips, recaps, star, similar }; /api/home/pulse → Live's activity pulse with moments and latestUpdate; /api/home/stats/series/:metric?days= → { metric, kind, days, points, peak, … } (404 { error, metrics } for an unknown metric, 503 when Media's series are unavailable); /api/streams/recently-online → { streamers, total, limit, offset, hasMore }; /api/streams/recent-vods → { vods, total, limit, offset, hasMore }; /api/content/feed and /api/content/moments → { feed, type, sort, window, items, next, sources, partial }.
+ */
+export type LiveDiscoveryResult =
+  | {
+      stream: {} | null;
+      moment?: unknown;
+      count: number;
+      index?: number;
+      next_in_ms?: number;
+    }
+  | {
+      liveNow: number;
+      viewersNow: number;
+      weeklyActive?: unknown;
+      users?: unknown;
+      weeklyVisitors?: unknown;
+      concurrency?: unknown;
+      recent?: {};
+    }
+  | {
+      stats: {};
+      media: unknown[];
+      moments: unknown[];
+      slogans: unknown[];
+    }
+  | {
+      star: {
+        username?: string;
+        display_name?: string;
+        live?: {} | null;
+        rotates?: boolean;
+      } | null;
+    }
+  | {
+      since: unknown;
+      signed_in: boolean;
+      liveNow: unknown;
+      streamed: unknown;
+      stats: unknown;
+      hot: unknown;
+    }
+  | {
+      channel: {} | null;
+      live: unknown;
+      clips: unknown;
+      recaps: unknown;
+      star: unknown;
+      similar: unknown;
+    }
+  | {
+      /**
+       * @maxItems 10
+       */
+      moments:
+        | []
+        | [unknown]
+        | [unknown, unknown]
+        | [unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown, unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown]
+        | [unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown];
+      latestUpdate: unknown;
+    }
+  | {
+      metric: string;
+      kind: string;
+      days?: number;
+      points: {}[];
+      peak?: number;
+      source?: string;
+    }
+  | {
+      streamers: unknown[];
+      total: number;
+      limit: number;
+      offset: number;
+      hasMore: boolean;
+    }
+  | {
+      vods: unknown[];
+      total: number;
+      limit: number;
+      offset: number;
+      hasMore: boolean;
+    }
+  | {
+      feed: string;
+      type?: unknown;
+      sort?: string;
+      window?: unknown;
+      items: {
+        kind: string;
+        id: string | number;
+        href?: string;
+        title?: string;
+      }[];
+      next: string | null;
+      sources: {};
+      partial: boolean;
+    };
+
+/** live.follower-page@1.0.0 (owner: live) */
+/**
+ * live.follower-page@1: the answer of GET /internal/followers?stream_id=&limit=&after= on OpenVibe.Live (live.follower.read, service token, loopback): the followers of the channel that streams stream_id, for Network's go-live notifications. A follower is named by their Network subject when Live knows it, else their Network user id. next is the cursor for the following page (null on the last). 400 without stream_id, 404 for an unknown stream.
+ */
+export interface LiveFollowerPage {
+  stream_id: number;
+  channel: {
+    subject: string | null;
+  };
+  /**
+   * @maxItems 5000
+   */
+  followers: {
+    subject: string | null;
+    network_user_id: number | null;
+  }[];
+  next: number | null;
+}
+
+/** live.stream-read-result@1.0.0 (owner: live) */
+/**
+ * live.stream-read-result@1: answers of live.stream.read on OpenVibe.Live (public, parameters in the path and query). GET /api/streams → { streams } (live now, with each slot's external viewers and total_viewer_count); GET /api/streams/recent?limit= → { streams } (recently ended, with their public VOD from OpenVibe.Media); GET /api/streams/:id → { stream } (plus endpoint while live, cameras, controls, pip_overlay, follower_count, isFollowing for a signed-in viewer); GET /api/streams/channel/:username/resolve/:ref → { managed_stream, live_stream_id, is_live }; GET /api/live-events is a Server-Sent Events feed whose stream-live messages carry { repeat, username, display_name, avatar_url, title, stream_id, slug, managed_id, at }. Ingest keys are never included.
+ */
+export type LiveStreamReadResult =
+  | {
+      streams: {
+        id: number;
+        user_id: number;
+        channel_id?: number | null;
+        managed_stream_id?: number | null;
+        title?: string | null;
+        description?: string | null;
+        category?: string | null;
+        protocol?: string | null;
+        is_live?: number | boolean;
+        is_nsfw?: number | boolean;
+        viewer_count?: number | null;
+        peak_viewers?: number | null;
+        thumbnail_url?: string | null;
+        started_at?: string | null;
+        ended_at?: string | null;
+        /**
+         * The public channel projection.
+         */
+        channel?: {} | null;
+        /**
+         * While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl).
+         */
+        endpoint?: {};
+      }[];
+    }
+  | {
+      /**
+       * A stream session row (streams.* with its slot) without the ingest keys or the home ZIP.
+       */
+      stream: {
+        id: number;
+        user_id: number;
+        channel_id?: number | null;
+        managed_stream_id?: number | null;
+        title?: string | null;
+        description?: string | null;
+        category?: string | null;
+        protocol?: string | null;
+        is_live?: number | boolean;
+        is_nsfw?: number | boolean;
+        viewer_count?: number | null;
+        peak_viewers?: number | null;
+        thumbnail_url?: string | null;
+        started_at?: string | null;
+        ended_at?: string | null;
+        /**
+         * The public channel projection.
+         */
+        channel?: {} | null;
+        /**
+         * While live: how to play it (jsmpeg channel, webrtc roomId, rtmp flvUrl).
+         */
+        endpoint?: {};
+      };
+    }
+  | {
+      managed_stream: {
+        id: number;
+        slug?: string | null;
+        title?: string | null;
+        protocol?: string | null;
+      };
+      live_stream_id: number | null;
+      is_live: boolean;
+    }
+  | {
+      repeat?: boolean;
+      username: string | null;
+      display_name?: string | null;
+      avatar_url?: string | null;
+      title?: string | null;
+      stream_id: number;
+      slug?: string | null;
+      managed_id?: number | null;
+      /**
+       * ms epoch.
+       */
+      at: number;
+    };
+
+/** live.tips-delivery-request@1.0.0 (owner: live) */
+/**
+ * live.tips-delivery-request@1: the body of POST /internal/tips/deliveries on OpenVibe.Live (live.tips_delivery.write; OpenVibe.Tips' live-chat delivery adapter, loopback only). The money already moved in OpenVibe.Billing; this only shows it on the creator's channel. Needs an Idempotency-Key header (<interaction id>:<effect>, 8-200 of A-Z a-z 0-9 _ : . -); a repeat answers the first result. effect chat_line or paid_message: a donation event in the channel room and global chat, saved as a donation chat message, with the alert sound; tts: tts.text spoken on the live stream (or the offline channel room); media_request: media.url into the channel's media queue at cost 0. The creator must have a Live channel (404 otherwise); an unknown effect or a failure is 422.
+ */
+export interface LiveTipsDeliveryRequest {
+  delivery_id?: string;
+  effect: "chat_line" | "paid_message" | "tts" | "media_request";
+  test?: boolean;
+  creator: {
+    type?: "user";
+    id: string;
+  };
+  supporter?: {
+    /**
+     * Shown (80 characters); Someone when absent.
+     */
+    name?: string;
+    subject?: string | null;
+  };
+  interaction?: {
+    id?: string;
+    kind?: string;
+    amount?: number | string;
+    currency?: string;
+    /**
+     * Cut to 500 characters.
+     */
+    message?: string | null;
+  };
+  /**
+   * The chat line to save (1000 characters); a default names the supporter and amount.
+   */
+  text?: string;
+  tts?: {
+    text?: string;
+    voice?: string | null;
+  };
+  media?: {
+    url: string;
+  };
+  highlight_seconds?: number | string;
+  /**
+   * A live stream of the creator ({ service: live, type: stream, id }); otherwise the creator's current live stream.
+   */
+  target?: {
+    service?: string;
+    type?: string;
+    id?: string | number;
+  };
+}
+
+/** live.tips-delivery-result@1.0.0 (owner: live) */
+/**
+ * live.tips-delivery-result@1: the answer of POST /internal/tips/deliveries on OpenVibe.Live: 200 { ok: true, ref } naming what was made (the saved chat message for chat_line/paid_message, the stream spoken on for tts, the queued media request); the same answer again for a repeated Idempotency-Key. Refusals are { error }: 400 without an Idempotency-Key, 404 creator without a Live channel (permanent), 409 the same delivery is still running (retry), 422 unknown effect, no text, or a media request that failed.
+ */
+export interface LiveTipsDeliveryResult {
+  ok: true;
+  ref: {
+    chat_message_id?: number | null;
+    stream_id?: number | null;
+    media_request_id?: number;
+  };
 }
 
 /** community.moderation.action@1.0.0 (owner: community) */
@@ -15356,3 +19309,728 @@ export type CommunityPulseWriteResult =
   | {
       removed: number;
     };
+
+/** openre.destination@1.0.0 (owner: openre) */
+/**
+ * openre.destination@1: one restream destination of a stream on OpenRe.Stream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.
+ */
+export interface OpenreDestination {
+  id: string;
+  stream_id: string;
+  platform: "youtube" | "twitch" | "kick" | "custom";
+  name?: string | null;
+  server_url: string;
+  transport: "rtmp" | "srt";
+  has_stream_key: boolean;
+  stream_key_hint?: string | null;
+  has_srt_passphrase?: boolean;
+  srt_latency_ms?: number | null;
+  enabled: boolean;
+  auto_start: boolean;
+  quality_preset?: string | null;
+  custom_video_bitrate?: number | null;
+  custom_audio_bitrate?: number | null;
+  custom_fps?: number | null;
+  custom_encoder_preset?: string | null;
+  hold_reason?: string | null;
+  consecutive_failures?: number | null;
+  cooldown_until?: string | null;
+  cooldown_ms?: number;
+  last_error?: string | null;
+  last_failed_at?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** openre.key-rotate-request@1.0.0 (owner: openre) */
+/**
+ * openre.key-rotate-request@1: the body of POST /api/v1/streams/:id/keys/rotate on OpenRe.Stream (openre.key.rotate). grace_seconds (0 by default, at most 7 days) keeps the old key working that long; end_sessions true also ends the stream's open sessions. An empty body rotates with no grace.
+ */
+export interface OpenreKeyRotateRequest {
+  /**
+   * Clamped to 0..604800.
+   */
+  grace_seconds?: number | string;
+  end_sessions?: boolean;
+}
+
+/** openre.key-rotate-result@1.0.0 (owner: openre) */
+/**
+ * openre.key-rotate-result@1: the answer of POST /api/v1/streams/:id/keys/rotate on OpenRe.Stream: the new key (shown once, Cache-Control no-store), the keys it retired (grace or revoked), when the grace ends, how many sessions were asked to end, and the ingest endpoints. openre.key.rotated is announced.
+ */
+export interface OpenreKeyRotateResult {
+  key: {
+    id: string;
+    /**
+     * The plain ingest key: only in this answer.
+     */
+    key: string;
+    hint: string;
+    shown_once: true;
+  };
+  retired: {
+    id: string;
+    hint?: string;
+    status: "grace" | "revoked";
+  }[];
+  grace_until: string | null;
+  sessions_ending: number;
+  /**
+   * Where an encoder publishes (never the key).
+   */
+  ingest: {
+    rtmp?: {
+      url: string;
+      key_hint?: string | null;
+      key_id?: string | null;
+    };
+  };
+}
+
+/** openre.output-read-result@1.0.0 (owner: openre) */
+/**
+ * openre.output-read-result@1: answers of openre.output.read on OpenRe.Stream. GET /api/v1/streams/:id/destinations → { destinations }; GET /api/v1/sessions/:id/outputs → { outputs } (with health); GET /api/v1/destinations/:id/logs and GET /api/v1/outputs/:id/logs?limit= → { logs } (newest first, at most 500).
+ */
+export type OpenreOutputReadResult =
+  | {
+      destinations: OpenreDestination[];
+    }
+  | {
+      outputs: OpenreOutput[];
+    }
+  | {
+      /**
+       * @maxItems 500
+       */
+      logs: {
+        output_id?: string | null;
+        level: string;
+        message: string;
+        at: string | null;
+      }[];
+    };
+
+/** openre.output-write-request@1.0.0 (owner: openre) */
+/**
+ * openre.output-write-request@1: the body of POST /api/v1/streams/:id/destinations (platform and server_url required) and PATCH /api/v1/destinations/:id (fields left out keep their value) on OpenRe.Stream (openre.output.write). server_url must pass the destination URL rules (rtmp, rtmps or srt, public hosts); stream_key (at most 512 characters, no spaces) and srt_passphrase (10 to 79 characters) are sealed and never read back — __keep__ leaves them unchanged, empty clears them. Numbers out of range become null: srt_latency_ms 20-8000, custom_video_bitrate 500-50000, custom_audio_bitrate 32-512, custom_fps 15-120; an unknown custom_encoder_preset becomes null. DELETE /api/v1/destinations/:id and POST /api/v1/destinations/:id/test|start|stop take no body.
+ */
+export type OpenreOutputWriteRequest =
+  | {
+      platform?: "youtube" | "twitch" | "kick" | "custom";
+      name?: string | null;
+      server_url?: string;
+      stream_key?: string | null;
+      srt_passphrase?: string | null;
+      srt_latency_ms?: number | string | null;
+      enabled?: boolean | number;
+      auto_start?: boolean | number;
+      quality_preset?: "auto" | "low" | "medium" | "high" | "ultra" | "source";
+      custom_video_bitrate?: number | string | null;
+      custom_audio_bitrate?: number | string | null;
+      custom_fps?: number | string | null;
+      custom_encoder_preset?: string | null;
+    }
+  | NoBody;
+
+/** openre.output-write-result@1.0.0 (owner: openre) */
+/**
+ * openre.output-write-result@1: answers of openre.output.write on OpenRe.Stream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).
+ */
+export type OpenreOutputWriteResult =
+  | {
+      destination: OpenreDestination;
+    }
+  | {
+      ok: boolean;
+      checks: {
+        check: string;
+        ok: boolean;
+        detail?: unknown;
+      }[];
+    }
+  | {
+      output: OpenreOutput;
+    }
+  | {
+      stopping: number;
+    };
+
+/** openre.output@1.0.0 (owner: openre) */
+/**
+ * openre.output@1: one restream output (a destination running for a live session) on OpenRe.Stream (server/store/outputs.js publicOutput), with its desired and actual state, restarts and progress.
+ */
+export interface OpenreOutput {
+  id: string;
+  session_id: string;
+  destination_id: string;
+  desired: "run" | "stop";
+  state: string;
+  worker?: {} | null;
+  restart_attempts?: number;
+  max_restart_attempts?: number;
+  next_restart_at?: string | null;
+  ever_live?: boolean;
+  last_error?: string | null;
+  progress?: unknown;
+  started_at?: string | null;
+  live_at?: string | null;
+  uptime_ms?: number;
+  ended_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** openre.session-end-result@1.0.0 (owner: openre) */
+/**
+ * openre.session-end-result@1: the answer of POST /api/v1/sessions/:id/end on OpenRe.Stream (openre.session.end): 202 { requested: true, state } when the owning worker was asked to disconnect the encoder, 409 { requested: false, state } when the session could not be ended (already ending or over).
+ */
+export interface OpenreSessionEndResult {
+  requested: boolean;
+  state: string;
+}
+
+/** openre.session-read-result@1.0.0 (owner: openre) */
+/**
+ * openre.session-read-result@1: answers of openre.session.read on OpenRe.Stream. GET /api/v1/sessions?stream_id=&state=&limit=&before= → { sessions } (the owner's; a service sees those of the subject it acts for); GET /api/v1/sessions/:id → { session } with transitions, outputs, recording and playback; GET /api/v1/sessions/:id/playback → { playback } (where to watch: flv and rtmp URLs, internal loopback and public); GET /api/v1/workers → { workers } (worker generations; staff and services only).
+ */
+export type OpenreSessionReadResult =
+  | {
+      sessions: {
+        id: string;
+        stream_id: string;
+        protocol: string;
+        state: "starting" | "live" | "ending" | "ended" | "failed";
+        desired_state?: string | null;
+        worker?: {} | null;
+        lease_expires_at?: string | null;
+        key_id?: string | null;
+        end_reason?: string | null;
+        failure_reason?: string | null;
+        media_info?: unknown;
+        revision?: number;
+        created_at: string | null;
+        live_at?: string | null;
+        ended_at?: string | null;
+        duration_seconds?: number;
+        /**
+         * GET /sessions/:id only.
+         */
+        transitions?: unknown[];
+        outputs?: unknown[];
+        recording?: {} | null;
+        playback?: {} | null;
+      }[];
+    }
+  | {
+      session: {
+        id: string;
+        stream_id: string;
+        protocol: string;
+        state: "starting" | "live" | "ending" | "ended" | "failed";
+        desired_state?: string | null;
+        worker?: {} | null;
+        lease_expires_at?: string | null;
+        key_id?: string | null;
+        end_reason?: string | null;
+        failure_reason?: string | null;
+        media_info?: unknown;
+        revision?: number;
+        created_at: string | null;
+        live_at?: string | null;
+        ended_at?: string | null;
+        duration_seconds?: number;
+        /**
+         * GET /sessions/:id only.
+         */
+        transitions?: unknown[];
+        outputs?: unknown[];
+        recording?: {} | null;
+        playback?: {} | null;
+      };
+    }
+  | {
+      playback: {
+        session_id: string;
+        protocol: string;
+        state: string;
+        live: boolean;
+        worker?: {} | null;
+        flv?: {
+          internal_url?: string;
+          public_url?: string;
+          content_type?: string;
+        } | null;
+        rtmp?: {} | null;
+        webrtc?: unknown;
+        hls?: unknown;
+      } | null;
+    }
+  | {
+      workers: {}[];
+    };
+
+/** openre.stream-read-result@1.0.0 (owner: openre) */
+/**
+ * openre.stream-read-result@1: answers of openre.stream.read on OpenRe.Stream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.
+ */
+export type OpenreStreamReadResult =
+  | {
+      streams: OpenreStream[];
+    }
+  | {
+      stream: OpenreStream;
+    }
+  | {
+      keys: {
+        id: string;
+        hint?: string;
+        status: "active" | "grace" | "revoked";
+        created_at?: string | null;
+        grace_until?: string | null;
+        revoked_at?: string | null;
+        last_used_at?: string | null;
+      }[];
+    };
+
+/** openre.stream-write-request@1.0.0 (owner: openre) */
+/**
+ * openre.stream-write-request@1: the body of POST /api/v1/streams and PATCH /api/v1/streams/:id on OpenRe.Stream (openre.stream.write). A person creates streams for themselves; a service names the owner with X-OV-Subject (or owner_subject, which must then match). title is cleaned and cut to 140 characters (Untitled stream when blank), description to 2000; protocols is a non-empty subset of rtmp, whip, webrtc, jsmpeg; external_refs (create only, at most 10, each bound to one stream) link it to another service's record, e.g. { service: live, type: managed_stream, id: 12 }; state (update only) is active or disabled. Fields left out keep their value. DELETE /api/v1/streams/:id (archive; refused while live) takes no body. Refusals are 400 openre.invalid_* and 409 openre.ref_taken / openre.stream_live.
+ */
+export type OpenreStreamWriteRequest =
+  | {
+      owner_subject?: string;
+      title?: string | null;
+      description?: string | null;
+      /**
+       * @minItems 1
+       */
+      protocols?: ["rtmp" | "whip" | "webrtc" | "jsmpeg", ...("rtmp" | "whip" | "webrtc" | "jsmpeg")[]];
+      recording_mode?: "vod" | "clips" | "none";
+      recording_visibility?: "public" | "unlisted" | "private";
+      playback_visibility?: "public" | "unlisted" | "private";
+      mirror_to_live?: boolean | number;
+      state?: "active" | "disabled";
+      /**
+       * @maxItems 10
+       */
+      external_refs?:
+        | []
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | [
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            },
+            {
+              service: string;
+              type: string;
+              id: string | number;
+              label?: string | null;
+            }
+          ]
+        | null;
+    }
+  | NoBody;
+
+/** openre.stream-write-result@1.0.0 (owner: openre) */
+/**
+ * openre.stream-write-result@1: answers of openre.stream.write on OpenRe.Stream. POST /api/v1/streams → 201 { stream, key } where key is the first ingest key, shown once (Cache-Control no-store); PATCH /api/v1/streams/:id → { stream }; DELETE /api/v1/streams/:id → 204 with no body.
+ */
+export interface OpenreStreamWriteResult {
+  stream: OpenreStream;
+  key?: {
+    id: string;
+    /**
+     * The plain ingest key: only in this answer.
+     */
+    key: string;
+    hint: string;
+    shown_once: true;
+  };
+}
+
+/** openre.stream@1.0.0 (owner: openre) */
+/**
+ * openre.stream@1: one stream definition as OpenRe.Stream's API shows it (server/api/v1.js publicDefinition): the owner's stream with its protocols, recording and playback settings, ingest endpoints, key metadata (hints only, never a key) and the open session if any.
+ */
+export interface OpenreStream {
+  id: string;
+  title: string;
+  description?: string | null;
+  owner: SubjectRef;
+  protocols: ("rtmp" | "whip" | "webrtc" | "jsmpeg")[];
+  recording_mode: "vod" | "clips" | "none";
+  recording_visibility?: "public" | "unlisted" | "private";
+  playback_visibility?: "public" | "unlisted" | "private";
+  mirror_to_live?: number | boolean;
+  state: "active" | "disabled" | "archived";
+  revision: number;
+  external_refs?: {
+    service: string;
+    type: string;
+    id: string | number;
+    label?: string | null;
+  }[];
+  /**
+   * Where an encoder publishes (never the key).
+   */
+  ingest: {
+    rtmp?: {
+      url: string;
+      key_hint?: string | null;
+      key_id?: string | null;
+    };
+  };
+  keys: {
+    id: string;
+    hint: string;
+    status: "active" | "grace" | "revoked";
+    grace_until?: string | null;
+    created_at?: string | null;
+    last_used_at?: string | null;
+  }[];
+  session: {
+    id?: string;
+    state?: string;
+    protocol?: string;
+    live_at?: string | null;
+  } | null;
+  created_at: string | null;
+  updated_at: string | null;
+}

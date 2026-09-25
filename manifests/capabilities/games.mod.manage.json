@@ -24,5 +24,6 @@
     "POST /api/v1/mods/:id/grants",
     "DELETE /api/v1/mods/:id/grants/:capability",
     "GET /api/v1/mods/:id/audit"
-  ]
+  ],
+  "outputSchema": "games.mod-manage-result@1"
 }

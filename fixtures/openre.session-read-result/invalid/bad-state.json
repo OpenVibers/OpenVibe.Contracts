@@ -1,0 +1,1 @@
+{ "sessions": [ { "id": "ses_1", "stream_id": "def_1", "protocol": "rtmp", "state": "paused", "created_at": null } ] }

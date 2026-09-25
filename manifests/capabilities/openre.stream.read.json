@@ -17,5 +17,7 @@
     "GET /api/v1/streams",
     "GET /api/v1/streams/:id",
     "GET /api/v1/streams/:id/keys"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "openre.stream-read-result@1"
 }

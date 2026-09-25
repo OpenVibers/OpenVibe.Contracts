@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /internal/tips/deliveries"
-  ]
+  ],
+  "inputSchema": "live.tips-delivery-request@1",
+  "outputSchema": "live.tips-delivery-result@1"
 }

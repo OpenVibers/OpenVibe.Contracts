@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/output-write-result.v1.json",
+  "title": "OpenreOutputWriteResult",
+  "description": "openre.output-write-result@1: answers of openre.output.write on OpenRe.Stream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "destination"
+      ],
+      "properties": {
+        "destination": {
+          "$ref": "destination.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "checks"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "check",
+              "ok"
+            ],
+            "properties": {
+              "check": {
+                "type": "string"
+              },
+              "ok": {
+                "type": "boolean"
+              },
+              "detail": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "output"
+      ],
+      "properties": {
+        "output": {
+          "$ref": "output.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "stopping"
+      ],
+      "properties": {
+        "stopping": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}

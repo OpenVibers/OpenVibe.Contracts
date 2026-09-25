@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/output.v1.json",
+  "title": "OpenreOutput",
+  "description": "openre.output@1: one restream output (a destination running for a live session) on OpenRe.Stream (server/store/outputs.js publicOutput), with its desired and actual state, restarts and progress.",
+  "type": "object",
+  "required": [
+    "id",
+    "session_id",
+    "destination_id",
+    "desired",
+    "state"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "destination_id": {
+      "type": "string"
+    },
+    "desired": {
+      "enum": [
+        "run",
+        "stop"
+      ]
+    },
+    "state": {
+      "type": "string"
+    },
+    "worker": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "restart_attempts": {
+      "type": "integer"
+    },
+    "max_restart_attempts": {
+      "type": "integer"
+    },
+    "next_restart_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "ever_live": {
+      "type": "boolean"
+    },
+    "last_error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "progress": {},
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "live_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "uptime_ms": {
+      "type": "integer"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

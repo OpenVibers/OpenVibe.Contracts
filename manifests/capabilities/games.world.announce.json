@@ -9,5 +9,7 @@
   "resourceConstraints": ["none"],
   "quotaClass": "games-mod-runtime",
   "events": [],
-  "implementedBy": ["mod runtime binding ModApi.announce (apps/server/src/mods/runtime.ts)"]
+  "implementedBy": ["mod runtime binding ModApi.announce (apps/server/src/mods/runtime.ts)"],
+  "inputSchema": "games.announcement@1",
+  "outputSchema": "games.announce-frame@1"
 }

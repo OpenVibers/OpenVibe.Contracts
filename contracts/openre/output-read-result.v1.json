@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/openre/output-read-result.v1.json",
+  "title": "OpenreOutputReadResult",
+  "description": "openre.output-read-result@1: answers of openre.output.read on OpenRe.Stream. GET /api/v1/streams/:id/destinations → { destinations }; GET /api/v1/sessions/:id/outputs → { outputs } (with health); GET /api/v1/destinations/:id/logs and GET /api/v1/outputs/:id/logs?limit= → { logs } (newest first, at most 500).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "destinations"
+      ],
+      "properties": {
+        "destinations": {
+          "type": "array",
+          "items": {
+            "$ref": "destination.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "outputs"
+      ],
+      "properties": {
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "output.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "logs"
+      ],
+      "properties": {
+        "logs": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "type": "object",
+            "required": [
+              "level",
+              "message",
+              "at"
+            ],
+            "properties": {
+              "output_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "level": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
