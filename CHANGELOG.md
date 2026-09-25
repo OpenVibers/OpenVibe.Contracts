@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.45.0 — 2026-09-25
+
+**`live.index_document.upserted|deleted`** also carry Live's public VOD and clip pages (types `vod` and `clip`, id = the Media id, canonical `openvibe.live/vod/<id>` and `/clip/<id>`), alongside channels. Live owns those canonical pages (title, channel, AI overview, transcript), so Live sends their Search documents. `media.index_document.*` is only for VODs and clips whose canonical page is on openvibe.media (apps other than Live), the same rule as Media's sitemap. Fixtures for a VOD, an AI clip (noindex) and a VOD tombstone. Additive.
+
 ## 0.44.0 — 2026-09-25
 
 Search documents from three more owners (roadmap WS-O task 10): **`live.index_document.upserted|deleted`** (a streamer's channel page, type `channel`), **`media.index_document.upserted|deleted`** (public, playable VODs and clips, types `vod` and `clip`) and **`community.index_document.upserted|deleted`** (public forum threads and public pastes, types `thread` and `paste`). They use the same shape as the Wiki, Blog, News and other owners' index events: the `search.index-document@1` document, or a tombstone `{ type, id, revision }`. OpenVibe.Search consumes them through `*.index_document.*`. The live, media and community manifests list them. Fixtures cover the Live payloads. Additive.

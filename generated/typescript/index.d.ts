@@ -6701,11 +6701,11 @@ export interface WikiIndexDocumentDeletedPayload {
 
 /** live.index_document.upserted@1.0.0 (owner: live) */
 /**
- * live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of A streamer's channel page (openvibe.live/@username): its name, bio, what it streams and whether it is live. Sent whenever what Search should hold changed; a banned channel, or one that stopped streaming for good, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.
+ * live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of one of Live's canonical pages: a streamer's channel (type channel, openvibe.live/@username: its name, bio, what it streams and whether it is live), or a public VOD or clip of a Live stream (types vod and clip, openvibe.live/vod/<id> and /clip/<id>: title, channel, AI overview and transcript; the id is the Media id; AI clips are noindex). Sent whenever what Search should hold changed; a banned channel, or a VOD or clip that is deleted, made private or failed, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.
  */
 export type LiveIndexDocumentUpsertedPayload = IndexDocument & {
   owner: "live";
-  type: "channel";
+  type: "channel" | "vod" | "clip";
   id?: string;
   deleted: false;
 };
@@ -6715,7 +6715,7 @@ export type LiveIndexDocumentUpsertedPayload = IndexDocument & {
  * live.index_document.deleted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:live.
  */
 export interface LiveIndexDocumentDeletedPayload {
-  type: "channel";
+  type: "channel" | "vod" | "clip";
   id: string;
   /**
    * Index revision of the tombstone; wins over any document at the same or an older revision.
@@ -6725,7 +6725,7 @@ export interface LiveIndexDocumentDeletedPayload {
 
 /** media.index_document.upserted@1.0.0 (owner: media) */
 /**
- * media.index_document.upserted v1 (OpenVibe.Media; roadmap WS-O task 10). The OpenVibe.Search document of A public, playable VOD or clip page on openvibe.media (readiness playable, visibility public). Sent whenever what Search should hold changed; a VOD or clip that is deleted, made private or stops being playable gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:media.
+ * media.index_document.upserted v1 (OpenVibe.Media; roadmap WS-O task 10). The OpenVibe.Search document of a public, playable VOD or clip whose canonical page is on openvibe.media (openvibe.media/v/<id>, /c/<id>): readiness playable, visibility public, made by a person, and owned by an app other than Live (Live's own VODs and clips are live.index_document, type vod or clip, on Live's pages). Sent whenever what Search should hold changed; a VOD or clip that is deleted, made private or stops being playable gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:media.
  */
 export type MediaIndexDocumentUpsertedPayload = IndexDocument & {
   owner: "media";

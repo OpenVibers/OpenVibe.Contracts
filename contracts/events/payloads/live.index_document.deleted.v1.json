@@ -12,7 +12,11 @@
   "additionalProperties": false,
   "properties": {
     "type": {
-      "const": "channel"
+      "enum": [
+        "channel",
+        "vod",
+        "clip"
+      ]
     },
     "id": {
       "type": "string",
