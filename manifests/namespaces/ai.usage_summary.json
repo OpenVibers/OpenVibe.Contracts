@@ -1,0 +1,48 @@
+{
+  "namespace": "ai.usage_summary",
+  "owner": "ai",
+  "version": 1,
+  "description": "How much OpenVibe AI did on this person's behalf over the last 30 days (runs, tokens, which services asked). Private; OpenVibe.AI's run log stays the truth.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [],
+  "quotaBytes": 2048,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "runs_30d": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "tokens_30d": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "by_service": {
+        "type": "object",
+        "maxProperties": 30,
+        "propertyNames": {
+          "pattern": "^[a-z][a-z0-9-]{1,39}$"
+        },
+        "additionalProperties": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "last_run_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "maxLength": 40
+      },
+      "computed_at": {
+        "type": "string",
+        "maxLength": 40
+      }
+    }
+  }
+}

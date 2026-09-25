@@ -1,0 +1,53 @@
+{
+  "namespace": "wiki.projects",
+  "owner": "wiki",
+  "version": 1,
+  "description": "The wiki spaces this person owns or edits. Only public spaces are named; the others are counted. Wiki recomputes it when a permission changes.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [
+    "spaces"
+  ],
+  "quotaBytes": 8192,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "spaces": {
+        "type": "array",
+        "maxItems": 50,
+        "items": {
+          "type": "object",
+          "required": [
+            "slug",
+            "name",
+            "role"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "slug": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "role": {
+              "enum": [
+                "owner",
+                "editor"
+              ]
+            }
+          }
+        }
+      },
+      "private_count": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  }
+}

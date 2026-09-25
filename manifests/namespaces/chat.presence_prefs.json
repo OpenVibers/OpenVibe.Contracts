@@ -1,0 +1,22 @@
+{
+  "namespace": "chat.presence_prefs",
+  "owner": "chat",
+  "version": 1,
+  "description": "Whether this person appears by name in chat user lists. Hidden people are counted, never named. Chat enforces it.",
+  "writers": [
+    "owner",
+    "user"
+  ],
+  "publicFields": [],
+  "quotaBytes": 256,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "show_in_user_list": {
+        "type": "boolean"
+      }
+    }
+  }
+}

@@ -426,6 +426,24 @@ export interface ModuleNamespace {
    * How records of the previous version are upgraded.
    */
   migration?: string;
+  /**
+   * Field-level read rules: a service other than the owner, holding network.modules.read for the namespace, sees publicFields plus the fields listed for it here, and nothing else. A service not listed sees publicFields only. The owner and the person always see the whole record.
+   */
+  readers?: {
+    [k: string]: string[] | undefined;
+  };
+  /**
+   * Declarative upgrades from each earlier version, applied in order when a stored record's version is below the namespace's: rename moves a field, drop removes fields, defaults adds fields the record lacks. Network upgrades a record when it is read and stores the upgraded record on its next write.
+   */
+  migrations?: {
+    from: number;
+    to: number;
+    rename?: {
+      [k: string]: string | undefined;
+    };
+    drop?: string[];
+    defaults?: {};
+  }[];
 }
 
 /** modules.module-record@1.0.0 (owner: network) */

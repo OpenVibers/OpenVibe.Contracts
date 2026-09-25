@@ -17,6 +17,28 @@
     "quotaBytes": { "type": "integer", "minimum": 64, "maximum": 65536 },
     "onOwnerRemoved": { "enum": ["retain-readonly", "delete-after-retention"], "description": "What happens to records when the owning service or mod is retired." },
     "retentionDays": { "type": "integer", "minimum": 0 },
-    "migration": { "type": "string", "description": "How records of the previous version are upgraded." }
+    "migration": { "type": "string", "description": "How records of the previous version are upgraded." },
+    "readers": {
+      "type": "object",
+      "description": "Field-level read rules: a service other than the owner, holding network.modules.read for the namespace, sees publicFields plus the fields listed for it here, and nothing else. A service not listed sees publicFields only. The owner and the person always see the whole record.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+      "additionalProperties": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+    },
+    "migrations": {
+      "type": "array",
+      "description": "Declarative upgrades from each earlier version, applied in order when a stored record's version is below the namespace's: rename moves a field, drop removes fields, defaults adds fields the record lacks. Network upgrades a record when it is read and stores the upgraded record on its next write.",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "additionalProperties": false,
+        "properties": {
+          "from": { "type": "integer", "minimum": 1 },
+          "to": { "type": "integer", "minimum": 2 },
+          "rename": { "type": "object", "additionalProperties": { "type": "string" } },
+          "drop": { "type": "array", "items": { "type": "string" } },
+          "defaults": { "type": "object" }
+        }
+      }
+    }
   }
 }

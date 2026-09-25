@@ -1,10 +1,11 @@
 {
   "namespace": "tools.usage",
   "owner": "tools",
-  "version": 1,
-  "description": "Recently used tools, for the launcher. Written by Tools only.",
+  "version": 2,
+  "description": "Recently used tools and favourite tools, for the Tools launcher and my.openvibe.network. Tools writes recent; the person or Tools writes favorites.",
   "writers": [
-    "owner"
+    "owner",
+    "user"
   ],
   "publicFields": [],
   "quotaBytes": 8192,
@@ -33,7 +34,23 @@
             }
           }
         }
+      },
+      "favorites": {
+        "type": "array",
+        "maxItems": 24,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,79}$"
+        }
       }
     }
-  }
+  },
+  "migration": "v2 adds favorites; every v1 record is a valid v2 record.",
+  "migrations": [
+    {
+      "from": 1,
+      "to": 2
+    }
+  ]
 }

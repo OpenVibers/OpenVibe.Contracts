@@ -4,6 +4,24 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.41.0 — 2026-09-25
+
+User modules, the rest of D06 (roadmap WS-B task 9):
+
+- **Field-level read rules.** A namespace may list `readers`: `{ service: [fields] }`. A service other than the owner that reads a record (with `network.modules.read`) sees only the public fields and the fields listed for it. `modules.serviceView(namespace, service, data)` applies the rule; Network's service read applies it.
+- **Version migration.** A namespace may list declarative `migrations` (`{ from, to, rename, drop, defaults }`). `modules.upgrade(namespace, data, version)` brings a stored record to the current version. Network upgrades a record when it is read and stores it at the current version on the next write. The contract test requires a path from every earlier version.
+- **New namespaces:**
+  - `chat.dm_settings`: new conversations from everyone or nobody, group invites, previews;
+  - `chat.presence_prefs`: whether the person is named in chat user lists;
+  - `live.stats`: 30-day streaming summary;
+  - `ai.usage_summary`: 30-day AI runs on the person's behalf;
+  - `community.profile`: threads, posts, comments, pastes, first and last activity;
+  - `wiki.projects`: spaces the person owns or edits, where only public ones are named.
+- **`chat.tts_defaults` v2**, now owned by Chat. Its fields are the settings Live's chat panel actually has: `send`, `send_while_live`, `volume`, `sounds`, `sound_volume`, `sources`. v1 (voice, rate, muted) was never written, and a v1 record upgrades to an empty v2 record.
+- **`tools.usage` v2** adds `favorites` (unique tool ids, at most 24). The person may write it; every v1 record is valid v2.
+- **`ai.preferences`** is readable by `ai` (all five fields).
+- The chat and ai service manifests list their new namespaces.
+
 ## 0.40.0 — 2026-09-24
 
 The chat manifest names its own domain: **openvibe.chat** (`domains`, `publicOrigin`). OpenVibe.Chat serves the site itself (global chat, messages, settings, sign-in with the Network), and Network's first-party CORS list, which comes from these manifests, now includes it. Additive.

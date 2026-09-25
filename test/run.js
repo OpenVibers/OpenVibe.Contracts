@@ -556,9 +556,26 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
         for (const f of n.publicFields) ok(n.schema.properties && n.schema.properties[f], `${n.namespace} public field ${f} is in its schema`);
         ok(n.onOwnerRemoved !== 'delete-after-retention' || Number.isInteger(n.retentionDays), `${n.namespace} deletion has a retention period`);
     }
-    ok(modules.validateData('chat.tts_defaults', { voice: 'a', rate: 1 }).valid, 'valid module data passes');
-    ok(!modules.validateData('chat.tts_defaults', { rate: 9 }).valid, 'out-of-range value fails');
-    ok(!modules.validateData('chat.tts_defaults', { voice: 'a', password: 'x' }).valid, 'unknown field fails');
+    for (const n of modules.namespaces) {
+        for (const [svc, fields] of Object.entries(n.readers || {})) {
+            ok(serviceIds.has(svc) && svc !== n.owner, `${n.namespace} reader ${svc} is another service`);
+            for (const f of fields) ok(n.schema.properties[f], `${n.namespace} field ${f} readable by ${svc} is in its schema`);
+        }
+        // Every earlier version has a migration path, and each step's result is valid at the next version.
+        for (let v = 1; v < n.version; v++) ok(modules.upgrade(n.namespace, {}, v) && modules.upgrade(n.namespace, {}, v).version === n.version, `${n.namespace} v${v} upgrades to v${n.version}`);
+        ok(n.version === 1 || typeof n.migration === 'string', `${n.namespace} v${n.version} says how older records upgrade`);
+    }
+    ok(modules.validateData('chat.tts_defaults', { send: true, volume: 40, sources: { kick: false } }).valid, 'valid module data passes');
+    ok(!modules.validateData('chat.tts_defaults', { volume: 101 }).valid, 'out-of-range value fails');
+    ok(!modules.validateData('chat.tts_defaults', { send: true, password: 'x' }).valid, 'unknown field fails');
+    const up = modules.upgrade('chat.tts_defaults', { voice: 'a', rate: 1, muted: true }, 1);
+    ok(up.version === 2 && up.upgraded && JSON.stringify(up.data) === '{}' && modules.validateData('chat.tts_defaults', up.data).valid, 'a v1 tts record upgrades to a valid v2 record');
+    ok(modules.upgrade('tools.usage', { recent: [{ tool: 'img' }] }, 1).data.recent.length === 1 && !modules.upgrade('tools.usage', {}, 2).upgraded, 'tools.usage v1 → v2 keeps recent; current records are left alone');
+    ok(modules.upgrade('live.profile', {}, 1).upgraded === false, 'a current-version record is not upgraded');
+    ok(JSON.stringify(modules.serviceView('ai.preferences', 'ai', { style: 'casual', history: false })) === '{"style":"casual","history":false}', 'a listed reader sees its fields');
+    ok(JSON.stringify(modules.serviceView('live.stats', 'ai', { streams_30d: 2, new_followers_30d: 5 })) === '{"streams_30d":2}', 'an unlisted service sees public fields only');
+    ok(modules.serviceView('live.stats', 'live', { new_followers_30d: 5 }).new_followers_30d === 5, 'the owner sees everything');
+    ok(modules.validateData('tools.usage', { favorites: ['img', 'yt'] }).valid && !modules.validateData('tools.usage', { favorites: ['img', 'img'] }).valid, 'favorites are unique tool ids');
     ok(!modules.validateData('tools.usage', { recent: Array.from({ length: 30 }, () => ({ tool: 'x'.repeat(80), at: 'y'.repeat(300) })) }).valid, 'over quota fails');
     ok(!modules.validateData('nope.nope', {}).valid && !modules.validateData('chat.preferences', []).valid, 'unknown namespace / non-object fails');
     ok(JSON.stringify(modules.publicView('live.profile', { followers: 3, stream_minutes_30d: 99 })) === '{"followers":3}', 'public view keeps only public fields');

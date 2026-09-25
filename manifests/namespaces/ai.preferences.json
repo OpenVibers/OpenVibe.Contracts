@@ -39,5 +39,14 @@
         "type": "boolean"
       }
     }
+  },
+  "readers": {
+    "ai": [
+      "style",
+      "length",
+      "perspective",
+      "personalization",
+      "history"
+    ]
   }
 }

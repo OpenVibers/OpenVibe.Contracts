@@ -1,0 +1,31 @@
+{
+  "namespace": "chat.dm_settings",
+  "owner": "chat",
+  "version": 1,
+  "description": "Who may start direct messages with this person, whether they may be added to group conversations, and whether notifications show message text. Chat enforces it; blocks stay in Chat.",
+  "writers": [
+    "owner",
+    "user"
+  ],
+  "publicFields": [],
+  "quotaBytes": 512,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "new_conversations": {
+        "enum": [
+          "everyone",
+          "nobody"
+        ]
+      },
+      "group_invites": {
+        "type": "boolean"
+      },
+      "previews": {
+        "type": "boolean"
+      }
+    }
+  }
+}

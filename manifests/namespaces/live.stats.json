@@ -1,0 +1,46 @@
+{
+  "namespace": "live.stats",
+  "owner": "live",
+  "version": 1,
+  "description": "This person's streaming over the last 30 days, recomputed by Live after each stream and daily. A summary; Live's streams and follows stay the truth.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [
+    "streams_30d",
+    "stream_minutes_30d",
+    "peak_viewers_30d"
+  ],
+  "quotaBytes": 1024,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "streams_30d": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "stream_minutes_30d": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "peak_viewers_30d": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "avg_viewers_30d": {
+        "type": "number",
+        "minimum": 0
+      },
+      "new_followers_30d": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "computed_at": {
+        "type": "string",
+        "maxLength": 40
+      }
+    }
+  }
+}

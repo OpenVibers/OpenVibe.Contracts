@@ -1,30 +1,70 @@
 {
   "namespace": "chat.tts_defaults",
-  "owner": "live",
-  "version": 1,
-  "description": "Default text-to-speech voice and rate for this person.",
+  "owner": "chat",
+  "version": 2,
+  "description": "A person's chat text-to-speech and sound settings, the same on every site with OpenVibe chat: whether their own messages are read aloud (also while they broadcast), how loud other people's messages and chat sounds play, and which relayed platforms are read. Chat owns it; the person or Chat writes it.",
   "writers": [
     "owner",
     "user"
   ],
   "publicFields": [],
-  "quotaBytes": 2048,
+  "quotaBytes": 1024,
   "onOwnerRemoved": "retain-readonly",
+  "migration": "v1 (voice, rate, muted) was owned by Live and never written; v2 moves it to Chat with the settings Live's chat panel actually has. A v1 record upgrades to an empty v2 record (Chat's defaults).",
+  "migrations": [
+    {
+      "from": 1,
+      "to": 2,
+      "drop": [
+        "voice",
+        "rate",
+        "muted"
+      ]
+    }
+  ],
   "schema": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "voice": {
-        "type": "string",
-        "maxLength": 80
-      },
-      "rate": {
-        "type": "number",
-        "minimum": 0.5,
-        "maximum": 2
-      },
-      "muted": {
+      "send": {
         "type": "boolean"
+      },
+      "send_while_live": {
+        "type": "boolean"
+      },
+      "volume": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "sounds": {
+        "type": "boolean"
+      },
+      "sound_volume": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "sources": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "native": {
+            "type": "boolean"
+          },
+          "robotstreamer": {
+            "type": "boolean"
+          },
+          "kick": {
+            "type": "boolean"
+          },
+          "youtube": {
+            "type": "boolean"
+          },
+          "twitch": {
+            "type": "boolean"
+          }
+        }
       }
     }
   }

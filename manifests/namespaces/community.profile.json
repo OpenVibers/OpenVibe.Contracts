@@ -1,0 +1,54 @@
+{
+  "namespace": "community.profile",
+  "owner": "community",
+  "version": 1,
+  "description": "This person's OpenVibe Community activity: threads, posts, comments and pastes they wrote, and when they were first and last active. Community recomputes it on each contribution.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [
+    "threads",
+    "posts",
+    "comments",
+    "pastes",
+    "first_active_at"
+  ],
+  "quotaBytes": 1024,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "threads": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "posts": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "comments": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "pastes": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "first_active_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "maxLength": 40
+      },
+      "last_active_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "maxLength": 40
+      }
+    }
+  }
+}
