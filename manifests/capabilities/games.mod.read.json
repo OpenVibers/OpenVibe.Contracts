@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Read the browser game's installed mods: manifest, content pack, status, trust tier, requested and granted capabilities. Public; no token needed.",
-  "outputSchema": "mods.mod-manifest@1",
+  "outputSchema": "games.mod-read-result@1",
   "permissions": ["games:mods:read"],
   "resourceConstraints": ["none"],
   "quotaClass": "games-read",

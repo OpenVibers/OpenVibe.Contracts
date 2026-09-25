@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/forum-post.v1.json",
+  "title": "CommunityForumPost",
+  "description": "community.forum-post@1: one forum post (the opening post of a thread or a reply) as OpenVibe.Community's API shows it (server/forum/service.js shapePost). A deleted post keeps its place with no author, body, attachments or pastes.",
+  "type": "object",
+  "required": [
+    "id",
+    "thread_id",
+    "is_opening",
+    "origin",
+    "author",
+    "body_markdown",
+    "body_html",
+    "revision",
+    "deleted",
+    "can_edit",
+    "attachments",
+    "pastes"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "thread_id": {
+      "type": "integer"
+    },
+    "is_opening": {
+      "type": "boolean"
+    },
+    "origin": {
+      "type": "string"
+    },
+    "author": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.",
+      "properties": {
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_ai": {
+          "const": true
+        },
+        "is_system": {
+          "const": true
+        }
+      }
+    },
+    "body_markdown": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "body_html": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "deleted": {
+      "type": "boolean"
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "can_edit": {
+      "type": "boolean"
+    },
+    "attachments": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "media_id",
+          "url"
+        ],
+        "properties": {
+          "media_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "filename": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mime": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "pastes": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "slug",
+          "url"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "screenshot_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lines": {
+            "type": "integer"
+          },
+          "excerpt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

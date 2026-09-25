@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/paste-create-result.v1.json",
+  "title": "CommunityPasteCreateResult",
+  "description": "community.paste-create-result@1: the answer of POST /api/pastes on OpenVibe.Community (community.paste.create), a text paste or, with a multipart screenshot part, an image paste (server/pastes/service.js created): 201 { id, slug, url, paste } — url is /p/<slug> and paste the new paste as community.paste@1. Refusals are { error } with 400 (no content, too large, not an image), 409 (a service's slug is taken), 429 (cooldown or daily limit) or 502/503 (Media unavailable for a screenshot).",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "url",
+    "paste"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^/p/"
+    },
+    "paste": {
+      "$ref": "paste.v1.json"
+    }
+  }
+}

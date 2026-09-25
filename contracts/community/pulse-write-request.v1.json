@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/pulse-write-request.v1.json",
+  "title": "CommunityPulseWriteRequest",
+  "description": "community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities (ref.service must be that service: 403 pulse.foreign_ref otherwise), with a title (whitespace collapsed, 1 to 300 characters) and an absolute http(s) url (at most 2000 characters). origin defaults to X-OV-Origin (user, ai or system; X-OV-Origin: ai always wins); an origin user item names the person in X-OV-Subject. occurred_at is an ISO time, not in the future (default now). Only public activity enters Pulse: a visibility other than public is 400 pulse.not_public. The same ref again updates the item. Unknown fields are ignored. DELETE /api/v1/pulse/items/:service/:type/:id takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ref",
+        "title",
+        "url"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "../common/entity-ref.v1.json"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "At most 300 characters once whitespace is collapsed."
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2000,
+          "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://"
+        },
+        "origin": {
+          "enum": [
+            "user",
+            "ai",
+            "system",
+            null
+          ]
+        },
+        "occurred_at": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            null
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

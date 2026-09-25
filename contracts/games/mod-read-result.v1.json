@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/mod-read-result.v1.json",
+  "title": "GamesModReadResult",
+  "description": "games.mod-read-result@1: answers of games.mod.read on OpenVibe.Games (public). GET /api/v1/mods → { mods } (every installed mod's public view: status and grants); GET /api/v1/mods/:id → one mod's public view with its installed manifest (mods.mod-manifest@1) and pack. An unknown id is 404 mod.not_found.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "mods"
+      ],
+      "properties": {
+        "mods": {
+          "type": "array",
+          "items": {
+            "$ref": "mod-view.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "mod-view.v1.json"
+        },
+        {
+          "type": "object",
+          "required": [
+            "manifest",
+            "pack"
+          ],
+          "properties": {
+            "manifest": {
+              "$ref": "../mods/mod-manifest.v1.json"
+            },
+            "pack": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

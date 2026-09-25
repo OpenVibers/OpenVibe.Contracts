@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Forum writes as a service: create threads and replies in a space, vote on threads, and edit or delete one's own posts, as the acting subject (X-OV-Subject) or as origin \"ai\" (no author, labelled as AI). Space visibility (public, members, staff), locks and limits are checked by Community.",
-  "outputSchema": "common.entity-ref@1",
+  "outputSchema": "community.post-write-result@1",
   "permissions": [
     "community:write"
   ],

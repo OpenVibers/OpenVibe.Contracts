@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/mod-view.v1.json",
+  "title": "GamesModView",
+  "description": "games.mod-view@1: an installed mod's public view on OpenVibe.Games (apps/server/src/mods/routes.ts publicView): identity, runtime, trust tier, lifecycle status, the capabilities its manifest requests and those currently granted.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "version",
+    "target",
+    "runtime",
+    "trust_tier",
+    "status",
+    "requested",
+    "granted",
+    "installed_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^mod_"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string",
+      "description": "e.g. games.browser"
+    },
+    "runtime": {
+      "type": "string",
+      "description": "e.g. games-content@1"
+    },
+    "trust_tier": {
+      "enum": [
+        "unreviewed",
+        "reviewed",
+        "first-party"
+      ]
+    },
+    "status": {
+      "enum": [
+        "enabled",
+        "disabled",
+        "revoked"
+      ]
+    },
+    "requested": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Capabilities the manifest asks for."
+    },
+    "granted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Capabilities approved and not revoked."
+    },
+    "installed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

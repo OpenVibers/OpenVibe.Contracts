@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Read public release metadata: an app's published, deprecated and revoked releases with their manifests, compatibility ranges and the app's trust tier (metadata only; it never grants anything). Drafts are never returned. Public; no token needed.",
-  "outputSchema": "codes.app-manifest@1",
+  "outputSchema": "codes.release-read-result@1",
   "permissions": ["codes:releases:read"],
   "resourceConstraints": ["none"],
   "quotaClass": "codes-read",

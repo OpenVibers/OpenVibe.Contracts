@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/release-read-result.v1.json",
+  "title": "CodesReleaseReadResult",
+  "description": "codes.release-read-result@1: answers of codes.release.read on OpenVibe.Codes (public; no token needed, but a token that is presented must hold the capability; never drafts). GET /api/v1/apps/:app/releases → { app_id, trust, releases } (published, deprecated and revoked releases, newest first); GET /api/v1/apps/:app/trust → { app_id, tier, note, set_by, set_at, note_on_authority } (metadata only: grants in OpenVibe.Network are the authority); GET /api/v1/releases/:id → { release, manifest } (the manifest as published: codes.app-manifest@1 for an app, mods.mod-manifest@1 for a mod). An id that is not an app or a release is 404.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "app_id",
+        "trust",
+        "releases"
+      ],
+      "properties": {
+        "app_id": {
+          "type": "string",
+          "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "trust": {
+          "type": "object",
+          "required": [
+            "tier"
+          ],
+          "properties": {
+            "tier": {
+              "type": "string"
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "set_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "set_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "releases": {
+          "type": "array",
+          "items": {
+            "$ref": "release.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "app_id",
+        "tier",
+        "note_on_authority"
+      ],
+      "properties": {
+        "app_id": {
+          "type": "string",
+          "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "set_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "set_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note_on_authority": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "release",
+        "manifest"
+      ],
+      "properties": {
+        "release": {
+          "$ref": "release.v1.json"
+        },
+        "manifest": {
+          "anyOf": [
+            {
+              "$ref": "app-manifest.v1.json"
+            },
+            {
+              "$ref": "../mods/mod-manifest.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

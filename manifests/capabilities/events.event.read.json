@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "internal",
   "description": "Read retained events of every visibility with a seq cursor (pull consumers), keep per-consumer checkpoints, and open realtime streams as a service principal.",
-  "outputSchema": "events.event-envelope@1",
+  "outputSchema": "events.read-result@1",
   "permissions": [
     "events:read"
   ],

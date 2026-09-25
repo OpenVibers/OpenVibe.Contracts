@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/post-write-result.v1.json",
+  "title": "CommunityPostWriteResult",
+  "description": "community.post-write-result@1: answers of the forum writes on OpenVibe.Community (community.post.create). POST /api/v1/spaces/:space/threads → 201 { thread, post } (the thread and its opening post); POST …/threads/:slug/posts → 201 { post, page, url } (the reply, the page it lands on and its address with #post-<id>); PUT /api/v1/posts/:id → { post }; POST …/threads/:slug/votes → { thread_id, score, upvotes, downvotes, my_vote }; DELETE /api/v1/posts/:id → { ok, id } (deleting the opening post deletes the thread: { ok, id, deleted: thread }); DELETE /api/v1/spaces/:space/threads/:slug → { ok, id, deleted: thread }. Refusals are problem+json.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "thread",
+        "post"
+      ],
+      "properties": {
+        "thread": {
+          "$ref": "forum-thread.v1.json"
+        },
+        "post": {
+          "$ref": "forum-post.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "post"
+      ],
+      "properties": {
+        "post": {
+          "$ref": "forum-post.v1.json"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "thread_id",
+        "score",
+        "upvotes",
+        "downvotes",
+        "my_vote"
+      ],
+      "properties": {
+        "thread_id": {
+          "type": "integer"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "upvotes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "downvotes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "my_vote": {
+          "enum": [
+            1,
+            -1,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "id"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "id": {
+          "type": "integer"
+        },
+        "deleted": {
+          "const": "thread"
+        }
+      }
+    }
+  ]
+}

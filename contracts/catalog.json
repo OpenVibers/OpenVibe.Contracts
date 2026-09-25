@@ -269,6 +269,15 @@
       "status": "active"
     },
     {
+      "id": "codes.release-read-result",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/release-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "events.redaction-directive",
       "version": "1.0.0",
       "owner": "events",
@@ -3634,6 +3643,33 @@
       "status": "active"
     },
     {
+      "id": "games.mod-manage-request",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/mod-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod-read-result",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/mod-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.mod-view",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/mod-view.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.object.deleted",
       "version": "1.0.0",
       "owner": "media",
@@ -3893,6 +3929,51 @@
       "version": "1.0.0",
       "owner": "community",
       "schema": "community/pulse-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.forum-post",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/forum-post.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.forum-thread",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/forum-thread.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.paste-create-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/paste-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.post-write-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/post-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.pulse-write-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/pulse-write-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

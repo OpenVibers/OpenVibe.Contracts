@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Create a paste (text or screenshot). A service token creates it for the acting subject named in X-OV-Subject, or as origin \"ai\" for derived pastes (roadmap 33).",
-  "outputSchema": "common.entity-ref@1",
+  "outputSchema": "community.paste-create-result@1",
   "permissions": [
     "community:write"
   ],

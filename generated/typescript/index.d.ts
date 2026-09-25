@@ -5798,6 +5798,34 @@ export interface CodesRelease {
   };
 }
 
+/** codes.release-read-result@1.0.0 (owner: codes) */
+/**
+ * codes.release-read-result@1: answers of codes.release.read on OpenVibe.Codes (public; no token needed, but a token that is presented must hold the capability; never drafts). GET /api/v1/apps/:app/releases → { app_id, trust, releases } (published, deprecated and revoked releases, newest first); GET /api/v1/apps/:app/trust → { app_id, tier, note, set_by, set_at, note_on_authority } (metadata only: grants in OpenVibe.Network are the authority); GET /api/v1/releases/:id → { release, manifest } (the manifest as published: codes.app-manifest@1 for an app, mods.mod-manifest@1 for a mod). An id that is not an app or a release is 404.
+ */
+export type CodesReleaseReadResult =
+  | {
+      app_id: string;
+      trust: {
+        tier: string;
+        note?: string | null;
+        set_by?: string | null;
+        set_at?: string | null;
+      };
+      releases: CodesRelease[];
+    }
+  | {
+      app_id: string;
+      tier: string;
+      note?: string | null;
+      set_by?: string | null;
+      set_at?: string | null;
+      note_on_authority: string;
+    }
+  | {
+      release: CodesRelease;
+      manifest: AppManifest | ModManifest | null;
+    };
+
 /** events.redaction-directive@1.0.0 (owner: events) */
 /**
  * payload.redacts (ADR-026): a producer takes back events it published earlier. Any event may carry it, normally the producer's own *.deleted event. It names event_ids, or subject_type + subject_ids, or both, never an empty list. event_ids names events directly; subject_type + subject_ids names every stored event of the same source (for an app, the same project and environment) about those subjects. OpenVibe.Events rewrites each target into a tombstone (events.tombstone-payload@1) in the transaction that stores the directive. Naming another source's event is 403 events.redaction_not_allowed (the whole batch is refused); a malformed directive is 422 events.invalid_redaction. An event that carries a directive is never redacted itself.
@@ -5932,7 +5960,7 @@ export type EventsReadRequest =
 
 /** events.read-result@1.0.0 (owner: events) */
 /**
- * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, event }], next_after_seq, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). An app sees only its project's events in its token's environment plus public first-party events.
+ * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, event }], next_after_seq, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } (id: the seq; a gap message when the cursor is older than retention). An app sees only its project's events in its token's environment plus public first-party events.
  */
 export type EventsReadResult =
   | {
@@ -36359,31 +36387,7 @@ export interface GamesAnnouncement {
  * games.mod-manage-result@1: answers of games.mod.manage on OpenVibe.Games (staff: an owner/admin session, or a service token with games.mod.manage). POST /api/v1/mods → 201 the installed mod's public view; POST /api/v1/mods/:id/enable|disable|revoke, POST /api/v1/mods/:id/grants and DELETE /api/v1/mods/:id/grants/:capability → 200 the mod's public view after the change (revoke is terminal); GET /api/v1/mods/:id/audit?limit= → { audit } (install, grant, use, deny and revoke entries, at most 500). Errors are problem+json (mod.not_found, mod.invalid_request, capability.denied, …).
  */
 export type GamesModManageResult =
-  | {
-      id: string;
-      name: string;
-      version: string;
-      /**
-       * e.g. games.browser
-       */
-      target: string;
-      /**
-       * e.g. games-content@1
-       */
-      runtime: string;
-      trust_tier: "unreviewed" | "reviewed" | "first-party";
-      status: "enabled" | "disabled" | "revoked";
-      /**
-       * Capabilities the manifest asks for.
-       */
-      requested: string[];
-      /**
-       * Capabilities approved and not revoked.
-       */
-      granted: string[];
-      installed_at: string;
-      updated_at: string;
-    }
+  | GamesModView
   | {
       /**
        * @maxItems 500
@@ -36426,6 +36430,148 @@ export type GamesPropPlacement =
   | {
       key: string;
     };
+
+/** games.mod-manage-request@1.0.0 (owner: games) */
+/**
+ * games.mod-manage-request@1: bodies of games.mod.manage on OpenVibe.Games (staff: an owner/admin session, or a service token with games.mod.manage). POST /api/v1/mods installs a mod: { manifest, pack?, approve?, trustTier?, enable? } — manifest is a mods.mod-manifest@1 the Games runtime can run (games.browser, games-content@1); pack is its games-content@1 data (announcements and props, validated strictly: unknown keys refused); approve lists at most 64 requested capabilities to grant; trustTier is unreviewed (default), reviewed or first-party; enable true starts it enabled. A mod already installed is 409 mod.exists. POST /api/v1/mods/:id/grants: { capability }. POST /api/v1/mods/:id/revoke: { reason? } (terminal). POST /api/v1/mods/:id/enable|disable take an empty JSON object or no body; DELETE /api/v1/mods/:id/grants/:capability and GET /api/v1/mods/:id/audit take no body. Bodies are at most 256 KB; unknown top-level fields are ignored.
+ */
+export type GamesModManageRequest =
+  | {
+      manifest: ModManifest;
+      pack?: {
+        /**
+         * @maxItems 10
+         */
+        announcements?:
+          | []
+          | [GamesAnnouncement]
+          | [GamesAnnouncement, GamesAnnouncement]
+          | [GamesAnnouncement, GamesAnnouncement, GamesAnnouncement]
+          | [GamesAnnouncement, GamesAnnouncement, GamesAnnouncement, GamesAnnouncement]
+          | [GamesAnnouncement, GamesAnnouncement, GamesAnnouncement, GamesAnnouncement, GamesAnnouncement]
+          | [
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement
+            ]
+          | [
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement
+            ]
+          | [
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement
+            ]
+          | [
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement
+            ]
+          | [
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement,
+              GamesAnnouncement
+            ];
+        /**
+         * @maxItems 50
+         */
+        props?: {
+          key: string;
+          item: string;
+          /**
+           * @minItems 3
+           * @maxItems 3
+           */
+          pos: [number, number, number];
+          yaw?: number;
+        }[];
+      };
+      /**
+       * @maxItems 64
+       */
+      approve?: string[];
+      trustTier?: "unreviewed" | "reviewed" | "first-party";
+      enable?: boolean;
+    }
+  | {
+      capability: string;
+    }
+  | {
+      /**
+       * Revoke only; cut to 500 characters.
+       */
+      reason?: string;
+    };
+
+/** games.mod-read-result@1.0.0 (owner: games) */
+/**
+ * games.mod-read-result@1: answers of games.mod.read on OpenVibe.Games (public). GET /api/v1/mods → { mods } (every installed mod's public view: status and grants); GET /api/v1/mods/:id → one mod's public view with its installed manifest (mods.mod-manifest@1) and pack. An unknown id is 404 mod.not_found.
+ */
+export type GamesModReadResult =
+  | {
+      mods: GamesModView[];
+    }
+  | (GamesModView & {
+      manifest: ModManifest;
+      pack: {};
+    });
+
+/** games.mod-view@1.0.0 (owner: games) */
+/**
+ * games.mod-view@1: an installed mod's public view on OpenVibe.Games (apps/server/src/mods/routes.ts publicView): identity, runtime, trust tier, lifecycle status, the capabilities its manifest requests and those currently granted.
+ */
+export interface GamesModView {
+  id: string;
+  name: string;
+  version: string;
+  /**
+   * e.g. games.browser
+   */
+  target: string;
+  /**
+   * e.g. games-content@1
+   */
+  runtime: string;
+  trust_tier: "unreviewed" | "reviewed" | "first-party";
+  status: "enabled" | "disabled" | "revoked";
+  /**
+   * Capabilities the manifest asks for.
+   */
+  requested: string[];
+  /**
+   * Capabilities approved and not revoked.
+   */
+  granted: string[];
+  installed_at: string;
+  updated_at: string;
+}
 
 /** media.object.deleted@1.0.0 (owner: media) */
 /**
@@ -37573,6 +37719,358 @@ export type CommunityPulseWriteResult =
   | {
       removed: number;
     };
+
+/** community.forum-post@1.0.0 (owner: community) */
+/**
+ * community.forum-post@1: one forum post (the opening post of a thread or a reply) as OpenVibe.Community's API shows it (server/forum/service.js shapePost). A deleted post keeps its place with no author, body, attachments or pastes.
+ */
+export interface CommunityForumPost {
+  id: number;
+  thread_id: number;
+  is_opening: boolean;
+  origin: string;
+  /**
+   * The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.
+   */
+  author: {
+    subject?: string | null;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+    is_ai?: true;
+    is_system?: true;
+  } | null;
+  body_markdown: string | null;
+  body_html: string | null;
+  revision: number;
+  deleted: boolean;
+  created_at?: string | null;
+  updated_at?: string | null;
+  can_edit: boolean;
+  /**
+   * @maxItems 4
+   */
+  attachments:
+    | []
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ]
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ]
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ]
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ];
+  /**
+   * @maxItems 4
+   */
+  pastes:
+    | []
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ]
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ]
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ]
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ];
+}
+
+/** community.forum-thread@1.0.0 (owner: community) */
+/**
+ * community.forum-thread@1: one forum thread as OpenVibe.Community's /api/v1/spaces API shows it (server/forum/service.js shapeThread): where it lives, its kind and status, category, members-only gate, author, origin, pin and lock state, score, reply count, views, pages, the last post and the caller's vote.
+ */
+export interface CommunityForumThread {
+  id: number;
+  space: string;
+  slug: string;
+  title: string;
+  /**
+   * /s/<space>/t/<slug>
+   */
+  url: string;
+  /**
+   * discussion, request, roadmap, …
+   */
+  kind: string;
+  status?: string | null;
+  category?: {
+    slug?: string;
+    name?: string;
+    description?: string | null;
+    position?: unknown;
+    thread_count?: number;
+  } | null;
+  members_only?: {
+    owner?: string;
+    owner_username?: string | null;
+    join_url?: string | null;
+  } | null;
+  /**
+   * The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.
+   */
+  author: {
+    subject?: string | null;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+    is_ai?: true;
+    is_system?: true;
+  } | null;
+  origin: string;
+  pinned: boolean;
+  locked: boolean;
+  score: number;
+  reply_count: number;
+  views?: number;
+  pages: number;
+  last_post?: {
+    id?: number;
+    /**
+     * The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.
+     */
+    author?: {
+      subject?: string | null;
+      username?: string | null;
+      display_name?: string | null;
+      avatar_url?: string | null;
+      profile_color?: string | null;
+      is_ai?: true;
+      is_system?: true;
+    } | null;
+  } | null;
+  crosspost_of?: unknown;
+  last_activity_at?: string | null;
+  created_at: string | null;
+  my_vote: 1 | -1 | 0;
+}
+
+/** community.paste-create-result@1.0.0 (owner: community) */
+/**
+ * community.paste-create-result@1: the answer of POST /api/pastes on OpenVibe.Community (community.paste.create), a text paste or, with a multipart screenshot part, an image paste (server/pastes/service.js created): 201 { id, slug, url, paste } — url is /p/<slug> and paste the new paste as community.paste@1. Refusals are { error } with 400 (no content, too large, not an image), 409 (a service's slug is taken), 429 (cooldown or daily limit) or 502/503 (Media unavailable for a screenshot).
+ */
+export interface CommunityPasteCreateResult {
+  id: number;
+  slug: string;
+  url: string;
+  paste: CommunityPaste;
+}
+
+/** community.post-write-result@1.0.0 (owner: community) */
+/**
+ * community.post-write-result@1: answers of the forum writes on OpenVibe.Community (community.post.create). POST /api/v1/spaces/:space/threads → 201 { thread, post } (the thread and its opening post); POST …/threads/:slug/posts → 201 { post, page, url } (the reply, the page it lands on and its address with #post-<id>); PUT /api/v1/posts/:id → { post }; POST …/threads/:slug/votes → { thread_id, score, upvotes, downvotes, my_vote }; DELETE /api/v1/posts/:id → { ok, id } (deleting the opening post deletes the thread: { ok, id, deleted: thread }); DELETE /api/v1/spaces/:space/threads/:slug → { ok, id, deleted: thread }. Refusals are problem+json.
+ */
+export type CommunityPostWriteResult =
+  | {
+      thread: CommunityForumThread;
+      post: CommunityForumPost;
+    }
+  | {
+      post: CommunityForumPost;
+      page?: number;
+      url?: string;
+    }
+  | {
+      thread_id: number;
+      score: number;
+      upvotes: number;
+      downvotes: number;
+      my_vote: 1 | -1 | 0;
+    }
+  | {
+      ok: true;
+      id: number;
+      deleted?: "thread";
+    };
+
+/** community.pulse-write-request@1.0.0 (owner: community) */
+/**
+ * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities (ref.service must be that service: 403 pulse.foreign_ref otherwise), with a title (whitespace collapsed, 1 to 300 characters) and an absolute http(s) url (at most 2000 characters). origin defaults to X-OV-Origin (user, ai or system; X-OV-Origin: ai always wins); an origin user item names the person in X-OV-Subject. occurred_at is an ISO time, not in the future (default now). Only public activity enters Pulse: a visibility other than public is 400 pulse.not_public. The same ref again updates the item. Unknown fields are ignored. DELETE /api/v1/pulse/items/:service/:type/:id takes no body.
+ */
+export type CommunityPulseWriteRequest =
+  | {
+      ref: EntityRef;
+      /**
+       * At most 300 characters once whitespace is collapsed.
+       */
+      title: string;
+      url: string;
+      origin?: "user" | "ai" | "system" | null;
+      occurred_at?: string | number | null;
+      visibility?: "public" | null;
+    }
+  | NoBody;
 
 /** openre.destination@1.0.0 (owner: openre) */
 /**

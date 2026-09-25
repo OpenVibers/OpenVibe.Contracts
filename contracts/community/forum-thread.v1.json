@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/forum-thread.v1.json",
+  "title": "CommunityForumThread",
+  "description": "community.forum-thread@1: one forum thread as OpenVibe.Community's /api/v1/spaces API shows it (server/forum/service.js shapeThread): where it lives, its kind and status, category, members-only gate, author, origin, pin and lock state, score, reply count, views, pages, the last post and the caller's vote.",
+  "type": "object",
+  "required": [
+    "id",
+    "space",
+    "slug",
+    "title",
+    "url",
+    "kind",
+    "author",
+    "origin",
+    "pinned",
+    "locked",
+    "score",
+    "reply_count",
+    "pages",
+    "created_at",
+    "my_vote"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "space": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "url": {
+      "type": "string",
+      "description": "/s/<space>/t/<slug>"
+    },
+    "kind": {
+      "type": "string",
+      "description": "discussion, request, roadmap, …"
+    },
+    "status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "category": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "position": {},
+        "thread_count": {
+          "type": "integer"
+        }
+      }
+    },
+    "members_only": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "owner_username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "join_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "author": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.",
+      "properties": {
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_ai": {
+          "const": true
+        },
+        "is_system": {
+          "const": true
+        }
+      }
+    },
+    "origin": {
+      "type": "string"
+    },
+    "pinned": {
+      "type": "boolean"
+    },
+    "locked": {
+      "type": "boolean"
+    },
+    "score": {
+      "type": "integer"
+    },
+    "reply_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "views": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pages": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "last_post": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "author": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.",
+          "properties": {
+            "subject": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "username": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "display_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "avatar_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "profile_color": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "is_ai": {
+              "const": true
+            },
+            "is_system": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "crosspost_of": {},
+    "last_activity_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "my_vote": {
+      "enum": [
+        1,
+        -1,
+        0
+      ]
+    }
+  }
+}
