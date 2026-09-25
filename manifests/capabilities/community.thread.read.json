@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Read a space's threads (hot, new or top, paged) and one thread with its posts, plus the RSS feeds. Community checks space visibility and the VIP gate (403 vip.members_only). Creating threads and replies stays community.post.create.",
-  "outputSchema": "common.entity-ref@1",
+  "outputSchema": "community.thread-read-result@1",
   "permissions": [
     "community:read"
   ],

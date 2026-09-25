@@ -90,6 +90,60 @@ export type ServiceTokenClaims = {
   [k: string]: unknown | undefined;
 };
 
+/** identity.resolve-request@1.0.0 (owner: network) */
+/**
+ * identity.resolve-request@1: the request of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve?subject_id= or ?system=&id=[&type=user] takes no body. POST /internal/identity/resolve-batch: { subject_ids } or { system, type?, ids } (at most 500; 413 beyond).
+ */
+export type IdentityResolveRequest =
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 500
+       */
+      subject_ids: [string, ...string[]];
+    }
+  | {
+      system: string;
+      type?: string;
+      /**
+       * @minItems 1
+       * @maxItems 500
+       */
+      ids: [string | number, ...(string | number)[]];
+    }
+  | NoBody;
+
+/** identity.resolve-result@1.0.0 (owner: network) */
+/**
+ * identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing.
+ */
+export type IdentityResolveResult =
+  | IdentitySubjectProjection
+  | {
+      results: {
+        [k: string]: (IdentitySubjectProjection | null) | undefined;
+      };
+    };
+
+/** identity.subject-projection@1.0.0 (owner: network) */
+/**
+ * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.
+ */
+export interface IdentitySubjectProjection {
+  subject: SubjectRef;
+  network_user_id?: number;
+  network_anon_id?: number;
+  username: string;
+  display_name: string;
+  avatar_url: string | null;
+  banned: boolean;
+  legacy_ids?: {
+    source_system: string;
+    source_type: string;
+    source_id: string;
+  }[];
+}
+
 /** common.entity-ref@1.0.0 (owner: contracts) */
 /**
  * Typed reference to another service's entity. Store this instead of a foreign key; resolve a display projection from the owner.
@@ -615,7 +669,7 @@ export type Binary = string;
 
 /** media.file-upload@1.0.0 (owner: media) */
 /**
- * media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.media-ref@1.
+ * media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.file@1 (201).
  */
 export interface MediaFileUpload {
   /**
@@ -5826,6 +5880,26 @@ export type CodesReleaseReadResult =
       manifest: AppManifest | ModManifest | null;
     };
 
+/** codes.release-manage-request@1.0.0 (owner: codes) */
+/**
+ * codes.release-manage-request@1: bodies of codes.release.manage on OpenVibe.Codes (an app token managing its own releases). POST /api/v1/apps/:app/releases: { kind?, manifest, notes?, publish? } — kind mod or app (anything else is app); manifest must validate as codes.app-manifest@1 for an app or mods.mod-manifest@1 for a mod (422 manifest.invalid with the validation otherwise; a version that already has a release is 409); notes are cut to 2000 characters; publish true publishes the draft at once. POST /api/v1/releases/:id/deprecate: { reason, replacement? } (a reason is required, cut to 500 characters; replacement must be a published release of the same app). POST /api/v1/releases/:id/revoke: { reason } (required). POST /api/v1/releases/:id/publish takes no body. Unknown fields are ignored.
+ */
+export type CodesReleaseManageRequest =
+  | {
+      /**
+       * mod, or app (the default).
+       */
+      kind?: string;
+      manifest: AppManifest | ModManifest;
+      notes?: string | null;
+      publish?: boolean;
+    }
+  | {
+      reason: string;
+      replacement?: string | null;
+    }
+  | NoBody;
+
 /** events.redaction-directive@1.0.0 (owner: events) */
 /**
  * payload.redacts (ADR-026): a producer takes back events it published earlier. Any event may carry it, normally the producer's own *.deleted event. It names event_ids, or subject_type + subject_ids, or both, never an empty list. event_ids names events directly; subject_type + subject_ids names every stored event of the same source (for an app, the same project and environment) about those subjects. OpenVibe.Events rewrites each target into a tombstone (events.tombstone-payload@1) in the transaction that stores the directive. Naming another source's event is 403 events.redaction_not_allowed (the whole batch is refused); a malformed directive is 422 events.invalid_redaction. An event that carries a directive is never redacted itself.
@@ -6035,6 +6109,20 @@ export interface EventsSubscription {
    */
   secret?: string;
 }
+
+/** events.publish-request@1.0.0 (owner: events) */
+/**
+ * events.publish-request@1: the body of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps): one events.event-envelope@1, or a batch { events: [...] } of 1 to 100 envelopes stored all or nothing. trace_id, priority (important) and visibility (internal) default when left out. source must be the caller and event_type one of its prefixes (an app: app-<ULID> and app.<project_key>.*, actor the app or the user it acts for).
+ */
+export type EventsPublishRequest =
+  | EventEnvelope
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 100
+       */
+      events: [EventEnvelope, ...EventEnvelope[]];
+    };
 
 /** chat.message.deleted@1.0.0 (owner: chat) */
 /**
@@ -9845,6 +9933,64 @@ export type SourcesSourceWriteRequest =
     }
   | NoBody;
 
+/** sources.item-read-result@1.0.0 (owner: sources) */
+/**
+ * sources.item-read-result@1: answers of sources.item.read on OpenVibe.Sources. GET /api/v1/items?source=&category=&after=&limit=&include_removed= → { items, next_after, more, sources } (a change feed: items in change order, at most 500; sources gives each listed source's health); GET /api/v1/items/:id[?revisions=1] → { item, source } (the item, with its revisions when asked, and its source's health; null when the source is gone).
+ */
+export type SourcesItemReadResult =
+  | {
+      /**
+       * @maxItems 500
+       */
+      items: SourceItem[];
+      next_after: number;
+      more?: boolean;
+      sources: {
+        [k: string]:
+          | {
+              status?: string;
+              stale?: boolean;
+              last_success_at?: string | null;
+            }
+          | undefined;
+      };
+    }
+  | {
+      item: SourceItem;
+      source: {
+        key: string;
+        status?: string;
+        stale?: boolean;
+        last_success_at?: string | null;
+      } | null;
+    };
+
+/** sources.source-read-result@1.0.0 (owner: sources) */
+/**
+ * sources.source-read-result@1: answers of sources.source.read on OpenVibe.Sources. GET /api/v1/sources → { sources }; GET /api/v1/sources/:key → { source } (sources.source@1 with health); GET /api/v1/sources/:key/runs?before=&limit= → { runs, next_before } (newest first); GET /api/v1/runs?after=&source=&state=&limit= → { runs, next_after } (every source's fetch runs in order; state failed means any failure); GET /api/v1/health → { counts, attention } (sources by health status, and the failing, stale or never fetched ones).
+ */
+export type SourcesSourceReadResult =
+  | {
+      sources: Source[];
+    }
+  | {
+      source: Source;
+    }
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      counts: {
+        [k: string]: number | undefined;
+      };
+      attention: {
+        key: string;
+        category?: string;
+        type?: string;
+        status: string;
+      }[];
+    };
+
 /** search.document.indexed@1.0.0 (owner: search) */
 /**
  * search.document.indexed v1 (OpenVibe.Search server/store.js announce). An applied index document (from an owner's *.index_document.upserted or the direct API) is servable: restricted (ACL only) or public. Sent on every applied revision that stays exposed, first time or not. Envelope: subject { type: document, id: <owner>/<type>/<id>, revision }, visibility internal, priority important, actor service:search, trace_id of the request or event that caused it.
@@ -9885,6 +10031,1600 @@ export interface SearchDocumentRemovedPayload {
    */
   canonical_url: string | null;
 }
+
+/** search.document-write-request@1.0.0 (owner: search) */
+/**
+ * search.document-write-request@1: the request of search.document.write on OpenVibe.Search (a service writes and reads only the documents it owns). PUT /api/v1/documents/:owner/:type/:id: a search.index-document@1 (owner, type and id come from the path; a body that names others is 422). DELETE /api/v1/documents/:owner/:type/:id?revision= (a tombstone) and the owner reads (GET /api/v1/owners/:owner/documents, …/documents/:type/:id, …/rejections) take no body.
+ */
+export type SearchDocumentWriteRequest = IndexDocument | NoBody;
+
+/** search.owner-result@1.0.0 (owner: search) */
+/**
+ * search.owner-result@1: answers of search.document.write on OpenVibe.Search. PUT and DELETE /api/v1/documents/:owner/:type/:id → search.write-result@1 (stale and conflicting revisions are 409 problems); GET /api/v1/owners/:owner/documents?type=&after=&limit= → { owner, documents, next_after } (reconciliation: type, id, revision, deleted, exposure, hash, indexed_at); GET /api/v1/owners/:owner/documents/:type/:id → { document, effective_indexability, exposure, via, event_id, indexed_at } (the stored document); GET /api/v1/owners/:owner/rejections?after= → { rejections, next_after } (index-document events Search refused, at most 200).
+ */
+export type SearchOwnerResult =
+  | SearchWriteResult
+  | {
+      owner: string;
+      documents: {
+        type: string;
+        id: string;
+        revision: number;
+        deleted: boolean;
+        exposure?: unknown;
+        hash?: string | null;
+        indexed_at?: string | null;
+      }[];
+      next_after: number | null;
+    }
+  | {
+      document: IndexDocument;
+      effective_indexability: unknown;
+      exposure?: unknown;
+      via?: unknown;
+      event_id?: string | null;
+      indexed_at?: string | null;
+    }
+  | {
+      /**
+       * @maxItems 200
+       */
+      rejections: {
+        seq: number;
+        event_id?: string | null;
+        event_type?: string | null;
+        type?: string | null;
+        id?: string | null;
+        revision?: number | null;
+        code: string;
+        detail?: string | null;
+        at?: string | null;
+      }[];
+      next_after: number | null;
+    };
+
+/** search.read-result@1.0.0 (owner: search) */
+/**
+ * search.read-result@1: answers of search.query.run and search.query.delegate on OpenVibe.Search. GET /api/v1/search → search.query-result@1; GET /api/v1/suggest?q=&owner=&type=&limit= → { suggestions } (title prefixes, at most 20, only documents the caller may see); GET /api/v1/documents/:owner/:type/:id → { document } (one document by exact id, if the caller may see it; 404 otherwise).
+ */
+export type SearchReadResult =
+  | SearchQueryResult
+  | {
+      /**
+       * @maxItems 20
+       */
+      suggestions:
+        | []
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ]
+        | [
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            },
+            {
+              owner: string;
+              type: string;
+              id: string;
+              title?: string | null;
+              canonical_url?: string | null;
+            }
+          ];
+    }
+  | {
+      document: {
+        owner: string;
+        type: string;
+        id: string;
+        revision: number;
+        visibility?: string;
+        title?: string | null;
+        summary?: string | null;
+        canonical_url?: string | null;
+        facets?: unknown;
+        language?: unknown;
+        authorship?: unknown;
+        provenance?: unknown;
+        published_at?: unknown;
+        updated_at?: unknown;
+        indexable: boolean;
+      };
+    };
 
 /** wiki.space.updated@1.0.0 (owner: wiki) */
 /**
@@ -13037,6 +14777,112 @@ export type AiUsageResult =
         entries?: number;
         hits?: number | null;
       }[];
+    };
+
+/** ai.run-citation@1.0.0 (owner: ai) */
+/**
+ * ai.run-citation@1: one source a run cited on OpenVibe.AI (the citations table): what the workflow was given or a citation the requester attached afterwards (provenance.attached), with trust and provenance.
+ */
+export interface AiRunCitation {
+  id: number;
+  run_id: string;
+  ordinal?: number | null;
+  source_type: string;
+  source_id?: string | null;
+  url?: string | null;
+  title?: string | null;
+  author?: string | null;
+  published_at?: string | null;
+  retrieved_at?: string | null;
+  snippet?: string | null;
+  content_hash?: string | null;
+  trust?: {};
+  provenance?: {};
+  attached_by?: string | null;
+  created_at?: string;
+}
+
+/** ai.run-create-request@1.0.0 (owner: ai) */
+/**
+ * ai.run-create-request@1: bodies of ai.run.create on OpenVibe.AI. POST /api/v1/runs: ai.run-request@1. POST /api/v1/chat, /generate, /summarize, /classify, /extract, /enrich and /embed: a run of workflow ai.<op> whose input is the body itself (validated by that workflow's own input schema), except idempotency_key, target, attribution, on_behalf_of and options, which are the run's. POST /api/v1/runs/:id/citations: { citations } (1-50, each with a source_type; the requester only). POST /api/v1/runs/:id/cancel and /retry take no body.
+ */
+export type AiRunCreateRequest =
+  | AiRunRequest
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 50
+       */
+      citations: [
+        {
+          source_type: string;
+          source_id?: string;
+          url?: string;
+          title?: string;
+          author?: string;
+          snippet?: string;
+          provenance?: {};
+        },
+        ...{
+          source_type: string;
+          source_id?: string;
+          url?: string;
+          title?: string;
+          author?: string;
+          snippet?: string;
+          provenance?: {};
+        }[]
+      ];
+    }
+  | {
+      idempotency_key?: string;
+      target?: unknown;
+      attribution?: unknown;
+      on_behalf_of?: unknown;
+      options?: {};
+    }
+  | NoBody;
+
+/** ai.run-create-result@1.0.0 (owner: ai) */
+/**
+ * ai.run-create-result@1: answers of ai.run.create on OpenVibe.AI. POST /api/v1/runs and the direct operations → { run, replayed? } (201 when it finished or was served from cache within the wait, 202 with Location while queued or running, 200 with replayed true for an idempotent repeat); POST …/cancel → { run }; POST …/retry → { run } (a new run with retry_of); POST …/citations → 201 { citations }. A quota refusal or a full queue is 429 with Retry-After.
+ */
+export type AiRunCreateResult =
+  | {
+      run: AiRun;
+      replayed?: true;
+    }
+  | {
+      citations: AiRunCitation[];
+    };
+
+/** ai.run-read-result@1.0.0 (owner: ai) */
+/**
+ * ai.run-read-result@1: answers of ai.run.read on OpenVibe.AI (the caller's own runs; usage readers may ask for all). GET /api/v1/runs?status=&workflow=&target=&limit=&before= → { runs }; GET /api/v1/runs/:id → { run, citations, requests } (the request log is metadata only: hashes, tokens, cost, latency, never prompts); GET /api/v1/runs/:id/citations → { citations }. Someone else's run is 404 run.not_found.
+ */
+export type AiRunReadResult =
+  | {
+      runs: AiRun[];
+    }
+  | {
+      run: AiRun;
+      citations: AiRunCitation[];
+      requests: {
+        id: number;
+        seq: number;
+        operation?: string | null;
+        provider_key?: string | null;
+        model_key?: string | null;
+        status: string;
+        fallback?: unknown;
+        tokens_in?: number | null;
+        tokens_out?: number | null;
+        cost_usd?: number | null;
+        latency_ms?: number | null;
+      }[];
+    }
+  | {
+      citations: AiRunCitation[];
     };
 
 /** tips.interaction.ready@1.0.0 (owner: tips) */
@@ -23551,6 +25397,16 @@ export interface NetworkStaffListResult {
   }[];
 }
 
+/** network.module-write-request@1.0.0 (owner: network) */
+/**
+ * network.module-write-request@1: the request of network.modules.write on OpenVibe.Network. PUT /internal/modules/:namespace/:subject: { data } — the record's new value, validated against the namespace's schema; If-Match names the revision read (412 if it moved). DELETE /internal/modules/:namespace/:subject (204) takes no body. The answer to PUT is modules.module-record@1.
+ */
+export type NetworkModuleWriteRequest =
+  | {
+      data: {};
+    }
+  | NoBody;
+
 /** tools.tool@1.1.0 (owner: tools) */
 /**
  * One tool on openvibe.tools as its registry describes it (GET /api/v1/tools/:id, and each item of GET /api/v1/tools; capability tools.tool.read; ADR-027). There is one descriptor per catalogue tool (GET /api/catalog.json tools[].id), built from the tool's own code, so its page, the run API, openvibe-sdk/tools, the OpenAPI document and the docs all read the same facts. EXECUTION is where the tool's engine runs for its page: client (in the browser; nothing leaves it), sync (a server request answered inline) or job (an asynchronous job on a satellite, tools.job@1). API says whether POST /api/v1/tools/{id}/run exposes the tool. A client tool has api true only when it also has a server engine (a pure transform that runs in Node), and its page stays browser-only. A page-only tool (yt) has api false and run null. A job tool's run creates a job of run.job.type whose input is { ...input, ...run.job.preset, tool: run.job.operation } (the preset and the operation always win). INPUT is the JSON Schema (2020-12) that a run request's input must match, embedded or as { $ref: https://openvibe.tools/api/v1/tools/{id}/schema#/$defs/input }. GET /api/v1/tools/:id/schema answers { $schema, $id, $defs: { input, output } }, and the list uses the $ref form. When api is false, $defs.input is false (the schema that accepts nothing), since there is no run to take an input. OUTPUT.SCHEMA describes result.data for every execution: inline and job tools alike. KEYWORDS (the catalogue's search terms) and EXAMPLES (sample runs for the docs and the OpenAPI document) are optional. NOT A TOOL: there is no planned status. A planned catalogue entry has no descriptor and is not listed, and neither is a mirror (a second build of another tool). GET /api/v1/tools/:id and /schema answer 404 tools.tool.not_found for either, with a detail that says the id is planned or names the tool it mirrors, as for an id that does not exist. RULES this schema enforces: api false has no run and no examples, and api true has a run and an input; an API job tool names its job, and only job tools name one; an API tool whose output is a file runs as a job (its results are served as job files); a tools.net.probe tool fetches (egress) and is never anonymous; an anonymous egress tool has a per-target throttle (limits.perTargetPerMinute); a client tool never fetches; an unavailable tool says why (statusReason); JSON output has a schema. contracts.tools.checkDescriptor(d) also checks what depends on the id (run.path, $ref targets), files.min <= files.max, and each example: its input against an embedded input schema and limits.maxInputBytes, and its files against files (count and accept).
@@ -24039,6 +25895,34 @@ export interface ToolsJobRequest {
    */
   idempotency_key?: string;
 }
+
+/** tools.job-create-request@1.0.0 (owner: tools) */
+/**
+ * tools.job-create-request@1: the request of tools.job.create on the Tools satellites that run jobs. POST /api/v1/jobs: tools.job-request@1 (JSON or multipart). POST /api/v1/jobs/:id/retry and PUT|DELETE /api/v1/jobs/:id/references/:ref take no body.
+ */
+export type ToolsJobCreateRequest = ToolsJobRequest | NoBody;
+
+/** tools.job-read-result@1.0.0 (owner: tools) */
+/**
+ * tools.job-read-result@1: answers of tools.job.read on the Tools satellites. GET /api/v1/jobs/:id → tools.job@1, and so is the data of every event on GET /api/v1/jobs/:id/events (Server-Sent Events, Last-Event-ID resume); GET /api/v1/jobs/:id/files/:n → the result file's bytes (Content-Type of the file; 409 tools.job.not_ready before the job succeeded).
+ */
+export type ToolsJobReadResult = ToolsJob | string;
+
+/** tools.tool-read-result@1.0.0 (owner: tools) */
+/**
+ * tools.tool-read-result@1: answers of tools.tool.read on openvibe.tools (public registry; ADR-027). GET /api/v1/tools → tools.tool-list@1; GET /api/v1/tools/:id → tools.tool@1 with its schemas embedded; GET /api/v1/tools/:id/schema → the tool's own JSON Schema document { $schema, $id, $defs: { input, output } } (application/schema+json; input is false for a tool without an API input).
+ */
+export type ToolsToolReadResult =
+  | ToolList
+  | ToolDescriptor
+  | {
+      $schema: string;
+      $id: string;
+      $defs: {
+        input: {} | boolean;
+        output: {};
+      };
+    };
 
 /** news.source.ingested@1.0.0 (owner: news) */
 /**
@@ -36623,6 +38507,30 @@ export interface MediaObjectVisibilityChangedPayload {
   changed_at: string;
 }
 
+/** media.file-read-result@1.0.0 (owner: media) */
+/**
+ * media.file-read-result@1: answers of media.object.read on OpenVibe.Media. GET /api/v1/:app/files/:key → media.file@1 (the file's metadata; 404 when it is not the tenant's); GET /f/:key → the bytes, with Content-Type and Range (a sandbox file only through its signed URL).
+ */
+export type MediaFileReadResult = MediaFile | string;
+
+/** media.file@1.0.0 (owner: media) */
+/**
+ * media.file@1: one stored file of a tenant on OpenVibe.Media (server/files/routes.js filePublic): its key, owner, name, size, type and hash, and the URL it is served from (/f/<key>; a developer-project sandbox file gets a short-lived signed URL instead).
+ */
+export interface MediaFile {
+  key: string;
+  app_id: string;
+  user_id?: string | number | null;
+  original_name: string;
+  size: number;
+  mime: string;
+  sha256?: string | null;
+  url: string;
+  sandbox?: true;
+  url_expires_at?: string | number;
+  created_at: string;
+}
+
 /** community.paste.created@1.0.0 (owner: community) */
 /**
  * community.paste.created v1 (OpenVibe.Community server/events.js, queued in the transaction of the change). A paste (text or screenshot) was created. Never the content or title. Envelope: subject { type: paste, id }, visibility public when the item is public else internal, priority low, actor the person or service:community.
@@ -37695,26 +39603,7 @@ export type CommunityPostWriteRequest =
 export type CommunityPulseWriteResult =
   | {
       created: boolean;
-      item: {
-        id: number;
-        source: {
-          service: string;
-          type: string;
-          id: string;
-        };
-        title: string;
-        url: string;
-        origin: "user" | "ai" | "system";
-        label: "AI" | "System" | null;
-        actor: {
-          subject?: string | null;
-          username?: string | null;
-          display_name?: string | null;
-          avatar_url?: string | null;
-          profile_color?: string | null;
-        } | null;
-        occurred_at: string | null;
-      };
+      item: CommunityPulseItem;
     }
   | {
       removed: number;
@@ -38071,6 +39960,239 @@ export type CommunityPulseWriteRequest =
       visibility?: "public" | null;
     }
   | NoBody;
+
+/** community.comment-thread@1.0.0 (owner: community) */
+/**
+ * community.comment-thread@1: one embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeThread): the entity it belongs to, its visibility and comment count. id is the sequential id for services and the access id (cth_…) for everyone else; a hidden thread shows moderators its count, others only that it is hidden.
+ */
+export interface CommunityCommentThread {
+  id: number | string;
+  access_id: string;
+  ref: EntityRef;
+  visibility: "public" | "hidden" | "locked";
+  comment_count: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** community.comment-write-request@1.0.0 (owner: community) */
+/**
+ * community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.
+ */
+export type CommunityCommentWriteRequest =
+  | {
+      ref: EntityRef;
+    }
+  | {
+      message: string;
+      parent_id?: number | string | null;
+      anon_name?: string | null;
+    }
+  | {
+      value: 1 | -1 | 0 | "1" | "-1" | "0";
+    }
+  | NoBody;
+
+/** community.comment-write-result@1.0.0 (owner: community) */
+/**
+ * community.comment-write-result@1: answers of community.comment.write on OpenVibe.Community. POST …/threads/resolve → { thread, created } (201 when created); GET …/threads/:id?after=&sort=&limit=&parent= → { thread, comments, next_cursor, viewer }; POST …/threads/:id/comments → 201 { comment }; DELETE /api/v1/comments/:commentId → { ok, id }; POST …/:commentId/votes → { comment_id, score, upvotes, downvotes, my_vote }. Refusals are problem+json (thread.locked, auth.required, community.blocked, …).
+ */
+export type CommunityCommentWriteResult =
+  | {
+      thread: CommunityCommentThread;
+      created: boolean;
+    }
+  | {
+      thread: CommunityCommentThread;
+      comments: CommunityComment[];
+      next_cursor: string | null;
+      viewer: {
+        signed_in?: boolean;
+        can_comment?: boolean;
+        can_vote?: boolean;
+        can_moderate?: boolean;
+      };
+    }
+  | {
+      comment: CommunityComment;
+    }
+  | {
+      ok: true;
+      id: number;
+    }
+  | {
+      comment_id: number;
+      score: number;
+      upvotes: number;
+      downvotes: number;
+      my_vote: 1 | -1 | 0;
+    };
+
+/** community.comment@1.0.0 (owner: community) */
+/**
+ * community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.
+ */
+export interface CommunityComment {
+  id: number;
+  thread_id: number | string;
+  parent_id: number | null;
+  origin: string;
+  author: {
+    subject?: string | null;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+    is_ai?: true;
+    is_system?: true;
+  } | null;
+  anon_name?: string | null;
+  display_name?: string | null;
+  message: string | null;
+  deleted: boolean;
+  score: number;
+  upvotes?: number;
+  downvotes?: number;
+  my_vote: 1 | -1 | 0;
+  reply_count?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  edited_at?: string | null;
+  can_edit: boolean;
+  can_delete: boolean;
+  replies?: {}[];
+}
+
+/** community.forum-space@1.0.0 (owner: community) */
+/**
+ * community.forum-space@1: one forum space as OpenVibe.Community's /api/v1/spaces API shows it (server/forum/service.js shapeSpace): its slug, name, visibility, thread kind and statuses, style, whether votes and reactions are on, its group and parent board, the members-only gate and, in lists, its counts and last activity.
+ */
+export interface CommunityForumSpace {
+  slug: string;
+  name: string;
+  description?: string | null;
+  visibility: "public" | "members" | "staff";
+  url: string;
+  thread_kind: string;
+  statuses: string[];
+  style: "feed" | "forum";
+  votes: boolean;
+  reactions: boolean;
+  group: {
+    slug?: string;
+    name?: string;
+  } | null;
+  parent: {
+    slug?: string;
+    name?: string;
+  } | null;
+  post_count?: number;
+  thread_count?: number;
+  last_activity_at?: string | null;
+  members_only: {
+    owner?: string;
+    owner_username?: string | null;
+    join_url?: string | null;
+  } | null;
+  last_post?: {} | null;
+  children?: unknown[];
+}
+
+/** community.pulse-item@1.0.0 (owner: community) */
+/**
+ * community.pulse-item@1: one item of the network's public activity on OpenVibe.Community (server/pulse/service.js shape), with provenance: its source entity, title, url, origin (user, ai or system), the AI or System label, the actor (a person for user items, never for AI or system ones) and when it happened.
+ */
+export interface CommunityPulseItem {
+  id: number;
+  source: {
+    service: string;
+    type: string;
+    id: string;
+  };
+  title: string;
+  url: string;
+  origin: "user" | "ai" | "system";
+  label: "AI" | "System" | null;
+  actor: {
+    subject?: string | null;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+    is_ai?: true;
+    is_system?: true;
+  } | null;
+  occurred_at: string | null;
+}
+
+/** community.pulse-read-result@1.0.0 (owner: community) */
+/**
+ * community.pulse-read-result@1: answers of community.pulse.read on OpenVibe.Community (anyone). GET /api/v1/pulse?origin=user|ai|system&after=&limit= → { items, next_cursor } (newest first, at most 100; an unknown origin or a cursor this API did not issue is 400). GET /pulse is the same activity as an HTML page.
+ */
+export type CommunityPulseReadResult =
+  | {
+      /**
+       * @maxItems 100
+       */
+      items: CommunityPulseItem[];
+      next_cursor: string | null;
+    }
+  | string;
+
+/** community.space-read-result@1.0.0 (owner: community) */
+/**
+ * community.space-read-result@1: answers of community.space.read on OpenVibe.Community. GET /api/v1/spaces → { spaces, groups } (the spaces the caller can open, each with its last post, and the board index: groups in order with their top-level spaces and child boards); GET /api/v1/spaces/:space → { space } (a staff or members-only space the caller cannot open is 404 or 401/403 vip.members_only); GET /s is the board index as an HTML page.
+ */
+export type CommunitySpaceReadResult =
+  | {
+      spaces: CommunityForumSpace[];
+      groups: {
+        slug: string | null;
+        name: string;
+        description?: string | null;
+        spaces: unknown[];
+      }[];
+    }
+  | {
+      space: CommunityForumSpace;
+    }
+  | string;
+
+/** community.thread-read-result@1.0.0 (owner: community) */
+/**
+ * community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.
+ */
+export type CommunityThreadReadResult =
+  | {
+      space: {};
+      sort?: string;
+      page: number;
+      per_page?: number;
+      total: number;
+      pages: number;
+      categories?: unknown[];
+      category?: string | null;
+      status?: string | null;
+      viewer?: {};
+      children?: unknown[];
+      groups?: unknown[];
+      threads: CommunityForumThread[];
+    }
+  | {
+      space: {};
+      thread: CommunityForumThread;
+      posts: CommunityForumPost[];
+      reactions?: unknown[];
+      crosspost?: {};
+      categories?: unknown[];
+      attachments?: {};
+      page: number;
+      per_page?: number;
+      pages: number;
+      total?: number;
+      viewer?: {};
+    }
+  | string;
 
 /** openre.destination@1.0.0 (owner: openre) */
 /**

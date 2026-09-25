@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/publish-request.v1.json",
+  "title": "EventsPublishRequest",
+  "description": "events.publish-request@1: the body of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps): one events.event-envelope@1, or a batch { events: [...] } of 1 to 100 envelopes stored all or nothing. trace_id, priority (important) and visibility (internal) default when left out. source must be the caller and event_type one of its prefixes (an app: app-<ULID> and app.<project_key>.*, actor the app or the user it acts for).",
+  "anyOf": [
+    {
+      "$ref": "event-envelope.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "events"
+      ],
+      "not": {
+        "required": [
+          "event_id"
+        ]
+      },
+      "properties": {
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "$ref": "event-envelope.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

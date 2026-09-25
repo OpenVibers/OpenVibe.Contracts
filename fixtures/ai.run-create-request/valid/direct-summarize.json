@@ -1,0 +1,1 @@
+{ "text": "Summarize this stream recap.", "options": { "max_words": 80 }, "idempotency_key": "recap-812" }

@@ -32,6 +32,33 @@
       "adr": "ADR-003"
     },
     {
+      "id": "identity.resolve-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/resolve-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "identity.resolve-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/resolve-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "identity.subject-projection",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/subject-projection.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "common.entity-ref",
       "version": "1.0.0",
       "owner": "contracts",
@@ -278,6 +305,15 @@
       "status": "active"
     },
     {
+      "id": "codes.release-manage-request",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/release-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "events.redaction-directive",
       "version": "1.0.0",
       "owner": "events",
@@ -365,6 +401,15 @@
       "version": "1.0.0",
       "owner": "events",
       "schema": "events/subscription.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.publish-request",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/publish-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -458,6 +503,24 @@
       "status": "active"
     },
     {
+      "id": "sources.item-read-result",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/item-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "sources.source-read-result",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/source-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "search.document.indexed",
       "version": "1.0.0",
       "owner": "search",
@@ -476,6 +539,33 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-018"
+    },
+    {
+      "id": "search.document-write-request",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/document-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "search.owner-result",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/owner-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "search.read-result",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "wiki.space.updated",
@@ -1145,6 +1235,42 @@
       "version": "1.0.0",
       "owner": "ai",
       "schema": "ai/usage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.run-citation",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-citation.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.run-create-request",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.run-create-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.run-read-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -2260,6 +2386,15 @@
       "status": "active"
     },
     {
+      "id": "network.module-write-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/module-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "tools.tool",
       "version": "1.1.0",
       "owner": "tools",
@@ -2318,6 +2453,33 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-027"
+    },
+    {
+      "id": "tools.job-create-request",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/job-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "tools.job-read-result",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/job-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "tools.tool-read-result",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/tool-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "news.source.ingested",
@@ -3688,6 +3850,24 @@
       "status": "active"
     },
     {
+      "id": "media.file-read-result",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/file-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.file",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/file.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "community.paste.created",
       "version": "1.0.0",
       "owner": "community",
@@ -3974,6 +4154,87 @@
       "version": "1.0.0",
       "owner": "community",
       "schema": "community/pulse-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.comment-thread",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/comment-thread.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.comment-write-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/comment-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.comment-write-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/comment-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.comment",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/comment.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.forum-space",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/forum-space.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.pulse-item",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/pulse-item.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.pulse-read-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/pulse-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.space-read-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/space-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.thread-read-result",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/thread-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

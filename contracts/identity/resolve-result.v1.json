@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/resolve-result.v1.json",
+  "title": "IdentityResolveResult",
+  "description": "identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing.",
+  "anyOf": [
+    {
+      "$ref": "subject-projection.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "results"
+      ],
+      "properties": {
+        "results": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "subject-projection.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

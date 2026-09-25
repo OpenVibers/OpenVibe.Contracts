@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/comment-thread.v1.json",
+  "title": "CommunityCommentThread",
+  "description": "community.comment-thread@1: one embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeThread): the entity it belongs to, its visibility and comment count. id is the sequential id for services and the access id (cth_…) for everyone else; a hidden thread shows moderators its count, others only that it is hidden.",
+  "type": "object",
+  "required": [
+    "id",
+    "access_id",
+    "ref",
+    "visibility",
+    "comment_count"
+  ],
+  "properties": {
+    "id": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "access_id": {
+      "type": "string",
+      "pattern": "^cth_"
+    },
+    "ref": {
+      "$ref": "../common/entity-ref.v1.json"
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "hidden",
+        "locked"
+      ]
+    },
+    "comment_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

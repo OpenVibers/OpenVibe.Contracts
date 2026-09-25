@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/run-create-result.v1.json",
+  "title": "AiRunCreateResult",
+  "description": "ai.run-create-result@1: answers of ai.run.create on OpenVibe.AI. POST /api/v1/runs and the direct operations → { run, replayed? } (201 when it finished or was served from cache within the wait, 202 with Location while queued or running, 200 with replayed true for an idempotent repeat); POST …/cancel → { run }; POST …/retry → { run } (a new run with retry_of); POST …/citations → 201 { citations }. A quota refusal or a full queue is 429 with Retry-After.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "run"
+      ],
+      "properties": {
+        "run": {
+          "$ref": "run.v1.json"
+        },
+        "replayed": {
+          "const": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "citations"
+      ],
+      "properties": {
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "run-citation.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

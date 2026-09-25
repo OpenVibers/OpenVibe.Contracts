@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "first-party",
   "description": "Write a subject's record in a namespace the service owns (If-Match revision).",
-  "inputSchema": "modules.module-record@1",
+  "inputSchema": "network.module-write-request@1",
   "outputSchema": "modules.module-record@1",
   "permissions": [
     "modules:write"

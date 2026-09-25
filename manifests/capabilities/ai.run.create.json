@@ -5,8 +5,8 @@
   "status": "active",
   "visibility": "first-party",
   "description": "Create workflow runs (POST /api/v1/runs and the direct chat/generate/summarize/classify/extract/enrich/embed operations), cancel or retry the caller's own runs and attach citations to them. A token's `ns` claim limits which workflow namespaces it may run (live.*, wiki.*, ...). Quotas are checked before any provider call.",
-  "inputSchema": "ai.run-request@1",
-  "outputSchema": "ai.run@1",
+  "inputSchema": "ai.run-create-request@1",
+  "outputSchema": "ai.run-create-result@1",
   "permissions": [
     "ai:run"
   ],

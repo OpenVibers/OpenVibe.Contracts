@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Submit an asynchronous tool job (img.process, audio.process, docs.process) with its input files (tools.job-request@1, JSON or multipart); the job is owned by the calling principal. Idempotency-Key supported. Also the owner's other writes on a job: retry a failed job as a new one (idempotent: asking again returns that retry), and keep a succeeded job's result while a reference such as community:paste:p_123 points at it (PUT), or let it expire again (DELETE, after the last reference).",
-  "inputSchema": "tools.job-request@1",
+  "inputSchema": "tools.job-create-request@1",
   "outputSchema": "tools.job@1",
   "permissions": [
     "tools:jobs:write"

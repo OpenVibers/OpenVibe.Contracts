@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/comment-write-result.v1.json",
+  "title": "CommunityCommentWriteResult",
+  "description": "community.comment-write-result@1: answers of community.comment.write on OpenVibe.Community. POST …/threads/resolve → { thread, created } (201 when created); GET …/threads/:id?after=&sort=&limit=&parent= → { thread, comments, next_cursor, viewer }; POST …/threads/:id/comments → 201 { comment }; DELETE /api/v1/comments/:commentId → { ok, id }; POST …/:commentId/votes → { comment_id, score, upvotes, downvotes, my_vote }. Refusals are problem+json (thread.locked, auth.required, community.blocked, …).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "thread",
+        "created"
+      ],
+      "properties": {
+        "thread": {
+          "$ref": "comment-thread.v1.json"
+        },
+        "created": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "thread",
+        "comments",
+        "next_cursor",
+        "viewer"
+      ],
+      "properties": {
+        "thread": {
+          "$ref": "comment-thread.v1.json"
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "comment.v1.json"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "viewer": {
+          "type": "object",
+          "properties": {
+            "signed_in": {
+              "type": "boolean"
+            },
+            "can_comment": {
+              "type": "boolean"
+            },
+            "can_vote": {
+              "type": "boolean"
+            },
+            "can_moderate": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "comment"
+      ],
+      "properties": {
+        "comment": {
+          "$ref": "comment.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "id"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "comment_id",
+        "score",
+        "upvotes",
+        "downvotes",
+        "my_vote"
+      ],
+      "properties": {
+        "comment_id": {
+          "type": "integer"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "upvotes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "downvotes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "my_vote": {
+          "enum": [
+            1,
+            -1,
+            0
+          ]
+        }
+      }
+    }
+  ]
+}

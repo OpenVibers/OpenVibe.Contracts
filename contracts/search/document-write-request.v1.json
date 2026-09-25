@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/document-write-request.v1.json",
+  "title": "SearchDocumentWriteRequest",
+  "description": "search.document-write-request@1: the request of search.document.write on OpenVibe.Search (a service writes and reads only the documents it owns). PUT /api/v1/documents/:owner/:type/:id: a search.index-document@1 (owner, type and id come from the path; a body that names others is 422). DELETE /api/v1/documents/:owner/:type/:id?revision= (a tombstone) and the owner reads (GET /api/v1/owners/:owner/documents, …/documents/:type/:id, …/rejections) take no body.",
+  "anyOf": [
+    {
+      "$ref": "index-document.v1.json"
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

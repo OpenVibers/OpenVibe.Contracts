@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/forum-space.v1.json",
+  "title": "CommunityForumSpace",
+  "description": "community.forum-space@1: one forum space as OpenVibe.Community's /api/v1/spaces API shows it (server/forum/service.js shapeSpace): its slug, name, visibility, thread kind and statuses, style, whether votes and reactions are on, its group and parent board, the members-only gate and, in lists, its counts and last activity.",
+  "type": "object",
+  "required": [
+    "slug",
+    "name",
+    "visibility",
+    "url",
+    "thread_kind",
+    "statuses",
+    "style",
+    "votes",
+    "reactions",
+    "group",
+    "parent",
+    "members_only"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "members",
+        "staff"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "thread_kind": {
+      "type": "string"
+    },
+    "statuses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "style": {
+      "enum": [
+        "feed",
+        "forum"
+      ]
+    },
+    "votes": {
+      "type": "boolean"
+    },
+    "reactions": {
+      "type": "boolean"
+    },
+    "group": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "parent": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "post_count": {
+      "type": "integer"
+    },
+    "thread_count": {
+      "type": "integer"
+    },
+    "last_activity_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "members_only": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "owner_username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "join_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "last_post": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "children": {
+      "type": "array"
+    }
+  }
+}

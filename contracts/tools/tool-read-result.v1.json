@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/tool-read-result.v1.json",
+  "title": "ToolsToolReadResult",
+  "description": "tools.tool-read-result@1: answers of tools.tool.read on openvibe.tools (public registry; ADR-027). GET /api/v1/tools → tools.tool-list@1; GET /api/v1/tools/:id → tools.tool@1 with its schemas embedded; GET /api/v1/tools/:id/schema → the tool's own JSON Schema document { $schema, $id, $defs: { input, output } } (application/schema+json; input is false for a tool without an API input).",
+  "anyOf": [
+    {
+      "$ref": "tool-list.v1.json"
+    },
+    {
+      "$ref": "tool.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "$schema",
+        "$id",
+        "$defs"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "$id": {
+          "type": "string"
+        },
+        "$defs": {
+          "type": "object",
+          "required": [
+            "input",
+            "output"
+          ],
+          "properties": {
+            "input": {
+              "type": [
+                "object",
+                "boolean"
+              ]
+            },
+            "output": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{ "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" }, "network_user_id": 1042, "username": "alice", "display_name": "Alice", "avatar_url": null, "banned": false, "legacy_ids": [ { "source_system": "live", "source_type": "user", "source_id": "17" } ] }

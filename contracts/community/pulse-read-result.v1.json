@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/pulse-read-result.v1.json",
+  "title": "CommunityPulseReadResult",
+  "description": "community.pulse-read-result@1: answers of community.pulse.read on OpenVibe.Community (anyone). GET /api/v1/pulse?origin=user|ai|system&after=&limit= → { items, next_cursor } (newest first, at most 100; an unknown origin or a cursor this API did not issue is 400). GET /pulse is the same activity as an HTML page.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "pulse-item.v1.json"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "string",
+      "contentMediaType": "text/html",
+      "description": "GET /pulse: the HTML page."
+    }
+  ]
+}

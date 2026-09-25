@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/read-result.v1.json",
+  "title": "SearchReadResult",
+  "description": "search.read-result@1: answers of search.query.run and search.query.delegate on OpenVibe.Search. GET /api/v1/search → search.query-result@1; GET /api/v1/suggest?q=&owner=&type=&limit= → { suggestions } (title prefixes, at most 20, only documents the caller may see); GET /api/v1/documents/:owner/:type/:id → { document } (one document by exact id, if the caller may see it; 404 otherwise).",
+  "anyOf": [
+    {
+      "$ref": "query-result.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "suggestions"
+      ],
+      "properties": {
+        "suggestions": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "id"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "canonical_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "document"
+      ],
+      "properties": {
+        "document": {
+          "type": "object",
+          "required": [
+            "owner",
+            "type",
+            "id",
+            "revision",
+            "indexable"
+          ],
+          "properties": {
+            "owner": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer"
+            },
+            "visibility": {
+              "type": "string"
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "summary": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "canonical_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "facets": {},
+            "language": {},
+            "authorship": {},
+            "provenance": {},
+            "published_at": {},
+            "updated_at": {},
+            "indexable": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

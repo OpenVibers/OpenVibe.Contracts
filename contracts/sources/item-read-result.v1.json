@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sources/item-read-result.v1.json",
+  "title": "SourcesItemReadResult",
+  "description": "sources.item-read-result@1: answers of sources.item.read on OpenVibe.Sources. GET /api/v1/items?source=&category=&after=&limit=&include_removed= → { items, next_after, more, sources } (a change feed: items in change order, at most 500; sources gives each listed source's health); GET /api/v1/items/:id[?revisions=1] → { item, source } (the item, with its revisions when asked, and its source's health; null when the source is gone).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "items",
+        "next_after",
+        "sources"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "$ref": "item.v1.json"
+          }
+        },
+        "next_after": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "more": {
+          "type": "boolean"
+        },
+        "sources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "stale": {
+                "type": "boolean"
+              },
+              "last_success_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "item",
+        "source"
+      ],
+      "properties": {
+        "item": {
+          "$ref": "item.v1.json"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "key"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "stale": {
+                  "type": "boolean"
+                },
+                "last_success_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

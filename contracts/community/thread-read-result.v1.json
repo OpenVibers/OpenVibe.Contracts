@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/thread-read-result.v1.json",
+  "title": "CommunityThreadReadResult",
+  "description": "community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "space",
+        "threads",
+        "page",
+        "pages",
+        "total"
+      ],
+      "properties": {
+        "space": {
+          "type": "object"
+        },
+        "sort": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "categories": {
+          "type": "array"
+        },
+        "category": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "viewer": {
+          "type": "object"
+        },
+        "children": {
+          "type": "array"
+        },
+        "groups": {
+          "type": "array"
+        },
+        "threads": {
+          "type": "array",
+          "items": {
+            "$ref": "forum-thread.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "space",
+        "thread",
+        "posts",
+        "page",
+        "pages"
+      ],
+      "properties": {
+        "space": {
+          "type": "object"
+        },
+        "thread": {
+          "$ref": "forum-thread.v1.json"
+        },
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "forum-post.v1.json"
+          }
+        },
+        "reactions": {
+          "type": "array"
+        },
+        "crosspost": {
+          "type": "object"
+        },
+        "categories": {
+          "type": "array"
+        },
+        "attachments": {
+          "type": "object"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total": {
+          "type": "integer"
+        },
+        "viewer": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "string",
+      "contentMediaType": "text/html",
+      "description": "GET /s/:space and /s/:space/t/:slug: HTML pages."
+    },
+    {
+      "type": "string",
+      "contentMediaType": "application/rss+xml",
+      "description": "GET /s/feed.xml and /s/:space/feed.xml: RSS feeds."
+    }
+  ]
+}

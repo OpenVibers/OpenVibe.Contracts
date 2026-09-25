@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/file-read-result.v1.json",
+  "title": "MediaFileReadResult",
+  "description": "media.file-read-result@1: answers of media.object.read on OpenVibe.Media. GET /api/v1/:app/files/:key → media.file@1 (the file's metadata; 404 when it is not the tenant's); GET /f/:key → the bytes, with Content-Type and Range (a sandbox file only through its signed URL).",
+  "anyOf": [
+    {
+      "$ref": "file.v1.json"
+    },
+    {
+      "type": "string",
+      "contentEncoding": "binary",
+      "description": "GET /f/:key: the file."
+    }
+  ]
+}

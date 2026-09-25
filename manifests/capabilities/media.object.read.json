@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Read object metadata / bytes in a namespace.",
-  "inputSchema": "media.media-ref@1",
+  "inputSchema": "common.no-body@1",
   "permissions": [
     "media:read"
   ],
@@ -18,5 +18,5 @@
     "GET /api/v1/:app/files/:key",
     "GET /f/:key"
   ],
-  "outputSchema": "common.binary@1"
+  "outputSchema": "media.file-read-result@1"
 }

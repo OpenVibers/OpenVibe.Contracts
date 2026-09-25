@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/subject-projection.v1.json",
+  "title": "IdentitySubjectProjection",
+  "description": "identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.",
+  "type": "object",
+  "required": [
+    "subject",
+    "username",
+    "display_name",
+    "avatar_url",
+    "banned"
+  ],
+  "properties": {
+    "subject": {
+      "$ref": "subject-ref.v1.json"
+    },
+    "network_user_id": {
+      "type": "integer"
+    },
+    "network_anon_id": {
+      "type": "integer"
+    },
+    "username": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "banned": {
+      "type": "boolean"
+    },
+    "legacy_ids": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_system",
+          "source_type",
+          "source_id"
+        ],
+        "properties": {
+          "source_system": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

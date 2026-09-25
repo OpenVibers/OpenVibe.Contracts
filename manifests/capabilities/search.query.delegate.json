@@ -19,5 +19,5 @@
     "GET /api/v1/documents/:owner/:type/:id"
   ],
   "inputSchema": "search.query@1",
-  "outputSchema": "search.query-result@1"
+  "outputSchema": "search.read-result@1"
 }

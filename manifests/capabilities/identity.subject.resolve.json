@@ -5,8 +5,8 @@
   "status": "active",
   "visibility": "first-party",
   "description": "Resolve a subject (or a legacy service-local id) to its canonical SubjectRef and display projection.",
-  "inputSchema": "identity.legacy-identity-map@1",
-  "outputSchema": "identity.subject-ref@1",
+  "inputSchema": "identity.resolve-request@1",
+  "outputSchema": "identity.resolve-result@1",
   "permissions": [
     "identity:read"
   ],

@@ -1,0 +1,1 @@
+{ "counts": { "healthy": 11, "stale": 1 }, "attention": [ { "key": "example-deals", "category": "deals", "type": "api", "status": "stale" } ] }

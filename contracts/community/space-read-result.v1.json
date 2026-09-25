@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/space-read-result.v1.json",
+  "title": "CommunitySpaceReadResult",
+  "description": "community.space-read-result@1: answers of community.space.read on OpenVibe.Community. GET /api/v1/spaces → { spaces, groups } (the spaces the caller can open, each with its last post, and the board index: groups in order with their top-level spaces and child boards); GET /api/v1/spaces/:space → { space } (a staff or members-only space the caller cannot open is 404 or 401/403 vip.members_only); GET /s is the board index as an HTML page.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "spaces",
+        "groups"
+      ],
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "$ref": "forum-space.v1.json"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "slug",
+              "name",
+              "spaces"
+            ],
+            "properties": {
+              "slug": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "spaces": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "space"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "forum-space.v1.json"
+        }
+      }
+    },
+    {
+      "type": "string",
+      "contentMediaType": "text/html",
+      "description": "GET /s: the board index page."
+    }
+  ]
+}

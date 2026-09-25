@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/owner-result.v1.json",
+  "title": "SearchOwnerResult",
+  "description": "search.owner-result@1: answers of search.document.write on OpenVibe.Search. PUT and DELETE /api/v1/documents/:owner/:type/:id → search.write-result@1 (stale and conflicting revisions are 409 problems); GET /api/v1/owners/:owner/documents?type=&after=&limit= → { owner, documents, next_after } (reconciliation: type, id, revision, deleted, exposure, hash, indexed_at); GET /api/v1/owners/:owner/documents/:type/:id → { document, effective_indexability, exposure, via, event_id, indexed_at } (the stored document); GET /api/v1/owners/:owner/rejections?after= → { rejections, next_after } (index-document events Search refused, at most 200).",
+  "anyOf": [
+    {
+      "$ref": "write-result.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "documents",
+        "next_after"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "id",
+              "revision",
+              "deleted"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "deleted": {
+                "type": "boolean"
+              },
+              "exposure": {},
+              "hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "indexed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "next_after": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "document",
+        "effective_indexability"
+      ],
+      "properties": {
+        "document": {
+          "$ref": "index-document.v1.json"
+        },
+        "effective_indexability": {},
+        "exposure": {},
+        "via": {},
+        "event_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "indexed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "rejections",
+        "next_after"
+      ],
+      "properties": {
+        "rejections": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "required": [
+              "seq",
+              "code"
+            ],
+            "properties": {
+              "seq": {
+                "type": "integer"
+              },
+              "event_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "event_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "revision": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "code": {
+                "type": "string"
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "next_after": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    }
+  ]
+}

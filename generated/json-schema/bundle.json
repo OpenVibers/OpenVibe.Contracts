@@ -272,6 +272,170 @@
         ]
       }
     },
+    "identity.resolve-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/resolve-request.v1.json",
+        "title": "IdentityResolveRequest",
+        "description": "identity.resolve-request@1: the request of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve?subject_id= or ?system=&id=[&type=user] takes no body. POST /internal/identity/resolve-batch: { subject_ids } or { system, type?, ids } (at most 500; 413 beyond).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "subject_ids"
+            ],
+            "properties": {
+              "subject_ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 500,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "system",
+              "ids"
+            ],
+            "properties": {
+              "system": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "default": "user"
+              },
+              "ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 500,
+                "items": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "identity.resolve-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/resolve-result.v1.json",
+        "title": "IdentityResolveResult",
+        "description": "identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing.",
+        "anyOf": [
+          {
+            "$ref": "subject-projection.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "results"
+            ],
+            "properties": {
+              "results": {
+                "type": "object",
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "subject-projection.v1.json"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "identity.subject-projection": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/subject-projection.v1.json",
+        "title": "IdentitySubjectProjection",
+        "description": "identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.",
+        "type": "object",
+        "required": [
+          "subject",
+          "username",
+          "display_name",
+          "avatar_url",
+          "banned"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "subject-ref.v1.json"
+          },
+          "network_user_id": {
+            "type": "integer"
+          },
+          "network_anon_id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "banned": {
+            "type": "boolean"
+          },
+          "legacy_ids": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source_system",
+                "source_type",
+                "source_id"
+              ],
+              "properties": {
+                "source_system": {
+                  "type": "string"
+                },
+                "source_type": {
+                  "type": "string"
+                },
+                "source_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "common.entity-ref": {
       "version": "1.0.0",
       "owner": "contracts",
@@ -1618,7 +1782,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/media/file-upload.v1.json",
         "title": "MediaFileUpload",
-        "description": "media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.media-ref@1.",
+        "description": "media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.file@1 (201).",
         "type": "object",
         "required": [
           "file"
@@ -3576,6 +3740,73 @@
         ]
       }
     },
+    "codes.release-manage-request": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/release-manage-request.v1.json",
+        "title": "CodesReleaseManageRequest",
+        "description": "codes.release-manage-request@1: bodies of codes.release.manage on OpenVibe.Codes (an app token managing its own releases). POST /api/v1/apps/:app/releases: { kind?, manifest, notes?, publish? } — kind mod or app (anything else is app); manifest must validate as codes.app-manifest@1 for an app or mods.mod-manifest@1 for a mod (422 manifest.invalid with the validation otherwise; a version that already has a release is 409); notes are cut to 2000 characters; publish true publishes the draft at once. POST /api/v1/releases/:id/deprecate: { reason, replacement? } (a reason is required, cut to 500 characters; replacement must be a published release of the same app). POST /api/v1/releases/:id/revoke: { reason } (required). POST /api/v1/releases/:id/publish takes no body. Unknown fields are ignored.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "manifest"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "description": "mod, or app (the default)."
+              },
+              "manifest": {
+                "anyOf": [
+                  {
+                    "$ref": "app-manifest.v1.json"
+                  },
+                  {
+                    "$ref": "../mods/mod-manifest.v1.json"
+                  }
+                ]
+              },
+              "notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publish": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "reason"
+            ],
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "replacement": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^(rel_[0-9A-HJKMNP-TV-Z]{26})?$"
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
     "events.redaction-directive": {
       "version": "1.0.0",
       "owner": "events",
@@ -4233,6 +4464,43 @@
             "description": "Only when the subscription is created: shown once."
           }
         }
+      }
+    },
+    "events.publish-request": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/publish-request.v1.json",
+        "title": "EventsPublishRequest",
+        "description": "events.publish-request@1: the body of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps): one events.event-envelope@1, or a batch { events: [...] } of 1 to 100 envelopes stored all or nothing. trace_id, priority (important) and visibility (internal) default when left out. source must be the caller and event_type one of its prefixes (an app: app-<ULID> and app.<project_key>.*, actor the app or the user it acts for).",
+        "anyOf": [
+          {
+            "$ref": "event-envelope.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "events"
+            ],
+            "not": {
+              "required": [
+                "event_id"
+              ]
+            },
+            "properties": {
+              "events": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "$ref": "event-envelope.v1.json"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "chat.message.deleted": {
@@ -5070,6 +5338,304 @@
         ]
       }
     },
+    "sources.item-read-result": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/sources/item-read-result.v1.json",
+        "title": "SourcesItemReadResult",
+        "description": "sources.item-read-result@1: answers of sources.item.read on OpenVibe.Sources. GET /api/v1/items?source=&category=&after=&limit=&include_removed= → { items, next_after, more, sources } (a change feed: items in change order, at most 500; sources gives each listed source's health); GET /api/v1/items/:id[?revisions=1] → { item, source } (the item, with its revisions when asked, and its source's health; null when the source is gone).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "items",
+              "next_after",
+              "sources"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "$ref": "item.v1.json"
+                }
+              },
+              "next_after": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "more": {
+                "type": "boolean"
+              },
+              "sources": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "last_success_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "item",
+              "source"
+            ],
+            "properties": {
+              "item": {
+                "$ref": "item.v1.json"
+              },
+              "source": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "key"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "stale": {
+                        "type": "boolean"
+                      },
+                      "last_success_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "sources.source-read-result": {
+      "version": "1.0.0",
+      "owner": "sources",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/sources/source-read-result.v1.json",
+        "title": "SourcesSourceReadResult",
+        "description": "sources.source-read-result@1: answers of sources.source.read on OpenVibe.Sources. GET /api/v1/sources → { sources }; GET /api/v1/sources/:key → { source } (sources.source@1 with health); GET /api/v1/sources/:key/runs?before=&limit= → { runs, next_before } (newest first); GET /api/v1/runs?after=&source=&state=&limit= → { runs, next_after } (every source's fetch runs in order; state failed means any failure); GET /api/v1/health → { counts, attention } (sources by health status, and the failing, stale or never fetched ones).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "sources"
+            ],
+            "properties": {
+              "sources": {
+                "type": "array",
+                "items": {
+                  "$ref": "source.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "source"
+            ],
+            "properties": {
+              "source": {
+                "$ref": "source.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "runs"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "next_before"
+                ]
+              },
+              {
+                "required": [
+                  "next_after"
+                ]
+              }
+            ],
+            "properties": {
+              "runs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "source_key",
+                    "state"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": [
+                        "string",
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "source_key": {
+                      "type": "string"
+                    },
+                    "endpoint_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "trigger": {
+                      "type": "string"
+                    },
+                    "started_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "finished_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "http_status": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "error_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "detail": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "bytes": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "raw_body_hash": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "parser_version": {},
+                    "items": {
+                      "type": "object"
+                    },
+                    "seq": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "next_before": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "next_after": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "counts",
+              "attention"
+            ],
+            "properties": {
+              "counts": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              },
+              "attention": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "key",
+                    "status"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "category": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
     "search.document.indexed": {
       "version": "1.0.0",
       "owner": "search",
@@ -5200,6 +5766,326 @@
             "description": "The URL only when the document was public before (so it must be purged); null otherwise."
           }
         }
+      }
+    },
+    "search.document-write-request": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/document-write-request.v1.json",
+        "title": "SearchDocumentWriteRequest",
+        "description": "search.document-write-request@1: the request of search.document.write on OpenVibe.Search (a service writes and reads only the documents it owns). PUT /api/v1/documents/:owner/:type/:id: a search.index-document@1 (owner, type and id come from the path; a body that names others is 422). DELETE /api/v1/documents/:owner/:type/:id?revision= (a tombstone) and the owner reads (GET /api/v1/owners/:owner/documents, …/documents/:type/:id, …/rejections) take no body.",
+        "anyOf": [
+          {
+            "$ref": "index-document.v1.json"
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "search.owner-result": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/owner-result.v1.json",
+        "title": "SearchOwnerResult",
+        "description": "search.owner-result@1: answers of search.document.write on OpenVibe.Search. PUT and DELETE /api/v1/documents/:owner/:type/:id → search.write-result@1 (stale and conflicting revisions are 409 problems); GET /api/v1/owners/:owner/documents?type=&after=&limit= → { owner, documents, next_after } (reconciliation: type, id, revision, deleted, exposure, hash, indexed_at); GET /api/v1/owners/:owner/documents/:type/:id → { document, effective_indexability, exposure, via, event_id, indexed_at } (the stored document); GET /api/v1/owners/:owner/rejections?after= → { rejections, next_after } (index-document events Search refused, at most 200).",
+        "anyOf": [
+          {
+            "$ref": "write-result.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "documents",
+              "next_after"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string"
+              },
+              "documents": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "id",
+                    "revision",
+                    "deleted"
+                  ],
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "deleted": {
+                      "type": "boolean"
+                    },
+                    "exposure": {},
+                    "hash": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "indexed_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              },
+              "next_after": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "document",
+              "effective_indexability"
+            ],
+            "properties": {
+              "document": {
+                "$ref": "index-document.v1.json"
+              },
+              "effective_indexability": {},
+              "exposure": {},
+              "via": {},
+              "event_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "indexed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "rejections",
+              "next_after"
+            ],
+            "properties": {
+              "rejections": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "seq",
+                    "code"
+                  ],
+                  "properties": {
+                    "seq": {
+                      "type": "integer"
+                    },
+                    "event_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "event_type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "revision": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              },
+              "next_after": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "search.read-result": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/read-result.v1.json",
+        "title": "SearchReadResult",
+        "description": "search.read-result@1: answers of search.query.run and search.query.delegate on OpenVibe.Search. GET /api/v1/search → search.query-result@1; GET /api/v1/suggest?q=&owner=&type=&limit= → { suggestions } (title prefixes, at most 20, only documents the caller may see); GET /api/v1/documents/:owner/:type/:id → { document } (one document by exact id, if the caller may see it; 404 otherwise).",
+        "anyOf": [
+          {
+            "$ref": "query-result.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "suggestions"
+            ],
+            "properties": {
+              "suggestions": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "owner",
+                    "type",
+                    "id"
+                  ],
+                  "properties": {
+                    "owner": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "canonical_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "document"
+            ],
+            "properties": {
+              "document": {
+                "type": "object",
+                "required": [
+                  "owner",
+                  "type",
+                  "id",
+                  "revision",
+                  "indexable"
+                ],
+                "properties": {
+                  "owner": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "visibility": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "summary": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "canonical_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "facets": {},
+                  "language": {},
+                  "authorship": {},
+                  "provenance": {},
+                  "published_at": {},
+                  "updated_at": {},
+                  "indexable": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "wiki.space.updated": {
@@ -12117,6 +13003,351 @@
                       ]
                     }
                   }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ai.run-citation": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-citation.v1.json",
+        "title": "AiRunCitation",
+        "description": "ai.run-citation@1: one source a run cited on OpenVibe.AI (the citations table): what the workflow was given or a citation the requester attached afterwards (provenance.attached), with trust and provenance.",
+        "type": "object",
+        "required": [
+          "id",
+          "run_id",
+          "source_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "run_id": {
+            "type": "string"
+          },
+          "ordinal": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retrieved_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "snippet": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "content_hash": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "trust": {
+            "type": "object"
+          },
+          "provenance": {
+            "type": "object"
+          },
+          "attached_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ai.run-create-request": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-create-request.v1.json",
+        "title": "AiRunCreateRequest",
+        "description": "ai.run-create-request@1: bodies of ai.run.create on OpenVibe.AI. POST /api/v1/runs: ai.run-request@1. POST /api/v1/chat, /generate, /summarize, /classify, /extract, /enrich and /embed: a run of workflow ai.<op> whose input is the body itself (validated by that workflow's own input schema), except idempotency_key, target, attribution, on_behalf_of and options, which are the run's. POST /api/v1/runs/:id/citations: { citations } (1-50, each with a source_type; the requester only). POST /api/v1/runs/:id/cancel and /retry take no body.",
+        "anyOf": [
+          {
+            "$ref": "run-request.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "citations"
+            ],
+            "properties": {
+              "citations": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 50,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "source_type"
+                  ],
+                  "properties": {
+                    "source_type": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_.-]{1,63}$"
+                    },
+                    "source_id": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "url": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "title": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "author": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "snippet": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "provenance": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "A direct operation: the workflow input fields plus idempotency_key, target, attribution, on_behalf_of and options.",
+            "properties": {
+              "idempotency_key": {
+                "type": "string"
+              },
+              "target": {},
+              "attribution": {},
+              "on_behalf_of": {},
+              "options": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "ai.run-create-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-create-result.v1.json",
+        "title": "AiRunCreateResult",
+        "description": "ai.run-create-result@1: answers of ai.run.create on OpenVibe.AI. POST /api/v1/runs and the direct operations → { run, replayed? } (201 when it finished or was served from cache within the wait, 202 with Location while queued or running, 200 with replayed true for an idempotent repeat); POST …/cancel → { run }; POST …/retry → { run } (a new run with retry_of); POST …/citations → 201 { citations }. A quota refusal or a full queue is 429 with Retry-After.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "run"
+            ],
+            "properties": {
+              "run": {
+                "$ref": "run.v1.json"
+              },
+              "replayed": {
+                "const": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "citations"
+            ],
+            "properties": {
+              "citations": {
+                "type": "array",
+                "items": {
+                  "$ref": "run-citation.v1.json"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ai.run-read-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-read-result.v1.json",
+        "title": "AiRunReadResult",
+        "description": "ai.run-read-result@1: answers of ai.run.read on OpenVibe.AI (the caller's own runs; usage readers may ask for all). GET /api/v1/runs?status=&workflow=&target=&limit=&before= → { runs }; GET /api/v1/runs/:id → { run, citations, requests } (the request log is metadata only: hashes, tokens, cost, latency, never prompts); GET /api/v1/runs/:id/citations → { citations }. Someone else's run is 404 run.not_found.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "runs"
+            ],
+            "properties": {
+              "runs": {
+                "type": "array",
+                "items": {
+                  "$ref": "run.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "run",
+              "citations",
+              "requests"
+            ],
+            "properties": {
+              "run": {
+                "$ref": "run.v1.json"
+              },
+              "citations": {
+                "type": "array",
+                "items": {
+                  "$ref": "run-citation.v1.json"
+                }
+              },
+              "requests": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "seq",
+                    "status"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "seq": {
+                      "type": "integer"
+                    },
+                    "operation": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "provider_key": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "model_key": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "fallback": {},
+                    "tokens_in": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "tokens_out": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "cost_usd": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "latency_ms": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "citations"
+            ],
+            "properties": {
+              "citations": {
+                "type": "array",
+                "items": {
+                  "$ref": "run-citation.v1.json"
                 }
               }
             }
@@ -23809,6 +25040,33 @@
         }
       }
     },
+    "network.module-write-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/module-write-request.v1.json",
+        "title": "NetworkModuleWriteRequest",
+        "description": "network.module-write-request@1: the request of network.modules.write on OpenVibe.Network. PUT /internal/modules/:namespace/:subject: { data } — the record's new value, validated against the namespace's schema; If-Match names the revision read (412 if it moved). DELETE /internal/modules/:namespace/:subject (204) takes no body. The answer to PUT is modules.module-record@1.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "properties": {
+              "data": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
     "tools.tool": {
       "version": "1.1.0",
       "owner": "tools",
@@ -25251,6 +26509,99 @@
             "description": "8-200 printable ASCII characters. The Idempotency-Key header is used when both are present."
           }
         }
+      }
+    },
+    "tools.job-create-request": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/job-create-request.v1.json",
+        "title": "ToolsJobCreateRequest",
+        "description": "tools.job-create-request@1: the request of tools.job.create on the Tools satellites that run jobs. POST /api/v1/jobs: tools.job-request@1 (JSON or multipart). POST /api/v1/jobs/:id/retry and PUT|DELETE /api/v1/jobs/:id/references/:ref take no body.",
+        "anyOf": [
+          {
+            "$ref": "job-request.v1.json"
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "tools.job-read-result": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/job-read-result.v1.json",
+        "title": "ToolsJobReadResult",
+        "description": "tools.job-read-result@1: answers of tools.job.read on the Tools satellites. GET /api/v1/jobs/:id → tools.job@1, and so is the data of every event on GET /api/v1/jobs/:id/events (Server-Sent Events, Last-Event-ID resume); GET /api/v1/jobs/:id/files/:n → the result file's bytes (Content-Type of the file; 409 tools.job.not_ready before the job succeeded).",
+        "anyOf": [
+          {
+            "$ref": "job.v1.json"
+          },
+          {
+            "type": "string",
+            "contentEncoding": "binary",
+            "description": "GET /api/v1/jobs/:id/files/:n."
+          }
+        ]
+      }
+    },
+    "tools.tool-read-result": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/tool-read-result.v1.json",
+        "title": "ToolsToolReadResult",
+        "description": "tools.tool-read-result@1: answers of tools.tool.read on openvibe.tools (public registry; ADR-027). GET /api/v1/tools → tools.tool-list@1; GET /api/v1/tools/:id → tools.tool@1 with its schemas embedded; GET /api/v1/tools/:id/schema → the tool's own JSON Schema document { $schema, $id, $defs: { input, output } } (application/schema+json; input is false for a tool without an API input).",
+        "anyOf": [
+          {
+            "$ref": "tool-list.v1.json"
+          },
+          {
+            "$ref": "tool.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "$schema",
+              "$id",
+              "$defs"
+            ],
+            "properties": {
+              "$schema": {
+                "type": "string"
+              },
+              "$id": {
+                "type": "string"
+              },
+              "$defs": {
+                "type": "object",
+                "required": [
+                  "input",
+                  "output"
+                ],
+                "properties": {
+                  "input": {
+                    "type": [
+                      "object",
+                      "boolean"
+                    ]
+                  },
+                  "output": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "news.source.ingested": {
@@ -41825,6 +43176,94 @@
         }
       }
     },
+    "media.file-read-result": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/file-read-result.v1.json",
+        "title": "MediaFileReadResult",
+        "description": "media.file-read-result@1: answers of media.object.read on OpenVibe.Media. GET /api/v1/:app/files/:key → media.file@1 (the file's metadata; 404 when it is not the tenant's); GET /f/:key → the bytes, with Content-Type and Range (a sandbox file only through its signed URL).",
+        "anyOf": [
+          {
+            "$ref": "file.v1.json"
+          },
+          {
+            "type": "string",
+            "contentEncoding": "binary",
+            "description": "GET /f/:key: the file."
+          }
+        ]
+      }
+    },
+    "media.file": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/file.v1.json",
+        "title": "MediaFile",
+        "description": "media.file@1: one stored file of a tenant on OpenVibe.Media (server/files/routes.js filePublic): its key, owner, name, size, type and hash, and the URL it is served from (/f/<key>; a developer-project sandbox file gets a short-lived signed URL instead).",
+        "type": "object",
+        "required": [
+          "key",
+          "app_id",
+          "original_name",
+          "size",
+          "mime",
+          "url",
+          "created_at"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "app_id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "original_name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mime": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "sandbox": {
+            "const": true
+          },
+          "url_expires_at": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "community.paste.created": {
       "version": "1.0.0",
       "owner": "community",
@@ -45139,106 +46578,7 @@
                 "type": "boolean"
               },
               "item": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "source",
-                  "title",
-                  "url",
-                  "origin",
-                  "label",
-                  "actor",
-                  "occurred_at"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
-                  "source": {
-                    "type": "object",
-                    "required": [
-                      "service",
-                      "type",
-                      "id"
-                    ],
-                    "properties": {
-                      "service": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "string"
-                      },
-                      "id": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "title": {
-                    "type": "string",
-                    "maxLength": 300
-                  },
-                  "url": {
-                    "type": "string"
-                  },
-                  "origin": {
-                    "enum": [
-                      "user",
-                      "ai",
-                      "system"
-                    ]
-                  },
-                  "label": {
-                    "enum": [
-                      "AI",
-                      "System",
-                      null
-                    ]
-                  },
-                  "actor": {
-                    "type": [
-                      "object",
-                      "null"
-                    ],
-                    "properties": {
-                      "subject": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      },
-                      "username": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      },
-                      "display_name": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      },
-                      "avatar_url": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      },
-                      "profile_color": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      }
-                    }
-                  },
-                  "occurred_at": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
-                  }
-                }
+                "$ref": "pulse-item.v1.json"
               }
             }
           },
@@ -45892,6 +47232,953 @@
           },
           {
             "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "community.comment-thread": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/comment-thread.v1.json",
+        "title": "CommunityCommentThread",
+        "description": "community.comment-thread@1: one embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeThread): the entity it belongs to, its visibility and comment count. id is the sequential id for services and the access id (cth_…) for everyone else; a hidden thread shows moderators its count, others only that it is hidden.",
+        "type": "object",
+        "required": [
+          "id",
+          "access_id",
+          "ref",
+          "visibility",
+          "comment_count"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "integer",
+              "string"
+            ]
+          },
+          "access_id": {
+            "type": "string",
+            "pattern": "^cth_"
+          },
+          "ref": {
+            "$ref": "../common/entity-ref.v1.json"
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "hidden",
+              "locked"
+            ]
+          },
+          "comment_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "community.comment-write-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/comment-write-request.v1.json",
+        "title": "CommunityCommentWriteRequest",
+        "description": "community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "ref"
+            ],
+            "properties": {
+              "ref": {
+                "$ref": "../common/entity-ref.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000,
+                "pattern": "\\S"
+              },
+              "parent_id": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "anon_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "value": {
+                "enum": [
+                  1,
+                  -1,
+                  0,
+                  "1",
+                  "-1",
+                  "0"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "community.comment-write-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/comment-write-result.v1.json",
+        "title": "CommunityCommentWriteResult",
+        "description": "community.comment-write-result@1: answers of community.comment.write on OpenVibe.Community. POST …/threads/resolve → { thread, created } (201 when created); GET …/threads/:id?after=&sort=&limit=&parent= → { thread, comments, next_cursor, viewer }; POST …/threads/:id/comments → 201 { comment }; DELETE /api/v1/comments/:commentId → { ok, id }; POST …/:commentId/votes → { comment_id, score, upvotes, downvotes, my_vote }. Refusals are problem+json (thread.locked, auth.required, community.blocked, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "thread",
+              "created"
+            ],
+            "properties": {
+              "thread": {
+                "$ref": "comment-thread.v1.json"
+              },
+              "created": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "thread",
+              "comments",
+              "next_cursor",
+              "viewer"
+            ],
+            "properties": {
+              "thread": {
+                "$ref": "comment-thread.v1.json"
+              },
+              "comments": {
+                "type": "array",
+                "items": {
+                  "$ref": "comment.v1.json"
+                }
+              },
+              "next_cursor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "viewer": {
+                "type": "object",
+                "properties": {
+                  "signed_in": {
+                    "type": "boolean"
+                  },
+                  "can_comment": {
+                    "type": "boolean"
+                  },
+                  "can_vote": {
+                    "type": "boolean"
+                  },
+                  "can_moderate": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "comment"
+            ],
+            "properties": {
+              "comment": {
+                "$ref": "comment.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "id"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "id": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "comment_id",
+              "score",
+              "upvotes",
+              "downvotes",
+              "my_vote"
+            ],
+            "properties": {
+              "comment_id": {
+                "type": "integer"
+              },
+              "score": {
+                "type": "integer"
+              },
+              "upvotes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "downvotes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "my_vote": {
+                "enum": [
+                  1,
+                  -1,
+                  0
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "community.comment": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/comment.v1.json",
+        "title": "CommunityComment",
+        "description": "community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.",
+        "type": "object",
+        "required": [
+          "id",
+          "thread_id",
+          "parent_id",
+          "origin",
+          "author",
+          "message",
+          "deleted",
+          "score",
+          "my_vote",
+          "can_edit",
+          "can_delete"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "thread_id": {
+            "type": [
+              "integer",
+              "string"
+            ]
+          },
+          "parent_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "origin": {
+            "type": "string"
+          },
+          "author": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_ai": {
+                "const": true
+              },
+              "is_system": {
+                "const": true
+              }
+            }
+          },
+          "anon_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 5000
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "score": {
+            "type": "integer"
+          },
+          "upvotes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "downvotes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "my_vote": {
+            "enum": [
+              1,
+              -1,
+              0
+            ]
+          },
+          "reply_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "edited_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "can_edit": {
+            "type": "boolean"
+          },
+          "can_delete": {
+            "type": "boolean"
+          },
+          "replies": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "community.forum-space": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/forum-space.v1.json",
+        "title": "CommunityForumSpace",
+        "description": "community.forum-space@1: one forum space as OpenVibe.Community's /api/v1/spaces API shows it (server/forum/service.js shapeSpace): its slug, name, visibility, thread kind and statuses, style, whether votes and reactions are on, its group and parent board, the members-only gate and, in lists, its counts and last activity.",
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "visibility",
+          "url",
+          "thread_kind",
+          "statuses",
+          "style",
+          "votes",
+          "reactions",
+          "group",
+          "parent",
+          "members_only"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "staff"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "thread_kind": {
+            "type": "string"
+          },
+          "statuses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style": {
+            "enum": [
+              "feed",
+              "forum"
+            ]
+          },
+          "votes": {
+            "type": "boolean"
+          },
+          "reactions": {
+            "type": "boolean"
+          },
+          "group": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "parent": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "post_count": {
+            "type": "integer"
+          },
+          "thread_count": {
+            "type": "integer"
+          },
+          "last_activity_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "members_only": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string"
+              },
+              "owner_username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "join_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "last_post": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "children": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "community.pulse-item": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/pulse-item.v1.json",
+        "title": "CommunityPulseItem",
+        "description": "community.pulse-item@1: one item of the network's public activity on OpenVibe.Community (server/pulse/service.js shape), with provenance: its source entity, title, url, origin (user, ai or system), the AI or System label, the actor (a person for user items, never for AI or system ones) and when it happened.",
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "title",
+          "url",
+          "origin",
+          "label",
+          "actor",
+          "occurred_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "service",
+              "type",
+              "id"
+            ],
+            "properties": {
+              "service": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "url": {
+            "type": "string"
+          },
+          "origin": {
+            "enum": [
+              "user",
+              "ai",
+              "system"
+            ]
+          },
+          "label": {
+            "enum": [
+              "AI",
+              "System",
+              null
+            ]
+          },
+          "actor": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_ai": {
+                "const": true
+              },
+              "is_system": {
+                "const": true
+              }
+            }
+          },
+          "occurred_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "community.pulse-read-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/pulse-read-result.v1.json",
+        "title": "CommunityPulseReadResult",
+        "description": "community.pulse-read-result@1: answers of community.pulse.read on OpenVibe.Community (anyone). GET /api/v1/pulse?origin=user|ai|system&after=&limit= → { items, next_cursor } (newest first, at most 100; an unknown origin or a cursor this API did not issue is 400). GET /pulse is the same activity as an HTML page.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "items",
+              "next_cursor"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "$ref": "pulse-item.v1.json"
+                }
+              },
+              "next_cursor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "string",
+            "contentMediaType": "text/html",
+            "description": "GET /pulse: the HTML page."
+          }
+        ]
+      }
+    },
+    "community.space-read-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/space-read-result.v1.json",
+        "title": "CommunitySpaceReadResult",
+        "description": "community.space-read-result@1: answers of community.space.read on OpenVibe.Community. GET /api/v1/spaces → { spaces, groups } (the spaces the caller can open, each with its last post, and the board index: groups in order with their top-level spaces and child boards); GET /api/v1/spaces/:space → { space } (a staff or members-only space the caller cannot open is 404 or 401/403 vip.members_only); GET /s is the board index as an HTML page.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "spaces",
+              "groups"
+            ],
+            "properties": {
+              "spaces": {
+                "type": "array",
+                "items": {
+                  "$ref": "forum-space.v1.json"
+                }
+              },
+              "groups": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "slug",
+                    "name",
+                    "spaces"
+                  ],
+                  "properties": {
+                    "slug": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "spaces": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "space"
+            ],
+            "properties": {
+              "space": {
+                "$ref": "forum-space.v1.json"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "contentMediaType": "text/html",
+            "description": "GET /s: the board index page."
+          }
+        ]
+      }
+    },
+    "community.thread-read-result": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/thread-read-result.v1.json",
+        "title": "CommunityThreadReadResult",
+        "description": "community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "space",
+              "threads",
+              "page",
+              "pages",
+              "total"
+            ],
+            "properties": {
+              "space": {
+                "type": "object"
+              },
+              "sort": {
+                "type": "string"
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "per_page": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pages": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "categories": {
+                "type": "array"
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "viewer": {
+                "type": "object"
+              },
+              "children": {
+                "type": "array"
+              },
+              "groups": {
+                "type": "array"
+              },
+              "threads": {
+                "type": "array",
+                "items": {
+                  "$ref": "forum-thread.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "space",
+              "thread",
+              "posts",
+              "page",
+              "pages"
+            ],
+            "properties": {
+              "space": {
+                "type": "object"
+              },
+              "thread": {
+                "$ref": "forum-thread.v1.json"
+              },
+              "posts": {
+                "type": "array",
+                "items": {
+                  "$ref": "forum-post.v1.json"
+                }
+              },
+              "reactions": {
+                "type": "array"
+              },
+              "crosspost": {
+                "type": "object"
+              },
+              "categories": {
+                "type": "array"
+              },
+              "attachments": {
+                "type": "object"
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "per_page": {
+                "type": "integer"
+              },
+              "pages": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "total": {
+                "type": "integer"
+              },
+              "viewer": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "contentMediaType": "text/html",
+            "description": "GET /s/:space and /s/:space/t/:slug: HTML pages."
+          },
+          {
+            "type": "string",
+            "contentMediaType": "application/rss+xml",
+            "description": "GET /s/feed.xml and /s/:space/feed.xml: RSS feeds."
           }
         ]
       }

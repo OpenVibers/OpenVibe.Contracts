@@ -229,12 +229,12 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
         ok(c && c.owner === 'tools' && c.inputSchema === 'tools.run-request@1' && c.outputSchema === 'tools.run@1' && c.implementedBy.some(r => r.startsWith('POST /api/v1/tools/:id/run')), `${id} is the run API`);
     }
     const [readCap, runCap, probeCap] = ['tools.tool.read', 'tools.tool.run', 'tools.net.probe'].map(id => capabilities.get(id));
-    ok(readCap.visibility === 'public' && readCap.quotaClass === 'tools-read' && readCap.outputSchema === 'tools.tool@1' && ['GET /api/v1/tools', 'GET /api/v1/tools/:id', 'GET /api/v1/tools/:id/schema'].every(r => readCap.implementedBy.includes(r)), 'tools.tool.read: public registry routes');
+    ok(readCap.visibility === 'public' && readCap.quotaClass === 'tools-read' && readCap.outputSchema === 'tools.tool-read-result@1' && JSON.stringify(contracts.schema('tools.tool-read-result').anyOf.slice(0, 2)) === JSON.stringify([{ $ref: 'tool-list.v1.json' }, { $ref: 'tool.v1.json' }]) && ['GET /api/v1/tools', 'GET /api/v1/tools/:id', 'GET /api/v1/tools/:id/schema'].every(r => readCap.implementedBy.includes(r)), 'tools.tool.read: public registry routes');
     ok(runCap.visibility === 'public' && runCap.quotaClass === 'tools-run', 'tools.tool.run is public');
     ok(probeCap.visibility === 'partner' && probeCap.quotaClass === 'tools-probe', 'tools.net.probe is partner: staff-set allowances only, never a default one');
     const jobCreate = capabilities.get('tools.job.create');
-    ok(['POST /api/v1/jobs/:id/retry', 'PUT|DELETE /api/v1/jobs/:id/references/:ref'].every(r => jobCreate.implementedBy.includes(r)) && jobCreate.inputSchema === 'tools.job-request@1', 'tools.job.create covers submit, retry and references');
-    ok(['tools.job.create', 'tools.job.read', 'tools.job.cancel'].every(id => capabilities.get(id).outputSchema === 'tools.job@1'), 'the job capabilities answer tools.job@1');
+    ok(['POST /api/v1/jobs/:id/retry', 'PUT|DELETE /api/v1/jobs/:id/references/:ref'].every(r => jobCreate.implementedBy.includes(r)) && jobCreate.inputSchema === 'tools.job-create-request@1' && contracts.schema('tools.job-create-request').anyOf[0].$ref === 'job-request.v1.json', 'tools.job.create covers submit (tools.job-request@1), retry and references');
+    ok(['tools.job.create', 'tools.job.cancel'].every(id => capabilities.get(id).outputSchema === 'tools.job@1') && capabilities.get('tools.job.read').outputSchema === 'tools.job-read-result@1' && contracts.schema('tools.job-read-result').anyOf[0].$ref === 'job.v1.json', 'the job capabilities answer tools.job@1 (reads also serve result files)');
     const svc = services.get('tools');
     ok(svc.ready === '/api/ready' && ['tools.tool.read', 'tools.tool.run', 'tools.net.probe'].every(c => svc.capabilities.includes(c)), 'the tools manifest lists the registry and run capabilities and its ready path');
     for (const t of ['created', 'started', 'succeeded', 'failed']) ok(contracts.resolve(`tools.job.${t}`).status === 'active', `tools.job.${t} is emitted (active)`);

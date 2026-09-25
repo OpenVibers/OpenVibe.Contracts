@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/pulse-item.v1.json",
+  "title": "CommunityPulseItem",
+  "description": "community.pulse-item@1: one item of the network's public activity on OpenVibe.Community (server/pulse/service.js shape), with provenance: its source entity, title, url, origin (user, ai or system), the AI or System label, the actor (a person for user items, never for AI or system ones) and when it happened.",
+  "type": "object",
+  "required": [
+    "id",
+    "source",
+    "title",
+    "url",
+    "origin",
+    "label",
+    "actor",
+    "occurred_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "service",
+        "type",
+        "id"
+      ],
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "url": {
+      "type": "string"
+    },
+    "origin": {
+      "enum": [
+        "user",
+        "ai",
+        "system"
+      ]
+    },
+    "label": {
+      "enum": [
+        "AI",
+        "System",
+        null
+      ]
+    },
+    "actor": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_ai": {
+          "const": true
+        },
+        "is_system": {
+          "const": true
+        }
+      }
+    },
+    "occurred_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

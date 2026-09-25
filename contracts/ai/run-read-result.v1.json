@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/run-read-result.v1.json",
+  "title": "AiRunReadResult",
+  "description": "ai.run-read-result@1: answers of ai.run.read on OpenVibe.AI (the caller's own runs; usage readers may ask for all). GET /api/v1/runs?status=&workflow=&target=&limit=&before= → { runs }; GET /api/v1/runs/:id → { run, citations, requests } (the request log is metadata only: hashes, tokens, cost, latency, never prompts); GET /api/v1/runs/:id/citations → { citations }. Someone else's run is 404 run.not_found.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "runs"
+      ],
+      "properties": {
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "run.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "run",
+        "citations",
+        "requests"
+      ],
+      "properties": {
+        "run": {
+          "$ref": "run.v1.json"
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "run-citation.v1.json"
+          }
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "seq",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "seq": {
+                "type": "integer"
+              },
+              "operation": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "provider_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "model_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "fallback": {},
+              "tokens_in": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "tokens_out": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "cost_usd": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "latency_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "citations"
+      ],
+      "properties": {
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "run-citation.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

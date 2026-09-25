@@ -6,46 +6,31 @@
   "anyOf": [
     {
       "type": "object",
-      "required": ["item", "created"],
+      "required": [
+        "item",
+        "created"
+      ],
       "properties": {
-        "created": { "type": "boolean" },
+        "created": {
+          "type": "boolean"
+        },
         "item": {
-          "type": "object",
-          "required": ["id", "source", "title", "url", "origin", "label", "actor", "occurred_at"],
-          "properties": {
-            "id": { "type": "integer" },
-            "source": {
-              "type": "object",
-              "required": ["service", "type", "id"],
-              "properties": {
-                "service": { "type": "string" },
-                "type": { "type": "string" },
-                "id": { "type": "string" }
-              }
-            },
-            "title": { "type": "string", "maxLength": 300 },
-            "url": { "type": "string" },
-            "origin": { "enum": ["user", "ai", "system"] },
-            "label": { "enum": ["AI", "System", null] },
-            "actor": {
-              "type": ["object", "null"],
-              "properties": {
-                "subject": { "type": ["string", "null"] },
-                "username": { "type": ["string", "null"] },
-                "display_name": { "type": ["string", "null"] },
-                "avatar_url": { "type": ["string", "null"] },
-                "profile_color": { "type": ["string", "null"] }
-              }
-            },
-            "occurred_at": { "type": ["string", "null"] }
-          }
+          "$ref": "pulse-item.v1.json"
         }
       }
     },
     {
       "type": "object",
-      "required": ["removed"],
-      "properties": { "removed": { "type": "integer", "minimum": 0, "maximum": 1 } }
+      "required": [
+        "removed"
+      ],
+      "properties": {
+        "removed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
     }
   ]
 }

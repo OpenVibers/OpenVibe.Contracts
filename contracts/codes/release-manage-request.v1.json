@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/release-manage-request.v1.json",
+  "title": "CodesReleaseManageRequest",
+  "description": "codes.release-manage-request@1: bodies of codes.release.manage on OpenVibe.Codes (an app token managing its own releases). POST /api/v1/apps/:app/releases: { kind?, manifest, notes?, publish? } — kind mod or app (anything else is app); manifest must validate as codes.app-manifest@1 for an app or mods.mod-manifest@1 for a mod (422 manifest.invalid with the validation otherwise; a version that already has a release is 409); notes are cut to 2000 characters; publish true publishes the draft at once. POST /api/v1/releases/:id/deprecate: { reason, replacement? } (a reason is required, cut to 500 characters; replacement must be a published release of the same app). POST /api/v1/releases/:id/revoke: { reason } (required). POST /api/v1/releases/:id/publish takes no body. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "manifest"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "mod, or app (the default)."
+        },
+        "manifest": {
+          "anyOf": [
+            {
+              "$ref": "app-manifest.v1.json"
+            },
+            {
+              "$ref": "../mods/mod-manifest.v1.json"
+            }
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publish": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "replacement": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^(rel_[0-9A-HJKMNP-TV-Z]{26})?$"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

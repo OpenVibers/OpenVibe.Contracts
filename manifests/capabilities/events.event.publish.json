@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "internal",
   "description": "Publish durable events (events.event-envelope@1) as the calling service: source must be the principal's service slug and event_type must use a prefix that source owns. Idempotent on event_id.",
-  "inputSchema": "events.event-envelope@1",
+  "inputSchema": "events.publish-request@1",
   "permissions": [
     "events:write"
   ],

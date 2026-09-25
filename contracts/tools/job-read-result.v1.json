@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/job-read-result.v1.json",
+  "title": "ToolsJobReadResult",
+  "description": "tools.job-read-result@1: answers of tools.job.read on the Tools satellites. GET /api/v1/jobs/:id → tools.job@1, and so is the data of every event on GET /api/v1/jobs/:id/events (Server-Sent Events, Last-Event-ID resume); GET /api/v1/jobs/:id/files/:n → the result file's bytes (Content-Type of the file; 409 tools.job.not_ready before the job succeeded).",
+  "anyOf": [
+    {
+      "$ref": "job.v1.json"
+    },
+    {
+      "type": "string",
+      "contentEncoding": "binary",
+      "description": "GET /api/v1/jobs/:id/files/:n."
+    }
+  ]
+}

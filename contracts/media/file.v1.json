@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/file.v1.json",
+  "title": "MediaFile",
+  "description": "media.file@1: one stored file of a tenant on OpenVibe.Media (server/files/routes.js filePublic): its key, owner, name, size, type and hash, and the URL it is served from (/f/<key>; a developer-project sandbox file gets a short-lived signed URL instead).",
+  "type": "object",
+  "required": [
+    "key",
+    "app_id",
+    "original_name",
+    "size",
+    "mime",
+    "url",
+    "created_at"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "app_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ]
+    },
+    "original_name": {
+      "type": "string"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mime": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "sandbox": {
+      "const": true
+    },
+    "url_expires_at": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/run-citation.v1.json",
+  "title": "AiRunCitation",
+  "description": "ai.run-citation@1: one source a run cited on OpenVibe.AI (the citations table): what the workflow was given or a citation the requester attached afterwards (provenance.attached), with trust and provenance.",
+  "type": "object",
+  "required": [
+    "id",
+    "run_id",
+    "source_type"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "ordinal": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "source_type": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "retrieved_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "snippet": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "trust": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "attached_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}

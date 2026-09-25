@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Upload a file object into an app namespace.",
-  "outputSchema": "media.media-ref@1",
+  "outputSchema": "media.file@1",
   "permissions": [
     "media:write"
   ],

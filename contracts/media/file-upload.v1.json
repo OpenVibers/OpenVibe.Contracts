@@ -2,11 +2,17 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/media/file-upload.v1.json",
   "title": "MediaFileUpload",
-  "description": "media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.media-ref@1.",
+  "description": "media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.file@1 (201).",
   "type": "object",
-  "required": ["file"],
+  "required": [
+    "file"
+  ],
   "additionalProperties": true,
   "properties": {
-    "file": { "type": "string", "contentEncoding": "binary", "description": "The multipart part named file (filename and Content-Type from the part)." }
+    "file": {
+      "type": "string",
+      "contentEncoding": "binary",
+      "description": "The multipart part named file (filename and Content-Type from the part)."
+    }
   }
 }

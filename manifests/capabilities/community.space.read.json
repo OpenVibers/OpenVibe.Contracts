@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "List the spaces the caller can open and read one space's metadata (roadmap §30.2 community.space.*). Anonymous callers see public spaces, signed-in people also members spaces, moderators also staff spaces; members-only (VIP) spaces are flagged. Served to anyone; Community checks space visibility itself.",
-  "outputSchema": "common.entity-ref@1",
+  "outputSchema": "community.space-read-result@1",
   "permissions": [
     "community:read"
   ],

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/resolve-request.v1.json",
+  "title": "IdentityResolveRequest",
+  "description": "identity.resolve-request@1: the request of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve?subject_id= or ?system=&id=[&type=user] takes no body. POST /internal/identity/resolve-batch: { subject_ids } or { system, type?, ids } (at most 500; 413 beyond).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "subject_ids"
+      ],
+      "properties": {
+        "subject_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "system",
+        "ids"
+      ],
+      "properties": {
+        "system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "default": "user"
+        },
+        "ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

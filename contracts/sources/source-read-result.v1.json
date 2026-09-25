@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sources/source-read-result.v1.json",
+  "title": "SourcesSourceReadResult",
+  "description": "sources.source-read-result@1: answers of sources.source.read on OpenVibe.Sources. GET /api/v1/sources → { sources }; GET /api/v1/sources/:key → { source } (sources.source@1 with health); GET /api/v1/sources/:key/runs?before=&limit= → { runs, next_before } (newest first); GET /api/v1/runs?after=&source=&state=&limit= → { runs, next_after } (every source's fetch runs in order; state failed means any failure); GET /api/v1/health → { counts, attention } (sources by health status, and the failing, stale or never fetched ones).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "sources"
+      ],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "source.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "source.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "runs"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "next_before"
+          ]
+        },
+        {
+          "required": [
+            "next_after"
+          ]
+        }
+      ],
+      "properties": {
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source_key",
+              "state"
+            ],
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_key": {
+                "type": "string"
+              },
+              "endpoint_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "trigger": {
+                "type": "string"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "state": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bytes": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "raw_body_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "parser_version": {},
+              "items": {
+                "type": "object"
+              },
+              "seq": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "next_before": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "next_after": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "counts",
+        "attention"
+      ],
+      "properties": {
+        "counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "attention": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "status"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

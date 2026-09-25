@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/run-create-request.v1.json",
+  "title": "AiRunCreateRequest",
+  "description": "ai.run-create-request@1: bodies of ai.run.create on OpenVibe.AI. POST /api/v1/runs: ai.run-request@1. POST /api/v1/chat, /generate, /summarize, /classify, /extract, /enrich and /embed: a run of workflow ai.<op> whose input is the body itself (validated by that workflow's own input schema), except idempotency_key, target, attribution, on_behalf_of and options, which are the run's. POST /api/v1/runs/:id/citations: { citations } (1-50, each with a source_type; the requester only). POST /api/v1/runs/:id/cancel and /retry take no body.",
+  "anyOf": [
+    {
+      "$ref": "run-request.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "citations"
+      ],
+      "properties": {
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "required": [
+              "source_type"
+            ],
+            "properties": {
+              "source_type": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_.-]{1,63}$"
+              },
+              "source_id": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "url": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "author": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "snippet": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "provenance": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "description": "A direct operation: the workflow input fields plus idempotency_key, target, attribution, on_behalf_of and options.",
+      "properties": {
+        "idempotency_key": {
+          "type": "string"
+        },
+        "target": {},
+        "attribution": {},
+        "on_behalf_of": {},
+        "options": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

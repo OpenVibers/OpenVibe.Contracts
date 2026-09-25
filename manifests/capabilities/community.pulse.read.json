@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "description": "Read the network's public activity feed (Pulse): entity reference, title, URL and origin (user, ai or system), newest first with a cursor. Only public items are ever stored. Served to anyone (CORS allow-list for browsers). Live's /api/home/pulse is a different, Live-only feed.",
-  "outputSchema": "common.entity-ref@1",
+  "outputSchema": "community.pulse-read-result@1",
   "permissions": [
     "community:read"
   ],

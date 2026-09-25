@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/job-create-request.v1.json",
+  "title": "ToolsJobCreateRequest",
+  "description": "tools.job-create-request@1: the request of tools.job.create on the Tools satellites that run jobs. POST /api/v1/jobs: tools.job-request@1 (JSON or multipart). POST /api/v1/jobs/:id/retry and PUT|DELETE /api/v1/jobs/:id/references/:ref take no body.",
+  "anyOf": [
+    {
+      "$ref": "job-request.v1.json"
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

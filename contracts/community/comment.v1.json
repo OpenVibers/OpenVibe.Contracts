@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/comment.v1.json",
+  "title": "CommunityComment",
+  "description": "community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.",
+  "type": "object",
+  "required": [
+    "id",
+    "thread_id",
+    "parent_id",
+    "origin",
+    "author",
+    "message",
+    "deleted",
+    "score",
+    "my_vote",
+    "can_edit",
+    "can_delete"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "thread_id": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "parent_id": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "origin": {
+      "type": "string"
+    },
+    "author": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_ai": {
+          "const": true
+        },
+        "is_system": {
+          "const": true
+        }
+      }
+    },
+    "anon_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "display_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 5000
+    },
+    "deleted": {
+      "type": "boolean"
+    },
+    "score": {
+      "type": "integer"
+    },
+    "upvotes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "downvotes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "my_vote": {
+      "enum": [
+        1,
+        -1,
+        0
+      ]
+    },
+    "reply_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "edited_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "can_edit": {
+      "type": "boolean"
+    },
+    "can_delete": {
+      "type": "boolean"
+    },
+    "replies": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}
