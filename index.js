@@ -25,4 +25,5 @@ module.exports = {
     modules: require('./lib/modules'),
     tools: require('./lib/tools'),
     staff: require('./lib/staff'),
+    openapi: require('./lib/openapi'),
 };

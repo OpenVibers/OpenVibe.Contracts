@@ -46,6 +46,8 @@ Contract check for a service's CI (v0.3): `npx openvibe-contracts-check --servic
 
 TypeScript types: `generated/typescript/index.d.ts` (`"types"` in package.json). All schemas in one file: `generated/json-schema/bundle.json`.
 
+OpenAPI 3.1 per service: `generated/openapi/<service>.json` (index in `generated/openapi/index.json`; `require('openvibe-contracts').openapi.document('tools')`). Each is built from the capabilities (`implementedBy` routes, input and output schemas) by `lib/openapi.js`. It lists every route a capability names, with the capabilities it performs, its request and response schemas and problem+json errors. OpenVibe.Codes serves them together as the API explorer.
+
 ## What's in v0.1
 
 | Contract | Owner | Purpose |

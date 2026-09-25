@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.51.0 — 2026-09-25
+
+**OpenAPI 3.1 per service** (roadmap WS-C task 6): `generated/openapi/<service>.json` for each of the 24 services that own an active capability, 450 operations in all, plus `generated/openapi/index.json`. `lib/openapi.js` (`openapi.buildOpenApi()`, `openapi.index()`, `openapi.document(id)`) builds them from each capability's `implementedBy` routes and its input and output schemas:
+- one operation per route, listing the capabilities it performs (`x-openvibe-capabilities`, visibility and quota class), with a bearer token as its security;
+- a JSON, multipart or binary request body, or query parameters on reads;
+- a `2XX` response from the output schema, and `application/problem+json` errors;
+- every schema reached, as a component.
+
+The documents are validated as OpenAPI 3.1 in `npm test` (`test/openapi.test.js`, dev dependency `@seriousme/openapi-schema-validator`), and `generate --check` keeps them current.
+
 ## 0.50.0 — 2026-09-25
 
 Capability schemas (roadmap WS-C task 4), starting with Search: **`search.query@1`** (the query string of `GET /api/v1/search` and `/suggest`: q, owner, type, lang, facets, limit, cursor, `facet.<key>`), **`search.query-result@1`** (a page of hits the caller may see, `next_cursor`, facet counts; never an ACL or a total) and **`search.write-result@1`** (`PUT /api/v1/documents/…`: applied or unchanged; stale and conflicting revisions are 409 problems). `search.query.run` and `search.query.delegate` name the first two; `search.document.write` names the third as its output. Fixtures for each. Two conventions so every capability can name schemas: **`common.no-body@1`** (a request whose parameters are the path and query) and **`common.binary@1`** (a response of bytes); **`media.file-upload@1`** is the multipart body of `POST /api/v1/:app/files`. The Media and Tools capabilities name them. **A ratchet**: `test/capability-schemas.test.js` fails on an active capability without an input or output schema unless it is in `compatibility/capability-schema-gaps.json` (162 today), and on a listed gap that has been filled; the list only shrinks. Additive.
