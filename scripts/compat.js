@@ -43,10 +43,13 @@ function compare(id, a, b, at) {
 const oldCat = readAt(base, 'contracts/catalog.json');
 const newCat = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/catalog.json'), 'utf8'));
 const deprecated = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'compatibility/deprecations.json'), 'utf8')).deprecations.map(d => d.id));
+// A recorded correction (compatibility/corrections.json) is accepted against its one base tag only.
+const corrected = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'compatibility/corrections.json'), 'utf8')).corrections.filter(c => c.base === base).map(c => c.id));
 for (const entry of (oldCat ? oldCat.contracts : [])) {
     const now = newCat.contracts.find(c => c.id === entry.id);
     if (!now) { if (!deprecated.has(entry.id)) problems.push(`${entry.id}: removed from the catalog without a deprecation`); continue; }
     if (now.schema !== entry.schema) continue;  // new major file; old one must still be listed separately
+    if (corrected.has(entry.id)) { console.log(`compat vs ${base}: ${entry.id} is a recorded correction (compatibility/corrections.json)`); continue; }
     compare(entry.id, readAt(base, `contracts/${entry.schema}`), JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', entry.schema), 'utf8')), '');
 }
 if (problems.length) { console.error(`compat vs ${base}: ${problems.length} breaking change(s)\n  ${problems.join('\n  ')}`); process.exit(1); }

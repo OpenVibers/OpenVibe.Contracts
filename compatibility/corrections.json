@@ -1,0 +1,11 @@
+{
+  "_about": "Recorded corrections: a contract released with a schema that nothing ever produced or consumed, fixed in the next release to describe what is actually sent. { id, base (the release tag the correction is compared with), fixedIn, reason }. The compat gate accepts the listed contract's changes against that one base only; every other comparison, and every later release, is checked as usual. Never for a contract anyone implemented.",
+  "corrections": [
+    {
+      "id": "network.grant.changed",
+      "base": "v0.47.0",
+      "fixedIn": "0.48.0",
+      "reason": "0.47.0 gave network.grant.changed a service-principal payload, but Network's developer relay already sent it for developer-app grants ({ project_id, capability, audience, from, to }) and OpenVibe.Events acts on that shape. Nothing produced or consumed the 0.47.0 shape; it moved to network.principal_grant.changed."
+    }
+  ]
+}
