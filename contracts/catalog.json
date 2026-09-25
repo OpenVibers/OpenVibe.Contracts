@@ -874,6 +874,15 @@
       "status": "active"
     },
     {
+      "id": "network.user.updated",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.user.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.user.token_valid_after",
       "version": "1.0.0",
       "owner": "network",

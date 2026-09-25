@@ -9395,6 +9395,46 @@ export interface NetworkModuleUpdatedPayload {
       };
 }
 
+/** network.user.updated@1.0.0 (owner: network) */
+/**
+ * network.user.updated v1 (OpenVibe.Network server/identity/profile-events.js; roadmap WS-B task 2). What other services may know about a person changed: their username, display name, picture, colour, role or ban. The payload is the person's whole current profile, not a diff, so a consumer keeps a projection by writing it over the one it has, and ignores one whose revision is not newer (events can arrive out of order). Emitted in the transaction of the change: a profile edit, a rename, a role grant or removal, a ban or unban. Consumers use it instead of their own copies: roles go both ways (a downgrade too), and a ban arrives even for someone who never comes back. Envelope: subject { type: user, id }, visibility internal, actor the person (their own edit) or the staff member.
+ */
+export interface NetworkUserUpdatedPayload {
+  /**
+   * The person (identity.subject-ref@1, a user).
+   */
+  subject: {
+    type: "user";
+    id: string;
+  };
+  /**
+   * Network's numeric user id (the legacy id services linked before subjects).
+   */
+  network_user_id: number;
+  /**
+   * Grows with every change to this person's profile; a consumer keeps the highest it has seen.
+   */
+  revision: number;
+  username: string;
+  display_name?: string | null;
+  avatar_url?: string | null;
+  profile_color?: string | null;
+  /**
+   * The staff map's role (policy.staff-map); capabilities follow from it.
+   */
+  role: "user" | "streamer" | "global_mod" | "admin";
+  banned: boolean;
+  /**
+   * What this change touched ('created' for a new account), so a consumer can skip work it does not need.
+   *
+   * @minItems 1
+   */
+  changed: [
+    "username" | "display_name" | "avatar_url" | "profile_color" | "role" | "banned" | "created",
+    ...("username" | "display_name" | "avatar_url" | "profile_color" | "role" | "banned" | "created")[]
+  ];
+}
+
 /** network.user.token_valid_after@1.0.0 (owner: network) */
 /**
  * network.user.token_valid_after v1 (OpenVibe.Network server/auth/revocation.js). A person's tokens issued before valid_after are no longer good: every service that accepts Network user tokens refuses one whose iat (seconds) * 1000 is less than valid_after (milliseconds), exactly as Network does, drops what it cached for that person's older tokens and closes the sockets they opened. Emitted in the transaction that moves the cutoff: a password change or reset, sign out everywhere, a ban, an account deletion, or staff ending someone's sessions. Consumers keep the latest valid_after per subject and ignore an older one (events can arrive out of order). Envelope: subject { type: user, id }, visibility internal, actor the person (their own change) or the staff member / system:network.

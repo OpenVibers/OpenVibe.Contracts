@@ -51,7 +51,8 @@
     "network.credential.rotated",
     "network.grant.changed",
     "network.module.updated",
-    "network.user.token_valid_after"
+    "network.user.token_valid_after",
+    "network.user.updated"
   ],
   "eventsConsumed": [
     "billing.staff.action",

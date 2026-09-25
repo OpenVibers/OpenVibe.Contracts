@@ -10098,6 +10098,113 @@
         }
       }
     },
+    "network.user.updated": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.user.updated.v1.json",
+        "title": "NetworkUserUpdatedPayload",
+        "description": "network.user.updated v1 (OpenVibe.Network server/identity/profile-events.js; roadmap WS-B task 2). What other services may know about a person changed: their username, display name, picture, colour, role or ban. The payload is the person's whole current profile, not a diff, so a consumer keeps a projection by writing it over the one it has, and ignores one whose revision is not newer (events can arrive out of order). Emitted in the transaction of the change: a profile edit, a rename, a role grant or removal, a ban or unban. Consumers use it instead of their own copies: roles go both ways (a downgrade too), and a ban arrives even for someone who never comes back. Envelope: subject { type: user, id }, visibility internal, actor the person (their own edit) or the staff member.",
+        "type": "object",
+        "required": [
+          "subject",
+          "network_user_id",
+          "revision",
+          "username",
+          "role",
+          "banned",
+          "changed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "object",
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "description": "The person (identity.subject-ref@1, a user)."
+          },
+          "network_user_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Network's numeric user id (the legacy id services linked before subjects)."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Grows with every change to this person's profile; a consumer keeps the highest it has seen."
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "profile_color": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 32
+          },
+          "role": {
+            "enum": [
+              "user",
+              "streamer",
+              "global_mod",
+              "admin"
+            ],
+            "description": "The staff map's role (policy.staff-map); capabilities follow from it."
+          },
+          "banned": {
+            "type": "boolean"
+          },
+          "changed": {
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "username",
+                "display_name",
+                "avatar_url",
+                "profile_color",
+                "role",
+                "banned",
+                "created"
+              ]
+            },
+            "description": "What this change touched ('created' for a new account), so a consumer can skip work it does not need."
+          }
+        }
+      }
+    },
     "network.user.token_valid_after": {
       "version": "1.0.0",
       "owner": "network",

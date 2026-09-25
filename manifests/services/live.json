@@ -45,11 +45,12 @@
     "live.release.deployed"
   ],
   "eventsConsumed": [
-    "openre.session.*",
-    "media.vod.*",
     "media.clip.*",
     "media.storage.*",
-    "network.user.token_valid_after"
+    "media.vod.*",
+    "network.user.token_valid_after",
+    "network.user.updated",
+    "openre.session.*"
   ],
   "namespacesOwned": [
     "live.*"

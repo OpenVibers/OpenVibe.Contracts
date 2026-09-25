@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.43.0 — 2026-09-25
+
+**`network.user.updated`** (roadmap WS-B task 2). A person's whole current profile after any change that other services may know about: username, display name, picture, colour, role or ban. The payload carries a `revision` and the list of what `changed` (`created` for a new account). Consumers keep a projection by writing the newest over what they have: roles apply in both directions, and a ban arrives even for someone who never comes back. Network produces it and Live consumes it (Live's `subject_projection`, replacing the `/internal/user-role` push). Fixtures cover valid and invalid payloads. Additive.
+
 ## 0.42.0 — 2026-09-25
 
 The service manifests carry what Network's registry and site list used to hard-code (roadmap WS-C task 1, "manifest-derived registry"):
