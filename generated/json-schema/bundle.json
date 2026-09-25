@@ -10456,6 +10456,51 @@
         }
       }
     },
+    "network.block.changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.block.changed.v1.json",
+        "title": "NetworkBlockChangedPayload",
+        "description": "network.block.changed v1 (OpenVibe.Network; roadmap WS-E task 5). A person blocked or unblocked someone. Blocks are the network's: kept by Network, keyed by subjects, and honoured by every product — Chat (no DM, no mention notification from someone who blocked you), Community (no reply to their threads or comments) and notifications (none from a person the recipient blocked). Written to Network's outbox in the transaction that changes the block. Consumers keep a projection and apply the latest `revision` per (blocker, blocked); a service may also read the current list at GET /internal/blocks (network.blocks.read). Envelope: subject { type: user, id: <blocker> }, visibility internal, actor the blocker.",
+        "type": "object",
+        "required": [
+          "blocker",
+          "blocked",
+          "active",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "blocker": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Who blocked."
+          },
+          "blocked": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Who is blocked."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "true: blocked; false: unblocked."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Grows with every change of this pair; a consumer ignores an older one."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "network.user.updated": {
       "version": "1.0.0",
       "owner": "network",

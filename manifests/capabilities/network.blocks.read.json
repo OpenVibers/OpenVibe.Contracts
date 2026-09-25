@@ -1,0 +1,13 @@
+{
+  "id": "network.blocks.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read who a person has blocked and who has blocked them (subjects only), as an owning service honouring platform blocks: Chat for DMs and mentions, Community for replies, notification senders. Never grantable to apps.",
+  "permissions": ["blocks:read"],
+  "resourceConstraints": [],
+  "quotaClass": "blocks-read",
+  "events": ["network.block.changed"],
+  "implementedBy": ["GET /internal/blocks?subject=usr_…"]
+}

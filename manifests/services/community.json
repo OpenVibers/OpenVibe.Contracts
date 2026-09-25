@@ -38,6 +38,7 @@
     "community.thread.created"
   ],
   "eventsConsumed": [
+    "network.block.changed",
     "network.user.token_valid_after"
   ],
   "namespacesOwned": [

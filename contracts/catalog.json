@@ -946,6 +946,15 @@
       "status": "active"
     },
     {
+      "id": "network.block.changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.block.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.user.updated",
       "version": "1.0.0",
       "owner": "network",

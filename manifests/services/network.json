@@ -34,6 +34,7 @@
   "capabilities": [
     "identity.subject.resolve",
     "mods.grant.manage",
+    "network.blocks.read",
     "network.coins.credit",
     "network.coins.debit",
     "network.coins.transfer",
@@ -48,6 +49,7 @@
   "eventsProduced": [
     "network.app.created",
     "network.app.revoked",
+    "network.block.changed",
     "network.credential.revoked",
     "network.credential.rotated",
     "network.grant.changed",

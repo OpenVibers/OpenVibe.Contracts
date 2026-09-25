@@ -9503,6 +9503,30 @@ export interface NetworkPrincipalGrantChangedPayload {
   actor_subject?: string | null;
 }
 
+/** network.block.changed@1.0.0 (owner: network) */
+/**
+ * network.block.changed v1 (OpenVibe.Network; roadmap WS-E task 5). A person blocked or unblocked someone. Blocks are the network's: kept by Network, keyed by subjects, and honoured by every product — Chat (no DM, no mention notification from someone who blocked you), Community (no reply to their threads or comments) and notifications (none from a person the recipient blocked). Written to Network's outbox in the transaction that changes the block. Consumers keep a projection and apply the latest `revision` per (blocker, blocked); a service may also read the current list at GET /internal/blocks (network.blocks.read). Envelope: subject { type: user, id: <blocker> }, visibility internal, actor the blocker.
+ */
+export interface NetworkBlockChangedPayload {
+  /**
+   * Who blocked.
+   */
+  blocker: string;
+  /**
+   * Who is blocked.
+   */
+  blocked: string;
+  /**
+   * true: blocked; false: unblocked.
+   */
+  active: boolean;
+  /**
+   * Grows with every change of this pair; a consumer ignores an older one.
+   */
+  revision: number;
+  at?: string;
+}
+
 /** network.user.updated@1.0.0 (owner: network) */
 /**
  * network.user.updated v1 (OpenVibe.Network server/identity/profile-events.js; roadmap WS-B task 2). What other services may know about a person changed: their username, display name, picture, colour, role or ban. The payload is the person's whole current profile, not a diff, so a consumer keeps a projection by writing it over the one it has, and ignores one whose revision is not newer (events can arrive out of order). Emitted in the transaction of the change: a profile edit, a rename, a role grant or removal, a ban or unban. Consumers use it instead of their own copies: roles go both ways (a downgrade too), and a ban arrives even for someone who never comes back. Envelope: subject { type: user, id }, visibility internal, actor the person (their own edit) or the staff member.

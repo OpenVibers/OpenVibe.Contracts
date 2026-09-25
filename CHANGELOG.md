@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.49.0 — 2026-09-25
+
+Platform blocks (roadmap WS-E task 5). **`network.block.changed`**: a person blocked or unblocked someone (`blocker`, `blocked`, `active`, a per-pair `revision`); Network keeps the blocks, keyed by subjects, and Chat and Community consume the event. New capability **`network.blocks.read`** (first-party, never for apps): `GET /internal/blocks?subject=` lists who a person blocked and who blocked them. Fixtures for a block and an unblock. Additive.
+
 ## 0.48.0 — 2026-09-25
 
 **Correction to 0.47.0.** `network.grant.changed` was already emitted by Network's developer event relay for a developer app's grant, and OpenVibe.Events acts on it (it stops an app's subscriptions when its `events.app.subscribe` grant leaves approved). 0.47.0 gave that event a service-principal payload that does not match. Now `network.grant.changed` describes what is actually sent: `{ project_id, capability, audience, from, to }`, subject `app`. A first-party service principal's grant change is the new **`network.principal_grant.changed`** (the 0.47.0 payload under its own name). Nothing consumed the 0.47.0 shape. The compat gate records this in `compatibility/corrections.json` (accepted against v0.47.0 only).

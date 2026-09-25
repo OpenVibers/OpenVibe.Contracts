@@ -23,6 +23,7 @@
     "chat.moderation.action"
   ],
   "eventsConsumed": [
+    "network.block.changed",
     "network.user.token_valid_after"
   ],
   "namespacesOwned": [
