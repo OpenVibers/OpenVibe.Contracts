@@ -937,6 +937,15 @@
       "status": "active"
     },
     {
+      "id": "network.principal_grant.changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.principal_grant.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.user.updated",
       "version": "1.0.0",
       "owner": "network",

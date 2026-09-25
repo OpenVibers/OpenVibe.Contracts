@@ -4,9 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.48.0 — 2026-09-25
+
+**Correction to 0.47.0.** `network.grant.changed` was already emitted by Network's developer event relay for a developer app's grant, and OpenVibe.Events acts on it (it stops an app's subscriptions when its `events.app.subscribe` grant leaves approved). 0.47.0 gave that event a service-principal payload that does not match. Now `network.grant.changed` describes what is actually sent: `{ project_id, capability, audience, from, to }`, subject `app`. A first-party service principal's grant change is the new **`network.principal_grant.changed`** (the 0.47.0 payload under its own name). Nothing consumed the 0.47.0 shape.
+
 ## 0.47.0 — 2026-09-25
 
-**`network.grant.changed`** gets its payload contract (roadmap WS-D task 3): a service principal's capability grant was given, changed (namespaces or expiry), revoked by the owner, or expired, with actor and reason. Network writes it beside an audit row in the transaction that changes the grant; the seeded defaults are not announced. New capability **`network.staff.read`** (active, first-party, never grantable to apps): list the network's staff with their roles and staff-map capabilities, `GET /api/v1/staff/moderators` (WS-D task 4). Fixtures for a grant and an expiry. Additive.
+**`network.grant.changed`** gets a payload contract (roadmap WS-D task 3; corrected in 0.48.0: that shape is `network.principal_grant.changed`): a service principal's capability grant was given, changed (namespaces or expiry), revoked by the owner, or expired, with actor and reason. Network writes it beside an audit row in the transaction that changes the grant; the seeded defaults are not announced. New capability **`network.staff.read`** (active, first-party, never grantable to apps): list the network's staff with their roles and staff-map capabilities, `GET /api/v1/staff/moderators` (WS-D task 4). Fixtures for a grant and an expiry. Additive.
 
 ## 0.46.0 — 2026-09-25
 

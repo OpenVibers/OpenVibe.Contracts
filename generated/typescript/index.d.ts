@@ -9469,9 +9469,21 @@ export interface NetworkModuleUpdatedPayload {
 
 /** network.grant.changed@1.0.0 (owner: network) */
 /**
- * network.grant.changed v1 (OpenVibe.Network server/identity/grants-admin.js; roadmap WS-D task 3). A service principal's capability grant was given, changed (namespaces or expiry), revoked by the owner, or expired. The seeded default grants are not announced. Written to Network's outbox in the transaction that changes principal_grants, beside an audit row. A service's next token (at most 5 minutes later) carries the change. Envelope: subject { type: grant, id: <client_id>:<capability>@<audience> }, visibility internal, actor the owner who changed it (or the system for an expiry).
+ * network.grant.changed v1 (OpenVibe.Network server/developer/store.js grantEvent; ADR-014). A developer app's capability grant changed state: requested, approved, denied or revoked. Written through Network's developer event relay beside the project audit row. OpenVibe.Events stops an app's subscriptions at once when its events.app.subscribe grant leaves approved. Envelope: subject { type: app, id: <app_…> }, visibility internal. (A first-party service principal's grant is network.principal_grant.changed.)
  */
 export interface NetworkGrantChangedPayload {
+  project_id: string;
+  capability: string;
+  audience: string;
+  from: "none" | "requested" | "approved" | "denied" | "revoked";
+  to: "requested" | "approved" | "denied" | "revoked";
+}
+
+/** network.principal_grant.changed@1.0.0 (owner: network) */
+/**
+ * network.principal_grant.changed v1 (OpenVibe.Network server/identity/grants-admin.js; roadmap WS-D task 3). A first-party service principal's capability grant was given, changed (namespaces or expiry), revoked by the owner, or expired. The seeded default grants are not announced. Written to Network's outbox in the transaction that changes principal_grants, beside an audit row. A service's next token (at most 5 minutes later) carries the change. Envelope: subject { type: grant, id: <client_id>:<capability>@<audience> }, visibility internal, actor the owner who changed it (or the system for an expiry). (A developer app's grant is network.grant.changed.)
+ */
+export interface NetworkPrincipalGrantChangedPayload {
   /**
    * The service principal (oauth client id).
    */
