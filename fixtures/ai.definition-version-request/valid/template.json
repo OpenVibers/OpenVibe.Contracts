@@ -1,0 +1,1 @@
+{ "name": "Clip title", "system_prompt": "You title stream clips.", "user_prompt": "Transcript: {{transcript}}", "input_schema": { "type": "object", "required": ["transcript"] }, "output_schema": { "type": "object", "required": ["title"] }, "visibility": "first-party", "status": "draft" }

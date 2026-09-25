@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/usage-result.v1.json",
+  "title": "AiUsageResult",
+  "description": "ai.usage-result@1: answers of ai.usage.read on OpenVibe.AI (all GETs, parameters in the query). GET /api/v1/status → { providers, runs, today, workflows, templates, routes, inflight, quotas }; GET /api/v1/usage?from=&to=&requester= → { usage } (daily rows); GET /api/v1/quotas → { quotas, current }; GET /api/v1/requests?provider=&status=&run=&fallback=&limit= → { requests } (request-log metadata: hashes, tokens, cost, latency; raw debug fields only for provider managers who ask); GET /api/v1/audit → { audit }; GET /api/v1/cache → { cache }; GET /api/v1/providers → { providers }; GET /api/v1/models?provider= → { models }. Never raw prompts, never secrets.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "providers",
+        "runs",
+        "today"
+      ],
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "credentials": {
+                "type": "string"
+              },
+              "health": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "runs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Run counts by status."
+        },
+        "today": {
+          "type": "object",
+          "required": [
+            "day"
+          ],
+          "properties": {
+            "day": {
+              "type": "string"
+            },
+            "requests": {
+              "type": "number"
+            },
+            "cost_usd": {
+              "type": "number"
+            }
+          }
+        },
+        "workflows": {
+          "type": "integer"
+        },
+        "templates": {
+          "type": "integer"
+        },
+        "routes": {
+          "type": "integer"
+        },
+        "inflight": {
+          "type": "integer"
+        },
+        "quotas": {
+          "type": "array"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "providers"
+      ],
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": {
+            "$ref": "provider.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "models"
+      ],
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "model.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "quotas",
+        "current"
+      ],
+      "properties": {
+        "quotas": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "current": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quota": {
+                "type": "object"
+              },
+              "scope_id": {
+                "type": "string"
+              },
+              "window_start": {
+                "type": "string"
+              },
+              "resets_in_seconds": {
+                "type": "number"
+              },
+              "used": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "usage"
+      ],
+      "properties": {
+        "usage": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "requests"
+      ],
+      "properties": {
+        "requests": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "audit"
+      ],
+      "properties": {
+        "audit": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "cache"
+      ],
+      "properties": {
+        "cache": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "workflow_key": {
+                "type": "string"
+              },
+              "privacy": {
+                "type": "string"
+              },
+              "entries": {
+                "type": "integer"
+              },
+              "hits": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

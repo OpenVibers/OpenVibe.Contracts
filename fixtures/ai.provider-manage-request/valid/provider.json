@@ -1,0 +1,1 @@
+{ "key": "openai", "kind": "openai", "auth_mode": "bearer", "secret_ref": "env:OPENAI_API_KEY", "capabilities": ["chat", "embed"], "priority": 20 }

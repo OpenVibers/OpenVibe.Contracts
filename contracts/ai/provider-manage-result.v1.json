@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/provider-manage-result.v1.json",
+  "title": "AiProviderManageResult",
+  "description": "ai.provider-manage-result@1: answers of ai.provider.manage on OpenVibe.AI. Provider create/update/disable/enable → { provider } (201 on POST); POST …/reset → { health } (the circuit breaker, closed again); model upserts → { model }; POST /api/v1/quotas → 201 { quota } (the stored row); DELETE /api/v1/cache → { removed } (entries purged). Every change is audited.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "provider"
+      ],
+      "properties": {
+        "provider": {
+          "$ref": "provider.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "health"
+      ],
+      "properties": {
+        "health": {
+          "type": "object",
+          "required": [
+            "state"
+          ],
+          "properties": {
+            "provider_key": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "closed",
+                "open",
+                "half_open"
+              ]
+            },
+            "consecutive_failures": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "model"
+      ],
+      "properties": {
+        "model": {
+          "$ref": "model.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "quota"
+      ],
+      "properties": {
+        "quota": {
+          "type": "object",
+          "required": [
+            "id",
+            "scope_type",
+            "scope_id",
+            "window",
+            "status"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "scope_type": {
+              "type": "string"
+            },
+            "scope_id": {
+              "type": "string"
+            },
+            "window": {
+              "type": "string"
+            },
+            "max_requests": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "max_tokens": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "max_cost_usd": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "workflow_prefix": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "removed"
+      ],
+      "properties": {
+        "removed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}

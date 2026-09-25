@@ -1,0 +1,1 @@
+{ "primary": { "provider": "anthropic", "model": "claude-sonnet-4-5" }, "fallbacks": [ { "provider": "openai", "model": "gpt-4.1-mini" } ], "response_format": "json" }

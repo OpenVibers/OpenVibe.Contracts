@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/provider-manage-request.v1.json",
+  "title": "AiProviderManageRequest",
+  "description": "ai.provider-manage-request@1: bodies of ai.provider.manage on OpenVibe.AI. POST /api/v1/providers creates or replaces a provider (key required) and PATCH /api/v1/providers/:key changes one (fields left out keep their value); a body carrying api_key or secret is refused (422: send secret_ref env:NAME, never a secret value). POST /api/v1/models (provider_key and model_key required) and PATCH /api/v1/models/:provider/:model upsert a model. POST /api/v1/quotas upserts a quota (scope_type and window required; scope_id too unless global; the same scope, window and workflow_prefix is one quota). POST /api/v1/providers/:key/disable|enable|reset and DELETE /api/v1/cache[?workflow=] take no body. Unknown fields are ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "api_key"
+            ]
+          },
+          {
+            "required": [
+              "secret"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)*$"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "stub",
+            "openai",
+            "anthropic",
+            "http",
+            "whisper"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        },
+        "base_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https?://\\S+$"
+        },
+        "auth_mode": {
+          "enum": [
+            "none",
+            "bearer",
+            "x-api-key"
+          ]
+        },
+        "secret_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^(env:[A-Z][A-Z0-9_]{0,63})?$"
+        },
+        "default_model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "chat",
+              "generate",
+              "summarize",
+              "classify",
+              "extract",
+              "enrich",
+              "embed",
+              "vision",
+              "json",
+              "transcribe"
+            ]
+          }
+        },
+        "timeout_ms": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Clamped to 1000..600000."
+        },
+        "priority": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "provider_key": {
+          "type": "string"
+        },
+        "model_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "chat",
+            "vision",
+            "embedding",
+            "stt"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        },
+        "context_window": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "max_output": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "cost": {
+          "type": "object",
+          "properties": {
+            "in_per_mtok": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "out_per_mtok": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "cached_per_mtok": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          }
+        },
+        "supports": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "boolean"
+            },
+            "tools": {
+              "type": "boolean"
+            },
+            "streaming": {
+              "type": "boolean"
+            },
+            "vision": {
+              "type": "boolean"
+            }
+          }
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "scope_type",
+        "window"
+      ],
+      "properties": {
+        "scope_type": {
+          "enum": [
+            "global",
+            "service",
+            "actor",
+            "attribution"
+          ]
+        },
+        "scope_id": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "* on a non-global scope = each one separately."
+        },
+        "window": {
+          "enum": [
+            "minute",
+            "hour",
+            "day"
+          ]
+        },
+        "max_requests": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "max_tokens": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "max_cost_usd": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "workflow_prefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

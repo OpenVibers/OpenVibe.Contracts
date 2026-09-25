@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/definition-version-result.v1.json",
+  "title": "AiDefinitionVersionResult",
+  "description": "ai.definition-version-result@1: answers of ai.workflow.manage on OpenVibe.AI. POST …/:key/versions → 201 { template | workflow | route } (the new version, whole: prompts and schemas for a template, steps for a workflow, primary/fallbacks for a route); POST …/versions/:version/status → { template | workflow | route: { key, version, status } }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "template"
+      ],
+      "properties": {
+        "template": {
+          "type": "object",
+          "required": [
+            "key",
+            "version",
+            "status"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "workflow"
+      ],
+      "properties": {
+        "workflow": {
+          "type": "object",
+          "required": [
+            "key",
+            "version",
+            "status"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "route"
+      ],
+      "properties": {
+        "route": {
+          "type": "object",
+          "required": [
+            "key",
+            "version",
+            "status"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

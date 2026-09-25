@@ -19,5 +19,7 @@
     "GET /api/v1/subscriptions/:id",
     "POST /api/v1/subscriptions/:id/disable",
     "POST /api/v1/subscriptions/:id/enable"
-  ]
+  ],
+  "inputSchema": "events.subscription-request@1",
+  "outputSchema": "events.subscription-result@1"
 }

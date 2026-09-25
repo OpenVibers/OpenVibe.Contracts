@@ -18,5 +18,7 @@
     "GET /api/v1/events/:event_id",
     "GET /api/v1/checkpoints",
     "PUT /api/v1/checkpoints"
-  ]
+  ],
+  "inputSchema": "events.read-request@1",
+  "outputSchema": "events.read-result@1"
 }

@@ -20,5 +20,7 @@
     "POST /api/v1/workflows/:key/versions/:version/status",
     "POST /api/v1/routes/:key/versions",
     "POST /api/v1/routes/:key/versions/:version/status"
-  ]
+  ],
+  "inputSchema": "ai.definition-version-request@1",
+  "outputSchema": "ai.definition-version-result@1"
 }

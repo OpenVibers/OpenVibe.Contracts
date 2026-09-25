@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/subscription-request.v1.json",
+  "title": "EventsSubscriptionRequest",
+  "description": "events.subscription-request@1: the body of POST /api/v1/subscriptions on OpenVibe.Events (events.subscription.manage for services, events.app.subscribe for developer apps; the consumer is always the caller). topic_pattern (topic is accepted for it) and endpoint are required: a service's endpoint must be http(s) on the allow-list (127.0.0.1, *.openvibe.*), an app's must be https resolving only to public addresses. secret, when given, is 32 to 256 characters (else one is generated); retry_policy accepts max_attempts (1..20) and backoff_ms (1..20 delays of 0..86400000 ms) and nothing else. The same pattern and endpoint twice is 409 events.subscription_exists. GET /api/v1/subscriptions[/:id] and POST /api/v1/subscriptions/:id/disable|enable take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "endpoint"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "topic_pattern"
+          ]
+        },
+        {
+          "required": [
+            "topic"
+          ]
+        }
+      ],
+      "properties": {
+        "topic_pattern": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$",
+          "description": "Dot-separated segments of [a-z0-9_] or *, where * stands for one or more whole segments (*.* is refused)."
+        },
+        "topic": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$",
+          "description": "Dot-separated segments of [a-z0-9_] or *, where * stands for one or more whole segments (*.* is refused)."
+        },
+        "endpoint": {
+          "type": "string",
+          "pattern": "^https?://"
+        },
+        "secret": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 256
+        },
+        "retry_policy": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "backoff_ms": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 86400000
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

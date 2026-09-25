@@ -1,0 +1,1 @@
+{ "events": [ { "seq": 1, "event": { "event_type": "x" } } ], "next_after_seq": 1, "latest_seq": 1 }

@@ -271,6 +271,78 @@
       "adr": "ADR-026"
     },
     {
+      "id": "events.delivery-admin-request",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/delivery-admin-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.delivery-admin-result",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/delivery-admin-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.publish-result",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/publish-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.read-request",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/read-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.read-result",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.subscription-request",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/subscription-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.subscription-result",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/subscription-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.subscription",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/subscription.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.message.deleted",
       "version": "1.0.0",
       "owner": "chat",
@@ -626,6 +698,69 @@
       "compatibility": "backward",
       "status": "planned",
       "adr": "ADR-015"
+    },
+    {
+      "id": "ai.definition-version-request",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/definition-version-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.definition-version-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/definition-version-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.model",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/model.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.provider-manage-request",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/provider-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.provider-manage-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/provider-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.provider",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/provider.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.usage-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/usage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "tips.interaction.ready",

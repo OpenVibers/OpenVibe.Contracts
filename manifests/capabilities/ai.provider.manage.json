@@ -23,5 +23,7 @@
     "PATCH /api/v1/models/:provider/:model",
     "POST /api/v1/quotas",
     "DELETE /api/v1/cache"
-  ]
+  ],
+  "inputSchema": "ai.provider-manage-request@1",
+  "outputSchema": "ai.provider-manage-result@1"
 }

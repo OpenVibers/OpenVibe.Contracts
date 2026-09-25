@@ -1,0 +1,1 @@
+{ "deliveries": [ { "event_id": "evt_01JAB2C3D4E5F6G7H8J9K0MNPQ", "subscription_id": "sub_01JAB2C3D4E5F6G7H8J9K0MNPQ", "seq": 88213, "status": "dead", "attempt": 8, "next_attempt_at": null, "last_status": 502, "last_error": "HTTP 502", "delivered_at": null } ], "counts": { "pending": 3, "delivered": 91822, "failed": 1, "dead": 1 } }

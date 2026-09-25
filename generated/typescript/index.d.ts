@@ -5793,6 +5793,178 @@ export interface TombstonePayload {
   redacted_by: string;
 }
 
+/** events.delivery-admin-request@1.0.0 (owner: events) */
+/**
+ * events.delivery-admin-request@1: the body of POST /api/v1/deliveries/replay on OpenVibe.Events (events.delivery.admin, operators): { subscription_id } and exactly one of from_seq (requeue everything the subscription matches from that seq) or event_ids (at most 1000). GET /api/v1/deliveries?status=&subscription_id=&after_seq=&limit= takes no body.
+ */
+export type EventsDeliveryAdminRequest =
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | NoBody;
+
+/** events.delivery-admin-result@1.0.0 (owner: events) */
+/**
+ * events.delivery-admin-result@1: answers of events.delivery.admin on OpenVibe.Events. GET /api/v1/deliveries → { deliveries, counts } (per delivery: event, subscription, seq, status pending|delivered|failed|dead, attempt, next_attempt_at, the last HTTP status and error, delivered_at; counts by status); POST /api/v1/deliveries/replay → { subscription_id, queued }.
+ */
+export type EventsDeliveryAdminResult =
+  | {
+      deliveries: {
+        event_id: string;
+        subscription_id: string;
+        seq: number;
+        status: "pending" | "delivered" | "failed" | "dead";
+        attempt: number;
+        next_attempt_at?: string | null;
+        last_status?: number | null;
+        last_error?: string | null;
+        delivered_at?: string | null;
+      }[];
+      counts: {
+        pending: number;
+        delivered: number;
+        failed: number;
+        dead: number;
+      };
+    }
+  | {
+      subscription_id: string;
+      queued: number;
+    };
+
+/** events.publish-result@1.0.0 (owner: events) */
+/**
+ * events.publish-result@1: the answer of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps). One envelope → { event_id, seq, duplicate } (201 when stored, 200 when every event was a repeat); a batch { events: [...] } (at most 100, atomic) → { results } in the same order. Refusals are problem+json: 422 events.invalid_envelope / events.invalid_redaction, 403 events.source_mismatch / events.type_not_allowed / events.actor_mismatch, 413 events.payload_too_large / events.batch_too_large, 429 events.quota_exceeded (apps).
+ */
+export type EventsPublishResult =
+  | {
+      event_id: string;
+      seq: number;
+      /**
+       * true: this event_id was stored before; the stored seq is returned and nothing is stored twice.
+       */
+      duplicate: boolean;
+    }
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 100
+       */
+      results: [
+        {
+          event_id: string;
+          seq: number;
+          /**
+           * true: this event_id was stored before; the stored seq is returned and nothing is stored twice.
+           */
+          duplicate: boolean;
+        },
+        ...{
+          event_id: string;
+          seq: number;
+          /**
+           * true: this event_id was stored before; the stored seq is returned and nothing is stored twice.
+           */
+          duplicate: boolean;
+        }[]
+      ];
+    };
+
+/** events.read-request@1.0.0 (owner: events) */
+/**
+ * events.read-request@1: request bodies of the pull API on OpenVibe.Events (events.event.read, events.app.read). PUT /api/v1/checkpoints: { topic, cursor } stores the calling consumer's cursor for a topic pattern (an app's patterns must start with a literal segment and app.* must name its own project_key). GET /api/v1/events?topic=&after_seq=&limit=, GET /api/v1/events/:event_id, GET /api/v1/checkpoints?topic= and GET /realtime/stream?topics= take no body.
+ */
+export type EventsReadRequest =
+  | {
+      /**
+       * Dot-separated segments of [a-z0-9_] or *, where * stands for one or more whole segments (*.* is refused).
+       */
+      topic: string;
+      /**
+       * A seq (next_after_seq of the last page handled).
+       */
+      cursor: number;
+    }
+  | NoBody;
+
+/** events.read-result@1.0.0 (owner: events) */
+/**
+ * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, event }], next_after_seq, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). An app sees only its project's events in its token's environment plus public first-party events.
+ */
+export type EventsReadResult =
+  | {
+      /**
+       * @maxItems 1000
+       */
+      events: {
+        seq: number;
+        event: EventEnvelope;
+      }[];
+      next_after_seq: number;
+      latest_seq: number;
+      gap?: {
+        from_seq: number;
+        to_seq: number;
+      };
+    }
+  | {
+      seq: number;
+      event: EventEnvelope;
+    }
+  | {
+      consumer: string;
+      topic: string;
+      cursor: number;
+      updated_at: string | null;
+    };
+
+/** events.subscription-request@1.0.0 (owner: events) */
+/**
+ * events.subscription-request@1: the body of POST /api/v1/subscriptions on OpenVibe.Events (events.subscription.manage for services, events.app.subscribe for developer apps; the consumer is always the caller). topic_pattern (topic is accepted for it) and endpoint are required: a service's endpoint must be http(s) on the allow-list (127.0.0.1, *.openvibe.*), an app's must be https resolving only to public addresses. secret, when given, is 32 to 256 characters (else one is generated); retry_policy accepts max_attempts (1..20) and backoff_ms (1..20 delays of 0..86400000 ms) and nothing else. The same pattern and endpoint twice is 409 events.subscription_exists. GET /api/v1/subscriptions[/:id] and POST /api/v1/subscriptions/:id/disable|enable take no body.
+ */
+export type EventsSubscriptionRequest =
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | NoBody;
+
+/** events.subscription-result@1.0.0 (owner: events) */
+/**
+ * events.subscription-result@1: answers of the subscription routes on OpenVibe.Events. POST /api/v1/subscriptions → 201 events.subscription@1 with its secret (shown once); GET /api/v1/subscriptions → { subscriptions } (the caller's own, no secrets); GET /api/v1/subscriptions/:id and POST …/disable|enable → events.subscription@1. Another consumer's subscription is 404.
+ */
+export type EventsSubscriptionResult =
+  | EventsSubscription
+  | {
+      subscriptions: EventsSubscription[];
+    };
+
+/** events.subscription@1.0.0 (owner: events) */
+/**
+ * events.subscription@1: one push subscription as OpenVibe.Events shows it to its consumer (server/store.js subscriptionView). The signing secret appears only in the answer that creates it (and in a rotation's). A developer app's subscription also names its project and environment.
+ */
+export interface EventsSubscription {
+  id: string;
+  /**
+   * The calling service, or app:app_<ULID>.
+   */
+  consumer: string;
+  topic_pattern: string;
+  endpoint: string;
+  enabled: boolean;
+  retry_policy: {
+    max_attempts?: number;
+    backoff_ms?: number[];
+  } | null;
+  created_at: string;
+  updated_at: string;
+  project_id?: string;
+  env?: string;
+  /**
+   * Only when the subscription is created: shown once.
+   */
+  secret?: string;
+}
+
 /** chat.message.deleted@1.0.0 (owner: chat) */
 /**
  * chat.message.deleted v1 (OpenVibe.Chat server/db/database.js _announceDeleted). Public messages were deleted: by a moderator, through Live's bridge, the author's or an anon's history, a time-range purge or the auto-delete sweep. Envelope: subject { type: chat_message, id: <first id> }, visibility public, priority important, actor service:chat. One event per 500 ids. Carries only ids, never the text, the author or who deleted it; payload.redacts makes OpenVibe.Events tombstone the chat.message.created of each id.
@@ -8023,6 +8195,337 @@ export interface AiRunCachedPayload {
   created_at: string;
   finished_at: string;
 }
+
+/** ai.definition-version-request@1.0.0 (owner: ai) */
+/**
+ * ai.definition-version-request@1: bodies of ai.workflow.manage on OpenVibe.AI. An edit is always a new version (the previous one stays readable); fields left out are taken from the newest existing version. POST /api/v1/templates/:key/versions: a prompt template (input_schema and output_schema must compile as JSON Schema; visibility public, first-party or internal). POST /api/v1/workflows/:key/versions (key <namespace>.<name>): steps (at least one; kind llm (naming an existing template), passthrough, transcribe or embed), schemas, default route, cache mode. POST /api/v1/routes/:key/versions: primary { provider, model } and fallbacks (every provider must exist), or alias_of another route. POST …/:key/versions/:version/status: { status } (templates and workflows draft|active|deprecated|archived; routes active|disabled). Refusals are 422 ai.invalid.
+ */
+export type AiDefinitionVersionRequest =
+  | {
+      name?: string;
+      description?: string | null;
+      /**
+       * A JSON Schema the run input must match.
+       */
+      input_schema?: {};
+      /**
+       * A JSON Schema the output must match.
+       */
+      output_schema?: {};
+      system_prompt?: string;
+      user_prompt?: string;
+      default_route?: string | null;
+      owner?: string;
+      visibility?: "public" | "first-party" | "internal";
+      status?: "draft" | "active" | "deprecated" | "archived";
+      metadata?: {};
+    }
+  | {
+      name?: string;
+      description?: string | null;
+      namespace?: string;
+      /**
+       * A JSON Schema.
+       */
+      input_schema?: {};
+      /**
+       * A JSON Schema.
+       */
+      output_schema?: {};
+      /**
+       * @minItems 1
+       */
+      steps?: [
+        {
+          kind: "llm" | "passthrough" | "transcribe" | "embed";
+          template?: string;
+        },
+        ...{
+          kind: "llm" | "passthrough" | "transcribe" | "embed";
+          template?: string;
+        }[]
+      ];
+      default_route?: string | null;
+      cache_mode?: "none" | "private" | "service";
+      cache_ttl_sec?: number | null;
+      status?: "draft" | "active" | "deprecated" | "archived";
+      metadata?: {};
+    }
+  | {
+      primary?: {
+        provider: string;
+        model?: string | null;
+      };
+      fallbacks?: {
+        provider: string;
+        model?: string | null;
+      }[];
+      options?: {};
+      max_output_tokens?: number | null;
+      response_format?: "text" | "json";
+      timeout_ms?: number | null;
+      alias_of?: string | null;
+      status?: "active" | "disabled";
+    };
+
+/** ai.definition-version-result@1.0.0 (owner: ai) */
+/**
+ * ai.definition-version-result@1: answers of ai.workflow.manage on OpenVibe.AI. POST …/:key/versions → 201 { template | workflow | route } (the new version, whole: prompts and schemas for a template, steps for a workflow, primary/fallbacks for a route); POST …/versions/:version/status → { template | workflow | route: { key, version, status } }.
+ */
+export type AiDefinitionVersionResult =
+  | {
+      template: {
+        key: string;
+        version: number;
+        status: string;
+      };
+    }
+  | {
+      workflow: {
+        key: string;
+        version: number;
+        status: string;
+      };
+    }
+  | {
+      route: {
+        key: string;
+        version: number;
+        status: string;
+      };
+    };
+
+/** ai.model@1.0.0 (owner: ai) */
+/**
+ * ai.model@1: one model of a provider in OpenVibe.AI's registry (server/registry.js decodeModel): type, status, limits, per-million-token costs and what it supports.
+ */
+export interface AiModel {
+  provider_key: string;
+  model_key: string;
+  display_name?: string | null;
+  type: "chat" | "vision" | "embedding" | "stt";
+  status: "active" | "disabled";
+  context_window?: number | null;
+  max_output?: number | null;
+  cost: {
+    in_per_mtok?: number | null;
+    out_per_mtok?: number | null;
+    cached_per_mtok?: number | null;
+  };
+  supports: {
+    json?: boolean;
+    tools?: boolean;
+    streaming?: boolean;
+    vision?: boolean;
+  };
+  metadata?: {};
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** ai.provider-manage-request@1.0.0 (owner: ai) */
+/**
+ * ai.provider-manage-request@1: bodies of ai.provider.manage on OpenVibe.AI. POST /api/v1/providers creates or replaces a provider (key required) and PATCH /api/v1/providers/:key changes one (fields left out keep their value); a body carrying api_key or secret is refused (422: send secret_ref env:NAME, never a secret value). POST /api/v1/models (provider_key and model_key required) and PATCH /api/v1/models/:provider/:model upsert a model. POST /api/v1/quotas upserts a quota (scope_type and window required; scope_id too unless global; the same scope, window and workflow_prefix is one quota). POST /api/v1/providers/:key/disable|enable|reset and DELETE /api/v1/cache[?workflow=] take no body. Unknown fields are ignored.
+ */
+export type AiProviderManageRequest =
+  | {
+      key?: string;
+      display_name?: string;
+      kind?: "stub" | "openai" | "anthropic" | "http" | "whisper";
+      status?: "active" | "disabled";
+      base_url?: string | null;
+      auth_mode?: "none" | "bearer" | "x-api-key";
+      secret_ref?: string | null;
+      default_model?: string | null;
+      capabilities?: (
+        | "chat"
+        | "generate"
+        | "summarize"
+        | "classify"
+        | "extract"
+        | "enrich"
+        | "embed"
+        | "vision"
+        | "json"
+        | "transcribe"
+      )[];
+      /**
+       * Clamped to 1000..600000.
+       */
+      timeout_ms?: number | string;
+      priority?: number | string;
+      metadata?: {};
+    }
+  | {
+      provider_key?: string;
+      model_key?: string;
+      display_name?: string;
+      type?: "chat" | "vision" | "embedding" | "stt";
+      status?: "active" | "disabled";
+      context_window?: number | null;
+      max_output?: number | null;
+      cost?: {
+        in_per_mtok?: number | null;
+        out_per_mtok?: number | null;
+        cached_per_mtok?: number | null;
+      };
+      supports?: {
+        json?: boolean;
+        tools?: boolean;
+        streaming?: boolean;
+        vision?: boolean;
+      };
+      metadata?: {};
+    }
+  | {
+      scope_type: "global" | "service" | "actor" | "attribution";
+      /**
+       * * on a non-global scope = each one separately.
+       */
+      scope_id?: string;
+      window: "minute" | "hour" | "day";
+      max_requests?: number | string | null;
+      max_tokens?: number | string | null;
+      max_cost_usd?: number | string | null;
+      workflow_prefix?: string | null;
+      status?: "active" | "disabled";
+    }
+  | NoBody;
+
+/** ai.provider-manage-result@1.0.0 (owner: ai) */
+/**
+ * ai.provider-manage-result@1: answers of ai.provider.manage on OpenVibe.AI. Provider create/update/disable/enable → { provider } (201 on POST); POST …/reset → { health } (the circuit breaker, closed again); model upserts → { model }; POST /api/v1/quotas → 201 { quota } (the stored row); DELETE /api/v1/cache → { removed } (entries purged). Every change is audited.
+ */
+export type AiProviderManageResult =
+  | {
+      provider: AiProvider;
+    }
+  | {
+      health: {
+        provider_key?: string;
+        state: "closed" | "open" | "half_open";
+        consecutive_failures?: number;
+      };
+    }
+  | {
+      model: AiModel;
+    }
+  | {
+      quota: {
+        id: number;
+        scope_type: string;
+        scope_id: string;
+        window: string;
+        max_requests?: number | null;
+        max_tokens?: number | null;
+        max_cost_usd?: number | null;
+        workflow_prefix?: string | null;
+        status: string;
+      };
+    }
+  | {
+      removed: number;
+    };
+
+/** ai.provider@1.0.0 (owner: ai) */
+/**
+ * ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the circuit-breaker health.
+ */
+export interface AiProvider {
+  key: string;
+  display_name?: string | null;
+  kind: "stub" | "openai" | "anthropic" | "http" | "whisper";
+  status: "active" | "disabled";
+  base_url?: string | null;
+  auth_mode: "none" | "bearer" | "x-api-key";
+  /**
+   * env:NAME, a reference; never the secret.
+   */
+  secret_ref?: string | null;
+  default_model?: string | null;
+  capabilities: (
+    "chat" | "generate" | "summarize" | "classify" | "extract" | "enrich" | "embed" | "vision" | "json" | "transcribe"
+  )[];
+  timeout_ms?: number | null;
+  priority?: number | null;
+  metadata?: {};
+  origin?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  credentials: "not_required" | "configured" | "missing";
+  health?: {
+    provider_key?: string;
+    state?: "closed" | "open" | "half_open";
+    consecutive_failures?: number;
+  } | null;
+}
+
+/** ai.usage-result@1.0.0 (owner: ai) */
+/**
+ * ai.usage-result@1: answers of ai.usage.read on OpenVibe.AI (all GETs, parameters in the query). GET /api/v1/status → { providers, runs, today, workflows, templates, routes, inflight, quotas }; GET /api/v1/usage?from=&to=&requester= → { usage } (daily rows); GET /api/v1/quotas → { quotas, current }; GET /api/v1/requests?provider=&status=&run=&fallback=&limit= → { requests } (request-log metadata: hashes, tokens, cost, latency; raw debug fields only for provider managers who ask); GET /api/v1/audit → { audit }; GET /api/v1/cache → { cache }; GET /api/v1/providers → { providers }; GET /api/v1/models?provider= → { models }. Never raw prompts, never secrets.
+ */
+export type AiUsageResult =
+  | {
+      providers: {
+        key: string;
+        kind?: string;
+        status?: string;
+        credentials?: string;
+        health?: string;
+      }[];
+      /**
+       * Run counts by status.
+       */
+      runs: {
+        [k: string]: number | undefined;
+      };
+      today: {
+        day: string;
+        requests?: number;
+        cost_usd?: number;
+      };
+      workflows?: number;
+      templates?: number;
+      routes?: number;
+      inflight?: number;
+      quotas?: unknown[];
+    }
+  | {
+      providers: AiProvider[];
+    }
+  | {
+      models: AiModel[];
+    }
+  | {
+      quotas: {}[];
+      current: {
+        quota?: {};
+        scope_id?: string;
+        window_start?: string;
+        resets_in_seconds?: number;
+        used?: {};
+      }[];
+    }
+  | {
+      usage: {}[];
+    }
+  | {
+      /**
+       * @maxItems 500
+       */
+      requests: {}[];
+    }
+  | {
+      audit: {}[];
+    }
+  | {
+      cache: {
+        workflow_key?: string;
+        privacy?: string;
+        entries?: number;
+        hits?: number | null;
+      }[];
+    };
 
 /** tips.interaction.ready@1.0.0 (owner: tips) */
 /**

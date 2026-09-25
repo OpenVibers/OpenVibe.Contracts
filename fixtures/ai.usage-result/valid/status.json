@@ -1,0 +1,1 @@
+{ "providers": [ { "key": "anthropic", "kind": "anthropic", "status": "active", "credentials": "configured", "health": "closed" } ], "runs": { "succeeded": 1203, "failed": 7 }, "today": { "day": "2026-09-25", "requests": 311, "cost_usd": 1.84 }, "workflows": 23, "templates": 19, "routes": 6, "inflight": 2, "quotas": [] }

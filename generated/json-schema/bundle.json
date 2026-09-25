@@ -3347,6 +3347,582 @@
         }
       }
     },
+    "events.delivery-admin-request": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/delivery-admin-request.v1.json",
+        "title": "EventsDeliveryAdminRequest",
+        "description": "events.delivery-admin-request@1: the body of POST /api/v1/deliveries/replay on OpenVibe.Events (events.delivery.admin, operators): { subscription_id } and exactly one of from_seq (requeue everything the subscription matches from that seq) or event_ids (at most 1000). GET /api/v1/deliveries?status=&subscription_id=&after_seq=&limit= takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "subscription_id"
+            ],
+            "oneOf": [
+              {
+                "required": [
+                  "from_seq"
+                ]
+              },
+              {
+                "required": [
+                  "event_ids"
+                ]
+              }
+            ],
+            "properties": {
+              "subscription_id": {
+                "type": "string"
+              },
+              "from_seq": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "event_ids": {
+                "type": "array",
+                "maxItems": 1000,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "events.delivery-admin-result": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/delivery-admin-result.v1.json",
+        "title": "EventsDeliveryAdminResult",
+        "description": "events.delivery-admin-result@1: answers of events.delivery.admin on OpenVibe.Events. GET /api/v1/deliveries → { deliveries, counts } (per delivery: event, subscription, seq, status pending|delivered|failed|dead, attempt, next_attempt_at, the last HTTP status and error, delivered_at; counts by status); POST /api/v1/deliveries/replay → { subscription_id, queued }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "deliveries",
+              "counts"
+            ],
+            "properties": {
+              "deliveries": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "event_id",
+                    "subscription_id",
+                    "seq",
+                    "status",
+                    "attempt"
+                  ],
+                  "properties": {
+                    "event_id": {
+                      "type": "string"
+                    },
+                    "subscription_id": {
+                      "type": "string"
+                    },
+                    "seq": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "enum": [
+                        "pending",
+                        "delivered",
+                        "failed",
+                        "dead"
+                      ]
+                    },
+                    "attempt": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "next_attempt_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "last_status": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "last_error": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "delivered_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              },
+              "counts": {
+                "type": "object",
+                "required": [
+                  "pending",
+                  "delivered",
+                  "failed",
+                  "dead"
+                ],
+                "properties": {
+                  "pending": {
+                    "type": "integer"
+                  },
+                  "delivered": {
+                    "type": "integer"
+                  },
+                  "failed": {
+                    "type": "integer"
+                  },
+                  "dead": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subscription_id",
+              "queued"
+            ],
+            "properties": {
+              "subscription_id": {
+                "type": "string"
+              },
+              "queued": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "events.publish-result": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/publish-result.v1.json",
+        "title": "EventsPublishResult",
+        "description": "events.publish-result@1: the answer of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps). One envelope → { event_id, seq, duplicate } (201 when stored, 200 when every event was a repeat); a batch { events: [...] } (at most 100, atomic) → { results } in the same order. Refusals are problem+json: 422 events.invalid_envelope / events.invalid_redaction, 403 events.source_mismatch / events.type_not_allowed / events.actor_mismatch, 413 events.payload_too_large / events.batch_too_large, 429 events.quota_exceeded (apps).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "event_id",
+              "seq",
+              "duplicate"
+            ],
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "pattern": "^evt_"
+              },
+              "seq": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "duplicate": {
+                "type": "boolean",
+                "description": "true: this event_id was stored before; the stored seq is returned and nothing is stored twice."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "results"
+            ],
+            "properties": {
+              "results": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "event_id",
+                    "seq",
+                    "duplicate"
+                  ],
+                  "properties": {
+                    "event_id": {
+                      "type": "string",
+                      "pattern": "^evt_"
+                    },
+                    "seq": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "duplicate": {
+                      "type": "boolean",
+                      "description": "true: this event_id was stored before; the stored seq is returned and nothing is stored twice."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "events.read-request": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/read-request.v1.json",
+        "title": "EventsReadRequest",
+        "description": "events.read-request@1: request bodies of the pull API on OpenVibe.Events (events.event.read, events.app.read). PUT /api/v1/checkpoints: { topic, cursor } stores the calling consumer's cursor for a topic pattern (an app's patterns must start with a literal segment and app.* must name its own project_key). GET /api/v1/events?topic=&after_seq=&limit=, GET /api/v1/events/:event_id, GET /api/v1/checkpoints?topic= and GET /realtime/stream?topics= take no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "topic",
+              "cursor"
+            ],
+            "properties": {
+              "topic": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$",
+                "description": "Dot-separated segments of [a-z0-9_] or *, where * stands for one or more whole segments (*.* is refused)."
+              },
+              "cursor": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "A seq (next_after_seq of the last page handled)."
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "events.read-result": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/read-result.v1.json",
+        "title": "EventsReadResult",
+        "description": "events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, event }], next_after_seq, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). An app sees only its project's events in its token's environment plus public first-party events.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "events",
+              "next_after_seq",
+              "latest_seq"
+            ],
+            "properties": {
+              "events": {
+                "type": "array",
+                "maxItems": 1000,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "seq",
+                    "event"
+                  ],
+                  "properties": {
+                    "seq": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "event": {
+                      "$ref": "event-envelope.v1.json"
+                    }
+                  }
+                }
+              },
+              "next_after_seq": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "latest_seq": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "gap": {
+                "type": "object",
+                "required": [
+                  "from_seq",
+                  "to_seq"
+                ],
+                "properties": {
+                  "from_seq": {
+                    "type": "integer"
+                  },
+                  "to_seq": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "seq",
+              "event"
+            ],
+            "properties": {
+              "seq": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "event": {
+                "$ref": "event-envelope.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "consumer",
+              "topic",
+              "cursor",
+              "updated_at"
+            ],
+            "properties": {
+              "consumer": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "string"
+              },
+              "cursor": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "events.subscription-request": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/subscription-request.v1.json",
+        "title": "EventsSubscriptionRequest",
+        "description": "events.subscription-request@1: the body of POST /api/v1/subscriptions on OpenVibe.Events (events.subscription.manage for services, events.app.subscribe for developer apps; the consumer is always the caller). topic_pattern (topic is accepted for it) and endpoint are required: a service's endpoint must be http(s) on the allow-list (127.0.0.1, *.openvibe.*), an app's must be https resolving only to public addresses. secret, when given, is 32 to 256 characters (else one is generated); retry_policy accepts max_attempts (1..20) and backoff_ms (1..20 delays of 0..86400000 ms) and nothing else. The same pattern and endpoint twice is 409 events.subscription_exists. GET /api/v1/subscriptions[/:id] and POST /api/v1/subscriptions/:id/disable|enable take no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "endpoint"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "topic_pattern"
+                ]
+              },
+              {
+                "required": [
+                  "topic"
+                ]
+              }
+            ],
+            "properties": {
+              "topic_pattern": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$",
+                "description": "Dot-separated segments of [a-z0-9_] or *, where * stands for one or more whole segments (*.* is refused)."
+              },
+              "topic": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$",
+                "description": "Dot-separated segments of [a-z0-9_] or *, where * stands for one or more whole segments (*.* is refused)."
+              },
+              "endpoint": {
+                "type": "string",
+                "pattern": "^https?://"
+              },
+              "secret": {
+                "type": "string",
+                "minLength": 32,
+                "maxLength": 256
+              },
+              "retry_policy": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "max_attempts": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20
+                  },
+                  "backoff_ms": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 86400000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "events.subscription-result": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/subscription-result.v1.json",
+        "title": "EventsSubscriptionResult",
+        "description": "events.subscription-result@1: answers of the subscription routes on OpenVibe.Events. POST /api/v1/subscriptions → 201 events.subscription@1 with its secret (shown once); GET /api/v1/subscriptions → { subscriptions } (the caller's own, no secrets); GET /api/v1/subscriptions/:id and POST …/disable|enable → events.subscription@1. Another consumer's subscription is 404.",
+        "anyOf": [
+          {
+            "$ref": "subscription.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "subscriptions"
+            ],
+            "properties": {
+              "subscriptions": {
+                "type": "array",
+                "items": {
+                  "$ref": "subscription.v1.json"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "events.subscription": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/subscription.v1.json",
+        "title": "EventsSubscription",
+        "description": "events.subscription@1: one push subscription as OpenVibe.Events shows it to its consumer (server/store.js subscriptionView). The signing secret appears only in the answer that creates it (and in a rotation's). A developer app's subscription also names its project and environment.",
+        "type": "object",
+        "required": [
+          "id",
+          "consumer",
+          "topic_pattern",
+          "endpoint",
+          "enabled",
+          "retry_policy",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^sub_"
+          },
+          "consumer": {
+            "type": "string",
+            "description": "The calling service, or app:app_<ULID>."
+          },
+          "topic_pattern": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "retry_policy": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "max_attempts": {
+                "type": "integer"
+              },
+              "backoff_ms": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "env": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string",
+            "description": "Only when the subscription is created: shown once."
+          }
+        }
+      }
+    },
     "chat.message.deleted": {
       "version": "1.0.0",
       "owner": "chat",
@@ -6380,6 +6956,1221 @@
             "format": "date-time"
           }
         }
+      }
+    },
+    "ai.definition-version-request": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/definition-version-request.v1.json",
+        "title": "AiDefinitionVersionRequest",
+        "description": "ai.definition-version-request@1: bodies of ai.workflow.manage on OpenVibe.AI. An edit is always a new version (the previous one stays readable); fields left out are taken from the newest existing version. POST /api/v1/templates/:key/versions: a prompt template (input_schema and output_schema must compile as JSON Schema; visibility public, first-party or internal). POST /api/v1/workflows/:key/versions (key <namespace>.<name>): steps (at least one; kind llm (naming an existing template), passthrough, transcribe or embed), schemas, default route, cache mode. POST /api/v1/routes/:key/versions: primary { provider, model } and fallbacks (every provider must exist), or alias_of another route. POST …/:key/versions/:version/status: { status } (templates and workflows draft|active|deprecated|archived; routes active|disabled). Refusals are 422 ai.invalid.",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "input_schema": {
+                "type": "object",
+                "description": "A JSON Schema the run input must match."
+              },
+              "output_schema": {
+                "type": "object",
+                "description": "A JSON Schema the output must match."
+              },
+              "system_prompt": {
+                "type": "string"
+              },
+              "user_prompt": {
+                "type": "string"
+              },
+              "default_route": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "owner": {
+                "type": "string"
+              },
+              "visibility": {
+                "enum": [
+                  "public",
+                  "first-party",
+                  "internal"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "draft",
+                  "active",
+                  "deprecated",
+                  "archived"
+                ]
+              },
+              "metadata": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "input_schema": {
+                "type": "object",
+                "description": "A JSON Schema."
+              },
+              "output_schema": {
+                "type": "object",
+                "description": "A JSON Schema."
+              },
+              "steps": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "llm",
+                        "passthrough",
+                        "transcribe",
+                        "embed"
+                      ]
+                    },
+                    "template": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "default_route": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cache_mode": {
+                "enum": [
+                  "none",
+                  "private",
+                  "service"
+                ]
+              },
+              "cache_ttl_sec": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "draft",
+                  "active",
+                  "deprecated",
+                  "archived"
+                ]
+              },
+              "metadata": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "primary": {
+                "type": "object",
+                "required": [
+                  "provider"
+                ],
+                "properties": {
+                  "provider": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "fallbacks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "provider"
+                  ],
+                  "properties": {
+                    "provider": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "options": {
+                "type": "object"
+              },
+              "max_output_tokens": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "response_format": {
+                "enum": [
+                  "text",
+                  "json"
+                ]
+              },
+              "timeout_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "alias_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ai.definition-version-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/definition-version-result.v1.json",
+        "title": "AiDefinitionVersionResult",
+        "description": "ai.definition-version-result@1: answers of ai.workflow.manage on OpenVibe.AI. POST …/:key/versions → 201 { template | workflow | route } (the new version, whole: prompts and schemas for a template, steps for a workflow, primary/fallbacks for a route); POST …/versions/:version/status → { template | workflow | route: { key, version, status } }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "template"
+            ],
+            "properties": {
+              "template": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "version",
+                  "status"
+                ],
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "workflow"
+            ],
+            "properties": {
+              "workflow": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "version",
+                  "status"
+                ],
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "route"
+            ],
+            "properties": {
+              "route": {
+                "type": "object",
+                "required": [
+                  "key",
+                  "version",
+                  "status"
+                ],
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ai.model": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model.v1.json",
+        "title": "AiModel",
+        "description": "ai.model@1: one model of a provider in OpenVibe.AI's registry (server/registry.js decodeModel): type, status, limits, per-million-token costs and what it supports.",
+        "type": "object",
+        "required": [
+          "provider_key",
+          "model_key",
+          "type",
+          "status",
+          "cost",
+          "supports"
+        ],
+        "properties": {
+          "provider_key": {
+            "type": "string"
+          },
+          "model_key": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "enum": [
+              "chat",
+              "vision",
+              "embedding",
+              "stt"
+            ]
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          },
+          "context_window": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "max_output": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "cost": {
+            "type": "object",
+            "properties": {
+              "in_per_mtok": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "out_per_mtok": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "cached_per_mtok": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            }
+          },
+          "supports": {
+            "type": "object",
+            "properties": {
+              "json": {
+                "type": "boolean"
+              },
+              "tools": {
+                "type": "boolean"
+              },
+              "streaming": {
+                "type": "boolean"
+              },
+              "vision": {
+                "type": "boolean"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "ai.provider-manage-request": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/provider-manage-request.v1.json",
+        "title": "AiProviderManageRequest",
+        "description": "ai.provider-manage-request@1: bodies of ai.provider.manage on OpenVibe.AI. POST /api/v1/providers creates or replaces a provider (key required) and PATCH /api/v1/providers/:key changes one (fields left out keep their value); a body carrying api_key or secret is refused (422: send secret_ref env:NAME, never a secret value). POST /api/v1/models (provider_key and model_key required) and PATCH /api/v1/models/:provider/:model upsert a model. POST /api/v1/quotas upserts a quota (scope_type and window required; scope_id too unless global; the same scope, window and workflow_prefix is one quota). POST /api/v1/providers/:key/disable|enable|reset and DELETE /api/v1/cache[?workflow=] take no body. Unknown fields are ignored.",
+        "anyOf": [
+          {
+            "type": "object",
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "api_key"
+                  ]
+                },
+                {
+                  "required": [
+                    "secret"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)*$"
+              },
+              "display_name": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "stub",
+                  "openai",
+                  "anthropic",
+                  "http",
+                  "whisper"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              },
+              "base_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^https?://\\S+$"
+              },
+              "auth_mode": {
+                "enum": [
+                  "none",
+                  "bearer",
+                  "x-api-key"
+                ]
+              },
+              "secret_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^(env:[A-Z][A-Z0-9_]{0,63})?$"
+              },
+              "default_model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "chat",
+                    "generate",
+                    "summarize",
+                    "classify",
+                    "extract",
+                    "enrich",
+                    "embed",
+                    "vision",
+                    "json",
+                    "transcribe"
+                  ]
+                }
+              },
+              "timeout_ms": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "Clamped to 1000..600000."
+              },
+              "priority": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "metadata": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "provider_key": {
+                "type": "string"
+              },
+              "model_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "display_name": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "chat",
+                  "vision",
+                  "embedding",
+                  "stt"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              },
+              "context_window": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "max_output": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "cost": {
+                "type": "object",
+                "properties": {
+                  "in_per_mtok": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "out_per_mtok": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cached_per_mtok": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "supports": {
+                "type": "object",
+                "properties": {
+                  "json": {
+                    "type": "boolean"
+                  },
+                  "tools": {
+                    "type": "boolean"
+                  },
+                  "streaming": {
+                    "type": "boolean"
+                  },
+                  "vision": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "metadata": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "scope_type",
+              "window"
+            ],
+            "properties": {
+              "scope_type": {
+                "enum": [
+                  "global",
+                  "service",
+                  "actor",
+                  "attribution"
+                ]
+              },
+              "scope_id": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "* on a non-global scope = each one separately."
+              },
+              "window": {
+                "enum": [
+                  "minute",
+                  "hour",
+                  "day"
+                ]
+              },
+              "max_requests": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "max_tokens": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "max_cost_usd": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "workflow_prefix": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "ai.provider-manage-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/provider-manage-result.v1.json",
+        "title": "AiProviderManageResult",
+        "description": "ai.provider-manage-result@1: answers of ai.provider.manage on OpenVibe.AI. Provider create/update/disable/enable → { provider } (201 on POST); POST …/reset → { health } (the circuit breaker, closed again); model upserts → { model }; POST /api/v1/quotas → 201 { quota } (the stored row); DELETE /api/v1/cache → { removed } (entries purged). Every change is audited.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "provider"
+            ],
+            "properties": {
+              "provider": {
+                "$ref": "provider.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "health"
+            ],
+            "properties": {
+              "health": {
+                "type": "object",
+                "required": [
+                  "state"
+                ],
+                "properties": {
+                  "provider_key": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "enum": [
+                      "closed",
+                      "open",
+                      "half_open"
+                    ]
+                  },
+                  "consecutive_failures": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "model"
+            ],
+            "properties": {
+              "model": {
+                "$ref": "model.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "quota"
+            ],
+            "properties": {
+              "quota": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "scope_type",
+                  "scope_id",
+                  "window",
+                  "status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "scope_type": {
+                    "type": "string"
+                  },
+                  "scope_id": {
+                    "type": "string"
+                  },
+                  "window": {
+                    "type": "string"
+                  },
+                  "max_requests": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "max_tokens": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "max_cost_usd": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "workflow_prefix": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "removed"
+            ],
+            "properties": {
+              "removed": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ai.provider": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/provider.v1.json",
+        "title": "AiProvider",
+        "description": "ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the circuit-breaker health.",
+        "type": "object",
+        "required": [
+          "key",
+          "kind",
+          "status",
+          "auth_mode",
+          "capabilities",
+          "credentials"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)*$"
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "enum": [
+              "stub",
+              "openai",
+              "anthropic",
+              "http",
+              "whisper"
+            ]
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          },
+          "base_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "auth_mode": {
+            "enum": [
+              "none",
+              "bearer",
+              "x-api-key"
+            ]
+          },
+          "secret_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "env:NAME, a reference; never the secret."
+          },
+          "default_model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "chat",
+                "generate",
+                "summarize",
+                "classify",
+                "extract",
+                "enrich",
+                "embed",
+                "vision",
+                "json",
+                "transcribe"
+              ]
+            }
+          },
+          "timeout_ms": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "priority": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "origin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "credentials": {
+            "enum": [
+              "not_required",
+              "configured",
+              "missing"
+            ]
+          },
+          "health": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "provider_key": {
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "closed",
+                  "open",
+                  "half_open"
+                ]
+              },
+              "consecutive_failures": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ai.usage-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/usage-result.v1.json",
+        "title": "AiUsageResult",
+        "description": "ai.usage-result@1: answers of ai.usage.read on OpenVibe.AI (all GETs, parameters in the query). GET /api/v1/status → { providers, runs, today, workflows, templates, routes, inflight, quotas }; GET /api/v1/usage?from=&to=&requester= → { usage } (daily rows); GET /api/v1/quotas → { quotas, current }; GET /api/v1/requests?provider=&status=&run=&fallback=&limit= → { requests } (request-log metadata: hashes, tokens, cost, latency; raw debug fields only for provider managers who ask); GET /api/v1/audit → { audit }; GET /api/v1/cache → { cache }; GET /api/v1/providers → { providers }; GET /api/v1/models?provider= → { models }. Never raw prompts, never secrets.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "providers",
+              "runs",
+              "today"
+            ],
+            "properties": {
+              "providers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "key"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "credentials": {
+                      "type": "string"
+                    },
+                    "health": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "runs": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "description": "Run counts by status."
+              },
+              "today": {
+                "type": "object",
+                "required": [
+                  "day"
+                ],
+                "properties": {
+                  "day": {
+                    "type": "string"
+                  },
+                  "requests": {
+                    "type": "number"
+                  },
+                  "cost_usd": {
+                    "type": "number"
+                  }
+                }
+              },
+              "workflows": {
+                "type": "integer"
+              },
+              "templates": {
+                "type": "integer"
+              },
+              "routes": {
+                "type": "integer"
+              },
+              "inflight": {
+                "type": "integer"
+              },
+              "quotas": {
+                "type": "array"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "providers"
+            ],
+            "properties": {
+              "providers": {
+                "type": "array",
+                "items": {
+                  "$ref": "provider.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "models"
+            ],
+            "properties": {
+              "models": {
+                "type": "array",
+                "items": {
+                  "$ref": "model.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "quotas",
+              "current"
+            ],
+            "properties": {
+              "quotas": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "current": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "quota": {
+                      "type": "object"
+                    },
+                    "scope_id": {
+                      "type": "string"
+                    },
+                    "window_start": {
+                      "type": "string"
+                    },
+                    "resets_in_seconds": {
+                      "type": "number"
+                    },
+                    "used": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "usage"
+            ],
+            "properties": {
+              "usage": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "requests"
+            ],
+            "properties": {
+              "requests": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "audit"
+            ],
+            "properties": {
+              "audit": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "cache"
+            ],
+            "properties": {
+              "cache": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "workflow_key": {
+                      "type": "string"
+                    },
+                    "privacy": {
+                      "type": "string"
+                    },
+                    "entries": {
+                      "type": "integer"
+                    },
+                    "hits": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "tips.interaction.ready": {

@@ -20,5 +20,6 @@
     "GET /api/v1/checkpoints",
     "PUT /api/v1/checkpoints",
     "GET /realtime/stream"
-  ]
+  ],
+  "inputSchema": "events.read-request@1"
 }

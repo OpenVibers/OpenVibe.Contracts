@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/read-result.v1.json",
+  "title": "EventsReadResult",
+  "description": "events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, event }], next_after_seq, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). An app sees only its project's events in its token's environment plus public first-party events.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "events",
+        "next_after_seq",
+        "latest_seq"
+      ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "required": [
+              "seq",
+              "event"
+            ],
+            "properties": {
+              "seq": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "event": {
+                "$ref": "event-envelope.v1.json"
+              }
+            }
+          }
+        },
+        "next_after_seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latest_seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap": {
+          "type": "object",
+          "required": [
+            "from_seq",
+            "to_seq"
+          ],
+          "properties": {
+            "from_seq": {
+              "type": "integer"
+            },
+            "to_seq": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "seq",
+        "event"
+      ],
+      "properties": {
+        "seq": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event": {
+          "$ref": "event-envelope.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "consumer",
+        "topic",
+        "cursor",
+        "updated_at"
+      ],
+      "properties": {
+        "consumer": {
+          "type": "string"
+        },
+        "topic": {
+          "type": "string"
+        },
+        "cursor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    }
+  ]
+}

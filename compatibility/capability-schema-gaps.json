@@ -2,33 +2,6 @@
   "_about": "Active capabilities still without an input or output schema (roadmap WS-C task 4). test/capability-schemas.test.js fails on any active capability missing a schema that is not listed here, and on a listed one that has since gained it (remove it from this list). The list only shrinks: fill a capability's schemas, then delete its row. A request with no body names common.no-body@1; a response of bytes names common.binary@1.",
   "gaps": [
     {
-      "id": "ai.provider.manage",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "ai.run.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "ai.usage.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "ai.workflow.manage",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
       "id": "blog.blog.configure",
       "missing": [
         "inputSchema",
@@ -245,52 +218,6 @@
     },
     {
       "id": "deals.watch.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "events.app.publish",
-      "missing": [
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "events.app.read",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "events.app.subscribe",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "events.delivery.admin",
-      "missing": [
-        "inputSchema",
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "events.event.publish",
-      "missing": [
-        "outputSchema"
-      ]
-    },
-    {
-      "id": "events.event.read",
-      "missing": [
-        "inputSchema"
-      ]
-    },
-    {
-      "id": "events.subscription.manage",
       "missing": [
         "inputSchema",
         "outputSchema"

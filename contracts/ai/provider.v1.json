@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/provider.v1.json",
+  "title": "AiProvider",
+  "description": "ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the circuit-breaker health.",
+  "type": "object",
+  "required": [
+    "key",
+    "kind",
+    "status",
+    "auth_mode",
+    "capabilities",
+    "credentials"
+  ],
+  "properties": {
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)*$"
+    },
+    "display_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "stub",
+        "openai",
+        "anthropic",
+        "http",
+        "whisper"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "disabled"
+      ]
+    },
+    "base_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "auth_mode": {
+      "enum": [
+        "none",
+        "bearer",
+        "x-api-key"
+      ]
+    },
+    "secret_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "env:NAME, a reference; never the secret."
+    },
+    "default_model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "chat",
+          "generate",
+          "summarize",
+          "classify",
+          "extract",
+          "enrich",
+          "embed",
+          "vision",
+          "json",
+          "transcribe"
+        ]
+      }
+    },
+    "timeout_ms": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "priority": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "origin": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "credentials": {
+      "enum": [
+        "not_required",
+        "configured",
+        "missing"
+      ]
+    },
+    "health": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "provider_key": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "closed",
+            "open",
+            "half_open"
+          ]
+        },
+        "consecutive_failures": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

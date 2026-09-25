@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/subscription-result.v1.json",
+  "title": "EventsSubscriptionResult",
+  "description": "events.subscription-result@1: answers of the subscription routes on OpenVibe.Events. POST /api/v1/subscriptions → 201 events.subscription@1 with its secret (shown once); GET /api/v1/subscriptions → { subscriptions } (the caller's own, no secrets); GET /api/v1/subscriptions/:id and POST …/disable|enable → events.subscription@1. Another consumer's subscription is 404.",
+  "anyOf": [
+    {
+      "$ref": "subscription.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "subscriptions"
+      ],
+      "properties": {
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "subscription.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

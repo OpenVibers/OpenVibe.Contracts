@@ -22,5 +22,7 @@
     "GET /api/v1/cache",
     "GET /api/v1/providers",
     "GET /api/v1/models"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "ai.usage-result@1"
 }

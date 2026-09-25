@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/definition-version-request.v1.json",
+  "title": "AiDefinitionVersionRequest",
+  "description": "ai.definition-version-request@1: bodies of ai.workflow.manage on OpenVibe.AI. An edit is always a new version (the previous one stays readable); fields left out are taken from the newest existing version. POST /api/v1/templates/:key/versions: a prompt template (input_schema and output_schema must compile as JSON Schema; visibility public, first-party or internal). POST /api/v1/workflows/:key/versions (key <namespace>.<name>): steps (at least one; kind llm (naming an existing template), passthrough, transcribe or embed), schemas, default route, cache mode. POST /api/v1/routes/:key/versions: primary { provider, model } and fallbacks (every provider must exist), or alias_of another route. POST …/:key/versions/:version/status: { status } (templates and workflows draft|active|deprecated|archived; routes active|disabled). Refusals are 422 ai.invalid.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "input_schema": {
+          "type": "object",
+          "description": "A JSON Schema the run input must match."
+        },
+        "output_schema": {
+          "type": "object",
+          "description": "A JSON Schema the output must match."
+        },
+        "system_prompt": {
+          "type": "string"
+        },
+        "user_prompt": {
+          "type": "string"
+        },
+        "default_route": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "owner": {
+          "type": "string"
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "first-party",
+            "internal"
+          ]
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "deprecated",
+            "archived"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "input_schema": {
+          "type": "object",
+          "description": "A JSON Schema."
+        },
+        "output_schema": {
+          "type": "object",
+          "description": "A JSON Schema."
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "llm",
+                  "passthrough",
+                  "transcribe",
+                  "embed"
+                ]
+              },
+              "template": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "default_route": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cache_mode": {
+          "enum": [
+            "none",
+            "private",
+            "service"
+          ]
+        },
+        "cache_ttl_sec": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "deprecated",
+            "archived"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "object",
+          "required": [
+            "provider"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string"
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "fallbacks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "provider"
+            ],
+            "properties": {
+              "provider": {
+                "type": "string"
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "options": {
+          "type": "object"
+        },
+        "max_output_tokens": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "response_format": {
+          "enum": [
+            "text",
+            "json"
+          ]
+        },
+        "timeout_ms": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "alias_of": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{ "topic_pattern": "media.vod.*", "endpoint": "https://hooks.example.com/ov", "retry_policy": { "max_attempts": 8, "jitter": true } }

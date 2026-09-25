@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/subscription.v1.json",
+  "title": "EventsSubscription",
+  "description": "events.subscription@1: one push subscription as OpenVibe.Events shows it to its consumer (server/store.js subscriptionView). The signing secret appears only in the answer that creates it (and in a rotation's). A developer app's subscription also names its project and environment.",
+  "type": "object",
+  "required": [
+    "id",
+    "consumer",
+    "topic_pattern",
+    "endpoint",
+    "enabled",
+    "retry_policy",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^sub_"
+    },
+    "consumer": {
+      "type": "string",
+      "description": "The calling service, or app:app_<ULID>."
+    },
+    "topic_pattern": {
+      "type": "string"
+    },
+    "endpoint": {
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "retry_policy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "max_attempts": {
+          "type": "integer"
+        },
+        "backoff_ms": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "env": {
+      "type": "string"
+    },
+    "secret": {
+      "type": "string",
+      "description": "Only when the subscription is created: shown once."
+    }
+  }
+}

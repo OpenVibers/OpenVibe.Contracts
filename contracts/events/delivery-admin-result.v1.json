@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/delivery-admin-result.v1.json",
+  "title": "EventsDeliveryAdminResult",
+  "description": "events.delivery-admin-result@1: answers of events.delivery.admin on OpenVibe.Events. GET /api/v1/deliveries → { deliveries, counts } (per delivery: event, subscription, seq, status pending|delivered|failed|dead, attempt, next_attempt_at, the last HTTP status and error, delivered_at; counts by status); POST /api/v1/deliveries/replay → { subscription_id, queued }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "deliveries",
+        "counts"
+      ],
+      "properties": {
+        "deliveries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "event_id",
+              "subscription_id",
+              "seq",
+              "status",
+              "attempt"
+            ],
+            "properties": {
+              "event_id": {
+                "type": "string"
+              },
+              "subscription_id": {
+                "type": "string"
+              },
+              "seq": {
+                "type": "integer"
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "delivered",
+                  "failed",
+                  "dead"
+                ]
+              },
+              "attempt": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "next_attempt_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_status": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "last_error": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "delivered_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "counts": {
+          "type": "object",
+          "required": [
+            "pending",
+            "delivered",
+            "failed",
+            "dead"
+          ],
+          "properties": {
+            "pending": {
+              "type": "integer"
+            },
+            "delivered": {
+              "type": "integer"
+            },
+            "failed": {
+              "type": "integer"
+            },
+            "dead": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "subscription_id",
+        "queued"
+      ],
+      "properties": {
+        "subscription_id": {
+          "type": "string"
+        },
+        "queued": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}

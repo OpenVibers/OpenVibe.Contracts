@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/deliveries",
     "POST /api/v1/deliveries/replay"
-  ]
+  ],
+  "inputSchema": "events.delivery-admin-request@1",
+  "outputSchema": "events.delivery-admin-result@1"
 }

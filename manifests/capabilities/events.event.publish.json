@@ -16,5 +16,6 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/events"
-  ]
+  ],
+  "outputSchema": "events.publish-result@1"
 }
