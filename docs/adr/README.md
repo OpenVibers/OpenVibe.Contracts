@@ -31,3 +31,4 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-025](ADR-025-marketplace-scope.md) | Marketplace and commerce scope | Accepted 2026-09-23: Trade stays informational |
 | [ADR-026](ADR-026-event-redaction.md) | Producer redaction of its own events (`payload.redacts`) and event payload contracts | Accepted and implemented 2026-09-23 (OpenVibe.Events, Chat) |
 | [ADR-027](ADR-027-tools-platform-api.md) | Tools platform API: descriptors, one run API, caller tiers, probes, abuse log, legacy sunset | Accepted 2026-09-23; contracts v0.33.0, routes planned |
+| [ADR-028](ADR-028-expand-migrate-contract.md) | Expand, migrate, contract: schema changes that survive a rollback (7-day window); destructive-statement check and rollback-with-newer-writes test | Accepted 2026-09-25; enforced in Live |
