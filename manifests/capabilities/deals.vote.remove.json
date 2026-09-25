@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "DELETE /api/v1/offers/:id/vote"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "deals.vote-result@1"
 }

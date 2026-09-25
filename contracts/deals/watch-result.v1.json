@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/watch-result.v1.json",
+  "title": "DealsWatchResult",
+  "description": "deals.watch-result@1: answers of the watch routes on OpenVibe.Deals: GET /api/v1/watches → { watches } (the acting person's; deals.watch.read); POST /api/v1/watches → 201 { watch } (deals.watch.create); DELETE /api/v1/watches/:id → { id, deleted: true } (deals.watch.delete; someone else's watch is 404).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "watches"
+      ],
+      "properties": {
+        "watches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "notify",
+              "created_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "keyword",
+                  "product",
+                  "price_below",
+                  "search"
+                ]
+              },
+              "query": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "notify": {
+                "type": "boolean"
+              },
+              "product": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "max_price": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "notifications": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "watch"
+      ],
+      "properties": {
+        "watch": {
+          "type": "object",
+          "required": [
+            "id",
+            "kind",
+            "notify",
+            "created_at"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "keyword",
+                "product",
+                "price_below",
+                "search"
+              ]
+            },
+            "query": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "notify": {
+              "type": "boolean"
+            },
+            "product": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "max_price": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "currency": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "created_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "notifications": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "id",
+        "deleted"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "deleted": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

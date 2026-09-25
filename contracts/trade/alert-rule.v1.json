@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/alert-rule.v1.json",
+  "title": "TradeAlertRule",
+  "description": "trade.alert-rule@1: one alert rule of a person on OpenVibe.Trade (server/domain/alerts.js ruleDto): a threshold on a metric, filings of some form types, or any new document for an instrument. Alerts inform; they never trade.",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "status",
+    "instrument"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "threshold",
+        "filing_type",
+        "new_document"
+      ]
+    },
+    "status": {
+      "type": "string"
+    },
+    "instrument": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "metric": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "operator": {
+      "enum": [
+        "above",
+        "below",
+        null
+      ]
+    },
+    "threshold": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "form_types": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "armed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

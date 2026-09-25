@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/moderation-result.v1.json",
+  "title": "DealsModerationResult",
+  "description": "deals.moderation-result@1: answers of deals.offer.moderate on OpenVibe.Deals. POST /api/v1/offers/:id/disable|enable|review → { offer }; GET /api/v1/flags?status=open|resolved|dismissed → { flags }; POST /api/v1/flags/:id/resolve → { flag, changed } (changed false when it was no longer open).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "offer"
+      ],
+      "properties": {
+        "offer": {
+          "$ref": "offer.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "flags"
+      ],
+      "properties": {
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "origin",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "origin": {
+                "type": "string"
+              },
+              "reporter": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "open",
+                  "resolved",
+                  "dismissed"
+                ]
+              },
+              "details": {
+                "type": "object"
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "resolved_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "resolved_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "resolution": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "offer": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "flag",
+        "changed"
+      ],
+      "properties": {
+        "flag": {
+          "type": "object",
+          "required": [
+            "id",
+            "kind",
+            "origin",
+            "status"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "origin": {
+              "type": "string"
+            },
+            "reporter": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "enum": [
+                "open",
+                "resolved",
+                "dismissed"
+              ]
+            },
+            "details": {
+              "type": "object"
+            },
+            "created_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "resolved_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "resolved_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "resolution": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "offer": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        },
+        "changed": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

@@ -2725,6 +2725,141 @@
       "status": "active"
     },
     {
+      "id": "deals.flag-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/flag-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.flag-result",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/flag-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.moderation-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/moderation-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.moderation-result",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/moderation-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer-action-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/offer-action-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer-result",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/offer-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer-submit-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/offer-submit-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer-update-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/offer-update-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.offer",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/offer.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.product-resolve-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/product-resolve-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.product-resolve-result",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/product-resolve-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.vote-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/vote-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.vote-result",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/vote-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.watch-request",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/watch-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "deals.watch-result",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "deals/watch-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "trade.observation.created",
       "version": "1.0.0",
       "owner": "trade",
@@ -2765,6 +2900,177 @@
       "version": "1.0.0",
       "owner": "trade",
       "schema": "events/payloads/trade.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.alert-read-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/alert-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.alert-rule-request",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/alert-rule-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.alert-rule-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/alert-rule-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.alert-rule",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/alert-rule.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.context-proposal-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/context-proposal-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.context-proposal",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/context-proposal.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.context-read-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/context-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.context-revision",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/context-revision.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.deleted-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/deleted-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.instrument-manage-request",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/instrument-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.instrument-manage-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/instrument-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.instrument",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/instrument.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.observation-request",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/observation-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.observation-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/observation-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.observation",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/observation.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.resolve-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/resolve-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.watchlist-request",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/watchlist-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.watchlist-result",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/watchlist-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "trade.watchlist",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "trade/watchlist.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

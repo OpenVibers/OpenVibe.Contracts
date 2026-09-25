@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/offer-update-request.v1.json",
+  "title": "DealsOfferUpdateRequest",
+  "description": "deals.offer-update-request@1: bodies of deals.offer.update on OpenVibe.Deals. PATCH /api/v1/offers/:id (the submitter or a moderator): { title?, description?, category?, expires_at?, product_slug? | product?, ai_summary? } (ai_summary only from OpenVibe.AI with X-OV-Origin: ai; product null detaches it). POST /api/v1/offers/:id/observations (a person): a price report — at least a price, shipping cost, availability or condition, with the currency of any amount; services may give observed_at (not in the future).",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 4000
+        },
+        "category": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 60
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "product_slug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "product": {
+          "anyOf": [
+            {
+              "type": "object",
+              "description": "Product aliases to resolve (or create) the product.",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "brand": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "gtin": {
+                  "type": "string",
+                  "pattern": "^[0-9]{8,14}$"
+                },
+                "mpn": {
+                  "type": "string"
+                },
+                "sku": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ai_summary": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        }
+      }
+    },
+    {
+      "type": "object",
+      "anyOf": [
+        {
+          "required": [
+            "price"
+          ]
+        },
+        {
+          "required": [
+            "shipping"
+          ]
+        },
+        {
+          "required": [
+            "availability"
+          ]
+        },
+        {
+          "required": [
+            "condition"
+          ]
+        }
+      ],
+      "properties": {
+        "price": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ],
+          "description": "A decimal amount; always with its currency."
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z]{3}$",
+          "description": "ISO 4217; Deals never assumes one."
+        },
+        "shipping": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ],
+          "description": "A decimal amount; always with its currency."
+        },
+        "shipping_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "condition": {
+          "enum": [
+            "new",
+            "used",
+            "refurbished",
+            "damaged",
+            null
+          ]
+        },
+        "availability": {
+          "enum": [
+            "in_stock",
+            "out_of_stock",
+            "preorder",
+            "discontinued",
+            "limited",
+            "sold_out",
+            "online_only",
+            "in_store_only",
+            null
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "observed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  ]
+}

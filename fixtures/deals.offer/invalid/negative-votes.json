@@ -1,0 +1,1 @@
+{ "id": "d", "slug": "s", "url": "u", "title": "t", "link": "l", "status": "active", "origin": "community", "created_at": null, "observations": [], "votes": { "up": -1, "down": 0, "up_weight": 0, "down_weight": 0 }, "indexability": { "indexable": true } }

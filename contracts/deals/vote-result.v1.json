@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/vote-result.v1.json",
+  "title": "DealsVoteResult",
+  "description": "deals.vote-result@1: the answer of PUT and DELETE /api/v1/offers/:id/vote on OpenVibe.Deals: { offer_id, value (0 after a removal), previous, changed, votes } — the vote lands on the canonical offer of a merge group.",
+  "type": "object",
+  "required": [
+    "offer_id",
+    "value",
+    "previous",
+    "changed",
+    "votes"
+  ],
+  "properties": {
+    "offer_id": {
+      "type": "string"
+    },
+    "value": {
+      "enum": [
+        1,
+        -1,
+        0
+      ]
+    },
+    "previous": {
+      "enum": [
+        1,
+        -1,
+        0,
+        null
+      ]
+    },
+    "changed": {
+      "type": "boolean"
+    },
+    "votes": {
+      "type": "object",
+      "required": [
+        "up",
+        "down",
+        "up_weight",
+        "down_weight"
+      ],
+      "properties": {
+        "up": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "down": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "up_weight": {
+          "type": "number"
+        },
+        "down_weight": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

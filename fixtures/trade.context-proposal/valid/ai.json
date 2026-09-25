@@ -1,0 +1,1 @@
+{ "workflow": { "id": "trade.summarize_market_context", "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPS", "model": "claude-sonnet-4-5" }, "input_sources": [ { "source_type": "trade.observation", "source_id": "obs_01JAB2C3D4E5F6G7H8J9K0MNPQ" } ], "output": { "summary": "Acme closed at 182.40 USD on 2026-09-24.", "citations": [0], "gaps": ["No filings in the last 30 days."] } }

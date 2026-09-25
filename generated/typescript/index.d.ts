@@ -26848,6 +26848,469 @@ export interface DealsIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** deals.flag-request@1.0.0 (owner: deals) */
+/**
+ * deals.flag-request@1: the body of POST /api/v1/offers/:id/flags on OpenVibe.Deals (deals.flag.create; a person): { kind, reason?, duplicate_of? } — duplicate_of (the other deal, id, slug or /d/ link) is required for kind duplicate. An open flag of the same kind by the same person is refreshed, not repeated.
+ */
+export interface DealsFlagRequest {
+  kind: "expired" | "price_wrong" | "spam" | "duplicate" | "other";
+  reason?: string | null;
+  duplicate_of?: string | null;
+}
+
+/** deals.flag-result@1.0.0 (owner: deals) */
+/**
+ * deals.flag-result@1: the answer of POST /api/v1/offers/:id/flags on OpenVibe.Deals: { flag: { id, kind, status }, created } (201 when created, 200 when an open flag was refreshed).
+ */
+export interface DealsFlagResult {
+  flag: {
+    id: string;
+    kind: string;
+    status: string;
+  };
+  created: boolean;
+}
+
+/** deals.moderation-request@1.0.0 (owner: deals) */
+/**
+ * deals.moderation-request@1: bodies of deals.offer.moderate on OpenVibe.Deals (moderators). POST /api/v1/offers/:id/disable: { reason } (3-300 characters); POST …/enable: { reason? }; POST …/review (a person): { note? }; POST /api/v1/flags/:id/resolve: { status?: resolved (default) | dismissed, resolution? }. GET /api/v1/flags?status= takes no body.
+ */
+export type DealsModerationRequest =
+  | {
+      reason?: string | null;
+      note?: string | null;
+    }
+  | {
+      status: "resolved" | "dismissed";
+      resolution?: string | null;
+    };
+
+/** deals.moderation-result@1.0.0 (owner: deals) */
+/**
+ * deals.moderation-result@1: answers of deals.offer.moderate on OpenVibe.Deals. POST /api/v1/offers/:id/disable|enable|review → { offer }; GET /api/v1/flags?status=open|resolved|dismissed → { flags }; POST /api/v1/flags/:id/resolve → { flag, changed } (changed false when it was no longer open).
+ */
+export type DealsModerationResult =
+  | {
+      offer: DealsOffer;
+    }
+  | {
+      flags: {
+        id: string;
+        kind: string;
+        origin: string;
+        reporter?: string | null;
+        reason?: string | null;
+        status: "open" | "resolved" | "dismissed";
+        details?: {};
+        created_at?: string | null;
+        updated_at?: string | null;
+        resolved_by?: string | null;
+        resolved_at?: string | null;
+        resolution?: string | null;
+        offer?: {} | null;
+      }[];
+    }
+  | {
+      flag: {
+        id: string;
+        kind: string;
+        origin: string;
+        reporter?: string | null;
+        reason?: string | null;
+        status: "open" | "resolved" | "dismissed";
+        details?: {};
+        created_at?: string | null;
+        updated_at?: string | null;
+        resolved_by?: string | null;
+        resolved_at?: string | null;
+        resolution?: string | null;
+        offer?: {} | null;
+      };
+      changed: boolean;
+    };
+
+/** deals.offer-action-request@1.0.0 (owner: deals) */
+/**
+ * deals.offer-action-request@1: bodies of the deal actions on OpenVibe.Deals. POST /api/v1/offers/:id/expire (deals.offer.expire; the submitter or a moderator): { reason? } (a moderator's reason is recorded). POST …/disable (deals.offer.moderate): { reason } (3-300 characters, required); POST …/enable: { reason? }; POST …/review (a person): { note? }. POST …/merge (deals.offer.merge, moderators): { into, reason? } (the canonical deal, id or slug; no cycles, not an already merged offer); POST …/unmerge: { reason? }.
+ */
+export type DealsOfferActionRequest =
+  | {
+      reason?: string | null;
+      note?: string | null;
+    }
+  | {
+      into: string;
+      reason?: string | null;
+    };
+
+/** deals.offer-result@1.0.0 (owner: deals) */
+/**
+ * deals.offer-result@1: the answer of the deal writes on OpenVibe.Deals: { offer } (the canonical offer after the change). POST /api/v1/offers (201), PATCH /api/v1/offers/:id, POST …/expire, …/disable, …/enable and …/review answer exactly that; POST …/observations (201) adds the observation recorded; POST …/merge adds merged { id, slug } and the before/after of the change; POST …/unmerge adds from { id, slug } and before/after.
+ */
+export interface DealsOfferResult {
+  offer: DealsOffer;
+  observation?: {
+    id: string;
+    observed_at: string | null;
+    recorded_at?: string | null;
+    price?: string | null;
+    currency?: string | null;
+    shipping?: string | null;
+    shipping_note?: string | null;
+    condition?: "new" | "used" | "refurbished" | "damaged" | null;
+    availability?:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+    origin: string;
+    observed_by?: string | null;
+    listing?: string | null;
+    source: {
+      id?: string | null;
+      kind?: string | null;
+      ref?: {} | null;
+      key?: string | null;
+      url?: string | null;
+    };
+  };
+  merged?: {
+    id?: string;
+    slug?: string;
+  };
+  from?: {
+    id?: string;
+    slug?: string;
+  };
+  before?: unknown;
+  after?: unknown;
+}
+
+/** deals.offer-submit-request@1.0.0 (owner: deals) */
+/**
+ * deals.offer-submit-request@1: the body of POST /api/v1/offers on OpenVibe.Deals (deals.offer.submit; a signed-in person, or a service acting for one; X-OV-Origin: ai holds the text for review). url (an http(s) link to the offer; a link already posted is 409 offer.duplicate) and title (3-200 characters) are required; a price or shipping cost needs its currency; expires_at may not be in the past. The first price observation is recorded with it.
+ */
+export interface DealsOfferSubmitRequest {
+  url: string;
+  title: string;
+  description?: string | null;
+  category?: string | null;
+  expires_at?: string | null;
+  store_name?: string | null;
+  product_slug?: string | null;
+  /**
+   * Product aliases to resolve (or create) the product.
+   */
+  product?: {
+    name?: string;
+    brand?: string | null;
+    gtin?: string;
+    mpn?: string;
+    sku?: string;
+    url?: string;
+    category?: string | null;
+    description?: string | null;
+  };
+  /**
+   * A decimal amount; always with its currency.
+   */
+  price?: string | number | null;
+  /**
+   * ISO 4217; Deals never assumes one.
+   */
+  currency?: string | null;
+  /**
+   * A decimal amount; always with its currency.
+   */
+  shipping?: string | number | null;
+  shipping_note?: string | null;
+  condition?: "new" | "used" | "refurbished" | "damaged" | null;
+  availability?:
+    | "in_stock"
+    | "out_of_stock"
+    | "preorder"
+    | "discontinued"
+    | "limited"
+    | "sold_out"
+    | "online_only"
+    | "in_store_only"
+    | null;
+  note?: string | null;
+}
+
+/** deals.offer-update-request@1.0.0 (owner: deals) */
+/**
+ * deals.offer-update-request@1: bodies of deals.offer.update on OpenVibe.Deals. PATCH /api/v1/offers/:id (the submitter or a moderator): { title?, description?, category?, expires_at?, product_slug? | product?, ai_summary? } (ai_summary only from OpenVibe.AI with X-OV-Origin: ai; product null detaches it). POST /api/v1/offers/:id/observations (a person): a price report — at least a price, shipping cost, availability or condition, with the currency of any amount; services may give observed_at (not in the future).
+ */
+export type DealsOfferUpdateRequest =
+  | {
+      title?: string;
+      description?: string | null;
+      category?: string | null;
+      expires_at?: string | null;
+      product_slug?: string | null;
+      product?: {
+        name?: string;
+        brand?: string | null;
+        gtin?: string;
+        mpn?: string;
+        sku?: string;
+        url?: string;
+        category?: string | null;
+        description?: string | null;
+      } | null;
+      ai_summary?: string | null;
+    }
+  | {
+      [k: string]: unknown | undefined;
+    };
+
+/** deals.offer@1.0.0 (owner: deals) */
+/**
+ * deals.offer@1: one deal as OpenVibe.Deals presents it (server/domain/publication.js offerDto; the API and /d/:slug.json): the canonical (root) offer of a merge group with its store, product, price observations (the latest is "latest", never "current": freshness says whether it still holds), sources, the offers merged into it, votes, hotness and the indexability decision.
+ */
+export interface DealsOffer {
+  id: string;
+  slug: string;
+  url: string;
+  title: string;
+  description?: string | null;
+  /**
+   * The offer on the store.
+   */
+  link: string;
+  /**
+   * active, expired, disabled
+   */
+  status: string;
+  category?: string | null;
+  origin: string;
+  submitted_by?: string | null;
+  text_origin?: string | null;
+  review_state?: string | null;
+  ai_summary?: string | null;
+  expires_at?: string | null;
+  expired_at?: string | null;
+  expired_reason?: string | null;
+  disabled_reason?: string | null;
+  created_at: string | null;
+  updated_at?: string | null;
+  store?: {
+    id?: string;
+    domain?: string;
+    name?: string | null;
+    url?: string;
+  } | null;
+  product?: {
+    id?: string;
+    slug?: string;
+    name?: string;
+    url?: string;
+  } | null;
+  latest_observation?: {
+    id: string;
+    observed_at: string | null;
+    recorded_at?: string | null;
+    price?: string | null;
+    currency?: string | null;
+    shipping?: string | null;
+    shipping_note?: string | null;
+    condition?: "new" | "used" | "refurbished" | "damaged" | null;
+    availability?:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+    origin: string;
+    observed_by?: string | null;
+    listing?: string | null;
+    source: {
+      id?: string | null;
+      kind?: string | null;
+      ref?: {} | null;
+      key?: string | null;
+      url?: string | null;
+    };
+  } | null;
+  freshness?: unknown;
+  observations: {
+    id: string;
+    observed_at: string | null;
+    recorded_at?: string | null;
+    price?: string | null;
+    currency?: string | null;
+    shipping?: string | null;
+    shipping_note?: string | null;
+    condition?: "new" | "used" | "refurbished" | "damaged" | null;
+    availability?:
+      | "in_stock"
+      | "out_of_stock"
+      | "preorder"
+      | "discontinued"
+      | "limited"
+      | "sold_out"
+      | "online_only"
+      | "in_store_only"
+      | null;
+    origin: string;
+    observed_by?: string | null;
+    listing?: string | null;
+    source: {
+      id?: string | null;
+      kind?: string | null;
+      ref?: {} | null;
+      key?: string | null;
+      url?: string | null;
+    };
+  }[];
+  sources?: {}[];
+  merged_from?: {
+    id?: string;
+    slug?: string;
+    title?: string;
+    merged_at?: string | null;
+  }[];
+  votes: {
+    up: number;
+    down: number;
+    up_weight: number;
+    down_weight: number;
+  };
+  hotness?: {} | null;
+  indexability: {
+    indexable: boolean;
+    robots?: string;
+    reasons?: unknown[];
+  };
+}
+
+/** deals.product-resolve-request@1.0.0 (owner: deals) */
+/**
+ * deals.product-resolve-request@1: the body of POST /api/v1/products/resolve on OpenVibe.Deals (deals.product.resolve): product aliases (gtin 8-14 digits, mpn, sku, url, name) to find the product by; with create (default true) a product is made when none matches (name then required, 2-200 characters).
+ */
+export interface DealsProductResolveRequest {
+  name?: string;
+  brand?: string | null;
+  gtin?: string;
+  mpn?: string;
+  sku?: string;
+  url?: string;
+  category?: string | null;
+  description?: string | null;
+  create?: boolean;
+}
+
+/** deals.product-resolve-result@1.0.0 (owner: deals) */
+/**
+ * deals.product-resolve-result@1: the answer of POST /api/v1/products/resolve on OpenVibe.Deals: { product, created, conflicts } — 201 when the product was created; conflicts lists aliases that pointed elsewhere. Nothing matching with create false is 404 product.not_found.
+ */
+export interface DealsProductResolveResult {
+  product: {
+    id: string;
+    slug: string;
+    name: string;
+    url: string;
+  };
+  created: boolean;
+  conflicts: unknown[];
+}
+
+/** deals.vote-request@1.0.0 (owner: deals) */
+/**
+ * deals.vote-request@1: the body of PUT /api/v1/offers/:id/vote on OpenVibe.Deals (deals.vote.set; a person): { value: 1 | -1 }. DELETE /api/v1/offers/:id/vote (deals.vote.remove) takes no body.
+ */
+export type DealsVoteRequest =
+  | {
+      value: 1 | -1 | "1" | "-1";
+    }
+  | NoBody;
+
+/** deals.vote-result@1.0.0 (owner: deals) */
+/**
+ * deals.vote-result@1: the answer of PUT and DELETE /api/v1/offers/:id/vote on OpenVibe.Deals: { offer_id, value (0 after a removal), previous, changed, votes } — the vote lands on the canonical offer of a merge group.
+ */
+export interface DealsVoteResult {
+  offer_id: string;
+  value: 1 | -1 | 0;
+  previous: 1 | -1 | 0 | null;
+  changed: boolean;
+  votes: {
+    up: number;
+    down: number;
+    up_weight: number;
+    down_weight: number;
+  };
+}
+
+/** deals.watch-request@1.0.0 (owner: deals) */
+/**
+ * deals.watch-request@1: the body of POST /api/v1/watches on OpenVibe.Deals (deals.watch.create; the acting person): kind keyword or search (query with at least one word; a search is saved without notifications), product (product, a slug or id), or price_below (max_price and currency, with a product or keywords). label is optional (120 characters). There is a per-person limit (429 watch.limit).
+ */
+export type DealsWatchRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  kind: "keyword" | "product" | "price_below" | "search";
+  query?: string | null;
+  product?: string | null;
+  /**
+   * A decimal amount; always with its currency.
+   */
+  max_price?: string | number | null;
+  /**
+   * ISO 4217; Deals never assumes one.
+   */
+  currency?: string | null;
+  label?: string | null;
+};
+
+/** deals.watch-result@1.0.0 (owner: deals) */
+/**
+ * deals.watch-result@1: answers of the watch routes on OpenVibe.Deals: GET /api/v1/watches → { watches } (the acting person's; deals.watch.read); POST /api/v1/watches → 201 { watch } (deals.watch.create); DELETE /api/v1/watches/:id → { id, deleted: true } (deals.watch.delete; someone else's watch is 404).
+ */
+export type DealsWatchResult =
+  | {
+      watches: {
+        id: string;
+        kind: "keyword" | "product" | "price_below" | "search";
+        query?: string | null;
+        label?: string | null;
+        notify: boolean;
+        product?: {} | null;
+        max_price?: string | null;
+        currency?: string | null;
+        created_at: string | null;
+        notifications?: number;
+      }[];
+    }
+  | {
+      watch: {
+        id: string;
+        kind: "keyword" | "product" | "price_below" | "search";
+        query?: string | null;
+        label?: string | null;
+        notify: boolean;
+        product?: {} | null;
+        max_price?: string | null;
+        currency?: string | null;
+        created_at: string | null;
+        notifications?: number;
+      };
+    }
+  | {
+      id: string;
+      deleted: true;
+    };
+
 /** trade.observation.created@1.0.0 (owner: trade) */
 /**
  * trade.observation.created v1 (OpenVibe.Trade server/domain/observations.js record). A market observation was recorded: one value a source stated for an instrument (metric, the decimal exactly as stated, unit, currency when monetary, period), when it was true per the source (observed_at), when the source was fetched (retrieved_at) and when Trade recorded it, with the source reference. Recorded by a feed service through POST /api/v1/observations (trade.observation.write) or by the Sources sync (server/domain/sync.js). Only on creation: a replay of the same (source_key, source_ref) sends nothing, and a different value under the same reference is refused. Written in the transaction that inserted the immutable row, together with the source's freshness update (trade.source.recovered|stale), alert evaluation (trade.alert.triggered) and the instrument's Search document. Leaves out the freshness verdict (computed at read time) and recorded_by (the envelope actor). Envelope: subject { type: observation, id }, visibility public, priority low, actor service:<recording service> (service:trade for the Sources sync). Information only, not investment advice.
@@ -26994,6 +27457,559 @@ export interface TradeIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** trade.alert-read-result@1.0.0 (owner: trade) */
+/**
+ * trade.alert-read-result@1: answers of trade.alert.read on OpenVibe.Trade (the acting person's): GET /api/v1/alerts → { rules }; GET /api/v1/alerts/deliveries?limit= → { deliveries } (newest first, at most 200: which rule fired on what, and the event sent).
+ */
+export type TradeAlertReadResult =
+  | {
+      rules: TradeAlertRule[];
+    }
+  | {
+      /**
+       * @maxItems 200
+       */
+      deliveries: {
+        id: string | number;
+        rule_id: string;
+        rule_kind?: string;
+        trigger: {
+          kind?: string;
+          id?: string;
+        };
+        event_id?: string | null;
+        created_at?: string | null;
+      }[];
+    };
+
+/** trade.alert-rule-request@1.0.0 (owner: trade) */
+/**
+ * trade.alert-rule-request@1: the body of POST /api/v1/alerts on OpenVibe.Trade (trade.alert.create; the acting person): an active instrument by symbol and the rule kind. threshold needs metric, operator (above or below), threshold (a finite decimal) and unit, and may name a currency; filing_type needs 1-10 form_types (a list or comma-separated, e.g. 10-K, 8-K); new_document needs nothing more. There is a per-person limit (429 alert.limit).
+ */
+export type TradeAlertRuleRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  symbol: string;
+  kind: "threshold" | "filing_type" | "new_document";
+  metric?: string;
+  operator?: "above" | "below";
+  threshold?: string | number;
+  unit?: string;
+  /**
+   * ISO 4217.
+   */
+  currency?: string | null;
+  form_types?: string[] | string;
+};
+
+/** trade.alert-rule-result@1.0.0 (owner: trade) */
+/**
+ * trade.alert-rule-result@1: the answer of POST /api/v1/alerts on OpenVibe.Trade: 201 { rule }.
+ */
+export interface TradeAlertRuleResult {
+  rule: TradeAlertRule;
+}
+
+/** trade.alert-rule@1.0.0 (owner: trade) */
+/**
+ * trade.alert-rule@1: one alert rule of a person on OpenVibe.Trade (server/domain/alerts.js ruleDto): a threshold on a metric, filings of some form types, or any new document for an instrument. Alerts inform; they never trade.
+ */
+export interface TradeAlertRule {
+  id: string;
+  kind: "threshold" | "filing_type" | "new_document";
+  status: string;
+  instrument: {
+    id: string;
+    symbol?: string;
+    name?: string;
+  };
+  metric?: string | null;
+  operator?: "above" | "below" | null;
+  threshold?: string | null;
+  unit?: string | null;
+  currency?: string | null;
+  form_types?: string[] | null;
+  armed?: boolean | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** trade.context-proposal-result@1.0.0 (owner: trade) */
+/**
+ * trade.context-proposal-result@1: the answer of POST /api/v1/instruments/:symbol/context on OpenVibe.Trade: 201 { revision, published } (published only for an editor's revision sent with publish).
+ */
+export interface TradeContextProposalResult {
+  revision: TradeContextRevision;
+  published: boolean;
+}
+
+/** trade.context-proposal@1.0.0 (owner: trade) */
+/**
+ * trade.context-proposal@1: the body of POST /api/v1/instruments/:symbol/context on OpenVibe.Trade (trade.context.propose). An editor: { body, cites?, expected_revision?, publish?, message? } (Markdown up to 20000 characters). OpenVibe.AI (X-OV-Origin: ai): { workflow: { id: trade.summarize_market_context, run_id, version?, model? }, input_sources: [{ source_type, source_id }], output: { summary, observations?, gaps?, citations? }, stub_provider? } — always a draft that needs a person's review. Context that recommends buying, selling or holding, or gives price targets, is refused (422 context.advice_refused).
+ */
+export type TradeContextProposal =
+  | {
+      body: string;
+      cites?: {
+        kind?: "observation" | "document";
+        id?: string;
+      }[];
+      expected_revision?: number | null;
+      publish?: boolean | string;
+      message?: string | null;
+    }
+  | {
+      workflow: {
+        [k: string]: unknown | undefined;
+      };
+      input_sources?: {
+        source_type: "trade.document" | "trade.observation";
+        source_id: string;
+      }[];
+      output: {
+        summary: string;
+        citations?: number[];
+        /**
+         * @maxItems 30
+         */
+        observations?: {
+          text?: string;
+          observed_at?: string;
+          citations?: number[];
+        }[];
+        /**
+         * @maxItems 20
+         */
+        gaps?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      };
+      stub_provider?: boolean;
+    };
+
+/** trade.context-read-result@1.0.0 (owner: trade) */
+/**
+ * trade.context-read-result@1: answers of trade.context.read on OpenVibe.Trade. GET /api/v1/instruments/:symbol/context → { instrument, published, disclaimer } (published is the published context revision or null; ?all=1 adds pending drafts for editors and services); GET …/context/input → { workflow, input, deliver_to } (what OpenVibe.AI's trade.summarize_market_context workflow takes: the instrument, numbered sources with freshness, and where to POST the result).
+ */
+export type TradeContextReadResult =
+  | {
+      instrument: TradeInstrument;
+      published: TradeContextRevision | null;
+      /**
+       * Information only — not investment advice; no trading here.
+       */
+      disclaimer: string;
+      pending?: TradeContextRevision[];
+    }
+  | {
+      workflow: string;
+      input: {
+        instrument: {};
+        stale_after_hours?: number;
+        sources: {
+          source_type: "trade.observation" | "trade.document";
+          source_id: string;
+        }[];
+      };
+      deliver_to: {
+        method?: "POST";
+        path?: string;
+        headers?: {};
+      };
+    };
+
+/** trade.context-revision@1.0.0 (owner: trade) */
+/**
+ * trade.context-revision@1: one revision of an instrument's market context on OpenVibe.Trade (server/domain/context.js view): the Markdown, HTML and text, what it cites (observations and documents; a citation whose source is gone is marked missing), its authorship and disclosure, and whether it still needs a person's review (AI drafts do).
+ */
+export interface TradeContextRevision {
+  revision: number;
+  published: boolean;
+  published_at?: string | null;
+  written_at?: string | number | null;
+  as_of?: unknown;
+  origin?: "editor" | "ai" | null;
+  body_markdown: string;
+  body_html?: string;
+  text?: string;
+  cites: {
+    kind: "observation" | "document";
+    id: string;
+    observation?: TradeObservation;
+    document?: {};
+    missing?: true;
+  }[];
+  authorship?: unknown;
+  disclosure?: unknown;
+  review?: {
+    decision?: string;
+    reviewed_at?: unknown;
+    reviewer?: string | null;
+  } | null;
+  needs_review: boolean;
+}
+
+/** trade.deleted-result@1.0.0 (owner: trade) */
+/**
+ * trade.deleted-result@1: the answer of DELETE /api/v1/alerts/:id (trade.alert.delete) and DELETE /api/v1/watchlists/:id (trade.watchlist.delete) on OpenVibe.Trade: { deleted }. Someone else's rule or watchlist is 404.
+ */
+export interface TradeDeletedResult {
+  deleted: boolean;
+}
+
+/** trade.instrument-manage-request@1.0.0 (owner: trade) */
+/**
+ * trade.instrument-manage-request@1: bodies of trade.instrument.manage on OpenVibe.Trade (editors, or a service with the capability). POST /api/v1/instruments: { symbol, name, kind?, exchange?, cik?, currency? } (kind defaults to equity; aliases for the symbol, CIK and name are added). PATCH /api/v1/instruments/:symbol: any of name, kind, exchange, cik, currency, status (active or archived). POST /api/v1/instruments/:symbol/aliases: { kind: ticker | cik | name, value }. Text fields must be strings; a symbol or CIK another instrument holds is 409.
+ */
+export type TradeInstrumentManageRequest =
+  | {
+      /**
+       * 1-16 characters of A-Z, 0-9, . or - (upper-cased).
+       */
+      symbol: string;
+      name: string;
+      kind?: "equity" | "fund" | "index" | "currency" | "commodity" | "crypto" | "other" | null | "";
+      exchange?: string | null;
+      /**
+       * 1-10 digits (zero-padded to 10).
+       */
+      cik?: string | number | null;
+      /**
+       * ISO 4217.
+       */
+      currency?: string | null;
+    }
+  | {
+      name?: string;
+      kind?: "equity" | "fund" | "index" | "currency" | "commodity" | "crypto" | "other";
+      exchange?: string | null;
+      cik?: string | number | null;
+      /**
+       * ISO 4217.
+       */
+      currency?: string | null;
+      status?: "active" | "archived";
+    }
+  | {
+      kind: "ticker" | "cik" | "name";
+      value: string;
+    };
+
+/** trade.instrument-manage-result@1.0.0 (owner: trade) */
+/**
+ * trade.instrument-manage-result@1: answers of trade.instrument.manage on OpenVibe.Trade: POST /api/v1/instruments → 201 { instrument, aliases }; PATCH → { instrument }; POST …/aliases → 201 { alias, aliases } (alias { kind, value, normalized }).
+ */
+export type TradeInstrumentManageResult =
+  | {
+      instrument: TradeInstrument;
+      aliases?: {
+        kind?: string;
+        value?: string;
+        normalized?: string;
+      }[];
+    }
+  | {
+      alias: {
+        kind: "ticker" | "cik" | "name";
+        value: string;
+        normalized: string;
+      };
+      aliases: unknown[];
+    };
+
+/** trade.instrument@1.0.0 (owner: trade) */
+/**
+ * trade.instrument@1: one instrument as OpenVibe.Trade's API shows it (server/domain/reading.js instrumentDto).
+ */
+export interface TradeInstrument {
+  id: string;
+  symbol: string;
+  name: string;
+  kind: "equity" | "fund" | "index" | "currency" | "commodity" | "crypto" | "other";
+  exchange?: string | null;
+  cik?: string | null;
+  currency?: string | null;
+  status: "active" | "archived";
+  url: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** trade.observation-request@1.0.0 (owner: trade) */
+/**
+ * trade.observation-request@1: the body of POST /api/v1/observations on OpenVibe.Trade (trade.observation.write; services only): one value a source stated for an instrument (symbol or instrument_id). value is the finite decimal as stated; observed_at and retrieved_at are date-times with a zone and not in the future; source_key names the OpenVibe.Sources source and source_ref the statement within it. The same source reference with the same value is answered as it was (200); a different value under the same reference is 409 observation.conflict (a correction needs its own source_ref).
+ */
+export type TradeObservationRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  symbol?: string;
+  instrument_id?: string;
+  metric: string;
+  value: string | number;
+  unit: string;
+  currency?: string | null;
+  period?: string | null;
+  observed_at: string;
+  retrieved_at: string;
+  source_key: string;
+  source_ref: string;
+  source_item_id?: string | null;
+  source_url?: string | null;
+  max_age_sec?: number | string | null;
+};
+
+/** trade.observation-result@1.0.0 (owner: trade) */
+/**
+ * trade.observation-result@1: the answer of POST /api/v1/observations on OpenVibe.Trade: { observation, created } — 201 when recorded (trade.observation.created is announced, alerts are checked), 200 for a repeat of the same statement.
+ */
+export interface TradeObservationResult {
+  observation: TradeObservation;
+  created: boolean;
+}
+
+/** trade.observation@1.0.0 (owner: trade) */
+/**
+ * trade.observation@1: one market observation on OpenVibe.Trade (server/domain/observations.js dto): a value a source stated (the decimal exactly as stated), when it was true and when it was fetched, where from, and (in reads) whether it is stale by its source's freshness or its own max age. Rows are immutable.
+ */
+export interface TradeObservation {
+  id: string;
+  metric: string;
+  /**
+   * The decimal as the source stated it.
+   */
+  value: string;
+  unit: string;
+  currency?: string | null;
+  period?: string | null;
+  observed_at: string | null;
+  retrieved_at: string | null;
+  recorded_at: string | null;
+  max_age_sec?: number | null;
+  source: {
+    key: string;
+    item_id?: string | null;
+    url?: string | null;
+    ref?: string;
+  };
+  freshness?: {
+    stale?: boolean;
+    stale_since?: string | null;
+    reason?: "value_older_than_max_age" | "source_unknown" | "source_stale" | null;
+    source_status?: unknown;
+    source_last_success_at?: unknown;
+  };
+}
+
+/** trade.resolve-result@1.0.0 (owner: trade) */
+/**
+ * trade.resolve-result@1: the answer of GET /api/v1/instruments/resolve?q=&kind= on OpenVibe.Trade (trade.instrument.resolve): { query, status: resolved | ambiguous | not_found, match: { kind, value } | null, instrument | null, candidates } (a CIK, symbol or alias matched; candidates when more than one could be meant).
+ */
+export interface TradeResolveResult {
+  query?: unknown;
+  status: "resolved" | "ambiguous" | "not_found";
+  match: {
+    kind?: string;
+    value?: string;
+  } | null;
+  instrument: TradeInstrument | null;
+  candidates: TradeInstrument[];
+}
+
+/** trade.watchlist-request@1.0.0 (owner: trade) */
+/**
+ * trade.watchlist-request@1: bodies of the watchlist writes on OpenVibe.Trade (the acting person). POST /api/v1/watchlists (trade.watchlist.create) and PATCH /api/v1/watchlists/:id (trade.watchlist.update): { name } (a string, at most 80 characters; your names are unique). PUT /api/v1/watchlists/:id/items/:symbol: { note? } (at most 300 characters). DELETE …/items/:symbol takes no body.
+ */
+export type TradeWatchlistRequest =
+  | {
+      name: string;
+    }
+  | {
+      note?: string | null;
+    };
+
+/** trade.watchlist-result@1.0.0 (owner: trade) */
+/**
+ * trade.watchlist-result@1: answers of the watchlist routes on OpenVibe.Trade: GET /api/v1/watchlists → { watchlists }; GET /api/v1/watchlists/:id, POST (201) and PATCH → { watchlist }; PUT …/items/:symbol → { added, watchlist }; DELETE …/items/:symbol → { removed, watchlist }.
+ */
+export type TradeWatchlistResult =
+  | {
+      watchlists: TradeWatchlist[];
+    }
+  | {
+      watchlist: TradeWatchlist;
+      added?: boolean;
+      removed?: boolean;
+    };
+
+/** trade.watchlist@1.0.0 (owner: trade) */
+/**
+ * trade.watchlist@1: one of a person's watchlists on OpenVibe.Trade (server/domain/watchlists.js dto) with its instruments and notes.
+ */
+export interface TradeWatchlist {
+  id: string;
+  name: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+  items?: {
+    instrument: {
+      id: string;
+      symbol: string;
+      name?: string;
+      kind?: string;
+      exchange?: string | null;
+      status?: string;
+      url?: string;
+    };
+    note?: string | null;
+    added_at?: string | null;
+  }[];
 }
 
 /** games.player.joined@1.0.0 (owner: games) */

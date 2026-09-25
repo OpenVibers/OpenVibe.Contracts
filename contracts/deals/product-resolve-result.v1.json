@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/product-resolve-result.v1.json",
+  "title": "DealsProductResolveResult",
+  "description": "deals.product-resolve-result@1: the answer of POST /api/v1/products/resolve on OpenVibe.Deals: { product, created, conflicts } — 201 when the product was created; conflicts lists aliases that pointed elsewhere. Nothing matching with create false is 404 product.not_found.",
+  "type": "object",
+  "required": [
+    "product",
+    "created",
+    "conflicts"
+  ],
+  "properties": {
+    "product": {
+      "type": "object",
+      "required": [
+        "id",
+        "slug",
+        "name",
+        "url"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "created": {
+      "type": "boolean"
+    },
+    "conflicts": {
+      "type": "array"
+    }
+  }
+}

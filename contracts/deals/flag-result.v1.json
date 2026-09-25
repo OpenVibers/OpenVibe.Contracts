@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/flag-result.v1.json",
+  "title": "DealsFlagResult",
+  "description": "deals.flag-result@1: the answer of POST /api/v1/offers/:id/flags on OpenVibe.Deals: { flag: { id, kind, status }, created } (201 when created, 200 when an open flag was refreshed).",
+  "type": "object",
+  "required": [
+    "flag",
+    "created"
+  ],
+  "properties": {
+    "flag": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "created": {
+      "type": "boolean"
+    }
+  }
+}

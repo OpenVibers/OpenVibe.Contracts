@@ -20,5 +20,7 @@
   "implementedBy": [
     "POST /api/v1/offers/:id/merge",
     "POST /api/v1/offers/:id/unmerge"
-  ]
+  ],
+  "inputSchema": "deals.offer-action-request@1",
+  "outputSchema": "deals.offer-result@1"
 }

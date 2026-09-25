@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/context-revision.v1.json",
+  "title": "TradeContextRevision",
+  "description": "trade.context-revision@1: one revision of an instrument's market context on OpenVibe.Trade (server/domain/context.js view): the Markdown, HTML and text, what it cites (observations and documents; a citation whose source is gone is marked missing), its authorship and disclosure, and whether it still needs a person's review (AI drafts do).",
+  "type": "object",
+  "required": [
+    "revision",
+    "published",
+    "body_markdown",
+    "cites",
+    "needs_review"
+  ],
+  "properties": {
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "published": {
+      "type": "boolean"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "written_at": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ]
+    },
+    "as_of": {},
+    "origin": {
+      "enum": [
+        "editor",
+        "ai",
+        null
+      ]
+    },
+    "body_markdown": {
+      "type": "string"
+    },
+    "body_html": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "cites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "id"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "observation",
+              "document"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "observation": {
+            "$ref": "observation.v1.json"
+          },
+          "document": {
+            "type": "object"
+          },
+          "missing": {
+            "const": true
+          }
+        }
+      }
+    },
+    "authorship": {},
+    "disclosure": {},
+    "review": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "decision": {
+          "type": "string"
+        },
+        "reviewed_at": {},
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "needs_review": {
+      "type": "boolean"
+    }
+  }
+}

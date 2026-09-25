@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/instrument.v1.json",
+  "title": "TradeInstrument",
+  "description": "trade.instrument@1: one instrument as OpenVibe.Trade's API shows it (server/domain/reading.js instrumentDto).",
+  "type": "object",
+  "required": [
+    "id",
+    "symbol",
+    "name",
+    "kind",
+    "status",
+    "url"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "symbol": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "equity",
+        "fund",
+        "index",
+        "currency",
+        "commodity",
+        "crypto",
+        "other"
+      ]
+    },
+    "exchange": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "cik": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]{10}$"
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "archived"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

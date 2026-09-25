@@ -20,5 +20,7 @@
   "implementedBy": [
     "PATCH /api/v1/offers/:id",
     "POST /api/v1/offers/:id/observations"
-  ]
+  ],
+  "inputSchema": "deals.offer-update-request@1",
+  "outputSchema": "deals.offer-result@1"
 }

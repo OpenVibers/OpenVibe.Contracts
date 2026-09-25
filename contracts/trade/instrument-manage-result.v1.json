@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/instrument-manage-result.v1.json",
+  "title": "TradeInstrumentManageResult",
+  "description": "trade.instrument-manage-result@1: answers of trade.instrument.manage on OpenVibe.Trade: POST /api/v1/instruments → 201 { instrument, aliases }; PATCH → { instrument }; POST …/aliases → 201 { alias, aliases } (alias { kind, value, normalized }).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "instrument"
+      ],
+      "properties": {
+        "instrument": {
+          "$ref": "instrument.v1.json"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "normalized": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "alias",
+        "aliases"
+      ],
+      "properties": {
+        "alias": {
+          "type": "object",
+          "required": [
+            "kind",
+            "value",
+            "normalized"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "ticker",
+                "cik",
+                "name"
+              ]
+            },
+            "value": {
+              "type": "string"
+            },
+            "normalized": {
+              "type": "string"
+            }
+          }
+        },
+        "aliases": {
+          "type": "array"
+        }
+      }
+    }
+  ]
+}

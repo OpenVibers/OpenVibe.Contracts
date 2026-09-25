@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/watch-request.v1.json",
+  "title": "DealsWatchRequest",
+  "description": "deals.watch-request@1: the body of POST /api/v1/watches on OpenVibe.Deals (deals.watch.create; the acting person): kind keyword or search (query with at least one word; a search is saved without notifications), product (product, a slug or id), or price_below (max_price and currency, with a product or keywords). label is optional (120 characters). There is a per-person limit (429 watch.limit).",
+  "type": "object",
+  "required": [
+    "kind"
+  ],
+  "properties": {
+    "kind": {
+      "enum": [
+        "keyword",
+        "product",
+        "price_below",
+        "search"
+      ]
+    },
+    "query": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "product": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "max_price": {
+      "type": [
+        "string",
+        "number",
+        "null"
+      ],
+      "description": "A decimal amount; always with its currency."
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z]{3}$",
+      "description": "ISO 4217; Deals never assumes one."
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "keyword",
+              "search"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "product"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "product"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "price_below"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "max_price",
+          "currency"
+        ]
+      }
+    }
+  ]
+}

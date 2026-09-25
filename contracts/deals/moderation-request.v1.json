@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/moderation-request.v1.json",
+  "title": "DealsModerationRequest",
+  "description": "deals.moderation-request@1: bodies of deals.offer.moderate on OpenVibe.Deals (moderators). POST /api/v1/offers/:id/disable: { reason } (3-300 characters); POST …/enable: { reason? }; POST …/review (a person): { note? }; POST /api/v1/flags/:id/resolve: { status?: resolved (default) | dismissed, resolution? }. GET /api/v1/flags?status= takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "resolved",
+            "dismissed"
+          ]
+        },
+        "resolution": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    }
+  ]
+}

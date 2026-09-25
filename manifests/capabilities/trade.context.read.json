@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/instruments/:symbol/context",
     "GET /api/v1/instruments/:symbol/context/input"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "trade.context-read-result@1"
 }

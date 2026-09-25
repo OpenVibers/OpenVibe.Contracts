@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/resolve-result.v1.json",
+  "title": "TradeResolveResult",
+  "description": "trade.resolve-result@1: the answer of GET /api/v1/instruments/resolve?q=&kind= on OpenVibe.Trade (trade.instrument.resolve): { query, status: resolved | ambiguous | not_found, match: { kind, value } | null, instrument | null, candidates } (a CIK, symbol or alias matched; candidates when more than one could be meant).",
+  "type": "object",
+  "required": [
+    "status",
+    "match",
+    "instrument",
+    "candidates"
+  ],
+  "properties": {
+    "query": {},
+    "status": {
+      "enum": [
+        "resolved",
+        "ambiguous",
+        "not_found"
+      ]
+    },
+    "match": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "instrument": {
+      "anyOf": [
+        {
+          "$ref": "instrument.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "instrument.v1.json"
+      }
+    }
+  }
+}

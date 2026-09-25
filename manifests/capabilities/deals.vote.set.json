@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "PUT /api/v1/offers/:id/vote"
-  ]
+  ],
+  "inputSchema": "deals.vote-request@1",
+  "outputSchema": "deals.vote-result@1"
 }

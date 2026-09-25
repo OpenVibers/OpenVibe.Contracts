@@ -1,0 +1,1 @@
+{ "flags": [ { "id": "dfl_01JAB2C3D4E5F6G7H8J9K0MNPQ", "kind": "price_wrong", "origin": "user", "reporter": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ", "reason": "now $99", "status": "open", "details": {}, "created_at": "2026-09-25T18:00:00.000Z", "updated_at": "2026-09-25T18:00:00.000Z", "resolved_by": null, "resolved_at": null, "resolution": null, "offer": null } ] }

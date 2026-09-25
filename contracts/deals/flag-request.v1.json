@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/flag-request.v1.json",
+  "title": "DealsFlagRequest",
+  "description": "deals.flag-request@1: the body of POST /api/v1/offers/:id/flags on OpenVibe.Deals (deals.flag.create; a person): { kind, reason?, duplicate_of? } — duplicate_of (the other deal, id, slug or /d/ link) is required for kind duplicate. An open flag of the same kind by the same person is refreshed, not repeated.",
+  "type": "object",
+  "required": [
+    "kind"
+  ],
+  "properties": {
+    "kind": {
+      "enum": [
+        "expired",
+        "price_wrong",
+        "spam",
+        "duplicate",
+        "other"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "duplicate_of": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "if": {
+    "properties": {
+      "kind": {
+        "const": "duplicate"
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "duplicate_of"
+    ]
+  }
+}

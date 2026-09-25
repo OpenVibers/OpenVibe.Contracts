@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/context-proposal-result.v1.json",
+  "title": "TradeContextProposalResult",
+  "description": "trade.context-proposal-result@1: the answer of POST /api/v1/instruments/:symbol/context on OpenVibe.Trade: 201 { revision, published } (published only for an editor's revision sent with publish).",
+  "type": "object",
+  "required": [
+    "revision",
+    "published"
+  ],
+  "properties": {
+    "revision": {
+      "$ref": "context-revision.v1.json"
+    },
+    "published": {
+      "type": "boolean"
+    }
+  }
+}

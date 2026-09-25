@@ -17,5 +17,7 @@
     "PATCH /api/v1/watchlists/:id",
     "PUT /api/v1/watchlists/:id/items/:symbol",
     "DELETE /api/v1/watchlists/:id/items/:symbol"
-  ]
+  ],
+  "inputSchema": "trade.watchlist-request@1",
+  "outputSchema": "trade.watchlist-result@1"
 }

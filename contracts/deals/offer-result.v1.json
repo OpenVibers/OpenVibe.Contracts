@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/offer-result.v1.json",
+  "title": "DealsOfferResult",
+  "description": "deals.offer-result@1: the answer of the deal writes on OpenVibe.Deals: { offer } (the canonical offer after the change). POST /api/v1/offers (201), PATCH /api/v1/offers/:id, POST …/expire, …/disable, …/enable and …/review answer exactly that; POST …/observations (201) adds the observation recorded; POST …/merge adds merged { id, slug } and the before/after of the change; POST …/unmerge adds from { id, slug } and before/after.",
+  "type": "object",
+  "required": [
+    "offer"
+  ],
+  "properties": {
+    "offer": {
+      "$ref": "offer.v1.json"
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "id",
+        "observed_at",
+        "origin",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "recorded_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "price": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shipping": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shipping_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "condition": {
+          "enum": [
+            "new",
+            "used",
+            "refurbished",
+            "damaged",
+            null
+          ]
+        },
+        "availability": {
+          "enum": [
+            "in_stock",
+            "out_of_stock",
+            "preorder",
+            "discontinued",
+            "limited",
+            "sold_out",
+            "online_only",
+            "in_store_only",
+            null
+          ]
+        },
+        "origin": {
+          "type": "string"
+        },
+        "observed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "listing": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "kind": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ref": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "key": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "merged": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        }
+      }
+    },
+    "from": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        }
+      }
+    },
+    "before": {},
+    "after": {}
+  }
+}

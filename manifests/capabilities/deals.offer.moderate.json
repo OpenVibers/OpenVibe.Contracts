@@ -23,5 +23,7 @@
     "POST /api/v1/offers/:id/review",
     "GET /api/v1/flags",
     "POST /api/v1/flags/:id/resolve"
-  ]
+  ],
+  "inputSchema": "deals.moderation-request@1",
+  "outputSchema": "deals.moderation-result@1"
 }

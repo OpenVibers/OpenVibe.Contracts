@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/alert-rule-request.v1.json",
+  "title": "TradeAlertRuleRequest",
+  "description": "trade.alert-rule-request@1: the body of POST /api/v1/alerts on OpenVibe.Trade (trade.alert.create; the acting person): an active instrument by symbol and the rule kind. threshold needs metric, operator (above or below), threshold (a finite decimal) and unit, and may name a currency; filing_type needs 1-10 form_types (a list or comma-separated, e.g. 10-K, 8-K); new_document needs nothing more. There is a per-person limit (429 alert.limit).",
+  "type": "object",
+  "required": [
+    "symbol",
+    "kind"
+  ],
+  "properties": {
+    "symbol": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "threshold",
+        "filing_type",
+        "new_document"
+      ]
+    },
+    "metric": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "operator": {
+      "enum": [
+        "above",
+        "below"
+      ]
+    },
+    "threshold": {
+      "type": [
+        "string",
+        "number"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "maxLength": 20
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\s*[A-Za-z]{3}\\s*$|^$",
+      "description": "ISO 4217."
+    },
+    "form_types": {
+      "type": [
+        "array",
+        "string"
+      ],
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "threshold"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "metric",
+          "operator",
+          "threshold",
+          "unit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "filing_type"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "form_types"
+        ]
+      }
+    }
+  ]
+}

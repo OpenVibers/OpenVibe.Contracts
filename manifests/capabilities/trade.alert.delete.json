@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "DELETE /api/v1/alerts/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "trade.deleted-result@1"
 }

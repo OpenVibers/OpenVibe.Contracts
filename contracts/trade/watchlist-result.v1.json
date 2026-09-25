@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/watchlist-result.v1.json",
+  "title": "TradeWatchlistResult",
+  "description": "trade.watchlist-result@1: answers of the watchlist routes on OpenVibe.Trade: GET /api/v1/watchlists → { watchlists }; GET /api/v1/watchlists/:id, POST (201) and PATCH → { watchlist }; PUT …/items/:symbol → { added, watchlist }; DELETE …/items/:symbol → { removed, watchlist }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "watchlists"
+      ],
+      "properties": {
+        "watchlists": {
+          "type": "array",
+          "items": {
+            "$ref": "watchlist.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "watchlist"
+      ],
+      "properties": {
+        "watchlist": {
+          "$ref": "watchlist.v1.json"
+        },
+        "added": {
+          "type": "boolean"
+        },
+        "removed": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

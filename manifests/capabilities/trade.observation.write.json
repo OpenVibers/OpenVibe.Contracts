@@ -22,5 +22,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/observations"
-  ]
+  ],
+  "inputSchema": "trade.observation-request@1",
+  "outputSchema": "trade.observation-result@1"
 }

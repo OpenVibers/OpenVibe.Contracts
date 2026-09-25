@@ -28905,6 +28905,1925 @@
         }
       }
     },
+    "deals.flag-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/flag-request.v1.json",
+        "title": "DealsFlagRequest",
+        "description": "deals.flag-request@1: the body of POST /api/v1/offers/:id/flags on OpenVibe.Deals (deals.flag.create; a person): { kind, reason?, duplicate_of? } — duplicate_of (the other deal, id, slug or /d/ link) is required for kind duplicate. An open flag of the same kind by the same person is refreshed, not repeated.",
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "expired",
+              "price_wrong",
+              "spam",
+              "duplicate",
+              "other"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "duplicate_of": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "if": {
+          "properties": {
+            "kind": {
+              "const": "duplicate"
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "duplicate_of"
+          ]
+        }
+      }
+    },
+    "deals.flag-result": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/flag-result.v1.json",
+        "title": "DealsFlagResult",
+        "description": "deals.flag-result@1: the answer of POST /api/v1/offers/:id/flags on OpenVibe.Deals: { flag: { id, kind, status }, created } (201 when created, 200 when an open flag was refreshed).",
+        "type": "object",
+        "required": [
+          "flag",
+          "created"
+        ],
+        "properties": {
+          "flag": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          },
+          "created": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "deals.moderation-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/moderation-request.v1.json",
+        "title": "DealsModerationRequest",
+        "description": "deals.moderation-request@1: bodies of deals.offer.moderate on OpenVibe.Deals (moderators). POST /api/v1/offers/:id/disable: { reason } (3-300 characters); POST …/enable: { reason? }; POST …/review (a person): { note? }; POST /api/v1/flags/:id/resolve: { status?: resolved (default) | dismissed, resolution? }. GET /api/v1/flags?status= takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "resolved",
+                  "dismissed"
+                ]
+              },
+              "resolution": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              }
+            }
+          }
+        ]
+      }
+    },
+    "deals.moderation-result": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/moderation-result.v1.json",
+        "title": "DealsModerationResult",
+        "description": "deals.moderation-result@1: answers of deals.offer.moderate on OpenVibe.Deals. POST /api/v1/offers/:id/disable|enable|review → { offer }; GET /api/v1/flags?status=open|resolved|dismissed → { flags }; POST /api/v1/flags/:id/resolve → { flag, changed } (changed false when it was no longer open).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "offer"
+            ],
+            "properties": {
+              "offer": {
+                "$ref": "offer.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "flags"
+            ],
+            "properties": {
+              "flags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "origin",
+                    "status"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "origin": {
+                      "type": "string"
+                    },
+                    "reporter": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "enum": [
+                        "open",
+                        "resolved",
+                        "dismissed"
+                      ]
+                    },
+                    "details": {
+                      "type": "object"
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "resolved_by": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "resolved_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "resolution": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "offer": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "flag",
+              "changed"
+            ],
+            "properties": {
+              "flag": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "kind",
+                  "origin",
+                  "status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "origin": {
+                    "type": "string"
+                  },
+                  "reporter": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "resolved",
+                      "dismissed"
+                    ]
+                  },
+                  "details": {
+                    "type": "object"
+                  },
+                  "created_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "updated_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "resolved_by": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "resolved_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "resolution": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "offer": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "changed": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "deals.offer-action-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/offer-action-request.v1.json",
+        "title": "DealsOfferActionRequest",
+        "description": "deals.offer-action-request@1: bodies of the deal actions on OpenVibe.Deals. POST /api/v1/offers/:id/expire (deals.offer.expire; the submitter or a moderator): { reason? } (a moderator's reason is recorded). POST …/disable (deals.offer.moderate): { reason } (3-300 characters, required); POST …/enable: { reason? }; POST …/review (a person): { note? }. POST …/merge (deals.offer.merge, moderators): { into, reason? } (the canonical deal, id or slug; no cycles, not an already merged offer); POST …/unmerge: { reason? }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "into"
+            ],
+            "properties": {
+              "into": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "deals.offer-result": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/offer-result.v1.json",
+        "title": "DealsOfferResult",
+        "description": "deals.offer-result@1: the answer of the deal writes on OpenVibe.Deals: { offer } (the canonical offer after the change). POST /api/v1/offers (201), PATCH /api/v1/offers/:id, POST …/expire, …/disable, …/enable and …/review answer exactly that; POST …/observations (201) adds the observation recorded; POST …/merge adds merged { id, slug } and the before/after of the change; POST …/unmerge adds from { id, slug } and before/after.",
+        "type": "object",
+        "required": [
+          "offer"
+        ],
+        "properties": {
+          "offer": {
+            "$ref": "offer.v1.json"
+          },
+          "observation": {
+            "type": "object",
+            "required": [
+              "id",
+              "observed_at",
+              "origin",
+              "source"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "observed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "recorded_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "price": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "shipping": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "shipping_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "condition": {
+                "enum": [
+                  "new",
+                  "used",
+                  "refurbished",
+                  "damaged",
+                  null
+                ]
+              },
+              "availability": {
+                "enum": [
+                  "in_stock",
+                  "out_of_stock",
+                  "preorder",
+                  "discontinued",
+                  "limited",
+                  "sold_out",
+                  "online_only",
+                  "in_store_only",
+                  null
+                ]
+              },
+              "origin": {
+                "type": "string"
+              },
+              "observed_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "listing": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "kind": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ref": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "key": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "merged": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              }
+            }
+          },
+          "from": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              }
+            }
+          },
+          "before": {},
+          "after": {}
+        }
+      }
+    },
+    "deals.offer-submit-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/offer-submit-request.v1.json",
+        "title": "DealsOfferSubmitRequest",
+        "description": "deals.offer-submit-request@1: the body of POST /api/v1/offers on OpenVibe.Deals (deals.offer.submit; a signed-in person, or a service acting for one; X-OV-Origin: ai holds the text for review). url (an http(s) link to the offer; a link already posted is 409 offer.duplicate) and title (3-200 characters) are required; a price or shipping cost needs its currency; expires_at may not be in the past. The first price observation is recorded with it.",
+        "type": "object",
+        "required": [
+          "url",
+          "title"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "^https?://"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 200
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 4000
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "store_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "product_slug": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "product": {
+            "type": "object",
+            "description": "Product aliases to resolve (or create) the product.",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "brand": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "gtin": {
+                "type": "string",
+                "pattern": "^[0-9]{8,14}$"
+              },
+              "mpn": {
+                "type": "string"
+              },
+              "sku": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "price": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ],
+            "description": "A decimal amount; always with its currency."
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Za-z]{3}$",
+            "description": "ISO 4217; Deals never assumes one."
+          },
+          "shipping": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ],
+            "description": "A decimal amount; always with its currency."
+          },
+          "shipping_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "condition": {
+            "enum": [
+              "new",
+              "used",
+              "refurbished",
+              "damaged",
+              null
+            ]
+          },
+          "availability": {
+            "enum": [
+              "in_stock",
+              "out_of_stock",
+              "preorder",
+              "discontinued",
+              "limited",
+              "sold_out",
+              "online_only",
+              "in_store_only",
+              null
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "deals.offer-update-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/offer-update-request.v1.json",
+        "title": "DealsOfferUpdateRequest",
+        "description": "deals.offer-update-request@1: bodies of deals.offer.update on OpenVibe.Deals. PATCH /api/v1/offers/:id (the submitter or a moderator): { title?, description?, category?, expires_at?, product_slug? | product?, ai_summary? } (ai_summary only from OpenVibe.AI with X-OV-Origin: ai; product null detaches it). POST /api/v1/offers/:id/observations (a person): a price report — at least a price, shipping cost, availability or condition, with the currency of any amount; services may give observed_at (not in the future).",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 200
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 4000
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 60
+              },
+              "expires_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "product_slug": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "product": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "description": "Product aliases to resolve (or create) the product.",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "brand": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "gtin": {
+                        "type": "string",
+                        "pattern": "^[0-9]{8,14}$"
+                      },
+                      "mpn": {
+                        "type": "string"
+                      },
+                      "sku": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "category": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "description": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "ai_summary": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 2000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "price"
+                ]
+              },
+              {
+                "required": [
+                  "shipping"
+                ]
+              },
+              {
+                "required": [
+                  "availability"
+                ]
+              },
+              {
+                "required": [
+                  "condition"
+                ]
+              }
+            ],
+            "properties": {
+              "price": {
+                "type": [
+                  "string",
+                  "number",
+                  "null"
+                ],
+                "description": "A decimal amount; always with its currency."
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[A-Za-z]{3}$",
+                "description": "ISO 4217; Deals never assumes one."
+              },
+              "shipping": {
+                "type": [
+                  "string",
+                  "number",
+                  "null"
+                ],
+                "description": "A decimal amount; always with its currency."
+              },
+              "shipping_note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 200
+              },
+              "condition": {
+                "enum": [
+                  "new",
+                  "used",
+                  "refurbished",
+                  "damaged",
+                  null
+                ]
+              },
+              "availability": {
+                "enum": [
+                  "in_stock",
+                  "out_of_stock",
+                  "preorder",
+                  "discontinued",
+                  "limited",
+                  "sold_out",
+                  "online_only",
+                  "in_store_only",
+                  null
+                ]
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              },
+              "observed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "deals.offer": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/offer.v1.json",
+        "title": "DealsOffer",
+        "description": "deals.offer@1: one deal as OpenVibe.Deals presents it (server/domain/publication.js offerDto; the API and /d/:slug.json): the canonical (root) offer of a merge group with its store, product, price observations (the latest is \"latest\", never \"current\": freshness says whether it still holds), sources, the offers merged into it, votes, hotness and the indexability decision.",
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "url",
+          "title",
+          "link",
+          "status",
+          "origin",
+          "created_at",
+          "observations",
+          "votes",
+          "indexability"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "link": {
+            "type": "string",
+            "description": "The offer on the store."
+          },
+          "status": {
+            "type": "string",
+            "description": "active, expired, disabled"
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "origin": {
+            "type": "string"
+          },
+          "submitted_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "text_origin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "review_state": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ai_summary": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expired_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expired_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "disabled_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "store": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "domain": {
+                "type": "string"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "product": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "latest_observation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "observed_at",
+                  "origin",
+                  "source"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "observed_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "recorded_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "price": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "currency": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "shipping": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "shipping_note": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "condition": {
+                    "enum": [
+                      "new",
+                      "used",
+                      "refurbished",
+                      "damaged",
+                      null
+                    ]
+                  },
+                  "availability": {
+                    "enum": [
+                      "in_stock",
+                      "out_of_stock",
+                      "preorder",
+                      "discontinued",
+                      "limited",
+                      "sold_out",
+                      "online_only",
+                      "in_store_only",
+                      null
+                    ]
+                  },
+                  "origin": {
+                    "type": "string"
+                  },
+                  "observed_by": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "listing": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "kind": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "ref": {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "key": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "url": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "freshness": {},
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "observed_at",
+                "origin",
+                "source"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "observed_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "recorded_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "price": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "currency": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "shipping": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "shipping_note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "condition": {
+                  "enum": [
+                    "new",
+                    "used",
+                    "refurbished",
+                    "damaged",
+                    null
+                  ]
+                },
+                "availability": {
+                  "enum": [
+                    "in_stock",
+                    "out_of_stock",
+                    "preorder",
+                    "discontinued",
+                    "limited",
+                    "sold_out",
+                    "online_only",
+                    "in_store_only",
+                    null
+                  ]
+                },
+                "origin": {
+                  "type": "string"
+                },
+                "observed_by": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "listing": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "kind": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "ref": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "key": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "merged_from": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "merged_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "votes": {
+            "type": "object",
+            "required": [
+              "up",
+              "down",
+              "up_weight",
+              "down_weight"
+            ],
+            "properties": {
+              "up": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "down": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "up_weight": {
+                "type": "number"
+              },
+              "down_weight": {
+                "type": "number"
+              }
+            }
+          },
+          "hotness": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "indexability": {
+            "type": "object",
+            "required": [
+              "indexable"
+            ],
+            "properties": {
+              "indexable": {
+                "type": "boolean"
+              },
+              "robots": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "deals.product-resolve-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/product-resolve-request.v1.json",
+        "title": "DealsProductResolveRequest",
+        "description": "deals.product-resolve-request@1: the body of POST /api/v1/products/resolve on OpenVibe.Deals (deals.product.resolve): product aliases (gtin 8-14 digits, mpn, sku, url, name) to find the product by; with create (default true) a product is made when none matches (name then required, 2-200 characters).",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "gtin": {
+            "type": "string",
+            "pattern": "^[0-9]{8,14}$"
+          },
+          "mpn": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "create": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "deals.product-resolve-result": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/product-resolve-result.v1.json",
+        "title": "DealsProductResolveResult",
+        "description": "deals.product-resolve-result@1: the answer of POST /api/v1/products/resolve on OpenVibe.Deals: { product, created, conflicts } — 201 when the product was created; conflicts lists aliases that pointed elsewhere. Nothing matching with create false is 404 product.not_found.",
+        "type": "object",
+        "required": [
+          "product",
+          "created",
+          "conflicts"
+        ],
+        "properties": {
+          "product": {
+            "type": "object",
+            "required": [
+              "id",
+              "slug",
+              "name",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "created": {
+            "type": "boolean"
+          },
+          "conflicts": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "deals.vote-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/vote-request.v1.json",
+        "title": "DealsVoteRequest",
+        "description": "deals.vote-request@1: the body of PUT /api/v1/offers/:id/vote on OpenVibe.Deals (deals.vote.set; a person): { value: 1 | -1 }. DELETE /api/v1/offers/:id/vote (deals.vote.remove) takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "value": {
+                "enum": [
+                  1,
+                  -1,
+                  "1",
+                  "-1"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "deals.vote-result": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/vote-result.v1.json",
+        "title": "DealsVoteResult",
+        "description": "deals.vote-result@1: the answer of PUT and DELETE /api/v1/offers/:id/vote on OpenVibe.Deals: { offer_id, value (0 after a removal), previous, changed, votes } — the vote lands on the canonical offer of a merge group.",
+        "type": "object",
+        "required": [
+          "offer_id",
+          "value",
+          "previous",
+          "changed",
+          "votes"
+        ],
+        "properties": {
+          "offer_id": {
+            "type": "string"
+          },
+          "value": {
+            "enum": [
+              1,
+              -1,
+              0
+            ]
+          },
+          "previous": {
+            "enum": [
+              1,
+              -1,
+              0,
+              null
+            ]
+          },
+          "changed": {
+            "type": "boolean"
+          },
+          "votes": {
+            "type": "object",
+            "required": [
+              "up",
+              "down",
+              "up_weight",
+              "down_weight"
+            ],
+            "properties": {
+              "up": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "down": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "up_weight": {
+                "type": "number"
+              },
+              "down_weight": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "deals.watch-request": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/watch-request.v1.json",
+        "title": "DealsWatchRequest",
+        "description": "deals.watch-request@1: the body of POST /api/v1/watches on OpenVibe.Deals (deals.watch.create; the acting person): kind keyword or search (query with at least one word; a search is saved without notifications), product (product, a slug or id), or price_below (max_price and currency, with a product or keywords). label is optional (120 characters). There is a per-person limit (429 watch.limit).",
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "keyword",
+              "product",
+              "price_below",
+              "search"
+            ]
+          },
+          "query": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "product": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "max_price": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ],
+            "description": "A decimal amount; always with its currency."
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Za-z]{3}$",
+            "description": "ISO 4217; Deals never assumes one."
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "keyword",
+                    "search"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "query"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "product"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "product"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "price_below"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "max_price",
+                "currency"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "deals.watch-result": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/deals/watch-result.v1.json",
+        "title": "DealsWatchResult",
+        "description": "deals.watch-result@1: answers of the watch routes on OpenVibe.Deals: GET /api/v1/watches → { watches } (the acting person's; deals.watch.read); POST /api/v1/watches → 201 { watch } (deals.watch.create); DELETE /api/v1/watches/:id → { id, deleted: true } (deals.watch.delete; someone else's watch is 404).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "watches"
+            ],
+            "properties": {
+              "watches": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "notify",
+                    "created_at"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "enum": [
+                        "keyword",
+                        "product",
+                        "price_below",
+                        "search"
+                      ]
+                    },
+                    "query": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "notify": {
+                      "type": "boolean"
+                    },
+                    "product": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "max_price": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "currency": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "notifications": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "watch"
+            ],
+            "properties": {
+              "watch": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "kind",
+                  "notify",
+                  "created_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "enum": [
+                      "keyword",
+                      "product",
+                      "price_below",
+                      "search"
+                    ]
+                  },
+                  "query": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "notify": {
+                    "type": "boolean"
+                  },
+                  "product": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "max_price": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "currency": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "created_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "notifications": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "deleted"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "deleted": {
+                "const": true
+              }
+            }
+          }
+        ]
+      }
+    },
     "trade.observation.created": {
       "version": "1.0.0",
       "owner": "trade",
@@ -29236,6 +31155,1547 @@
             "minimum": 1,
             "maximum": 9007199254740991,
             "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "trade.alert-read-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/alert-read-result.v1.json",
+        "title": "TradeAlertReadResult",
+        "description": "trade.alert-read-result@1: answers of trade.alert.read on OpenVibe.Trade (the acting person's): GET /api/v1/alerts → { rules }; GET /api/v1/alerts/deliveries?limit= → { deliveries } (newest first, at most 200: which rule fired on what, and the event sent).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "rules"
+            ],
+            "properties": {
+              "rules": {
+                "type": "array",
+                "items": {
+                  "$ref": "alert-rule.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "deliveries"
+            ],
+            "properties": {
+              "deliveries": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "rule_id",
+                    "trigger"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": [
+                        "string",
+                        "integer"
+                      ]
+                    },
+                    "rule_id": {
+                      "type": "string"
+                    },
+                    "rule_kind": {
+                      "type": "string"
+                    },
+                    "trigger": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "event_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.alert-rule-request": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/alert-rule-request.v1.json",
+        "title": "TradeAlertRuleRequest",
+        "description": "trade.alert-rule-request@1: the body of POST /api/v1/alerts on OpenVibe.Trade (trade.alert.create; the acting person): an active instrument by symbol and the rule kind. threshold needs metric, operator (above or below), threshold (a finite decimal) and unit, and may name a currency; filing_type needs 1-10 form_types (a list or comma-separated, e.g. 10-K, 8-K); new_document needs nothing more. There is a per-person limit (429 alert.limit).",
+        "type": "object",
+        "required": [
+          "symbol",
+          "kind"
+        ],
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "threshold",
+              "filing_type",
+              "new_document"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "operator": {
+            "enum": [
+              "above",
+              "below"
+            ]
+          },
+          "threshold": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\s*[A-Za-z]{3}\\s*$|^$",
+            "description": "ISO 4217."
+          },
+          "form_types": {
+            "type": [
+              "array",
+              "string"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "threshold"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "metric",
+                "operator",
+                "threshold",
+                "unit"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "filing_type"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "form_types"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "trade.alert-rule-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/alert-rule-result.v1.json",
+        "title": "TradeAlertRuleResult",
+        "description": "trade.alert-rule-result@1: the answer of POST /api/v1/alerts on OpenVibe.Trade: 201 { rule }.",
+        "type": "object",
+        "required": [
+          "rule"
+        ],
+        "properties": {
+          "rule": {
+            "$ref": "alert-rule.v1.json"
+          }
+        }
+      }
+    },
+    "trade.alert-rule": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/alert-rule.v1.json",
+        "title": "TradeAlertRule",
+        "description": "trade.alert-rule@1: one alert rule of a person on OpenVibe.Trade (server/domain/alerts.js ruleDto): a threshold on a metric, filings of some form types, or any new document for an instrument. Alerts inform; they never trade.",
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "instrument"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "threshold",
+              "filing_type",
+              "new_document"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "instrument": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "symbol": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "metric": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "operator": {
+            "enum": [
+              "above",
+              "below",
+              null
+            ]
+          },
+          "threshold": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "form_types": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "armed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "trade.context-proposal-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/context-proposal-result.v1.json",
+        "title": "TradeContextProposalResult",
+        "description": "trade.context-proposal-result@1: the answer of POST /api/v1/instruments/:symbol/context on OpenVibe.Trade: 201 { revision, published } (published only for an editor's revision sent with publish).",
+        "type": "object",
+        "required": [
+          "revision",
+          "published"
+        ],
+        "properties": {
+          "revision": {
+            "$ref": "context-revision.v1.json"
+          },
+          "published": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "trade.context-proposal": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/context-proposal.v1.json",
+        "title": "TradeContextProposal",
+        "description": "trade.context-proposal@1: the body of POST /api/v1/instruments/:symbol/context on OpenVibe.Trade (trade.context.propose). An editor: { body, cites?, expected_revision?, publish?, message? } (Markdown up to 20000 characters). OpenVibe.AI (X-OV-Origin: ai): { workflow: { id: trade.summarize_market_context, run_id, version?, model? }, input_sources: [{ source_type, source_id }], output: { summary, observations?, gaps?, citations? }, stub_provider? } — always a draft that needs a person's review. Context that recommends buying, selling or holding, or gives price targets, is refused (422 context.advice_refused).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "body"
+            ],
+            "properties": {
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "cites": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "observation",
+                        "document"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "expected_revision": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "publish": {
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "workflow",
+              "output"
+            ],
+            "properties": {
+              "workflow": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "anyOf": [
+                  {
+                    "required": [
+                      "run_id"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "runId"
+                    ]
+                  }
+                ],
+                "properties": {
+                  "id": {
+                    "const": "trade.summarize_market_context"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "runId": {
+                    "type": "string"
+                  },
+                  "version": {},
+                  "model": {}
+                }
+              },
+              "input_sources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "source_type",
+                    "source_id"
+                  ],
+                  "properties": {
+                    "source_type": {
+                      "enum": [
+                        "trade.document",
+                        "trade.observation"
+                      ]
+                    },
+                    "source_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "output": {
+                "type": "object",
+                "required": [
+                  "summary"
+                ],
+                "properties": {
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "citations": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "observations": {
+                    "type": "array",
+                    "maxItems": 30,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "observed_at": {
+                          "type": "string"
+                        },
+                        "citations": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "gaps": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "stub_provider": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.context-read-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/context-read-result.v1.json",
+        "title": "TradeContextReadResult",
+        "description": "trade.context-read-result@1: answers of trade.context.read on OpenVibe.Trade. GET /api/v1/instruments/:symbol/context → { instrument, published, disclaimer } (published is the published context revision or null; ?all=1 adds pending drafts for editors and services); GET …/context/input → { workflow, input, deliver_to } (what OpenVibe.AI's trade.summarize_market_context workflow takes: the instrument, numbered sources with freshness, and where to POST the result).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "instrument",
+              "published",
+              "disclaimer"
+            ],
+            "properties": {
+              "instrument": {
+                "$ref": "instrument.v1.json"
+              },
+              "published": {
+                "anyOf": [
+                  {
+                    "$ref": "context-revision.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "disclaimer": {
+                "type": "string",
+                "description": "Information only — not investment advice; no trading here."
+              },
+              "pending": {
+                "type": "array",
+                "items": {
+                  "$ref": "context-revision.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "workflow",
+              "input",
+              "deliver_to"
+            ],
+            "properties": {
+              "workflow": {
+                "type": "string"
+              },
+              "input": {
+                "type": "object",
+                "required": [
+                  "instrument",
+                  "sources"
+                ],
+                "properties": {
+                  "instrument": {
+                    "type": "object"
+                  },
+                  "stale_after_hours": {
+                    "type": "integer"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "source_type",
+                        "source_id"
+                      ],
+                      "properties": {
+                        "source_type": {
+                          "enum": [
+                            "trade.observation",
+                            "trade.document"
+                          ]
+                        },
+                        "source_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "deliver_to": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "const": "POST"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "headers": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.context-revision": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/context-revision.v1.json",
+        "title": "TradeContextRevision",
+        "description": "trade.context-revision@1: one revision of an instrument's market context on OpenVibe.Trade (server/domain/context.js view): the Markdown, HTML and text, what it cites (observations and documents; a citation whose source is gone is marked missing), its authorship and disclosure, and whether it still needs a person's review (AI drafts do).",
+        "type": "object",
+        "required": [
+          "revision",
+          "published",
+          "body_markdown",
+          "cites",
+          "needs_review"
+        ],
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "written_at": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "as_of": {},
+          "origin": {
+            "enum": [
+              "editor",
+              "ai",
+              null
+            ]
+          },
+          "body_markdown": {
+            "type": "string"
+          },
+          "body_html": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cites": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "kind",
+                "id"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "observation",
+                    "document"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "observation": {
+                  "$ref": "observation.v1.json"
+                },
+                "document": {
+                  "type": "object"
+                },
+                "missing": {
+                  "const": true
+                }
+              }
+            }
+          },
+          "authorship": {},
+          "disclosure": {},
+          "review": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "decision": {
+                "type": "string"
+              },
+              "reviewed_at": {},
+              "reviewer": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "needs_review": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "trade.deleted-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/deleted-result.v1.json",
+        "title": "TradeDeletedResult",
+        "description": "trade.deleted-result@1: the answer of DELETE /api/v1/alerts/:id (trade.alert.delete) and DELETE /api/v1/watchlists/:id (trade.watchlist.delete) on OpenVibe.Trade: { deleted }. Someone else's rule or watchlist is 404.",
+        "type": "object",
+        "required": [
+          "deleted"
+        ],
+        "properties": {
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "trade.instrument-manage-request": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/instrument-manage-request.v1.json",
+        "title": "TradeInstrumentManageRequest",
+        "description": "trade.instrument-manage-request@1: bodies of trade.instrument.manage on OpenVibe.Trade (editors, or a service with the capability). POST /api/v1/instruments: { symbol, name, kind?, exchange?, cik?, currency? } (kind defaults to equity; aliases for the symbol, CIK and name are added). PATCH /api/v1/instruments/:symbol: any of name, kind, exchange, cik, currency, status (active or archived). POST /api/v1/instruments/:symbol/aliases: { kind: ticker | cik | name, value }. Text fields must be strings; a symbol or CIK another instrument holds is 409.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "symbol",
+              "name"
+            ],
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "pattern": "^\\s*[A-Za-z0-9][A-Za-z0-9.-]{0,15}\\s*$",
+                "description": "1-16 characters of A-Z, 0-9, . or - (upper-cased)."
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "kind": {
+                "enum": [
+                  "equity",
+                  "fund",
+                  "index",
+                  "currency",
+                  "commodity",
+                  "crypto",
+                  "other",
+                  null,
+                  ""
+                ]
+              },
+              "exchange": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 40
+              },
+              "cik": {
+                "type": [
+                  "string",
+                  "integer",
+                  "null"
+                ],
+                "description": "1-10 digits (zero-padded to 10)."
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\s*[A-Za-z]{3}\\s*$|^$",
+                "description": "ISO 4217."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "kind": {
+                "enum": [
+                  "equity",
+                  "fund",
+                  "index",
+                  "currency",
+                  "commodity",
+                  "crypto",
+                  "other"
+                ]
+              },
+              "exchange": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 40
+              },
+              "cik": {
+                "type": [
+                  "string",
+                  "integer",
+                  "null"
+                ]
+              },
+              "currency": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\s*[A-Za-z]{3}\\s*$|^$",
+                "description": "ISO 4217."
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "archived"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "ticker",
+                  "cik",
+                  "name"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.instrument-manage-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/instrument-manage-result.v1.json",
+        "title": "TradeInstrumentManageResult",
+        "description": "trade.instrument-manage-result@1: answers of trade.instrument.manage on OpenVibe.Trade: POST /api/v1/instruments → 201 { instrument, aliases }; PATCH → { instrument }; POST …/aliases → 201 { alias, aliases } (alias { kind, value, normalized }).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "instrument"
+            ],
+            "properties": {
+              "instrument": {
+                "$ref": "instrument.v1.json"
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "normalized": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "alias",
+              "aliases"
+            ],
+            "properties": {
+              "alias": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "value",
+                  "normalized"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "ticker",
+                      "cik",
+                      "name"
+                    ]
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "normalized": {
+                    "type": "string"
+                  }
+                }
+              },
+              "aliases": {
+                "type": "array"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.instrument": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/instrument.v1.json",
+        "title": "TradeInstrument",
+        "description": "trade.instrument@1: one instrument as OpenVibe.Trade's API shows it (server/domain/reading.js instrumentDto).",
+        "type": "object",
+        "required": [
+          "id",
+          "symbol",
+          "name",
+          "kind",
+          "status",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "equity",
+              "fund",
+              "index",
+              "currency",
+              "commodity",
+              "crypto",
+              "other"
+            ]
+          },
+          "exchange": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cik": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{10}$"
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "active",
+              "archived"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "trade.observation-request": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/observation-request.v1.json",
+        "title": "TradeObservationRequest",
+        "description": "trade.observation-request@1: the body of POST /api/v1/observations on OpenVibe.Trade (trade.observation.write; services only): one value a source stated for an instrument (symbol or instrument_id). value is the finite decimal as stated; observed_at and retrieved_at are date-times with a zone and not in the future; source_key names the OpenVibe.Sources source and source_ref the statement within it. The same source reference with the same value is answered as it was (200); a different value under the same reference is 409 observation.conflict (a correction needs its own source_ref).",
+        "type": "object",
+        "required": [
+          "metric",
+          "value",
+          "unit",
+          "observed_at",
+          "retrieved_at",
+          "source_key",
+          "source_ref"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "symbol"
+            ]
+          },
+          {
+            "required": [
+              "instrument_id"
+            ]
+          }
+        ],
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "instrument_id": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string",
+            "pattern": "^\\s*[A-Za-z][A-Za-z0-9_.:-]{0,79}\\s*$"
+          },
+          "value": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "pattern": "^\\s*[A-Za-z][A-Za-z0-9/%._-]{0,19}\\s*$"
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\s*([A-Z]{3})?\\s*$"
+          },
+          "period": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40
+          },
+          "observed_at": {
+            "type": "string"
+          },
+          "retrieved_at": {
+            "type": "string"
+          },
+          "source_key": {
+            "type": "string",
+            "pattern": "^\\s*[a-z0-9][a-z0-9-]{1,63}\\s*$"
+          },
+          "source_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "source_item_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(itm_[0-9A-HJKMNP-TV-Z]{26})?$"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https?://"
+          },
+          "max_age_sec": {
+            "type": [
+              "integer",
+              "string",
+              "null"
+            ],
+            "minimum": 60,
+            "maximum": 315360000
+          }
+        }
+      }
+    },
+    "trade.observation-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/observation-result.v1.json",
+        "title": "TradeObservationResult",
+        "description": "trade.observation-result@1: the answer of POST /api/v1/observations on OpenVibe.Trade: { observation, created } — 201 when recorded (trade.observation.created is announced, alerts are checked), 200 for a repeat of the same statement.",
+        "type": "object",
+        "required": [
+          "observation",
+          "created"
+        ],
+        "properties": {
+          "observation": {
+            "$ref": "observation.v1.json"
+          },
+          "created": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "trade.observation": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/observation.v1.json",
+        "title": "TradeObservation",
+        "description": "trade.observation@1: one market observation on OpenVibe.Trade (server/domain/observations.js dto): a value a source stated (the decimal exactly as stated), when it was true and when it was fetched, where from, and (in reads) whether it is stale by its source's freshness or its own max age. Rows are immutable.",
+        "type": "object",
+        "required": [
+          "id",
+          "metric",
+          "value",
+          "unit",
+          "observed_at",
+          "retrieved_at",
+          "recorded_at",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "description": "The decimal as the source stated it."
+          },
+          "unit": {
+            "type": "string"
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "retrieved_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "recorded_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "max_age_sec": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "key"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "item_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ref": {
+                "type": "string"
+              }
+            }
+          },
+          "freshness": {
+            "type": "object",
+            "properties": {
+              "stale": {
+                "type": "boolean"
+              },
+              "stale_since": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "reason": {
+                "enum": [
+                  "value_older_than_max_age",
+                  "source_unknown",
+                  "source_stale",
+                  null
+                ]
+              },
+              "source_status": {},
+              "source_last_success_at": {}
+            }
+          }
+        }
+      }
+    },
+    "trade.resolve-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/resolve-result.v1.json",
+        "title": "TradeResolveResult",
+        "description": "trade.resolve-result@1: the answer of GET /api/v1/instruments/resolve?q=&kind= on OpenVibe.Trade (trade.instrument.resolve): { query, status: resolved | ambiguous | not_found, match: { kind, value } | null, instrument | null, candidates } (a CIK, symbol or alias matched; candidates when more than one could be meant).",
+        "type": "object",
+        "required": [
+          "status",
+          "match",
+          "instrument",
+          "candidates"
+        ],
+        "properties": {
+          "query": {},
+          "status": {
+            "enum": [
+              "resolved",
+              "ambiguous",
+              "not_found"
+            ]
+          },
+          "match": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          "instrument": {
+            "anyOf": [
+              {
+                "$ref": "instrument.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "instrument.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "trade.watchlist-request": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/watchlist-request.v1.json",
+        "title": "TradeWatchlistRequest",
+        "description": "trade.watchlist-request@1: bodies of the watchlist writes on OpenVibe.Trade (the acting person). POST /api/v1/watchlists (trade.watchlist.create) and PATCH /api/v1/watchlists/:id (trade.watchlist.update): { name } (a string, at most 80 characters; your names are unique). PUT /api/v1/watchlists/:id/items/:symbol: { note? } (at most 300 characters). DELETE …/items/:symbol takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.watchlist-result": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/watchlist-result.v1.json",
+        "title": "TradeWatchlistResult",
+        "description": "trade.watchlist-result@1: answers of the watchlist routes on OpenVibe.Trade: GET /api/v1/watchlists → { watchlists }; GET /api/v1/watchlists/:id, POST (201) and PATCH → { watchlist }; PUT …/items/:symbol → { added, watchlist }; DELETE …/items/:symbol → { removed, watchlist }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "watchlists"
+            ],
+            "properties": {
+              "watchlists": {
+                "type": "array",
+                "items": {
+                  "$ref": "watchlist.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "watchlist"
+            ],
+            "properties": {
+              "watchlist": {
+                "$ref": "watchlist.v1.json"
+              },
+              "added": {
+                "type": "boolean"
+              },
+              "removed": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "trade.watchlist": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/trade/watchlist.v1.json",
+        "title": "TradeWatchlist",
+        "description": "trade.watchlist@1: one of a person's watchlists on OpenVibe.Trade (server/domain/watchlists.js dto) with its instruments and notes.",
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "instrument"
+              ],
+              "properties": {
+                "instrument": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "symbol"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "symbol": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "exchange": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "added_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
           }
         }
       }

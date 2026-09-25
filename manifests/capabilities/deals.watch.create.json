@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/watches"
-  ]
+  ],
+  "inputSchema": "deals.watch-request@1",
+  "outputSchema": "deals.watch-result@1"
 }

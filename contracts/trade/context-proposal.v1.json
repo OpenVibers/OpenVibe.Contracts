@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/context-proposal.v1.json",
+  "title": "TradeContextProposal",
+  "description": "trade.context-proposal@1: the body of POST /api/v1/instruments/:symbol/context on OpenVibe.Trade (trade.context.propose). An editor: { body, cites?, expected_revision?, publish?, message? } (Markdown up to 20000 characters). OpenVibe.AI (X-OV-Origin: ai): { workflow: { id: trade.summarize_market_context, run_id, version?, model? }, input_sources: [{ source_type, source_id }], output: { summary, observations?, gaps?, citations? }, stub_provider? } — always a draft that needs a person's review. Context that recommends buying, selling or holding, or gives price targets, is refused (422 context.advice_refused).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "body"
+      ],
+      "properties": {
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "cites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "observation",
+                  "document"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "expected_revision": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "publish": {
+          "type": [
+            "boolean",
+            "string"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "workflow",
+        "output"
+      ],
+      "properties": {
+        "workflow": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "run_id"
+              ]
+            },
+            {
+              "required": [
+                "runId"
+              ]
+            }
+          ],
+          "properties": {
+            "id": {
+              "const": "trade.summarize_market_context"
+            },
+            "run_id": {
+              "type": "string"
+            },
+            "runId": {
+              "type": "string"
+            },
+            "version": {},
+            "model": {}
+          }
+        },
+        "input_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source_type",
+              "source_id"
+            ],
+            "properties": {
+              "source_type": {
+                "enum": [
+                  "trade.document",
+                  "trade.observation"
+                ]
+              },
+              "source_id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "summary"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "citations": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "observations": {
+              "type": "array",
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "observed_at": {
+                    "type": "string"
+                  },
+                  "citations": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "gaps": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "stub_provider": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

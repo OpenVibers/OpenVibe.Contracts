@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/instrument-manage-request.v1.json",
+  "title": "TradeInstrumentManageRequest",
+  "description": "trade.instrument-manage-request@1: bodies of trade.instrument.manage on OpenVibe.Trade (editors, or a service with the capability). POST /api/v1/instruments: { symbol, name, kind?, exchange?, cik?, currency? } (kind defaults to equity; aliases for the symbol, CIK and name are added). PATCH /api/v1/instruments/:symbol: any of name, kind, exchange, cik, currency, status (active or archived). POST /api/v1/instruments/:symbol/aliases: { kind: ticker | cik | name, value }. Text fields must be strings; a symbol or CIK another instrument holds is 409.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "symbol",
+        "name"
+      ],
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "pattern": "^\\s*[A-Za-z0-9][A-Za-z0-9.-]{0,15}\\s*$",
+          "description": "1-16 characters of A-Z, 0-9, . or - (upper-cased)."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "kind": {
+          "enum": [
+            "equity",
+            "fund",
+            "index",
+            "currency",
+            "commodity",
+            "crypto",
+            "other",
+            null,
+            ""
+          ]
+        },
+        "exchange": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "cik": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ],
+          "description": "1-10 digits (zero-padded to 10)."
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\s*[A-Za-z]{3}\\s*$|^$",
+          "description": "ISO 4217."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "kind": {
+          "enum": [
+            "equity",
+            "fund",
+            "index",
+            "currency",
+            "commodity",
+            "crypto",
+            "other"
+          ]
+        },
+        "exchange": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "cik": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\s*[A-Za-z]{3}\\s*$|^$",
+          "description": "ISO 4217."
+        },
+        "status": {
+          "enum": [
+            "active",
+            "archived"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "ticker",
+            "cik",
+            "name"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    }
+  ]
+}

@@ -16,5 +16,7 @@
   "implementedBy": [
     "GET /api/v1/alerts",
     "GET /api/v1/alerts/deliveries"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "trade.alert-read-result@1"
 }

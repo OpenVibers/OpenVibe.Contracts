@@ -1,0 +1,1 @@
+{ "symbol": "ACME", "metric": "close", "value": "182.40", "unit": "USD", "observed_at": "2026-09-24T20:00:00Z", "retrieved_at": "2026-09-24T21:05:00Z", "source_key": "example-quotes" }

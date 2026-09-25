@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/instruments/resolve"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "trade.resolve-result@1"
 }

@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "DELETE /api/v1/watches/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "deals.watch-result@1"
 }

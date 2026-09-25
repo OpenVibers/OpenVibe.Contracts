@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/context-read-result.v1.json",
+  "title": "TradeContextReadResult",
+  "description": "trade.context-read-result@1: answers of trade.context.read on OpenVibe.Trade. GET /api/v1/instruments/:symbol/context → { instrument, published, disclaimer } (published is the published context revision or null; ?all=1 adds pending drafts for editors and services); GET …/context/input → { workflow, input, deliver_to } (what OpenVibe.AI's trade.summarize_market_context workflow takes: the instrument, numbered sources with freshness, and where to POST the result).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "instrument",
+        "published",
+        "disclaimer"
+      ],
+      "properties": {
+        "instrument": {
+          "$ref": "instrument.v1.json"
+        },
+        "published": {
+          "anyOf": [
+            {
+              "$ref": "context-revision.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disclaimer": {
+          "type": "string",
+          "description": "Information only — not investment advice; no trading here."
+        },
+        "pending": {
+          "type": "array",
+          "items": {
+            "$ref": "context-revision.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "workflow",
+        "input",
+        "deliver_to"
+      ],
+      "properties": {
+        "workflow": {
+          "type": "string"
+        },
+        "input": {
+          "type": "object",
+          "required": [
+            "instrument",
+            "sources"
+          ],
+          "properties": {
+            "instrument": {
+              "type": "object"
+            },
+            "stale_after_hours": {
+              "type": "integer"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "source_type",
+                  "source_id"
+                ],
+                "properties": {
+                  "source_type": {
+                    "enum": [
+                      "trade.observation",
+                      "trade.document"
+                    ]
+                  },
+                  "source_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deliver_to": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "const": "POST"
+            },
+            "path": {
+              "type": "string"
+            },
+            "headers": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

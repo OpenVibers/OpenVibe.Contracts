@@ -1,0 +1,501 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/offer.v1.json",
+  "title": "DealsOffer",
+  "description": "deals.offer@1: one deal as OpenVibe.Deals presents it (server/domain/publication.js offerDto; the API and /d/:slug.json): the canonical (root) offer of a merge group with its store, product, price observations (the latest is \"latest\", never \"current\": freshness says whether it still holds), sources, the offers merged into it, votes, hotness and the indexability decision.",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "url",
+    "title",
+    "link",
+    "status",
+    "origin",
+    "created_at",
+    "observations",
+    "votes",
+    "indexability"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "link": {
+      "type": "string",
+      "description": "The offer on the store."
+    },
+    "status": {
+      "type": "string",
+      "description": "active, expired, disabled"
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "origin": {
+      "type": "string"
+    },
+    "submitted_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "text_origin": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_state": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ai_summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "expired_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "expired_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "disabled_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "store": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "product": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "latest_observation": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "observed_at",
+            "origin",
+            "source"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "observed_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "recorded_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "price": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "currency": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "shipping": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "shipping_note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "condition": {
+              "enum": [
+                "new",
+                "used",
+                "refurbished",
+                "damaged",
+                null
+              ]
+            },
+            "availability": {
+              "enum": [
+                "in_stock",
+                "out_of_stock",
+                "preorder",
+                "discontinued",
+                "limited",
+                "sold_out",
+                "online_only",
+                "in_store_only",
+                null
+              ]
+            },
+            "origin": {
+              "type": "string"
+            },
+            "observed_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "listing": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "kind": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ref": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "key": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "freshness": {},
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "observed_at",
+          "origin",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "recorded_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "price": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shipping": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shipping_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "condition": {
+            "enum": [
+              "new",
+              "used",
+              "refurbished",
+              "damaged",
+              null
+            ]
+          },
+          "availability": {
+            "enum": [
+              "in_stock",
+              "out_of_stock",
+              "preorder",
+              "discontinued",
+              "limited",
+              "sold_out",
+              "online_only",
+              "in_store_only",
+              null
+            ]
+          },
+          "origin": {
+            "type": "string"
+          },
+          "observed_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "listing": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "kind": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ref": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "merged_from": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "merged_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "votes": {
+      "type": "object",
+      "required": [
+        "up",
+        "down",
+        "up_weight",
+        "down_weight"
+      ],
+      "properties": {
+        "up": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "down": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "up_weight": {
+          "type": "number"
+        },
+        "down_weight": {
+          "type": "number"
+        }
+      }
+    },
+    "hotness": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "indexability": {
+      "type": "object",
+      "required": [
+        "indexable"
+      ],
+      "properties": {
+        "indexable": {
+          "type": "boolean"
+        },
+        "robots": {
+          "type": "string"
+        },
+        "reasons": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

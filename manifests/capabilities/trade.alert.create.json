@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/alerts"
-  ]
+  ],
+  "inputSchema": "trade.alert-rule-request@1",
+  "outputSchema": "trade.alert-rule-result@1"
 }

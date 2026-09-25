@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/watchlist-request.v1.json",
+  "title": "TradeWatchlistRequest",
+  "description": "trade.watchlist-request@1: bodies of the watchlist writes on OpenVibe.Trade (the acting person). POST /api/v1/watchlists (trade.watchlist.create) and PATCH /api/v1/watchlists/:id (trade.watchlist.update): { name } (a string, at most 80 characters; your names are unique). PUT /api/v1/watchlists/:id/items/:symbol: { note? } (at most 300 characters). DELETE …/items/:symbol takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/offer-action-request.v1.json",
+  "title": "DealsOfferActionRequest",
+  "description": "deals.offer-action-request@1: bodies of the deal actions on OpenVibe.Deals. POST /api/v1/offers/:id/expire (deals.offer.expire; the submitter or a moderator): { reason? } (a moderator's reason is recorded). POST …/disable (deals.offer.moderate): { reason } (3-300 characters, required); POST …/enable: { reason? }; POST …/review (a person): { note? }. POST …/merge (deals.offer.merge, moderators): { into, reason? } (the canonical deal, id or slug; no cycles, not an already merged offer); POST …/unmerge: { reason? }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "into"
+      ],
+      "properties": {
+        "into": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  ]
+}

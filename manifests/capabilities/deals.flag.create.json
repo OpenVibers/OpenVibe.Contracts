@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/offers/:id/flags"
-  ]
+  ],
+  "inputSchema": "deals.flag-request@1",
+  "outputSchema": "deals.flag-result@1"
 }

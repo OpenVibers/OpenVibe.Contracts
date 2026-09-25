@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/vote-request.v1.json",
+  "title": "DealsVoteRequest",
+  "description": "deals.vote-request@1: the body of PUT /api/v1/offers/:id/vote on OpenVibe.Deals (deals.vote.set; a person): { value: 1 | -1 }. DELETE /api/v1/offers/:id/vote (deals.vote.remove) takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            1,
+            -1,
+            "1",
+            "-1"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

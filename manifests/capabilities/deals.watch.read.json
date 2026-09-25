@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/watches"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "deals.watch-result@1"
 }

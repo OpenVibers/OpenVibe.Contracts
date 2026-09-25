@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/instruments/:symbol/context"
-  ]
+  ],
+  "inputSchema": "trade.context-proposal@1",
+  "outputSchema": "trade.context-proposal-result@1"
 }

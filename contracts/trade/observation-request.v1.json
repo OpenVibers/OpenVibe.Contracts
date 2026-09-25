@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/observation-request.v1.json",
+  "title": "TradeObservationRequest",
+  "description": "trade.observation-request@1: the body of POST /api/v1/observations on OpenVibe.Trade (trade.observation.write; services only): one value a source stated for an instrument (symbol or instrument_id). value is the finite decimal as stated; observed_at and retrieved_at are date-times with a zone and not in the future; source_key names the OpenVibe.Sources source and source_ref the statement within it. The same source reference with the same value is answered as it was (200); a different value under the same reference is 409 observation.conflict (a correction needs its own source_ref).",
+  "type": "object",
+  "required": [
+    "metric",
+    "value",
+    "unit",
+    "observed_at",
+    "retrieved_at",
+    "source_key",
+    "source_ref"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "symbol"
+      ]
+    },
+    {
+      "required": [
+        "instrument_id"
+      ]
+    }
+  ],
+  "properties": {
+    "symbol": {
+      "type": "string"
+    },
+    "instrument_id": {
+      "type": "string"
+    },
+    "metric": {
+      "type": "string",
+      "pattern": "^\\s*[A-Za-z][A-Za-z0-9_.:-]{0,79}\\s*$"
+    },
+    "value": {
+      "type": [
+        "string",
+        "number"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "pattern": "^\\s*[A-Za-z][A-Za-z0-9/%._-]{0,19}\\s*$"
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\s*([A-Z]{3})?\\s*$"
+    },
+    "period": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 40
+    },
+    "observed_at": {
+      "type": "string"
+    },
+    "retrieved_at": {
+      "type": "string"
+    },
+    "source_key": {
+      "type": "string",
+      "pattern": "^\\s*[a-z0-9][a-z0-9-]{1,63}\\s*$"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "source_item_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(itm_[0-9A-HJKMNP-TV-Z]{26})?$"
+    },
+    "source_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https?://"
+    },
+    "max_age_sec": {
+      "type": [
+        "integer",
+        "string",
+        "null"
+      ],
+      "minimum": 60,
+      "maximum": 315360000
+    }
+  }
+}

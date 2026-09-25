@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/watchlists"
-  ]
+  ],
+  "inputSchema": "trade.watchlist-request@1",
+  "outputSchema": "trade.watchlist-result@1"
 }

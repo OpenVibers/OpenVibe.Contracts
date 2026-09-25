@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/products/resolve"
-  ]
+  ],
+  "inputSchema": "deals.product-resolve-request@1",
+  "outputSchema": "deals.product-resolve-result@1"
 }

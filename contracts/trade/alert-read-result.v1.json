@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/alert-read-result.v1.json",
+  "title": "TradeAlertReadResult",
+  "description": "trade.alert-read-result@1: answers of trade.alert.read on OpenVibe.Trade (the acting person's): GET /api/v1/alerts → { rules }; GET /api/v1/alerts/deliveries?limit= → { deliveries } (newest first, at most 200: which rule fired on what, and the event sent).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "rules"
+      ],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "alert-rule.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "deliveries"
+      ],
+      "properties": {
+        "deliveries": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "rule_id",
+              "trigger"
+            ],
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              },
+              "rule_id": {
+                "type": "string"
+              },
+              "rule_kind": {
+                "type": "string"
+              },
+              "trigger": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              },
+              "event_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

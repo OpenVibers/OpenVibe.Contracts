@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/deals/product-resolve-request.v1.json",
+  "title": "DealsProductResolveRequest",
+  "description": "deals.product-resolve-request@1: the body of POST /api/v1/products/resolve on OpenVibe.Deals (deals.product.resolve): product aliases (gtin 8-14 digits, mpn, sku, url, name) to find the product by; with create (default true) a product is made when none matches (name then required, 2-200 characters).",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "brand": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gtin": {
+      "type": "string",
+      "pattern": "^[0-9]{8,14}$"
+    },
+    "mpn": {
+      "type": "string"
+    },
+    "sku": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "create": {
+      "type": "boolean"
+    }
+  }
+}

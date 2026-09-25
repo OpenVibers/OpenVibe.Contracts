@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/deleted-result.v1.json",
+  "title": "TradeDeletedResult",
+  "description": "trade.deleted-result@1: the answer of DELETE /api/v1/alerts/:id (trade.alert.delete) and DELETE /api/v1/watchlists/:id (trade.watchlist.delete) on OpenVibe.Trade: { deleted }. Someone else's rule or watchlist is 404.",
+  "type": "object",
+  "required": [
+    "deleted"
+  ],
+  "properties": {
+    "deleted": {
+      "type": "boolean"
+    }
+  }
+}

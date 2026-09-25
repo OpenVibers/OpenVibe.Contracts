@@ -18,5 +18,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/offers/:id/expire"
-  ]
+  ],
+  "inputSchema": "deals.offer-action-request@1",
+  "outputSchema": "deals.offer-result@1"
 }

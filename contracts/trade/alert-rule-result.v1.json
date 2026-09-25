@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/alert-rule-result.v1.json",
+  "title": "TradeAlertRuleResult",
+  "description": "trade.alert-rule-result@1: the answer of POST /api/v1/alerts on OpenVibe.Trade: 201 { rule }.",
+  "type": "object",
+  "required": [
+    "rule"
+  ],
+  "properties": {
+    "rule": {
+      "$ref": "alert-rule.v1.json"
+    }
+  }
+}

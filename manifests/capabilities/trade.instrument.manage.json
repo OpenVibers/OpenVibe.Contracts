@@ -20,5 +20,7 @@
     "POST /api/v1/instruments",
     "PATCH /api/v1/instruments/:symbol",
     "POST /api/v1/instruments/:symbol/aliases"
-  ]
+  ],
+  "inputSchema": "trade.instrument-manage-request@1",
+  "outputSchema": "trade.instrument-manage-result@1"
 }

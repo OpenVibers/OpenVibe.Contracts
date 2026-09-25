@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/observation-result.v1.json",
+  "title": "TradeObservationResult",
+  "description": "trade.observation-result@1: the answer of POST /api/v1/observations on OpenVibe.Trade: { observation, created } — 201 when recorded (trade.observation.created is announced, alerts are checked), 200 for a repeat of the same statement.",
+  "type": "object",
+  "required": [
+    "observation",
+    "created"
+  ],
+  "properties": {
+    "observation": {
+      "$ref": "observation.v1.json"
+    },
+    "created": {
+      "type": "boolean"
+    }
+  }
+}

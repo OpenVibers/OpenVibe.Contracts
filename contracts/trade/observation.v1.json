@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/trade/observation.v1.json",
+  "title": "TradeObservation",
+  "description": "trade.observation@1: one market observation on OpenVibe.Trade (server/domain/observations.js dto): a value a source stated (the decimal exactly as stated), when it was true and when it was fetched, where from, and (in reads) whether it is stale by its source's freshness or its own max age. Rows are immutable.",
+  "type": "object",
+  "required": [
+    "id",
+    "metric",
+    "value",
+    "unit",
+    "observed_at",
+    "retrieved_at",
+    "recorded_at",
+    "source"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "metric": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string",
+      "description": "The decimal as the source stated it."
+    },
+    "unit": {
+      "type": "string"
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "period": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "retrieved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "recorded_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "max_age_sec": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "item_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ref": {
+          "type": "string"
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "properties": {
+        "stale": {
+          "type": "boolean"
+        },
+        "stale_since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reason": {
+          "enum": [
+            "value_older_than_max_age",
+            "source_unknown",
+            "source_stale",
+            null
+          ]
+        },
+        "source_status": {},
+        "source_last_success_at": {}
+      }
+    }
+  }
+}
