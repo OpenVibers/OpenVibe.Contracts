@@ -2,7 +2,7 @@
   "namespace": "ai.preferences",
   "owner": "network",
   "version": 1,
-  "description": "How this person wants AI features to behave (roadmap 28.3 m12: style, length, perspective, personalization opt-out).",
+  "description": "How this person wants OpenVibe AI to write for them: style, length and perspective, whether it may personalise, and whether it keeps what they ask.",
   "writers": [
     "owner",
     "user"

@@ -2,7 +2,7 @@
   "namespace": "live.profile",
   "owner": "live",
   "version": 1,
-  "description": "Live channel summary shown on other sites. Written by Live only.",
+  "description": "This person's Live channel as other sites show it: the channel link, followers, whether they stream and when they were last live. Written by Live only.",
   "writers": [
     "owner"
   ],

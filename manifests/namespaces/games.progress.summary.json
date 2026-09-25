@@ -2,7 +2,7 @@
   "namespace": "games.progress.summary",
   "owner": "games",
   "version": 1,
-  "description": "Public summary of game progress. The authoritative inventory stays in OpenVibe.Games.",
+  "description": "A public summary of this person's game progress: level, playtime and the world they last played. Their characters and inventory stay in OpenVibe.Games.",
   "writers": [
     "owner"
   ],

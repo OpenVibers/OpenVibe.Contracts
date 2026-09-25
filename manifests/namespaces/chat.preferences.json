@@ -2,7 +2,7 @@
   "namespace": "chat.preferences",
   "owner": "chat",
   "version": 1,
-  "description": "Portable chat display preferences. OpenVibe.Chat owns it since the Wave 6 cutover (2026-09-23): Chat reads and writes the signed-in person's record (GET/PUT /api/chat/preferences) with its service token; Live may still read it.",
+  "description": "How chat looks for this person on every site with OpenVibe chat: timestamps, compact messages, text size, badges and emotes.",
   "writers": [
     "owner",
     "user"

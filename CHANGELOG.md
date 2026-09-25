@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.41.1 — 2026-09-25
+
+Plain-language descriptions for `ai.preferences`, `chat.preferences`, `games.progress.summary` and `live.profile`. my.openvibe.network now shows these descriptions to people on its AI & Data tab. No schema change.
+
 ## 0.41.0 — 2026-09-25
 
 User modules, the rest of D06 (roadmap WS-B task 9):
