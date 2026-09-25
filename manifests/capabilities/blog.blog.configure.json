@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "PATCH /api/v1/blogs/:handle"
-  ]
+  ],
+  "inputSchema": "blog.blog-configure-request@1",
+  "outputSchema": "blog.blog-result@1"
 }

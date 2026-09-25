@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/member-result.v1.json",
+  "title": "BlogMemberResult",
+  "description": "blog.member-result@1: answers of blog.member.manage on OpenVibe.Blog. GET /api/v1/blogs/:handle/members → { members } (subject, role, name and username when Network knows them); PUT …/members/:subject → { member }; DELETE → { removed } (false when they were not a member).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "members"
+      ],
+      "properties": {
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "role"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string"
+              },
+              "role": {
+                "enum": [
+                  "owner",
+                  "editor",
+                  "author"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "member"
+      ],
+      "properties": {
+        "member": {
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "properties": {
+            "subject": {
+              "type": "string"
+            },
+            "role": {
+              "enum": [
+                "owner",
+                "editor",
+                "author"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "removed"
+      ],
+      "properties": {
+        "removed": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

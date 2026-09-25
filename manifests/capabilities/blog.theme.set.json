@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "PUT /api/v1/blogs/:handle/theme"
-  ]
+  ],
+  "inputSchema": "blog.theme-request@1",
+  "outputSchema": "blog.blog-result@1"
 }

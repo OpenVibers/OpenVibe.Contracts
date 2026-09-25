@@ -22,5 +22,7 @@
     "POST /api/v1/posts/:id/revert",
     "POST /api/v1/posts/:id/attachments",
     "DELETE /api/v1/posts/:id/attachments/:aid"
-  ]
+  ],
+  "inputSchema": "blog.post-update-request@1",
+  "outputSchema": "blog.post-update-result@1"
 }

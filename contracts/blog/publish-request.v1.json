@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/publish-request.v1.json",
+  "title": "BlogPublishRequest",
+  "description": "blog.publish-request@1: the body of POST /api/v1/posts/:id/publish on OpenVibe.Blog (blog.post.publish): { revision? } (default the head; an AI draft is published only after a person reviewed it: 409 post.review_required).",
+  "type": "object",
+  "properties": {
+    "revision": {
+      "type": [
+        "integer",
+        "string",
+        "null"
+      ],
+      "minimum": 1
+    }
+  }
+}

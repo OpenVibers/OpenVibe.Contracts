@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/post-create-request.v1.json",
+  "title": "BlogPostCreateRequest",
+  "description": "blog.post-create-request@1: the body of POST /api/v1/blogs/:handle/posts on OpenVibe.Blog (blog.post.create; a member who may write, or a service acting for one; X-OV-Origin: ai makes an AI draft that needs a person's review). A new draft at revision 1: title required. Unknown fields are ignored; refusals are problem+json (post.invalid_title, post.too_long, post.invalid_visibility, post.invalid_slug, post.too_many_tags, post.invalid_series, …).",
+  "type": "object",
+  "required": [
+    "title"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Whitespace collapsed; required, at most 200 characters."
+    },
+    "body": {
+      "type": "string",
+      "maxLength": 200000,
+      "description": "Markdown."
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "members",
+        "private"
+      ],
+      "description": "Default public; members gates it behind the blog's VIP entitlement (OpenVibe.VIP decides)."
+    },
+    "entitlement_key": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.:-]{0,127}$",
+      "description": "members only: informational, default vip:<handle>."
+    },
+    "slug": {
+      "type": "string",
+      "description": "Default from the title; lowercase letters, digits and dashes (a taken one gets a number)."
+    },
+    "allow_comments": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ]
+    },
+    "noindex": {
+      "type": [
+        "boolean",
+        "integer",
+        "string"
+      ]
+    },
+    "tags": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Comma-separated."
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "At most 20 tags of at most 50 characters."
+    },
+    "categories": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Comma-separated."
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "Category paths (Parent > Child), at most 10."
+    },
+    "series": {
+      "description": "A series id (ser_…), a new series title, or { title }; null or empty leaves the series."
+    },
+    "series_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "series_position": {
+      "type": [
+        "integer",
+        "string",
+        "null"
+      ]
+    },
+    "citations": {
+      "type": "array",
+      "maxItems": 100,
+      "description": "Sources: a URL (with retrieved_at) or an OpenVibe.Sources item id; a quote may be text or { text }. At most 100 are kept.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_item_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retrieved_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quote": {},
+          "license_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "authorship": {
+      "type": "object",
+      "description": "hybrid or imported authorship details; an AI service (X-OV-Origin: ai) writes AI drafts that need review."
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/json-feed.v1.json",
+  "title": "BlogJsonFeed",
+  "description": "blog.json-feed@1: the answer of GET /api/v1/blogs/:handle/feed on OpenVibe.Blog (blog.feed.read): the blog's public posts as a JSON Feed 1.1 document (openvibe-publishing seo.jsonFeed), as many as the blog's feed item count, with full HTML content when the blog allows it and otherwise the summary as text. Empty fields are left out.",
+  "type": "object",
+  "required": [
+    "version",
+    "title",
+    "home_page_url",
+    "feed_url",
+    "items"
+  ],
+  "properties": {
+    "version": {
+      "const": "https://jsonfeed.org/version/1.1"
+    },
+    "title": {
+      "type": "string"
+    },
+    "home_page_url": {
+      "type": "string"
+    },
+    "feed_url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content_html": {
+            "type": "string"
+          },
+          "content_text": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "date_published": {
+            "type": "string"
+          },
+          "date_modified": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

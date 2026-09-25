@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/blog-configure-request.v1.json",
+  "title": "BlogBlogConfigureRequest",
+  "description": "blog.blog-configure-request@1: the body of PATCH /api/v1/blogs/:handle on OpenVibe.Blog (blog.blog.configure; an owner): title (at most 120 characters, not blank), description (500), language (a BCP 47 tag) and feeds { rss, atom, json, item_count (1-50), full_content }. Fields left out keep their value.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "language": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+    },
+    "feeds": {
+      "type": "object",
+      "properties": {
+        "rss": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "atom": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "json": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "item_count": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1,
+          "maximum": 50,
+          "pattern": "^[0-9]+$"
+        },
+        "full_content": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

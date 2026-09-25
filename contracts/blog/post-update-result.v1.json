@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/post-update-result.v1.json",
+  "title": "BlogPostUpdateResult",
+  "description": "blog.post-update-result@1: answers of blog.post.update on OpenVibe.Blog. PATCH /api/v1/posts/:id → { post, revision, created } (created false when nothing changed); POST …/revert → 201 { revision, post }; POST …/attachments → 201 { attachment }; DELETE …/attachments/:aid → { removed }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "post",
+        "revision"
+      ],
+      "properties": {
+        "post": {
+          "$ref": "post.v1.json"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "attachment"
+      ],
+      "properties": {
+        "attachment": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "removed"
+      ],
+      "properties": {
+        "removed": {}
+      }
+    }
+  ]
+}

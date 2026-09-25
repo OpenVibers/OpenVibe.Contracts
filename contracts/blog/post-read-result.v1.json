@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/post-read-result.v1.json",
+  "title": "BlogPostReadResult",
+  "description": "blog.post-read-result@1: answers of blog.post.read on OpenVibe.Blog. GET /api/v1/posts/:id → { post } (editors and staff get the full view; readers of a published post the public one; a members-only post someone may not open is 403 post.members_only with a teaser); GET /api/v1/posts/:id/revisions → { revisions } (each with its length instead of the content); GET …/revisions/:n → { revision, citations }; GET …/diff?from=&to=&mode= → { diff }; GET /api/v1/blogs/:handle/posts?all=1 → { posts } (drafts too, members only).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "post"
+      ],
+      "properties": {
+        "post": {
+          "$ref": "post.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revisions"
+      ],
+      "properties": {
+        "revisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "type": "integer"
+              },
+              "length": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revision",
+        "citations"
+      ],
+      "properties": {
+        "revision": {
+          "type": "object",
+          "required": [
+            "number"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            }
+          }
+        },
+        "citations": {
+          "type": "array"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "diff"
+      ],
+      "properties": {
+        "diff": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "posts"
+      ],
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "post.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

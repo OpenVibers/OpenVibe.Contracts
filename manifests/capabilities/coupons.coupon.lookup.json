@@ -17,5 +17,7 @@
     "GET /api/v1/merchants/:id/coupons",
     "GET /api/v1/merchants/:id",
     "GET /api/v1/coupons/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "coupons.lookup-result@1"
 }

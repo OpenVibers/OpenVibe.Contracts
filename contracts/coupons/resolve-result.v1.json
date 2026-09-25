@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/resolve-result.v1.json",
+  "title": "CouponsResolveResult",
+  "description": "coupons.resolve-result@1: the answer of GET /api/v1/merchants/resolve?host= on OpenVibe.Coupons (coupons.merchant.resolve; public, anonymous allowed, rate-limited, CORS for the configured extension origins): the merchant whose domain rule matches the host. No match is 404 merchant.not_found with the normalised host and its registrable domain; a missing host is 400 host.required.",
+  "type": "object",
+  "required": [
+    "host",
+    "registrable_domain",
+    "matched_rule",
+    "merchant"
+  ],
+  "properties": {
+    "host": {
+      "type": "string"
+    },
+    "registrable_domain": {
+      "type": "string"
+    },
+    "matched_rule": {
+      "type": "object",
+      "required": [
+        "host",
+        "include_subdomains",
+        "path_prefix"
+      ],
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "include_subdomains": {
+          "type": "boolean"
+        },
+        "path_prefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "merchant": {
+      "$ref": "merchant.v1.json"
+    }
+  }
+}

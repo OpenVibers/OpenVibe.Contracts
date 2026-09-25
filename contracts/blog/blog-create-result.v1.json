@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/blog-create-result.v1.json",
+  "title": "BlogBlogCreateResult",
+  "description": "blog.blog-create-result@1: the answer of POST /api/v1/blogs on OpenVibe.Blog: { blog, created } — 201 when the blog was created, 200 when the member already had it.",
+  "type": "object",
+  "required": [
+    "blog",
+    "created"
+  ],
+  "properties": {
+    "blog": {
+      "$ref": "blog.v1.json"
+    },
+    "created": {
+      "type": "boolean"
+    }
+  }
+}

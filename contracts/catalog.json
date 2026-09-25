@@ -838,6 +838,186 @@
       "status": "active"
     },
     {
+      "id": "blog.blog-configure-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/blog-configure-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.blog-create-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/blog-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.blog-create-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/blog-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.blog-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/blog-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.blog",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/blog.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.delete-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/delete-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.json-feed",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/json-feed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.member-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/member-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.member-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/member-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post-create-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/post-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post-create-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/post-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post-read-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/post-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post-update-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/post-update-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post-update-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/post-update-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.post",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/post.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.publication-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/publication-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.publish-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/publish-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.schedule-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/schedule-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.schedule-result",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/schedule-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "blog.theme-request",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "blog/theme-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.run-request",
       "version": "1.0.0",
       "owner": "ai",
@@ -2378,6 +2558,114 @@
       "version": "1.0.0",
       "owner": "coupons",
       "schema": "events/payloads/coupons.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.coupon",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/coupon.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.lookup-result",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/lookup-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.merchant-manage-request",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/merchant-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.merchant-manage-result",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/merchant-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.merchant",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/merchant.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.report-request",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/report-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.report-result",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/report-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.resolve-result",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/resolve-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.status-request",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/status-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.status-result",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/status-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.submit-request",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/submit-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "coupons.submit-result",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "coupons/submit-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

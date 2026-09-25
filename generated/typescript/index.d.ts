@@ -11949,6 +11949,449 @@ export interface BlogIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** blog.blog-configure-request@1.0.0 (owner: blog) */
+/**
+ * blog.blog-configure-request@1: the body of PATCH /api/v1/blogs/:handle on OpenVibe.Blog (blog.blog.configure; an owner): title (at most 120 characters, not blank), description (500), language (a BCP 47 tag) and feeds { rss, atom, json, item_count (1-50), full_content }. Fields left out keep their value.
+ */
+export interface BlogBlogConfigureRequest {
+  title?: string | null;
+  description?: string | null;
+  language?: string | null;
+  feeds?: {
+    rss?: boolean | number | string;
+    atom?: boolean | number | string;
+    json?: boolean | number | string;
+    item_count?: number | string;
+    full_content?: boolean | number | string;
+  };
+}
+
+/** blog.blog-create-request@1.0.0 (owner: blog) */
+/**
+ * blog.blog-create-request@1: the body of POST /api/v1/blogs on OpenVibe.Blog (blog.blog.create): get or create the acting member's blog (one per usr_ subject). handle defaults to their Network username (2-40 of a-z, 0-9, _ and -, not a reserved word); title and description are optional.
+ */
+export interface BlogBlogCreateRequest {
+  handle?: string;
+  title?: string | null;
+  description?: string | null;
+}
+
+/** blog.blog-create-result@1.0.0 (owner: blog) */
+/**
+ * blog.blog-create-result@1: the answer of POST /api/v1/blogs on OpenVibe.Blog: { blog, created } — 201 when the blog was created, 200 when the member already had it.
+ */
+export interface BlogBlogCreateResult {
+  blog: BlogBlog;
+  created: boolean;
+}
+
+/** blog.blog-result@1.0.0 (owner: blog) */
+/**
+ * blog.blog-result@1: the answer of PATCH /api/v1/blogs/:handle (blog.blog.configure) and PUT /api/v1/blogs/:handle/theme (blog.theme.set) on OpenVibe.Blog: { blog } with the member view; the theme answer adds themes (the presets).
+ */
+export interface BlogBlogResult {
+  blog: BlogBlog;
+  themes?: string[];
+}
+
+/** blog.blog@1.0.0 (owner: blog) */
+/**
+ * blog.blog@1: one blog as OpenVibe.Blog's API shows it (server/http/api.js blogDto). Members of the blog (and staff) also see status, owner_subject and feed_settings.
+ */
+export interface BlogBlog {
+  id: string;
+  /**
+   * member, …
+   */
+  kind: string;
+  handle: string;
+  title: string;
+  description?: string | null;
+  url: string;
+  theme: string;
+  language: string;
+  feeds: {
+    type: "rss" | "atom" | "json";
+    url: string;
+  }[];
+  status?: string;
+  owner_subject?: string | null;
+  feed_settings?: {
+    rss?: number;
+    atom?: number;
+    json?: number;
+    item_count?: number;
+    full_content?: number;
+  };
+}
+
+/** blog.delete-result@1.0.0 (owner: blog) */
+/**
+ * blog.delete-result@1: the answer of DELETE /api/v1/posts/:id on OpenVibe.Blog (blog.post.delete): { deleted: true, id }.
+ */
+export interface BlogDeleteResult {
+  deleted: true;
+  id: string;
+}
+
+/** blog.json-feed@1.0.0 (owner: blog) */
+/**
+ * blog.json-feed@1: the answer of GET /api/v1/blogs/:handle/feed on OpenVibe.Blog (blog.feed.read): the blog's public posts as a JSON Feed 1.1 document (openvibe-publishing seo.jsonFeed), as many as the blog's feed item count, with full HTML content when the blog allows it and otherwise the summary as text. Empty fields are left out.
+ */
+export interface BlogJsonFeed {
+  version: "https://jsonfeed.org/version/1.1";
+  title: string;
+  home_page_url: string;
+  feed_url: string;
+  description?: string;
+  language?: string;
+  authors?: {
+    name?: string;
+    url?: string;
+  }[];
+  /**
+   * @maxItems 50
+   */
+  items: {
+    id: string;
+    url?: string;
+    title?: string;
+    content_html?: string;
+    content_text?: string;
+    summary?: string;
+    image?: string;
+    date_published?: string;
+    date_modified?: string;
+    authors?: {
+      name?: string;
+      url?: string;
+    }[];
+    tags?: string[];
+  }[];
+}
+
+/** blog.member-request@1.0.0 (owner: blog) */
+/**
+ * blog.member-request@1: bodies of blog.member.manage on OpenVibe.Blog (an owner). PUT /api/v1/blogs/:handle/members/:subject: { role: owner | editor | author } (members are usr_ subjects; a member blog keeps at least one owner). GET …/members and DELETE …/members/:subject take no body.
+ */
+export type BlogMemberRequest =
+  | {
+      role: "owner" | "editor" | "author";
+    }
+  | NoBody;
+
+/** blog.member-result@1.0.0 (owner: blog) */
+/**
+ * blog.member-result@1: answers of blog.member.manage on OpenVibe.Blog. GET /api/v1/blogs/:handle/members → { members } (subject, role, name and username when Network knows them); PUT …/members/:subject → { member }; DELETE → { removed } (false when they were not a member).
+ */
+export type BlogMemberResult =
+  | {
+      members: {
+        subject: string;
+        role: "owner" | "editor" | "author";
+        name?: string | null;
+        username?: string | null;
+      }[];
+    }
+  | {
+      member: {
+        subject?: string;
+        role: "owner" | "editor" | "author";
+      };
+    }
+  | {
+      removed: boolean;
+    };
+
+/** blog.post-create-request@1.0.0 (owner: blog) */
+/**
+ * blog.post-create-request@1: the body of POST /api/v1/blogs/:handle/posts on OpenVibe.Blog (blog.post.create; a member who may write, or a service acting for one; X-OV-Origin: ai makes an AI draft that needs a person's review). A new draft at revision 1: title required. Unknown fields are ignored; refusals are problem+json (post.invalid_title, post.too_long, post.invalid_visibility, post.invalid_slug, post.too_many_tags, post.invalid_series, …).
+ */
+export interface BlogPostCreateRequest {
+  /**
+   * Whitespace collapsed; required, at most 200 characters.
+   */
+  title: string;
+  /**
+   * Markdown.
+   */
+  body?: string;
+  summary?: string | null;
+  /**
+   * Default public; members gates it behind the blog's VIP entitlement (OpenVibe.VIP decides).
+   */
+  visibility?: "public" | "unlisted" | "members" | "private";
+  /**
+   * members only: informational, default vip:<handle>.
+   */
+  entitlement_key?: string;
+  /**
+   * Default from the title; lowercase letters, digits and dashes (a taken one gets a number).
+   */
+  slug?: string;
+  allow_comments?: boolean | number | string;
+  noindex?: boolean | number | string;
+  /**
+   * At most 20 tags of at most 50 characters.
+   */
+  tags?: string | string[];
+  /**
+   * Category paths (Parent > Child), at most 10.
+   */
+  categories?: string | string[];
+  /**
+   * A series id (ser_…), a new series title, or { title }; null or empty leaves the series.
+   */
+  series?: {
+    [k: string]: unknown | undefined;
+  };
+  series_id?: string | null;
+  series_position?: number | string | null;
+  /**
+   * Sources: a URL (with retrieved_at) or an OpenVibe.Sources item id; a quote may be text or { text }. At most 100 are kept.
+   *
+   * @maxItems 100
+   */
+  citations?: {
+    url?: string | null;
+    source_item_id?: string | null;
+    title?: string | null;
+    retrieved_at?: string | null;
+    quote?: unknown;
+    license_note?: string | null;
+  }[];
+  message?: string | null;
+  /**
+   * hybrid or imported authorship details; an AI service (X-OV-Origin: ai) writes AI drafts that need review.
+   */
+  authorship?: {};
+}
+
+/** blog.post-create-result@1.0.0 (owner: blog) */
+/**
+ * blog.post-create-result@1: the answer of POST /api/v1/blogs/:handle/posts on OpenVibe.Blog: 201 { post, revision } (the editor view and the revision number, 1).
+ */
+export interface BlogPostCreateResult {
+  post: BlogPost;
+  revision: number;
+}
+
+/** blog.post-read-result@1.0.0 (owner: blog) */
+/**
+ * blog.post-read-result@1: answers of blog.post.read on OpenVibe.Blog. GET /api/v1/posts/:id → { post } (editors and staff get the full view; readers of a published post the public one; a members-only post someone may not open is 403 post.members_only with a teaser); GET /api/v1/posts/:id/revisions → { revisions } (each with its length instead of the content); GET …/revisions/:n → { revision, citations }; GET …/diff?from=&to=&mode= → { diff }; GET /api/v1/blogs/:handle/posts?all=1 → { posts } (drafts too, members only).
+ */
+export type BlogPostReadResult =
+  | {
+      post: BlogPost;
+    }
+  | {
+      revisions: {
+        number: number;
+        length?: number;
+      }[];
+    }
+  | {
+      revision: {
+        number: number;
+        content?: string;
+        fields?: {};
+      };
+      citations: unknown[];
+    }
+  | {
+      diff: {};
+    }
+  | {
+      posts: BlogPost[];
+    };
+
+/** blog.post-update-request@1.0.0 (owner: blog) */
+/**
+ * blog.post-update-request@1: bodies of blog.post.update on OpenVibe.Blog (editors of the post). PATCH /api/v1/posts/:id: any post fields; a change to title, body or summary makes a new revision and needs expected_revision (the revision you edited; 428 revision.expected_required without it); citations sent replace the revision's, otherwise they carry forward. POST /api/v1/posts/:id/revert: { to_revision, expected_revision }. POST /api/v1/posts/:id/attachments: { media_id (med_…), role?: cover | inline | gallery, alt?, caption?, position? }. DELETE /api/v1/posts/:id/attachments/:aid takes no body.
+ */
+export type BlogPostUpdateRequest =
+  | {
+      title?: string;
+      /**
+       * Markdown.
+       */
+      body?: string;
+      summary?: string | null;
+      /**
+       * Default public; members gates it behind the blog's VIP entitlement (OpenVibe.VIP decides).
+       */
+      visibility?: "public" | "unlisted" | "members" | "private";
+      /**
+       * members only: informational, default vip:<handle>.
+       */
+      entitlement_key?: string;
+      /**
+       * Default from the title; lowercase letters, digits and dashes (a taken one gets a number).
+       */
+      slug?: string;
+      allow_comments?: boolean | number | string;
+      noindex?: boolean | number | string;
+      /**
+       * At most 20 tags of at most 50 characters.
+       */
+      tags?: string | string[];
+      /**
+       * Category paths (Parent > Child), at most 10.
+       */
+      categories?: string | string[];
+      /**
+       * A series id (ser_…), a new series title, or { title }; null or empty leaves the series.
+       */
+      series?: {
+        [k: string]: unknown | undefined;
+      };
+      series_id?: string | null;
+      series_position?: number | string | null;
+      /**
+       * Sources: a URL (with retrieved_at) or an OpenVibe.Sources item id; a quote may be text or { text }. At most 100 are kept.
+       *
+       * @maxItems 100
+       */
+      citations?: {
+        url?: string | null;
+        source_item_id?: string | null;
+        title?: string | null;
+        retrieved_at?: string | null;
+        quote?: unknown;
+        license_note?: string | null;
+      }[];
+      message?: string | null;
+      /**
+       * hybrid or imported authorship details; an AI service (X-OV-Origin: ai) writes AI drafts that need review.
+       */
+      authorship?: {};
+      expected_revision?: number | string;
+    }
+  | {
+      to_revision: number | string;
+      expected_revision: number | string;
+    }
+  | {
+      media_id: string;
+      role?: "cover" | "inline" | "gallery";
+      alt?: string | null;
+      caption?: string | null;
+      position?: number | string;
+    }
+  | NoBody;
+
+/** blog.post-update-result@1.0.0 (owner: blog) */
+/**
+ * blog.post-update-result@1: answers of blog.post.update on OpenVibe.Blog. PATCH /api/v1/posts/:id → { post, revision, created } (created false when nothing changed); POST …/revert → 201 { revision, post }; POST …/attachments → 201 { attachment }; DELETE …/attachments/:aid → { removed }.
+ */
+export type BlogPostUpdateResult =
+  | {
+      post: BlogPost;
+      revision: number;
+      created?: boolean;
+    }
+  | {
+      attachment: {};
+    }
+  | {
+      removed: unknown;
+    };
+
+/** blog.post@1.0.0 (owner: blog) */
+/**
+ * blog.post@1: one post as OpenVibe.Blog's API shows it (server/http/api.js postDto): its state, visibility, the fields of the revision shown (the published one, or the head for editors), terms, series and the indexability decision. Editors and staff also get the body, authorship, review, scheduled jobs, attachments and citations; readers of a members-only post they may not open get a 403 teaser instead.
+ */
+export interface BlogPost {
+  id: string;
+  blog: {
+    id: string;
+    handle: string;
+  };
+  slug: string;
+  url: string;
+  /**
+   * draft, scheduled, published, unpublished, deleted
+   */
+  state: string;
+  visibility: "public" | "unlisted" | "members" | "private";
+  author_subject?: string | null;
+  title: string | null;
+  summary?: string | null;
+  revision: number | null;
+  published_revision: number | null;
+  first_published_at?: string | null;
+  published_at?: string | null;
+  tags: unknown[];
+  categories: unknown[];
+  series?: {} | null;
+  allow_comments: boolean;
+  noindex: boolean;
+  indexability?: {
+    indexable?: boolean;
+    robots?: string;
+    reasons?: unknown[];
+  } | null;
+  entitlement_key?: string | null;
+  body?: string | null;
+  authorship?: unknown;
+  review?: unknown;
+  scheduled?: unknown[];
+  attachments?: unknown[];
+  citations?: unknown[];
+}
+
+/** blog.publication-result@1.0.0 (owner: blog) */
+/**
+ * blog.publication-result@1: the answer of POST /api/v1/posts/:id/publish (blog.post.publish) and POST /api/v1/posts/:id/unpublish (blog.post.unpublish) on OpenVibe.Blog: { post, changed } (changed false when it already was in that state).
+ */
+export interface BlogPublicationResult {
+  post: BlogPost;
+  changed: boolean;
+}
+
+/** blog.publish-request@1.0.0 (owner: blog) */
+/**
+ * blog.publish-request@1: the body of POST /api/v1/posts/:id/publish on OpenVibe.Blog (blog.post.publish): { revision? } (default the head; an AI draft is published only after a person reviewed it: 409 post.review_required).
+ */
+export interface BlogPublishRequest {
+  revision?: number | string | null;
+}
+
+/** blog.schedule-request@1.0.0 (owner: blog) */
+/**
+ * blog.schedule-request@1: bodies of blog.post.schedule on OpenVibe.Blog. POST /api/v1/posts/:id/schedule: { at, revision?, action? } (at an ISO 8601 time in the future; action publish (default) or unpublish). DELETE /api/v1/posts/:id/schedule cancels pending jobs and takes no body.
+ */
+export type BlogScheduleRequest =
+  | {
+      at: string | number;
+      revision?: number | string | null;
+      action?: "publish" | "unpublish";
+    }
+  | NoBody;
+
+/** blog.schedule-result@1.0.0 (owner: blog) */
+/**
+ * blog.schedule-result@1: answers of blog.post.schedule on OpenVibe.Blog: POST …/schedule → 201 { job, created, post }; DELETE …/schedule → { cancelled, post } (jobs cancelled; a scheduled post goes back to draft).
+ */
+export type BlogScheduleResult =
+  | {
+      job: {};
+      created: boolean;
+      post: BlogPost;
+    }
+  | {
+      cancelled: number;
+      post: BlogPost;
+    };
+
+/** blog.theme-request@1.0.0 (owner: blog) */
+/**
+ * blog.theme-request@1: the body of PUT /api/v1/blogs/:handle/theme on OpenVibe.Blog (blog.theme.set; an owner): one of the theme presets.
+ */
+export interface BlogThemeRequest {
+  theme: "vibe" | "paper" | "slate" | "sand" | "nord" | "high-contrast";
+}
+
 /** ai.run-request@1.0.0 (owner: ai) */
 /**
  * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.
@@ -25395,6 +25838,255 @@ export interface CouponsIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** coupons.coupon@1.0.0 (owner: coupons) */
+/**
+ * coupons.coupon@1: one code as OpenVibe.Coupons shows it (server/domain/coupons.js view): its status and confidence come only from people's reports (counts in a window, report times rounded to the hour), a known or unknown expiry, restrictions, hints and evidence. No submitter or reporter is ever named.
+ */
+export interface CouponsCoupon {
+  id: string;
+  merchant_id: string;
+  code: string;
+  title: string;
+  description?: string | null;
+  status: "unknown" | "reported_working" | "reported_failed" | "expired" | "disabled";
+  active: boolean;
+  confidence?: unknown;
+  reports: {
+    window_days?: number;
+    last_report_at?: string | null;
+    last_worked_at?: string | null;
+    last_failed_at?: string | null;
+  };
+  expiry: {
+    known: boolean;
+    expires_at: string | null;
+    precision?: string | null;
+    basis?: string | null;
+  };
+  restrictions: {
+    kind: "min_spend" | "category" | "new_customers_only" | "region" | "other";
+    value?: unknown;
+    amount?: string;
+    amount_minor?: number;
+    currency?: string;
+  }[];
+  hints?: {
+    text?: string;
+    scope?: "code" | "merchant";
+  }[];
+  evidence?: {
+    kind?: string;
+    url?: string | null;
+    merchant_page?: boolean;
+    sources_item?: string;
+    retrieved_at?: string | null;
+  }[];
+  origin: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+  expired_at?: string | null;
+  url: string;
+}
+
+/** coupons.lookup-result@1.0.0 (owner: coupons) */
+/**
+ * coupons.lookup-result@1: answers of coupons.coupon.lookup on OpenVibe.Coupons (public, anonymous allowed, cacheable: the same bytes for every caller). GET /api/v1/merchants/:id/coupons → { merchant, coupons } (the active codes); GET /api/v1/merchants/:id → { merchant }; GET /api/v1/coupons/:id → { coupon, merchant }. Inactive merchants and unpublished or disabled codes are 404.
+ */
+export interface CouponsLookupResult {
+  merchant: CouponsMerchant;
+  /**
+   * @maxItems 200
+   */
+  coupons?: CouponsCoupon[];
+  coupon?: CouponsCoupon;
+}
+
+/** coupons.merchant-manage-request@1.0.0 (owner: coupons) */
+/**
+ * coupons.merchant-manage-request@1: bodies of coupons.merchant.manage on OpenVibe.Coupons (staff or a service). POST /api/v1/merchants: { domains, name?, slug?, homepage_url?, description?, status? } (at least one domain rule; a rule on a public suffix is refused; homepage_url must be https; status pending, else active). POST /api/v1/merchants/:id/domains: one domain rule { host, include_subdomains?, path_prefix? } (a rule another merchant holds is 409). POST /api/v1/merchants/:id/status: { status: active | disabled }.
+ */
+export type CouponsMerchantManageRequest =
+  | {
+      /**
+       * @minItems 1
+       */
+      domains: [
+        {
+          host: string;
+          /**
+           * Default true.
+           */
+          include_subdomains?: boolean | number | string;
+          path_prefix?: string;
+        },
+        ...{
+          host: string;
+          /**
+           * Default true.
+           */
+          include_subdomains?: boolean | number | string;
+          path_prefix?: string;
+        }[]
+      ];
+      name?: string | null;
+      slug?: string | null;
+      homepage_url?: string | null;
+      description?: string | null;
+      /**
+       * pending; anything else is active.
+       */
+      status?: string;
+    }
+  | {
+      host: string;
+      /**
+       * Default true.
+       */
+      include_subdomains?: boolean | number | string;
+      path_prefix?: string;
+    }
+  | {
+      status: "active" | "disabled";
+    };
+
+/** coupons.merchant-manage-result@1.0.0 (owner: coupons) */
+/**
+ * coupons.merchant-manage-result@1: the answer of every coupons.merchant.manage route on OpenVibe.Coupons: { merchant } with its status (201 for a new merchant or domain).
+ */
+export interface CouponsMerchantManageResult {
+  merchant: CouponsMerchant & {};
+}
+
+/** coupons.merchant@1.0.0 (owner: coupons) */
+/**
+ * coupons.merchant@1: one merchant as OpenVibe.Coupons' lookup API shows it (server/http/api.js merchantView): the same bytes for every caller, nothing about any person. Staff and service answers of the merchant routes add its status.
+ */
+export interface CouponsMerchant {
+  id: string;
+  slug: string;
+  name: string;
+  homepage_url?: string | null;
+  url: string;
+  domains: {
+    host: string;
+    include_subdomains: boolean;
+    path_prefix: string | null;
+  }[];
+  active_codes: number;
+  hints: string[];
+  status?: "pending" | "active" | "disabled";
+}
+
+/** coupons.report-request@1.0.0 (owner: coupons) */
+/**
+ * coupons.report-request@1: the body of POST /api/v1/coupons/:id/report on OpenVibe.Coupons (coupons.report.create; people, installs and services acting for a person): whether the code worked, and for a failure why. The code must be in active results; you cannot report your own submission. Reporting again changes your earlier report.
+ */
+export interface CouponsReportRequest {
+  outcome: "worked" | "failed";
+  /**
+   * Failed reports only.
+   */
+  reason?: "invalid" | "expired" | "min_spend_not_met" | "not_eligible" | "other" | null | "";
+}
+
+/** coupons.report-result@1.0.0 (owner: coupons) */
+/**
+ * coupons.report-result@1: the answer of POST /api/v1/coupons/:id/report on OpenVibe.Coupons: { accepted, deduplicated, corrected, coupon } — 201 for a new report, 200 when it repeated or corrected an earlier one.
+ */
+export interface CouponsReportResult {
+  accepted: true;
+  deduplicated: boolean;
+  corrected: boolean;
+  coupon: CouponsCoupon;
+}
+
+/** coupons.resolve-result@1.0.0 (owner: coupons) */
+/**
+ * coupons.resolve-result@1: the answer of GET /api/v1/merchants/resolve?host= on OpenVibe.Coupons (coupons.merchant.resolve; public, anonymous allowed, rate-limited, CORS for the configured extension origins): the merchant whose domain rule matches the host. No match is 404 merchant.not_found with the normalised host and its registrable domain; a missing host is 400 host.required.
+ */
+export interface CouponsResolveResult {
+  host: string;
+  registrable_domain: string;
+  matched_rule: {
+    host: string;
+    include_subdomains: boolean;
+    path_prefix: string | null;
+  };
+  merchant: CouponsMerchant;
+}
+
+/** coupons.status-request@1.0.0 (owner: coupons) */
+/**
+ * coupons.status-request@1: the body of POST /api/v1/coupons/:id/status on OpenVibe.Coupons (coupons.status.update; staff or a service): disabled, expired (not while disabled) or active (re-enable: the status is recomputed from reports and time); reported_working and reported_failed cannot be set by anyone.
+ */
+export interface CouponsStatusRequest {
+  status: "disabled" | "expired" | "active";
+  note?: string | null;
+}
+
+/** coupons.status-result@1.0.0 (owner: coupons) */
+/**
+ * coupons.status-result@1: the answer of POST /api/v1/coupons/:id/status on OpenVibe.Coupons: { coupon } after the change.
+ */
+export interface CouponsStatusResult {
+  coupon: CouponsCoupon;
+}
+
+/** coupons.submit-request@1.0.0 (owner: coupons) */
+/**
+ * coupons.submit-request@1: the body of POST /api/v1/coupons/submit on OpenVibe.Coupons (coupons.coupon.submit; a signed-in person, or a service acting for one or as AI; installs cannot submit): a code and the merchant it is for (merchant_id, or the host or url of the shop: an unknown shop becomes a pending merchant). code is 1-64 printable characters without spaces; title (at least 3 characters: what the code gives) is required. status, confidence, verified, working, valid and validity are refused (422 coupon.status_not_accepted): a code's status comes only from people's reports. expires is a date (YYYY-MM-DD) or ISO time; expiry_basis evidence needs evidence_url. A duplicate answers the existing code (200).
+ */
+export type CouponsSubmitRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  code: string;
+  title: string;
+  description?: string | null;
+  merchant_id?: string;
+  host?: string;
+  url?: string;
+  expires?: string | null;
+  expiry_basis?: "submitter" | "evidence";
+  evidence_url?: string;
+  restrictions?: {
+    min_spend?: {
+      amount?: number | string;
+      /**
+       * ISO 4217.
+       */
+      currency?: string;
+    };
+    /**
+     * At most 10.
+     */
+    categories?: unknown[] | string;
+    new_customers_only?: boolean | string;
+    /**
+     * ISO 3166-1 alpha-2 codes, at most 50.
+     */
+    regions?: unknown[] | string;
+    other?: string;
+  };
+  hint?: string | null;
+  ai_run_id?: string | null;
+};
+
+/** coupons.submit-result@1.0.0 (owner: coupons) */
+/**
+ * coupons.submit-result@1: the answer of POST /api/v1/coupons/submit on OpenVibe.Coupons: { coupon, merchant, duplicate, review_state } — 201 for a new code, 200 when the same code was already known (duplicate).
+ */
+export interface CouponsSubmitResult {
+  coupon: CouponsCoupon;
+  merchant: {
+    id: string;
+    slug: string;
+    name: string;
+    status: "pending" | "active" | "disabled";
+  };
+  duplicate: boolean;
+  review_state: string;
 }
 
 /** deals.offer.created@1.0.0 (owner: deals) */

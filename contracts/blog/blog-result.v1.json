@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/blog-result.v1.json",
+  "title": "BlogBlogResult",
+  "description": "blog.blog-result@1: the answer of PATCH /api/v1/blogs/:handle (blog.blog.configure) and PUT /api/v1/blogs/:handle/theme (blog.theme.set) on OpenVibe.Blog: { blog } with the member view; the theme answer adds themes (the presets).",
+  "type": "object",
+  "required": [
+    "blog"
+  ],
+  "properties": {
+    "blog": {
+      "$ref": "blog.v1.json"
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/status-request.v1.json",
+  "title": "CouponsStatusRequest",
+  "description": "coupons.status-request@1: the body of POST /api/v1/coupons/:id/status on OpenVibe.Coupons (coupons.status.update; staff or a service): disabled, expired (not while disabled) or active (re-enable: the status is recomputed from reports and time); reported_working and reported_failed cannot be set by anyone.",
+  "type": "object",
+  "required": [
+    "status"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "disabled",
+        "expired",
+        "active"
+      ]
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

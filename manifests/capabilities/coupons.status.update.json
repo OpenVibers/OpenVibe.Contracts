@@ -22,5 +22,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/coupons/:id/status"
-  ]
+  ],
+  "inputSchema": "coupons.status-request@1",
+  "outputSchema": "coupons.status-result@1"
 }

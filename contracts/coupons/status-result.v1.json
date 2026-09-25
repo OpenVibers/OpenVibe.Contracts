@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/status-result.v1.json",
+  "title": "CouponsStatusResult",
+  "description": "coupons.status-result@1: the answer of POST /api/v1/coupons/:id/status on OpenVibe.Coupons: { coupon } after the change.",
+  "type": "object",
+  "required": [
+    "coupon"
+  ],
+  "properties": {
+    "coupon": {
+      "$ref": "coupon.v1.json"
+    }
+  }
+}

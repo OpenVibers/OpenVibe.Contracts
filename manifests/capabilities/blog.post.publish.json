@@ -20,5 +20,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/posts/:id/publish"
-  ]
+  ],
+  "inputSchema": "blog.publish-request@1",
+  "outputSchema": "blog.publication-result@1"
 }

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/member-request.v1.json",
+  "title": "BlogMemberRequest",
+  "description": "blog.member-request@1: bodies of blog.member.manage on OpenVibe.Blog (an owner). PUT /api/v1/blogs/:handle/members/:subject: { role: owner | editor | author } (members are usr_ subjects; a member blog keeps at least one owner). GET …/members and DELETE …/members/:subject take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "owner",
+            "editor",
+            "author"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

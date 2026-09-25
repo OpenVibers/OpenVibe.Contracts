@@ -21,5 +21,7 @@
   "implementedBy": [
     "POST /api/v1/posts/:id/schedule",
     "DELETE /api/v1/posts/:id/schedule"
-  ]
+  ],
+  "inputSchema": "blog.schedule-request@1",
+  "outputSchema": "blog.schedule-result@1"
 }

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/report-result.v1.json",
+  "title": "CouponsReportResult",
+  "description": "coupons.report-result@1: the answer of POST /api/v1/coupons/:id/report on OpenVibe.Coupons: { accepted, deduplicated, corrected, coupon } — 201 for a new report, 200 when it repeated or corrected an earlier one.",
+  "type": "object",
+  "required": [
+    "accepted",
+    "deduplicated",
+    "corrected",
+    "coupon"
+  ],
+  "properties": {
+    "accepted": {
+      "const": true
+    },
+    "deduplicated": {
+      "type": "boolean"
+    },
+    "corrected": {
+      "type": "boolean"
+    },
+    "coupon": {
+      "$ref": "coupon.v1.json"
+    }
+  }
+}

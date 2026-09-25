@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/publication-result.v1.json",
+  "title": "BlogPublicationResult",
+  "description": "blog.publication-result@1: the answer of POST /api/v1/posts/:id/publish (blog.post.publish) and POST /api/v1/posts/:id/unpublish (blog.post.unpublish) on OpenVibe.Blog: { post, changed } (changed false when it already was in that state).",
+  "type": "object",
+  "required": [
+    "post",
+    "changed"
+  ],
+  "properties": {
+    "post": {
+      "$ref": "post.v1.json"
+    },
+    "changed": {
+      "type": "boolean"
+    }
+  }
+}

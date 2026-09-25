@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/schedule-request.v1.json",
+  "title": "BlogScheduleRequest",
+  "description": "blog.schedule-request@1: bodies of blog.post.schedule on OpenVibe.Blog. POST /api/v1/posts/:id/schedule: { at, revision?, action? } (at an ISO 8601 time in the future; action publish (default) or unpublish). DELETE /api/v1/posts/:id/schedule cancels pending jobs and takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "at"
+      ],
+      "properties": {
+        "at": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "revision": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "action": {
+          "enum": [
+            "publish",
+            "unpublish"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

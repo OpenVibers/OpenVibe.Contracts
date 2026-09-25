@@ -1,0 +1,1 @@
+{ "name": "Example Shoes", "homepage_url": "https://shoes.example.com/", "domains": [ { "host": "shoes.example.com" } ] }

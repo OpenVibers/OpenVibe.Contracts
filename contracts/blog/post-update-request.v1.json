@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/post-update-request.v1.json",
+  "title": "BlogPostUpdateRequest",
+  "description": "blog.post-update-request@1: bodies of blog.post.update on OpenVibe.Blog (editors of the post). PATCH /api/v1/posts/:id: any post fields; a change to title, body or summary makes a new revision and needs expected_revision (the revision you edited; 428 revision.expected_required without it); citations sent replace the revision's, otherwise they carry forward. POST /api/v1/posts/:id/revert: { to_revision, expected_revision }. POST /api/v1/posts/:id/attachments: { media_id (med_…), role?: cover | inline | gallery, alt?, caption?, position? }. DELETE /api/v1/posts/:id/attachments/:aid takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 200000,
+          "description": "Markdown."
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "unlisted",
+            "members",
+            "private"
+          ],
+          "description": "Default public; members gates it behind the blog's VIP entitlement (OpenVibe.VIP decides)."
+        },
+        "entitlement_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.:-]{0,127}$",
+          "description": "members only: informational, default vip:<handle>."
+        },
+        "slug": {
+          "type": "string",
+          "description": "Default from the title; lowercase letters, digits and dashes (a taken one gets a number)."
+        },
+        "allow_comments": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "noindex": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ]
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "Comma-separated."
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "At most 20 tags of at most 50 characters."
+        },
+        "categories": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "Comma-separated."
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "Category paths (Parent > Child), at most 10."
+        },
+        "series": {
+          "description": "A series id (ser_…), a new series title, or { title }; null or empty leaves the series."
+        },
+        "series_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "series_position": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "citations": {
+          "type": "array",
+          "maxItems": 100,
+          "description": "Sources: a URL (with retrieved_at) or an OpenVibe.Sources item id; a quote may be text or { text }. At most 100 are kept.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_item_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "retrieved_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "quote": {},
+              "license_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authorship": {
+          "type": "object",
+          "description": "hybrid or imported authorship details; an AI service (X-OV-Origin: ai) writes AI drafts that need review."
+        },
+        "expected_revision": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 0,
+          "pattern": "^[0-9]+$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "to_revision",
+        "expected_revision"
+      ],
+      "properties": {
+        "to_revision": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 1
+        },
+        "expected_revision": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "media_id"
+      ],
+      "properties": {
+        "media_id": {
+          "type": "string",
+          "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "role": {
+          "enum": [
+            "cover",
+            "inline",
+            "gallery"
+          ]
+        },
+        "alt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "caption": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "position": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

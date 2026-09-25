@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/lookup-result.v1.json",
+  "title": "CouponsLookupResult",
+  "description": "coupons.lookup-result@1: answers of coupons.coupon.lookup on OpenVibe.Coupons (public, anonymous allowed, cacheable: the same bytes for every caller). GET /api/v1/merchants/:id/coupons → { merchant, coupons } (the active codes); GET /api/v1/merchants/:id → { merchant }; GET /api/v1/coupons/:id → { coupon, merchant }. Inactive merchants and unpublished or disabled codes are 404.",
+  "type": "object",
+  "required": [
+    "merchant"
+  ],
+  "properties": {
+    "merchant": {
+      "$ref": "merchant.v1.json"
+    },
+    "coupons": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "coupon.v1.json"
+      }
+    },
+    "coupon": {
+      "$ref": "coupon.v1.json"
+    }
+  }
+}

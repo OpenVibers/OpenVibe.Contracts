@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/coupon.v1.json",
+  "title": "CouponsCoupon",
+  "description": "coupons.coupon@1: one code as OpenVibe.Coupons shows it (server/domain/coupons.js view): its status and confidence come only from people's reports (counts in a window, report times rounded to the hour), a known or unknown expiry, restrictions, hints and evidence. No submitter or reporter is ever named.",
+  "type": "object",
+  "required": [
+    "id",
+    "merchant_id",
+    "code",
+    "title",
+    "status",
+    "active",
+    "reports",
+    "expiry",
+    "restrictions",
+    "origin",
+    "url"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "merchant_id": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[\\x21-\\x7E]{1,64}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "unknown",
+        "reported_working",
+        "reported_failed",
+        "expired",
+        "disabled"
+      ]
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "confidence": {},
+    "reports": {
+      "type": "object",
+      "properties": {
+        "window_days": {
+          "type": "integer"
+        },
+        "last_report_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "last_worked_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "last_failed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "expiry": {
+      "type": "object",
+      "required": [
+        "known",
+        "expires_at"
+      ],
+      "properties": {
+        "known": {
+          "type": "boolean"
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "precision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "restrictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "min_spend",
+              "category",
+              "new_customers_only",
+              "region",
+              "other"
+            ]
+          },
+          "value": {},
+          "amount": {
+            "type": "string"
+          },
+          "amount_minor": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "scope": {
+            "enum": [
+              "code",
+              "merchant"
+            ]
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "merchant_page": {
+            "type": "boolean"
+          },
+          "sources_item": {
+            "type": "string"
+          },
+          "retrieved_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "origin": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "expired_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}

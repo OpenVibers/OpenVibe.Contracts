@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/submit-result.v1.json",
+  "title": "CouponsSubmitResult",
+  "description": "coupons.submit-result@1: the answer of POST /api/v1/coupons/submit on OpenVibe.Coupons: { coupon, merchant, duplicate, review_state } — 201 for a new code, 200 when the same code was already known (duplicate).",
+  "type": "object",
+  "required": [
+    "coupon",
+    "merchant",
+    "duplicate",
+    "review_state"
+  ],
+  "properties": {
+    "coupon": {
+      "$ref": "coupon.v1.json"
+    },
+    "merchant": {
+      "type": "object",
+      "required": [
+        "id",
+        "slug",
+        "name",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "active",
+            "disabled"
+          ]
+        }
+      }
+    },
+    "duplicate": {
+      "type": "boolean"
+    },
+    "review_state": {
+      "type": "string"
+    }
+  }
+}

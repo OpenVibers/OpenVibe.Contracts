@@ -19,5 +19,7 @@
   ],
   "implementedBy": [
     "DELETE /api/v1/posts/:id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "blog.delete-result@1"
 }

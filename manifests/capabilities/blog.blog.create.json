@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/blogs"
-  ]
+  ],
+  "inputSchema": "blog.blog-create-request@1",
+  "outputSchema": "blog.blog-create-result@1"
 }

@@ -21,5 +21,7 @@
     "POST /api/v1/merchants",
     "POST /api/v1/merchants/:id/domains",
     "POST /api/v1/merchants/:id/status"
-  ]
+  ],
+  "inputSchema": "coupons.merchant-manage-request@1",
+  "outputSchema": "coupons.merchant-manage-result@1"
 }

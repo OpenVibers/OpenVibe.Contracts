@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/submit-request.v1.json",
+  "title": "CouponsSubmitRequest",
+  "description": "coupons.submit-request@1: the body of POST /api/v1/coupons/submit on OpenVibe.Coupons (coupons.coupon.submit; a signed-in person, or a service acting for one or as AI; installs cannot submit): a code and the merchant it is for (merchant_id, or the host or url of the shop: an unknown shop becomes a pending merchant). code is 1-64 printable characters without spaces; title (at least 3 characters: what the code gives) is required. status, confidence, verified, working, valid and validity are refused (422 coupon.status_not_accepted): a code's status comes only from people's reports. expires is a date (YYYY-MM-DD) or ISO time; expiry_basis evidence needs evidence_url. A duplicate answers the existing code (200).",
+  "type": "object",
+  "required": [
+    "code",
+    "title"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "merchant_id"
+      ]
+    },
+    {
+      "required": [
+        "host"
+      ]
+    },
+    {
+      "required": [
+        "url"
+      ]
+    }
+  ],
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "status"
+        ]
+      },
+      {
+        "required": [
+          "confidence"
+        ]
+      },
+      {
+        "required": [
+          "verified"
+        ]
+      },
+      {
+        "required": [
+          "working"
+        ]
+      },
+      {
+        "required": [
+          "valid"
+        ]
+      },
+      {
+        "required": [
+          "validity"
+        ]
+      }
+    ]
+  },
+  "properties": {
+    "code": {
+      "type": "string",
+      "pattern": "^\\s*[\\x21-\\x7E]{1,64}\\s*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "merchant_id": {
+      "type": "string"
+    },
+    "host": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
+    "expires": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expiry_basis": {
+      "enum": [
+        "submitter",
+        "evidence"
+      ]
+    },
+    "evidence_url": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^https?://"
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "min_spend": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "currency": {
+              "type": "string",
+              "description": "ISO 4217."
+            }
+          }
+        },
+        "categories": {
+          "type": [
+            "array",
+            "string"
+          ],
+          "description": "At most 10."
+        },
+        "new_customers_only": {
+          "type": [
+            "boolean",
+            "string"
+          ]
+        },
+        "regions": {
+          "type": [
+            "array",
+            "string"
+          ],
+          "description": "ISO 3166-1 alpha-2 codes, at most 50."
+        },
+        "other": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
+    },
+    "hint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300
+    },
+    "ai_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

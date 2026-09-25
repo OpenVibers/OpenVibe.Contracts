@@ -1,0 +1,1 @@
+{ "code": "FALL15", "title": "15% off sneakers", "url": "https://shoes.example.com/sneakers", "expires": "2026-10-31", "expiry_basis": "evidence", "evidence_url": "https://shoes.example.com/fall-sale", "restrictions": { "min_spend": { "amount": 50, "currency": "USD" }, "new_customers_only": true } }

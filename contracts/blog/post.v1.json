@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/post.v1.json",
+  "title": "BlogPost",
+  "description": "blog.post@1: one post as OpenVibe.Blog's API shows it (server/http/api.js postDto): its state, visibility, the fields of the revision shown (the published one, or the head for editors), terms, series and the indexability decision. Editors and staff also get the body, authorship, review, scheduled jobs, attachments and citations; readers of a members-only post they may not open get a 403 teaser instead.",
+  "type": "object",
+  "required": [
+    "id",
+    "blog",
+    "slug",
+    "url",
+    "state",
+    "visibility",
+    "title",
+    "revision",
+    "published_revision",
+    "tags",
+    "categories",
+    "allow_comments",
+    "noindex"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "blog": {
+      "type": "object",
+      "required": [
+        "id",
+        "handle"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "handle": {
+          "type": "string"
+        }
+      }
+    },
+    "slug": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "description": "draft, scheduled, published, unpublished, deleted"
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "members",
+        "private"
+      ]
+    },
+    "author_subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "published_revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "first_published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array"
+    },
+    "categories": {
+      "type": "array"
+    },
+    "series": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "allow_comments": {
+      "type": "boolean"
+    },
+    "noindex": {
+      "type": "boolean"
+    },
+    "indexability": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "indexable": {
+          "type": "boolean"
+        },
+        "robots": {
+          "type": "string"
+        },
+        "reasons": {
+          "type": "array"
+        }
+      }
+    },
+    "entitlement_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "body": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "authorship": {},
+    "review": {},
+    "scheduled": {
+      "type": "array"
+    },
+    "attachments": {
+      "type": "array"
+    },
+    "citations": {
+      "type": "array"
+    }
+  }
+}

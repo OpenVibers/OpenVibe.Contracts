@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/schedule-result.v1.json",
+  "title": "BlogScheduleResult",
+  "description": "blog.schedule-result@1: answers of blog.post.schedule on OpenVibe.Blog: POST …/schedule → 201 { job, created, post }; DELETE …/schedule → { cancelled, post } (jobs cancelled; a scheduled post goes back to draft).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "job",
+        "created",
+        "post"
+      ],
+      "properties": {
+        "job": {
+          "type": "object"
+        },
+        "created": {
+          "type": "boolean"
+        },
+        "post": {
+          "$ref": "post.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "cancelled",
+        "post"
+      ],
+      "properties": {
+        "cancelled": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "post": {
+          "$ref": "post.v1.json"
+        }
+      }
+    }
+  ]
+}

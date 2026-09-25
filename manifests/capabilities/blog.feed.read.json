@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/blogs/:handle/feed"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "blog.json-feed@1"
 }

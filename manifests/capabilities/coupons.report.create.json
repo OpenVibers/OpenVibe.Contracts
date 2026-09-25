@@ -20,5 +20,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/coupons/:id/report"
-  ]
+  ],
+  "inputSchema": "coupons.report-request@1",
+  "outputSchema": "coupons.report-result@1"
 }

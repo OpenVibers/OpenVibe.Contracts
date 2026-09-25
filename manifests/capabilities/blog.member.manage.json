@@ -17,5 +17,7 @@
     "GET /api/v1/blogs/:handle/members",
     "PUT /api/v1/blogs/:handle/members/:subject",
     "DELETE /api/v1/blogs/:handle/members/:subject"
-  ]
+  ],
+  "inputSchema": "blog.member-request@1",
+  "outputSchema": "blog.member-result@1"
 }

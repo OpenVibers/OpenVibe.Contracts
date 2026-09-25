@@ -1,0 +1,1 @@
+{ "id": "b", "kind": "member", "handle": "x", "title": "t", "url": "u", "theme": "paper", "language": "en", "feeds": [ { "type": "opml", "url": "u" } ] }

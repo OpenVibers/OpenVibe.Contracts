@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/merchant.v1.json",
+  "title": "CouponsMerchant",
+  "description": "coupons.merchant@1: one merchant as OpenVibe.Coupons' lookup API shows it (server/http/api.js merchantView): the same bytes for every caller, nothing about any person. Staff and service answers of the merchant routes add its status.",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "name",
+    "url",
+    "domains",
+    "active_codes",
+    "hints"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "homepage_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "host",
+          "include_subdomains",
+          "path_prefix"
+        ],
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "include_subdomains": {
+            "type": "boolean"
+          },
+          "path_prefix": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "active_codes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "active",
+        "disabled"
+      ]
+    }
+  }
+}

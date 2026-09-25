@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /api/v1/merchants/resolve?host="
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "coupons.resolve-result@1"
 }

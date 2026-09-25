@@ -8271,6 +8271,1433 @@
         }
       }
     },
+    "blog.blog-configure-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/blog-configure-request.v1.json",
+        "title": "BlogBlogConfigureRequest",
+        "description": "blog.blog-configure-request@1: the body of PATCH /api/v1/blogs/:handle on OpenVibe.Blog (blog.blog.configure; an owner): title (at most 120 characters, not blank), description (500), language (a BCP 47 tag) and feeds { rss, atom, json, item_count (1-50), full_content }. Fields left out keep their value.",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "language": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+          },
+          "feeds": {
+            "type": "object",
+            "properties": {
+              "rss": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              },
+              "atom": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              },
+              "json": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              },
+              "item_count": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "maximum": 50,
+                "pattern": "^[0-9]+$"
+              },
+              "full_content": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "blog.blog-create-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/blog-create-request.v1.json",
+        "title": "BlogBlogCreateRequest",
+        "description": "blog.blog-create-request@1: the body of POST /api/v1/blogs on OpenVibe.Blog (blog.blog.create): get or create the acting member's blog (one per usr_ subject). handle defaults to their Network username (2-40 of a-z, 0-9, _ and -, not a reserved word); title and description are optional.",
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]{2,40}$"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "blog.blog-create-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/blog-create-result.v1.json",
+        "title": "BlogBlogCreateResult",
+        "description": "blog.blog-create-result@1: the answer of POST /api/v1/blogs on OpenVibe.Blog: { blog, created } — 201 when the blog was created, 200 when the member already had it.",
+        "type": "object",
+        "required": [
+          "blog",
+          "created"
+        ],
+        "properties": {
+          "blog": {
+            "$ref": "blog.v1.json"
+          },
+          "created": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "blog.blog-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/blog-result.v1.json",
+        "title": "BlogBlogResult",
+        "description": "blog.blog-result@1: the answer of PATCH /api/v1/blogs/:handle (blog.blog.configure) and PUT /api/v1/blogs/:handle/theme (blog.theme.set) on OpenVibe.Blog: { blog } with the member view; the theme answer adds themes (the presets).",
+        "type": "object",
+        "required": [
+          "blog"
+        ],
+        "properties": {
+          "blog": {
+            "$ref": "blog.v1.json"
+          },
+          "themes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "blog.blog": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/blog.v1.json",
+        "title": "BlogBlog",
+        "description": "blog.blog@1: one blog as OpenVibe.Blog's API shows it (server/http/api.js blogDto). Members of the blog (and staff) also see status, owner_subject and feed_settings.",
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "handle",
+          "title",
+          "url",
+          "theme",
+          "language",
+          "feeds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "description": "member, …"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "theme": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "feeds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "type",
+                "url"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "rss",
+                    "atom",
+                    "json"
+                  ]
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "owner_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "feed_settings": {
+            "type": "object",
+            "properties": {
+              "rss": {
+                "type": "integer"
+              },
+              "atom": {
+                "type": "integer"
+              },
+              "json": {
+                "type": "integer"
+              },
+              "item_count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50
+              },
+              "full_content": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "blog.delete-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/delete-result.v1.json",
+        "title": "BlogDeleteResult",
+        "description": "blog.delete-result@1: the answer of DELETE /api/v1/posts/:id on OpenVibe.Blog (blog.post.delete): { deleted: true, id }.",
+        "type": "object",
+        "required": [
+          "deleted",
+          "id"
+        ],
+        "properties": {
+          "deleted": {
+            "const": true
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "blog.json-feed": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/json-feed.v1.json",
+        "title": "BlogJsonFeed",
+        "description": "blog.json-feed@1: the answer of GET /api/v1/blogs/:handle/feed on OpenVibe.Blog (blog.feed.read): the blog's public posts as a JSON Feed 1.1 document (openvibe-publishing seo.jsonFeed), as many as the blog's feed item count, with full HTML content when the blog allows it and otherwise the summary as text. Empty fields are left out.",
+        "type": "object",
+        "required": [
+          "version",
+          "title",
+          "home_page_url",
+          "feed_url",
+          "items"
+        ],
+        "properties": {
+          "version": {
+            "const": "https://jsonfeed.org/version/1.1"
+          },
+          "title": {
+            "type": "string"
+          },
+          "home_page_url": {
+            "type": "string"
+          },
+          "feed_url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "content_html": {
+                  "type": "string"
+                },
+                "content_text": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                },
+                "date_published": {
+                  "type": "string"
+                },
+                "date_modified": {
+                  "type": "string"
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "blog.member-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/member-request.v1.json",
+        "title": "BlogMemberRequest",
+        "description": "blog.member-request@1: bodies of blog.member.manage on OpenVibe.Blog (an owner). PUT /api/v1/blogs/:handle/members/:subject: { role: owner | editor | author } (members are usr_ subjects; a member blog keeps at least one owner). GET …/members and DELETE …/members/:subject take no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "role"
+            ],
+            "properties": {
+              "role": {
+                "enum": [
+                  "owner",
+                  "editor",
+                  "author"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "blog.member-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/member-result.v1.json",
+        "title": "BlogMemberResult",
+        "description": "blog.member-result@1: answers of blog.member.manage on OpenVibe.Blog. GET /api/v1/blogs/:handle/members → { members } (subject, role, name and username when Network knows them); PUT …/members/:subject → { member }; DELETE → { removed } (false when they were not a member).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "members"
+            ],
+            "properties": {
+              "members": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "role"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "enum": [
+                        "owner",
+                        "editor",
+                        "author"
+                      ]
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "username": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "member"
+            ],
+            "properties": {
+              "member": {
+                "type": "object",
+                "required": [
+                  "role"
+                ],
+                "properties": {
+                  "subject": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "enum": [
+                      "owner",
+                      "editor",
+                      "author"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "removed"
+            ],
+            "properties": {
+              "removed": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "blog.post-create-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/post-create-request.v1.json",
+        "title": "BlogPostCreateRequest",
+        "description": "blog.post-create-request@1: the body of POST /api/v1/blogs/:handle/posts on OpenVibe.Blog (blog.post.create; a member who may write, or a service acting for one; X-OV-Origin: ai makes an AI draft that needs a person's review). A new draft at revision 1: title required. Unknown fields are ignored; refusals are problem+json (post.invalid_title, post.too_long, post.invalid_visibility, post.invalid_slug, post.too_many_tags, post.invalid_series, …).",
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Whitespace collapsed; required, at most 200 characters."
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 200000,
+            "description": "Markdown."
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ],
+            "description": "Default public; members gates it behind the blog's VIP entitlement (OpenVibe.VIP decides)."
+          },
+          "entitlement_key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.:-]{0,127}$",
+            "description": "members only: informational, default vip:<handle>."
+          },
+          "slug": {
+            "type": "string",
+            "description": "Default from the title; lowercase letters, digits and dashes (a taken one gets a number)."
+          },
+          "allow_comments": {
+            "type": [
+              "boolean",
+              "integer",
+              "string"
+            ]
+          },
+          "noindex": {
+            "type": [
+              "boolean",
+              "integer",
+              "string"
+            ]
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Comma-separated."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "At most 20 tags of at most 50 characters."
+          },
+          "categories": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Comma-separated."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Category paths (Parent > Child), at most 10."
+          },
+          "series": {
+            "description": "A series id (ser_…), a new series title, or { title }; null or empty leaves the series."
+          },
+          "series_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "series_position": {
+            "type": [
+              "integer",
+              "string",
+              "null"
+            ]
+          },
+          "citations": {
+            "type": "array",
+            "maxItems": 100,
+            "description": "Sources: a URL (with retrieved_at) or an OpenVibe.Sources item id; a quote may be text or { text }. At most 100 are kept.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_item_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "retrieved_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "quote": {},
+                "license_note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authorship": {
+            "type": "object",
+            "description": "hybrid or imported authorship details; an AI service (X-OV-Origin: ai) writes AI drafts that need review."
+          }
+        }
+      }
+    },
+    "blog.post-create-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/post-create-result.v1.json",
+        "title": "BlogPostCreateResult",
+        "description": "blog.post-create-result@1: the answer of POST /api/v1/blogs/:handle/posts on OpenVibe.Blog: 201 { post, revision } (the editor view and the revision number, 1).",
+        "type": "object",
+        "required": [
+          "post",
+          "revision"
+        ],
+        "properties": {
+          "post": {
+            "$ref": "post.v1.json"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "blog.post-read-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/post-read-result.v1.json",
+        "title": "BlogPostReadResult",
+        "description": "blog.post-read-result@1: answers of blog.post.read on OpenVibe.Blog. GET /api/v1/posts/:id → { post } (editors and staff get the full view; readers of a published post the public one; a members-only post someone may not open is 403 post.members_only with a teaser); GET /api/v1/posts/:id/revisions → { revisions } (each with its length instead of the content); GET …/revisions/:n → { revision, citations }; GET …/diff?from=&to=&mode= → { diff }; GET /api/v1/blogs/:handle/posts?all=1 → { posts } (drafts too, members only).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "post"
+            ],
+            "properties": {
+              "post": {
+                "$ref": "post.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "revisions"
+            ],
+            "properties": {
+              "revisions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "number"
+                  ],
+                  "properties": {
+                    "number": {
+                      "type": "integer"
+                    },
+                    "length": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "revision",
+              "citations"
+            ],
+            "properties": {
+              "revision": {
+                "type": "object",
+                "required": [
+                  "number"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "fields": {
+                    "type": "object"
+                  }
+                }
+              },
+              "citations": {
+                "type": "array"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "diff"
+            ],
+            "properties": {
+              "diff": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "posts"
+            ],
+            "properties": {
+              "posts": {
+                "type": "array",
+                "items": {
+                  "$ref": "post.v1.json"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "blog.post-update-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/post-update-request.v1.json",
+        "title": "BlogPostUpdateRequest",
+        "description": "blog.post-update-request@1: bodies of blog.post.update on OpenVibe.Blog (editors of the post). PATCH /api/v1/posts/:id: any post fields; a change to title, body or summary makes a new revision and needs expected_revision (the revision you edited; 428 revision.expected_required without it); citations sent replace the revision's, otherwise they carry forward. POST /api/v1/posts/:id/revert: { to_revision, expected_revision }. POST /api/v1/posts/:id/attachments: { media_id (med_…), role?: cover | inline | gallery, alt?, caption?, position? }. DELETE /api/v1/posts/:id/attachments/:aid takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "body": {
+                "type": "string",
+                "maxLength": 200000,
+                "description": "Markdown."
+              },
+              "summary": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "visibility": {
+                "enum": [
+                  "public",
+                  "unlisted",
+                  "members",
+                  "private"
+                ],
+                "description": "Default public; members gates it behind the blog's VIP entitlement (OpenVibe.VIP decides)."
+              },
+              "entitlement_key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_.:-]{0,127}$",
+                "description": "members only: informational, default vip:<handle>."
+              },
+              "slug": {
+                "type": "string",
+                "description": "Default from the title; lowercase letters, digits and dashes (a taken one gets a number)."
+              },
+              "allow_comments": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              },
+              "noindex": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ]
+              },
+              "tags": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "Comma-separated."
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "At most 20 tags of at most 50 characters."
+              },
+              "categories": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "Comma-separated."
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "Category paths (Parent > Child), at most 10."
+              },
+              "series": {
+                "description": "A series id (ser_…), a new series title, or { title }; null or empty leaves the series."
+              },
+              "series_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "series_position": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "citations": {
+                "type": "array",
+                "maxItems": 100,
+                "description": "Sources: a URL (with retrieved_at) or an OpenVibe.Sources item id; a quote may be text or { text }. At most 100 are kept.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "source_item_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "title": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "retrieved_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "quote": {},
+                    "license_note": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "authorship": {
+                "type": "object",
+                "description": "hybrid or imported authorship details; an AI service (X-OV-Origin: ai) writes AI drafts that need review."
+              },
+              "expected_revision": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 0,
+                "pattern": "^[0-9]+$"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "to_revision",
+              "expected_revision"
+            ],
+            "properties": {
+              "to_revision": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1
+              },
+              "expected_revision": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "media_id"
+            ],
+            "properties": {
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "role": {
+                "enum": [
+                  "cover",
+                  "inline",
+                  "gallery"
+                ]
+              },
+              "alt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "caption": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "position": {
+                "type": [
+                  "integer",
+                  "string"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "blog.post-update-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/post-update-result.v1.json",
+        "title": "BlogPostUpdateResult",
+        "description": "blog.post-update-result@1: answers of blog.post.update on OpenVibe.Blog. PATCH /api/v1/posts/:id → { post, revision, created } (created false when nothing changed); POST …/revert → 201 { revision, post }; POST …/attachments → 201 { attachment }; DELETE …/attachments/:aid → { removed }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "post",
+              "revision"
+            ],
+            "properties": {
+              "post": {
+                "$ref": "post.v1.json"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "created": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "attachment"
+            ],
+            "properties": {
+              "attachment": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "removed"
+            ],
+            "properties": {
+              "removed": {}
+            }
+          }
+        ]
+      }
+    },
+    "blog.post": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/post.v1.json",
+        "title": "BlogPost",
+        "description": "blog.post@1: one post as OpenVibe.Blog's API shows it (server/http/api.js postDto): its state, visibility, the fields of the revision shown (the published one, or the head for editors), terms, series and the indexability decision. Editors and staff also get the body, authorship, review, scheduled jobs, attachments and citations; readers of a members-only post they may not open get a 403 teaser instead.",
+        "type": "object",
+        "required": [
+          "id",
+          "blog",
+          "slug",
+          "url",
+          "state",
+          "visibility",
+          "title",
+          "revision",
+          "published_revision",
+          "tags",
+          "categories",
+          "allow_comments",
+          "noindex"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "blog": {
+            "type": "object",
+            "required": [
+              "id",
+              "handle"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "handle": {
+                "type": "string"
+              }
+            }
+          },
+          "slug": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "description": "draft, scheduled, published, unpublished, deleted"
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "members",
+              "private"
+            ]
+          },
+          "author_subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "published_revision": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "first_published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array"
+          },
+          "categories": {
+            "type": "array"
+          },
+          "series": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "allow_comments": {
+            "type": "boolean"
+          },
+          "noindex": {
+            "type": "boolean"
+          },
+          "indexability": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "indexable": {
+                "type": "boolean"
+              },
+              "robots": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array"
+              }
+            }
+          },
+          "entitlement_key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "body": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authorship": {},
+          "review": {},
+          "scheduled": {
+            "type": "array"
+          },
+          "attachments": {
+            "type": "array"
+          },
+          "citations": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "blog.publication-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/publication-result.v1.json",
+        "title": "BlogPublicationResult",
+        "description": "blog.publication-result@1: the answer of POST /api/v1/posts/:id/publish (blog.post.publish) and POST /api/v1/posts/:id/unpublish (blog.post.unpublish) on OpenVibe.Blog: { post, changed } (changed false when it already was in that state).",
+        "type": "object",
+        "required": [
+          "post",
+          "changed"
+        ],
+        "properties": {
+          "post": {
+            "$ref": "post.v1.json"
+          },
+          "changed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "blog.publish-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/publish-request.v1.json",
+        "title": "BlogPublishRequest",
+        "description": "blog.publish-request@1: the body of POST /api/v1/posts/:id/publish on OpenVibe.Blog (blog.post.publish): { revision? } (default the head; an AI draft is published only after a person reviewed it: 409 post.review_required).",
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": [
+              "integer",
+              "string",
+              "null"
+            ],
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "blog.schedule-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/schedule-request.v1.json",
+        "title": "BlogScheduleRequest",
+        "description": "blog.schedule-request@1: bodies of blog.post.schedule on OpenVibe.Blog. POST /api/v1/posts/:id/schedule: { at, revision?, action? } (at an ISO 8601 time in the future; action publish (default) or unpublish). DELETE /api/v1/posts/:id/schedule cancels pending jobs and takes no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "at"
+            ],
+            "properties": {
+              "at": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              },
+              "revision": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ]
+              },
+              "action": {
+                "enum": [
+                  "publish",
+                  "unpublish"
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "blog.schedule-result": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/schedule-result.v1.json",
+        "title": "BlogScheduleResult",
+        "description": "blog.schedule-result@1: answers of blog.post.schedule on OpenVibe.Blog: POST …/schedule → 201 { job, created, post }; DELETE …/schedule → { cancelled, post } (jobs cancelled; a scheduled post goes back to draft).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "job",
+              "created",
+              "post"
+            ],
+            "properties": {
+              "job": {
+                "type": "object"
+              },
+              "created": {
+                "type": "boolean"
+              },
+              "post": {
+                "$ref": "post.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "cancelled",
+              "post"
+            ],
+            "properties": {
+              "cancelled": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "post": {
+                "$ref": "post.v1.json"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "blog.theme-request": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/blog/theme-request.v1.json",
+        "title": "BlogThemeRequest",
+        "description": "blog.theme-request@1: the body of PUT /api/v1/blogs/:handle/theme on OpenVibe.Blog (blog.theme.set; an owner): one of the theme presets.",
+        "type": "object",
+        "required": [
+          "theme"
+        ],
+        "properties": {
+          "theme": {
+            "enum": [
+              "vibe",
+              "paper",
+              "slate",
+              "sand",
+              "nord",
+              "high-contrast"
+            ]
+          }
+        }
+      }
+    },
     "ai.run-request": {
       "version": "1.0.0",
       "owner": "ai",
@@ -25856,6 +27283,894 @@
             "minimum": 1,
             "maximum": 9007199254740991,
             "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "coupons.coupon": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/coupon.v1.json",
+        "title": "CouponsCoupon",
+        "description": "coupons.coupon@1: one code as OpenVibe.Coupons shows it (server/domain/coupons.js view): its status and confidence come only from people's reports (counts in a window, report times rounded to the hour), a known or unknown expiry, restrictions, hints and evidence. No submitter or reporter is ever named.",
+        "type": "object",
+        "required": [
+          "id",
+          "merchant_id",
+          "code",
+          "title",
+          "status",
+          "active",
+          "reports",
+          "expiry",
+          "restrictions",
+          "origin",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "merchant_id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[\\x21-\\x7E]{1,64}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "unknown",
+              "reported_working",
+              "reported_failed",
+              "expired",
+              "disabled"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "confidence": {},
+          "reports": {
+            "type": "object",
+            "properties": {
+              "window_days": {
+                "type": "integer"
+              },
+              "last_report_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_worked_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_failed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          },
+          "expiry": {
+            "type": "object",
+            "required": [
+              "known",
+              "expires_at"
+            ],
+            "properties": {
+              "known": {
+                "type": "boolean"
+              },
+              "expires_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "precision": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "basis": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "restrictions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "min_spend",
+                    "category",
+                    "new_customers_only",
+                    "region",
+                    "other"
+                  ]
+                },
+                "value": {},
+                "amount": {
+                  "type": "string"
+                },
+                "amount_minor": {
+                  "type": "integer"
+                },
+                "currency": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "hints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "scope": {
+                  "enum": [
+                    "code",
+                    "merchant"
+                  ]
+                }
+              }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "merchant_page": {
+                  "type": "boolean"
+                },
+                "sources_item": {
+                  "type": "string"
+                },
+                "retrieved_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "origin": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expired_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "coupons.lookup-result": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/lookup-result.v1.json",
+        "title": "CouponsLookupResult",
+        "description": "coupons.lookup-result@1: answers of coupons.coupon.lookup on OpenVibe.Coupons (public, anonymous allowed, cacheable: the same bytes for every caller). GET /api/v1/merchants/:id/coupons → { merchant, coupons } (the active codes); GET /api/v1/merchants/:id → { merchant }; GET /api/v1/coupons/:id → { coupon, merchant }. Inactive merchants and unpublished or disabled codes are 404.",
+        "type": "object",
+        "required": [
+          "merchant"
+        ],
+        "properties": {
+          "merchant": {
+            "$ref": "merchant.v1.json"
+          },
+          "coupons": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "$ref": "coupon.v1.json"
+            }
+          },
+          "coupon": {
+            "$ref": "coupon.v1.json"
+          }
+        }
+      }
+    },
+    "coupons.merchant-manage-request": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/merchant-manage-request.v1.json",
+        "title": "CouponsMerchantManageRequest",
+        "description": "coupons.merchant-manage-request@1: bodies of coupons.merchant.manage on OpenVibe.Coupons (staff or a service). POST /api/v1/merchants: { domains, name?, slug?, homepage_url?, description?, status? } (at least one domain rule; a rule on a public suffix is refused; homepage_url must be https; status pending, else active). POST /api/v1/merchants/:id/domains: one domain rule { host, include_subdomains?, path_prefix? } (a rule another merchant holds is 409). POST /api/v1/merchants/:id/status: { status: active | disabled }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "domains"
+            ],
+            "properties": {
+              "domains": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "host"
+                  ],
+                  "properties": {
+                    "host": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "include_subdomains": {
+                      "type": [
+                        "boolean",
+                        "integer",
+                        "string"
+                      ],
+                      "description": "Default true."
+                    },
+                    "path_prefix": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "slug": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "homepage_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^https://"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "description": "pending; anything else is active."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "host"
+            ],
+            "properties": {
+              "host": {
+                "type": "string",
+                "minLength": 1
+              },
+              "include_subdomains": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ],
+                "description": "Default true."
+              },
+              "path_prefix": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "coupons.merchant-manage-result": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/merchant-manage-result.v1.json",
+        "title": "CouponsMerchantManageResult",
+        "description": "coupons.merchant-manage-result@1: the answer of every coupons.merchant.manage route on OpenVibe.Coupons: { merchant } with its status (201 for a new merchant or domain).",
+        "type": "object",
+        "required": [
+          "merchant"
+        ],
+        "properties": {
+          "merchant": {
+            "allOf": [
+              {
+                "$ref": "merchant.v1.json"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "status"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "coupons.merchant": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/merchant.v1.json",
+        "title": "CouponsMerchant",
+        "description": "coupons.merchant@1: one merchant as OpenVibe.Coupons' lookup API shows it (server/http/api.js merchantView): the same bytes for every caller, nothing about any person. Staff and service answers of the merchant routes add its status.",
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "url",
+          "domains",
+          "active_codes",
+          "hints"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "homepage_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "host",
+                "include_subdomains",
+                "path_prefix"
+              ],
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "include_subdomains": {
+                  "type": "boolean"
+                },
+                "path_prefix": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "active_codes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "hints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "active",
+              "disabled"
+            ]
+          }
+        }
+      }
+    },
+    "coupons.report-request": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/report-request.v1.json",
+        "title": "CouponsReportRequest",
+        "description": "coupons.report-request@1: the body of POST /api/v1/coupons/:id/report on OpenVibe.Coupons (coupons.report.create; people, installs and services acting for a person): whether the code worked, and for a failure why. The code must be in active results; you cannot report your own submission. Reporting again changes your earlier report.",
+        "type": "object",
+        "required": [
+          "outcome"
+        ],
+        "properties": {
+          "outcome": {
+            "enum": [
+              "worked",
+              "failed"
+            ]
+          },
+          "reason": {
+            "enum": [
+              "invalid",
+              "expired",
+              "min_spend_not_met",
+              "not_eligible",
+              "other",
+              null,
+              ""
+            ],
+            "description": "Failed reports only."
+          }
+        },
+        "if": {
+          "properties": {
+            "outcome": {
+              "const": "worked"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "reason": {
+              "enum": [
+                null,
+                ""
+              ]
+            }
+          }
+        }
+      }
+    },
+    "coupons.report-result": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/report-result.v1.json",
+        "title": "CouponsReportResult",
+        "description": "coupons.report-result@1: the answer of POST /api/v1/coupons/:id/report on OpenVibe.Coupons: { accepted, deduplicated, corrected, coupon } — 201 for a new report, 200 when it repeated or corrected an earlier one.",
+        "type": "object",
+        "required": [
+          "accepted",
+          "deduplicated",
+          "corrected",
+          "coupon"
+        ],
+        "properties": {
+          "accepted": {
+            "const": true
+          },
+          "deduplicated": {
+            "type": "boolean"
+          },
+          "corrected": {
+            "type": "boolean"
+          },
+          "coupon": {
+            "$ref": "coupon.v1.json"
+          }
+        }
+      }
+    },
+    "coupons.resolve-result": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/resolve-result.v1.json",
+        "title": "CouponsResolveResult",
+        "description": "coupons.resolve-result@1: the answer of GET /api/v1/merchants/resolve?host= on OpenVibe.Coupons (coupons.merchant.resolve; public, anonymous allowed, rate-limited, CORS for the configured extension origins): the merchant whose domain rule matches the host. No match is 404 merchant.not_found with the normalised host and its registrable domain; a missing host is 400 host.required.",
+        "type": "object",
+        "required": [
+          "host",
+          "registrable_domain",
+          "matched_rule",
+          "merchant"
+        ],
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "registrable_domain": {
+            "type": "string"
+          },
+          "matched_rule": {
+            "type": "object",
+            "required": [
+              "host",
+              "include_subdomains",
+              "path_prefix"
+            ],
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "include_subdomains": {
+                "type": "boolean"
+              },
+              "path_prefix": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "merchant": {
+            "$ref": "merchant.v1.json"
+          }
+        }
+      }
+    },
+    "coupons.status-request": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/status-request.v1.json",
+        "title": "CouponsStatusRequest",
+        "description": "coupons.status-request@1: the body of POST /api/v1/coupons/:id/status on OpenVibe.Coupons (coupons.status.update; staff or a service): disabled, expired (not while disabled) or active (re-enable: the status is recomputed from reports and time); reported_working and reported_failed cannot be set by anyone.",
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "disabled",
+              "expired",
+              "active"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "coupons.status-result": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/status-result.v1.json",
+        "title": "CouponsStatusResult",
+        "description": "coupons.status-result@1: the answer of POST /api/v1/coupons/:id/status on OpenVibe.Coupons: { coupon } after the change.",
+        "type": "object",
+        "required": [
+          "coupon"
+        ],
+        "properties": {
+          "coupon": {
+            "$ref": "coupon.v1.json"
+          }
+        }
+      }
+    },
+    "coupons.submit-request": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/submit-request.v1.json",
+        "title": "CouponsSubmitRequest",
+        "description": "coupons.submit-request@1: the body of POST /api/v1/coupons/submit on OpenVibe.Coupons (coupons.coupon.submit; a signed-in person, or a service acting for one or as AI; installs cannot submit): a code and the merchant it is for (merchant_id, or the host or url of the shop: an unknown shop becomes a pending merchant). code is 1-64 printable characters without spaces; title (at least 3 characters: what the code gives) is required. status, confidence, verified, working, valid and validity are refused (422 coupon.status_not_accepted): a code's status comes only from people's reports. expires is a date (YYYY-MM-DD) or ISO time; expiry_basis evidence needs evidence_url. A duplicate answers the existing code (200).",
+        "type": "object",
+        "required": [
+          "code",
+          "title"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "merchant_id"
+            ]
+          },
+          {
+            "required": [
+              "host"
+            ]
+          },
+          {
+            "required": [
+              "url"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "status"
+              ]
+            },
+            {
+              "required": [
+                "confidence"
+              ]
+            },
+            {
+              "required": [
+                "verified"
+              ]
+            },
+            {
+              "required": [
+                "working"
+              ]
+            },
+            {
+              "required": [
+                "valid"
+              ]
+            },
+            {
+              "required": [
+                "validity"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^\\s*[\\x21-\\x7E]{1,64}\\s*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "merchant_id": {
+            "type": "string"
+          },
+          "host": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https?://"
+          },
+          "expires": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expiry_basis": {
+            "enum": [
+              "submitter",
+              "evidence"
+            ]
+          },
+          "evidence_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "pattern": "^https?://"
+          },
+          "restrictions": {
+            "type": "object",
+            "properties": {
+              "min_spend": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": [
+                      "number",
+                      "string"
+                    ]
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "ISO 4217."
+                  }
+                }
+              },
+              "categories": {
+                "type": [
+                  "array",
+                  "string"
+                ],
+                "description": "At most 10."
+              },
+              "new_customers_only": {
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              },
+              "regions": {
+                "type": [
+                  "array",
+                  "string"
+                ],
+                "description": "ISO 3166-1 alpha-2 codes, at most 50."
+              },
+              "other": {
+                "type": "string",
+                "maxLength": 300
+              }
+            }
+          },
+          "hint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          },
+          "ai_run_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "coupons.submit-result": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/coupons/submit-result.v1.json",
+        "title": "CouponsSubmitResult",
+        "description": "coupons.submit-result@1: the answer of POST /api/v1/coupons/submit on OpenVibe.Coupons: { coupon, merchant, duplicate, review_state } — 201 for a new code, 200 when the same code was already known (duplicate).",
+        "type": "object",
+        "required": [
+          "coupon",
+          "merchant",
+          "duplicate",
+          "review_state"
+        ],
+        "properties": {
+          "coupon": {
+            "$ref": "coupon.v1.json"
+          },
+          "merchant": {
+            "type": "object",
+            "required": [
+              "id",
+              "slug",
+              "name",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "active",
+                  "disabled"
+                ]
+              }
+            }
+          },
+          "duplicate": {
+            "type": "boolean"
+          },
+          "review_state": {
+            "type": "string"
           }
         }
       }

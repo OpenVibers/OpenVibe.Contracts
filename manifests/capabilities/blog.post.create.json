@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/blogs/:handle/posts"
-  ]
+  ],
+  "inputSchema": "blog.post-create-request@1",
+  "outputSchema": "blog.post-create-result@1"
 }

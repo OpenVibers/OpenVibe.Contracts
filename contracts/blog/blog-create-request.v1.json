@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/blog-create-request.v1.json",
+  "title": "BlogBlogCreateRequest",
+  "description": "blog.blog-create-request@1: the body of POST /api/v1/blogs on OpenVibe.Blog (blog.blog.create): get or create the acting member's blog (one per usr_ subject). handle defaults to their Network username (2-40 of a-z, 0-9, _ and -, not a reserved word); title and description are optional.",
+  "type": "object",
+  "properties": {
+    "handle": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]{2,40}$"
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

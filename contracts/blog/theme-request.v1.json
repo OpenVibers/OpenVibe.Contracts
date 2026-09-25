@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/theme-request.v1.json",
+  "title": "BlogThemeRequest",
+  "description": "blog.theme-request@1: the body of PUT /api/v1/blogs/:handle/theme on OpenVibe.Blog (blog.theme.set; an owner): one of the theme presets.",
+  "type": "object",
+  "required": [
+    "theme"
+  ],
+  "properties": {
+    "theme": {
+      "enum": [
+        "vibe",
+        "paper",
+        "slate",
+        "sand",
+        "nord",
+        "high-contrast"
+      ]
+    }
+  }
+}

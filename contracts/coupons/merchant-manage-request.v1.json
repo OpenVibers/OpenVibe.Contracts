@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/merchant-manage-request.v1.json",
+  "title": "CouponsMerchantManageRequest",
+  "description": "coupons.merchant-manage-request@1: bodies of coupons.merchant.manage on OpenVibe.Coupons (staff or a service). POST /api/v1/merchants: { domains, name?, slug?, homepage_url?, description?, status? } (at least one domain rule; a rule on a public suffix is refused; homepage_url must be https; status pending, else active). POST /api/v1/merchants/:id/domains: one domain rule { host, include_subdomains?, path_prefix? } (a rule another merchant holds is 409). POST /api/v1/merchants/:id/status: { status: active | disabled }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "domains"
+      ],
+      "properties": {
+        "domains": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "host"
+            ],
+            "properties": {
+              "host": {
+                "type": "string",
+                "minLength": 1
+              },
+              "include_subdomains": {
+                "type": [
+                  "boolean",
+                  "integer",
+                  "string"
+                ],
+                "description": "Default true."
+              },
+              "path_prefix": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "slug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "homepage_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "pending; anything else is active."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "host"
+      ],
+      "properties": {
+        "host": {
+          "type": "string",
+          "minLength": 1
+        },
+        "include_subdomains": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "Default true."
+        },
+        "path_prefix": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        }
+      }
+    }
+  ]
+}

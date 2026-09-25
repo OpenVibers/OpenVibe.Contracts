@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/post-create-result.v1.json",
+  "title": "BlogPostCreateResult",
+  "description": "blog.post-create-result@1: the answer of POST /api/v1/blogs/:handle/posts on OpenVibe.Blog: 201 { post, revision } (the editor view and the revision number, 1).",
+  "type": "object",
+  "required": [
+    "post",
+    "revision"
+  ],
+  "properties": {
+    "post": {
+      "$ref": "post.v1.json"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

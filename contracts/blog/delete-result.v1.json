@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/delete-result.v1.json",
+  "title": "BlogDeleteResult",
+  "description": "blog.delete-result@1: the answer of DELETE /api/v1/posts/:id on OpenVibe.Blog (blog.post.delete): { deleted: true, id }.",
+  "type": "object",
+  "required": [
+    "deleted",
+    "id"
+  ],
+  "properties": {
+    "deleted": {
+      "const": true
+    },
+    "id": {
+      "type": "string"
+    }
+  }
+}

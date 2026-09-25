@@ -21,5 +21,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/coupons/submit"
-  ]
+  ],
+  "inputSchema": "coupons.submit-request@1",
+  "outputSchema": "coupons.submit-result@1"
 }

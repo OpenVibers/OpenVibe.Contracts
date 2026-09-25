@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/blog/blog.v1.json",
+  "title": "BlogBlog",
+  "description": "blog.blog@1: one blog as OpenVibe.Blog's API shows it (server/http/api.js blogDto). Members of the blog (and staff) also see status, owner_subject and feed_settings.",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "handle",
+    "title",
+    "url",
+    "theme",
+    "language",
+    "feeds"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "description": "member, …"
+    },
+    "handle": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "theme": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "feeds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "rss",
+              "atom",
+              "json"
+            ]
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string"
+    },
+    "owner_subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "feed_settings": {
+      "type": "object",
+      "properties": {
+        "rss": {
+          "type": "integer"
+        },
+        "atom": {
+          "type": "integer"
+        },
+        "json": {
+          "type": "integer"
+        },
+        "item_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "full_content": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

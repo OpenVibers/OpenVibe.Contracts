@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/coupons/report-request.v1.json",
+  "title": "CouponsReportRequest",
+  "description": "coupons.report-request@1: the body of POST /api/v1/coupons/:id/report on OpenVibe.Coupons (coupons.report.create; people, installs and services acting for a person): whether the code worked, and for a failure why. The code must be in active results; you cannot report your own submission. Reporting again changes your earlier report.",
+  "type": "object",
+  "required": [
+    "outcome"
+  ],
+  "properties": {
+    "outcome": {
+      "enum": [
+        "worked",
+        "failed"
+      ]
+    },
+    "reason": {
+      "enum": [
+        "invalid",
+        "expired",
+        "min_spend_not_met",
+        "not_eligible",
+        "other",
+        null,
+        ""
+      ],
+      "description": "Failed reports only."
+    }
+  },
+  "if": {
+    "properties": {
+      "outcome": {
+        "const": "worked"
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "reason": {
+        "enum": [
+          null,
+          ""
+        ]
+      }
+    }
+  }
+}
