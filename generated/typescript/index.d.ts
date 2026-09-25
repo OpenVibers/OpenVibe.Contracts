@@ -9467,6 +9467,30 @@ export interface NetworkModuleUpdatedPayload {
       };
 }
 
+/** network.grant.changed@1.0.0 (owner: network) */
+/**
+ * network.grant.changed v1 (OpenVibe.Network server/identity/grants-admin.js; roadmap WS-D task 3). A service principal's capability grant was given, changed (namespaces or expiry), revoked by the owner, or expired. The seeded default grants are not announced. Written to Network's outbox in the transaction that changes principal_grants, beside an audit row. A service's next token (at most 5 minutes later) carries the change. Envelope: subject { type: grant, id: <client_id>:<capability>@<audience> }, visibility internal, actor the owner who changed it (or the system for an expiry).
+ */
+export interface NetworkGrantChangedPayload {
+  /**
+   * The service principal (oauth client id).
+   */
+  client_id: string;
+  capability: string;
+  audience: string;
+  change: "granted" | "updated" | "revoked" | "expired";
+  /**
+   * @maxItems 100
+   */
+  namespaces?: string[];
+  expires_at?: string | null;
+  reason?: string | null;
+  /**
+   * The owner who made the change; null for an expiry.
+   */
+  actor_subject?: string | null;
+}
+
 /** network.user.updated@1.0.0 (owner: network) */
 /**
  * network.user.updated v1 (OpenVibe.Network server/identity/profile-events.js; roadmap WS-B task 2). What other services may know about a person changed: their username, display name, picture, colour, role or ban. The payload is the person's whole current profile, not a diff, so a consumer keeps a projection by writing it over the one it has, and ignores one whose revision is not newer (events can arrive out of order). Emitted in the transaction of the change: a profile edit, a rename, a role grant or removal, a ban or unban. Consumers use it instead of their own copies: roles go both ways (a downgrade too), and a ban arrives even for someone who never comes back. Envelope: subject { type: user, id }, visibility internal, actor the person (their own edit) or the staff member.

@@ -1,0 +1,1 @@
+{ "client_id": "tools", "capability": "media.object.write", "audience": "openvibe.media", "change": "expired", "namespaces": [], "expires_at": "2026-09-25T00:00:00.000Z", "reason": null, "actor_subject": null }

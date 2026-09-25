@@ -42,7 +42,8 @@
     "network.modules.write",
     "network.notifications.push",
     "network.project.manage",
-    "network.project.read"
+    "network.project.read",
+    "network.staff.read"
   ],
   "eventsProduced": [
     "network.app.created",

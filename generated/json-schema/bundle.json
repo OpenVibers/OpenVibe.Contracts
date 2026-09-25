@@ -10334,6 +10334,77 @@
         }
       }
     },
+    "network.grant.changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.grant.changed.v1.json",
+        "title": "NetworkGrantChangedPayload",
+        "description": "network.grant.changed v1 (OpenVibe.Network server/identity/grants-admin.js; roadmap WS-D task 3). A service principal's capability grant was given, changed (namespaces or expiry), revoked by the owner, or expired. The seeded default grants are not announced. Written to Network's outbox in the transaction that changes principal_grants, beside an audit row. A service's next token (at most 5 minutes later) carries the change. Envelope: subject { type: grant, id: <client_id>:<capability>@<audience> }, visibility internal, actor the owner who changed it (or the system for an expiry).",
+        "type": "object",
+        "required": [
+          "client_id",
+          "capability",
+          "audience",
+          "change"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+            "description": "The service principal (oauth client id)."
+          },
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"
+          },
+          "audience": {
+            "type": "string",
+            "pattern": "^openvibe\\.[a-z][a-z0-9_-]{0,63}$"
+          },
+          "change": {
+            "enum": [
+              "granted",
+              "updated",
+              "revoked",
+              "expired"
+            ]
+          },
+          "namespaces": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "actor_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The owner who made the change; null for an expiry."
+          }
+        }
+      }
+    },
     "network.user.updated": {
       "version": "1.0.0",
       "owner": "network",

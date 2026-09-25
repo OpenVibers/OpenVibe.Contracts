@@ -1,0 +1,1 @@
+{ "client_id": "live", "capability": "network.modules.write", "audience": "openvibe.network", "change": "granted", "namespaces": ["live.profile"], "expires_at": "2026-12-31T00:00:00.000Z", "reason": "profile summaries", "actor_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" }

@@ -1,0 +1,17 @@
+{
+  "id": "network.staff.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "List the network's staff (global moderators, admins and the owner) with their roles and staff capabilities from the staff map, as an owning service: to show who moderates, or to route a report. Never grantable to apps.",
+  "permissions": [
+    "staff:read"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "staff-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/staff/moderators"
+  ]
+}
