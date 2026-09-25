@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/correction-submit-result.v1.json",
+  "title": "ReviewsCorrectionSubmitResult",
+  "description": "reviews.correction-submit-result@1: the answer of reviews.correction.submit on OpenVibe.Reviews: POST /api/v1/entities/:ref/corrections → 201 { correction } (open, filed under the canonical entity).",
+  "type": "object",
+  "required": [
+    "correction"
+  ],
+  "properties": {
+    "correction": {
+      "$ref": "correction.v1.json"
+    }
+  }
+}

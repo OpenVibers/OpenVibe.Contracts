@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/timeline-update-request.v1.json",
+  "title": "NewsTimelineUpdateRequest",
+  "description": "news.timeline-update-request@1: bodies of news.timeline.update on OpenVibe.News (editors). POST /api/v1/stories/:id/timeline { occurred_on, text, source } adds a dated entry resting on one attached source (occurredOn is read too): occurred_on is the date the source states (YYYY-MM-DD or an ISO 8601 time; 422 timeline.invalid_date), text at most 500 characters (422 timeline.no_text, timeline.too_long), source a source number or an attached item id (422 timeline.unknown_source, 409 source_item.removed). DELETE /api/v1/stories/:id/timeline/:eid takes no body (404 timeline.not_found).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "occurred_on",
+        "text",
+        "source"
+      ],
+      "properties": {
+        "occurred_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2}(\\.\\d{1,3})?)?(Z|[+-]\\d{2}:\\d{2}))?$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "pattern": "^([0-9]+|(nsi|itm)_[0-9A-HJKMNP-TV-Z]{26})$"
+            }
+          ],
+          "description": "The source number [n], or the attached item's id (nsi_… or itm_…)."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

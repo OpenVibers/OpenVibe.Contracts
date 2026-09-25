@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/summary-propose-request.v1.json",
+  "title": "ReviewsSummaryProposeRequest",
+  "description": "reviews.summary-propose-request@1: the body of reviews.summary.propose on OpenVibe.Reviews (a service principal only: 403 summary.service_only): POST /api/v1/entities/:ref/summary/proposals { workflow: { id, run_id }, overview?, overview_signals?, pros?, cons?, stub_provider?, note? } proposes an AI summary revision (workflow reviews.summarize_entity) whose every pro and con cites live signals of the entity. It is stored with ai authorship, never published by this call and stays out of pages, feeds and Search until a person approves it. Unknown keys are refused, and nothing can carry a rating: 422 summary.rating_forbidden for a rating-like key, 422 summary.rating_in_text for a rating stated in the text. Other refusals: 400 authorship.workflow_required, 422 summary.invalid, summary.empty, summary.uncited_point, summary.invalid_citation; 409 entity.not_active.",
+  "type": "object",
+  "required": [
+    "workflow"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "workflow": {
+      "type": "object",
+      "required": [
+        "id",
+        "run_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+          "description": "The OpenVibe.AI workflow, reviews.summarize_entity."
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The run (runId is read too)."
+        },
+        "runId": {
+          "type": "string"
+        },
+        "version": {},
+        "model": {
+          "type": "string"
+        }
+      }
+    },
+    "overview": {
+      "type": "string",
+      "description": "At most 6000 characters."
+    },
+    "overview_signals": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "description": "The signals the overview rests on (needed when there are no pros or cons)."
+    },
+    "pros": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "text",
+          "signals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "At most 600 characters once whitespace is collapsed."
+          },
+          "signals": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "minItems": 1
+              }
+            ],
+            "description": "The live signals of the entity the point rests on (at least one)."
+          }
+        }
+      },
+      "maxItems": 12
+    },
+    "cons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "text",
+          "signals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "At most 600 characters once whitespace is collapsed."
+          },
+          "signals": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "minItems": 1
+              }
+            ],
+            "description": "The live signals of the entity the point rests on (at least one)."
+          }
+        }
+      },
+      "maxItems": 12
+    },
+    "stub_provider": {
+      "type": "boolean",
+      "description": "The run was answered by a stub provider (stubProvider is read too)."
+    },
+    "stubProvider": {
+      "type": "boolean"
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Goes into the revision message."
+    },
+    "expected_revision": {
+      "description": "Accepted and ignored by a proposal."
+    },
+    "expectedRevision": {
+      "description": "Accepted and ignored by a proposal."
+    },
+    "message": {
+      "description": "Accepted and ignored by a proposal."
+    },
+    "publish": {
+      "description": "Accepted and ignored by a proposal."
+    },
+    "correction_note": {
+      "description": "Accepted and ignored by a proposal."
+    },
+    "correction_id": {
+      "description": "Accepted and ignored by a proposal."
+    }
+  }
+}

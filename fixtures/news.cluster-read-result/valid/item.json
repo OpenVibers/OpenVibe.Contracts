@@ -1,0 +1,43 @@
+{
+  "item": {
+    "id": "nsi_01JAB2Z7Y6X5W4V3T2S1R0QPNM",
+    "sources_item": {
+      "service": "sources",
+      "type": "item",
+      "id": "itm_01JAB2Y8K9M1N2P3Q4R5S6T7VW",
+      "revision": 1
+    },
+    "source_key": "harbour-gazette",
+    "headline": "Harbour bridge closes for inspection after cracks found",
+    "url": "https://harbourgazette.example/bridge-closure",
+    "outlet": "Harbour Gazette",
+    "authors": [
+      "M. Okafor"
+    ],
+    "published_at": "2026-09-24T07:30:00+01:00",
+    "summary": null,
+    "summary_basis": "terms do not allow a stored summary",
+    "license_note": null,
+    "terms_note": "Headline and link only",
+    "status": "active",
+    "duplicate_of": null,
+    "dedupe": null,
+    "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+    "cluster_reason": {
+      "rule": "new_cluster",
+      "cluster": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+      "terms": [
+        "bridge",
+        "harbour",
+        "inspection"
+      ],
+      "entities": [
+        "Harbour Bridge"
+      ]
+    },
+    "retrieved_at": "2026-09-24T08:15:00.000Z",
+    "first_seen_at": "2026-09-24T08:15:00.000Z",
+    "upstream_updated_at": null,
+    "removed": null
+  }
+}

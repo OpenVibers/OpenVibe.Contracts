@@ -1,0 +1,437 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story.v1.json",
+  "title": "NewsStory",
+  "description": "news.story@1: one story as OpenVibe.News shows it to editors (server/http/api.js storyDto), drafts included: publication state, the head revision (headline and paragraphs that each cite source numbers, authorship), what stands between it and publication, the gate's indexability of the published revision, the working source table (numbered, never renumbered; detached sources stay listed), timeline, perspectives and editorial flags.",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "url",
+    "state",
+    "cluster_id",
+    "topic",
+    "working_headline",
+    "noindex",
+    "published_revision",
+    "first_published_at",
+    "published_at",
+    "retracted_at",
+    "head",
+    "publishable",
+    "indexability",
+    "sources",
+    "timeline",
+    "perspectives",
+    "flags"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^sty_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "draft",
+        "published",
+        "unpublished",
+        "retracted"
+      ]
+    },
+    "cluster_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "topic": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The topic slug."
+    },
+    "working_headline": {
+      "type": "string"
+    },
+    "noindex": {
+      "type": "boolean"
+    },
+    "published_revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "first_published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "retracted_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "head": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "revision",
+        "headline",
+        "paragraphs",
+        "authorship",
+        "system",
+        "gaps",
+        "author",
+        "created_at"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "headline": {
+          "type": "string"
+        },
+        "paragraphs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text",
+              "sources"
+            ],
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "authorship": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "The openvibe-publishing authorship record: mode, authors (usr_ ids), the OpenVibe.AI workflow { id, runId, version?, model? } of an ai or hybrid revision, stubProvider when a stub provider answered.",
+          "properties": {
+            "mode": {
+              "enum": [
+                "human",
+                "ai",
+                "hybrid",
+                "imported"
+              ]
+            },
+            "authors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "workflow": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "version": {},
+                "model": {
+                  "type": "string"
+                }
+              }
+            },
+            "stubProvider": {
+              "type": "boolean"
+            },
+            "source": {
+              "type": "object"
+            },
+            "importedFrom": {
+              "type": "object"
+            }
+          }
+        },
+        "system": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Set on a revision News prepared after a cited source changed upstream: { reason, source_item_id, sources_item_id, sources_revision, based_on }."
+        },
+        "gaps": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "What an AI draft could not support from the sources."
+        },
+        "author": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "publishable": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "detail"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "What stands between the revision and publication (story.unsourced, story.claim_unsourced, story.source_removed, story.source_detached, story.review_required, story.no_headline, …); empty when it can be published."
+    },
+    "indexability": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "indexable",
+        "robots",
+        "reasons"
+      ],
+      "properties": {
+        "indexable": {
+          "type": "boolean"
+        },
+        "robots": {
+          "type": "string",
+          "description": "index, follow | noindex, follow | noindex, nofollow"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "effect": {
+                "type": "string"
+              },
+              "detail": {}
+            }
+          },
+          "description": "The publishing gate's reasons (code, effect, detail); empty when indexable."
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "n",
+          "perspective_id",
+          "detached_at",
+          "item"
+        ],
+        "properties": {
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "perspective_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "detached_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "item": {
+            "$ref": "source-item.v1.json"
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "occurred_on",
+          "text",
+          "source_item_id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^tle_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "occurred_on": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "source_item_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "perspectives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^per_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "note",
+          "source_item_id",
+          "pending_revision",
+          "revision",
+          "created_by",
+          "created_at",
+          "resolved_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^flg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "kind": {
+            "enum": [
+              "correction",
+              "update",
+              "retraction",
+              "source_updated",
+              "source_removed"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "published",
+              "resolved"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_item_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pending_revision": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolved_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+  "aggregate": {
+    "revision": 3,
+    "computed_at": "2026-09-24T09:40:12.000Z",
+    "trigger": "signal_added",
+    "result": {
+      "method": "reviews-aggregate@1",
+      "components": {
+        "rating": {
+          "count": 318,
+          "percent": 84,
+          "inputs": [
+            "sig_01JAC2S3G4H5J6K7M8N9P0Q1R2"
+          ],
+          "on_scale": {
+            "value": 4.2,
+            "best": 5,
+            "worst": 1
+          }
+        }
+      },
+      "inputs": [
+        {
+          "signal_id": "sig_01JAC2S3G4H5J6K7M8N9P0Q1R2",
+          "type": "rating_aggregate",
+          "source_key": "sound-lab",
+          "source_item_id": "itm_01JAC3T4V5W6X7Y8Z9A0B1C2D3",
+          "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+          "observed_at": "2026-09-24T08:15:00.000Z",
+          "rating_value": 4.2,
+          "rating_best": 5,
+          "rating_worst": 1,
+          "rating_count": 318,
+          "weight": 318
+        }
+      ],
+      "excluded": [],
+      "sources": [
+        "sound-lab"
+      ],
+      "observed": {
+        "earliest": "2026-09-24T08:15:00.000Z",
+        "latest": "2026-09-24T08:15:00.000Z"
+      },
+      "computation": [
+        "rating: 84% = Σ(value ÷ best × count) ÷ Σ count over 1 signal and 318 ratings"
+      ]
+    }
+  },
+  "aggregate_revision": 3
+}

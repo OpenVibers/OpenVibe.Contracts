@@ -27,5 +27,7 @@
     "POST /api/v1/trust",
     "GET /api/v1/corrections",
     "PATCH /api/v1/corrections/:id"
-  ]
+  ],
+  "inputSchema": "reviews.entity-manage-request@1",
+  "outputSchema": "reviews.entity-manage-result@1"
 }

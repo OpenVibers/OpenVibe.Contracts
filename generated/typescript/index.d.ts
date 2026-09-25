@@ -24871,6 +24871,1863 @@ export interface NewsIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** news.cluster-audit@1.0.0 (owner: news) */
+/**
+ * news.cluster-audit@1: one audited cluster change on OpenVibe.News (server/domain/clusters.js shapeAudit): a merge, a split or the reversal of one, with exactly which source items moved, who did it and why. Merge: cluster_id survived and other_id was absorbed; split: other_id is the new cluster.
+ */
+export interface NewsClusterAudit {
+  id: string;
+  action: "merge" | "split" | "reverse_merge" | "reverse_split";
+  cluster_id: string;
+  other_id: string;
+  item_ids: string[];
+  reason: string | null;
+  /**
+   * The editor (usr_…) or the service that acted.
+   */
+  actor: string;
+  /**
+   * The audit entry this one reverses.
+   */
+  reverses: string | null;
+  /**
+   * The audit entry that reversed this one.
+   */
+  reversed_by: string | null;
+  at: string;
+}
+
+/** news.cluster-manage-request@1.0.0 (owner: news) */
+/**
+ * news.cluster-manage-request@1: bodies of news.cluster.manage on OpenVibe.News (editors). POST /api/v1/clusters/:id/merge { other, reason? } merges cluster other into :id (both open: 404 cluster.not_found, 409 cluster.not_open, 422 cluster.same). POST /api/v1/clusters/:id/split { items, reason? } moves those items into a new cluster (422 cluster.split_empty, cluster.split_foreign, cluster.split_all: at least one item stays). POST /api/v1/clusters/audit/:auditId/reverse { reason? } undoes a merge or split (404 cluster.audit_not_found, 409 cluster.already_reversed, 409 cluster.changed). Every change is audited with exactly which items moved.
+ */
+export type NewsClusterManageRequest =
+  | {
+      other: string;
+      /**
+       * Cut to 500 characters.
+       */
+      reason?: string | null;
+    }
+  | {
+      /**
+       * Source item ids (nsi_…) of the cluster.
+       *
+       * @minItems 1
+       */
+      items: [string, ...string[]];
+      /**
+       * Cut to 500 characters.
+       */
+      reason?: string | null;
+    }
+  | {
+      /**
+       * Cut to 500 characters.
+       */
+      reason?: string | null;
+    };
+
+/** news.cluster-manage-result@1.0.0 (owner: news) */
+/**
+ * news.cluster-manage-result@1: answers of news.cluster.manage on OpenVibe.News. POST /api/v1/clusters/:id/merge → { cluster, audit } (the surviving cluster with items, audit and stories). POST /api/v1/clusters/:id/split → 201 { cluster, created, audit } (the source cluster and the new one with its items). POST /api/v1/clusters/audit/:auditId/reverse → { audit, clusters } (the reversal entry and the two clusters involved). Emits news.cluster.updated.
+ */
+export type NewsClusterManageResult =
+  | {
+      cluster: NewsCluster;
+      created?: NewsCluster;
+      audit: NewsClusterAudit;
+    }
+  | {
+      audit: NewsClusterAudit;
+      /**
+       * @minItems 2
+       * @maxItems 2
+       */
+      clusters: [NewsCluster, NewsCluster];
+    };
+
+/** news.cluster-read-result@1.0.0 (owner: news) */
+/**
+ * news.cluster-read-result@1: answers of news.cluster.read on OpenVibe.News (editors, or a service holding news.cluster.read). GET /api/v1/clusters?limit= → { clusters } (open clusters, newest activity first). GET /api/v1/clusters/:id → { cluster } with its items, audit and stories (404 cluster.not_found). GET /api/v1/source-items/:id (nsi_… or itm_…) → { item } (404 source_item.not_found). GET /api/v1/ingest → { cursor, runs, sources }: the Sources cursor, the 50 latest ingestion runs and the cached source health.
+ */
+export type NewsClusterReadResult =
+  | {
+      clusters: NewsCluster[];
+    }
+  | {
+      cluster: NewsCluster;
+    }
+  | {
+      item: NewsSourceItem;
+    }
+  | {
+      cursor: number;
+      runs: {
+        id: number;
+        origin: "webhook" | "pull" | "sources";
+        /**
+         * ok | failed | ignored | an upstream state (http_error, timeout, …).
+         */
+        state: string;
+        source_key?: string | null;
+        sources_item_id?: string | null;
+        error_code?: string | null;
+        detail?: string | null;
+        /**
+         * { created, updated, removed, duplicates, unchanged }
+         */
+        counts?: {} | null;
+        cursor_before?: number | null;
+        cursor_after?: number | null;
+        at: string;
+      }[];
+      sources: {
+        source_key: string;
+        name?: string | null;
+        homepage_url?: string | null;
+        status?: string | null;
+        stale?: boolean | null;
+        last_success_at?: string | null;
+        refreshed_at: string;
+      }[];
+    };
+
+/** news.cluster@1.0.0 (owner: news) */
+/**
+ * news.cluster@1: one story cluster on OpenVibe.News (server/http/api.js clusterDto): a deterministic, explainable grouping of source items that report the same story, with its label (derived from the key terms, never invented), time window, key terms and entities. GET /api/v1/clusters/:id and merge/split answers add items, audit and stories.
+ */
+export interface NewsCluster {
+  id: string;
+  label: string;
+  status: "open" | "merged" | "dissolved";
+  merged_into: string | null;
+  split_from: string | null;
+  window: {
+    start: string | null;
+    end: string | null;
+  };
+  /**
+   * svc:news (clustering) or the editor who split it off.
+   */
+  created_by: string;
+  /**
+   * @maxItems 15
+   */
+  key_terms:
+    | []
+    | [
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        },
+        {
+          term: string;
+          items: number;
+        }
+      ];
+  /**
+   * @maxItems 10
+   */
+  key_entities:
+    | []
+    | [
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ]
+    | [
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        },
+        {
+          entity: string;
+          items: number;
+        }
+      ];
+  item_count: number;
+  items?: NewsSourceItem[];
+  audit?: NewsClusterAudit[];
+  stories?: {
+    id: string;
+    slug: string;
+    state: string;
+  }[];
+}
+
+/** news.perspective-update-request@1.0.0 (owner: news) */
+/**
+ * news.perspective-update-request@1: bodies of news.perspective.update on OpenVibe.News (editors). POST /api/v1/stories/:id/perspectives { label, description? } adds an editor-labelled perspective (labels are written by editors, never generated; 422 perspective.no_label, 422 perspective.label_too_long over 80 characters; the description is cut to 500). PUT /api/v1/stories/:id/sources/:item/perspective { perspective } puts an attached source in a perspective (per_…) or in none (null or absent; 404 story.source_not_attached, 404 perspective.not_found). DELETE /api/v1/stories/:id/perspectives/:pid takes no body.
+ */
+export type NewsPerspectiveUpdateRequest =
+  | {
+      /**
+       * At most 80 characters once whitespace is collapsed.
+       */
+      label: string;
+      description?: string | null;
+    }
+  | {
+      perspective?: string | null;
+    }
+  | NoBody;
+
+/** news.perspective-update-result@1.0.0 (owner: news) */
+/**
+ * news.perspective-update-result@1: answers of news.perspective.update on OpenVibe.News. POST /api/v1/stories/:id/perspectives → 201 { perspective } (the stored row; timestamps in epoch milliseconds). DELETE /api/v1/stories/:id/perspectives/:pid → { removed: true } (its sources are left without a perspective). PUT /api/v1/stories/:id/sources/:item/perspective → { n, perspective_id }.
+ */
+export type NewsPerspectiveUpdateResult =
+  | {
+      perspective: {
+        id: string;
+        story_id: string;
+        label: string;
+        description: string | null;
+        position: number;
+        created_by: string;
+        /**
+         * Epoch milliseconds.
+         */
+        created_at: number;
+        /**
+         * Epoch milliseconds.
+         */
+        updated_at: number;
+        /**
+         * Epoch milliseconds, or null.
+         */
+        removed_at: number | null;
+      };
+    }
+  | {
+      removed: true;
+    }
+  | {
+      n: number;
+      perspective_id: string | null;
+    };
+
+/** news.source-attach-request@1.0.0 (owner: news) */
+/**
+ * news.source-attach-request@1: bodies of news.source.attach on OpenVibe.News (editors). POST /api/v1/stories/:id/sources { item } (or { item_id }) attaches a source item to the story's source table under the next number (a detached item gets its old number back); 404 source_item.not_found, 409 source_item.removed for an item removed upstream. DELETE /api/v1/stories/:id/sources/:item takes no body and detaches it (its number is never reused; its timeline entries go with it; 404 story.source_not_attached).
+ */
+export type NewsSourceAttachRequest =
+  | {
+      /**
+       * A News source item id (nsi_…) or the OpenVibe.Sources item id it came from (itm_…).
+       */
+      item: string;
+    }
+  | {
+      /**
+       * A News source item id (nsi_…) or the OpenVibe.Sources item id it came from (itm_…).
+       */
+      item_id: string;
+    }
+  | NoBody;
+
+/** news.source-attach-result@1.0.0 (owner: news) */
+/**
+ * news.source-attach-result@1: answers of news.source.attach on OpenVibe.News. POST /api/v1/stories/:id/sources → 201 { n, created, item } (the source number; created false when it was already attached). DELETE /api/v1/stories/:id/sources/:item → { detached: true, n }.
+ */
+export type NewsSourceAttachResult =
+  | {
+      n: number;
+      created: boolean;
+      item: NewsSourceItem;
+    }
+  | {
+      detached: true;
+      n: number;
+    };
+
+/** news.source-item@1.0.0 (owner: news) */
+/**
+ * news.source-item@1: one source item as OpenVibe.News shows it to editors (server/http/api.js itemDto): the normalised OpenVibe.Sources item — headline, URL, outlet, authors, the date the source states and a licensed short summary, never a body — with its dedupe outcome, cluster and the stored explanation of its membership, and its upstream state.
+ */
+export interface NewsSourceItem {
+  id: string;
+  sources_item: EntityRef;
+  source_key: string;
+  headline: string;
+  url: string | null;
+  outlet: string;
+  authors: string[];
+  /**
+   * As the source states it; null when it does not.
+   */
+  published_at: string | null;
+  /**
+   * A short summary, stored only when the source's terms allow it.
+   */
+  summary: string | null;
+  /**
+   * Why a summary is (not) stored.
+   */
+  summary_basis: string | null;
+  license_note: string | null;
+  terms_note: string | null;
+  status: "active" | "duplicate" | "removed";
+  duplicate_of: string | null;
+  /**
+   * { rule, detail } when the item is a duplicate.
+   */
+  dedupe: {} | null;
+  cluster_id: string | null;
+  /**
+   * Why the item is in its cluster: { rule (shared_terms, new_cluster, duplicate_of, merged, split, …), shared_entities, shared_terms, score, … }.
+   */
+  cluster_reason: {} | null;
+  retrieved_at: string | null;
+  first_seen_at: string;
+  upstream_updated_at: string | null;
+  /**
+   * Set once the source removed the item upstream.
+   */
+  removed: {
+    at: string | null;
+    reason: string | null;
+  } | null;
+}
+
+/** news.story-create-request@1.0.0 (owner: news) */
+/**
+ * news.story-create-request@1: the body of news.story.create on OpenVibe.News: POST /api/v1/stories { headline, cluster?, topic?, slug?, body? | paragraphs? } opens a story (editors; a service acts for the editor in X-OV-Subject). The cluster's live, non-duplicate source items become its first sources, numbered by publication date; body or paragraphs (citing those numbers or item ids) becomes revision 1. Refusals: 422 story.no_headline (missing or over 200 characters), 404 cluster.not_found, 422 topic.not_found, 422 story.invalid_slug, 409 story.slug_taken, 422 story.claim_unsourced / story.unknown_source for a paragraph that cites nothing or a source not attached.
+ */
+export interface NewsStoryCreateRequest {
+  /**
+   * The working headline; at most 200 characters once whitespace is collapsed.
+   */
+  headline: string;
+  /**
+   * The cluster (clu_…) to open the story from; merged clusters are followed.
+   */
+  cluster?: string;
+  /**
+   * Same as cluster.
+   */
+  cluster_id?: string;
+  /**
+   * An active topic, by id (top_…) or slug.
+   */
+  topic?: string | null;
+  /**
+   * Default: made from the headline.
+   */
+  slug?: string;
+  /**
+   * Paragraphs separated by a blank line, each ending with the source numbers it rests on, e.g. "… said on Monday. [1, 3]".
+   */
+  body?: string;
+  /**
+   * @minItems 1
+   * @maxItems 60
+   */
+  paragraphs?: [
+    {
+      /**
+       * At most 3000 characters once whitespace is collapsed.
+       */
+      text: string;
+      /**
+       * The attached sources the paragraph rests on (at least one).
+       *
+       * @minItems 1
+       */
+      sources: [number | string, ...(number | string)[]];
+    },
+    ...{
+      /**
+       * At most 3000 characters once whitespace is collapsed.
+       */
+      text: string;
+      /**
+       * The attached sources the paragraph rests on (at least one).
+       *
+       * @minItems 1
+       */
+      sources: [number | string, ...(number | string)[]];
+    }[]
+  ];
+}
+
+/** news.story-create-result@1.0.0 (owner: news) */
+/**
+ * news.story-create-result@1: the answer of news.story.create on OpenVibe.News: POST /api/v1/stories → 201 { story, revision } — the new draft story and the number of its first revision (null when no text was sent). Emits news.story.created.
+ */
+export interface NewsStoryCreateResult {
+  story: NewsStory;
+  revision: number | null;
+}
+
+/** news.story-publish-request@1.0.0 (owner: news) */
+/**
+ * news.story-publish-request@1: bodies of news.story.publish on OpenVibe.News (editors). POST /api/v1/stories/:id/publish { revision?, correction? } publishes revision N (default the head) with an optional correction or update note readers will see. Refused while anything in the story's publishable list stands: 409 story.review_required (an AI revision no person approved), 409 story.source_removed / story.source_detached, 422 story.unsourced / story.claim_unsourced / story.no_headline (problems in the problem's extra); 422 story.correction_note_required when a source it cited was removed upstream and no note says what changed; 409 story.retracted; 404 revision.not_found. POST /api/v1/stories/:id/unpublish takes no body.
+ */
+export type NewsStoryPublishRequest =
+  | {
+      /**
+       * Default: the head revision.
+       */
+      revision?: number | string | null;
+      /**
+       * A note given without kind is a correction.
+       */
+      correction?: {
+        kind?: "correction" | "update";
+        note?: string;
+      } | null;
+    }
+  | NoBody;
+
+/** news.story-publish-result@1.0.0 (owner: news) */
+/**
+ * news.story-publish-result@1: answers of news.story.publish on OpenVibe.News. POST /api/v1/stories/:id/publish → { changed, resolved_flags, story } (changed false when that revision was already published and no note was given; resolved_flags are the upstream flags the revision answers). POST /api/v1/stories/:id/unpublish → { changed, story } (changed false when nothing was published). Emits news.story.published|updated|unpublished and the Search index events.
+ */
+export interface NewsStoryPublishResult {
+  changed: boolean;
+  resolved_flags?: string[];
+  story: NewsStory;
+}
+
+/** news.story-read-result@1.0.0 (owner: news) */
+/**
+ * news.story-read-result@1: answers of news.story.read on OpenVibe.News (editors, or a service holding news.story.read). GET /api/v1/stories/:id → { story, published } (the editor view with drafts, and the public model of the published revision or null; a caller without the capability gets only { published } of a published or retracted story, else 404 story.not_found). GET /api/v1/stories/:id/revisions?limit=&before= → { revisions } newest first. GET /api/v1/stories/:id/revisions/:n → { revision, citations, problems } (404 revision.not_found). GET /api/v1/stories/:id/diff?from=&to=&mode=line|word → { diff } of the text and a field-by-field comparison.
+ */
+export type NewsStoryReadResult =
+  | {
+      story?: NewsStory;
+      /**
+       * The public model of the published revision (the story page's .json twin); null while nothing is published.
+       */
+      published: {
+        id: string;
+        url: string;
+        state: string;
+        revision: number;
+        headline: string;
+        headline_sources: number[];
+        topic: {
+          slug: string;
+          name: string;
+          url: string;
+        } | null;
+        first_published_at: string | null;
+        updated_at: string;
+        authorship: {
+          mode: string;
+          workflow: string | null;
+          reviewed_by_person: boolean;
+          disclosure: string | null;
+        } | null;
+        authors: {
+          name: string;
+          username?: string | null;
+        }[];
+        claims: {
+          text: string;
+          sources: number[];
+          supported: boolean;
+        }[];
+        /**
+         * A source removed upstream shows only its number, outlet and the removal.
+         */
+        sources: {
+          n: number;
+          outlet: string;
+          status: "active" | "removed";
+          upstream_changed: boolean;
+          perspective: string | null;
+          /**
+           * The OpenVibe.Sources item and the revision the story snapshotted.
+           */
+          sources_item: {
+            service: "sources";
+            type: "item";
+            id: string;
+            revision: number;
+          };
+          removed_at?: string | null;
+          headline?: string;
+          url?: string | null;
+          authors?: string[];
+          published_at?: string | null;
+          retrieved_at?: string | null;
+          summary?: string | null;
+          removed_reason?: string | null;
+        }[];
+        timeline: {
+          occurred_on: string;
+          text: string;
+          source: number;
+          supported: boolean;
+        }[];
+        perspectives: {
+          label: string;
+          description: string | null;
+          sources: number[];
+        }[];
+        corrections: {
+          kind: string;
+          note: string | null;
+          revision: number | null;
+          at: string | null;
+        }[];
+        retraction: {
+          note: string | null;
+          at: string | null;
+          revision: number | null;
+        } | null;
+        pending_upstream_changes: {
+          kind: string;
+          n: number | null;
+          outlet: string | null;
+          at: string | null;
+        }[];
+        indexability: {
+          indexable: boolean;
+          /**
+           * index, follow | noindex, follow | noindex, nofollow
+           */
+          robots: string;
+          /**
+           * The publishing gate's reasons (code, effect, detail); empty when indexable.
+           */
+          reasons: {
+            code: string;
+            effect?: string;
+            detail?: unknown;
+          }[];
+        };
+      } | null;
+    }
+  | {
+      revisions: {
+        revision: number;
+        kind: "edit" | "revert" | "import";
+        author: string | null;
+        message: string | null;
+        created_at: string;
+        headline: string | null;
+        /**
+         * The openvibe-publishing authorship record: mode, authors (usr_ ids), the OpenVibe.AI workflow { id, runId, version?, model? } of an ai or hybrid revision, stubProvider when a stub provider answered.
+         */
+        authorship: {
+          mode?: "human" | "ai" | "hybrid" | "imported";
+          authors?: string[];
+          workflow?: {
+            id?: string;
+            runId?: string;
+            version?: unknown;
+            model?: string;
+          };
+          stubProvider?: boolean;
+          source?: {};
+          importedFrom?: {};
+        } | null;
+        system: {} | null;
+      }[];
+    }
+  | {
+      revision: {
+        id: string;
+        entityId: string;
+        number: number;
+        parentId?: string | null;
+        parentNumber?: number | null;
+        kind: "edit" | "revert" | "import";
+        revertedTo?: number | null;
+        /**
+         * The paragraphs as text with their [n] markers.
+         */
+        content: string;
+        /**
+         * headline, paragraphs and the snapshotted source table, timeline and perspectives.
+         */
+        fields: {
+          headline?: string;
+          paragraphs?: {
+            text: string;
+            sources: number[];
+          }[];
+          /**
+           * The source table snapshot: n, id, sources_item_id, sources_revision, headline, url, outlet, authors, published_at, retrieved_at, summary, status, perspective.
+           */
+          sources?: {}[];
+          timeline?: {}[];
+          perspectives?: {}[];
+        };
+        meta: {
+          /**
+           * The openvibe-publishing authorship record: mode, authors (usr_ ids), the OpenVibe.AI workflow { id, runId, version?, model? } of an ai or hybrid revision, stubProvider when a stub provider answered.
+           */
+          authorship?: {
+            mode?: "human" | "ai" | "hybrid" | "imported";
+            authors?: string[];
+            workflow?: {
+              id?: string;
+              runId?: string;
+              version?: unknown;
+              model?: string;
+            };
+            stubProvider?: boolean;
+            source?: {};
+            importedFrom?: {};
+          } | null;
+          system?: {};
+          gaps?: string[];
+        };
+        contentHash?: string;
+        author?: string | null;
+        message?: string | null;
+        createdAt: string;
+      };
+      citations: {
+        id: number;
+        entityId?: string;
+        revision: number;
+        /**
+         * p<n> for a paragraph, t:<entry id> for a timeline entry.
+         */
+        anchor: string | null;
+        sourceItemId: string | null;
+        url: string | null;
+        title?: string | null;
+        retrievedAt?: string | null;
+        quote?: {} | null;
+        licenseNote?: string | null;
+        carriedFrom?: number | null;
+        attachedBy?: string | null;
+        attachedAt?: string;
+      }[];
+      /**
+       * What stands between the revision and publication (story.unsourced, story.claim_unsourced, story.source_removed, story.source_detached, story.review_required, story.no_headline, …); empty when it can be published.
+       */
+      problems: {
+        code: string;
+        detail: string;
+      }[];
+    }
+  | {
+      diff: {
+        entityId: string;
+        from: number;
+        to: number;
+        content: {
+          mode: "line" | "word";
+          ops: {
+            op: "equal" | "insert" | "delete";
+            text: string;
+          }[];
+          added: number;
+          removed: number;
+          approximate: boolean;
+        };
+        fields: {
+          field: string;
+          from: unknown;
+          to: unknown;
+        }[];
+      };
+    };
+
+/** news.story-retract-request@1.0.0 (owner: news) */
+/**
+ * news.story-retract-request@1: the body of news.story.retract on OpenVibe.News: POST /api/v1/stories/:id/retract { note } retracts a published story with a public note (editors). The story stays at its URL with the notice, becomes noindex and leaves sitemaps and Search; final. Refusals: 422 story.retraction_note_required (under 10 characters once whitespace is collapsed), 422 flag.note_too_long (over 2000), 409 story.not_published.
+ */
+export interface NewsStoryRetractRequest {
+  note: string;
+}
+
+/** news.story-retract-result@1.0.0 (owner: news) */
+/**
+ * news.story-retract-result@1: the answer of news.story.retract on OpenVibe.News: POST /api/v1/stories/:id/retract → { changed, story } (changed false when the story was already retracted). Emits news.story.retracted and news.index_document.deleted.
+ */
+export interface NewsStoryRetractResult {
+  changed: boolean;
+  story: NewsStory;
+}
+
+/** news.story-revise-request@1.0.0 (owner: news) */
+/**
+ * news.story-revise-request@1: bodies of news.story.revise on OpenVibe.News (editors; a service acts for the editor in X-OV-Subject). POST /api/v1/stories/:id/revisions { expected_revision, headline?, body? | paragraphs?, topic?, noindex?, message? } saves a new immutable revision snapshotting the source table, timeline and perspectives (expected_revision is required once a revision exists: 428 revision.expected_required, 412 revision.conflict on a stale one; every paragraph must cite an attached source: 422 story.claim_unsourced / story.unknown_source; 409 story.retracted). With X-OV-Origin: ai the revision is AI-generated and carries authorship { workflow: { id: news.summarize_story | news.compare_perspectives, run_id } } and gaps. POST /api/v1/stories/:id/ai-drafts { workflow? } asks OpenVibe.AI for a draft (default news.summarize_story; 503 ai.not_configured, 422 story.unsourced, 422 story.too_few_sources). POST /api/v1/stories/:id/flags { kind, note } adds a correction or update note published with the next publication.
+ */
+export type NewsStoryReviseRequest =
+  | {
+      /**
+       * The revision you edited (expectedRevision is read too).
+       */
+      expected_revision?: number | string;
+      /**
+       * At most 200 characters; default the head's headline.
+       */
+      headline?: string | null;
+      /**
+       * Paragraphs separated by a blank line, each ending with the source numbers it rests on, e.g. "… said on Monday. [1, 3]".
+       */
+      body?: string;
+      /**
+       * @minItems 1
+       * @maxItems 60
+       */
+      paragraphs?: [
+        {
+          /**
+           * At most 3000 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The attached sources the paragraph rests on (at least one).
+           *
+           * @minItems 1
+           */
+          sources: [number | string, ...(number | string)[]];
+        },
+        ...{
+          /**
+           * At most 3000 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The attached sources the paragraph rests on (at least one).
+           *
+           * @minItems 1
+           */
+          sources: [number | string, ...(number | string)[]];
+        }[]
+      ];
+      /**
+       * An active topic by id or slug; null or empty clears it.
+       */
+      topic?: string | null;
+      /**
+       * true, 1 or "1" asks search engines not to index the story.
+       */
+      noindex?: boolean | number | string;
+      /**
+       * Cut to 200 characters.
+       */
+      message?: string | null;
+      /**
+       * Read only with X-OV-Origin: ai.
+       */
+      authorship?: {
+        workflow?: {
+          id?: "news.summarize_story" | "news.compare_perspectives";
+          run_id?: string;
+          runId?: string;
+          version?: unknown;
+          model?: string;
+        };
+        stub_provider?: boolean;
+        stubProvider?: boolean;
+      };
+      /**
+       * Read only with X-OV-Origin: ai.
+       *
+       * @maxItems 20
+       */
+      gaps?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ];
+    }
+  | {
+      workflow?: "news.summarize_story" | "news.compare_perspectives";
+    }
+  | {
+      kind: "correction" | "update";
+      /**
+       * Public text readers will see; at most 2000 characters.
+       */
+      note: string;
+    };
+
+/** news.story-revise-result@1.0.0 (owner: news) */
+/**
+ * news.story-revise-result@1: answers of news.story.revise on OpenVibe.News. POST /api/v1/stories/:id/revisions and POST /api/v1/stories/:id/ai-drafts → 201 { revision, created, story } (the revision number; created is false when the text and snapshot equal the head). POST /api/v1/stories/:id/flags → 201 { flag } (the stored flag row, open until the next publication; timestamps in epoch milliseconds).
+ */
+export type NewsStoryReviseResult =
+  | {
+      revision: number;
+      created: boolean;
+      story: NewsStory;
+    }
+  | {
+      flag: {
+        id: string;
+        story_id: string;
+        kind: "correction" | "update" | "retraction" | "source_updated" | "source_removed";
+        status: "open" | "published" | "resolved";
+        note: string | null;
+        source_item_id: string | null;
+        pending_revision: number | null;
+        revision: number | null;
+        created_by: string;
+        /**
+         * Epoch milliseconds.
+         */
+        created_at: number;
+        resolved_by: string | null;
+        /**
+         * Epoch milliseconds, or null.
+         */
+        resolved_at: number | null;
+      };
+    };
+
+/** news.story@1.0.0 (owner: news) */
+/**
+ * news.story@1: one story as OpenVibe.News shows it to editors (server/http/api.js storyDto), drafts included: publication state, the head revision (headline and paragraphs that each cite source numbers, authorship), what stands between it and publication, the gate's indexability of the published revision, the working source table (numbered, never renumbered; detached sources stay listed), timeline, perspectives and editorial flags.
+ */
+export interface NewsStory {
+  id: string;
+  slug: string;
+  url: string;
+  state: "draft" | "published" | "unpublished" | "retracted";
+  cluster_id: string | null;
+  /**
+   * The topic slug.
+   */
+  topic: string | null;
+  working_headline: string;
+  noindex: boolean;
+  published_revision: number | null;
+  first_published_at: string | null;
+  published_at: string | null;
+  retracted_at: string | null;
+  head: {
+    revision: number;
+    headline: string;
+    paragraphs: {
+      text: string;
+      sources: number[];
+    }[];
+    /**
+     * The openvibe-publishing authorship record: mode, authors (usr_ ids), the OpenVibe.AI workflow { id, runId, version?, model? } of an ai or hybrid revision, stubProvider when a stub provider answered.
+     */
+    authorship: {
+      mode?: "human" | "ai" | "hybrid" | "imported";
+      authors?: string[];
+      workflow?: {
+        id?: string;
+        runId?: string;
+        version?: unknown;
+        model?: string;
+      };
+      stubProvider?: boolean;
+      source?: {};
+      importedFrom?: {};
+    } | null;
+    /**
+     * Set on a revision News prepared after a cited source changed upstream: { reason, source_item_id, sources_item_id, sources_revision, based_on }.
+     */
+    system: {} | null;
+    /**
+     * What an AI draft could not support from the sources.
+     */
+    gaps: string[] | null;
+    author: string | null;
+    created_at: string;
+  } | null;
+  /**
+   * What stands between the revision and publication (story.unsourced, story.claim_unsourced, story.source_removed, story.source_detached, story.review_required, story.no_headline, …); empty when it can be published.
+   */
+  publishable: {
+    code: string;
+    detail: string;
+  }[];
+  indexability: {
+    indexable: boolean;
+    /**
+     * index, follow | noindex, follow | noindex, nofollow
+     */
+    robots: string;
+    /**
+     * The publishing gate's reasons (code, effect, detail); empty when indexable.
+     */
+    reasons: {
+      code: string;
+      effect?: string;
+      detail?: unknown;
+    }[];
+  } | null;
+  sources: {
+    n: number;
+    perspective_id: string | null;
+    detached_at: string | null;
+    item: NewsSourceItem;
+  }[];
+  timeline: {
+    id: string;
+    occurred_on: string;
+    text: string;
+    source_item_id: string;
+  }[];
+  perspectives: {
+    id: string;
+    label: string;
+    description: string | null;
+  }[];
+  flags: {
+    id: string;
+    kind: "correction" | "update" | "retraction" | "source_updated" | "source_removed";
+    status: "open" | "published" | "resolved";
+    note: string | null;
+    source_item_id: string | null;
+    pending_revision: number | null;
+    revision: number | null;
+    created_by: string;
+    created_at: string;
+    resolved_at: string | null;
+  }[];
+}
+
+/** news.timeline-update-request@1.0.0 (owner: news) */
+/**
+ * news.timeline-update-request@1: bodies of news.timeline.update on OpenVibe.News (editors). POST /api/v1/stories/:id/timeline { occurred_on, text, source } adds a dated entry resting on one attached source (occurredOn is read too): occurred_on is the date the source states (YYYY-MM-DD or an ISO 8601 time; 422 timeline.invalid_date), text at most 500 characters (422 timeline.no_text, timeline.too_long), source a source number or an attached item id (422 timeline.unknown_source, 409 source_item.removed). DELETE /api/v1/stories/:id/timeline/:eid takes no body (404 timeline.not_found).
+ */
+export type NewsTimelineUpdateRequest =
+  | {
+      occurred_on: string;
+      text: string;
+      /**
+       * The source number [n], or the attached item's id (nsi_… or itm_…).
+       */
+      source: number | string;
+    }
+  | NoBody;
+
+/** news.timeline-update-result@1.0.0 (owner: news) */
+/**
+ * news.timeline-update-result@1: answers of news.timeline.update on OpenVibe.News. POST /api/v1/stories/:id/timeline → 201 { entry } (the stored row; timestamps in epoch milliseconds). DELETE /api/v1/stories/:id/timeline/:eid → { removed: true }.
+ */
+export type NewsTimelineUpdateResult =
+  | {
+      entry: {
+        id: string;
+        story_id: string;
+        occurred_on: string;
+        text: string;
+        source_item_id: string;
+        created_by: string;
+        /**
+         * Epoch milliseconds.
+         */
+        created_at: number;
+        /**
+         * Epoch milliseconds, or null.
+         */
+        removed_at: number | null;
+      };
+    }
+  | {
+      removed: true;
+    };
+
+/** news.topic-manage-request@1.0.0 (owner: news) */
+/**
+ * news.topic-manage-request@1: the body of news.topic.manage on OpenVibe.News: POST /api/v1/topics { name, slug?, description? } adds a canonical topic (editors; a service acts for the editor in X-OV-Subject). The name is collapsed and cut to 80 characters, the description to 300; the slug is made from slug or name (422 topic.no_name without a name, 422 topic.invalid_slug when it has no letters or digits).
+ */
+export interface NewsTopicManageRequest {
+  name: string;
+  slug?: string;
+  description?: string | null;
+}
+
+/** news.topic-manage-result@1.0.0 (owner: news) */
+/**
+ * news.topic-manage-result@1: the answer of news.topic.manage on OpenVibe.News: POST /api/v1/topics → { topic, created } — 201 with the new topic, or 200 with the existing topic of that slug (created false; an existing topic is never renamed). Timestamps are epoch milliseconds.
+ */
+export interface NewsTopicManageResult {
+  topic: {
+    id: string;
+    slug: string;
+    name: string;
+    description: string | null;
+    status: "active" | "archived";
+    /**
+     * Epoch milliseconds.
+     */
+    created_at: number;
+    /**
+     * Epoch milliseconds.
+     */
+    updated_at: number;
+  };
+  created: boolean;
+}
+
 /** reviews.entity.merged@1.0.0 (owner: reviews) */
 /**
  * reviews.entity.merged v1 (OpenVibe.Reviews server/reviews/service.js merge → entityEvent). An editor merged one entity into another (POST /api/v1/entities/:ref/merge, capability reviews.entity.merge, a person only), in the transaction of the merge. Nothing is rewritten: the merged entity keeps its aliases and its signals keep their attribution; it becomes state merged with an active merged_into link (link_id) and the target's aggregate is recomputed over both, which is why reviews.entity.split restores attribution exactly. The same transaction sends Search the merged entity's tombstone and the target's new document (reviews.index_document.*); a published summary of the merged entity keeps its state and no reviews.summary.unpublished is sent. The signal ids, aliases and aggregate are left out (they are in the entity's history, GET /api/v1/entities/:ref/history). Envelope: subject { type: entity, id: <merged entity ent_…> }, visibility public, priority important, actor the editor (user usr_…).
@@ -25630,6 +27487,6035 @@ export interface ReviewsIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** reviews.correction-submit-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.correction-submit-request@1: the body of reviews.correction.submit on OpenVibe.Reviews: POST /api/v1/entities/:ref/corrections { body, target_type?, target_id?, evidence_url? } sends a correction to the editors' queue for the person named in X-OV-Subject (a signed-in person: 403 reviews.person_required). Refusals: 422 correction.invalid (unknown target_type, body under 10 or over 4000 characters, evidence_url not http(s)), 409 correction.duplicate (the same open request again), 429 correction.rate_limited (20 a day per person), 404 entity.not_found, 410 entity.deleted.
+ */
+export interface ReviewsCorrectionSubmitRequest {
+  /**
+   * What is wrong, 10–4000 characters once trimmed.
+   */
+  body: string;
+  /**
+   * Default entity.
+   */
+  target_type?: "entity" | "alias" | "signal" | "summary" | "aggregate";
+  /**
+   * Cut to 100 characters.
+   */
+  target_id?: string | null;
+  /**
+   * An http(s) URL.
+   */
+  evidence_url?: string | null;
+}
+
+/** reviews.correction-submit-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.correction-submit-result@1: the answer of reviews.correction.submit on OpenVibe.Reviews: POST /api/v1/entities/:ref/corrections → 201 { correction } (open, filed under the canonical entity).
+ */
+export interface ReviewsCorrectionSubmitResult {
+  correction: ReviewsCorrection;
+}
+
+/** reviews.correction@1.0.0 (owner: reviews) */
+/**
+ * reviews.correction@1: one correction request in the OpenVibe.Reviews editors' queue (the review_corrections row): what a person says is wrong about an entity, alias, signal, summary or aggregate, with an optional evidence URL, and how an editor resolved it. Corrections are read by editors and not published. Timestamps are epoch milliseconds.
+ */
+export interface ReviewsCorrection {
+  id: string;
+  entity_id: string;
+  target_type: "entity" | "alias" | "signal" | "summary" | "aggregate";
+  target_id: string | null;
+  body: string;
+  evidence_url: string | null;
+  submitted_by: string;
+  /**
+   * The service that sent it for the person, if any.
+   */
+  via: string | null;
+  status: "open" | "accepted" | "rejected";
+  resolved_by: string | null;
+  /**
+   * Stays with the editors.
+   */
+  resolution_note: string | null;
+  /**
+   * Epoch milliseconds, or null.
+   */
+  resolved_at: number | null;
+  /**
+   * Epoch milliseconds.
+   */
+  created_at: number;
+}
+
+/** reviews.entity-link@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-link@1: one typed link on OpenVibe.Reviews (the review_entity_links row): between two entities (related, edition_of, successor_of, part_of; a merge is a merged_into link and a split ends it) or to another service's entity (external_ref, with ref holding the EntityRef as JSON text). Ending a link keeps it with who, when and why. Timestamps are epoch milliseconds.
+ */
+export interface ReviewsEntityLink {
+  id: string;
+  from_entity: string;
+  to_entity: string | null;
+  type: "merged_into" | "related" | "edition_of" | "successor_of" | "part_of" | "external_ref";
+  /**
+   * external_ref links: the common.entity-ref@1 as JSON text.
+   */
+  ref: string | null;
+  note: string | null;
+  created_by: string;
+  /**
+   * Epoch milliseconds.
+   */
+  created_at: number;
+  /**
+   * Epoch milliseconds, or null.
+   */
+  ended_at: number | null;
+  ended_by: string | null;
+  end_note: string | null;
+}
+
+/** reviews.entity-manage-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-manage-request@1: bodies of reviews.entity.manage on OpenVibe.Reviews (Reviews editors; a service acts for the editor in X-OV-Subject, and every route but POST /api/v1/entities needs that person: 403 reviews.person_required / reviews.editor_required). POST /api/v1/entities { name, kind?, description?, slug?, aliases? } (201; 422 entity.invalid_name, entity.invalid_kind, alias.invalid; 409 entity.slug_taken, alias.taken). PATCH /api/v1/entities/:ref { name?, kind?, description?, slug?, noindex? } (a new slug redirects the old one; 409 entity.not_active). DELETE /api/v1/entities/:ref { note? } (409 entity.has_merges, entity.has_signals). POST /api/v1/entities/:ref/aliases { type, value } (201). POST /api/v1/entities/:ref/links { type, to? | ref?, note? } (to names an entity; an external_ref link carries ref, another service's EntityRef). DELETE /api/v1/entities/:ref/links/:id { note? }. POST /api/v1/trust { scope, scope_id, key, value?, note? } (excluding a source or signal from aggregates needs a note readers see: 422 trust.reason_required). PATCH /api/v1/corrections/:id { status, note?, correction_note?, summary? } (accepting a request about an entity with a published summary corrects it with the public correction_note; a service also needs reviews.summary.publish for that). GET /api/v1/corrections and DELETE /api/v1/entities/:ref/aliases/:id take no body.
+ */
+export type ReviewsEntityManageRequest =
+  | {
+      name: string;
+      /**
+       * Default other.
+       */
+      kind?: "product" | "game" | "software" | "service" | "place" | "organization" | "media" | "other";
+      /**
+       * Cut to 2000 characters.
+       */
+      description?: string | null;
+      slug?: string | null;
+      aliases?: {
+        type: "name" | "url" | "sku" | "gtin" | "mpn" | "source" | "external";
+        value: string;
+      }[];
+    }
+  | {
+      name?: string;
+      kind?: "product" | "game" | "software" | "service" | "place" | "organization" | "media" | "other";
+      description?: string | null;
+      slug?: string;
+      noindex?: boolean;
+    }
+  | {
+      note?: string | null;
+    }
+  | {
+      type: "name" | "url" | "sku" | "gtin" | "mpn" | "source" | "external";
+      value: string;
+    }
+  | {
+      type: "related" | "edition_of" | "successor_of" | "part_of" | "external_ref";
+      /**
+       * An entity id (ent_…) or its slug.
+       */
+      to?: string;
+      ref?: EntityRef;
+      /**
+       * Cut to 500 characters.
+       */
+      note?: string | null;
+    }
+  | {
+      scope: "source" | "signal" | "entity";
+      scope_id: string;
+      key: "aggregate" | "limitation" | "verification";
+      /**
+       * aggregate: include or exclude; limitation and verification: text (empty ends the fact).
+       */
+      value?: string | null;
+      note?: string | null;
+    }
+  | {
+      status: "accepted" | "rejected";
+      /**
+       * Stays with the editors.
+       */
+      note?: string | null;
+      /**
+       * The public note of the summary correction, 10–2000 characters.
+       */
+      correction_note?: string | null;
+      /**
+       * New text for the corrected summary; default the published text carried forward.
+       */
+      summary?: {
+        /**
+         * At most 6000 characters.
+         */
+        overview?: string;
+        /**
+         * The signals the overview rests on (needed when there are no pros or cons).
+         */
+        overview_signals?: string[];
+        /**
+         * @maxItems 12
+         */
+        pros?:
+          | []
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ];
+        /**
+         * @maxItems 12
+         */
+        cons?:
+          | []
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ]
+          | [
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              },
+              {
+                /**
+                 * At most 600 characters once whitespace is collapsed.
+                 */
+                text: string;
+                /**
+                 * The live signals of the entity the point rests on (at least one).
+                 */
+                signals: string | [string, ...string[]];
+              }
+            ];
+      };
+    }
+  | NoBody;
+
+/** reviews.entity-manage-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-manage-result@1: answers of reviews.entity.manage on OpenVibe.Reviews. POST /api/v1/entities → 201 { entity, settled_items } (items the new aliases resolved); PATCH and DELETE /api/v1/entities/:ref → { entity }. POST …/aliases → 201 { alias, settled_items }; DELETE …/aliases/:id → { alias }. POST …/links → 201 { link }; DELETE …/links/:id → { link } (ended). POST /api/v1/trust → { scope, scope_id, key, current, affected_entities }. GET /api/v1/corrections → { corrections } (open, oldest first, with the entity row and whether its summary is published). PATCH /api/v1/corrections/:id → { correction, revision } (the correction revision when accepting corrected a published summary, else null). Row timestamps are epoch milliseconds.
+ */
+export type ReviewsEntityManageResult =
+  | {
+      entity: ReviewsEntity;
+      settled_items?: number;
+    }
+  | {
+      alias: {
+        id: string;
+        entity_id: string;
+        type: "name" | "url" | "sku" | "gtin" | "mpn" | "source" | "external";
+        value: string;
+        norm: string;
+        created_by: string;
+        /**
+         * Epoch milliseconds.
+         */
+        created_at: number;
+        /**
+         * Epoch milliseconds, or null.
+         */
+        removed_at: number | null;
+        removed_by: string | null;
+      };
+      settled_items?: number;
+    }
+  | {
+      link: ReviewsEntityLink;
+    }
+  | {
+      scope: "source" | "signal" | "entity";
+      scope_id: string;
+      key: "aggregate" | "limitation" | "verification";
+      /**
+       * The trust fact now in force, or null (aggregate include and an empty value end it).
+       */
+      current: {
+        id: number;
+        scope: string;
+        scope_id: string;
+        key: string;
+        value: string;
+        note: string | null;
+        set_by: string;
+        /**
+         * Epoch milliseconds.
+         */
+        set_at: number;
+        /**
+         * Epoch milliseconds, or null.
+         */
+        ended_at?: number | null;
+        ended_by?: string | null;
+      } | null;
+      affected_entities: string[];
+    }
+  | {
+      corrections: {
+        id: string;
+        entity_id: string;
+        target_type: string;
+        target_id?: string | null;
+        body: string;
+        evidence_url?: string | null;
+        submitted_by: string;
+        via?: string | null;
+        status: string;
+        resolved_by?: string | null;
+        resolution_note?: string | null;
+        /**
+         * Epoch milliseconds, or null.
+         */
+        resolved_at?: number | null;
+        /**
+         * Epoch milliseconds.
+         */
+        created_at: number;
+        /**
+         * The canonical entity's review_entities row.
+         */
+        entity: {} | null;
+        summary_published: boolean;
+      }[];
+    }
+  | {
+      correction: ReviewsCorrection;
+      revision: ReviewsSummaryRevision | null;
+    };
+
+/** reviews.entity-merge-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-merge-request@1: the body of reviews.entity.merge on OpenVibe.Reviews: POST /api/v1/entities/:ref/merge { into, note? } merges :ref into another active entity, decided by the editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required). Nothing is rewritten: an audited merged_into link records who, when and why. Refusals: 404 entity.not_found, 422 merge.same_entity, 409 merge.not_active, 409 merge.target_not_active (with canonical_id), 409 merge.cycle.
+ */
+export interface ReviewsEntityMergeRequest {
+  /**
+   * An entity id (ent_…) or its slug.
+   */
+  into: string;
+  /**
+   * Cut to 500 characters.
+   */
+  note?: string | null;
+}
+
+/** reviews.entity-merge-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-merge-result@1: the answer of reviews.entity.merge on OpenVibe.Reviews: POST /api/v1/entities/:ref/merge → { link, entity, into, signals } — the merged_into link, the merged entity, the entity it now lives under (its aggregate recomputed over both) and the ids of the active signals that now count there. Emits reviews.entity.merged.
+ */
+export interface ReviewsEntityMergeResult {
+  link: ReviewsEntityLink;
+  entity: ReviewsEntity;
+  into: ReviewsEntity;
+  signals: string[];
+}
+
+/** reviews.entity-resolve-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-resolve-request@1: bodies of reviews.entity.resolve on OpenVibe.Reviews. POST /api/v1/resolve { name?, url?, gtin?, sku?, mpn?, source?, external? } resolves identifiers to an entity by deterministic rules (at least one: 422 resolve.empty; a name alone yields candidates, never a match). POST /api/v1/items/:id/resolution { entity, add_alias? } confirms an ambiguous or unmatched item for an entity (add_alias remembers that identifier of the item), or { ignore: true, note? } ignores it — both for an editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required; 404 item.not_found, 409 item.removed, 409 entity.not_active, 422 alias.invalid). GET /api/v1/entities, /entities/:ref, /entities/:ref/history, /entities/:ref/aggregate, /entities/:ref/summary/revisions/:n, /items and /items/:id take no body.
+ */
+export type ReviewsEntityResolveRequest =
+  | {
+      name?: string;
+      /**
+       * An absolute http(s) URL.
+       */
+      url?: string;
+      /**
+       * 8, 12, 13 or 14 digits.
+       */
+      gtin?: string;
+      sku?: string;
+      mpn?: string;
+      /**
+       * An OpenVibe.Sources source key bound to one entity.
+       */
+      source?: string;
+      /**
+       * namespace:id, e.g. steam_app:620.
+       */
+      external?: string;
+    }
+  | {
+      /**
+       * An entity id (ent_…) or its slug.
+       */
+      entity: string;
+      add_alias?: "name" | "url" | "sku" | "gtin" | "mpn" | "source" | "external";
+    }
+  | {
+      ignore: true;
+      note?: string | null;
+    }
+  | NoBody;
+
+/** reviews.entity-resolve-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-resolve-result@1: answers of reviews.entity.resolve on OpenVibe.Reviews. GET /api/v1/entities?q=&limit=&offset= → { entities, total } (total only when listing; a search by q answers { entities }). POST /api/v1/resolve → { match: exact | ambiguous | none, entity, via, rule, candidates }. GET /api/v1/entities/:ref → the entity page as JSON: { entity, aliases, merged_from, links, aggregate, aggregate_revision, signals, inactive_signals, sources, entity_trust, summary, open_corrections, decision, editor }, or { entity, canonical } for a merged or deleted entity. GET …/history → { entity, aggregates, summary_revisions, merges, signals, audit } (410 entity.deleted for readers). GET …/aggregate → { entity_id, aggregate, aggregate_revision } (409 entity.merged, 410 entity.deleted). GET …/summary/revisions/:n → { revision }. GET /api/v1/items → { items } (the resolution queue; editors). GET /api/v1/items/:id → { item } (410 item.removed). POST /api/v1/items/:id/resolution → { item, signal, settled_items } when confirmed, { item } when ignored.
+ */
+export type ReviewsEntityResolveResult =
+  | {
+      entities: ReviewsEntity[];
+      total?: number;
+    }
+  | {
+      match: "exact" | "ambiguous" | "none";
+      entity: ReviewsEntity | null;
+      /**
+       * The merged entity the identifier named, when it led to its canonical entity.
+       */
+      via: ReviewsEntity | null;
+      rule: string | null;
+      candidates: {
+        rule: string;
+        entity: ReviewsEntity;
+      }[];
+    }
+  | {
+      entity: ReviewsEntity;
+      aliases: {
+        id: string;
+        type: "name" | "url" | "sku" | "gtin" | "mpn" | "source" | "external";
+        value: string;
+      }[];
+      merged_from: ReviewsEntity[];
+      links: {
+        id: string;
+        type: "merged_into" | "related" | "edition_of" | "successor_of" | "part_of" | "external_ref";
+        from: string;
+        to: string | null;
+        ref: EntityRef | null;
+        note: string | null;
+        other: ReviewsEntity | null;
+        direction: "out" | "in";
+        created_at: string;
+      }[];
+      aggregate: {
+        revision: number;
+        computed_at: string;
+        trigger: string;
+        /**
+         * null once no qualifying signal is left.
+         */
+        result: {
+          /**
+           * reviews-aggregate@1
+           */
+          method: string;
+          components: {
+            recommendation?: {
+              positive: number;
+              total: number;
+              percent: number;
+              inputs: string[];
+            };
+            rating?: {
+              count: number;
+              percent: number;
+              inputs: string[];
+              on_scale?: {
+                value: number;
+                best: number;
+                worst?: number;
+              };
+            };
+          };
+          inputs: {}[];
+          excluded: {
+            signal_id: string;
+            /**
+             * source_excluded_by_editor, signal_excluded_by_editor, scale_not_stated, no_count, older_tally_same_source, covered_by_source_tally
+             */
+            reason: string;
+            note: string | null;
+          }[];
+          sources: string[];
+          observed: {
+            earliest: string;
+            latest: string;
+          };
+          /**
+           * The computation in words, one line per component.
+           */
+          computation: string[];
+        } | null;
+      } | null;
+      aggregate_revision: number | null;
+      signals: ReviewsSignal[];
+      inactive_signals: ReviewsSignal[];
+      sources: {
+        key: string;
+        name?: string | null;
+        homepage_url?: string | null;
+        license_note?: string | null;
+        terms_note?: string | null;
+        status?: string | null;
+        stale?: boolean | null;
+        last_success_at?: string | null;
+        /**
+         * The current editor trust facts by key.
+         */
+        trust: {
+          aggregate?: {
+            value: string;
+            note: string | null;
+            set_at: string | null;
+          };
+          limitation?: {
+            value: string;
+            note: string | null;
+            set_at: string | null;
+          };
+          verification?: {
+            value: string;
+            note: string | null;
+            set_at: string | null;
+          };
+        };
+      }[];
+      /**
+       * The current editor trust facts by key.
+       */
+      entity_trust: {
+        aggregate?: {
+          value: string;
+          note: string | null;
+          set_at: string | null;
+        };
+        limitation?: {
+          value: string;
+          note: string | null;
+          set_at: string | null;
+        };
+        verification?: {
+          value: string;
+          note: string | null;
+          set_at: string | null;
+        };
+      };
+      summary: {
+        id: string;
+        state: "draft" | "published" | "unpublished";
+        head_revision: number;
+        flagged: boolean;
+        flag_reason: string | null;
+        flagged_at: string | null;
+        published_at: string | null;
+        revision_published_at: string | null;
+        published: ReviewsSummaryRevision | null;
+        /**
+         * Editors get the pending revisions; readers only their count.
+         */
+        pending: ReviewsSummaryRevision[] | number;
+        history: {
+          number: number;
+          status: string;
+          created_at: string;
+          disclosure: string | null;
+          correction: {} | null;
+        }[];
+      } | null;
+      open_corrections: number;
+      decision: {
+        indexable: boolean;
+        robots: string;
+        /**
+         * The gate's reason codes.
+         */
+        reasons: string[];
+      };
+      editor: boolean;
+    }
+  | {
+      entity: ReviewsEntity;
+      canonical: ReviewsEntity | null;
+    }
+  | {
+      entity: ReviewsEntity;
+      aggregates: {
+        revision: number;
+        computed_at: string;
+        trigger: string;
+        /**
+         * null once no qualifying signal is left.
+         */
+        result: {
+          /**
+           * reviews-aggregate@1
+           */
+          method: string;
+          components: {
+            recommendation?: {
+              positive: number;
+              total: number;
+              percent: number;
+              inputs: string[];
+            };
+            rating?: {
+              count: number;
+              percent: number;
+              inputs: string[];
+              on_scale?: {
+                value: number;
+                best: number;
+                worst?: number;
+              };
+            };
+          };
+          inputs: {}[];
+          excluded: {
+            signal_id: string;
+            /**
+             * source_excluded_by_editor, signal_excluded_by_editor, scale_not_stated, no_count, older_tally_same_source, covered_by_source_tally
+             */
+            reason: string;
+            note: string | null;
+          }[];
+          sources: string[];
+          observed: {
+            earliest: string;
+            latest: string;
+          };
+          /**
+           * The computation in words, one line per component.
+           */
+          computation: string[];
+        } | null;
+      }[];
+      summary_revisions: ReviewsSummaryRevision[];
+      merges: {
+        id: string;
+        from: ReviewsEntity;
+        to: ReviewsEntity;
+        note: string | null;
+        merged_at: string;
+        /**
+         * Editors only.
+         */
+        merged_by: string | null;
+        split_at: string | null;
+        split_by: string | null;
+        split_note: string | null;
+      }[];
+      signals: ReviewsSignal[];
+      audit: {
+        id: number;
+        at: string;
+        action: string;
+        target: string | null;
+        /**
+         * Readers see "an editor" for a person.
+         */
+        actor: string;
+        detail: {};
+      }[];
+    }
+  | {
+      entity_id: string;
+      aggregate: {
+        revision: number;
+        computed_at: string;
+        trigger: string;
+        /**
+         * null once no qualifying signal is left.
+         */
+        result: {
+          /**
+           * reviews-aggregate@1
+           */
+          method: string;
+          components: {
+            recommendation?: {
+              positive: number;
+              total: number;
+              percent: number;
+              inputs: string[];
+            };
+            rating?: {
+              count: number;
+              percent: number;
+              inputs: string[];
+              on_scale?: {
+                value: number;
+                best: number;
+                worst?: number;
+              };
+            };
+          };
+          inputs: {}[];
+          excluded: {
+            signal_id: string;
+            /**
+             * source_excluded_by_editor, signal_excluded_by_editor, scale_not_stated, no_count, older_tally_same_source, covered_by_source_tally
+             */
+            reason: string;
+            note: string | null;
+          }[];
+          sources: string[];
+          observed: {
+            earliest: string;
+            latest: string;
+          };
+          /**
+           * The computation in words, one line per component.
+           */
+          computation: string[];
+        } | null;
+      } | null;
+      aggregate_revision: number | null;
+    }
+  | {
+      revision: ReviewsSummaryRevision;
+    }
+  | {
+      items: ReviewsItem[];
+    }
+  | {
+      item: ReviewsItem;
+      signal?: ReviewsSignal | null;
+      settled_items?: number;
+    };
+
+/** reviews.entity-split-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-split-request@1: the body of reviews.entity.split on OpenVibe.Reviews: POST /api/v1/entities/:ref/split { note? } undoes the merge of :ref, decided by the editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required): the merged_into link ends (audited) and the pre-merge attribution is restored exactly. Refusals: 404 entity.not_found, 409 split.not_merged, 409 split.no_merge_link.
+ */
+export interface ReviewsEntitySplitRequest {
+  /**
+   * Cut to 500 characters.
+   */
+  note?: string | null;
+}
+
+/** reviews.entity-split-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity-split-result@1: the answer of reviews.entity.split on OpenVibe.Reviews: POST /api/v1/entities/:ref/split → { link, entity, from, signals } — the ended merged_into link, the entity (active again), the entity it was merged into and the ids of the signals that went back with it. Both aggregates are recomputed and a summary that cited those signals is flagged with a pending revision. Emits reviews.entity.split.
+ */
+export interface ReviewsEntitySplitResult {
+  link: ReviewsEntityLink;
+  entity: ReviewsEntity;
+  from: ReviewsEntity | null;
+  signals: string[];
+}
+
+/** reviews.entity@1.0.0 (owner: reviews) */
+/**
+ * reviews.entity@1: one reviewed entity as OpenVibe.Reviews shows it (server/reviews/service.js entityView): the thing reviewed, its state (a merged entity points at the entity it now lives under; a deleted one keeps its record) and its public URL.
+ */
+export interface ReviewsEntity {
+  id: string;
+  slug: string;
+  name: string;
+  kind: "product" | "game" | "software" | "service" | "place" | "organization" | "media" | "other";
+  description: string | null;
+  state: "active" | "merged" | "deleted";
+  merged_into: string | null;
+  /**
+   * The entity it lives under after following merges (itself when not merged).
+   */
+  canonical_id: string | null;
+  noindex: boolean;
+  url: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/** reviews.item@1.0.0 (owner: reviews) */
+/**
+ * reviews.item@1: one OpenVibe.Sources item as OpenVibe.Reviews read it (server/reviews/service.js itemView): only the signal fields and provenance (never review text), its state upstream, and how it was resolved to an entity (resolved by a rule or an editor, ambiguous with candidates, unmatched, or ignored), with its active signal.
+ */
+export interface ReviewsItem {
+  id: string;
+  source_key: string;
+  kind: string;
+  identity: string;
+  canonical_url: string | null;
+  title: string | null;
+  item_revision: number;
+  published_at: string | null;
+  retrieved_at: string;
+  license_note: string | null;
+  terms_note: string | null;
+  /**
+   * The fields Reviews keeps from the item (identifiers and signal values).
+   */
+  fields: {};
+  state: "active" | "removed";
+  removed_at: string | null;
+  removed_reason: string | null;
+  resolution: "resolved" | "ambiguous" | "unmatched" | "ignored";
+  entity_id: string | null;
+  /**
+   * source, url, gtin, sku, mpn, external (joined with + when several agree), conflicting_identifiers, name_only or editor.
+   */
+  resolution_rule: string | null;
+  candidates: {
+    entity_id: string;
+    rule: string;
+    entity: ReviewsEntity | null;
+  }[];
+  /**
+   * Why the item does or does not state a signal.
+   */
+  signal_note: string | null;
+  /**
+   * The item's active signal, or null.
+   */
+  signal: {
+    signal_id: string;
+    entity_id: string;
+    canonical_entity_id: string | null;
+    type: "recommendation" | "recommendation_tally" | "rating" | "rating_aggregate";
+    source_key: string;
+    source_item_id: string;
+    item_revision: number;
+    /**
+     * When Reviews retrieved the item revision the signal came from.
+     */
+    observed_at: string;
+    source_published_at: string | null;
+    canonical_url: string | null;
+    license_note: string | null;
+    /**
+     * recommendation signals.
+     */
+    recommended?: boolean;
+    /**
+     * recommendation_tally signals.
+     */
+    positive_count?: number;
+    total_count?: number;
+    /**
+     * rating and rating_aggregate signals, on the scale the source states.
+     */
+    rating_value?: number;
+    rating_best?: number | null;
+    rating_worst?: number | null;
+    rating_count?: number | null;
+  } | null;
+}
+
+/** reviews.signal-import-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.signal-import-request@1: bodies of reviews.signal.import on OpenVibe.Reviews (Reviews editors and granted services; 403 reviews.editor_required). POST /api/v1/signals/import { source_item_id } (or { item_id }) fetches one OpenVibe.Sources item (sources.item.read) and applies it: 422 signal.invalid_source_item, 404 signal.source_item_not_found, 422 signal.invalid_item / signal.no_provenance, 503 sources.unavailable. POST /api/v1/sources/sync takes no body and pulls the next pages of category-reviews items in change order, then drains the import queue.
+ */
+export type ReviewsSignalImportRequest =
+  | {
+      source_item_id: string;
+    }
+  | {
+      item_id: string;
+    }
+  | NoBody;
+
+/** reviews.signal-import-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.signal-import-result@1: answers of reviews.signal.import on OpenVibe.Reviews. POST /api/v1/signals/import → { outcome, item, signal }: outcome created | updated | unchanged | removed | removed:unknown | ignored:removed | ignored:older_revision | ignored:category (item null for another category), the item as Reviews keeps it and its active signal (null when it states none or is not resolved). POST /api/v1/sources/sync → { pull, queue }: pages read, items applied, unchanged and skipped, the new cursor (ok false with a reason when Sources is not configured or failed), and the queued items fetched.
+ */
+export type ReviewsSignalImportResult =
+  | {
+      outcome: string;
+      item: ReviewsItem | null;
+      signal: ReviewsSignal | null;
+    }
+  | {
+      pull: {
+        ok: boolean;
+        reason?: string | null;
+        after?: number;
+        pages?: number;
+        applied?: number;
+        unchanged?: number;
+        skipped?: number;
+      };
+      queue: {
+        ok: boolean;
+        reason?: string | null;
+        done: number;
+        failed?: number;
+      };
+    };
+
+/** reviews.signal@1.0.0 (owner: reviews) */
+/**
+ * reviews.signal@1: one review signal as OpenVibe.Reviews shows it (server/reviews/service.js signalView): a typed observation (recommendation, tally or rating as the source states it — never review text) extracted from one OpenVibe.Sources item revision and attributed to one entity, with its status (superseded by a newer item revision, withdrawn when the item is removed or reattributed), trust facts and full provenance.
+ */
+export interface ReviewsSignal {
+  signal_id: string;
+  entity_id: string;
+  canonical_entity_id: string | null;
+  type: "recommendation" | "recommendation_tally" | "rating" | "rating_aggregate";
+  source_key: string;
+  source_item_id: string;
+  item_revision: number;
+  /**
+   * When Reviews retrieved the item revision the signal came from.
+   */
+  observed_at: string;
+  source_published_at: string | null;
+  canonical_url: string | null;
+  license_note: string | null;
+  /**
+   * recommendation signals.
+   */
+  recommended?: boolean;
+  /**
+   * recommendation_tally signals.
+   */
+  positive_count?: number;
+  total_count?: number;
+  /**
+   * rating and rating_aggregate signals, on the scale the source states.
+   */
+  rating_value?: number;
+  rating_best?: number | null;
+  rating_worst?: number | null;
+  rating_count?: number | null;
+  status: "active" | "superseded" | "withdrawn";
+  status_reason: string | null;
+  status_at: string | null;
+  superseded_by: string | null;
+  /**
+   * Trust facts extracted with the signal.
+   */
+  trust: {};
+  /**
+   * The current editor trust facts by key.
+   */
+  editor_trust: {
+    aggregate?: {
+      value: string;
+      note: string | null;
+      set_at: string | null;
+    };
+    limitation?: {
+      value: string;
+      note: string | null;
+      set_at: string | null;
+    };
+    verification?: {
+      value: string;
+      note: string | null;
+      set_at: string | null;
+    };
+  };
+  created_at: string;
+  provenance: {
+    source_key: string;
+    source_name: string | null;
+    source_homepage: string | null;
+    source_item_id: string;
+    item_revision: number;
+    item_kind: string | null;
+    retrieved_at: string;
+    last_seen_at: string | null;
+    canonical_url: string | null;
+    license_note: string | null;
+    terms_note: string | null;
+    item_state: string | null;
+    item_removed_reason: string | null;
+  };
+}
+
+/** reviews.summary-propose-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary-propose-request@1: the body of reviews.summary.propose on OpenVibe.Reviews (a service principal only: 403 summary.service_only): POST /api/v1/entities/:ref/summary/proposals { workflow: { id, run_id }, overview?, overview_signals?, pros?, cons?, stub_provider?, note? } proposes an AI summary revision (workflow reviews.summarize_entity) whose every pro and con cites live signals of the entity. It is stored with ai authorship, never published by this call and stays out of pages, feeds and Search until a person approves it. Unknown keys are refused, and nothing can carry a rating: 422 summary.rating_forbidden for a rating-like key, 422 summary.rating_in_text for a rating stated in the text. Other refusals: 400 authorship.workflow_required, 422 summary.invalid, summary.empty, summary.uncited_point, summary.invalid_citation; 409 entity.not_active.
+ */
+export interface ReviewsSummaryProposeRequest {
+  workflow: {
+    /**
+     * The OpenVibe.AI workflow, reviews.summarize_entity.
+     */
+    id: string;
+    /**
+     * The run (runId is read too).
+     */
+    run_id: string;
+    runId?: string;
+    version?: unknown;
+    model?: string;
+  };
+  /**
+   * At most 6000 characters.
+   */
+  overview?: string;
+  /**
+   * The signals the overview rests on (needed when there are no pros or cons).
+   */
+  overview_signals?: string[];
+  /**
+   * @maxItems 12
+   */
+  pros?:
+    | []
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ];
+  /**
+   * @maxItems 12
+   */
+  cons?:
+    | []
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ]
+    | [
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        },
+        {
+          /**
+           * At most 600 characters once whitespace is collapsed.
+           */
+          text: string;
+          /**
+           * The live signals of the entity the point rests on (at least one).
+           */
+          signals: string | [string, ...string[]];
+        }
+      ];
+  /**
+   * The run was answered by a stub provider (stubProvider is read too).
+   */
+  stub_provider?: boolean;
+  stubProvider?: boolean;
+  /**
+   * Goes into the revision message.
+   */
+  note?: string | null;
+  /**
+   * Accepted and ignored by a proposal.
+   */
+  expected_revision?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Accepted and ignored by a proposal.
+   */
+  expectedRevision?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Accepted and ignored by a proposal.
+   */
+  message?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Accepted and ignored by a proposal.
+   */
+  publish?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Accepted and ignored by a proposal.
+   */
+  correction_note?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Accepted and ignored by a proposal.
+   */
+  correction_id?: {
+    [k: string]: unknown | undefined;
+  };
+}
+
+/** reviews.summary-propose-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary-propose-result@1: the answer of reviews.summary.propose on OpenVibe.Reviews: POST /api/v1/entities/:ref/summary/proposals → 201 { summary, revision } — the entity's summary (its published state unchanged) and the proposed revision, status pending_ai.
+ */
+export interface ReviewsSummaryProposeResult {
+  summary: ReviewsSummary;
+  revision: ReviewsSummaryRevision;
+}
+
+/** reviews.summary-publish-request@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary-publish-request@1: bodies of reviews.summary.publish on OpenVibe.Reviews, as the editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required). POST /api/v1/entities/:ref/summary/revisions { overview?, overview_signals?, pros?, cons?, expected_revision?, message?, publish? } writes a revision (unknown and rating-like keys refused: 422 summary.invalid, summary.rating_forbidden; every point cites live signals of the entity; 412 revision.conflict on a stale expected_revision); with correction_note (and optionally the correction_id of a reader's request it answers) it corrects the published summary and is published at once (409 summary.not_published, 422 correction.note_required under 10 characters). POST …/summary/revisions/:n/review { decision, note?, publish? } approves (and by default publishes) or rejects. POST …/summary/publish { revision? } publishes a revision (default the head): refused for a rejected revision (409 summary.rejected), an AI or system-prepared revision no person approved (409 ai_generated_unreviewed, summary.review_required) and a point citing no live signal (409 summary.unsupported_points). POST …/summary/unpublish takes no body (409 summary.not_published).
+ */
+export type ReviewsSummaryPublishRequest =
+  | {
+      /**
+       * At most 6000 characters.
+       */
+      overview?: string;
+      /**
+       * The signals the overview rests on (needed when there are no pros or cons).
+       */
+      overview_signals?: string[];
+      /**
+       * @maxItems 12
+       */
+      pros?:
+        | []
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ];
+      /**
+       * @maxItems 12
+       */
+      cons?:
+        | []
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ]
+        | [
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            },
+            {
+              /**
+               * At most 600 characters once whitespace is collapsed.
+               */
+              text: string;
+              /**
+               * The live signals of the entity the point rests on (at least one).
+               */
+              signals: string | [string, ...string[]];
+            }
+          ];
+      /**
+       * The head you edited (expectedRevision is read too); default the current head.
+       */
+      expected_revision?: number | string | null;
+      expectedRevision?: number | string | null;
+      /**
+       * Cut to 500 characters.
+       */
+      message?: string | null;
+      /**
+       * true, "true" or "1" publishes the revision at once.
+       */
+      publish?: boolean | string;
+      /**
+       * Makes the revision a public correction of the published summary: 10–2000 characters.
+       */
+      correction_note?: string | null;
+      /**
+       * The open correction request (cor_…) it answers; accepted in the same transaction.
+       */
+      correction_id?: string | null;
+      /**
+       * Accepted and ignored by a written revision.
+       */
+      workflow?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * Accepted and ignored by a written revision.
+       */
+      stub_provider?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * Accepted and ignored by a written revision.
+       */
+      stubProvider?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * Accepted and ignored by a written revision.
+       */
+      note?: {
+        [k: string]: unknown | undefined;
+      };
+    }
+  | {
+      decision: "approved" | "rejected";
+      note?: string | null;
+      /**
+       * false or "false" approves without publishing.
+       */
+      publish?: boolean | string;
+    }
+  | {
+      /**
+       * Default the head revision.
+       */
+      revision?: number | string | null;
+    }
+  | NoBody;
+
+/** reviews.summary-publish-result@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary-publish-result@1: answers of reviews.summary.publish on OpenVibe.Reviews. POST /api/v1/entities/:ref/summary/revisions → 201 { summary, revision, published } (a correction also answers correction: the accepted request or null). POST …/summary/revisions/:n/review → { review, published, summary }. POST …/summary/publish and …/summary/unpublish → { summary }. Emits reviews.summary.published|updated|unpublished (a correction is an updated carrying correction).
+ */
+export type ReviewsSummaryPublishResult =
+  | {
+      summary: ReviewsSummary;
+      revision: ReviewsSummaryRevision;
+      published: boolean;
+      correction?: ReviewsCorrection | null;
+    }
+  | {
+      review: {
+        id: number;
+        entityId: string;
+        revision: number;
+        reviewer: string;
+        decision: "approved" | "rejected";
+        note: string | null;
+        reviewedAt: string;
+      };
+      published: boolean;
+      summary: ReviewsSummary;
+    }
+  | {
+      summary: ReviewsSummary;
+    };
+
+/** reviews.summary-revision@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary-revision@1: one immutable summary revision as OpenVibe.Reviews shows it (server/reviews/service.js summaryRevisionView): the overview and each point with the signals it cites and whether they are still live signals of the entity, its authorship (AI proposals name the workflow and run), the latest review, the system reason of a pending revision and the public correction note. A summary never carries a rating. Readers see the author of a person's revision as "an editor".
+ */
+export interface ReviewsSummaryRevision {
+  number: number;
+  status: "published" | "rejected" | "superseded" | "pending_system" | "pending_ai" | "draft";
+  overview: string;
+  points: {
+    /**
+     * overview, pro:<i> or con:<i>.
+     */
+    key: string;
+    kind: "overview" | "pro" | "con";
+    /**
+     * null for the overview (its text is overview).
+     */
+    text: string | null;
+    supported: boolean;
+    citations: {
+      signal_id: string;
+      ok: boolean;
+      status: "active" | "superseded" | "withdrawn" | "missing";
+      in_entity: boolean;
+      superseded_by: string | null;
+    }[];
+  }[];
+  authorship: {
+    mode: "human" | "ai" | "hybrid" | "imported";
+    /**
+     * { id, runId, version?, model? }
+     */
+    workflow: {} | null;
+    stub_provider: boolean;
+  } | null;
+  disclosure: {
+    mode: string;
+    short: string;
+    long: string;
+  } | null;
+  review: {
+    decision: "approved" | "rejected";
+    reviewed_at: string;
+  } | null;
+  /**
+   * A revision Reviews prepared after a cited signal left: { reason, signals, base_revision, dropped_points }.
+   */
+  system: {} | null;
+  correction: {
+    note: string;
+    corrects: number;
+    requested: boolean;
+  } | null;
+  author: string | null;
+  message: string | null;
+  created_at: string;
+}
+
+/** reviews.summary@1.0.0 (owner: reviews) */
+/**
+ * reviews.summary@1: the editorial summary of one entity on OpenVibe.Reviews (the review_summaries row the summary routes answer with): its publication state, the published revision, and the flag set when a cited signal left (the published text stays up, flagged, until an editor approves the pending revision). Timestamps are epoch milliseconds; flagged is 0 or 1.
+ */
+export interface ReviewsSummary {
+  id: string;
+  entity_id: string;
+  state: "draft" | "published" | "unpublished";
+  published_revision: number | null;
+  /**
+   * Epoch milliseconds, or null.
+   */
+  published_at: number | null;
+  /**
+   * Epoch milliseconds, or null.
+   */
+  revision_published_at: number | null;
+  flagged: 0 | 1;
+  flag_reason: string | null;
+  /**
+   * Epoch milliseconds, or null.
+   */
+  flagged_at: number | null;
+  /**
+   * Epoch milliseconds.
+   */
+  created_at: number;
+  /**
+   * Epoch milliseconds.
+   */
+  updated_at: number;
 }
 
 /** coupons.coupon.created@1.0.0 (owner: coupons) */
@@ -30411,4 +38297,369 @@ export interface OpenreStream {
   } | null;
   created_at: string | null;
   updated_at: string | null;
+}
+
+/** host.deploy-create-request@1.0.0 (owner: host) */
+/**
+ * host.deploy-create-request@1: bodies of host.deploy.create on OpenVibe.Host (a deployer or above of the project; an app principal added as deployer can deploy from CI). POST /api/v1/sites/:id/deploys uploads a deploy: the raw body is a tar or tar.gz archive (Content-Type application/gzip, application/x-gzip, application/x-tar or application/octet-stream), or multipart/form-data with archive=<one archive> or files=<file>… (each part's filename is its path); optional fields activate=1, root=<subdirectory to deploy> and strip=folder (removes a shared first segment) also work as query parameters. It is validated (path traversal, links, special and hidden files, server-side code, file types, sizes and quotas) and never executed; a refusal is a problem whose extra carries the failed deploy_id and its log (413 upload.too_large, quota.storage; 422 validation codes; 429 quota.deploys_per_day; 403 site.taken_down; 503 upload.busy; 507 storage.host_full). POST /api/v1/deploys/:id/activate { expected_active? } and POST /api/v1/sites/:id/rollback { deploy_id?, expected_active? } switch the site's pointer in one step (rollback without deploy_id goes to the deploy active before; 409 deploy.not_ready, site.active_changed when expected_active is stale, deploy.no_previous). GET /api/v1/sites/:id/deploys, /deploys/:id and /deploys/:id/log take no body.
+ */
+export type HostDeployCreateRequest =
+  | string
+  | {
+      deploy_id?: string | null;
+      /**
+       * The deploy you saw active (null: none); refused with 409 site.active_changed when it moved.
+       */
+      expected_active?: string | null;
+    }
+  | NoBody;
+
+/** host.deploy-create-result@1.0.0 (owner: host) */
+/**
+ * host.deploy-create-result@1: answers of host.deploy.create on OpenVibe.Host. GET /api/v1/sites/:id/deploys?limit= → { active_deploy_id, deploys, activations } (newest first; the last 20 pointer switches). POST /api/v1/sites/:id/deploys → 201 { deploy, activated, url } (the ready deploy with its validation log; activated when activate=1 switched the site to it). GET /api/v1/deploys/:id → { deploy } with its files. GET /api/v1/deploys/:id/log → { deploy_id, state, log }. POST /api/v1/deploys/:id/activate and /sites/:id/rollback → { active_deploy_id, previous_deploy_id, changed } (changed false when it was already active). Emits host.deploy.created|activated|failed.
+ */
+export type HostDeployCreateResult =
+  | {
+      active_deploy_id: string | null;
+      deploys: HostDeploy[];
+      activations: {
+        deploy_id: string;
+        previous_deploy_id: string | null;
+        kind: "activate" | "rollback";
+        actor: string;
+        at: string;
+      }[];
+    }
+  | {
+      deploy: HostDeploy;
+      activated?: boolean;
+      url?: string;
+    }
+  | {
+      deploy_id: string;
+      state: "ready" | "failed" | "deleted";
+      log: {
+        level: "info" | "warn" | "error";
+        message: string;
+        at: string;
+      }[];
+    }
+  | {
+      active_deploy_id: string;
+      previous_deploy_id: string | null;
+      changed: boolean;
+    };
+
+/** host.deploy@1.0.0 (owner: host) */
+/**
+ * host.deploy@1: one immutable static deploy on OpenVibe.Host (server/http/serialize.js deploy): ready (validated and stored, never executed) or failed (refused, with its failure code and log), whether the site serves it, its size and manifest hash. GET /api/v1/deploys/:id adds the files; the upload answer adds the log.
+ */
+export interface HostDeploy {
+  id: string;
+  site_id: string;
+  project_id: string;
+  state: "ready" | "failed" | "deleted";
+  active: boolean;
+  source: "archive" | "files";
+  file_count: number;
+  total_bytes: number;
+  /**
+   * Bytes this deploy added to the project's store.
+   */
+  new_bytes: number;
+  manifest_sha256: string | null;
+  failure_code: string | null;
+  created_by: string;
+  created_at: string;
+  files?: {
+    path: string;
+    sha256: string;
+    size: number;
+    content_type: string;
+  }[];
+  log?: {
+    level: "info" | "warn" | "error";
+    message: string;
+    at: string;
+  }[];
+}
+
+/** host.domain-manage-request@1.0.0 (owner: host) */
+/**
+ * host.domain-manage-request@1: bodies of host.domain.manage on OpenVibe.Host (a maintainer or above of the project). POST /api/v1/sites/:id/domains { hostname } adds a custom domain, pending until its TXT record is verified: a fully qualified host name, lowercased (422 domain.invalid_hostname; 422 domain.reserved for any OpenVibe domain; 403 domain.sandbox in sandbox projects; 429 quota.custom_domains; 409 domain.exists, domain.taken). GET /api/v1/sites/:id/domains, POST /api/v1/domains/:id/verify (checks the TXT record now) and DELETE /api/v1/domains/:id (409 domain.default: the default domain goes only with the site) take no body.
+ */
+export type HostDomainManageRequest =
+  | {
+      /**
+       * e.g. www.example.org (a trailing dot is dropped).
+       */
+      hostname: string;
+    }
+  | NoBody;
+
+/** host.domain-manage-result@1.0.0 (owner: host) */
+/**
+ * host.domain-manage-result@1: answers of host.domain.manage on OpenVibe.Host. GET /api/v1/sites/:id/domains → { domains } (the default domain first). POST /api/v1/sites/:id/domains → 201 { domain } with the DNS records to publish. POST /api/v1/domains/:id/verify → { domain } after the check (status verified and served once the TXT record matches, else last_error says what was found; emits host.domain.verified). DELETE /api/v1/domains/:id → { deleted: true }.
+ */
+export type HostDomainManageResult =
+  | {
+      domains: HostDomain[];
+    }
+  | {
+      domain: HostDomain;
+    }
+  | {
+      deleted: true;
+    };
+
+/** host.domain@1.0.0 (owner: host) */
+/**
+ * host.domain@1: one domain of a static site on OpenVibe.Host (server/http/serialize.js domain): the default <site>.openvibe.host, or a custom domain that is served only once its DNS TXT record is verified (re-checked daily; it lapses when the record is gone). A custom domain carries the records its owner must publish (the TXT verification value is public by design and shown only to members); TLS certificates are issued by an operator.
+ */
+export interface HostDomain {
+  id: string;
+  site_id: string;
+  hostname: string;
+  kind: "default" | "custom";
+  status: "pending" | "verified" | "failed" | "lapsed";
+  served: boolean;
+  verified_at: string | null;
+  last_checked_at: string | null;
+  last_error: string | null;
+  instructions?: {
+    verification: {
+      type: "TXT";
+      /**
+       * _openvibe-host.<hostname>
+       */
+      name: string;
+      /**
+       * openvibe-host-verification=<token>
+       */
+      value: string;
+      note?: string;
+    };
+    /**
+     * A CNAME for a subdomain; A/AAAA for an apex domain when the operator configured them.
+     */
+    routing: {
+      type: string;
+      name: string;
+      value: string;
+      note?: string;
+    }[];
+    tls: string;
+  };
+}
+
+/** host.project@1.0.0 (owner: host) */
+/**
+ * host.project@1: one OpenVibe.Host tenant project (server/http/serialize.js project): owned by a person (usr_…), production or sandbox, with the caller's role in it and any staff takedown. POST /api/v1/projects and GET /api/v1/projects/:id add the effective quota and the usage.
+ */
+export interface HostProject {
+  id: string;
+  name: string;
+  environment: "production" | "sandbox";
+  /**
+   * The OpenVibe.Network project once Network has projects.
+   */
+  network_project_id: string | null;
+  owner: string;
+  /**
+   * The caller's role (staff: a Network admin who is not a member).
+   */
+  role: "owner" | "maintainer" | "deployer" | "staff" | null;
+  created_at: string;
+  /**
+   * A staff takedown covering it: serving stops while the content is kept for review.
+   */
+  takedown: {
+    scope: "project" | "site";
+    reason: string;
+    since: string | null;
+  } | null;
+  /**
+   * The effective quota: the project's override where set, else its environment's default.
+   */
+  quota?: {
+    storage_bytes: number;
+    deploys_per_day: number;
+    max_files: number;
+    max_file_bytes: number;
+    sites: number;
+    custom_domains: number;
+  };
+  usage?: {
+    storage_bytes: number;
+    objects: number;
+    deploys_last_24h: number;
+    sites: number;
+    custom_domains: number;
+  };
+}
+
+/** host.site-manage-request@1.0.0 (owner: host) */
+/**
+ * host.site-manage-request@1: bodies of host.site.manage on OpenVibe.Host (judged by the acting principal's project role too; a sandbox token is refused on production projects). POST /api/v1/projects { name, environment?, network_project_id? } creates a project owned by the person named with X-OV-Subject (403 project.owner_must_be_user; 422 project.invalid_name over 80 characters, project.invalid_environment; 429 quota.projects; 409 project.network_project_taken). PUT /api/v1/projects/:id/quota { storage_bytes?, deploys_per_day?, max_files?, max_file_bytes?, sites?, custom_domains? } (a Network staff user: 403 auth.staff_only; fields left out keep their value). PUT /api/v1/projects/:id/members/:principal { role } (the owner: 422 member.invalid_role, 409 member.owner_fixed). POST /api/v1/projects/:id/sites { name } (a maintainer; lowercased and trimmed, one DNS label of 3–40 characters: 422 site.invalid_name, site.name_reserved; 409 site.name_taken, site.name_held; 429 quota.sites). POST /api/v1/projects/:id/takedown and /sites/:id/takedown { reason } (staff: stop serving, keep the content; 409 takedown.exists); DELETE on those { note? } lifts it. GET /api/v1/projects, /projects/:id, /projects/:id/quota, /projects/:id/sites and /sites/:id, and DELETE /api/v1/projects/:id, /projects/:id/members/:principal, /sites/:id and /deploys/:id take no body (deleting refuses taken-down content for non-staff: 409 site.taken_down; an active deploy: 409 deploy.active).
+ */
+export type HostSiteManageRequest =
+  | {
+      /**
+       * 1–80 characters once trimmed.
+       */
+      name: string;
+      /**
+       * Default production; a sandbox credential creates sandbox projects only.
+       */
+      environment?: "production" | "sandbox" | null;
+      network_project_id?: string | null;
+    }
+  | {
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      storage_bytes?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      deploys_per_day?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      max_files?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      max_file_bytes?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      sites?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      custom_domains?: number | null;
+    }
+  | {
+      /**
+       * Only a person (usr_…) can be an owner.
+       */
+      role: "owner" | "maintainer" | "deployer";
+    }
+  | {
+      /**
+       * The site name (lowercased).
+       */
+      name: string;
+    }
+  | {
+      /**
+       * Members see it.
+       */
+      reason: string;
+    }
+  | {
+      /**
+       * Cut to 500 characters.
+       */
+      note?: string | null;
+    }
+  | NoBody;
+
+/** host.site-manage-result@1.0.0 (owner: host) */
+/**
+ * host.site-manage-result@1: answers of host.site.manage on OpenVibe.Host. GET /api/v1/projects → { projects } (the caller's projects with their role). POST /api/v1/projects → 201 { project } (with quota and usage). GET /api/v1/projects/:id → { project, sites, members }. GET and PUT /api/v1/projects/:id/quota → { quota, usage }. PUT and DELETE /api/v1/projects/:id/members/:principal → { members }. GET /api/v1/projects/:id/sites → { sites }. POST /api/v1/projects/:id/sites → 201 { site }. GET /api/v1/sites/:id → { site, domains }. DELETE /api/v1/projects/:id and /sites/:id → { deleted: true } (serving stops at once; the objects are removed). DELETE /api/v1/deploys/:id → { deleted: true, objects_removed }. POST …/takedown → 201 { takedown }; DELETE …/takedown → { lifted: true }.
+ */
+export type HostSiteManageResult =
+  | {
+      projects: HostProject[];
+    }
+  | {
+      project: HostProject;
+      sites?: HostSite[];
+      members?: {
+        /**
+         * usr_…, app:app_… or svc:…
+         */
+        principal: string;
+        role: "owner" | "maintainer" | "deployer";
+        added_at: string;
+      }[];
+    }
+  | {
+      /**
+       * The effective quota: the project's override where set, else its environment's default.
+       */
+      quota: {
+        storage_bytes: number;
+        deploys_per_day: number;
+        max_files: number;
+        max_file_bytes: number;
+        sites: number;
+        custom_domains: number;
+      };
+      usage: {
+        storage_bytes: number;
+        objects: number;
+        deploys_last_24h: number;
+        sites: number;
+        custom_domains: number;
+      };
+    }
+  | {
+      members: {
+        /**
+         * usr_…, app:app_… or svc:…
+         */
+        principal: string;
+        role: "owner" | "maintainer" | "deployer";
+        added_at: string;
+      }[];
+    }
+  | {
+      sites: HostSite[];
+    }
+  | {
+      site: HostSite;
+      domains?: HostDomain[];
+    }
+  | {
+      deleted: true;
+      objects_removed?: number;
+    }
+  | {
+      /**
+       * The takedown now in force.
+       */
+      takedown: {
+        scope: "project" | "site";
+        reason: string;
+        since: string | null;
+      };
+    }
+  | {
+      lifted: true;
+    };
+
+/** host.site@1.0.0 (owner: host) */
+/**
+ * host.site@1: one static site on OpenVibe.Host (server/http/serialize.js site): its name (one DNS label), the default hostname and URL it is served at, the deploy it serves (one pointer; null until a deploy is activated) and any staff takedown.
+ */
+export interface HostSite {
+  id: string;
+  project_id: string;
+  name: string;
+  hostname: string;
+  url: string;
+  active_deploy_id: string | null;
+  /**
+   * A staff takedown covering it: serving stops while the content is kept for review.
+   */
+  takedown: {
+    scope: "project" | "site";
+    reason: string;
+    since: string | null;
+  } | null;
+  created_at: string;
+  updated_at: string;
 }

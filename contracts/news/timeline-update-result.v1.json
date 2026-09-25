@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/timeline-update-result.v1.json",
+  "title": "NewsTimelineUpdateResult",
+  "description": "news.timeline-update-result@1: answers of news.timeline.update on OpenVibe.News. POST /api/v1/stories/:id/timeline → 201 { entry } (the stored row; timestamps in epoch milliseconds). DELETE /api/v1/stories/:id/timeline/:eid → { removed: true }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "entry"
+      ],
+      "properties": {
+        "entry": {
+          "type": "object",
+          "required": [
+            "id",
+            "story_id",
+            "occurred_on",
+            "text",
+            "source_item_id",
+            "created_by",
+            "created_at",
+            "removed_at"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^tle_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "story_id": {
+              "type": "string"
+            },
+            "occurred_on": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "source_item_id": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "integer",
+              "description": "Epoch milliseconds."
+            },
+            "removed_at": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Epoch milliseconds, or null."
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "removed"
+      ],
+      "properties": {
+        "removed": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

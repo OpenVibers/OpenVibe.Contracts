@@ -1,0 +1,5 @@
+{
+  "status": "accepted",
+  "note": "Checked against the source",
+  "correction_note": "The rating count was doubled by an import error and has been fixed."
+}

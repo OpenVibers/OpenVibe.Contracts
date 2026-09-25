@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-split-request.v1.json",
+  "title": "ReviewsEntitySplitRequest",
+  "description": "reviews.entity-split-request@1: the body of reviews.entity.split on OpenVibe.Reviews: POST /api/v1/entities/:ref/split { note? } undoes the merge of :ref, decided by the editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required): the merged_into link ends (audited) and the pre-merge attribution is restored exactly. Refusals: 404 entity.not_found, 409 split.not_merged, 409 split.no_merge_link.",
+  "type": "object",
+  "properties": {
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Cut to 500 characters."
+    }
+  }
+}

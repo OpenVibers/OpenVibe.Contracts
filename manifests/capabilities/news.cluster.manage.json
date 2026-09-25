@@ -19,5 +19,7 @@
     "POST /api/v1/clusters/:id/merge",
     "POST /api/v1/clusters/:id/split",
     "POST /api/v1/clusters/audit/:auditId/reverse"
-  ]
+  ],
+  "inputSchema": "news.cluster-manage-request@1",
+  "outputSchema": "news.cluster-manage-result@1"
 }

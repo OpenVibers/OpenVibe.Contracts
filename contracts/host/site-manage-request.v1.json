@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/site-manage-request.v1.json",
+  "title": "HostSiteManageRequest",
+  "description": "host.site-manage-request@1: bodies of host.site.manage on OpenVibe.Host (judged by the acting principal's project role too; a sandbox token is refused on production projects). POST /api/v1/projects { name, environment?, network_project_id? } creates a project owned by the person named with X-OV-Subject (403 project.owner_must_be_user; 422 project.invalid_name over 80 characters, project.invalid_environment; 429 quota.projects; 409 project.network_project_taken). PUT /api/v1/projects/:id/quota { storage_bytes?, deploys_per_day?, max_files?, max_file_bytes?, sites?, custom_domains? } (a Network staff user: 403 auth.staff_only; fields left out keep their value). PUT /api/v1/projects/:id/members/:principal { role } (the owner: 422 member.invalid_role, 409 member.owner_fixed). POST /api/v1/projects/:id/sites { name } (a maintainer; lowercased and trimmed, one DNS label of 3–40 characters: 422 site.invalid_name, site.name_reserved; 409 site.name_taken, site.name_held; 429 quota.sites). POST /api/v1/projects/:id/takedown and /sites/:id/takedown { reason } (staff: stop serving, keep the content; 409 takedown.exists); DELETE on those { note? } lifts it. GET /api/v1/projects, /projects/:id, /projects/:id/quota, /projects/:id/sites and /sites/:id, and DELETE /api/v1/projects/:id, /projects/:id/members/:principal, /sites/:id and /deploys/:id take no body (deleting refuses taken-down content for non-staff: 409 site.taken_down; an active deploy: 409 deploy.active).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "1–80 characters once trimmed."
+        },
+        "environment": {
+          "enum": [
+            "production",
+            "sandbox",
+            null
+          ],
+          "description": "Default production; a sandbox credential creates sandbox projects only."
+        },
+        "network_project_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^([A-Za-z0-9_:-]{3,80})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "storage_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "A non-negative integer, or null for the environment default."
+        },
+        "deploys_per_day": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "A non-negative integer, or null for the environment default."
+        },
+        "max_files": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "A non-negative integer, or null for the environment default."
+        },
+        "max_file_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "A non-negative integer, or null for the environment default."
+        },
+        "sites": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "A non-negative integer, or null for the environment default."
+        },
+        "custom_domains": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "A non-negative integer, or null for the environment default."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "owner",
+            "maintainer",
+            "deployer"
+          ],
+          "description": "Only a person (usr_…) can be an owner."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^\\s*[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){2,39}\\s*$",
+          "description": "The site name (lowercased)."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Members see it."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

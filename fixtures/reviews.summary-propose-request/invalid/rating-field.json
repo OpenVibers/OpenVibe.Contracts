@@ -1,0 +1,11 @@
+{
+  "workflow": {
+    "id": "reviews.summarize_entity",
+    "run_id": "run_01JAC8R9S0T1V2W3X4Y5Z6A7B8"
+  },
+  "overview": "Great.",
+  "overview_signals": [
+    "sig_01JAC2S3G4H5J6K7M8N9P0Q1R2"
+  ],
+  "rating": 4.5
+}

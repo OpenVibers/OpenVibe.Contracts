@@ -18,5 +18,7 @@
     "GET /api/v1/clusters/:id",
     "GET /api/v1/source-items/:id",
     "GET /api/v1/ingest"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "news.cluster-read-result@1"
 }

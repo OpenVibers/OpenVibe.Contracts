@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-revise-request.v1.json",
+  "title": "NewsStoryReviseRequest",
+  "description": "news.story-revise-request@1: bodies of news.story.revise on OpenVibe.News (editors; a service acts for the editor in X-OV-Subject). POST /api/v1/stories/:id/revisions { expected_revision, headline?, body? | paragraphs?, topic?, noindex?, message? } saves a new immutable revision snapshotting the source table, timeline and perspectives (expected_revision is required once a revision exists: 428 revision.expected_required, 412 revision.conflict on a stale one; every paragraph must cite an attached source: 422 story.claim_unsourced / story.unknown_source; 409 story.retracted). With X-OV-Origin: ai the revision is AI-generated and carries authorship { workflow: { id: news.summarize_story | news.compare_perspectives, run_id } } and gaps. POST /api/v1/stories/:id/ai-drafts { workflow? } asks OpenVibe.AI for a draft (default news.summarize_story; 503 ai.not_configured, 422 story.unsourced, 422 story.too_few_sources). POST /api/v1/stories/:id/flags { kind, note } adds a correction or update note published with the next publication.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "minimum": 0,
+          "pattern": "^[0-9]+$",
+          "description": "The revision you edited (expectedRevision is read too)."
+        },
+        "headline": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "At most 200 characters; default the head's headline."
+        },
+        "body": {
+          "type": "string",
+          "description": "Paragraphs separated by a blank line, each ending with the source numbers it rests on, e.g. \"… said on Monday. [1, 3]\"."
+        },
+        "paragraphs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text",
+              "sources"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "description": "At most 3000 characters once whitespace is collapsed."
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "A source number [n] of the story's source table."
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^(nsi|itm)_[0-9A-HJKMNP-TV-Z]{26}$",
+                      "description": "A News source item id (nsi_…) or the OpenVibe.Sources item id it came from (itm_…)."
+                    }
+                  ]
+                },
+                "minItems": 1,
+                "description": "The attached sources the paragraph rests on (at least one)."
+              }
+            }
+          },
+          "minItems": 1,
+          "maxItems": 60
+        },
+        "topic": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "An active topic by id or slug; null or empty clears it."
+        },
+        "noindex": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "description": "true, 1 or \"1\" asks search engines not to index the story."
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 200 characters."
+        },
+        "authorship": {
+          "type": "object",
+          "description": "Read only with X-OV-Origin: ai.",
+          "properties": {
+            "workflow": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "enum": [
+                    "news.summarize_story",
+                    "news.compare_perspectives"
+                  ]
+                },
+                "run_id": {
+                  "type": "string"
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "version": {},
+                "model": {
+                  "type": "string"
+                }
+              }
+            },
+            "stub_provider": {
+              "type": "boolean"
+            },
+            "stubProvider": {
+              "type": "boolean"
+            }
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "description": "Read only with X-OV-Origin: ai."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "workflow": {
+          "enum": [
+            "news.summarize_story",
+            "news.compare_perspectives"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "note"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "correction",
+            "update"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "Public text readers will see; at most 2000 characters."
+        }
+      }
+    }
+  ]
+}

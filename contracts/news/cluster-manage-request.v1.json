@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/cluster-manage-request.v1.json",
+  "title": "NewsClusterManageRequest",
+  "description": "news.cluster-manage-request@1: bodies of news.cluster.manage on OpenVibe.News (editors). POST /api/v1/clusters/:id/merge { other, reason? } merges cluster other into :id (both open: 404 cluster.not_found, 409 cluster.not_open, 422 cluster.same). POST /api/v1/clusters/:id/split { items, reason? } moves those items into a new cluster (422 cluster.split_empty, cluster.split_foreign, cluster.split_all: at least one item stays). POST /api/v1/clusters/audit/:auditId/reverse { reason? } undoes a merge or split (404 cluster.audit_not_found, 409 cluster.already_reversed, 409 cluster.changed). Every change is audited with exactly which items moved.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "other"
+      ],
+      "properties": {
+        "other": {
+          "type": "string",
+          "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Source item ids (nsi_…) of the cluster."
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        }
+      }
+    }
+  ]
+}

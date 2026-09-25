@@ -1,0 +1,14 @@
+{
+  "id": "cla_01JAB4A5B6C7D8E9F0G1H2J3KM",
+  "action": "merge",
+  "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+  "other_id": "clu_01JAB2X4C4D5E6F7G8H9J0KMNP",
+  "item_ids": [
+    "nsi_01JAB2Z8Y6X5W4V3T2S1R0QPNM"
+  ],
+  "reason": "Same bridge closure",
+  "actor": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "reverses": null,
+  "reversed_by": null,
+  "at": "2026-09-24T09:40:12.000Z"
+}

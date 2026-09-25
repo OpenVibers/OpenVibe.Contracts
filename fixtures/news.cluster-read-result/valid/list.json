@@ -1,0 +1,33 @@
+{
+  "clusters": [
+    {
+      "id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+      "label": "Harbour Bridge",
+      "status": "open",
+      "merged_into": null,
+      "split_from": null,
+      "window": {
+        "start": "2026-09-24T06:30:00.000Z",
+        "end": "2026-09-24T07:30:00.000Z"
+      },
+      "created_by": "svc:news",
+      "key_terms": [
+        {
+          "term": "bridge",
+          "items": 2
+        },
+        {
+          "term": "inspection",
+          "items": 2
+        }
+      ],
+      "key_entities": [
+        {
+          "entity": "Harbour Bridge",
+          "items": 2
+        }
+      ],
+      "item_count": 2
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-revise-result.v1.json",
+  "title": "NewsStoryReviseResult",
+  "description": "news.story-revise-result@1: answers of news.story.revise on OpenVibe.News. POST /api/v1/stories/:id/revisions and POST /api/v1/stories/:id/ai-drafts → 201 { revision, created, story } (the revision number; created is false when the text and snapshot equal the head). POST /api/v1/stories/:id/flags → 201 { flag } (the stored flag row, open until the next publication; timestamps in epoch milliseconds).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "revision",
+        "created",
+        "story"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created": {
+          "type": "boolean"
+        },
+        "story": {
+          "$ref": "story.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "flag"
+      ],
+      "properties": {
+        "flag": {
+          "type": "object",
+          "required": [
+            "id",
+            "story_id",
+            "kind",
+            "status",
+            "note",
+            "source_item_id",
+            "pending_revision",
+            "revision",
+            "created_by",
+            "created_at",
+            "resolved_by",
+            "resolved_at"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^flg_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "story_id": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "correction",
+                "update",
+                "retraction",
+                "source_updated",
+                "source_removed"
+              ]
+            },
+            "status": {
+              "enum": [
+                "open",
+                "published",
+                "resolved"
+              ]
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_item_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "pending_revision": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "revision": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "created_by": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "integer",
+              "description": "Epoch milliseconds."
+            },
+            "resolved_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "resolved_at": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Epoch milliseconds, or null."
+            }
+          }
+        }
+      }
+    }
+  ]
+}

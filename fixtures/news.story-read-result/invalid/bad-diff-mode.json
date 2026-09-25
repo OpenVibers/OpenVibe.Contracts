@@ -1,0 +1,15 @@
+{
+  "diff": {
+    "entityId": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+    "from": 1,
+    "to": 2,
+    "content": {
+      "mode": "char",
+      "ops": [],
+      "added": 0,
+      "removed": 0,
+      "approximate": false
+    },
+    "fields": []
+  }
+}

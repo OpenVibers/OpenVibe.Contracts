@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/perspective-update-request.v1.json",
+  "title": "NewsPerspectiveUpdateRequest",
+  "description": "news.perspective-update-request@1: bodies of news.perspective.update on OpenVibe.News (editors). POST /api/v1/stories/:id/perspectives { label, description? } adds an editor-labelled perspective (labels are written by editors, never generated; 422 perspective.no_label, 422 perspective.label_too_long over 80 characters; the description is cut to 500). PUT /api/v1/stories/:id/sources/:item/perspective { perspective } puts an attached source in a perspective (per_…) or in none (null or absent; 404 story.source_not_attached, 404 perspective.not_found). DELETE /api/v1/stories/:id/perspectives/:pid takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "At most 80 characters once whitespace is collapsed."
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "perspective": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^per_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

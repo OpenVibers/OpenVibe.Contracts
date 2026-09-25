@@ -1,0 +1,336 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-manage-request.v1.json",
+  "title": "ReviewsEntityManageRequest",
+  "description": "reviews.entity-manage-request@1: bodies of reviews.entity.manage on OpenVibe.Reviews (Reviews editors; a service acts for the editor in X-OV-Subject, and every route but POST /api/v1/entities needs that person: 403 reviews.person_required / reviews.editor_required). POST /api/v1/entities { name, kind?, description?, slug?, aliases? } (201; 422 entity.invalid_name, entity.invalid_kind, alias.invalid; 409 entity.slug_taken, alias.taken). PATCH /api/v1/entities/:ref { name?, kind?, description?, slug?, noindex? } (a new slug redirects the old one; 409 entity.not_active). DELETE /api/v1/entities/:ref { note? } (409 entity.has_merges, entity.has_signals). POST /api/v1/entities/:ref/aliases { type, value } (201). POST /api/v1/entities/:ref/links { type, to? | ref?, note? } (to names an entity; an external_ref link carries ref, another service's EntityRef). DELETE /api/v1/entities/:ref/links/:id { note? }. POST /api/v1/trust { scope, scope_id, key, value?, note? } (excluding a source or signal from aggregates needs a note readers see: 422 trust.reason_required). PATCH /api/v1/corrections/:id { status, note?, correction_note?, summary? } (accepting a request about an entity with a published summary corrects it with the public correction_note; a service also needs reviews.summary.publish for that). GET /api/v1/corrections and DELETE /api/v1/entities/:ref/aliases/:id take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "kind": {
+          "enum": [
+            "product",
+            "game",
+            "software",
+            "service",
+            "place",
+            "organization",
+            "media",
+            "other"
+          ],
+          "description": "Default other."
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 2000 characters."
+        },
+        "slug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "value"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "name",
+                  "url",
+                  "sku",
+                  "gtin",
+                  "mpn",
+                  "source",
+                  "external"
+                ]
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "kind": {
+          "enum": [
+            "product",
+            "game",
+            "software",
+            "service",
+            "place",
+            "organization",
+            "media",
+            "other"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "slug": {
+          "type": "string"
+        },
+        "noindex": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "name",
+            "url",
+            "sku",
+            "gtin",
+            "mpn",
+            "source",
+            "external"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "related",
+            "edition_of",
+            "successor_of",
+            "part_of",
+            "external_ref"
+          ]
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An entity id (ent_…) or its slug."
+        },
+        "ref": {
+          "$ref": "../common/entity-ref.v1.json"
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "scope",
+        "scope_id",
+        "key"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "source",
+            "signal",
+            "entity"
+          ]
+        },
+        "scope_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "enum": [
+            "aggregate",
+            "limitation",
+            "verification"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "aggregate: include or exclude; limitation and verification: text (empty ends the fact)."
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "accepted",
+            "rejected"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Stays with the editors."
+        },
+        "correction_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The public note of the summary correction, 10–2000 characters."
+        },
+        "summary": {
+          "type": "object",
+          "description": "New text for the corrected summary; default the published text carried forward.",
+          "properties": {
+            "overview": {
+              "type": "string",
+              "description": "At most 6000 characters."
+            },
+            "overview_signals": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "description": "The signals the overview rests on (needed when there are no pros or cons)."
+            },
+            "pros": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "text",
+                  "signals"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "At most 600 characters once whitespace is collapsed."
+                  },
+                  "signals": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                        },
+                        "minItems": 1
+                      }
+                    ],
+                    "description": "The live signals of the entity the point rests on (at least one)."
+                  }
+                }
+              },
+              "maxItems": 12
+            },
+            "cons": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "text",
+                  "signals"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "At most 600 characters once whitespace is collapsed."
+                  },
+                  "signals": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                        },
+                        "minItems": 1
+                      }
+                    ],
+                    "description": "The live signals of the entity the point rests on (at least one)."
+                  }
+                }
+              },
+              "maxItems": 12
+            }
+          }
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

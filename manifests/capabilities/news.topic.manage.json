@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/topics"
-  ]
+  ],
+  "inputSchema": "news.topic-manage-request@1",
+  "outputSchema": "news.topic-manage-result@1"
 }

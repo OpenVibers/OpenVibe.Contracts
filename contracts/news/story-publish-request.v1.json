@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-publish-request.v1.json",
+  "title": "NewsStoryPublishRequest",
+  "description": "news.story-publish-request@1: bodies of news.story.publish on OpenVibe.News (editors). POST /api/v1/stories/:id/publish { revision?, correction? } publishes revision N (default the head) with an optional correction or update note readers will see. Refused while anything in the story's publishable list stands: 409 story.review_required (an AI revision no person approved), 409 story.source_removed / story.source_detached, 422 story.unsourced / story.claim_unsourced / story.no_headline (problems in the problem's extra); 422 story.correction_note_required when a source it cited was removed upstream and no note says what changed; 409 story.retracted; 404 revision.not_found. POST /api/v1/stories/:id/unpublish takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ],
+          "minimum": 1,
+          "pattern": "^[0-9]*$",
+          "description": "Default: the head revision."
+        },
+        "correction": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "A note given without kind is a correction.",
+          "properties": {
+            "kind": {
+              "enum": [
+                "correction",
+                "update"
+              ]
+            },
+            "note": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          }
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

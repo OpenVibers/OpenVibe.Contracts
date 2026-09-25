@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/summary-publish-request.v1.json",
+  "title": "ReviewsSummaryPublishRequest",
+  "description": "reviews.summary-publish-request@1: bodies of reviews.summary.publish on OpenVibe.Reviews, as the editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required). POST /api/v1/entities/:ref/summary/revisions { overview?, overview_signals?, pros?, cons?, expected_revision?, message?, publish? } writes a revision (unknown and rating-like keys refused: 422 summary.invalid, summary.rating_forbidden; every point cites live signals of the entity; 412 revision.conflict on a stale expected_revision); with correction_note (and optionally the correction_id of a reader's request it answers) it corrects the published summary and is published at once (409 summary.not_published, 422 correction.note_required under 10 characters). POST …/summary/revisions/:n/review { decision, note?, publish? } approves (and by default publishes) or rejects. POST …/summary/publish { revision? } publishes a revision (default the head): refused for a rejected revision (409 summary.rejected), an AI or system-prepared revision no person approved (409 ai_generated_unreviewed, summary.review_required) and a point citing no live signal (409 summary.unsupported_points). POST …/summary/unpublish takes no body (409 summary.not_published).",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "overview": {
+          "type": "string",
+          "description": "At most 6000 characters."
+        },
+        "overview_signals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "description": "The signals the overview rests on (needed when there are no pros or cons)."
+        },
+        "pros": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text",
+              "signals"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "description": "At most 600 characters once whitespace is collapsed."
+              },
+              "signals": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "minItems": 1
+                  }
+                ],
+                "description": "The live signals of the entity the point rests on (at least one)."
+              }
+            }
+          },
+          "maxItems": 12
+        },
+        "cons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text",
+              "signals"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "description": "At most 600 characters once whitespace is collapsed."
+              },
+              "signals": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "minItems": 1
+                  }
+                ],
+                "description": "The live signals of the entity the point rests on (at least one)."
+              }
+            }
+          },
+          "maxItems": 12
+        },
+        "expected_revision": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ],
+          "minimum": 0,
+          "pattern": "^[0-9]*$",
+          "description": "The head you edited (expectedRevision is read too); default the current head."
+        },
+        "expectedRevision": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cut to 500 characters."
+        },
+        "publish": {
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "description": "true, \"true\" or \"1\" publishes the revision at once."
+        },
+        "correction_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Makes the revision a public correction of the published summary: 10–2000 characters."
+        },
+        "correction_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The open correction request (cor_…) it answers; accepted in the same transaction."
+        },
+        "workflow": {
+          "description": "Accepted and ignored by a written revision."
+        },
+        "stub_provider": {
+          "description": "Accepted and ignored by a written revision."
+        },
+        "stubProvider": {
+          "description": "Accepted and ignored by a written revision."
+        },
+        "note": {
+          "description": "Accepted and ignored by a written revision."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "decision"
+      ],
+      "properties": {
+        "decision": {
+          "enum": [
+            "approved",
+            "rejected"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publish": {
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "description": "false or \"false\" approves without publishing."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ],
+          "minimum": 1,
+          "pattern": "^[0-9]+$",
+          "description": "Default the head revision."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/entities/:ref/corrections"
-  ]
+  ],
+  "inputSchema": "reviews.correction-submit-request@1",
+  "outputSchema": "reviews.correction-submit-result@1"
 }

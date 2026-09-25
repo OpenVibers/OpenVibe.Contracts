@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/cluster.v1.json",
+  "title": "NewsCluster",
+  "description": "news.cluster@1: one story cluster on OpenVibe.News (server/http/api.js clusterDto): a deterministic, explainable grouping of source items that report the same story, with its label (derived from the key terms, never invented), time window, key terms and entities. GET /api/v1/clusters/:id and merge/split answers add items, audit and stories.",
+  "type": "object",
+  "required": [
+    "id",
+    "label",
+    "status",
+    "merged_into",
+    "split_from",
+    "window",
+    "created_by",
+    "key_terms",
+    "key_entities",
+    "item_count"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^clu_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "label": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "open",
+        "merged",
+        "dissolved"
+      ]
+    },
+    "merged_into": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "split_from": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "end": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "created_by": {
+      "type": "string",
+      "description": "svc:news (clustering) or the editor who split it off."
+    },
+    "key_terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "term",
+          "items"
+        ],
+        "properties": {
+          "term": {
+            "type": "string"
+          },
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "maxItems": 15
+    },
+    "key_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entity",
+          "items"
+        ],
+        "properties": {
+          "entity": {
+            "type": "string"
+          },
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "maxItems": 10
+    },
+    "item_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "source-item.v1.json"
+      }
+    },
+    "audit": {
+      "type": "array",
+      "items": {
+        "$ref": "cluster-audit.v1.json"
+      }
+    },
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "state"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

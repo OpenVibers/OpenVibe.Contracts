@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/source-attach-result.v1.json",
+  "title": "NewsSourceAttachResult",
+  "description": "news.source-attach-result@1: answers of news.source.attach on OpenVibe.News. POST /api/v1/stories/:id/sources → 201 { n, created, item } (the source number; created false when it was already attached). DELETE /api/v1/stories/:id/sources/:item → { detached: true, n }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "n",
+        "created",
+        "item"
+      ],
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created": {
+          "type": "boolean"
+        },
+        "item": {
+          "$ref": "source-item.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "detached",
+        "n"
+      ],
+      "properties": {
+        "detached": {
+          "const": true
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  ]
+}

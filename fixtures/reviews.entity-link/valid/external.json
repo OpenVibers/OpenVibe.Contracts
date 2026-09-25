@@ -1,0 +1,13 @@
+{
+  "id": "lnk_01JAC5M7N7P8Q9R0S1T2V3W4X5",
+  "from_entity": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+  "to_entity": null,
+  "type": "external_ref",
+  "ref": "{\"service\":\"wiki\",\"type\":\"page\",\"id\":\"pg_01JAC9P0Q1R2S3T4V5W6X7Y8Z9\"}",
+  "note": null,
+  "created_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "created_at": 1790241000000,
+  "ended_at": null,
+  "ended_by": null,
+  "end_note": null
+}

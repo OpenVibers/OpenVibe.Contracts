@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/source-item.v1.json",
+  "title": "NewsSourceItem",
+  "description": "news.source-item@1: one source item as OpenVibe.News shows it to editors (server/http/api.js itemDto): the normalised OpenVibe.Sources item — headline, URL, outlet, authors, the date the source states and a licensed short summary, never a body — with its dedupe outcome, cluster and the stored explanation of its membership, and its upstream state.",
+  "type": "object",
+  "required": [
+    "id",
+    "sources_item",
+    "source_key",
+    "headline",
+    "url",
+    "outlet",
+    "authors",
+    "published_at",
+    "summary",
+    "summary_basis",
+    "license_note",
+    "terms_note",
+    "status",
+    "duplicate_of",
+    "dedupe",
+    "cluster_id",
+    "cluster_reason",
+    "retrieved_at",
+    "first_seen_at",
+    "upstream_updated_at",
+    "removed"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^nsi_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "sources_item": {
+      "$ref": "../common/entity-ref.v1.json",
+      "description": "The OpenVibe.Sources item and the revision these fields came from."
+    },
+    "source_key": {
+      "type": "string"
+    },
+    "headline": {
+      "type": "string"
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "outlet": {
+      "type": "string"
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "As the source states it; null when it does not."
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A short summary, stored only when the source's terms allow it."
+    },
+    "summary_basis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Why a summary is (not) stored."
+    },
+    "license_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "terms_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "duplicate",
+        "removed"
+      ]
+    },
+    "duplicate_of": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dedupe": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "{ rule, detail } when the item is a duplicate."
+    },
+    "cluster_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "cluster_reason": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Why the item is in its cluster: { rule (shared_terms, new_cluster, duplicate_of, merged, split, …), shared_entities, shared_terms, score, … }."
+    },
+    "retrieved_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "first_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "upstream_updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "removed": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "at",
+        "reason"
+      ],
+      "description": "Set once the source removed the item upstream.",
+      "properties": {
+        "at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

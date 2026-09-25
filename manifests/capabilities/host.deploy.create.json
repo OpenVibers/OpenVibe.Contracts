@@ -24,5 +24,7 @@
     "GET /api/v1/deploys/:id/log",
     "POST /api/v1/deploys/:id/activate",
     "POST /api/v1/sites/:id/rollback"
-  ]
+  ],
+  "inputSchema": "host.deploy-create-request@1",
+  "outputSchema": "host.deploy-create-result@1"
 }

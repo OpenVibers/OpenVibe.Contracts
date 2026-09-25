@@ -1,0 +1,29 @@
+{
+  "active_deploy_id": "dpl_01JAD4D4E5F6G7H8J9K0M1N2P3",
+  "deploys": [
+    {
+      "id": "dpl_01JAD4D4E5F6G7H8J9K0M1N2P3",
+      "site_id": "site_01JAD2S3T4V5W6X7Y8Z9A0B1C2",
+      "project_id": "prj_01JAD1P2R3J4K5M6N7P8Q9R0S1",
+      "state": "ready",
+      "active": true,
+      "source": "archive",
+      "file_count": 37,
+      "total_bytes": 482113,
+      "new_bytes": 20411,
+      "manifest_sha256": "a3f1c9e0b4d2e6f8a1c3e5f7091b2d4f6a8c0e2f4a6b8d0f2e4c6a8b0d2f4e6a",
+      "failure_code": null,
+      "created_by": "app:app_01JAD7A8B9C0D1E2F3G4H5J6K7",
+      "created_at": "2026-09-24T09:40:12.000Z"
+    }
+  ],
+  "activations": [
+    {
+      "deploy_id": "dpl_01JAD4D4E5F6G7H8J9K0M1N2P3",
+      "previous_deploy_id": "dpl_01JAD3D4E5F6G7H8J9K0M1N2P3",
+      "kind": "activate",
+      "actor": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "at": "2026-09-24T09:40:12.000Z"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/summary-revision.v1.json",
+  "title": "ReviewsSummaryRevision",
+  "description": "reviews.summary-revision@1: one immutable summary revision as OpenVibe.Reviews shows it (server/reviews/service.js summaryRevisionView): the overview and each point with the signals it cites and whether they are still live signals of the entity, its authorship (AI proposals name the workflow and run), the latest review, the system reason of a pending revision and the public correction note. A summary never carries a rating. Readers see the author of a person's revision as \"an editor\".",
+  "type": "object",
+  "required": [
+    "number",
+    "status",
+    "overview",
+    "points",
+    "authorship",
+    "disclosure",
+    "review",
+    "system",
+    "correction",
+    "author",
+    "message",
+    "created_at"
+  ],
+  "properties": {
+    "number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "published",
+        "rejected",
+        "superseded",
+        "pending_system",
+        "pending_ai",
+        "draft"
+      ]
+    },
+    "overview": {
+      "type": "string"
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "kind",
+          "text",
+          "supported",
+          "citations"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "overview, pro:<i> or con:<i>."
+          },
+          "kind": {
+            "enum": [
+              "overview",
+              "pro",
+              "con"
+            ]
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null for the overview (its text is overview)."
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "signal_id",
+                "ok",
+                "status",
+                "in_entity",
+                "superseded_by"
+              ],
+              "properties": {
+                "signal_id": {
+                  "type": "string"
+                },
+                "ok": {
+                  "type": "boolean"
+                },
+                "status": {
+                  "enum": [
+                    "active",
+                    "superseded",
+                    "withdrawn",
+                    "missing"
+                  ]
+                },
+                "in_entity": {
+                  "type": "boolean"
+                },
+                "superseded_by": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "authorship": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "mode",
+        "workflow",
+        "stub_provider"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "human",
+            "ai",
+            "hybrid",
+            "imported"
+          ]
+        },
+        "workflow": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "{ id, runId, version?, model? }"
+        },
+        "stub_provider": {
+          "type": "boolean"
+        }
+      }
+    },
+    "disclosure": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "mode",
+        "short",
+        "long"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "short": {
+          "type": "string"
+        },
+        "long": {
+          "type": "string"
+        }
+      }
+    },
+    "review": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "decision",
+        "reviewed_at"
+      ],
+      "properties": {
+        "decision": {
+          "enum": [
+            "approved",
+            "rejected"
+          ]
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "system": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "A revision Reviews prepared after a cited signal left: { reason, signals, base_revision, dropped_points }."
+    },
+    "correction": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "note",
+        "corrects",
+        "requested"
+      ],
+      "properties": {
+        "note": {
+          "type": "string"
+        },
+        "corrects": {
+          "type": "integer"
+        },
+        "requested": {
+          "type": "boolean"
+        }
+      }
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

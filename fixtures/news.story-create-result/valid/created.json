@@ -1,0 +1,158 @@
+{
+  "story": {
+    "id": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+    "slug": "harbour-bridge-closes-for-inspection",
+    "url": "https://openvibe.news/s/harbour-bridge-closes-for-inspection",
+    "state": "draft",
+    "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+    "topic": "local",
+    "working_headline": "Harbour bridge closes for inspection",
+    "noindex": false,
+    "published_revision": null,
+    "first_published_at": null,
+    "published_at": null,
+    "retracted_at": null,
+    "head": {
+      "revision": 1,
+      "headline": "Harbour bridge closes for inspection",
+      "paragraphs": [
+        {
+          "text": "The harbour bridge closed on Tuesday morning after inspectors found cracks in a support.",
+          "sources": [
+            1
+          ]
+        },
+        {
+          "text": "The council expects the inspection to take two weeks.",
+          "sources": [
+            2
+          ]
+        }
+      ],
+      "authorship": {
+        "mode": "human",
+        "authors": [
+          "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+        ]
+      },
+      "system": null,
+      "gaps": null,
+      "author": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "created_at": "2026-09-24T09:40:12.000Z"
+    },
+    "publishable": [],
+    "indexability": null,
+    "sources": [
+      {
+        "n": 1,
+        "perspective_id": null,
+        "detached_at": null,
+        "item": {
+          "id": "nsi_01JAB2Z7Y6X5W4V3T2S1R0QPNM",
+          "sources_item": {
+            "service": "sources",
+            "type": "item",
+            "id": "itm_01JAB2Y8K9M1N2P3Q4R5S6T7VW",
+            "revision": 1
+          },
+          "source_key": "harbour-gazette",
+          "headline": "Harbour bridge closes for inspection after cracks found",
+          "url": "https://harbourgazette.example/bridge-closure",
+          "outlet": "Harbour Gazette",
+          "authors": [
+            "M. Okafor"
+          ],
+          "published_at": "2026-09-24T07:30:00+01:00",
+          "summary": null,
+          "summary_basis": "terms do not allow a stored summary",
+          "license_note": null,
+          "terms_note": "Headline and link only",
+          "status": "active",
+          "duplicate_of": null,
+          "dedupe": null,
+          "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+          "cluster_reason": {
+            "rule": "new_cluster",
+            "cluster": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+            "terms": [
+              "bridge",
+              "harbour",
+              "inspection"
+            ],
+            "entities": [
+              "Harbour Bridge"
+            ]
+          },
+          "retrieved_at": "2026-09-24T08:15:00.000Z",
+          "first_seen_at": "2026-09-24T08:15:00.000Z",
+          "upstream_updated_at": null,
+          "removed": null
+        }
+      },
+      {
+        "n": 2,
+        "perspective_id": null,
+        "detached_at": null,
+        "item": {
+          "id": "nsi_01JAB2Z8Y6X5W4V3T2S1R0QPNM",
+          "sources_item": {
+            "service": "sources",
+            "type": "item",
+            "id": "itm_01JAB2Y9K9M1N2P3Q4R5S6T7VW",
+            "revision": 1
+          },
+          "source_key": "coastal-wire",
+          "headline": "Bridge inspection to take two weeks, council says",
+          "url": "https://coastalwire.example/news/bridge-inspection",
+          "outlet": "Coastal Wire",
+          "authors": [
+            "M. Okafor"
+          ],
+          "published_at": "2026-09-24T07:30:00+01:00",
+          "summary": null,
+          "summary_basis": "terms do not allow a stored summary",
+          "license_note": null,
+          "terms_note": "Headline and link only",
+          "status": "active",
+          "duplicate_of": null,
+          "dedupe": null,
+          "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+          "cluster_reason": {
+            "rule": "shared_terms",
+            "cluster": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+            "shared_entities": [
+              "Harbour Bridge"
+            ],
+            "shared_terms": [
+              "bridge",
+              "inspection"
+            ],
+            "score": 4,
+            "window_hours": 72
+          },
+          "retrieved_at": "2026-09-24T08:15:00.000Z",
+          "first_seen_at": "2026-09-24T08:15:00.000Z",
+          "upstream_updated_at": null,
+          "removed": null
+        }
+      }
+    ],
+    "timeline": [
+      {
+        "id": "tle_01JAB4T5V6W7X8Y9Z0A1B2C3D4",
+        "occurred_on": "2026-09-23",
+        "text": "Inspectors report cracks in a bridge support.",
+        "source_item_id": "nsi_01JAB2Z7Y6X5W4V3T2S1R0QPNM"
+      }
+    ],
+    "perspectives": [
+      {
+        "id": "per_01JAB4P5Q6R7S8T9V0W1X2Y3Z4",
+        "label": "Council statements",
+        "description": null
+      }
+    ],
+    "flags": []
+  },
+  "revision": 1
+}

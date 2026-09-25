@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-retract-request.v1.json",
+  "title": "NewsStoryRetractRequest",
+  "description": "news.story-retract-request@1: the body of news.story.retract on OpenVibe.News: POST /api/v1/stories/:id/retract { note } retracts a published story with a public note (editors). The story stays at its URL with the notice, becomes noindex and leaves sitemaps and Search; final. Refusals: 422 story.retraction_note_required (under 10 characters once whitespace is collapsed), 422 flag.note_too_long (over 2000), 409 story.not_published.",
+  "type": "object",
+  "required": [
+    "note"
+  ],
+  "properties": {
+    "note": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 2000
+    }
+  }
+}

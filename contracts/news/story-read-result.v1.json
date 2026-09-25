@@ -1,0 +1,986 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-read-result.v1.json",
+  "title": "NewsStoryReadResult",
+  "description": "news.story-read-result@1: answers of news.story.read on OpenVibe.News (editors, or a service holding news.story.read). GET /api/v1/stories/:id → { story, published } (the editor view with drafts, and the public model of the published revision or null; a caller without the capability gets only { published } of a published or retracted story, else 404 story.not_found). GET /api/v1/stories/:id/revisions?limit=&before= → { revisions } newest first. GET /api/v1/stories/:id/revisions/:n → { revision, citations, problems } (404 revision.not_found). GET /api/v1/stories/:id/diff?from=&to=&mode=line|word → { diff } of the text and a field-by-field comparison.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "published"
+      ],
+      "properties": {
+        "story": {
+          "$ref": "story.v1.json"
+        },
+        "published": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "id",
+            "url",
+            "state",
+            "revision",
+            "headline",
+            "headline_sources",
+            "topic",
+            "first_published_at",
+            "updated_at",
+            "authorship",
+            "authors",
+            "claims",
+            "sources",
+            "timeline",
+            "perspectives",
+            "corrections",
+            "retraction",
+            "pending_upstream_changes",
+            "indexability"
+          ],
+          "description": "The public model of the published revision (the story page's .json twin); null while nothing is published.",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer"
+            },
+            "headline": {
+              "type": "string"
+            },
+            "headline_sources": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "topic": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "required": [
+                "slug",
+                "name",
+                "url"
+              ],
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            },
+            "first_published_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "authorship": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "required": [
+                "mode",
+                "workflow",
+                "reviewed_by_person",
+                "disclosure"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string"
+                },
+                "workflow": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reviewed_by_person": {
+                  "type": "boolean"
+                },
+                "disclosure": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "authors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "claims": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "text",
+                  "sources",
+                  "supported"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "supported": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "n",
+                  "outlet",
+                  "status",
+                  "upstream_changed",
+                  "perspective",
+                  "sources_item"
+                ],
+                "properties": {
+                  "n": {
+                    "type": "integer"
+                  },
+                  "outlet": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "removed"
+                    ]
+                  },
+                  "upstream_changed": {
+                    "type": "boolean"
+                  },
+                  "perspective": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "sources_item": {
+                    "type": "object",
+                    "required": [
+                      "service",
+                      "type",
+                      "id",
+                      "revision"
+                    ],
+                    "description": "The OpenVibe.Sources item and the revision the story snapshotted.",
+                    "properties": {
+                      "service": {
+                        "const": "sources"
+                      },
+                      "type": {
+                        "const": "item"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "removed_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "headline": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "authors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "published_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "retrieved_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "summary": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "removed_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "description": "A source removed upstream shows only its number, outlet and the removal."
+            },
+            "timeline": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "occurred_on",
+                  "text",
+                  "source",
+                  "supported"
+                ],
+                "properties": {
+                  "occurred_on": {
+                    "type": "string"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "integer"
+                  },
+                  "supported": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "perspectives": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "label",
+                  "description",
+                  "sources"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "corrections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "note",
+                  "revision",
+                  "at"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "revision": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  }
+                }
+              }
+            },
+            "retraction": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "required": [
+                "note",
+                "at",
+                "revision"
+              ],
+              "properties": {
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "revision": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "pending_upstream_changes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "n",
+                  "outlet",
+                  "at"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "n": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "outlet": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  }
+                }
+              }
+            },
+            "indexability": {
+              "type": "object",
+              "required": [
+                "indexable",
+                "robots",
+                "reasons"
+              ],
+              "properties": {
+                "indexable": {
+                  "type": "boolean"
+                },
+                "robots": {
+                  "type": "string",
+                  "description": "index, follow | noindex, follow | noindex, nofollow"
+                },
+                "reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "code"
+                    ],
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "effect": {
+                        "type": "string"
+                      },
+                      "detail": {}
+                    }
+                  },
+                  "description": "The publishing gate's reasons (code, effect, detail); empty when indexable."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revisions"
+      ],
+      "properties": {
+        "revisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "revision",
+              "kind",
+              "author",
+              "message",
+              "created_at",
+              "headline",
+              "authorship",
+              "system"
+            ],
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "kind": {
+                "enum": [
+                  "edit",
+                  "revert",
+                  "import"
+                ]
+              },
+              "author": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "headline": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "authorship": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The openvibe-publishing authorship record: mode, authors (usr_ ids), the OpenVibe.AI workflow { id, runId, version?, model? } of an ai or hybrid revision, stubProvider when a stub provider answered.",
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "human",
+                      "ai",
+                      "hybrid",
+                      "imported"
+                    ]
+                  },
+                  "authors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "workflow": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "runId": {
+                        "type": "string"
+                      },
+                      "version": {},
+                      "model": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "stubProvider": {
+                    "type": "boolean"
+                  },
+                  "source": {
+                    "type": "object"
+                  },
+                  "importedFrom": {
+                    "type": "object"
+                  }
+                }
+              },
+              "system": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revision",
+        "citations",
+        "problems"
+      ],
+      "properties": {
+        "revision": {
+          "type": "object",
+          "required": [
+            "id",
+            "entityId",
+            "number",
+            "kind",
+            "content",
+            "fields",
+            "meta",
+            "createdAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "entityId": {
+              "type": "string"
+            },
+            "number": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "parentId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "parentNumber": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "kind": {
+              "enum": [
+                "edit",
+                "revert",
+                "import"
+              ]
+            },
+            "revertedTo": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "content": {
+              "type": "string",
+              "description": "The paragraphs as text with their [n] markers."
+            },
+            "fields": {
+              "type": "object",
+              "description": "headline, paragraphs and the snapshotted source table, timeline and perspectives.",
+              "properties": {
+                "headline": {
+                  "type": "string"
+                },
+                "paragraphs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "text",
+                      "sources"
+                    ],
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "sources": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  },
+                  "description": "The source table snapshot: n, id, sources_item_id, sources_revision, headline, url, outlet, authors, published_at, retrieved_at, summary, status, perspective."
+                },
+                "timeline": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "perspectives": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "authorship": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "description": "The openvibe-publishing authorship record: mode, authors (usr_ ids), the OpenVibe.AI workflow { id, runId, version?, model? } of an ai or hybrid revision, stubProvider when a stub provider answered.",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "human",
+                        "ai",
+                        "hybrid",
+                        "imported"
+                      ]
+                    },
+                    "authors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "workflow": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "runId": {
+                          "type": "string"
+                        },
+                        "version": {},
+                        "model": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "stubProvider": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "object"
+                    },
+                    "importedFrom": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "system": {
+                  "type": "object"
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "contentHash": {
+              "type": "string"
+            },
+            "author": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "message": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "revision",
+              "anchor",
+              "sourceItemId",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "entityId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "anchor": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "p<n> for a paragraph, t:<entry id> for a timeline entry."
+              },
+              "sourceItemId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "retrievedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "quote": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "licenseNote": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "carriedFrom": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "attachedBy": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "attachedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "problems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "detail"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "What stands between the revision and publication (story.unsourced, story.claim_unsourced, story.source_removed, story.source_detached, story.review_required, story.no_headline, …); empty when it can be published."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "diff"
+      ],
+      "properties": {
+        "diff": {
+          "type": "object",
+          "required": [
+            "entityId",
+            "from",
+            "to",
+            "content",
+            "fields"
+          ],
+          "properties": {
+            "entityId": {
+              "type": "string"
+            },
+            "from": {
+              "type": "integer"
+            },
+            "to": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "object",
+              "required": [
+                "mode",
+                "ops",
+                "added",
+                "removed",
+                "approximate"
+              ],
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "line",
+                    "word"
+                  ]
+                },
+                "ops": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "op",
+                      "text"
+                    ],
+                    "properties": {
+                      "op": {
+                        "enum": [
+                          "equal",
+                          "insert",
+                          "delete"
+                        ]
+                      },
+                      "text": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "added": {
+                  "type": "integer"
+                },
+                "removed": {
+                  "type": "integer"
+                },
+                "approximate": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "fields": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "field",
+                  "from",
+                  "to"
+                ],
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "from": {},
+                  "to": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

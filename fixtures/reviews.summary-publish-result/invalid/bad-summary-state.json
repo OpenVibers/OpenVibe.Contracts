@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "id": "sum_01JAC6S7T8V9W0X1Y2Z3A4B5C6",
+    "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+    "state": "archived",
+    "published_revision": 2,
+    "published_at": 1790237700000,
+    "revision_published_at": 1790243000000,
+    "flagged": 0,
+    "flag_reason": null,
+    "flagged_at": null,
+    "created_at": 1790237000000,
+    "updated_at": 1790243000000
+  },
+  "published": true
+}

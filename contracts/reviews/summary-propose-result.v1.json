@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/summary-propose-result.v1.json",
+  "title": "ReviewsSummaryProposeResult",
+  "description": "reviews.summary-propose-result@1: the answer of reviews.summary.propose on OpenVibe.Reviews: POST /api/v1/entities/:ref/summary/proposals → 201 { summary, revision } — the entity's summary (its published state unchanged) and the proposed revision, status pending_ai.",
+  "type": "object",
+  "required": [
+    "summary",
+    "revision"
+  ],
+  "properties": {
+    "summary": {
+      "$ref": "summary.v1.json"
+    },
+    "revision": {
+      "$ref": "summary-revision.v1.json"
+    }
+  }
+}

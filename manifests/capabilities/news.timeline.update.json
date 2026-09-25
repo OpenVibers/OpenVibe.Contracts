@@ -16,5 +16,7 @@
   "implementedBy": [
     "POST /api/v1/stories/:id/timeline",
     "DELETE /api/v1/stories/:id/timeline/:eid"
-  ]
+  ],
+  "inputSchema": "news.timeline-update-request@1",
+  "outputSchema": "news.timeline-update-result@1"
 }

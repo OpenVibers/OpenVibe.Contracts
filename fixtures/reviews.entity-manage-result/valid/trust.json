@@ -1,0 +1,20 @@
+{
+  "scope": "source",
+  "scope_id": "sound-lab",
+  "key": "aggregate",
+  "current": {
+    "id": 7,
+    "scope": "source",
+    "scope_id": "sound-lab",
+    "key": "aggregate",
+    "value": "exclude",
+    "note": "Ratings include paid placements",
+    "set_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "set_at": 1790242000000,
+    "ended_at": null,
+    "ended_by": null
+  },
+  "affected_entities": [
+    "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1"
+  ]
+}

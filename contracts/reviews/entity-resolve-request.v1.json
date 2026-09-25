@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-resolve-request.v1.json",
+  "title": "ReviewsEntityResolveRequest",
+  "description": "reviews.entity-resolve-request@1: bodies of reviews.entity.resolve on OpenVibe.Reviews. POST /api/v1/resolve { name?, url?, gtin?, sku?, mpn?, source?, external? } resolves identifiers to an entity by deterministic rules (at least one: 422 resolve.empty; a name alone yields candidates, never a match). POST /api/v1/items/:id/resolution { entity, add_alias? } confirms an ambiguous or unmatched item for an entity (add_alias remembers that identifier of the item), or { ignore: true, note? } ignores it — both for an editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required; 404 item.not_found, 409 item.removed, 409 entity.not_active, 422 alias.invalid). GET /api/v1/entities, /entities/:ref, /entities/:ref/history, /entities/:ref/aggregate, /entities/:ref/summary/revisions/:n, /items and /items/:id take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "description": "An absolute http(s) URL."
+        },
+        "gtin": {
+          "type": "string",
+          "description": "8, 12, 13 or 14 digits."
+        },
+        "sku": {
+          "type": "string"
+        },
+        "mpn": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "description": "An OpenVibe.Sources source key bound to one entity."
+        },
+        "external": {
+          "type": "string",
+          "description": "namespace:id, e.g. steam_app:620."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "entity"
+      ],
+      "properties": {
+        "entity": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An entity id (ent_…) or its slug."
+        },
+        "add_alias": {
+          "enum": [
+            "name",
+            "url",
+            "sku",
+            "gtin",
+            "mpn",
+            "source",
+            "external"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ignore"
+      ],
+      "properties": {
+        "ignore": {
+          "const": true
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

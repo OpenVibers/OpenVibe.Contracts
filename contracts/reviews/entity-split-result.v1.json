@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-split-result.v1.json",
+  "title": "ReviewsEntitySplitResult",
+  "description": "reviews.entity-split-result@1: the answer of reviews.entity.split on OpenVibe.Reviews: POST /api/v1/entities/:ref/split → { link, entity, from, signals } — the ended merged_into link, the entity (active again), the entity it was merged into and the ids of the signals that went back with it. Both aggregates are recomputed and a summary that cited those signals is flagged with a pending revision. Emits reviews.entity.split.",
+  "type": "object",
+  "required": [
+    "link",
+    "entity",
+    "from",
+    "signals"
+  ],
+  "properties": {
+    "link": {
+      "$ref": "entity-link.v1.json"
+    },
+    "entity": {
+      "$ref": "entity.v1.json"
+    },
+    "from": {
+      "anyOf": [
+        {
+          "$ref": "entity.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+      }
+    }
+  }
+}

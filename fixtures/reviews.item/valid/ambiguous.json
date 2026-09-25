@@ -1,0 +1,49 @@
+{
+  "id": "itm_01JAC3T4V5W6X7Y8Z9A0B1C2D3",
+  "source_key": "sound-lab",
+  "kind": "review_signal",
+  "identity": "https://soundlab.example/lumen-x2",
+  "canonical_url": "https://soundlab.example/lumen-x2",
+  "title": "Lumen X2",
+  "item_revision": 2,
+  "published_at": "2026-09-20",
+  "retrieved_at": "2026-09-24T08:15:00.000Z",
+  "license_note": null,
+  "terms_note": "Ratings may be shown with a link",
+  "fields": {
+    "gtin": "0012345678905",
+    "rating": {
+      "value": 4.2,
+      "best": 5,
+      "count": 318
+    }
+  },
+  "state": "active",
+  "removed_at": null,
+  "removed_reason": null,
+  "resolution": "ambiguous",
+  "entity_id": null,
+  "resolution_rule": "name_only",
+  "candidates": [
+    {
+      "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+      "rule": "name",
+      "entity": {
+        "id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+        "slug": "lumen-x2-headphones",
+        "name": "Lumen X2 Headphones",
+        "kind": "product",
+        "description": null,
+        "state": "active",
+        "merged_into": null,
+        "canonical_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+        "noindex": false,
+        "url": "https://openvibe.reviews/e/lumen-x2-headphones",
+        "created_at": "2026-09-24T08:15:00.000Z",
+        "updated_at": "2026-09-24T09:40:12.000Z"
+      }
+    }
+  ],
+  "signal_note": null,
+  "signal": null
+}

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/deploy.v1.json",
+  "title": "HostDeploy",
+  "description": "host.deploy@1: one immutable static deploy on OpenVibe.Host (server/http/serialize.js deploy): ready (validated and stored, never executed) or failed (refused, with its failure code and log), whether the site serves it, its size and manifest hash. GET /api/v1/deploys/:id adds the files; the upload answer adds the log.",
+  "type": "object",
+  "required": [
+    "id",
+    "site_id",
+    "project_id",
+    "state",
+    "active",
+    "source",
+    "file_count",
+    "total_bytes",
+    "new_bytes",
+    "manifest_sha256",
+    "failure_code",
+    "created_by",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^site_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "state": {
+      "enum": [
+        "ready",
+        "failed",
+        "deleted"
+      ]
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "source": {
+      "enum": [
+        "archive",
+        "files"
+      ]
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "new_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Bytes this deploy added to the project's store."
+    },
+    "manifest_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "failure_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sha256",
+          "size",
+          "content_type"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "content_type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "level",
+          "message",
+          "at"
+        ],
+        "properties": {
+          "level": {
+            "enum": [
+              "info",
+              "warn",
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

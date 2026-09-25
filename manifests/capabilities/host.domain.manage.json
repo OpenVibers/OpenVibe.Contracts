@@ -20,5 +20,7 @@
     "POST /api/v1/sites/:id/domains",
     "POST /api/v1/domains/:id/verify",
     "DELETE /api/v1/domains/:id"
-  ]
+  ],
+  "inputSchema": "host.domain-manage-request@1",
+  "outputSchema": "host.domain-manage-result@1"
 }

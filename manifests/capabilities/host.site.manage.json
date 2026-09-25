@@ -31,5 +31,7 @@
     "DELETE /api/v1/projects/:id/takedown",
     "POST /api/v1/sites/:id/takedown",
     "DELETE /api/v1/sites/:id/takedown"
-  ]
+  ],
+  "inputSchema": "host.site-manage-request@1",
+  "outputSchema": "host.site-manage-result@1"
 }

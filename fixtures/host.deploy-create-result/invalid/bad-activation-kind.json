@@ -1,0 +1,13 @@
+{
+  "active_deploy_id": "dpl_01JAD4D4E5F6G7H8J9K0M1N2P3",
+  "deploys": [],
+  "activations": [
+    {
+      "deploy_id": "dpl_01JAD4D4E5F6G7H8J9K0M1N2P3",
+      "previous_deploy_id": null,
+      "kind": "deploy",
+      "actor": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "at": "2026-09-24T09:40:12.000Z"
+    }
+  ]
+}

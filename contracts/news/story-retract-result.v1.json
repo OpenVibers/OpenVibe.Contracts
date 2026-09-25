@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-retract-result.v1.json",
+  "title": "NewsStoryRetractResult",
+  "description": "news.story-retract-result@1: the answer of news.story.retract on OpenVibe.News: POST /api/v1/stories/:id/retract → { changed, story } (changed false when the story was already retracted). Emits news.story.retracted and news.index_document.deleted.",
+  "type": "object",
+  "required": [
+    "changed",
+    "story"
+  ],
+  "properties": {
+    "changed": {
+      "type": "boolean"
+    },
+    "story": {
+      "$ref": "story.v1.json"
+    }
+  }
+}

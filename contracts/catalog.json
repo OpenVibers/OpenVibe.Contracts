@@ -2410,6 +2410,222 @@
       "status": "active"
     },
     {
+      "id": "news.cluster-audit",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/cluster-audit.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.cluster-manage-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/cluster-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.cluster-manage-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/cluster-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.cluster-read-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/cluster-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.cluster",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/cluster.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.perspective-update-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/perspective-update-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.perspective-update-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/perspective-update-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.source-attach-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/source-attach-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.source-attach-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/source-attach-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.source-item",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/source-item.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-create-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-create-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-publish-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-publish-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-publish-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-publish-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-read-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-retract-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-retract-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-retract-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-retract-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-revise-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-revise-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story-revise-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story-revise-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.story",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/story.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.timeline-update-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/timeline-update-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.timeline-update-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/timeline-update-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.topic-manage-request",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/topic-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "news.topic-manage-result",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "news/topic-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "reviews.entity.merged",
       "version": "1.0.0",
       "owner": "reviews",
@@ -2486,6 +2702,213 @@
       "version": "1.0.0",
       "owner": "reviews",
       "schema": "events/payloads/reviews.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.correction-submit-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/correction-submit-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.correction-submit-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/correction-submit-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.correction",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/correction.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-link",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-link.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-manage-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-manage-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-merge-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-merge-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-merge-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-merge-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-resolve-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-resolve-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-resolve-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-resolve-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-split-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-split-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity-split-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity-split-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.entity",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/entity.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.item",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/item.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.signal-import-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/signal-import-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.signal-import-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/signal-import-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.signal",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/signal.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary-propose-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/summary-propose-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary-propose-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/summary-propose-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary-publish-request",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/summary-publish-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary-publish-result",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/summary-publish-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary-revision",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/summary-revision.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "reviews.summary",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "reviews/summary.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -3587,6 +4010,96 @@
       "version": "1.0.0",
       "owner": "openre",
       "schema": "openre/stream.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.deploy-create-request",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/deploy-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.deploy-create-result",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/deploy-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.deploy",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/deploy.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.domain-manage-request",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/domain-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.domain-manage-result",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/domain-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.domain",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/domain.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.project",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/project.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.site-manage-request",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/site-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.site-manage-result",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/site-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.site",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/site.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

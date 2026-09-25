@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-publish-result.v1.json",
+  "title": "NewsStoryPublishResult",
+  "description": "news.story-publish-result@1: answers of news.story.publish on OpenVibe.News. POST /api/v1/stories/:id/publish → { changed, resolved_flags, story } (changed false when that revision was already published and no note was given; resolved_flags are the upstream flags the revision answers). POST /api/v1/stories/:id/unpublish → { changed, story } (changed false when nothing was published). Emits news.story.published|updated|unpublished and the Search index events.",
+  "type": "object",
+  "required": [
+    "changed",
+    "story"
+  ],
+  "properties": {
+    "changed": {
+      "type": "boolean"
+    },
+    "resolved_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^flg_[0-9A-HJKMNP-TV-Z]{26}$"
+      }
+    },
+    "story": {
+      "$ref": "story.v1.json"
+    }
+  }
+}

@@ -17,5 +17,7 @@
     "POST /api/v1/stories/:id/revisions",
     "POST /api/v1/stories/:id/ai-drafts",
     "POST /api/v1/stories/:id/flags"
-  ]
+  ],
+  "inputSchema": "news.story-revise-request@1",
+  "outputSchema": "news.story-revise-result@1"
 }

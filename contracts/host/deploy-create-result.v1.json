@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/deploy-create-result.v1.json",
+  "title": "HostDeployCreateResult",
+  "description": "host.deploy-create-result@1: answers of host.deploy.create on OpenVibe.Host. GET /api/v1/sites/:id/deploys?limit= → { active_deploy_id, deploys, activations } (newest first; the last 20 pointer switches). POST /api/v1/sites/:id/deploys → 201 { deploy, activated, url } (the ready deploy with its validation log; activated when activate=1 switched the site to it). GET /api/v1/deploys/:id → { deploy } with its files. GET /api/v1/deploys/:id/log → { deploy_id, state, log }. POST /api/v1/deploys/:id/activate and /sites/:id/rollback → { active_deploy_id, previous_deploy_id, changed } (changed false when it was already active). Emits host.deploy.created|activated|failed.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "active_deploy_id",
+        "deploys",
+        "activations"
+      ],
+      "properties": {
+        "active_deploy_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deploys": {
+          "type": "array",
+          "items": {
+            "$ref": "deploy.v1.json"
+          }
+        },
+        "activations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "deploy_id",
+              "previous_deploy_id",
+              "kind",
+              "actor",
+              "at"
+            ],
+            "properties": {
+              "deploy_id": {
+                "type": "string",
+                "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "previous_deploy_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "kind": {
+                "enum": [
+                  "activate",
+                  "rollback"
+                ]
+              },
+              "actor": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "deploy"
+      ],
+      "properties": {
+        "deploy": {
+          "$ref": "deploy.v1.json"
+        },
+        "activated": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "deploy_id",
+        "state",
+        "log"
+      ],
+      "properties": {
+        "deploy_id": {
+          "type": "string",
+          "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "state": {
+          "enum": [
+            "ready",
+            "failed",
+            "deleted"
+          ]
+        },
+        "log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "level",
+              "message",
+              "at"
+            ],
+            "properties": {
+              "level": {
+                "enum": [
+                  "info",
+                  "warn",
+                  "error"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "active_deploy_id",
+        "previous_deploy_id",
+        "changed"
+      ],
+      "properties": {
+        "active_deploy_id": {
+          "type": "string",
+          "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "previous_deploy_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "changed": {
+          "type": "boolean"
+        }
+      }
+    }
+  ]
+}

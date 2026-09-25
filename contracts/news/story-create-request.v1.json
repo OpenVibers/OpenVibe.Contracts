@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-create-request.v1.json",
+  "title": "NewsStoryCreateRequest",
+  "description": "news.story-create-request@1: the body of news.story.create on OpenVibe.News: POST /api/v1/stories { headline, cluster?, topic?, slug?, body? | paragraphs? } opens a story (editors; a service acts for the editor in X-OV-Subject). The cluster's live, non-duplicate source items become its first sources, numbered by publication date; body or paragraphs (citing those numbers or item ids) becomes revision 1. Refusals: 422 story.no_headline (missing or over 200 characters), 404 cluster.not_found, 422 topic.not_found, 422 story.invalid_slug, 409 story.slug_taken, 422 story.claim_unsourced / story.unknown_source for a paragraph that cites nothing or a source not attached.",
+  "type": "object",
+  "required": [
+    "headline"
+  ],
+  "properties": {
+    "headline": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The working headline; at most 200 characters once whitespace is collapsed."
+    },
+    "cluster": {
+      "type": "string",
+      "description": "The cluster (clu_…) to open the story from; merged clusters are followed."
+    },
+    "cluster_id": {
+      "type": "string",
+      "description": "Same as cluster."
+    },
+    "topic": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "An active topic, by id (top_…) or slug."
+    },
+    "slug": {
+      "type": "string",
+      "description": "Default: made from the headline."
+    },
+    "body": {
+      "type": "string",
+      "description": "Paragraphs separated by a blank line, each ending with the source numbers it rests on, e.g. \"… said on Monday. [1, 3]\"."
+    },
+    "paragraphs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "text",
+          "sources"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "At most 3000 characters once whitespace is collapsed."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "A source number [n] of the story's source table."
+                },
+                {
+                  "type": "string",
+                  "pattern": "^(nsi|itm)_[0-9A-HJKMNP-TV-Z]{26}$",
+                  "description": "A News source item id (nsi_…) or the OpenVibe.Sources item id it came from (itm_…)."
+                }
+              ]
+            },
+            "minItems": 1,
+            "description": "The attached sources the paragraph rests on (at least one)."
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 60
+    }
+  }
+}

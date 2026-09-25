@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/stories"
-  ]
+  ],
+  "inputSchema": "news.story-create-request@1",
+  "outputSchema": "news.story-create-result@1"
 }

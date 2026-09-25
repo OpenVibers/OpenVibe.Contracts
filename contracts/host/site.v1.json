@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/site.v1.json",
+  "title": "HostSite",
+  "description": "host.site@1: one static site on OpenVibe.Host (server/http/serialize.js site): its name (one DNS label), the default hostname and URL it is served at, the deploy it serves (one pointer; null until a deploy is activated) and any staff takedown.",
+  "type": "object",
+  "required": [
+    "id",
+    "project_id",
+    "name",
+    "hostname",
+    "url",
+    "active_deploy_id",
+    "takedown",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^site_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$"
+    },
+    "hostname": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "active_deploy_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "takedown": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "scope",
+        "reason",
+        "since"
+      ],
+      "description": "A staff takedown covering it: serving stops while the content is kept for review.",
+      "properties": {
+        "scope": {
+          "enum": [
+            "project",
+            "site"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

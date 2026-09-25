@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/topic-manage-result.v1.json",
+  "title": "NewsTopicManageResult",
+  "description": "news.topic-manage-result@1: the answer of news.topic.manage on OpenVibe.News: POST /api/v1/topics → { topic, created } — 201 with the new topic, or 200 with the existing topic of that slug (created false; an existing topic is never renamed). Timestamps are epoch milliseconds.",
+  "type": "object",
+  "required": [
+    "topic",
+    "created"
+  ],
+  "properties": {
+    "topic": {
+      "type": "object",
+      "required": [
+        "id",
+        "slug",
+        "name",
+        "description",
+        "status",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^top_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "created_at": {
+          "type": "integer",
+          "description": "Epoch milliseconds."
+        },
+        "updated_at": {
+          "type": "integer",
+          "description": "Epoch milliseconds."
+        }
+      }
+    },
+    "created": {
+      "type": "boolean"
+    }
+  }
+}

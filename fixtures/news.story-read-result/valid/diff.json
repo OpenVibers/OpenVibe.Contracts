@@ -1,0 +1,30 @@
+{
+  "diff": {
+    "entityId": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+    "from": 1,
+    "to": 2,
+    "content": {
+      "mode": "line",
+      "ops": [
+        {
+          "op": "equal",
+          "text": "The harbour bridge closed. [1]\n"
+        },
+        {
+          "op": "insert",
+          "text": "The council expects two weeks. [2]\n"
+        }
+      ],
+      "added": 1,
+      "removed": 0,
+      "approximate": false
+    },
+    "fields": [
+      {
+        "field": "headline",
+        "from": "Bridge closes",
+        "to": "Harbour bridge closes for inspection"
+      }
+    ]
+  }
+}

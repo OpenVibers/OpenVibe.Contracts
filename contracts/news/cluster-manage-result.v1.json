@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/cluster-manage-result.v1.json",
+  "title": "NewsClusterManageResult",
+  "description": "news.cluster-manage-result@1: answers of news.cluster.manage on OpenVibe.News. POST /api/v1/clusters/:id/merge → { cluster, audit } (the surviving cluster with items, audit and stories). POST /api/v1/clusters/:id/split → 201 { cluster, created, audit } (the source cluster and the new one with its items). POST /api/v1/clusters/audit/:auditId/reverse → { audit, clusters } (the reversal entry and the two clusters involved). Emits news.cluster.updated.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "cluster",
+        "audit"
+      ],
+      "properties": {
+        "cluster": {
+          "$ref": "cluster.v1.json"
+        },
+        "created": {
+          "$ref": "cluster.v1.json"
+        },
+        "audit": {
+          "$ref": "cluster-audit.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "audit",
+        "clusters"
+      ],
+      "properties": {
+        "audit": {
+          "$ref": "cluster-audit.v1.json"
+        },
+        "clusters": {
+          "type": "array",
+          "items": {
+            "$ref": "cluster.v1.json"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    }
+  ]
+}

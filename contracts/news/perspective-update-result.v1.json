@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/perspective-update-result.v1.json",
+  "title": "NewsPerspectiveUpdateResult",
+  "description": "news.perspective-update-result@1: answers of news.perspective.update on OpenVibe.News. POST /api/v1/stories/:id/perspectives → 201 { perspective } (the stored row; timestamps in epoch milliseconds). DELETE /api/v1/stories/:id/perspectives/:pid → { removed: true } (its sources are left without a perspective). PUT /api/v1/stories/:id/sources/:item/perspective → { n, perspective_id }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "perspective"
+      ],
+      "properties": {
+        "perspective": {
+          "type": "object",
+          "required": [
+            "id",
+            "story_id",
+            "label",
+            "description",
+            "position",
+            "created_by",
+            "created_at",
+            "updated_at",
+            "removed_at"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^per_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "story_id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "position": {
+              "type": "integer"
+            },
+            "created_by": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "integer",
+              "description": "Epoch milliseconds."
+            },
+            "updated_at": {
+              "type": "integer",
+              "description": "Epoch milliseconds."
+            },
+            "removed_at": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Epoch milliseconds, or null."
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "removed"
+      ],
+      "properties": {
+        "removed": {
+          "const": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "n",
+        "perspective_id"
+      ],
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "perspective_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^per_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

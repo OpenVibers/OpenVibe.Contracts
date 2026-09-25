@@ -1,0 +1,14 @@
+{
+  "alias": {
+    "id": "als_01JAC4A5B6C7D8E9F0G1H2J3K4",
+    "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+    "type": "sku",
+    "value": "LX2-BLK",
+    "norm": "LX2BLK",
+    "created_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "created_at": 1790241000000,
+    "removed_at": null,
+    "removed_by": null
+  },
+  "settled_items": 0
+}

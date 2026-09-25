@@ -18,5 +18,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/stories/:id/retract"
-  ]
+  ],
+  "inputSchema": "news.story-retract-request@1",
+  "outputSchema": "news.story-retract-result@1"
 }

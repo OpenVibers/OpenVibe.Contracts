@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/summary-publish-result.v1.json",
+  "title": "ReviewsSummaryPublishResult",
+  "description": "reviews.summary-publish-result@1: answers of reviews.summary.publish on OpenVibe.Reviews. POST /api/v1/entities/:ref/summary/revisions → 201 { summary, revision, published } (a correction also answers correction: the accepted request or null). POST …/summary/revisions/:n/review → { review, published, summary }. POST …/summary/publish and …/summary/unpublish → { summary }. Emits reviews.summary.published|updated|unpublished (a correction is an updated carrying correction).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "summary",
+        "revision",
+        "published"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "summary.v1.json"
+        },
+        "revision": {
+          "$ref": "summary-revision.v1.json"
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "correction": {
+          "anyOf": [
+            {
+              "$ref": "correction.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "review",
+        "published",
+        "summary"
+      ],
+      "properties": {
+        "review": {
+          "type": "object",
+          "required": [
+            "id",
+            "entityId",
+            "revision",
+            "reviewer",
+            "decision",
+            "note",
+            "reviewedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "entityId": {
+              "type": "string",
+              "pattern": "^sum_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "reviewer": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "decision": {
+              "enum": [
+                "approved",
+                "rejected"
+              ]
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "reviewedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "summary": {
+          "$ref": "summary.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "summary.v1.json"
+        }
+      }
+    }
+  ]
+}

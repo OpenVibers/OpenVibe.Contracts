@@ -1,0 +1,67 @@
+{
+  "summary": {
+    "id": "sum_01JAC6S7T8V9W0X1Y2Z3A4B5C6",
+    "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+    "state": "published",
+    "published_revision": 2,
+    "published_at": 1790237700000,
+    "revision_published_at": 1790243000000,
+    "flagged": 0,
+    "flag_reason": null,
+    "flagged_at": null,
+    "created_at": 1790237000000,
+    "updated_at": 1790243000000
+  },
+  "revision": {
+    "number": 3,
+    "status": "pending_ai",
+    "overview": "Well-reviewed for comfort; battery life is the common complaint.",
+    "points": [
+      {
+        "key": "overview",
+        "kind": "overview",
+        "text": null,
+        "supported": true,
+        "citations": [
+          {
+            "signal_id": "sig_01JAC2S3G4H5J6K7M8N9P0Q1R2",
+            "ok": true,
+            "status": "active",
+            "in_entity": true,
+            "superseded_by": null
+          }
+        ]
+      },
+      {
+        "key": "pro:0",
+        "kind": "pro",
+        "text": "Comfortable over long sessions",
+        "supported": true,
+        "citations": [
+          {
+            "signal_id": "sig_01JAC2S4G4H5J6K7M8N9P0Q1R2",
+            "ok": true,
+            "status": "active",
+            "in_entity": true,
+            "superseded_by": null
+          }
+        ]
+      }
+    ],
+    "authorship": {
+      "mode": "ai",
+      "workflow": {
+        "id": "reviews.summarize_entity",
+        "runId": "run_01JAC8R9S0T1V2W3X4Y5Z6A7B8"
+      },
+      "stub_provider": false
+    },
+    "disclosure": null,
+    "review": null,
+    "system": null,
+    "correction": null,
+    "author": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "message": null,
+    "created_at": "2026-09-24T09:40:12.000Z"
+  }
+}

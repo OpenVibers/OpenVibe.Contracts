@@ -1,0 +1,54 @@
+{
+  "site": {
+    "id": "site_01JAD2S3T4V5W6X7Y8Z9A0B1C2",
+    "project_id": "prj_01JAD1P2R3J4K5M6N7P8Q9R0S1",
+    "name": "harbour-radio",
+    "hostname": "harbour-radio.openvibe.host",
+    "url": "https://harbour-radio.openvibe.host",
+    "active_deploy_id": "dpl_01JAD4D4E5F6G7H8J9K0M1N2P3",
+    "takedown": null,
+    "created_at": "2026-09-24T08:15:00.000Z",
+    "updated_at": "2026-09-24T09:40:12.000Z"
+  },
+  "domains": [
+    {
+      "id": "dom_01JAD5D6E7F8G9H0J1K2M3N4P5",
+      "site_id": "site_01JAD2S3T4V5W6X7Y8Z9A0B1C2",
+      "hostname": "harbour-radio.openvibe.host",
+      "kind": "default",
+      "status": "verified",
+      "served": true,
+      "verified_at": "2026-09-24T08:15:00.000Z",
+      "last_checked_at": null,
+      "last_error": null
+    },
+    {
+      "id": "dom_01JAD6D6E7F8G9H0J1K2M3N4P5",
+      "site_id": "site_01JAD2S3T4V5W6X7Y8Z9A0B1C2",
+      "hostname": "www.harbourradio.example",
+      "kind": "custom",
+      "status": "pending",
+      "served": false,
+      "verified_at": null,
+      "last_checked_at": "2026-09-24T09:40:12.000Z",
+      "last_error": "no TXT record at _openvibe-host.www.harbourradio.example yet",
+      "instructions": {
+        "verification": {
+          "type": "TXT",
+          "name": "_openvibe-host.www.harbourradio.example",
+          "value": "openvibe-host-verification=5f0c2a9e1b7d4c3a8e6f0b2d4c6a8e0f1a3c5e7b",
+          "note": "keep this record: Host re-checks it daily"
+        },
+        "routing": [
+          {
+            "type": "CNAME",
+            "name": "www.harbourradio.example",
+            "value": "harbour-radio.openvibe.host",
+            "note": "for a subdomain such as www.example.org"
+          }
+        ],
+        "tls": "after verification an operator issues the certificate (Let's Encrypt); HTTPS starts working once it is installed"
+      }
+    }
+  ]
+}

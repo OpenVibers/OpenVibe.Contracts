@@ -1,0 +1,139 @@
+{
+  "cluster": {
+    "id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+    "label": "Harbour Bridge",
+    "status": "open",
+    "merged_into": null,
+    "split_from": null,
+    "window": {
+      "start": "2026-09-24T06:30:00.000Z",
+      "end": "2026-09-24T07:30:00.000Z"
+    },
+    "created_by": "svc:news",
+    "key_terms": [
+      {
+        "term": "bridge",
+        "items": 2
+      },
+      {
+        "term": "inspection",
+        "items": 2
+      }
+    ],
+    "key_entities": [
+      {
+        "entity": "Harbour Bridge",
+        "items": 2
+      }
+    ],
+    "item_count": 2,
+    "items": [
+      {
+        "id": "nsi_01JAB2Z7Y6X5W4V3T2S1R0QPNM",
+        "sources_item": {
+          "service": "sources",
+          "type": "item",
+          "id": "itm_01JAB2Y8K9M1N2P3Q4R5S6T7VW",
+          "revision": 1
+        },
+        "source_key": "harbour-gazette",
+        "headline": "Harbour bridge closes for inspection after cracks found",
+        "url": "https://harbourgazette.example/bridge-closure",
+        "outlet": "Harbour Gazette",
+        "authors": [
+          "M. Okafor"
+        ],
+        "published_at": "2026-09-24T07:30:00+01:00",
+        "summary": null,
+        "summary_basis": "terms do not allow a stored summary",
+        "license_note": null,
+        "terms_note": "Headline and link only",
+        "status": "active",
+        "duplicate_of": null,
+        "dedupe": null,
+        "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+        "cluster_reason": {
+          "rule": "new_cluster",
+          "cluster": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+          "terms": [
+            "bridge",
+            "harbour",
+            "inspection"
+          ],
+          "entities": [
+            "Harbour Bridge"
+          ]
+        },
+        "retrieved_at": "2026-09-24T08:15:00.000Z",
+        "first_seen_at": "2026-09-24T08:15:00.000Z",
+        "upstream_updated_at": null,
+        "removed": null
+      },
+      {
+        "id": "nsi_01JAB2Z8Y6X5W4V3T2S1R0QPNM",
+        "sources_item": {
+          "service": "sources",
+          "type": "item",
+          "id": "itm_01JAB2Y9K9M1N2P3Q4R5S6T7VW",
+          "revision": 1
+        },
+        "source_key": "coastal-wire",
+        "headline": "Bridge inspection to take two weeks, council says",
+        "url": "https://coastalwire.example/news/bridge-inspection",
+        "outlet": "Coastal Wire",
+        "authors": [
+          "M. Okafor"
+        ],
+        "published_at": "2026-09-24T07:30:00+01:00",
+        "summary": null,
+        "summary_basis": "terms do not allow a stored summary",
+        "license_note": null,
+        "terms_note": "Headline and link only",
+        "status": "active",
+        "duplicate_of": null,
+        "dedupe": null,
+        "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+        "cluster_reason": {
+          "rule": "shared_terms",
+          "cluster": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+          "shared_entities": [
+            "Harbour Bridge"
+          ],
+          "shared_terms": [
+            "bridge",
+            "inspection"
+          ],
+          "score": 4,
+          "window_hours": 72
+        },
+        "retrieved_at": "2026-09-24T08:15:00.000Z",
+        "first_seen_at": "2026-09-24T08:15:00.000Z",
+        "upstream_updated_at": null,
+        "removed": null
+      }
+    ],
+    "audit": [
+      {
+        "id": "cla_01JAB4A5B6C7D8E9F0G1H2J3KM",
+        "action": "merge",
+        "cluster_id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+        "other_id": "clu_01JAB2X4C4D5E6F7G8H9J0KMNP",
+        "item_ids": [
+          "nsi_01JAB2Z8Y6X5W4V3T2S1R0QPNM"
+        ],
+        "reason": "Same bridge closure",
+        "actor": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "reverses": null,
+        "reversed_by": null,
+        "at": "2026-09-24T09:40:12.000Z"
+      }
+    ],
+    "stories": [
+      {
+        "id": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+        "slug": "harbour-bridge-closes-for-inspection",
+        "state": "draft"
+      }
+    ]
+  }
+}

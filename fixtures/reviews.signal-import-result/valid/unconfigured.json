@@ -1,0 +1,11 @@
+{
+  "pull": {
+    "ok": false,
+    "reason": "OpenVibe.Sources is not configured"
+  },
+  "queue": {
+    "ok": false,
+    "reason": "OpenVibe.Sources is not configured",
+    "done": 0
+  }
+}

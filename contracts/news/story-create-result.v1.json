@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/story-create-result.v1.json",
+  "title": "NewsStoryCreateResult",
+  "description": "news.story-create-result@1: the answer of news.story.create on OpenVibe.News: POST /api/v1/stories → 201 { story, revision } — the new draft story and the number of its first revision (null when no text was sent). Emits news.story.created.",
+  "type": "object",
+  "required": [
+    "story",
+    "revision"
+  ],
+  "properties": {
+    "story": {
+      "$ref": "story.v1.json"
+    },
+    "revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-merge-request.v1.json",
+  "title": "ReviewsEntityMergeRequest",
+  "description": "reviews.entity-merge-request@1: the body of reviews.entity.merge on OpenVibe.Reviews: POST /api/v1/entities/:ref/merge { into, note? } merges :ref into another active entity, decided by the editor named in X-OV-Subject (403 reviews.person_required / reviews.editor_required). Nothing is rewritten: an audited merged_into link records who, when and why. Refusals: 404 entity.not_found, 422 merge.same_entity, 409 merge.not_active, 409 merge.target_not_active (with canonical_id), 409 merge.cycle.",
+  "type": "object",
+  "required": [
+    "into"
+  ],
+  "properties": {
+    "into": {
+      "type": "string",
+      "minLength": 1,
+      "description": "An entity id (ent_…) or its slug."
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Cut to 500 characters."
+    }
+  }
+}

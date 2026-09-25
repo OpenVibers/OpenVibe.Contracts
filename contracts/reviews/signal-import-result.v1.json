@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/signal-import-result.v1.json",
+  "title": "ReviewsSignalImportResult",
+  "description": "reviews.signal-import-result@1: answers of reviews.signal.import on OpenVibe.Reviews. POST /api/v1/signals/import → { outcome, item, signal }: outcome created | updated | unchanged | removed | removed:unknown | ignored:removed | ignored:older_revision | ignored:category (item null for another category), the item as Reviews keeps it and its active signal (null when it states none or is not resolved). POST /api/v1/sources/sync → { pull, queue }: pages read, items applied, unchanged and skipped, the new cursor (ok false with a reason when Sources is not configured or failed), and the queued items fetched.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "outcome",
+        "item",
+        "signal"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "pattern": "^(created|updated|unchanged|removed|removed:unknown|ignored:[a-z_]+)$"
+        },
+        "item": {
+          "anyOf": [
+            {
+              "$ref": "item.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "signal": {
+          "anyOf": [
+            {
+              "$ref": "signal.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "pull",
+        "queue"
+      ],
+      "properties": {
+        "pull": {
+          "type": "object",
+          "required": [
+            "ok"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "after": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "pages": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "applied": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unchanged": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "skipped": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "queue": {
+          "type": "object",
+          "required": [
+            "ok",
+            "done"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "done": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

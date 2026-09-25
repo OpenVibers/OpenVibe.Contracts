@@ -1,0 +1,7 @@
+{
+  "scope": "source",
+  "scope_id": "sound-lab",
+  "key": "aggregate",
+  "value": "exclude",
+  "note": "Ratings include paid placements"
+}

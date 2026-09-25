@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/entities/:ref/merge"
-  ]
+  ],
+  "inputSchema": "reviews.entity-merge-request@1",
+  "outputSchema": "reviews.entity-merge-result@1"
 }

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/domain-manage-request.v1.json",
+  "title": "HostDomainManageRequest",
+  "description": "host.domain-manage-request@1: bodies of host.domain.manage on OpenVibe.Host (a maintainer or above of the project). POST /api/v1/sites/:id/domains { hostname } adds a custom domain, pending until its TXT record is verified: a fully qualified host name, lowercased (422 domain.invalid_hostname; 422 domain.reserved for any OpenVibe domain; 403 domain.sandbox in sandbox projects; 429 quota.custom_domains; 409 domain.exists, domain.taken). GET /api/v1/sites/:id/domains, POST /api/v1/domains/:id/verify (checks the TXT record now) and DELETE /api/v1/domains/:id (409 domain.default: the default domain goes only with the site) take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "hostname"
+      ],
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 254,
+          "description": "e.g. www.example.org (a trailing dot is dropped)."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

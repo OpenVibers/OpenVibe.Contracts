@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/domain.v1.json",
+  "title": "HostDomain",
+  "description": "host.domain@1: one domain of a static site on OpenVibe.Host (server/http/serialize.js domain): the default <site>.openvibe.host, or a custom domain that is served only once its DNS TXT record is verified (re-checked daily; it lapses when the record is gone). A custom domain carries the records its owner must publish (the TXT verification value is public by design and shown only to members); TLS certificates are issued by an operator.",
+  "type": "object",
+  "required": [
+    "id",
+    "site_id",
+    "hostname",
+    "kind",
+    "status",
+    "served",
+    "verified_at",
+    "last_checked_at",
+    "last_error"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dom_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^site_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "hostname": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "default",
+        "custom"
+      ]
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "verified",
+        "failed",
+        "lapsed"
+      ]
+    },
+    "served": {
+      "type": "boolean"
+    },
+    "verified_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "last_checked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "last_error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "instructions": {
+      "type": "object",
+      "required": [
+        "verification",
+        "routing",
+        "tls"
+      ],
+      "properties": {
+        "verification": {
+          "type": "object",
+          "required": [
+            "type",
+            "name",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "const": "TXT"
+            },
+            "name": {
+              "type": "string",
+              "description": "_openvibe-host.<hostname>"
+            },
+            "value": {
+              "type": "string",
+              "description": "openvibe-host-verification=<token>"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        },
+        "routing": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "name",
+              "value"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "A CNAME for a subdomain; A/AAAA for an apex domain when the operator configured them."
+        },
+        "tls": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

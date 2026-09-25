@@ -1,0 +1,1411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-resolve-result.v1.json",
+  "title": "ReviewsEntityResolveResult",
+  "description": "reviews.entity-resolve-result@1: answers of reviews.entity.resolve on OpenVibe.Reviews. GET /api/v1/entities?q=&limit=&offset= → { entities, total } (total only when listing; a search by q answers { entities }). POST /api/v1/resolve → { match: exact | ambiguous | none, entity, via, rule, candidates }. GET /api/v1/entities/:ref → the entity page as JSON: { entity, aliases, merged_from, links, aggregate, aggregate_revision, signals, inactive_signals, sources, entity_trust, summary, open_corrections, decision, editor }, or { entity, canonical } for a merged or deleted entity. GET …/history → { entity, aggregates, summary_revisions, merges, signals, audit } (410 entity.deleted for readers). GET …/aggregate → { entity_id, aggregate, aggregate_revision } (409 entity.merged, 410 entity.deleted). GET …/summary/revisions/:n → { revision }. GET /api/v1/items → { items } (the resolution queue; editors). GET /api/v1/items/:id → { item } (410 item.removed). POST /api/v1/items/:id/resolution → { item, signal, settled_items } when confirmed, { item } when ignored.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "entities"
+      ],
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "$ref": "entity.v1.json"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "match",
+        "entity",
+        "via",
+        "rule",
+        "candidates"
+      ],
+      "properties": {
+        "match": {
+          "enum": [
+            "exact",
+            "ambiguous",
+            "none"
+          ]
+        },
+        "entity": {
+          "anyOf": [
+            {
+              "$ref": "entity.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "via": {
+          "anyOf": [
+            {
+              "$ref": "entity.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The merged entity the identifier named, when it led to its canonical entity."
+        },
+        "rule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "rule",
+              "entity"
+            ],
+            "properties": {
+              "rule": {
+                "type": "string"
+              },
+              "entity": {
+                "$ref": "entity.v1.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "entity",
+        "aliases",
+        "merged_from",
+        "links",
+        "aggregate",
+        "aggregate_revision",
+        "signals",
+        "inactive_signals",
+        "sources",
+        "entity_trust",
+        "summary",
+        "open_corrections",
+        "decision",
+        "editor"
+      ],
+      "properties": {
+        "entity": {
+          "$ref": "entity.v1.json"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "type",
+              "value"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^als_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "type": {
+                "enum": [
+                  "name",
+                  "url",
+                  "sku",
+                  "gtin",
+                  "mpn",
+                  "source",
+                  "external"
+                ]
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "merged_from": {
+          "type": "array",
+          "items": {
+            "$ref": "entity.v1.json"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "type",
+              "from",
+              "to",
+              "ref",
+              "note",
+              "other",
+              "direction",
+              "created_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "type": {
+                "enum": [
+                  "merged_into",
+                  "related",
+                  "edition_of",
+                  "successor_of",
+                  "part_of",
+                  "external_ref"
+                ]
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ref": {
+                "anyOf": [
+                  {
+                    "$ref": "../common/entity-ref.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "other": {
+                "anyOf": [
+                  {
+                    "$ref": "entity.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "direction": {
+                "enum": [
+                  "out",
+                  "in"
+                ]
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "aggregate": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "revision",
+                "computed_at",
+                "trigger",
+                "result"
+              ],
+              "description": "One immutable aggregate revision: a pure function of the live signals and the editors' trust decisions.",
+              "properties": {
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "computed_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "trigger": {
+                  "type": "string"
+                },
+                "result": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "required": [
+                    "method",
+                    "components",
+                    "inputs",
+                    "excluded",
+                    "sources",
+                    "observed",
+                    "computation"
+                  ],
+                  "description": "null once no qualifying signal is left.",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "description": "reviews-aggregate@1"
+                    },
+                    "components": {
+                      "type": "object",
+                      "properties": {
+                        "recommendation": {
+                          "type": "object",
+                          "required": [
+                            "positive",
+                            "total",
+                            "percent",
+                            "inputs"
+                          ],
+                          "properties": {
+                            "positive": {
+                              "type": "integer"
+                            },
+                            "total": {
+                              "type": "integer"
+                            },
+                            "percent": {
+                              "type": "number"
+                            },
+                            "inputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                              }
+                            }
+                          }
+                        },
+                        "rating": {
+                          "type": "object",
+                          "required": [
+                            "count",
+                            "percent",
+                            "inputs"
+                          ],
+                          "properties": {
+                            "count": {
+                              "type": "integer"
+                            },
+                            "percent": {
+                              "type": "number"
+                            },
+                            "inputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                              }
+                            },
+                            "on_scale": {
+                              "type": "object",
+                              "required": [
+                                "value",
+                                "best"
+                              ],
+                              "properties": {
+                                "value": {
+                                  "type": "number"
+                                },
+                                "best": {
+                                  "type": "number"
+                                },
+                                "worst": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Each signal that entered: signal_id, type, source_key, source_item_id, entity_id, observed_at, its values and weight."
+                      }
+                    },
+                    "excluded": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "signal_id",
+                          "reason",
+                          "note"
+                        ],
+                        "properties": {
+                          "signal_id": {
+                            "type": "string",
+                            "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                          },
+                          "reason": {
+                            "type": "string",
+                            "description": "source_excluded_by_editor, signal_excluded_by_editor, scale_not_stated, no_count, older_tally_same_source, covered_by_source_tally"
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "observed": {
+                      "type": "object",
+                      "required": [
+                        "earliest",
+                        "latest"
+                      ],
+                      "properties": {
+                        "earliest": {
+                          "type": "string"
+                        },
+                        "latest": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "computation": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The computation in words, one line per component."
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregate_revision": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "signals": {
+          "type": "array",
+          "items": {
+            "$ref": "signal.v1.json"
+          }
+        },
+        "inactive_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "signal.v1.json"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "trust"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "homepage_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "license_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "terms_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "stale": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "last_success_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "trust": {
+                "type": "object",
+                "description": "The current editor trust facts by key.",
+                "properties": {
+                  "aggregate": {
+                    "type": "object",
+                    "required": [
+                      "value",
+                      "note",
+                      "set_at"
+                    ],
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "note": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "set_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  "limitation": {
+                    "type": "object",
+                    "required": [
+                      "value",
+                      "note",
+                      "set_at"
+                    ],
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "note": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "set_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  "verification": {
+                    "type": "object",
+                    "required": [
+                      "value",
+                      "note",
+                      "set_at"
+                    ],
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "note": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "set_at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "entity_trust": {
+          "type": "object",
+          "description": "The current editor trust facts by key.",
+          "properties": {
+            "aggregate": {
+              "type": "object",
+              "required": [
+                "value",
+                "note",
+                "set_at"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "set_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            },
+            "limitation": {
+              "type": "object",
+              "required": [
+                "value",
+                "note",
+                "set_at"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "set_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            },
+            "verification": {
+              "type": "object",
+              "required": [
+                "value",
+                "note",
+                "set_at"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "set_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        },
+        "summary": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "id",
+            "state",
+            "head_revision",
+            "flagged",
+            "flag_reason",
+            "flagged_at",
+            "published_at",
+            "revision_published_at",
+            "published",
+            "pending",
+            "history"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^sum_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "state": {
+              "enum": [
+                "draft",
+                "published",
+                "unpublished"
+              ]
+            },
+            "head_revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "flagged": {
+              "type": "boolean"
+            },
+            "flag_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "flagged_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "published_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "revision_published_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "published": {
+              "anyOf": [
+                {
+                  "$ref": "summary-revision.v1.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "pending": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "summary-revision.v1.json"
+                  }
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              ],
+              "description": "Editors get the pending revisions; readers only their count."
+            },
+            "history": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "number",
+                  "status",
+                  "created_at",
+                  "disclosure",
+                  "correction"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "disclosure": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "correction": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "open_corrections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "decision": {
+          "type": "object",
+          "required": [
+            "indexable",
+            "robots",
+            "reasons"
+          ],
+          "properties": {
+            "indexable": {
+              "type": "boolean"
+            },
+            "robots": {
+              "type": "string"
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The gate's reason codes."
+            }
+          }
+        },
+        "editor": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "entity",
+        "canonical"
+      ],
+      "properties": {
+        "entity": {
+          "$ref": "entity.v1.json"
+        },
+        "canonical": {
+          "anyOf": [
+            {
+              "$ref": "entity.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "entity",
+        "aggregates",
+        "summary_revisions",
+        "merges",
+        "signals",
+        "audit"
+      ],
+      "properties": {
+        "entity": {
+          "$ref": "entity.v1.json"
+        },
+        "aggregates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "revision",
+              "computed_at",
+              "trigger",
+              "result"
+            ],
+            "description": "One immutable aggregate revision: a pure function of the live signals and the editors' trust decisions.",
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "computed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "trigger": {
+                "type": "string"
+              },
+              "result": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "method",
+                  "components",
+                  "inputs",
+                  "excluded",
+                  "sources",
+                  "observed",
+                  "computation"
+                ],
+                "description": "null once no qualifying signal is left.",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "description": "reviews-aggregate@1"
+                  },
+                  "components": {
+                    "type": "object",
+                    "properties": {
+                      "recommendation": {
+                        "type": "object",
+                        "required": [
+                          "positive",
+                          "total",
+                          "percent",
+                          "inputs"
+                        ],
+                        "properties": {
+                          "positive": {
+                            "type": "integer"
+                          },
+                          "total": {
+                            "type": "integer"
+                          },
+                          "percent": {
+                            "type": "number"
+                          },
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                            }
+                          }
+                        }
+                      },
+                      "rating": {
+                        "type": "object",
+                        "required": [
+                          "count",
+                          "percent",
+                          "inputs"
+                        ],
+                        "properties": {
+                          "count": {
+                            "type": "integer"
+                          },
+                          "percent": {
+                            "type": "number"
+                          },
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                            }
+                          },
+                          "on_scale": {
+                            "type": "object",
+                            "required": [
+                              "value",
+                              "best"
+                            ],
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "best": {
+                                "type": "number"
+                              },
+                              "worst": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "description": "Each signal that entered: signal_id, type, source_key, source_item_id, entity_id, observed_at, its values and weight."
+                    }
+                  },
+                  "excluded": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "signal_id",
+                        "reason",
+                        "note"
+                      ],
+                      "properties": {
+                        "signal_id": {
+                          "type": "string",
+                          "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                        },
+                        "reason": {
+                          "type": "string",
+                          "description": "source_excluded_by_editor, signal_excluded_by_editor, scale_not_stated, no_count, older_tally_same_source, covered_by_source_tally"
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "observed": {
+                    "type": "object",
+                    "required": [
+                      "earliest",
+                      "latest"
+                    ],
+                    "properties": {
+                      "earliest": {
+                        "type": "string"
+                      },
+                      "latest": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "computation": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The computation in words, one line per component."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary_revisions": {
+          "type": "array",
+          "items": {
+            "$ref": "summary-revision.v1.json"
+          }
+        },
+        "merges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "from",
+              "to",
+              "note",
+              "merged_at",
+              "merged_by",
+              "split_at",
+              "split_by",
+              "split_note"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "from": {
+                "$ref": "entity.v1.json"
+              },
+              "to": {
+                "$ref": "entity.v1.json"
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "merged_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "merged_by": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Editors only."
+              },
+              "split_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "split_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "split_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "signals": {
+          "type": "array",
+          "items": {
+            "$ref": "signal.v1.json"
+          }
+        },
+        "audit": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "at",
+              "action",
+              "target",
+              "actor",
+              "detail"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "action": {
+                "type": "string"
+              },
+              "target": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "actor": {
+                "type": "string",
+                "description": "Readers see \"an editor\" for a person."
+              },
+              "detail": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "entity_id",
+        "aggregate",
+        "aggregate_revision"
+      ],
+      "properties": {
+        "entity_id": {
+          "type": "string",
+          "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "aggregate": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "revision",
+                "computed_at",
+                "trigger",
+                "result"
+              ],
+              "description": "One immutable aggregate revision: a pure function of the live signals and the editors' trust decisions.",
+              "properties": {
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "computed_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "trigger": {
+                  "type": "string"
+                },
+                "result": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "required": [
+                    "method",
+                    "components",
+                    "inputs",
+                    "excluded",
+                    "sources",
+                    "observed",
+                    "computation"
+                  ],
+                  "description": "null once no qualifying signal is left.",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "description": "reviews-aggregate@1"
+                    },
+                    "components": {
+                      "type": "object",
+                      "properties": {
+                        "recommendation": {
+                          "type": "object",
+                          "required": [
+                            "positive",
+                            "total",
+                            "percent",
+                            "inputs"
+                          ],
+                          "properties": {
+                            "positive": {
+                              "type": "integer"
+                            },
+                            "total": {
+                              "type": "integer"
+                            },
+                            "percent": {
+                              "type": "number"
+                            },
+                            "inputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                              }
+                            }
+                          }
+                        },
+                        "rating": {
+                          "type": "object",
+                          "required": [
+                            "count",
+                            "percent",
+                            "inputs"
+                          ],
+                          "properties": {
+                            "count": {
+                              "type": "integer"
+                            },
+                            "percent": {
+                              "type": "number"
+                            },
+                            "inputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                              }
+                            },
+                            "on_scale": {
+                              "type": "object",
+                              "required": [
+                                "value",
+                                "best"
+                              ],
+                              "properties": {
+                                "value": {
+                                  "type": "number"
+                                },
+                                "best": {
+                                  "type": "number"
+                                },
+                                "worst": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Each signal that entered: signal_id, type, source_key, source_item_id, entity_id, observed_at, its values and weight."
+                      }
+                    },
+                    "excluded": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "signal_id",
+                          "reason",
+                          "note"
+                        ],
+                        "properties": {
+                          "signal_id": {
+                            "type": "string",
+                            "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+                          },
+                          "reason": {
+                            "type": "string",
+                            "description": "source_excluded_by_editor, signal_excluded_by_editor, scale_not_stated, no_count, older_tally_same_source, covered_by_source_tally"
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "observed": {
+                      "type": "object",
+                      "required": [
+                        "earliest",
+                        "latest"
+                      ],
+                      "properties": {
+                        "earliest": {
+                          "type": "string"
+                        },
+                        "latest": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "computation": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The computation in words, one line per component."
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregate_revision": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "revision"
+      ],
+      "properties": {
+        "revision": {
+          "$ref": "summary-revision.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "item.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "item": {
+          "$ref": "item.v1.json"
+        },
+        "signal": {
+          "anyOf": [
+            {
+              "$ref": "signal.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "settled_items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}

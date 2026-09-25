@@ -1,0 +1,6 @@
+{
+  "expected_revision": "head",
+  "workflow": "news.write_story",
+  "kind": "retraction",
+  "note": "x"
+}

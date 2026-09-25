@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/correction-submit-request.v1.json",
+  "title": "ReviewsCorrectionSubmitRequest",
+  "description": "reviews.correction-submit-request@1: the body of reviews.correction.submit on OpenVibe.Reviews: POST /api/v1/entities/:ref/corrections { body, target_type?, target_id?, evidence_url? } sends a correction to the editors' queue for the person named in X-OV-Subject (a signed-in person: 403 reviews.person_required). Refusals: 422 correction.invalid (unknown target_type, body under 10 or over 4000 characters, evidence_url not http(s)), 409 correction.duplicate (the same open request again), 429 correction.rate_limited (20 a day per person), 404 entity.not_found, 410 entity.deleted.",
+  "type": "object",
+  "required": [
+    "body"
+  ],
+  "properties": {
+    "body": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 4000,
+      "description": "What is wrong, 10–4000 characters once trimmed."
+    },
+    "target_type": {
+      "enum": [
+        "entity",
+        "alias",
+        "signal",
+        "summary",
+        "aggregate"
+      ],
+      "description": "Default entity."
+    },
+    "target_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Cut to 100 characters."
+    },
+    "evidence_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "An http(s) URL."
+    }
+  }
+}

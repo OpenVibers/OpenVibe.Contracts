@@ -17,5 +17,7 @@
     "POST /api/v1/stories/:id/perspectives",
     "DELETE /api/v1/stories/:id/perspectives/:pid",
     "PUT /api/v1/stories/:id/sources/:item/perspective"
-  ]
+  ],
+  "inputSchema": "news.perspective-update-request@1",
+  "outputSchema": "news.perspective-update-result@1"
 }

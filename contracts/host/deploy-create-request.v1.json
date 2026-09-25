@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/deploy-create-request.v1.json",
+  "title": "HostDeployCreateRequest",
+  "description": "host.deploy-create-request@1: bodies of host.deploy.create on OpenVibe.Host (a deployer or above of the project; an app principal added as deployer can deploy from CI). POST /api/v1/sites/:id/deploys uploads a deploy: the raw body is a tar or tar.gz archive (Content-Type application/gzip, application/x-gzip, application/x-tar or application/octet-stream), or multipart/form-data with archive=<one archive> or files=<file>… (each part's filename is its path); optional fields activate=1, root=<subdirectory to deploy> and strip=folder (removes a shared first segment) also work as query parameters. It is validated (path traversal, links, special and hidden files, server-side code, file types, sizes and quotas) and never executed; a refusal is a problem whose extra carries the failed deploy_id and its log (413 upload.too_large, quota.storage; 422 validation codes; 429 quota.deploys_per_day; 403 site.taken_down; 503 upload.busy; 507 storage.host_full). POST /api/v1/deploys/:id/activate { expected_active? } and POST /api/v1/sites/:id/rollback { deploy_id?, expected_active? } switch the site's pointer in one step (rollback without deploy_id goes to the deploy active before; 409 deploy.not_ready, site.active_changed when expected_active is stale, deploy.no_previous). GET /api/v1/sites/:id/deploys, /deploys/:id and /deploys/:id/log take no body.",
+  "anyOf": [
+    {
+      "type": "string",
+      "contentEncoding": "binary",
+      "description": "The upload itself: the tar or tar.gz bytes, or the multipart/form-data body (as common.binary@1)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "deploy_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expected_active": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The deploy you saw active (null: none); refused with 409 site.active_changed when it moved."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

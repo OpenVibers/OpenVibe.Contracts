@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-manage-result.v1.json",
+  "title": "ReviewsEntityManageResult",
+  "description": "reviews.entity-manage-result@1: answers of reviews.entity.manage on OpenVibe.Reviews. POST /api/v1/entities → 201 { entity, settled_items } (items the new aliases resolved); PATCH and DELETE /api/v1/entities/:ref → { entity }. POST …/aliases → 201 { alias, settled_items }; DELETE …/aliases/:id → { alias }. POST …/links → 201 { link }; DELETE …/links/:id → { link } (ended). POST /api/v1/trust → { scope, scope_id, key, current, affected_entities }. GET /api/v1/corrections → { corrections } (open, oldest first, with the entity row and whether its summary is published). PATCH /api/v1/corrections/:id → { correction, revision } (the correction revision when accepting corrected a published summary, else null). Row timestamps are epoch milliseconds.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "entity"
+      ],
+      "properties": {
+        "entity": {
+          "$ref": "entity.v1.json"
+        },
+        "settled_items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "alias"
+      ],
+      "properties": {
+        "alias": {
+          "type": "object",
+          "required": [
+            "id",
+            "entity_id",
+            "type",
+            "value",
+            "norm",
+            "created_by",
+            "created_at",
+            "removed_at",
+            "removed_by"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^als_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "entity_id": {
+              "type": "string",
+              "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "type": {
+              "enum": [
+                "name",
+                "url",
+                "sku",
+                "gtin",
+                "mpn",
+                "source",
+                "external"
+              ]
+            },
+            "value": {
+              "type": "string"
+            },
+            "norm": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "integer",
+              "description": "Epoch milliseconds."
+            },
+            "removed_at": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Epoch milliseconds, or null."
+            },
+            "removed_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "settled_items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "link"
+      ],
+      "properties": {
+        "link": {
+          "$ref": "entity-link.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "scope",
+        "scope_id",
+        "key",
+        "current",
+        "affected_entities"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "source",
+            "signal",
+            "entity"
+          ]
+        },
+        "scope_id": {
+          "type": "string"
+        },
+        "key": {
+          "enum": [
+            "aggregate",
+            "limitation",
+            "verification"
+          ]
+        },
+        "current": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "id",
+            "scope",
+            "scope_id",
+            "key",
+            "value",
+            "note",
+            "set_by",
+            "set_at"
+          ],
+          "description": "The trust fact now in force, or null (aggregate include and an empty value end it).",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "scope": {
+              "type": "string"
+            },
+            "scope_id": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "set_by": {
+              "type": "string"
+            },
+            "set_at": {
+              "type": "integer",
+              "description": "Epoch milliseconds."
+            },
+            "ended_at": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Epoch milliseconds, or null."
+            },
+            "ended_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "affected_entities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "corrections"
+      ],
+      "properties": {
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "entity_id",
+              "target_type",
+              "body",
+              "submitted_by",
+              "status",
+              "created_at",
+              "entity",
+              "summary_published"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^cor_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "entity_id": {
+                "type": "string"
+              },
+              "target_type": {
+                "type": "string"
+              },
+              "target_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "body": {
+                "type": "string"
+              },
+              "evidence_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "submitted_by": {
+                "type": "string"
+              },
+              "via": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": "string"
+              },
+              "resolved_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "resolution_note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "resolved_at": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Epoch milliseconds, or null."
+              },
+              "created_at": {
+                "type": "integer",
+                "description": "Epoch milliseconds."
+              },
+              "entity": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The canonical entity's review_entities row."
+              },
+              "summary_published": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "correction",
+        "revision"
+      ],
+      "properties": {
+        "correction": {
+          "$ref": "correction.v1.json"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "$ref": "summary-revision.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

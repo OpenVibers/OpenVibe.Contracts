@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/source-attach-request.v1.json",
+  "title": "NewsSourceAttachRequest",
+  "description": "news.source-attach-request@1: bodies of news.source.attach on OpenVibe.News (editors). POST /api/v1/stories/:id/sources { item } (or { item_id }) attaches a source item to the story's source table under the next number (a detached item gets its old number back); 404 source_item.not_found, 409 source_item.removed for an item removed upstream. DELETE /api/v1/stories/:id/sources/:item takes no body and detaches it (its number is never reused; its timeline entries go with it; 404 story.source_not_attached).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "item": {
+          "type": "string",
+          "pattern": "^(nsi|itm)_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "A News source item id (nsi_…) or the OpenVibe.Sources item id it came from (itm_…)."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "item_id"
+      ],
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^(nsi|itm)_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "A News source item id (nsi_…) or the OpenVibe.Sources item id it came from (itm_…)."
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

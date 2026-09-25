@@ -26,5 +26,7 @@
     "GET /api/v1/items",
     "GET /api/v1/items/:id",
     "POST /api/v1/items/:id/resolution"
-  ]
+  ],
+  "inputSchema": "reviews.entity-resolve-request@1",
+  "outputSchema": "reviews.entity-resolve-result@1"
 }

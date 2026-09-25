@@ -1,0 +1,12 @@
+{
+  "topic": {
+    "id": "top_01JAB1T2V3W4X5Y6Z7A8B9C0D1",
+    "slug": "local",
+    "name": "Local",
+    "description": "Stories from the harbour towns",
+    "status": "active",
+    "created_at": 1790237700000,
+    "updated_at": 1790237700000
+  },
+  "created": true
+}

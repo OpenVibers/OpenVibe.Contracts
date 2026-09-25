@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-link.v1.json",
+  "title": "ReviewsEntityLink",
+  "description": "reviews.entity-link@1: one typed link on OpenVibe.Reviews (the review_entity_links row): between two entities (related, edition_of, successor_of, part_of; a merge is a merged_into link and a split ends it) or to another service's entity (external_ref, with ref holding the EntityRef as JSON text). Ending a link keeps it with who, when and why. Timestamps are epoch milliseconds.",
+  "type": "object",
+  "required": [
+    "id",
+    "from_entity",
+    "to_entity",
+    "type",
+    "ref",
+    "note",
+    "created_by",
+    "created_at",
+    "ended_at",
+    "ended_by",
+    "end_note"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "from_entity": {
+      "type": "string",
+      "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "to_entity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "type": {
+      "enum": [
+        "merged_into",
+        "related",
+        "edition_of",
+        "successor_of",
+        "part_of",
+        "external_ref"
+      ]
+    },
+    "ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "external_ref links: the common.entity-ref@1 as JSON text."
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "integer",
+      "description": "Epoch milliseconds."
+    },
+    "ended_at": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Epoch milliseconds, or null."
+    },
+    "ended_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "end_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

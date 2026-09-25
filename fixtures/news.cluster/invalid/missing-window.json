@@ -1,0 +1,25 @@
+{
+  "id": "clu_01JAB2X3C4D5E6F7G8H9J0KMNP",
+  "label": "Harbour Bridge",
+  "status": "open",
+  "merged_into": null,
+  "split_from": null,
+  "created_by": "svc:news",
+  "key_terms": [
+    {
+      "term": "bridge",
+      "items": 2
+    },
+    {
+      "term": "inspection",
+      "items": 2
+    }
+  ],
+  "key_entities": [
+    {
+      "entity": "Harbour Bridge",
+      "items": 2
+    }
+  ],
+  "item_count": 2
+}

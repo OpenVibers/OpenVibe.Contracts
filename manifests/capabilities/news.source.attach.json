@@ -16,5 +16,7 @@
   "implementedBy": [
     "POST /api/v1/stories/:id/sources",
     "DELETE /api/v1/stories/:id/sources/:item"
-  ]
+  ],
+  "inputSchema": "news.source-attach-request@1",
+  "outputSchema": "news.source-attach-result@1"
 }

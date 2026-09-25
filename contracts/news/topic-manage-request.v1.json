@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/topic-manage-request.v1.json",
+  "title": "NewsTopicManageRequest",
+  "description": "news.topic-manage-request@1: the body of news.topic.manage on OpenVibe.News: POST /api/v1/topics { name, slug?, description? } adds a canonical topic (editors; a service acts for the editor in X-OV-Subject). The name is collapsed and cut to 80 characters, the description to 300; the slug is made from slug or name (422 topic.no_name without a name, 422 topic.invalid_slug when it has no letters or digits).",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "slug": {
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

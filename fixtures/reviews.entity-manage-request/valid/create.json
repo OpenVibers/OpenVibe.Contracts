@@ -1,0 +1,10 @@
+{
+  "name": "Lumen X2 Headphones",
+  "kind": "product",
+  "aliases": [
+    {
+      "type": "gtin",
+      "value": "0012345678905"
+    }
+  ]
+}

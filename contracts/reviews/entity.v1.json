@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity.v1.json",
+  "title": "ReviewsEntity",
+  "description": "reviews.entity@1: one reviewed entity as OpenVibe.Reviews shows it (server/reviews/service.js entityView): the thing reviewed, its state (a merged entity points at the entity it now lives under; a deleted one keeps its record) and its public URL.",
+  "type": "object",
+  "required": [
+    "id",
+    "slug",
+    "name",
+    "kind",
+    "description",
+    "state",
+    "merged_into",
+    "canonical_id",
+    "noindex",
+    "url",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "kind": {
+      "enum": [
+        "product",
+        "game",
+        "software",
+        "service",
+        "place",
+        "organization",
+        "media",
+        "other"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state": {
+      "enum": [
+        "active",
+        "merged",
+        "deleted"
+      ]
+    },
+    "merged_into": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "canonical_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The entity it lives under after following merges (itself when not merged)."
+    },
+    "noindex": {
+      "type": "boolean"
+    },
+    "url": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/entities/:ref/summary/proposals"
-  ]
+  ],
+  "inputSchema": "reviews.summary-propose-request@1",
+  "outputSchema": "reviews.summary-propose-result@1"
 }

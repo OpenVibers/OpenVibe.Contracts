@@ -1,0 +1,16 @@
+{
+  "flag": {
+    "id": "flg_01JAB4F5G6H7J8K9M0N1P2Q3R4",
+    "story_id": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+    "kind": "correction",
+    "status": "open",
+    "note": "An earlier version gave the wrong day for the closure.",
+    "source_item_id": null,
+    "pending_revision": null,
+    "revision": null,
+    "created_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "created_at": 1790237700000,
+    "resolved_by": null,
+    "resolved_at": null
+  }
+}

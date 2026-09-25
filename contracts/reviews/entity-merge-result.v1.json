@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/entity-merge-result.v1.json",
+  "title": "ReviewsEntityMergeResult",
+  "description": "reviews.entity-merge-result@1: the answer of reviews.entity.merge on OpenVibe.Reviews: POST /api/v1/entities/:ref/merge → { link, entity, into, signals } — the merged_into link, the merged entity, the entity it now lives under (its aggregate recomputed over both) and the ids of the active signals that now count there. Emits reviews.entity.merged.",
+  "type": "object",
+  "required": [
+    "link",
+    "entity",
+    "into",
+    "signals"
+  ],
+  "properties": {
+    "link": {
+      "$ref": "entity-link.v1.json"
+    },
+    "entity": {
+      "$ref": "entity.v1.json"
+    },
+    "into": {
+      "$ref": "entity.v1.json"
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+      }
+    }
+  }
+}

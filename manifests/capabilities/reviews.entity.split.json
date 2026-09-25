@@ -17,5 +17,7 @@
   ],
   "implementedBy": [
     "POST /api/v1/entities/:ref/split"
-  ]
+  ],
+  "inputSchema": "reviews.entity-split-request@1",
+  "outputSchema": "reviews.entity-split-result@1"
 }

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/domain-manage-result.v1.json",
+  "title": "HostDomainManageResult",
+  "description": "host.domain-manage-result@1: answers of host.domain.manage on OpenVibe.Host. GET /api/v1/sites/:id/domains → { domains } (the default domain first). POST /api/v1/sites/:id/domains → 201 { domain } with the DNS records to publish. POST /api/v1/domains/:id/verify → { domain } after the check (status verified and served once the TXT record matches, else last_error says what was found; emits host.domain.verified). DELETE /api/v1/domains/:id → { deleted: true }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "domains"
+      ],
+      "properties": {
+        "domains": {
+          "type": "array",
+          "items": {
+            "$ref": "domain.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "domain"
+      ],
+      "properties": {
+        "domain": {
+          "$ref": "domain.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "deleted"
+      ],
+      "properties": {
+        "deleted": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "pull": {
+    "ok": true,
+    "after": 5120,
+    "pages": 2,
+    "applied": 14,
+    "unchanged": 3,
+    "skipped": 0
+  },
+  "queue": {
+    "ok": true,
+    "done": 1,
+    "failed": 0
+  }
+}

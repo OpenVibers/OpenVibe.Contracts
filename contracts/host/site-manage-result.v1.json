@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/site-manage-result.v1.json",
+  "title": "HostSiteManageResult",
+  "description": "host.site-manage-result@1: answers of host.site.manage on OpenVibe.Host. GET /api/v1/projects → { projects } (the caller's projects with their role). POST /api/v1/projects → 201 { project } (with quota and usage). GET /api/v1/projects/:id → { project, sites, members }. GET and PUT /api/v1/projects/:id/quota → { quota, usage }. PUT and DELETE /api/v1/projects/:id/members/:principal → { members }. GET /api/v1/projects/:id/sites → { sites }. POST /api/v1/projects/:id/sites → 201 { site }. GET /api/v1/sites/:id → { site, domains }. DELETE /api/v1/projects/:id and /sites/:id → { deleted: true } (serving stops at once; the objects are removed). DELETE /api/v1/deploys/:id → { deleted: true, objects_removed }. POST …/takedown → 201 { takedown }; DELETE …/takedown → { lifted: true }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "projects"
+      ],
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "project.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "project"
+      ],
+      "properties": {
+        "project": {
+          "$ref": "project.v1.json"
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "site.v1.json"
+          }
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "principal",
+              "role",
+              "added_at"
+            ],
+            "properties": {
+              "principal": {
+                "type": "string",
+                "description": "usr_…, app:app_… or svc:…"
+              },
+              "role": {
+                "enum": [
+                  "owner",
+                  "maintainer",
+                  "deployer"
+                ]
+              },
+              "added_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "quota",
+        "usage"
+      ],
+      "properties": {
+        "quota": {
+          "type": "object",
+          "required": [
+            "storage_bytes",
+            "deploys_per_day",
+            "max_files",
+            "max_file_bytes",
+            "sites",
+            "custom_domains"
+          ],
+          "description": "The effective quota: the project's override where set, else its environment's default.",
+          "properties": {
+            "storage_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "deploys_per_day": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_files": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_file_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sites": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "custom_domains": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "usage": {
+          "type": "object",
+          "required": [
+            "storage_bytes",
+            "objects",
+            "deploys_last_24h",
+            "sites",
+            "custom_domains"
+          ],
+          "properties": {
+            "storage_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "objects": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "deploys_last_24h": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sites": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "custom_domains": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "members"
+      ],
+      "properties": {
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "principal",
+              "role",
+              "added_at"
+            ],
+            "properties": {
+              "principal": {
+                "type": "string",
+                "description": "usr_…, app:app_… or svc:…"
+              },
+              "role": {
+                "enum": [
+                  "owner",
+                  "maintainer",
+                  "deployer"
+                ]
+              },
+              "added_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "sites"
+      ],
+      "properties": {
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "site.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "site"
+      ],
+      "properties": {
+        "site": {
+          "$ref": "site.v1.json"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "$ref": "domain.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "deleted"
+      ],
+      "properties": {
+        "deleted": {
+          "const": true
+        },
+        "objects_removed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "takedown"
+      ],
+      "properties": {
+        "takedown": {
+          "type": "object",
+          "required": [
+            "scope",
+            "reason",
+            "since"
+          ],
+          "description": "The takedown now in force.",
+          "properties": {
+            "scope": {
+              "enum": [
+                "project",
+                "site"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "since": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "lifted"
+      ],
+      "properties": {
+        "lifted": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

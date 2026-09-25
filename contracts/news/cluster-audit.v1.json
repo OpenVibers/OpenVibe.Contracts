@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/cluster-audit.v1.json",
+  "title": "NewsClusterAudit",
+  "description": "news.cluster-audit@1: one audited cluster change on OpenVibe.News (server/domain/clusters.js shapeAudit): a merge, a split or the reversal of one, with exactly which source items moved, who did it and why. Merge: cluster_id survived and other_id was absorbed; split: other_id is the new cluster.",
+  "type": "object",
+  "required": [
+    "id",
+    "action",
+    "cluster_id",
+    "other_id",
+    "item_ids",
+    "reason",
+    "actor",
+    "reverses",
+    "reversed_by",
+    "at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^cla_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "action": {
+      "enum": [
+        "merge",
+        "split",
+        "reverse_merge",
+        "reverse_split"
+      ]
+    },
+    "cluster_id": {
+      "type": "string"
+    },
+    "other_id": {
+      "type": "string"
+    },
+    "item_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "actor": {
+      "type": "string",
+      "description": "The editor (usr_…) or the service that acted."
+    },
+    "reverses": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The audit entry this one reverses."
+    },
+    "reversed_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The audit entry that reversed this one."
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

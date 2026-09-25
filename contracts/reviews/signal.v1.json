@@ -1,0 +1,329 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/signal.v1.json",
+  "title": "ReviewsSignal",
+  "description": "reviews.signal@1: one review signal as OpenVibe.Reviews shows it (server/reviews/service.js signalView): a typed observation (recommendation, tally or rating as the source states it — never review text) extracted from one OpenVibe.Sources item revision and attributed to one entity, with its status (superseded by a newer item revision, withdrawn when the item is removed or reattributed), trust facts and full provenance.",
+  "type": "object",
+  "required": [
+    "signal_id",
+    "entity_id",
+    "canonical_entity_id",
+    "type",
+    "source_key",
+    "source_item_id",
+    "item_revision",
+    "observed_at",
+    "source_published_at",
+    "canonical_url",
+    "license_note",
+    "status",
+    "status_reason",
+    "status_at",
+    "superseded_by",
+    "trust",
+    "editor_trust",
+    "created_at",
+    "provenance"
+  ],
+  "properties": {
+    "signal_id": {
+      "type": "string",
+      "pattern": "^sig_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "entity_id": {
+      "type": "string",
+      "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "canonical_entity_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "type": {
+      "enum": [
+        "recommendation",
+        "recommendation_tally",
+        "rating",
+        "rating_aggregate"
+      ]
+    },
+    "source_key": {
+      "type": "string"
+    },
+    "source_item_id": {
+      "type": "string",
+      "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "item_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "description": "When Reviews retrieved the item revision the signal came from."
+    },
+    "source_published_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "canonical_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "license_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recommended": {
+      "type": "boolean",
+      "description": "recommendation signals."
+    },
+    "positive_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "recommendation_tally signals."
+    },
+    "total_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rating_value": {
+      "type": "number",
+      "description": "rating and rating_aggregate signals, on the scale the source states."
+    },
+    "rating_best": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "rating_worst": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "rating_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "superseded",
+        "withdrawn"
+      ]
+    },
+    "status_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "superseded_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "trust": {
+      "type": "object",
+      "description": "Trust facts extracted with the signal."
+    },
+    "editor_trust": {
+      "type": "object",
+      "description": "The current editor trust facts by key.",
+      "properties": {
+        "aggregate": {
+          "type": "object",
+          "required": [
+            "value",
+            "note",
+            "set_at"
+          ],
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "set_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        },
+        "limitation": {
+          "type": "object",
+          "required": [
+            "value",
+            "note",
+            "set_at"
+          ],
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "set_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        },
+        "verification": {
+          "type": "object",
+          "required": [
+            "value",
+            "note",
+            "set_at"
+          ],
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "set_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_key",
+        "source_name",
+        "source_homepage",
+        "source_item_id",
+        "item_revision",
+        "item_kind",
+        "retrieved_at",
+        "last_seen_at",
+        "canonical_url",
+        "license_note",
+        "terms_note",
+        "item_state",
+        "item_removed_reason"
+      ],
+      "properties": {
+        "source_key": {
+          "type": "string"
+        },
+        "source_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_homepage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_item_id": {
+          "type": "string"
+        },
+        "item_revision": {
+          "type": "integer"
+        },
+        "item_kind": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retrieved_at": {
+          "type": "string"
+        },
+        "last_seen_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "canonical_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "terms_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item_state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item_removed_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

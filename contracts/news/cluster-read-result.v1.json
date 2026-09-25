@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/news/cluster-read-result.v1.json",
+  "title": "NewsClusterReadResult",
+  "description": "news.cluster-read-result@1: answers of news.cluster.read on OpenVibe.News (editors, or a service holding news.cluster.read). GET /api/v1/clusters?limit= → { clusters } (open clusters, newest activity first). GET /api/v1/clusters/:id → { cluster } with its items, audit and stories (404 cluster.not_found). GET /api/v1/source-items/:id (nsi_… or itm_…) → { item } (404 source_item.not_found). GET /api/v1/ingest → { cursor, runs, sources }: the Sources cursor, the 50 latest ingestion runs and the cached source health.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "clusters"
+      ],
+      "properties": {
+        "clusters": {
+          "type": "array",
+          "items": {
+            "$ref": "cluster.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "cluster"
+      ],
+      "properties": {
+        "cluster": {
+          "$ref": "cluster.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "item": {
+          "$ref": "source-item.v1.json"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "cursor",
+        "runs",
+        "sources"
+      ],
+      "properties": {
+        "cursor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "origin",
+              "state",
+              "at"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "origin": {
+                "enum": [
+                  "webhook",
+                  "pull",
+                  "sources"
+                ]
+              },
+              "state": {
+                "type": "string",
+                "description": "ok | failed | ignored | an upstream state (http_error, timeout, …)."
+              },
+              "source_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sources_item_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "counts": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "{ created, updated, removed, duplicates, unchanged }"
+              },
+              "cursor_before": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "cursor_after": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source_key",
+              "refreshed_at"
+            ],
+            "properties": {
+              "source_key": {
+                "type": "string"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "homepage_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "stale": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "last_success_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "refreshed_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

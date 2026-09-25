@@ -1,0 +1,61 @@
+{
+  "revision": {
+    "id": "rev_01JAB4R5S6T7V8W9X0Y1Z2A3B4",
+    "entityId": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+    "number": 1,
+    "parentId": null,
+    "parentNumber": null,
+    "kind": "edit",
+    "revertedTo": null,
+    "content": "The harbour bridge closed on Tuesday morning after inspectors found cracks in a support. [1]",
+    "fields": {
+      "headline": "Harbour bridge closes for inspection",
+      "paragraphs": [
+        {
+          "text": "The harbour bridge closed on Tuesday morning after inspectors found cracks in a support.",
+          "sources": [
+            1
+          ]
+        }
+      ],
+      "sources": [],
+      "timeline": [],
+      "perspectives": []
+    },
+    "meta": {
+      "authorship": {
+        "mode": "human",
+        "authors": [
+          "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+        ]
+      }
+    },
+    "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "author": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "message": "First draft",
+    "createdAt": "2026-09-24T09:40:12.000Z"
+  },
+  "citations": [
+    {
+      "id": 1,
+      "entityId": "sty_01JAB3DEF4GH5JK6MN7PQ8RS9T",
+      "revision": 1,
+      "anchor": "p1",
+      "sourceItemId": "itm_01JAB2Y8K9M1N2P3Q4R5S6T7VW",
+      "url": "https://harbourgazette.example/bridge-closure",
+      "title": "Harbour bridge closes for inspection after cracks found",
+      "retrievedAt": "2026-09-24T08:15:00.000Z",
+      "quote": null,
+      "licenseNote": null,
+      "carriedFrom": null,
+      "attachedBy": "svc:news",
+      "attachedAt": "2026-09-24T09:40:12.000Z"
+    }
+  ],
+  "problems": [
+    {
+      "code": "story.unsourced",
+      "detail": "A story with zero sources cannot be published: attach the source items it rests on"
+    }
+  ]
+}

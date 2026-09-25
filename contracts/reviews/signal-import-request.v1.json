@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/signal-import-request.v1.json",
+  "title": "ReviewsSignalImportRequest",
+  "description": "reviews.signal-import-request@1: bodies of reviews.signal.import on OpenVibe.Reviews (Reviews editors and granted services; 403 reviews.editor_required). POST /api/v1/signals/import { source_item_id } (or { item_id }) fetches one OpenVibe.Sources item (sources.item.read) and applies it: 422 signal.invalid_source_item, 404 signal.source_item_not_found, 422 signal.invalid_item / signal.no_provenance, 503 sources.unavailable. POST /api/v1/sources/sync takes no body and pulls the next pages of category-reviews items in change order, then drains the import queue.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "source_item_id"
+      ],
+      "properties": {
+        "source_item_id": {
+          "type": "string",
+          "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "item_id"
+      ],
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      }
+    },
+    {
+      "$ref": "../common/no-body.v1.json"
+    }
+  ]
+}

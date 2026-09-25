@@ -22,5 +22,7 @@
     "POST /api/v1/entities/:ref/summary/revisions/:n/review",
     "POST /api/v1/entities/:ref/summary/publish",
     "POST /api/v1/entities/:ref/summary/unpublish"
-  ]
+  ],
+  "inputSchema": "reviews.summary-publish-request@1",
+  "outputSchema": "reviews.summary-publish-result@1"
 }

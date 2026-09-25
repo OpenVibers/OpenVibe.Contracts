@@ -1,0 +1,15 @@
+{
+  "id": "cor_01JAC7C8D9E0F1G2H3J4K5M6N7",
+  "entity_id": "ent_01JAC1E2N3T4V5W6X7Y8Z9A0B1",
+  "target_type": "aggregate",
+  "target_id": null,
+  "body": "The rating count looks doubled: Sound Lab lists 159 ratings.",
+  "evidence_url": "https://soundlab.example/lumen-x2",
+  "submitted_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "via": null,
+  "status": "open",
+  "resolved_by": null,
+  "resolution_note": null,
+  "resolved_at": null,
+  "created_at": 1790240000000
+}

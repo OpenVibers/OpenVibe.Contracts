@@ -22,5 +22,7 @@
   "implementedBy": [
     "POST /api/v1/stories/:id/publish",
     "POST /api/v1/stories/:id/unpublish"
-  ]
+  ],
+  "inputSchema": "news.story-publish-request@1",
+  "outputSchema": "news.story-publish-result@1"
 }

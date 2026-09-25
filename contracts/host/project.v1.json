@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/project.v1.json",
+  "title": "HostProject",
+  "description": "host.project@1: one OpenVibe.Host tenant project (server/http/serialize.js project): owned by a person (usr_…), production or sandbox, with the caller's role in it and any staff takedown. POST /api/v1/projects and GET /api/v1/projects/:id add the effective quota and the usage.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "environment",
+    "network_project_id",
+    "owner",
+    "role",
+    "created_at",
+    "takedown"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "environment": {
+      "enum": [
+        "production",
+        "sandbox"
+      ]
+    },
+    "network_project_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The OpenVibe.Network project once Network has projects."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "role": {
+      "enum": [
+        "owner",
+        "maintainer",
+        "deployer",
+        "staff",
+        null
+      ],
+      "description": "The caller's role (staff: a Network admin who is not a member)."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "takedown": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "scope",
+        "reason",
+        "since"
+      ],
+      "description": "A staff takedown covering it: serving stops while the content is kept for review.",
+      "properties": {
+        "scope": {
+          "enum": [
+            "project",
+            "site"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "quota": {
+      "type": "object",
+      "required": [
+        "storage_bytes",
+        "deploys_per_day",
+        "max_files",
+        "max_file_bytes",
+        "sites",
+        "custom_domains"
+      ],
+      "description": "The effective quota: the project's override where set, else its environment's default.",
+      "properties": {
+        "storage_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deploys_per_day": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_file_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sites": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "custom_domains": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "required": [
+        "storage_bytes",
+        "objects",
+        "deploys_last_24h",
+        "sites",
+        "custom_domains"
+      ],
+      "properties": {
+        "storage_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "objects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deploys_last_24h": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sites": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "custom_domains": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

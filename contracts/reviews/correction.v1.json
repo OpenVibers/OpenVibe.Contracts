@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/correction.v1.json",
+  "title": "ReviewsCorrection",
+  "description": "reviews.correction@1: one correction request in the OpenVibe.Reviews editors' queue (the review_corrections row): what a person says is wrong about an entity, alias, signal, summary or aggregate, with an optional evidence URL, and how an editor resolved it. Corrections are read by editors and not published. Timestamps are epoch milliseconds.",
+  "type": "object",
+  "required": [
+    "id",
+    "entity_id",
+    "target_type",
+    "target_id",
+    "body",
+    "evidence_url",
+    "submitted_by",
+    "via",
+    "status",
+    "resolved_by",
+    "resolution_note",
+    "resolved_at",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^cor_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "entity_id": {
+      "type": "string",
+      "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "target_type": {
+      "enum": [
+        "entity",
+        "alias",
+        "signal",
+        "summary",
+        "aggregate"
+      ]
+    },
+    "target_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "body": {
+      "type": "string"
+    },
+    "evidence_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "submitted_by": {
+      "type": "string"
+    },
+    "via": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The service that sent it for the person, if any."
+    },
+    "status": {
+      "enum": [
+        "open",
+        "accepted",
+        "rejected"
+      ]
+    },
+    "resolved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolution_note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Stays with the editors."
+    },
+    "resolved_at": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Epoch milliseconds, or null."
+    },
+    "created_at": {
+      "type": "integer",
+      "description": "Epoch milliseconds."
+    }
+  }
+}

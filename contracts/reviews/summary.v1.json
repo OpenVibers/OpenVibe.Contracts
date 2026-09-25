@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/reviews/summary.v1.json",
+  "title": "ReviewsSummary",
+  "description": "reviews.summary@1: the editorial summary of one entity on OpenVibe.Reviews (the review_summaries row the summary routes answer with): its publication state, the published revision, and the flag set when a cited signal left (the published text stays up, flagged, until an editor approves the pending revision). Timestamps are epoch milliseconds; flagged is 0 or 1.",
+  "type": "object",
+  "required": [
+    "id",
+    "entity_id",
+    "state",
+    "published_revision",
+    "published_at",
+    "revision_published_at",
+    "flagged",
+    "flag_reason",
+    "flagged_at",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^sum_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "entity_id": {
+      "type": "string",
+      "pattern": "^ent_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "state": {
+      "enum": [
+        "draft",
+        "published",
+        "unpublished"
+      ]
+    },
+    "published_revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "published_at": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Epoch milliseconds, or null."
+    },
+    "revision_published_at": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Epoch milliseconds, or null."
+    },
+    "flagged": {
+      "enum": [
+        0,
+        1
+      ]
+    },
+    "flag_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "flagged_at": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Epoch milliseconds, or null."
+    },
+    "created_at": {
+      "type": "integer",
+      "description": "Epoch milliseconds."
+    },
+    "updated_at": {
+      "type": "integer",
+      "description": "Epoch milliseconds."
+    }
+  }
+}
