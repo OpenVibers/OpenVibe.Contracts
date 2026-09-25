@@ -1,22 +1,16 @@
-name: contracts
+name: ci
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
 jobs:
+  # install, node --check, tests, contract and pin-drift checks: the shared test job (WS-Q task 1).
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # compat.js diffs against the previous release tag
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm test
-  # Secret scan (gitleaks) and dependency audit, shared by every OpenVibers repo (Track Q).
+    uses: OpenVibers/OpenVibe.Shared/.github/workflows/test.yml@66b76f868ea8228aad7811309eafef3726b036f3
+    with:
+      fetch-depth: 0                  # compat.js diffs against the previous release tag
+      syntax-dirs: lib scripts bin
+      pin-drift: false                # the library the pins point at
+  # Secret scan (gitleaks) and dependency audit, shared by every OpenVibers repo.
   security:
-    uses: OpenVibers/OpenVibe.Shared/.github/workflows/security.yml@83c998b65424fb97e6f6de55ad9cc5981767e89c
+    uses: OpenVibers/OpenVibe.Shared/.github/workflows/security.yml@66b76f868ea8228aad7811309eafef3726b036f3
