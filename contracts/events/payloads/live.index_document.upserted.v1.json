@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/live.index_document.upserted.v1.json",
+  "title": "LiveIndexDocumentUpsertedPayload",
+  "description": "live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of A streamer's channel page (openvibe.live/@username): its name, bio, what it streams and whether it is live. Sent whenever what Search should hold changed; a banned channel, or one that stopped streaming for good, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "live"
+        },
+        "type": {
+          "const": "channel"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9]{1,15}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

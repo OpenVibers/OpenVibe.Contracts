@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.index_document.upserted.v1.json",
+  "title": "MediaIndexDocumentUpsertedPayload",
+  "description": "media.index_document.upserted v1 (OpenVibe.Media; roadmap WS-O task 10). The OpenVibe.Search document of A public, playable VOD or clip page on openvibe.media (readiness playable, visibility public). Sent whenever what Search should hold changed; a VOD or clip that is deleted, made private or stops being playable gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:media.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "media"
+        },
+        "type": {
+          "enum": [
+            "vod",
+            "clip"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9]{1,15}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

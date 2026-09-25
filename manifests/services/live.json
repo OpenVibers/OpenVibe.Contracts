@@ -40,9 +40,11 @@
     "live.owner.resolve"
   ],
   "eventsProduced": [
-    "live.stream.started",
+    "live.index_document.deleted",
+    "live.index_document.upserted",
+    "live.release.deployed",
     "live.stream.ended",
-    "live.release.deployed"
+    "live.stream.started"
   ],
   "eventsConsumed": [
     "media.clip.*",

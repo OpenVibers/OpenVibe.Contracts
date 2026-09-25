@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.index_document.upserted.v1.json",
+  "title": "CommunityIndexDocumentUpsertedPayload",
+  "description": "community.index_document.upserted v1 (OpenVibe.Community; roadmap WS-O task 10). The OpenVibe.Search document of A public forum thread (in a public, open space) or a public paste on openvibe.community. Sent whenever what Search should hold changed; a thread or paste that is deleted, made private or members-only, or burns after reading gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:community.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "community"
+        },
+        "type": {
+          "enum": [
+            "thread",
+            "paste"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

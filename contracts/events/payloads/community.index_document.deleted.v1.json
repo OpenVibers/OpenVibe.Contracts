@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/community.index_document.deleted.v1.json",
+  "title": "CommunityIndexDocumentDeletedPayload",
+  "description": "community.index_document.deleted v1 (OpenVibe.Community; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:community.",
+  "type": "object",
+  "required": [
+    "type",
+    "id",
+    "revision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "enum": [
+        "thread",
+        "paste"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,80}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}

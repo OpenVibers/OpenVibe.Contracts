@@ -38,6 +38,8 @@
   "eventsProduced": [
     "media.clip.failed",
     "media.clip.ready",
+    "media.index_document.deleted",
+    "media.index_document.upserted",
     "media.job.cancelled",
     "media.job.failed",
     "media.job.proposed",

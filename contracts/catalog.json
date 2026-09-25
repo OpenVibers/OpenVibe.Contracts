@@ -388,6 +388,60 @@
       "status": "active"
     },
     {
+      "id": "live.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "events/payloads/community.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "blog.post.created",
       "version": "1.0.0",
       "owner": "blog",

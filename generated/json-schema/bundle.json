@@ -4187,6 +4187,234 @@
         }
       }
     },
+    "live.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.index_document.upserted.v1.json",
+        "title": "LiveIndexDocumentUpsertedPayload",
+        "description": "live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of A streamer's channel page (openvibe.live/@username): its name, bio, what it streams and whether it is live. Sent whenever what Search should hold changed; a banned channel, or one that stopped streaming for good, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "live"
+              },
+              "type": {
+                "const": "channel"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[0-9]{1,15}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.index_document.deleted.v1.json",
+        "title": "LiveIndexDocumentDeletedPayload",
+        "description": "live.index_document.deleted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:live.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "channel"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9]{1,15}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "media.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.index_document.upserted.v1.json",
+        "title": "MediaIndexDocumentUpsertedPayload",
+        "description": "media.index_document.upserted v1 (OpenVibe.Media; roadmap WS-O task 10). The OpenVibe.Search document of A public, playable VOD or clip page on openvibe.media (readiness playable, visibility public). Sent whenever what Search should hold changed; a VOD or clip that is deleted, made private or stops being playable gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:media.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "media"
+              },
+              "type": {
+                "enum": [
+                  "vod",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[0-9]{1,15}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "media.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/media.index_document.deleted.v1.json",
+        "title": "MediaIndexDocumentDeletedPayload",
+        "description": "media.index_document.deleted v1 (OpenVibe.Media; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:media.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "vod",
+              "clip"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9]{1,15}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "community.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/community.index_document.upserted.v1.json",
+        "title": "CommunityIndexDocumentUpsertedPayload",
+        "description": "community.index_document.upserted v1 (OpenVibe.Community; roadmap WS-O task 10). The OpenVibe.Search document of A public forum thread (in a public, open space) or a public paste on openvibe.community. Sent whenever what Search should hold changed; a thread or paste that is deleted, made private or members-only, or burns after reading gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:community.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "community"
+              },
+              "type": {
+                "enum": [
+                  "thread",
+                  "paste"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "community.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/community.index_document.deleted.v1.json",
+        "title": "CommunityIndexDocumentDeletedPayload",
+        "description": "community.index_document.deleted v1 (OpenVibe.Community; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:community.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "thread",
+              "paste"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,80}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
     "blog.post.created": {
       "version": "1.0.0",
       "owner": "blog",

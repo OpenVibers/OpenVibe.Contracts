@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.44.0 — 2026-09-25
+
+Search documents from three more owners (roadmap WS-O task 10): **`live.index_document.upserted|deleted`** (a streamer's channel page, type `channel`), **`media.index_document.upserted|deleted`** (public, playable VODs and clips, types `vod` and `clip`) and **`community.index_document.upserted|deleted`** (public forum threads and public pastes, types `thread` and `paste`). They use the same shape as the Wiki, Blog, News and other owners' index events: the `search.index-document@1` document, or a tombstone `{ type, id, revision }`. OpenVibe.Search consumes them through `*.index_document.*`. The live, media and community manifests list them. Fixtures cover the Live payloads. Additive.
+
 ## 0.43.0 — 2026-09-25
 
 **`network.user.updated`** (roadmap WS-B task 2). A person's whole current profile after any change that other services may know about: username, display name, picture, colour, role or ban. The payload carries a `revision` and the list of what `changed` (`created` for a new account). Consumers keep a projection by writing the newest over what they have: roles apply in both directions, and a ban arrives even for someone who never comes back. Network produces it and Live consumes it (Live's `subject_projection`, replacing the `/internal/user-role` push). Fixtures cover valid and invalid payloads. Additive.

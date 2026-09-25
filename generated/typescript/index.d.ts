@@ -6699,6 +6699,78 @@ export interface WikiIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** live.index_document.upserted@1.0.0 (owner: live) */
+/**
+ * live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of A streamer's channel page (openvibe.live/@username): its name, bio, what it streams and whether it is live. Sent whenever what Search should hold changed; a banned channel, or one that stopped streaming for good, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.
+ */
+export type LiveIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "live";
+  type: "channel";
+  id?: string;
+  deleted: false;
+};
+
+/** live.index_document.deleted@1.0.0 (owner: live) */
+/**
+ * live.index_document.deleted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:live.
+ */
+export interface LiveIndexDocumentDeletedPayload {
+  type: "channel";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** media.index_document.upserted@1.0.0 (owner: media) */
+/**
+ * media.index_document.upserted v1 (OpenVibe.Media; roadmap WS-O task 10). The OpenVibe.Search document of A public, playable VOD or clip page on openvibe.media (readiness playable, visibility public). Sent whenever what Search should hold changed; a VOD or clip that is deleted, made private or stops being playable gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:media.
+ */
+export type MediaIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "media";
+  type: "vod" | "clip";
+  id?: string;
+  deleted: false;
+};
+
+/** media.index_document.deleted@1.0.0 (owner: media) */
+/**
+ * media.index_document.deleted v1 (OpenVibe.Media; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:media.
+ */
+export interface MediaIndexDocumentDeletedPayload {
+  type: "vod" | "clip";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** community.index_document.upserted@1.0.0 (owner: community) */
+/**
+ * community.index_document.upserted v1 (OpenVibe.Community; roadmap WS-O task 10). The OpenVibe.Search document of A public forum thread (in a public, open space) or a public paste on openvibe.community. Sent whenever what Search should hold changed; a thread or paste that is deleted, made private or members-only, or burns after reading gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:community.
+ */
+export type CommunityIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "community";
+  type: "thread" | "paste";
+  id?: string;
+  deleted: false;
+};
+
+/** community.index_document.deleted@1.0.0 (owner: community) */
+/**
+ * community.index_document.deleted v1 (OpenVibe.Community; roadmap WS-O task 10). A Search tombstone: Search drops the document at this revision or older. Only sent for a document Search was sent before. Envelope: subject { type, id, revision }, visibility internal, actor service:community.
+ */
+export interface CommunityIndexDocumentDeletedPayload {
+  type: "thread" | "paste";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
 /** blog.post.created@1.0.0 (owner: blog) */
 /**
  * blog.post.created v1 (OpenVibe.Blog server/domain/posts.js create). A post exists as a draft (its first revision). Envelope: subject { type: post, id: pst_…, revision: 1 }, visibility internal, priority low, actor the person or the calling service.
