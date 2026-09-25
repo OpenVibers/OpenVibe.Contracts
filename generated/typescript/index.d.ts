@@ -667,6 +667,75 @@ export interface NoBody {}
  */
 export type Binary = string;
 
+/** common.config-snapshot@1.0.0 (owner: network) */
+/**
+ * One immutable revision of one service's configuration namespace (roadmap WS-C task 7; kept by openvibe-shared/config). A revision's values never change: revisions grow by one per namespace, and a rollback is a new revision that copies an older one's values. Only the state moves: proposed -> active -> superseded or rolled_back, or proposed -> rejected when validation or activation fails, in which case the previous active revision stays or is restored. A secret-class key's value never appears here: it is { redacted: true, fingerprint }, an HMAC-SHA256 of the value under a secret key the service keeps per namespace, so equal fingerprints within one namespace mean the value did not change, while the value cannot be recovered or guessed offline without that key. checksum is the sha256 of the canonical JSON (keys sorted, no whitespace) of values exactly as they appear here, secrets as their markers, so anyone can check it, and two snapshots of one namespace with the same checksum hold the same configuration.
+ */
+export type ConfigSnapshot = {
+  [k: string]: unknown | undefined;
+} & {
+  service: string;
+  /**
+   * <service>.<name>, e.g. live.site_settings or media.storage_tier.
+   */
+  namespace: string;
+  revision: number;
+  /**
+   * The revision that was active when this one was proposed; null for the namespace's first.
+   */
+  previous_revision: number | null;
+  state: "proposed" | "active" | "superseded" | "rejected" | "rolled_back";
+  /**
+   * The configuration, one member per key. A secret-class key's value is a redaction marker.
+   */
+  values: {
+    /**
+     * Any JSON value. An object with a redacted member is a redaction marker, and nothing else.
+     */
+    [k: string]:
+      | (
+          | (string | number | boolean | null | unknown[])
+          | {
+              [k: string]: unknown | undefined;
+            }
+          | {
+              redacted: true;
+              /**
+               * HMAC-SHA256 (hex) of the canonical JSON of the value, keyed with the namespace's secret key: equal within one namespace when the value is unchanged, and not recoverable or guessable without the key.
+               */
+              fingerprint: string;
+            }
+        )
+      | undefined;
+  };
+  /**
+   * Every key of values, classified. A key the service does not classify is internal.
+   */
+  classification: {
+    [k: string]: ("public" | "internal" | "secret") | undefined;
+  };
+  /**
+   * sha256 (hex) of the canonical JSON of values as they appear in this snapshot (secrets as their markers).
+   */
+  checksum: string;
+  created_at: string;
+  created_by: SubjectRef;
+  /**
+   * When it became active; null while proposed, and for a rejected revision.
+   */
+  activated_at?: string | null;
+  activated_by?: SubjectRef | null;
+  reason?: string | null;
+  /**
+   * Why it was rejected: the validation errors, or what activation reported. Never a secret value.
+   */
+  error?: string | null;
+  /**
+   * A rollback's source: the revision whose values this one copies.
+   */
+  copied_from?: number | null;
+};
+
 /** media.file-upload@1.0.0 (owner: media) */
 /**
  * media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.file@1 (201).

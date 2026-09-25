@@ -182,6 +182,15 @@
       "status": "active"
     },
     {
+      "id": "common.config-snapshot",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "common/config-snapshot.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.file-upload",
       "version": "1.0.0",
       "owner": "media",

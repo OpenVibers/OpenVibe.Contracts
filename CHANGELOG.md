@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased
+
+**`common.config-snapshot@1`** (roadmap WS-C task 7, the configuration model): one immutable revision of one service's configuration namespace (`live.site_settings`, `network.site_settings`, `media.storage_tier`), as `openvibe-shared/config` keeps it and `/api/admin/config` shows it. It carries service, namespace, a revision that grows per namespace and the previous one, a state (`proposed`, `active`, `superseded`, `rejected`, `rolled_back`), the values with every secret-class key as `{ redacted: true, fingerprint }` (an HMAC-SHA256 of the value under a secret key the service keeps per namespace: equal fingerprints within a namespace mean the value did not change, and the value cannot be recovered or guessed offline without the key), a `public`/`internal`/`secret` classification per key, a sha256 checksum over the canonical JSON of the values as shown (secrets as their markers, so anyone can check it and it reveals nothing more), who created and activated it and when, a reason, the rejection error, and `copied_from` for a rollback. A rejected revision names its error; an active, superseded or rolled-back one names when it became active. Fixtures for an active revision with a redacted secret, an imported first revision, a rejected tiering change, a rollback and a proposal; an unkeyed `sha256` marker is invalid. Additive.
+
 ## 0.51.0 — 2026-09-25
 
 **OpenAPI 3.1 per service** (roadmap WS-C task 6): `generated/openapi/<service>.json` for each of the 24 services that own an active capability, 450 operations in all, plus `generated/openapi/index.json`. `lib/openapi.js` (`openapi.buildOpenApi()`, `openapi.index()`, `openapi.document(id)`) builds them from each capability's `implementedBy` routes and its input and output schemas:

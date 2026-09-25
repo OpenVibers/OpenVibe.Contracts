@@ -1,0 +1,33 @@
+{
+  "service": "network",
+  "namespace": "network.site_settings",
+  "revision": 7,
+  "previous_revision": 6,
+  "state": "active",
+  "values": {
+    "signup_enabled": true,
+    "support_email": "support@openvibe.network",
+    "resend_api_key": {
+      "redacted": true,
+      "fingerprint": "ad8cf89568d4682f23abb9ae039530fece7b9505fdd62ae378621f1e7adbbca8"
+    }
+  },
+  "classification": {
+    "signup_enabled": "public",
+    "support_email": "public",
+    "resend_api_key": "secret"
+  },
+  "checksum": "ef5e60836ff9d9615bfa5d64a1a5a46f3b9afc8ae81de5c4c95ce2c7c367ece1",
+  "created_at": "2026-09-25T20:00:00.000Z",
+  "created_by": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "activated_at": "2026-09-25T20:00:00.120Z",
+  "activated_by": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "reason": "rollback to revision 5",
+  "copied_from": 5
+}

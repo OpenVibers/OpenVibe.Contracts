@@ -1,0 +1,30 @@
+{
+  "service": "media",
+  "namespace": "media.storage_tier",
+  "revision": 4,
+  "previous_revision": 3,
+  "state": "rejected",
+  "values": {
+    "enabled": true,
+    "minAgeDays": 7,
+    "r2Enabled": true,
+    "r2MinViews": 0,
+    "r2MaxPerSweep": 5
+  },
+  "classification": {
+    "enabled": "internal",
+    "minAgeDays": "internal",
+    "r2Enabled": "internal",
+    "r2MinViews": "internal",
+    "r2MaxPerSweep": "internal"
+  },
+  "checksum": "99a04eacd9782e2154eaa457c24a0f39b54d2a032145298befaf0ba50d226682",
+  "created_at": "2026-09-25T19:40:00.000Z",
+  "created_by": {
+    "type": "service",
+    "id": "live"
+  },
+  "activated_at": null,
+  "reason": "Promote every VOD to R2",
+  "error": "onActivate: r2MinViews must be at least 1 while r2Enabled"
+}

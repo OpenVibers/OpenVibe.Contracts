@@ -632,6 +632,29 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     fs.rmSync(tmp, { recursive: true, force: true });
 }
 
+// ── Config snapshots (WS-C task 7): what the schema cannot say across fields ──
+// classification names exactly the keys of values; a secret-class value is always a keyed
+// fingerprint marker and nothing else is one; the checksum is the sha256 of the values as shown.
+{
+    const crypto = require('crypto');
+    const canon = (v) => (Array.isArray(v) ? `[${v.map(canon).join(',')}]` : v && typeof v === 'object' ? `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canon(v[k])}`).join(',')}}` : JSON.stringify(v));
+    const sha = (v) => crypto.createHash('sha256').update(canon(v)).digest('hex');
+    const s = contracts.schema('common.config-snapshot');
+    ok(JSON.stringify(s.properties.state.enum) === JSON.stringify(['proposed', 'active', 'superseded', 'rejected', 'rolled_back']), 'config-snapshot states');
+    ok(!JSON.stringify(s).includes('"sha256"'), 'config-snapshot: a secret is never an unkeyed sha256');
+    const dir = path.join(ROOT, 'fixtures/common.config-snapshot/valid');
+    for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json'))) {
+        const snap = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+        ok(JSON.stringify(Object.keys(snap.values).sort()) === JSON.stringify(Object.keys(snap.classification).sort()), `config-snapshot ${f}: every key classified`);
+        for (const [k, v] of Object.entries(snap.values)) {
+            const marker = !!(v && typeof v === 'object' && v.redacted === true);
+            ok(marker === (snap.classification[k] === 'secret'), `config-snapshot ${f}: ${k} is redacted exactly when it is secret`);
+            if (marker) ok(JSON.stringify(Object.keys(v).sort()) === '["fingerprint","redacted"]', `config-snapshot ${f}: ${k} is a fingerprint, never an unkeyed hash`);
+        }
+        ok(snap.checksum === sha(snap.values), `config-snapshot ${f}: checksum is sha256 of the values as shown`);
+    }
+}
+
 // ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──
 execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js')], { stdio: 'inherit' });
 
