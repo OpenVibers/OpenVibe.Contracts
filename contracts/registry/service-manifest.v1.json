@@ -4,23 +4,194 @@
   "title": "ServiceManifest",
   "description": "What a service is, where it lives and what it offers. The ecosystem registry is built from these, not from hard-coded route maps.",
   "type": "object",
-  "required": ["id", "version", "status", "repository", "domains", "capabilities", "eventsProduced", "eventsConsumed", "namespacesOwned"],
+  "required": [
+    "id",
+    "version",
+    "status",
+    "repository",
+    "domains",
+    "capabilities",
+    "eventsProduced",
+    "eventsConsumed",
+    "namespacesOwned"
+  ],
   "additionalProperties": false,
   "properties": {
-    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
-    "name": { "type": "string" },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$" },
-    "status": { "enum": ["placeholder", "alpha", "beta", "stable", "degraded", "retired"] },
-    "repository": { "type": "string", "pattern": "^OpenVibers/[A-Za-z0-9._-]+$" },
-    "domains": { "type": "array", "items": { "type": "string" } },
-    "publicOrigin": { "type": "string", "format": "uri" },
-    "health": { "type": "string", "pattern": "^/" },
-    "ready": { "type": "string", "pattern": "^/" },
-    "capabilities": { "type": "array", "items": { "type": "string" } },
-    "eventsProduced": { "type": "array", "items": { "type": "string" } },
-    "eventsConsumed": { "type": "array", "items": { "type": "string" } },
-    "namespacesOwned": { "type": "array", "items": { "type": "string" } },
-    "contractRanges": { "type": "object", "additionalProperties": { "type": "string" } },
-    "notes": { "type": "string" }
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$"
+    },
+    "status": {
+      "enum": [
+        "placeholder",
+        "alpha",
+        "beta",
+        "stable",
+        "degraded",
+        "retired"
+      ]
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^OpenVibers/[A-Za-z0-9._-]+$"
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "publicOrigin": {
+      "type": "string",
+      "format": "uri"
+    },
+    "health": {
+      "type": "string",
+      "pattern": "^/"
+    },
+    "ready": {
+      "type": "string",
+      "pattern": "^/"
+    },
+    "internalOrigin": {
+      "type": "string",
+      "pattern": "^http://(127\\.0\\.0\\.1|localhost|\\[::1\\]):[0-9]{2,5}$",
+      "description": "Where the service answers on its host (loopback only): the address the registry polls health and readiness from. A host inventory or an OV_<ID>_INTERNAL_URL loopback override may replace it; a service with nothing to run has none."
+    },
+    "exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "description": "Where the service can actually be reached today, which is separate from its maturity (status): live (its public domain serves it), internal (loopback only; the domain, if any, still serves a placeholder), library (a released package), repository (code with CI, nothing released or run), placeholder (charter only) or retired. When a service goes public, this changes in the same release that points its domain at it.",
+      "properties": {
+        "state": {
+          "enum": [
+            "live",
+            "internal",
+            "library",
+            "repository",
+            "placeholder",
+            "retired"
+          ]
+        },
+        "publicSite": {
+          "enum": [
+            "service",
+            "placeholder",
+            null
+          ],
+          "description": "What the public domain answers today: the service itself, a placeholder page, or nothing (no public domain)."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "package": {
+          "type": "string",
+          "pattern": "^[a-z0-9@/._-]+$",
+          "description": "For a library: the npm package name."
+        },
+        "repo": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "description": "For a library: the OpenVibers repository its release tags live in."
+        }
+      }
+    },
+    "site": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "icon",
+        "tagline",
+        "what",
+        "legalProfile"
+      ],
+      "description": "How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "Short name after 'OpenVibe.' (or a full name containing a dot)."
+        },
+        "icon": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "tagline": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "what": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "legalProfile": {
+          "enum": [
+            "streaming",
+            "tools",
+            "ugc",
+            "games",
+            "hosting",
+            "account",
+            "info"
+          ],
+          "description": "Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal)."
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Order in site lists."
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9.-]+$",
+          "description": "Only while the manifest has no publicOrigin."
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "eventsProduced": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "eventsConsumed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "namespacesOwned": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contractRanges": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
   }
 }

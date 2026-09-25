@@ -4,6 +4,13 @@
   "name": "OpenVibe.Publishing",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Publishing",
+  "exposure": {
+    "state": "library",
+    "publicSite": null,
+    "note": "the shared publishing runtime used by Wiki, Blog, News, Reviews, Deals, Coupons and Trade",
+    "package": "openvibe-publishing",
+    "repo": "OpenVibe.Publishing"
+  },
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],

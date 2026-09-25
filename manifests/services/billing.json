@@ -13,6 +13,12 @@
   "publicOrigin": "https://billing.openvibe.network",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4600",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "the public domain is the staff console; accounts pay through each product"
+  },
   "capabilities": [
     "billing.intent.create",
     "billing.transfer.create",

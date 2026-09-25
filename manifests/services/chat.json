@@ -7,7 +7,9 @@
   "name": "OpenVibe.Chat",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Chat",
-  "domains": ["openvibe.chat"],
+  "domains": [
+    "openvibe.chat"
+  ],
   "publicOrigin": "https://openvibe.chat",
   "capabilities": [
     "chat.live_bridge.write",
@@ -23,8 +25,27 @@
   "eventsConsumed": [
     "network.user.token_valid_after"
   ],
-  "namespacesOwned": ["chat.preferences", "chat.tts_defaults", "chat.dm_settings", "chat.presence_prefs"],
+  "namespacesOwned": [
+    "chat.preferences",
+    "chat.tts_defaults",
+    "chat.dm_settings",
+    "chat.presence_prefs"
+  ],
   "notes": "Wave 6: Live's chat (WebSocket, DMs, history, TTS, sounds, moderation) behind a service boundary on 127.0.0.1:4400, serving Live's chat paths since 2026-09-23. Since 2026-09-24 also its own site, openvibe.chat (global chat, messages, settings, sign-in with the Network), which works while Live is down.",
   "health": "/health",
-  "ready": "/ready"
+  "ready": "/ready",
+  "internalOrigin": "http://127.0.0.1:4400",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "openvibe.chat since 2026-09-24 (global chat, messages, settings); also serves Live's chat paths"
+  },
+  "site": {
+    "name": "Chat",
+    "icon": "chat",
+    "tagline": "One chat for the network",
+    "what": "Global chat, rooms, stream chat and direct messages under one account, with or without JavaScript.",
+    "legalProfile": "ugc",
+    "position": 6
+  }
 }

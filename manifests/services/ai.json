@@ -13,6 +13,12 @@
   "publicOrigin": "https://ai.openvibe.network",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4700",
+  "exposure": {
+    "state": "internal",
+    "publicSite": null,
+    "note": "called by other services at 127.0.0.1:4700; ai.openvibe.network serves the OpenVibe.Sites placeholder page"
+  },
   "capabilities": [
     "ai.run.create",
     "ai.run.read",
@@ -27,6 +33,8 @@
     "ai.run.cached"
   ],
   "eventsConsumed": [],
-  "namespacesOwned": ["ai.usage_summary"],
+  "namespacesOwned": [
+    "ai.usage_summary"
+  ],
   "notes": "Providers, models, routing profiles, versioned prompt templates and workflows, runs, request logs, citations, scoped cache, quotas and audit. Workflow output is a draft/evidence package attributed to workflow + model + run. ai.run.queued|succeeded|failed|cached have payload contracts (v0.30.0, status planned): AI publishes them once its Events client is wired in; it publishes none today. ai.run.create takes ai.run-request@1 and returns ai.run@1."
 }

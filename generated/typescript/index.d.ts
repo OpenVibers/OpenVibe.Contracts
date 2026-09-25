@@ -143,6 +143,53 @@ export interface ServiceManifest {
   publicOrigin?: string;
   health?: string;
   ready?: string;
+  /**
+   * Where the service answers on its host (loopback only): the address the registry polls health and readiness from. A host inventory or an OV_<ID>_INTERNAL_URL loopback override may replace it; a service with nothing to run has none.
+   */
+  internalOrigin?: string;
+  /**
+   * Where the service can actually be reached today, which is separate from its maturity (status): live (its public domain serves it), internal (loopback only; the domain, if any, still serves a placeholder), library (a released package), repository (code with CI, nothing released or run), placeholder (charter only) or retired. When a service goes public, this changes in the same release that points its domain at it.
+   */
+  exposure?: {
+    state: "live" | "internal" | "library" | "repository" | "placeholder" | "retired";
+    /**
+     * What the public domain answers today: the service itself, a placeholder page, or nothing (no public domain).
+     */
+    publicSite?: "service" | "placeholder" | null;
+    note?: string;
+    /**
+     * For a library: the npm package name.
+     */
+    package?: string;
+    /**
+     * For a library: the OpenVibers repository its release tags live in.
+     */
+    repo?: string;
+  };
+  /**
+   * How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site.
+   */
+  site?: {
+    /**
+     * Short name after 'OpenVibe.' (or a full name containing a dot).
+     */
+    name: string;
+    icon: string;
+    tagline: string;
+    what: string;
+    /**
+     * Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal).
+     */
+    legalProfile: "streaming" | "tools" | "ugc" | "games" | "hosting" | "account" | "info";
+    /**
+     * Order in site lists.
+     */
+    position?: number;
+    /**
+     * Only while the manifest has no publicOrigin.
+     */
+    host?: string;
+  };
   capabilities: string[];
   eventsProduced: string[];
   eventsConsumed: string[];

@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.host",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4910",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "Host",
+    "icon": "host",
+    "tagline": "Deploy and host",
+    "what": "The network's deployment plane first, then simple hosting for community sites, bots and mods.",
+    "legalProfile": "hosting",
+    "position": 15
+  },
   "capabilities": [
     "host.site.manage",
     "host.deploy.create",

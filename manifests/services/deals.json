@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.deals",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4840",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "Deals",
+    "icon": "deals",
+    "tagline": "Deals worth sharing",
+    "what": "Deals submitted and voted on by the community, with source, price and freshness always shown.",
+    "legalProfile": "info",
+    "position": 16
+  },
   "capabilities": [
     "deals.offer.submit",
     "deals.offer.update",

@@ -14,6 +14,19 @@
   "publicOrigin": "https://openvibe.live",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:3000",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Live",
+    "icon": "live",
+    "tagline": "Streams, clips and chat",
+    "what": "Live streaming from a browser, OBS or a phone, with restreaming, clips, VODs, chat games and channel points.",
+    "legalProfile": "streaming",
+    "position": 0
+  },
   "capabilities": [
     "live.chat_context.read",
     "live.chat_effects.write",

@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.news",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4820",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "News",
+    "icon": "news",
+    "tagline": "Sourced, not spun",
+    "what": "Source-backed stories: clustered coverage, cited summaries, multiple perspectives and timelines.",
+    "legalProfile": "info",
+    "position": 10
+  },
   "capabilities": [
     "news.story.create",
     "news.story.read",

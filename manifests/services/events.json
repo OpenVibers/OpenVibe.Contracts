@@ -13,6 +13,11 @@
   "publicOrigin": "https://events.openvibe.network",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4300",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
   "capabilities": [
     "events.event.publish",
     "events.event.read",

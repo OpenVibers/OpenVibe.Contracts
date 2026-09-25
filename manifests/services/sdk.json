@@ -4,6 +4,12 @@
   "name": "OpenVibe.SDK",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.SDK",
+  "exposure": {
+    "state": "library",
+    "publicSite": null,
+    "package": "openvibe-sdk",
+    "repo": "OpenVibe.SDK"
+  },
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],

@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.vip",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4620",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "VIP",
+    "icon": "vip",
+    "tagline": "Memberships and perks",
+    "what": "Creator and network memberships: plans, perks and benefits recognised on every OpenVibe site.",
+    "legalProfile": "account",
+    "position": 13
+  },
   "capabilities": [
     "vip.plan.create",
     "vip.plan.update",

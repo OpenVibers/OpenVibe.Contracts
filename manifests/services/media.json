@@ -12,6 +12,20 @@
   ],
   "publicOrigin": "https://openvibe.media",
   "health": "/healthz",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4100",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Media",
+    "icon": "media",
+    "tagline": "VODs, clips, files",
+    "what": "The public media library behind every site: recorded streams, clips, images and uploads.",
+    "legalProfile": "hosting",
+    "position": 4
+  },
   "capabilities": [
     "media.object.upload",
     "media.object.read",

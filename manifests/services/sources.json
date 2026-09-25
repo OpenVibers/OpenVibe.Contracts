@@ -13,6 +13,12 @@
   "publicOrigin": "https://sources.openvibe.network",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4720",
+  "exposure": {
+    "state": "internal",
+    "publicSite": null,
+    "note": "internal ingestion service; sources.openvibe.network says so (its API is loopback-only)"
+  },
   "capabilities": [
     "sources.source.read",
     "sources.item.read",

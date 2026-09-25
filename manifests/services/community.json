@@ -41,5 +41,18 @@
   "namespacesOwned": [
     "community.*"
   ],
-  "ready": "/api/ready"
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4200",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Community",
+    "icon": "community",
+    "tagline": "Pastes and posts",
+    "what": "Share text and code with a link, comment, and follow what people on OpenVibe are making.",
+    "legalProfile": "ugc",
+    "position": 2
+  }
 }

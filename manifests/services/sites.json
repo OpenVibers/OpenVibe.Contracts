@@ -7,6 +7,11 @@
   "name": "OpenVibe.Sites",
   "status": "stable",
   "repository": "OpenVibers/OpenVibe.Sites",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "serves the placeholder pages of domains whose service is not public yet"
+  },
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],

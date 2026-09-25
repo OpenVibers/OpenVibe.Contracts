@@ -17,6 +17,20 @@
   ],
   "publicOrigin": "https://openvibe.network",
   "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4000",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Network",
+    "icon": "network",
+    "tagline": "Account and themes",
+    "what": "The account behind every site: one sign-in, themes, notifications, history and linked services.",
+    "legalProfile": "account",
+    "position": 5
+  },
   "capabilities": [
     "identity.subject.resolve",
     "mods.grant.manage",

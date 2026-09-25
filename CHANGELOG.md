@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.42.0 — 2026-09-25
+
+The service manifests carry what Network's registry and site list used to hard-code (roadmap WS-C task 1, "manifest-derived registry"):
+
+- **`internalOrigin`**: the loopback address a running service answers on, which the registry polls. An `OV_<ID>_INTERNAL_URL` loopback override can still replace it.
+- **`exposure`**: where the service can be reached today. `state` is live, internal, library, repository, placeholder or retired; `publicSite` says what the public domain answers (the service, a placeholder, or nothing); there is an optional `note`; libraries also give `package` and `repo`. This is separate from `status` (maturity).
+- **`site`**: how a site is presented, with `name`, `icon`, `tagline`, `what`, `legalProfile` (the legal wording of /terms, /privacy, /dmca), `position`, and `host` for a site without a public origin. A service without `site` is not a site.
+- **`ready`** is added to the network, media and games manifests (`/api/ready`).
+
+The values are exactly what Network hard-coded. A service going public is now one manifest edit here. The test requires every first-party manifest to have an exposure, every running service to have a unique loopback port, libraries to name their package and repository, and site positions to be unique. The additions are optional in the schema, so this release is additive.
+
 ## 0.41.1 — 2026-09-25
 
 Plain-language descriptions for `ai.preferences`, `chat.preferences`, `games.progress.summary` and `live.profile`. my.openvibe.network now shows these descriptions to people on its AI & Data tab. No schema change.

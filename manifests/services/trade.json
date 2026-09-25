@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.trade",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4860",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "Trade",
+    "icon": "trade",
+    "tagline": "Watchlists and alerts",
+    "what": "Informational watchlists, sourced market context and alerts. No custody, no order execution.",
+    "legalProfile": "ugc",
+    "position": 14
+  },
   "capabilities": [
     "trade.instrument.resolve",
     "trade.instrument.manage",

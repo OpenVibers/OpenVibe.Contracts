@@ -13,6 +13,19 @@
   "publicOrigin": "https://openvibe.tools",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4001",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Tools",
+    "icon": "tools",
+    "tagline": "Every online tool",
+    "what": "More than 160 online tools: converters, downloaders, PDF and image tools, developer utilities and network diagnostics, each on its own address.",
+    "legalProfile": "tools",
+    "position": 1
+  },
   "capabilities": [
     "tools.job.create",
     "tools.job.read",

@@ -14,6 +14,20 @@
   "publicOrigin": "https://openre.stream",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4500",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "OpenRe.Stream",
+    "icon": "stream",
+    "tagline": "Restream anywhere",
+    "what": "Ingest once and send the stream to every platform at once; keys, destinations and output health in one place.",
+    "legalProfile": "streaming",
+    "position": 18
+  },
   "capabilities": [
     "openre.stream.read",
     "openre.stream.write",

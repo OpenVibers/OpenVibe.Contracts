@@ -546,6 +546,28 @@ client.invalidate(); await client.getToken(); ok(calls === 2, 'invalidate forces
 const failing = serviceAuth.createTokenClient({ tokenUrl: 'x', clientId: 'live', clientSecret: 'bad', audience: 'a', fetchImpl: async () => ({ ok: false, status: 401, json: async () => ({ error: 'invalid_client' }) }) });
 await assert.rejects(failing.getToken(), /401: invalid_client/);
 
+// ── Manifest-derived registry (WS-C task 1): addresses, exposure, sites ──
+{
+    const ms = services.manifests;
+    const ports = new Map();
+    for (const m of ms) {
+        ok(m.exposure && typeof m.exposure.state === 'string', `${m.id} says where it can be reached (exposure)`);
+        const runs = ['live', 'internal'].includes(m.exposure.state) && !!m.ready;
+        if (runs) ok(typeof m.internalOrigin === 'string', `${m.id} runs: it names its loopback address (internalOrigin)`);
+        if (m.internalOrigin) {
+            const port = new URL(m.internalOrigin).port;
+            ok(!ports.has(port), `${m.id} internalOrigin port ${port} is its own${ports.has(port) ? ` (also ${ports.get(port)})` : ''}`);
+            ports.set(port, m.id);
+        }
+        if (m.exposure.state === 'library') ok(m.exposure.package && m.exposure.repo, `${m.id} library names its package and repository`);
+        if (m.exposure.state === 'live' && m.exposure.publicSite === 'service') ok(!!m.publicOrigin || (m.domains || []).length > 0 || !!m.exposure.note, `${m.id} is live: it has a public origin, its domains, or a note saying where`);
+        if (m.site) ok(!!(m.publicOrigin || m.site.host), `${m.id} site has a host`);
+    }
+    const positions = ms.filter(m => m.site).map(m => m.site.position);
+    ok(new Set(positions).size === positions.length, 'site positions are unique');
+    ok(ms.filter(m => m.site).length >= 10, 'the network\'s sites are in the manifests');
+}
+
 // ── User-module namespaces ────────────────────────────────────────────────
 {
     const { modules } = contracts;

@@ -4,6 +4,13 @@
   "name": "OpenVibe.Shared",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Shared",
+  "exposure": {
+    "state": "library",
+    "publicSite": null,
+    "note": "also served at /shared/* by each site",
+    "package": "openvibe-shared",
+    "repo": "OpenVibe.Shared"
+  },
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],

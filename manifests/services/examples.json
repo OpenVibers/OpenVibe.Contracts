@@ -7,6 +7,11 @@
   "name": "OpenVibe.Examples",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Examples",
+  "exposure": {
+    "state": "repository",
+    "publicSite": null,
+    "note": "example apps with CI in OpenVibers/OpenVibe.Examples; not published as a package"
+  },
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],

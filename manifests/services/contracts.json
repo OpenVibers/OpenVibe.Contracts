@@ -7,6 +7,13 @@
   "name": "OpenVibe.Contracts",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Contracts",
+  "exposure": {
+    "state": "library",
+    "publicSite": null,
+    "note": "schemas are also served by this registry at their $id URLs",
+    "package": "openvibe-contracts",
+    "repo": "OpenVibe.Contracts"
+  },
   "domains": [],
   "capabilities": [],
   "eventsProduced": [],

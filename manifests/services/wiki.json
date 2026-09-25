@@ -13,6 +13,19 @@
   "publicOrigin": "https://openvibe.wiki",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4800",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Wiki",
+    "icon": "wiki",
+    "tagline": "Knowledge, with sources",
+    "what": "Wiki spaces with page trees, revision history, citations and discussion, editable together.",
+    "legalProfile": "ugc",
+    "position": 9
+  },
   "capabilities": [
     "wiki.space.create",
     "wiki.page.create",

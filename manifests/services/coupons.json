@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.coupons",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4850",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "Coupons",
+    "icon": "coupons",
+    "tagline": "Codes that work",
+    "what": "Coupon codes with merchant matching, restrictions, expiry and real-people validity reports.",
+    "legalProfile": "info",
+    "position": 17
+  },
   "capabilities": [
     "coupons.coupon.submit",
     "coupons.report.create",

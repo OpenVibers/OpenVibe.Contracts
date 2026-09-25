@@ -13,6 +13,20 @@
   "publicOrigin": "https://openvibe.reviews",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4830",
+  "exposure": {
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "the domain serves the OpenVibe.Sites placeholder page"
+  },
+  "site": {
+    "name": "Reviews",
+    "icon": "reviews",
+    "tagline": "Reviews with receipts",
+    "what": "Review signals gathered across sources with provenance, pros and cons, and community discussion. No invented ratings.",
+    "legalProfile": "ugc",
+    "position": 11
+  },
   "capabilities": [
     "reviews.entity.resolve",
     "reviews.entity.manage",

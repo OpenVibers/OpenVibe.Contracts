@@ -13,6 +13,19 @@
   "publicOrigin": "https://openvibe.blog",
   "health": "/api/health",
   "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4810",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "site": {
+    "name": "Blog",
+    "icon": "blog",
+    "tagline": "Long-form, yours to keep",
+    "what": "The official OpenVibe blog and a blog for every member: drafts, scheduling, media, comments and feeds.",
+    "legalProfile": "info",
+    "position": 8
+  },
   "capabilities": [
     "blog.blog.create",
     "blog.blog.configure",
