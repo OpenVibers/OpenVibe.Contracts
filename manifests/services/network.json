@@ -59,6 +59,7 @@
     "chat.moderation.action",
     "community.moderation.action",
     "deals.watch.matched",
+    "live.moderation.action",
     "live.stream.started",
     "tips.interaction.moderated",
     "trade.alert.triggered"

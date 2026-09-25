@@ -42,6 +42,7 @@
   "eventsProduced": [
     "live.index_document.deleted",
     "live.index_document.upserted",
+    "live.moderation.action",
     "live.release.deployed",
     "live.stream.ended",
     "live.stream.started"

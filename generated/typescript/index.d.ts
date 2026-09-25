@@ -13369,6 +13369,31 @@ export interface ChatModerationActionPayload {
   details?: {};
 }
 
+/** live.moderation.action@1.0.0 (owner: live) */
+/**
+ * live.moderation.action v1 (OpenVibe.Live server/db/database.js logModerationAction; ADR-022). A staff or channel moderator action taken on OpenVibe.Live outside chat: site and global bans, IP bans, message deletes and purges from Live's admin panel, a stream force-ended, relay users hidden, channel moderators added or removed. Not a person tidying their own messages or configuring their own channel. Written to Live's outbox in the transaction that records the action. OpenVibe.Network keeps it in the moderation audit log. Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).
+ */
+export interface LiveModerationActionPayload {
+  action_id: number;
+  /**
+   * site_ban, global_ban, ip_ban_all, message_delete, bulk_message_delete, stream_force_end, channel_mod_add, … as Live names them.
+   */
+  action_type: string;
+  /**
+   * site, channel, stream, room, …
+   */
+  scope_type: string;
+  scope_id?: string | number | null;
+  /**
+   * Legacy Live user id of the actor (kept while subjects are adopted).
+   */
+  actor_user_id?: number | null;
+  actor_subject?: string | null;
+  target_user_id?: number | null;
+  target_subject?: string | null;
+  details?: {};
+}
+
 /** community.moderation.action@1.0.0 (owner: community) */
 /**
  * community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.

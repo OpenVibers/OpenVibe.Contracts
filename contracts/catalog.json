@@ -1529,6 +1529,16 @@
       "adr": "ADR-022"
     },
     {
+      "id": "live.moderation.action",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "community.moderation.action",
       "version": "1.0.0",
       "owner": "community",

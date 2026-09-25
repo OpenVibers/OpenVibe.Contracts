@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.46.0 — 2026-09-25
+
+**`live.moderation.action`** (ADR-022, roadmap WS-D task 1): a staff or channel-moderator action taken on OpenVibe.Live outside chat (site, global and IP bans, message deletes and purges from the admin panel, a stream force-ended, relay users hidden, channel moderators added or removed), with the same payload as `chat.moderation.action`. Events requires an event's prefix to match its source, so Live cannot send Chat's event for its own admin actions. OpenVibe.Network consumes it into the moderation audit log. The live manifest produces it and the network manifest consumes it. Fixtures cover a site ban and a force-ended stream. Additive.
+
 ## 0.45.0 — 2026-09-25
 
 **`live.index_document.upserted|deleted`** also carry Live's public VOD and clip pages (types `vod` and `clip`, id = the Media id, canonical `openvibe.live/vod/<id>` and `/clip/<id>`), alongside channels. Live owns those canonical pages (title, channel, AI overview, transcript), so Live sends their Search documents. `media.index_document.*` is only for VODs and clips whose canonical page is on openvibe.media (apps other than Live), the same rule as Media's sitemap. Fixtures for a VOD, an AI clip (noindex) and a VOD tombstone. Additive.
