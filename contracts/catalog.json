@@ -147,6 +147,33 @@
       "adr": "ADR-018"
     },
     {
+      "id": "search.query",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/query.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "search.query-result",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/query-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "search.write-result",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "sources.source",
       "version": "1.0.0",
       "owner": "sources",

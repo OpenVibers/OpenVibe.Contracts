@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/write-result.v1.json",
+  "title": "SearchWriteResult",
+  "description": "search.write-result@1: the answer of PUT /api/v1/documents/:owner/:type/:id (search.document.write). applied: stored (or a tombstone recorded); unchanged: the same revision with the same content. A revision older than the stored one is a 409 problem search.stale_revision; the same revision with different content is 409 search.revision_conflict.",
+  "type": "object",
+  "required": ["outcome", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "outcome": { "enum": ["applied", "unchanged"] },
+    "revision": { "type": "integer", "minimum": 1 },
+    "stored_revision": { "type": ["integer", "null"], "description": "What Search held before this write (null: nothing)." },
+    "deleted": { "type": "boolean" }
+  }
+}

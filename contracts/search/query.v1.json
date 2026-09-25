@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/query.v1.json",
+  "title": "SearchQuery",
+  "description": "search.query@1: the query string of GET /api/v1/search (and, with q/owner/type/limit only, GET /api/v1/suggest), capabilities search.query.run and search.query.delegate. Who sees what is decided by Search per hit: anonymous callers get public, published, indexable documents; a person also restricted documents naming them; a delegating service passes X-OV-Subject. Filters narrow; they never widen visibility.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "q": { "type": "string", "maxLength": 200, "description": "Words to match (FTS5; empty lists by recency)." },
+    "owner": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$", "description": "One owner service (live, community, wiki, …)." },
+    "type": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$", "description": "One document type within the owner (channel, vod, thread, …)." },
+    "lang": { "type": "string", "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$", "description": "BCP 47 language." },
+    "facets": { "type": "string", "maxLength": 400, "description": "Comma-separated facet keys to count over what the caller can see." },
+    "limit": { "type": ["integer", "string"], "pattern": "^[0-9]{1,3}$", "minimum": 1, "maximum": 100 },
+    "cursor": { "type": "string", "maxLength": 512, "description": "next_cursor of the previous page." }
+  },
+  "patternProperties": {
+    "^facet\\.[a-z][a-z0-9_]{0,39}$": {
+      "description": "A facet filter (facet.<key>=<value>); repeat the parameter for several values.",
+      "oneOf": [ { "type": "string", "maxLength": 200 }, { "type": "array", "maxItems": 20, "items": { "type": "string", "maxLength": 200 } } ]
+    }
+  }
+}

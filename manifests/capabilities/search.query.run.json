@@ -17,5 +17,7 @@
     "GET /api/v1/search",
     "GET /api/v1/suggest",
     "GET /api/v1/documents/:owner/:type/:id"
-  ]
+  ],
+  "inputSchema": "search.query@1",
+  "outputSchema": "search.query-result@1"
 }

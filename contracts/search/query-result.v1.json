@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/query-result.v1.json",
+  "title": "SearchQueryResult",
+  "description": "search.query-result@1: the answer of GET /api/v1/search — one page of hits the caller may see, a cursor for the next page, and facet counts when asked. Never a total count and never an ACL.",
+  "type": "object",
+  "required": ["results", "next_cursor"],
+  "additionalProperties": false,
+  "properties": {
+    "results": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["owner", "type", "id"],
+        "additionalProperties": false,
+        "properties": {
+          "owner": { "type": "string" },
+          "type": { "type": "string" },
+          "id": { "type": "string" },
+          "revision": { "type": "integer", "minimum": 0 },
+          "visibility": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "summary": { "type": ["string", "null"] },
+          "canonical_url": { "type": ["string", "null"] },
+          "facets": { "type": ["object", "null"] },
+          "language": { "type": ["string", "null"] },
+          "authorship": { "type": ["string", "null"] },
+          "provenance": { "type": ["array", "object", "null"] },
+          "published_at": { "type": ["string", "null"] },
+          "updated_at": { "type": ["string", "null"] },
+          "indexable": { "type": "boolean", "description": "false for a noindex document the caller may still see." },
+          "snippet_html": { "type": ["string", "null"], "description": "Escaped text with <mark> around the matches; nothing else." }
+        }
+      }
+    },
+    "next_cursor": { "type": ["string", "null"] },
+    "facets": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "object", "required": ["value", "count"], "properties": { "value": { "type": "string" }, "count": { "type": "integer", "minimum": 0 } } } } }
+  }
+}

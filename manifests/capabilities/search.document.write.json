@@ -22,5 +22,6 @@
     "GET /api/v1/owners/:owner/documents",
     "GET /api/v1/owners/:owner/documents/:type/:id",
     "GET /api/v1/owners/:owner/rejections"
-  ]
+  ],
+  "outputSchema": "search.write-result@1"
 }

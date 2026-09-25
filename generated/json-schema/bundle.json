@@ -1860,6 +1860,262 @@
         }
       }
     },
+    "search.query": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/query.v1.json",
+        "title": "SearchQuery",
+        "description": "search.query@1: the query string of GET /api/v1/search (and, with q/owner/type/limit only, GET /api/v1/suggest), capabilities search.query.run and search.query.delegate. Who sees what is decided by Search per hit: anonymous callers get public, published, indexable documents; a person also restricted documents naming them; a delegating service passes X-OV-Subject. Filters narrow; they never widen visibility.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "q": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Words to match (FTS5; empty lists by recency)."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,31}$",
+            "description": "One owner service (live, community, wiki, …)."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,31}$",
+            "description": "One document type within the owner (channel, vod, thread, …)."
+          },
+          "lang": {
+            "type": "string",
+            "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+            "description": "BCP 47 language."
+          },
+          "facets": {
+            "type": "string",
+            "maxLength": 400,
+            "description": "Comma-separated facet keys to count over what the caller can see."
+          },
+          "limit": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "pattern": "^[0-9]{1,3}$",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "next_cursor of the previous page."
+          }
+        },
+        "patternProperties": {
+          "^facet\\.[a-z][a-z0-9_]{0,39}$": {
+            "description": "A facet filter (facet.<key>=<value>); repeat the parameter for several values.",
+            "oneOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "search.query-result": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/query-result.v1.json",
+        "title": "SearchQueryResult",
+        "description": "search.query-result@1: the answer of GET /api/v1/search — one page of hits the caller may see, a cursor for the next page, and facet counts when asked. Never a total count and never an ACL.",
+        "type": "object",
+        "required": [
+          "results",
+          "next_cursor"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "results": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": [
+                "owner",
+                "type",
+                "id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "owner": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "visibility": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "summary": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "canonical_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "facets": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "language": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "authorship": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "provenance": {
+                  "type": [
+                    "array",
+                    "object",
+                    "null"
+                  ]
+                },
+                "published_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "updated_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "indexable": {
+                  "type": "boolean",
+                  "description": "false for a noindex document the caller may still see."
+                },
+                "snippet_html": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Escaped text with <mark> around the matches; nothing else."
+                }
+              }
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "facets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "value",
+                  "count"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "search.write-result": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/write-result.v1.json",
+        "title": "SearchWriteResult",
+        "description": "search.write-result@1: the answer of PUT /api/v1/documents/:owner/:type/:id (search.document.write). applied: stored (or a tombstone recorded); unchanged: the same revision with the same content. A revision older than the stored one is a 409 problem search.stale_revision; the same revision with different content is 409 search.revision_conflict.",
+        "type": "object",
+        "required": [
+          "outcome",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "outcome": {
+            "enum": [
+              "applied",
+              "unchanged"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "stored_revision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "What Search held before this write (null: nothing)."
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
     "sources.source": {
       "version": "1.0.0",
       "owner": "sources",

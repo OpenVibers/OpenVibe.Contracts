@@ -839,6 +839,235 @@ export interface IndexDocument {
   };
 }
 
+/** search.query@1.0.0 (owner: search) */
+/**
+ * search.query@1: the query string of GET /api/v1/search (and, with q/owner/type/limit only, GET /api/v1/suggest), capabilities search.query.run and search.query.delegate. Who sees what is decided by Search per hit: anonymous callers get public, published, indexable documents; a person also restricted documents naming them; a delegating service passes X-OV-Subject. Filters narrow; they never widen visibility.
+ */
+export interface SearchQuery {
+  /**
+   * Words to match (FTS5; empty lists by recency).
+   */
+  q?: string;
+  /**
+   * One owner service (live, community, wiki, …).
+   */
+  owner?: string;
+  /**
+   * One document type within the owner (channel, vod, thread, …).
+   */
+  type?: string;
+  /**
+   * BCP 47 language.
+   */
+  lang?: string;
+  /**
+   * Comma-separated facet keys to count over what the caller can see.
+   */
+  facets?: string;
+  limit?: number | string;
+  /**
+   * next_cursor of the previous page.
+   */
+  cursor?: string;
+  /**
+   * A facet filter (facet.<key>=<value>); repeat the parameter for several values.
+   *
+   * This interface was referenced by `SearchQuery`'s JSON-Schema definition
+   * via the `patternProperty` "^facet\.[a-z][a-z0-9_]{0,39}$".
+   */
+  [k: string]:
+    | string
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+}
+
+/** search.query-result@1.0.0 (owner: search) */
+/**
+ * search.query-result@1: the answer of GET /api/v1/search — one page of hits the caller may see, a cursor for the next page, and facet counts when asked. Never a total count and never an ACL.
+ */
+export interface SearchQueryResult {
+  /**
+   * @maxItems 100
+   */
+  results: {
+    owner: string;
+    type: string;
+    id: string;
+    revision?: number;
+    visibility?: string;
+    title?: string | null;
+    summary?: string | null;
+    canonical_url?: string | null;
+    facets?: {} | null;
+    language?: string | null;
+    authorship?: string | null;
+    provenance?: unknown[] | {} | null;
+    published_at?: string | null;
+    updated_at?: string | null;
+    /**
+     * false for a noindex document the caller may still see.
+     */
+    indexable?: boolean;
+    /**
+     * Escaped text with <mark> around the matches; nothing else.
+     */
+    snippet_html?: string | null;
+  }[];
+  next_cursor: string | null;
+  facets?: {
+    [k: string]:
+      | {
+          value: string;
+          count: number;
+        }[]
+      | undefined;
+  };
+}
+
+/** search.write-result@1.0.0 (owner: search) */
+/**
+ * search.write-result@1: the answer of PUT /api/v1/documents/:owner/:type/:id (search.document.write). applied: stored (or a tombstone recorded); unchanged: the same revision with the same content. A revision older than the stored one is a 409 problem search.stale_revision; the same revision with different content is 409 search.revision_conflict.
+ */
+export interface SearchWriteResult {
+  outcome: "applied" | "unchanged";
+  revision: number;
+  /**
+   * What Search held before this write (null: nothing).
+   */
+  stored_revision?: number | null;
+  deleted?: boolean;
+}
+
 /** sources.source@1.0.0 (owner: sources) */
 /**
  * A registered source (roadmap §4.2 B, Wave 14): where it is fetched from and on what terms. Credentials are referenced by environment-variable NAME only. A source's existence is never permission to fetch: robots and terms are verified before it is enabled, and the fetcher re-checks robots.txt on every run.
