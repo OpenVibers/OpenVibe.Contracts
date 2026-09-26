@@ -1963,7 +1963,7 @@
       }
     },
     "registry.release-manifest": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -2143,6 +2143,50 @@
             ],
             "maxLength": 512,
             "description": "Since 1.1.0. Same-origin URL where clients POST their update outcome counts (applied, reloaded, deferred, failed); null or absent when the service does not collect them."
+          },
+          "client_generation": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Since 1.2.0. The generation of the client this release serves (its pages and scripts). It goes up only when an older client can no longer work against this server; the page carries it in the ov-release meta tag's data-generation. Null when the service does not track one."
+          },
+          "min_client_generation": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Since 1.2.0. Oldest client generation still supported: an open tab whose generation is lower reloads at the next safe moment (reason required), without waiting for the mixed-version window. Null when every generation in the window is."
+          },
+          "shell": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "version",
+              "components"
+            ],
+            "description": "Since 1.2.0. The page shell (layout, router, navigation): the ids of the components that make it up and one version over them. A tab whose shell version differs never updates in place; it is prompted, and reloads only when it must. Null when the service names no shell.",
+            "properties": {
+              "version": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{12}$",
+                "description": "The first 12 hex of SHA-256 over the shell components' ids and versions, in id order."
+              },
+              "components": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{0,39}$"
+                },
+                "description": "Ids from components."
+              }
+            }
           }
         }
       }

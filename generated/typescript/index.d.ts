@@ -781,7 +781,7 @@ export interface ModuleRecord {
   updated_by?: string;
 }
 
-/** registry.release-manifest@1.1.0 (owner: network) */
+/** registry.release-manifest@1.2.0 (owner: network) */
 /**
  * What a running web surface is serving (GET /release.json, ADR-016). Open clients compare it on focus and reconnect. A client outside the supported window is prompted and reloads only when that is safe. Since 1.1.0 the manifest can also say which components changed, so a client can apply style and content changes in place, and which contract versions the server still accepts, so a mixed-version population can be checked.
  */
@@ -870,6 +870,161 @@ export interface ReleaseManifest {
    * Since 1.1.0. Same-origin URL where clients POST their update outcome counts (applied, reloaded, deferred, failed); null or absent when the service does not collect them.
    */
   metrics_url?: string | null;
+  /**
+   * Since 1.2.0. The generation of the client this release serves (its pages and scripts). It goes up only when an older client can no longer work against this server; the page carries it in the ov-release meta tag's data-generation. Null when the service does not track one.
+   */
+  client_generation?: number | null;
+  /**
+   * Since 1.2.0. Oldest client generation still supported: an open tab whose generation is lower reloads at the next safe moment (reason required), without waiting for the mixed-version window. Null when every generation in the window is.
+   */
+  min_client_generation?: number | null;
+  /**
+   * Since 1.2.0. The page shell (layout, router, navigation): the ids of the components that make it up and one version over them. A tab whose shell version differs never updates in place; it is prompted, and reloads only when it must. Null when the service names no shell.
+   */
+  shell?: {
+    /**
+     * The first 12 hex of SHA-256 over the shell components' ids and versions, in id order.
+     */
+    version: string;
+    /**
+     * Ids from components.
+     *
+     * @maxItems 20
+     */
+    components:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
 }
 
 /** common.no-body@1.0.0 (owner: common) */

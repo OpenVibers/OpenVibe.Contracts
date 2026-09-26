@@ -66,3 +66,13 @@ Roadmap WS-P task 9.
     only the poll.
 - **Rollback.** Stop announcing (`--no-announce`, or remove the credentials): tabs fall back to polling,
   as before.
+
+## Amendment 2 (2026-09-26): client generations and the shell (manifest 1.2.0)
+
+Roadmap WS-P task 7 completes the release manifest with three optional fields.
+
+- **`client_generation`**: the generation of the client a release serves. It goes up only when an older client can no longer work against the server. The page states it in the `ov-release` meta tag (`data-generation`).
+- **`min_client_generation`**: the oldest generation still supported. A tab below it reloads at the next safe moment with reason `required`, without waiting for the mixed-version window. `min_client_release` stays as it is: it names one exact release, while a generation covers every release since the break.
+- **`shell`**: the page shell, `{ version, components }`. The components are ids from `components`, and the version is the first 12 hex of SHA-256 over their ids and versions. A tab whose shell version differs never updates in place: it is prompted, and reloads only when it must.
+
+The fields are additive; a client that does not know them behaves as under 1.1.0.

@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.60.0 — 2026-09-26
+
+**Release manifest 1.2.0** (`registry.release-manifest`, roadmap WS-P task 7, ADR-016 amendment 2). Three optional fields:
+- `client_generation`: the generation of the client this release serves.
+- `min_client_generation`: a tab below it reloads at the next safe moment (reason `required`).
+- `shell`: `{ version, components }`. A tab whose shell differs is prompted, never updated in place.
+
+Fixtures cover a full 1.2.0 manifest, a negative generation and a bad shell version. Additive.
+
 ## 0.59.0 — 2026-09-26
 
 **Media namespaces and grants** (roadmap WS-G task 2). Media's grants are five verbs, each one capability checked per namespace: read (`media.object.read`), list, write (`media.object.upload`), delete and transform (`media.derivative.create`).
