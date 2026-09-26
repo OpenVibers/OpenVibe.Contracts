@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/creator-analytics-result.v1.json",
+  "title": "NetworkCreatorAnalyticsResult",
+  "description": "network.creator-analytics-result@1 (roadmap WS-E task 6): GET /api/v1/creators/:creator/analytics?days=1-365 on OpenVibe.Network. A creator's streaming analytics, built from live.stream.ended events: per UTC day and per stream, counts only (never who watched or chatted, no IP address or viewer id). Everyone sees streams, minutes and peak viewers; the creator (signed in) and services holding network.analytics.creator.read also get average viewers, chatters, messages and watch minutes (`full: true`).",
+  "type": "object",
+  "required": ["creator", "days", "full", "totals", "daily", "streams"],
+  "additionalProperties": false,
+  "properties": {
+    "creator": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "days": { "type": "integer", "minimum": 1, "maximum": 365 },
+    "full": { "type": "boolean" },
+    "totals": { "$ref": "#/$defs/counts" },
+    "daily": { "type": "array", "maxItems": 365, "items": { "allOf": [{ "$ref": "#/$defs/counts" }], "type": "object", "required": ["day"], "properties": { "day": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" } } } },
+    "streams": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["stream_id", "started_at", "ended_at", "duration_seconds"],
+        "additionalProperties": false,
+        "properties": {
+          "stream_id": { "type": "integer", "minimum": 1 },
+          "title": { "type": ["string", "null"], "maxLength": 300 },
+          "category": { "type": ["string", "null"], "maxLength": 100 },
+          "started_at": { "type": "string", "format": "date-time" },
+          "ended_at": { "type": "string", "format": "date-time" },
+          "duration_seconds": { "type": "integer", "minimum": 0 },
+          "peak_viewers": { "type": "integer", "minimum": 0 },
+          "avg_viewers": { "type": "number", "minimum": 0 },
+          "unique_chatters": { "type": "integer", "minimum": 0 },
+          "messages": { "type": "integer", "minimum": 0 },
+          "watch_minutes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "counts": {
+      "type": "object",
+      "properties": {
+        "streams": { "type": "integer", "minimum": 0 },
+        "stream_seconds": { "type": "integer", "minimum": 0 },
+        "peak_viewers": { "type": "integer", "minimum": 0 },
+        "avg_viewers": { "type": "number", "minimum": 0 },
+        "unique_chatters": { "type": "integer", "minimum": 0 },
+        "messages": { "type": "integer", "minimum": 0 },
+        "watch_minutes": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

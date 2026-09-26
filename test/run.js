@@ -170,7 +170,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(!contracts.validate('media.job.queued@1', { ...sqliteTime, created_at: '2026-09-23 18:02:11' }).valid, 'a SQLite time is not a media.job time');
     // Live: live.stream.ended is live.stream.started plus ended_at and duration_seconds.
     const started = contracts.schema('live.stream.started'), ended = contracts.schema('live.stream.ended');
-    ok(JSON.stringify(Object.keys(ended.properties)) === JSON.stringify([...Object.keys(started.properties), 'ended_at', 'duration_seconds']), 'live.stream.ended = started + ended_at, duration_seconds');
+    ok(JSON.stringify(Object.keys(ended.properties)) === JSON.stringify([...Object.keys(started.properties), 'ended_at', 'duration_seconds', 'stats']), 'live.stream.ended = started + ended_at, duration_seconds, stats (0.68.0, optional)');
     ok(JSON.stringify(ended.properties.channel) === JSON.stringify(started.properties.channel), 'both stream events describe the channel the same way');
     // Tips: the moderation capability announces its outcome; an erasure takes back the interaction's earlier events.
     const mod = capabilities.get('tips.interaction.moderate');

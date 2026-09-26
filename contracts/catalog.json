@@ -2536,6 +2536,16 @@
       "status": "active"
     },
     {
+      "id": "network.creator-analytics-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/creator-analytics-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-021"
+    },
+    {
       "id": "network.follow-list-result",
       "version": "1.0.0",
       "owner": "network",

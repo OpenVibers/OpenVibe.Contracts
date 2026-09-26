@@ -28011,7 +28011,7 @@ export interface LiveStreamStartedPayload {
 
 /** live.stream.ended@1.0.0 (owner: live) */
 /**
- * live.stream.ended v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js endStream). A live streams row ended (the streamer stopped, ingest dropped, a newer session replaced it on the same slot, or an admin ended it). Ending a row that is not live emits nothing, so each stream ends once. Written to Live's event_outbox in the transaction that ends the row. Everything live.stream.started carries, as it is at the end (the title and category may have changed), plus ended_at and duration_seconds. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 2 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
+ * live.stream.ended v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js endStream). A live streams row ended (the streamer stopped, ingest dropped, a newer session replaced it on the same slot, or an admin ended it). Ending a row that is not live emits nothing, so each stream ends once. Written to Live's event_outbox in the transaction that ends the row. Everything live.stream.started carries, as it is at the end (the title and category may have changed), plus ended_at and duration_seconds. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 2 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live. Since 0.68.0 an optional `stats` object carries the stream's totals (counts only) for creator analytics.
  */
 export interface LiveStreamEndedPayload {
   /**
@@ -28061,6 +28061,31 @@ export interface LiveStreamEndedPayload {
    * Whole seconds from started_at to ended_at; null when the row has no start time.
    */
   duration_seconds: number | null;
+  /**
+   * Contracts 0.68.0 (roadmap WS-E task 6): the stream's totals as Live computed them when it ended, for creator analytics. Counts only: never who watched or chatted.
+   */
+  stats?: {
+    /**
+     * Highest concurrent viewers.
+     */
+    peak_viewers?: number;
+    /**
+     * Average concurrent viewers over the viewer samples.
+     */
+    avg_viewers?: number;
+    /**
+     * Distinct signed-in people who chatted.
+     */
+    unique_chatters?: number;
+    /**
+     * Chat messages sent in the stream.
+     */
+    messages?: number;
+    /**
+     * Viewer minutes watched.
+     */
+    watch_minutes?: number;
+  };
 }
 
 /** live.release.deployed@1.0.0 (owner: live) */
@@ -29044,6 +29069,37 @@ export type NetworkNotificationPushResult =
       sent: number;
       total: number;
     };
+
+/** network.creator-analytics-result@1.0.0 (owner: network) */
+/**
+ * network.creator-analytics-result@1 (roadmap WS-E task 6): GET /api/v1/creators/:creator/analytics?days=1-365 on OpenVibe.Network. A creator's streaming analytics, built from live.stream.ended events: per UTC day and per stream, counts only (never who watched or chatted, no IP address or viewer id). Everyone sees streams, minutes and peak viewers; the creator (signed in) and services holding network.analytics.creator.read also get average viewers, chatters, messages and watch minutes (`full: true`).
+ */
+export interface NetworkCreatorAnalyticsResult {
+  creator: string;
+  days: number;
+  full: boolean;
+  totals: Counts;
+  /**
+   * @maxItems 365
+   */
+  daily: Counts[];
+  /**
+   * @maxItems 100
+   */
+  streams: {
+    stream_id: number;
+    title?: string | null;
+    category?: string | null;
+    started_at: string;
+    ended_at: string;
+    duration_seconds: number;
+    peak_viewers?: number;
+    avg_viewers?: number;
+    unique_chatters?: number;
+    messages?: number;
+    watch_minutes?: number;
+  }[];
+}
 
 /** network.follow-list-result@1.0.0 (owner: network) */
 /**

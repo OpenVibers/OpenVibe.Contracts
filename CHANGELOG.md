@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.68.0 — 2026-09-26
+
+**Creator analytics from events** (roadmap WS-E task 6).
+- **`live.stream.ended` gains an optional `stats` object:** peak and average viewers, unique chatters, messages and watch minutes. It holds counts only, never who.
+- **New schema** `network.creator-analytics-result@1`: a creator's daily and per-stream analytics, built on Network from `live.stream.ended`.
+- **New capability** `network.analytics.creator.read` (first-party): the full figures for Live's creator dashboards. Streams, minutes and peak viewers are public.
+
 ## 0.67.0 — 2026-09-26
 
 **Products write follows on a person's behalf** (ADR-030 step 4).

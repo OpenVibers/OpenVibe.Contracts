@@ -1,0 +1,15 @@
+{
+  "id": "network.analytics.creator.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a creator's full streaming analytics (average viewers, chatters, messages, watch minutes, as counts) for the creator's own dashboards in a first-party product (Live's /api/analytics). Streams, minutes and peak viewers are public without it. Never grantable to apps.",
+  "permissions": ["analytics:read"],
+  "resourceConstraints": [],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": ["GET /api/v1/creators/:creator/analytics"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.creator-analytics-result@1"
+}

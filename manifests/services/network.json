@@ -34,6 +34,7 @@
   "capabilities": [
     "identity.subject.resolve",
     "mods.grant.manage",
+    "network.analytics.creator.read",
     "network.blocks.read",
     "network.coins.credit",
     "network.coins.debit",

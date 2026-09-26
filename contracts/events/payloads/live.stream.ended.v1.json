@@ -2,31 +2,144 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/live.stream.ended.v1.json",
   "title": "LiveStreamEndedPayload",
-  "description": "live.stream.ended v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js endStream). A live streams row ended (the streamer stopped, ingest dropped, a newer session replaced it on the same slot, or an admin ended it). Ending a row that is not live emits nothing, so each stream ends once. Written to Live's event_outbox in the transaction that ends the row. Everything live.stream.started carries, as it is at the end (the title and category may have changed), plus ended_at and duration_seconds. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 2 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.",
+  "description": "live.stream.ended v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js endStream). A live streams row ended (the streamer stopped, ingest dropped, a newer session replaced it on the same slot, or an admin ended it). Ending a row that is not live emits nothing, so each stream ends once. Written to Live's event_outbox in the transaction that ends the row. Everything live.stream.started carries, as it is at the end (the title and category may have changed), plus ended_at and duration_seconds. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 2 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live. Since 0.68.0 an optional `stats` object carries the stream's totals (counts only) for creator analytics.",
   "type": "object",
-  "required": ["stream_id", "channel", "title", "category", "protocol", "is_nsfw", "started_at", "ended_at", "duration_seconds"],
+  "required": [
+    "stream_id",
+    "channel",
+    "title",
+    "category",
+    "protocol",
+    "is_nsfw",
+    "started_at",
+    "ended_at",
+    "duration_seconds"
+  ],
   "additionalProperties": false,
   "properties": {
-    "stream_id": { "type": "integer", "minimum": 1, "description": "Live's streams row id (the envelope subject id)." },
+    "stream_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Live's streams row id (the envelope subject id)."
+    },
     "channel": {
-      "type": "object", "required": ["username", "display_name", "url"], "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "username",
+        "display_name",
+        "url"
+      ],
+      "additionalProperties": false,
       "properties": {
-        "username": { "type": "string", "minLength": 1, "description": "The streamer's Live username (the channel slug)." },
-        "display_name": { "type": "string", "minLength": 1, "description": "The display name, or the username when there is none." },
-        "url": { "type": "string", "format": "uri", "pattern": "^https://openvibe\\.live/", "description": "The channel page, https://openvibe.live/@<username, URI-encoded>. Events from Live before 4c70332 (2026-09-23) carry https://openvibe.live/<username>, which Live answers with a 301 to the @ address since that commit." },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The streamer's Live username (the channel slug)."
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The display name, or the username when there is none."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://openvibe\\.live/",
+          "description": "The channel page, https://openvibe.live/@<username, URI-encoded>. Events from Live before 4c70332 (2026-09-23) carry https://openvibe.live/<username>, which Live answers with a 301 to the @ address since that commit."
+        },
         "subject": {
-          "type": "object", "required": ["type", "id"], "additionalProperties": false,
-          "properties": { "type": { "const": "user" }, "id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" } },
+          "type": "object",
+          "required": [
+            "type",
+            "id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "user"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
           "description": "The streamer's canonical subject; absent until Live has seen it (a Network sign-in or the subject backfill)."
         }
       }
     },
-    "title": { "type": "string" },
-    "category": { "type": ["string", "null"], "description": "null when the streamer chose none (the AI classifies the stream from what it shows)." },
-    "protocol": { "enum": ["jsmpeg", "webrtc", "rtmp"], "description": "How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp)." },
-    "is_nsfw": { "type": "boolean" },
-    "started_at": { "type": ["string", "null"], "format": "date-time", "description": "UTC. null only for a row without a start time, which createStream never writes." },
-    "ended_at": { "type": "string", "format": "date-time", "description": "UTC." },
-    "duration_seconds": { "type": ["integer", "null"], "minimum": 0, "description": "Whole seconds from started_at to ended_at; null when the row has no start time." }
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "null when the streamer chose none (the AI classifies the stream from what it shows)."
+    },
+    "protocol": {
+      "enum": [
+        "jsmpeg",
+        "webrtc",
+        "rtmp"
+      ],
+      "description": "How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp)."
+    },
+    "is_nsfw": {
+      "type": "boolean"
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "UTC. null only for a row without a start time, which createStream never writes."
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC."
+    },
+    "duration_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Whole seconds from started_at to ended_at; null when the row has no start time."
+    },
+    "stats": {
+      "type": "object",
+      "description": "Contracts 0.68.0 (roadmap WS-E task 6): the stream's totals as Live computed them when it ended, for creator analytics. Counts only: never who watched or chatted.",
+      "additionalProperties": false,
+      "properties": {
+        "peak_viewers": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Highest concurrent viewers."
+        },
+        "avg_viewers": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average concurrent viewers over the viewer samples."
+        },
+        "unique_chatters": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Distinct signed-in people who chatted."
+        },
+        "messages": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Chat messages sent in the stream."
+        },
+        "watch_minutes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Viewer minutes watched."
+        }
+      }
+    }
   }
 }

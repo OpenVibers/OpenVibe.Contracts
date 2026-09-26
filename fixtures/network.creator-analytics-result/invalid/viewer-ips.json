@@ -1,0 +1,1 @@
+{ "creator": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ", "days": 30, "full": true, "totals": {}, "daily": [], "streams": [ { "stream_id": 1, "started_at": "2026-09-26T14:54:43Z", "ended_at": "2026-09-26T15:19:08Z", "duration_seconds": 1, "viewer_ips": ["1.2.3.4"] } ] }
