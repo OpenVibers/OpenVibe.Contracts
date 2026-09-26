@@ -26010,6 +26010,130 @@
         ]
       }
     },
+    "network.operator-alerts-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/operator-alerts-request.v1.json",
+        "title": "NetworkOperatorAlertsRequest",
+        "description": "network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations.",
+        "type": "object",
+        "required": [
+          "source",
+          "alerts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "enum": [
+              "prometheus"
+            ],
+            "description": "Where the alerts are evaluated. Resolution is per source."
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "alerts": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "fingerprint",
+                "name",
+                "severity",
+                "summary",
+                "started_at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "fingerprint": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{16,64}$"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_:]{0,99}$"
+                },
+                "severity": {
+                  "enum": [
+                    "critical",
+                    "warning",
+                    "info"
+                  ]
+                },
+                "summary": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                "service": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,39}$"
+                },
+                "started_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network.operator-alerts-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/operator-alerts-result.v1.json",
+        "title": "NetworkOperatorAlertsResult",
+        "description": "network.operator-alerts-result@1: the answer of POST /internal/operator/alerts. firing: alerts firing after this report; opened: newly firing (paged); reminded: still firing and paged again (once a day); resolved: no longer firing (a resolved notice sent); notified: notifications created across all recipients (0 when no operator account is found or they switched admin notices off). Errors are { error } bodies (400 for a body that breaks the request contract).",
+        "type": "object",
+        "required": [
+          "ok",
+          "firing",
+          "opened",
+          "reminded",
+          "resolved",
+          "notified"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "firing": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "opened": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reminded": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resolved": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "notified": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
     "network.realtime-ticket-result": {
       "version": "1.0.0",
       "owner": "network",

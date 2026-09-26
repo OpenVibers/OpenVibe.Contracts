@@ -26111,6 +26111,43 @@ export type NetworkNotificationPushResult =
       total: number;
     };
 
+/** network.operator-alerts-request@1.0.0 (owner: network) */
+/**
+ * network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations.
+ */
+export interface NetworkOperatorAlertsRequest {
+  /**
+   * Where the alerts are evaluated. Resolution is per source.
+   */
+  source: "prometheus";
+  sent_at?: string;
+  /**
+   * @maxItems 200
+   */
+  alerts: {
+    fingerprint: string;
+    name: string;
+    severity: "critical" | "warning" | "info";
+    summary: string;
+    description?: string;
+    service?: string;
+    started_at: string;
+  }[];
+}
+
+/** network.operator-alerts-result@1.0.0 (owner: network) */
+/**
+ * network.operator-alerts-result@1: the answer of POST /internal/operator/alerts. firing: alerts firing after this report; opened: newly firing (paged); reminded: still firing and paged again (once a day); resolved: no longer firing (a resolved notice sent); notified: notifications created across all recipients (0 when no operator account is found or they switched admin notices off). Errors are { error } bodies (400 for a body that breaks the request contract).
+ */
+export interface NetworkOperatorAlertsResult {
+  ok: true;
+  firing: number;
+  opened: number;
+  reminded: number;
+  resolved: number;
+  notified: number;
+}
+
 /** network.realtime-ticket-result@1.0.0 (owner: network) */
 /**
  * What POST /api/v1/realtime/ticket answers (OpenVibe.Network; ADR-005 amendment 2): a realtime ticket (identity.realtime-ticket-claims@1) for the signed-in person, and where to use it. The caller is the person's own session (Bearer Network JWT, or the ov_token cookie on openvibe.network); guests are refused (403 realtime.guest), and 503 realtime.disabled means the operator turned browser realtime off (REALTIME_TICKETS=off): the client stays on polling. The client opens `${stream_url}?topics=${topics}&ticket=${ticket}` (plus last_event_id when it resumes) at once, and asks for a fresh ticket for every reconnect: a ticket opens one stream.

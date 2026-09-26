@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/operator-alerts-result.v1.json",
+  "title": "NetworkOperatorAlertsResult",
+  "description": "network.operator-alerts-result@1: the answer of POST /internal/operator/alerts. firing: alerts firing after this report; opened: newly firing (paged); reminded: still firing and paged again (once a day); resolved: no longer firing (a resolved notice sent); notified: notifications created across all recipients (0 when no operator account is found or they switched admin notices off). Errors are { error } bodies (400 for a body that breaks the request contract).",
+  "type": "object",
+  "required": ["ok", "firing", "opened", "reminded", "resolved", "notified"],
+  "additionalProperties": false,
+  "properties": {
+    "ok": { "const": true },
+    "firing": { "type": "integer", "minimum": 0 },
+    "opened": { "type": "integer", "minimum": 0 },
+    "reminded": { "type": "integer", "minimum": 0 },
+    "resolved": { "type": "integer", "minimum": 0 },
+    "notified": { "type": "integer", "minimum": 0 }
+  }
+}

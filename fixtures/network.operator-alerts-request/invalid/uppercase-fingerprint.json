@@ -1,0 +1,1 @@
+{ "source": "prometheus", "alerts": [ { "fingerprint": "3F1C2A9B7D4E6F80", "name": "OpenVibeBackupMissed", "severity": "critical", "summary": "No backup", "started_at": "2026-09-26T05:35:00Z" } ] }

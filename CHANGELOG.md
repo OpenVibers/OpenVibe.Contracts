@@ -6,6 +6,12 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.62.0 — 2026-09-26
+
+**Operator alerts** (roadmap WS-H task 11; the delivery path that Host's Prometheus alerts lacked).
+- **New capability `network.operator.alert`** (internal, owner network), implemented by `POST /internal/operator/alerts` on OpenVibe.Network and granted to the Host principal. The request is the complete set of alerts firing now at one source (`prometheus`). Network pages the operator (the owner account) as a critical or high `admin` notification when an alert opens, reminds once a day while it stays open, and sends a resolved notice when it drops out of the set. Being an `admin` notification, it reaches the bell, web push and the realtime topic, and no block hides it.
+- **New schemas** `network.operator-alerts-request@1` (source, sent_at, up to 200 alerts: fingerprint, name, severity, summary, description, service, started_at; no free-form labels) and `network.operator-alerts-result@1` (firing, opened, reminded, resolved, notified).
+
 ## 0.61.0 — 2026-09-26
 
 **A person's realtime topic and realtime tickets** (roadmap WS-E task 3, WS-F task 1; ADR-005 amendment 2).

@@ -1,0 +1,21 @@
+{
+  "id": "network.operator.alert",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Report the complete set of alerts firing on the production host, so Network pages the operator (the owner account) when an alert opens, once a day while it stays open, and when it resolves.",
+  "permissions": [
+    "notifications:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "notify",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/operator/alerts"
+  ],
+  "inputSchema": "network.operator-alerts-request@1",
+  "outputSchema": "network.operator-alerts-result@1"
+}

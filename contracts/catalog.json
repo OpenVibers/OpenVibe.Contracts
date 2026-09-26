@@ -2486,6 +2486,24 @@
       "status": "active"
     },
     {
+      "id": "network.operator-alerts-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/operator-alerts-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.operator-alerts-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/operator-alerts-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.realtime-ticket-result",
       "version": "1.0.0",
       "owner": "network",
