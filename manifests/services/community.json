@@ -69,7 +69,7 @@
       "drains": [
         "HTTP server closed"
       ],
-      "note": "only the HTTP server is closed: the events outbox, the Discord relay, the Pulse subscriptions and the profile and search-document scans are not stopped and end with the process"
+      "note": "only the HTTP server is closed: the events outbox, the Discord relay and the profile and search-document scans are not stopped and end with the process"
     },
     "startupRecovery": {
       "resumes": [

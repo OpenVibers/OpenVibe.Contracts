@@ -98,7 +98,7 @@
         "requests in flight finish",
         "exit"
       ],
-      "note": "timers, pollers and relays are not stopped; the forced exit after 10 s ends them, and their work is kept in the database"
+      "note": "timers, pollers and relays are not stopped: they end with the process, and their work is kept in the database for the next start"
     },
     "startupRecovery": {
       "resumes": [

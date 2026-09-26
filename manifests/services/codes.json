@@ -52,8 +52,7 @@
         "HTTP server closed",
         "outbox relay stopped (awaited)",
         "store closed"
-      ],
-      "note": "keepAliveTimeout is 65 s, so an idle keep-alive connection can hold server.close() until the forced exit at 5 s"
+      ]
     },
     "startupRecovery": {
       "resumes": [
