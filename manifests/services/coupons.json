@@ -43,7 +43,8 @@
     "coupons.report.created",
     "coupons.confidence.changed",
     "coupons.index_document.upserted",
-    "coupons.index_document.deleted"
+    "coupons.index_document.deleted",
+    "coupons.moderation.action"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

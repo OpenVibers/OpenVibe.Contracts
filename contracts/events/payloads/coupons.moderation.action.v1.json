@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.moderation.action.v1.json",
+  "title": "CouponsModerationActionPayload",
+  "description": "coupons.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Coupons, such as approving, disabling or removing someone else's coupon, resolving reports, changing a merchant's status. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+  "$ref": "../../common/moderation-action.v1.json"
+}

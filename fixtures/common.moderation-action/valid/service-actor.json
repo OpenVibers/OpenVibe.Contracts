@@ -1,0 +1,12 @@
+{
+  "action": "guard.blocked",
+  "target": {
+    "type": "address",
+    "id": "ip:3f9a1c"
+  },
+  "actor_subject": null,
+  "reason": null,
+  "details": {
+    "rule": "rate"
+  }
+}

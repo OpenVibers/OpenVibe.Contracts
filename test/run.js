@@ -655,6 +655,26 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     }
 }
 
+// ── Moderation audit events (ADR-022, WS-D task 1): one shared payload, one event per producer ──
+// Events requires an event's prefix to be its source, so each service has its own type; the ones
+// without an older shape are common.moderation-action@1, and Network consumes every one of them.
+{
+    const moderation = contracts.catalog.filter(c => /\.moderation\.action$/.test(c.id));
+    for (const svc of ['tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'codes']) {
+        const id = `${svc}.moderation.action`;
+        const c = moderation.find(x => x.id === id);
+        ok(c && c.owner === svc && c.adr === 'ADR-022', `${id} is owned by ${svc}`);
+        ok(contracts.schema(id).$ref === '../../common/moderation-action.v1.json', `${id} is a common.moderation-action@1`);
+    }
+    for (const c of moderation) ok(services.get('network').eventsConsumed.includes(c.id), `network consumes ${c.id} into the moderation audit log`);
+    const M = (v) => contracts.validate('common.moderation-action@1', v).valid;
+    const base = { action: 'post.hidden', target: { type: 'post', id: 'p1', owner_subject: null }, actor_subject: null };
+    ok(M(base) && M({ ...base, reason: 'spam', details: { previous: 'published' } }), 'action, target and actor_subject are enough; reason and details are optional');
+    for (const k of ['action', 'target', 'actor_subject']) ok(!M({ ...base, [k]: undefined }), `a moderation action needs ${k}`);
+    for (const action of ['Post.Hidden', 'post hidden', 'post.', '.hidden', 'x'.repeat(65)]) ok(!M({ ...base, action }), `"${action.slice(0, 12)}" is not a verb id`);
+    ok(!M({ ...base, text: 'the post' }) && !M({ ...base, target: { ...base.target, title: 'Hi' } }), 'it never carries the content');
+}
+
 // ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──
 execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js')], { stdio: 'inherit' });
 

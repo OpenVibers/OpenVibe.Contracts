@@ -191,6 +191,16 @@
       "status": "active"
     },
     {
+      "id": "common.moderation-action",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "common/moderation-action.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "media.file-upload",
       "version": "1.0.0",
       "owner": "media",
@@ -321,6 +331,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "codes.moderation.action",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     },
     {
       "id": "events.redaction-directive",
@@ -658,6 +678,16 @@
       "status": "active"
     },
     {
+      "id": "wiki.moderation.action",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "events/payloads/wiki.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "wiki.citation-attach-request",
       "version": "1.0.0",
       "owner": "wiki",
@@ -944,6 +974,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "blog.moderation.action",
+      "version": "1.0.0",
+      "owner": "blog",
+      "schema": "events/payloads/blog.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     },
     {
       "id": "blog.blog-configure-request",
@@ -2160,6 +2200,16 @@
       "status": "active"
     },
     {
+      "id": "tools.moderation.action",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "events/payloads/tools.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "live.stream.started",
       "version": "1.0.0",
       "owner": "live",
@@ -2590,6 +2640,16 @@
       "status": "active"
     },
     {
+      "id": "news.moderation.action",
+      "version": "1.0.0",
+      "owner": "news",
+      "schema": "events/payloads/news.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "news.cluster-audit",
       "version": "1.0.0",
       "owner": "news",
@@ -2887,6 +2947,16 @@
       "status": "active"
     },
     {
+      "id": "reviews.moderation.action",
+      "version": "1.0.0",
+      "owner": "reviews",
+      "schema": "events/payloads/reviews.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "reviews.correction-submit-request",
       "version": "1.0.0",
       "owner": "reviews",
@@ -3166,6 +3236,16 @@
       "status": "active"
     },
     {
+      "id": "coupons.moderation.action",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "coupons.coupon",
       "version": "1.0.0",
       "owner": "coupons",
@@ -3326,6 +3406,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "deals.moderation.action",
+      "version": "1.0.0",
+      "owner": "deals",
+      "schema": "events/payloads/deals.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     },
     {
       "id": "deals.flag-request",
@@ -3506,6 +3596,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "trade.moderation.action",
+      "version": "1.0.0",
+      "owner": "trade",
+      "schema": "events/payloads/trade.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     },
     {
       "id": "trade.alert-read-result",
@@ -3767,6 +3867,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "games.moderation.action",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     },
     {
       "id": "games.announce-frame",

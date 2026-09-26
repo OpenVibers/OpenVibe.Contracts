@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/moderation-action.v1.json",
+  "title": "ModerationAction",
+  "description": "common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.",
+  "type": "object",
+  "required": ["action", "target", "actor_subject"],
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$",
+      "description": "A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked)."
+    },
+    "target": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "minLength": 1, "maxLength": 40, "pattern": "^[a-z][a-z0-9_]*$", "description": "What was acted on, in the service's own words (post, page, release, user, player, …)." },
+        "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "owner_subject": { "type": ["string", "null"], "maxLength": 200, "description": "Whose content or account it was, when known." }
+      }
+    },
+    "actor_subject": { "type": ["string", "null"], "maxLength": 200, "description": "The staff member or moderator (null only for a service acting without a person)." },
+    "reason": { "type": ["string", "null"], "maxLength": 500 },
+    "details": { "type": "object", "description": "Per action: the fields changed, the previous and new state, a bulk action's count, … never the content." }
+  }
+}

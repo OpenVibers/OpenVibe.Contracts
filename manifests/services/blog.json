@@ -48,7 +48,8 @@
     "blog.post.deleted",
     "blog.schedule.failed",
     "blog.index_document.upserted",
-    "blog.index_document.deleted"
+    "blog.index_document.deleted",
+    "blog.moderation.action"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

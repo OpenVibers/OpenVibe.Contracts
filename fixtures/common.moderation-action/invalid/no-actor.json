@@ -1,0 +1,7 @@
+{
+  "action": "post.hidden",
+  "target": {
+    "type": "post",
+    "id": "x"
+  }
+}

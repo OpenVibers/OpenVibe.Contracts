@@ -33,7 +33,8 @@
   "eventsProduced": [
     "codes.app.published",
     "codes.app.deprecated",
-    "codes.app.revoked"
+    "codes.app.revoked",
+    "codes.moderation.action"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

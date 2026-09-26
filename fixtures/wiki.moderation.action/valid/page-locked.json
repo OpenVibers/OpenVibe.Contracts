@@ -1,0 +1,11 @@
+{
+  "action": "page.locked",
+  "target": {
+    "type": "page",
+    "id": "pg_42",
+    "owner_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "actor_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "reason": "edit war",
+  "details": {}
+}

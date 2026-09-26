@@ -1995,6 +1995,82 @@
         ]
       }
     },
+    "common.moderation-action": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/moderation-action.v1.json",
+        "title": "ModerationAction",
+        "description": "common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.",
+        "type": "object",
+        "required": [
+          "action",
+          "target",
+          "actor_subject"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$",
+            "description": "A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked)."
+          },
+          "target": {
+            "type": "object",
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "pattern": "^[a-z][a-z0-9_]*$",
+                "description": "What was acted on, in the service's own words (post, page, release, user, player, …)."
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "owner_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 200,
+                "description": "Whose content or account it was, when known."
+              }
+            }
+          },
+          "actor_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The staff member or moderator (null only for a service acting without a person)."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "details": {
+            "type": "object",
+            "description": "Per action: the fields changed, the previous and new state, a bulk action's count, … never the content."
+          }
+        }
+      }
+    },
     "media.file-upload": {
       "version": "1.0.0",
       "owner": "media",
@@ -4026,6 +4102,18 @@
             "$ref": "../common/no-body.v1.json"
           }
         ]
+      }
+    },
+    "codes.moderation.action": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.moderation.action.v1.json",
+        "title": "CodesModerationActionPayload",
+        "description": "codes.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Codes, such as revoking or deprecating someone else's release or app, and withdrawing trust in a publisher or signing key. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     },
     "events.redaction-directive": {
@@ -6934,6 +7022,18 @@
         }
       }
     },
+    "wiki.moderation.action": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/wiki.moderation.action.v1.json",
+        "title": "WikiModerationActionPayload",
+        "description": "wiki.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Wiki, such as editorial moderation of someone else's page or revision: hiding, unpublishing, deleting, restoring, locking or reverting. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
+      }
+    },
     "wiki.citation-attach-request": {
       "version": "1.0.0",
       "owner": "wiki",
@@ -9501,6 +9601,18 @@
             "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
           }
         }
+      }
+    },
+    "blog.moderation.action": {
+      "version": "1.0.0",
+      "owner": "blog",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/blog.moderation.action.v1.json",
+        "title": "BlogModerationActionPayload",
+        "description": "blog.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Blog, such as editorial moderation of someone else's post or blog: hiding, unpublishing, deleting or restoring it, suspending a blog. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     },
     "blog.blog-configure-request": {
@@ -22914,6 +23026,18 @@
         }
       }
     },
+    "tools.moderation.action": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tools.moderation.action.v1.json",
+        "title": "ToolsModerationActionPayload",
+        "description": "tools.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Tools (apps/gateway and its guard), such as guard blocks and unblocks of an account, an app or an address, and staff actions on someone else's jobs or tool pages. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
+      }
+    },
     "live.stream.started": {
       "version": "1.0.0",
       "owner": "live",
@@ -27577,6 +27701,18 @@
         }
       }
     },
+    "news.moderation.action": {
+      "version": "1.0.0",
+      "owner": "news",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/news.moderation.action.v1.json",
+        "title": "NewsModerationActionPayload",
+        "description": "news.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.News, such as editorial moderation: unpublishing, retracting or restoring a story, resolving flags, blocking a source. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
+      }
+    },
     "news.cluster-audit": {
       "version": "1.0.0",
       "owner": "news",
@@ -31584,6 +31720,18 @@
             "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
           }
         }
+      }
+    },
+    "reviews.moderation.action": {
+      "version": "1.0.0",
+      "owner": "reviews",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/reviews.moderation.action.v1.json",
+        "title": "ReviewsModerationActionPayload",
+        "description": "reviews.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Reviews, such as editorial moderation: removing or restoring someone else's signal or review, unpublishing a summary, merging or splitting entities. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     },
     "reviews.correction-submit-request": {
@@ -36392,6 +36540,18 @@
         }
       }
     },
+    "coupons.moderation.action": {
+      "version": "1.0.0",
+      "owner": "coupons",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/coupons.moderation.action.v1.json",
+        "title": "CouponsModerationActionPayload",
+        "description": "coupons.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Coupons, such as approving, disabling or removing someone else's coupon, resolving reports, changing a merchant's status. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
+      }
+    },
     "coupons.coupon": {
       "version": "1.0.0",
       "owner": "coupons",
@@ -38008,6 +38168,18 @@
             "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
           }
         }
+      }
+    },
+    "deals.moderation.action": {
+      "version": "1.0.0",
+      "owner": "deals",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/deals.moderation.action.v1.json",
+        "title": "DealsModerationActionPayload",
+        "description": "deals.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Deals, such as resolving flags, hiding, removing or restoring someone else's offer or comment. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     },
     "deals.flag-request": {
@@ -40262,6 +40434,18 @@
             "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
           }
         }
+      }
+    },
+    "trade.moderation.action": {
+      "version": "1.0.0",
+      "owner": "trade",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/trade.moderation.action.v1.json",
+        "title": "TradeModerationActionPayload",
+        "description": "trade.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Trade, such as hiding, removing or restoring someone else's listing or observation. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     },
     "trade.alert-read-result": {
@@ -42775,6 +42959,18 @@
             "maxLength": 500
           }
         }
+      }
+    },
+    "games.moderation.action": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/games.moderation.action.v1.json",
+        "title": "GamesModerationActionPayload",
+        "description": "games.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Games, such as kicking or banning a player, lifting a ban, and revoking or disabling someone else's mod. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     },
     "games.announce-frame": {

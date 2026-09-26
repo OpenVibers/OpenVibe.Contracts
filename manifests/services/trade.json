@@ -47,7 +47,8 @@
     "trade.source.stale",
     "trade.source.recovered",
     "trade.index_document.upserted",
-    "trade.index_document.deleted"
+    "trade.index_document.deleted",
+    "trade.moderation.action"
   ],
   "eventsConsumed": [
     "sources.item.created",

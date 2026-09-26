@@ -736,6 +736,37 @@ export type ConfigSnapshot = {
   copied_from?: number | null;
 };
 
+/** common.moderation-action@1.0.0 (owner: network) */
+/**
+ * common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.
+ */
+export interface ModerationAction {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** media.file-upload@1.0.0 (owner: media) */
 /**
  * media.file-upload@1: the multipart/form-data body of POST /api/v1/:app/files (media.object.upload, namespace :app): one part named `file` with the bytes and its filename and type. The tenant's quota is checked against the bytes; the answer is media.file@1 (201).
@@ -5968,6 +5999,37 @@ export type CodesReleaseManageRequest =
       replacement?: string | null;
     }
   | NoBody;
+
+/** codes.moderation.action@1.0.0 (owner: codes) */
+/**
+ * codes.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Codes, such as revoking or deprecating someone else's release or app, and withdrawing trust in a publisher or signing key. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface CodesModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
 
 /** events.redaction-directive@1.0.0 (owner: events) */
 /**
@@ -12458,6 +12520,37 @@ export interface WikiIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** wiki.moderation.action@1.0.0 (owner: wiki) */
+/**
+ * wiki.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Wiki, such as editorial moderation of someone else's page or revision: hiding, unpublishing, deleting, restoring, locking or reverting. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface WikiModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** wiki.citation-attach-request@1.0.0 (owner: wiki) */
 /**
  * wiki.citation-attach-request@1: the body of POST /api/v1/pages/:id/revisions/:n/citations on OpenVibe.Wiki (wiki.citation.attach, editors): sources for the newest revision while it is unpublished (a published revision's sources are fixed: 409 citation.revision_published; an older one is 409 citation.not_head). A URL citation needs retrieved_at; a Sources item id brings its own URL, title and retrieval time.
@@ -13784,6 +13877,37 @@ export interface BlogIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** blog.moderation.action@1.0.0 (owner: blog) */
+/**
+ * blog.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Blog, such as editorial moderation of someone else's post or blog: hiding, unpublishing, deleting or restoring it, suspending a blog. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface BlogModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
 }
 
 /** blog.blog-configure-request@1.0.0 (owner: blog) */
@@ -24433,6 +24557,37 @@ export interface ToolsJobFailedPayload {
   retryable: boolean;
 }
 
+/** tools.moderation.action@1.0.0 (owner: tools) */
+/**
+ * tools.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Tools (apps/gateway and its guard), such as guard blocks and unblocks of an account, an app or an address, and staff actions on someone else's jobs or tool pages. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface ToolsModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** live.stream.started@1.0.0 (owner: live) */
 /**
  * live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRe.Stream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
@@ -26850,6 +27005,37 @@ export interface NewsIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** news.moderation.action@1.0.0 (owner: news) */
+/**
+ * news.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.News, such as editorial moderation: unpublishing, retracting or restoring a story, resolving flags, blocking a source. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface NewsModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
 }
 
 /** news.cluster-audit@1.0.0 (owner: news) */
@@ -29468,6 +29654,37 @@ export interface ReviewsIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** reviews.moderation.action@1.0.0 (owner: reviews) */
+/**
+ * reviews.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Reviews, such as editorial moderation: removing or restoring someone else's signal or review, unpublishing a summary, merging or splitting entities. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface ReviewsModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
 }
 
 /** reviews.correction-submit-request@1.0.0 (owner: reviews) */
@@ -35707,6 +35924,37 @@ export interface CouponsIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** coupons.moderation.action@1.0.0 (owner: coupons) */
+/**
+ * coupons.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Coupons, such as approving, disabling or removing someone else's coupon, resolving reports, changing a merchant's status. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface CouponsModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** coupons.coupon@1.0.0 (owner: coupons) */
 /**
  * coupons.coupon@1: one code as OpenVibe.Coupons shows it (server/domain/coupons.js view): its status and confidence come only from people's reports (counts in a window, report times rounded to the hour), a known or unknown expiry, restrictions, hints and evidence. No submitter or reporter is ever named.
@@ -36715,6 +36963,37 @@ export interface DealsIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** deals.moderation.action@1.0.0 (owner: deals) */
+/**
+ * deals.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Deals, such as resolving flags, hiding, removing or restoring someone else's offer or comment. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface DealsModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** deals.flag-request@1.0.0 (owner: deals) */
 /**
  * deals.flag-request@1: the body of POST /api/v1/offers/:id/flags on OpenVibe.Deals (deals.flag.create; a person): { kind, reason?, duplicate_of? } — duplicate_of (the other deal, id, slug or /d/ link) is required for kind duplicate. An open flag of the same kind by the same person is refreshed, not repeated.
@@ -37324,6 +37603,37 @@ export interface TradeIndexDocumentDeletedPayload {
    * Index revision of the tombstone; wins over any document at the same or an older revision.
    */
   revision: number;
+}
+
+/** trade.moderation.action@1.0.0 (owner: trade) */
+/**
+ * trade.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Trade, such as hiding, removing or restoring someone else's listing or observation. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface TradeModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
 }
 
 /** trade.alert-read-result@1.0.0 (owner: trade) */
@@ -38315,6 +38625,37 @@ export interface GamesModRevokedPayload {
    */
   revoked_grants: string[];
   reason?: string;
+}
+
+/** games.moderation.action@1.0.0 (owner: games) */
+/**
+ * games.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Games, such as kicking or banning a player, lifting a ban, and revoking or disabling someone else's mod. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface GamesModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
 }
 
 /** games.announce-frame@1.0.0 (owner: games) */

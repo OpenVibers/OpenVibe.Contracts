@@ -1,0 +1,11 @@
+{
+  "action": "story.retracted",
+  "target": {
+    "type": "story",
+    "id": "sty_17",
+    "owner_subject": null
+  },
+  "actor_subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "reason": "fabricated source",
+  "details": {}
+}

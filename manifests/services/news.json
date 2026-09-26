@@ -51,7 +51,8 @@
     "news.story.unpublished",
     "news.story.retracted",
     "news.index_document.upserted",
-    "news.index_document.deleted"
+    "news.index_document.deleted",
+    "news.moderation.action"
   ],
   "eventsConsumed": [
     "sources.item.created",

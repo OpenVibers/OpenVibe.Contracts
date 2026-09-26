@@ -45,7 +45,8 @@
     "wiki.page.deleted",
     "wiki.watch.triggered",
     "wiki.index_document.upserted",
-    "wiki.index_document.deleted"
+    "wiki.index_document.deleted",
+    "wiki.moderation.action"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

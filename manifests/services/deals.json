@@ -48,7 +48,8 @@
     "deals.vote.changed",
     "deals.watch.matched",
     "deals.index_document.upserted",
-    "deals.index_document.deleted"
+    "deals.index_document.deleted",
+    "deals.moderation.action"
   ],
   "eventsConsumed": [
     "sources.item.created",

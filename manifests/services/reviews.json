@@ -46,7 +46,8 @@
     "reviews.summary.updated",
     "reviews.summary.unpublished",
     "reviews.index_document.upserted",
-    "reviews.index_document.deleted"
+    "reviews.index_document.deleted",
+    "reviews.moderation.action"
   ],
   "eventsConsumed": [
     "sources.item.created",
