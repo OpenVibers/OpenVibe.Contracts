@@ -9,3 +9,45 @@ description = "Sample Idempotency-Key value in a tools.run-request@1 fixture; an
 condition = "AND"
 paths = ['''^fixtures/tools\.run-request/valid/chained-job-file\.json$''']
 regexes = ['''^resize-01JAB2C3$''']
+
+[[allowlists]]
+description = "Sample credential in a capability-schema fixture (network.github-token-result): a made-up placeholder that shows the shape, not a real secret"
+condition = "AND"
+paths = ['''^fixtures/network\.github\-token\-result/invalid/unknown\-source\.json$''']
+regexes = ['''^(ghp_0123456789abcdefghijABCDEFGHIJ0123456789)$''']
+
+[[allowlists]]
+description = "Sample credential in a capability-schema fixture (network.github-token-result): a made-up placeholder that shows the shape, not a real secret"
+condition = "AND"
+paths = ['''^fixtures/network\.github\-token\-result/valid/env\.json$''']
+regexes = ['''^(ghp_0123456789abcdefghijABCDEFGHIJ0123456789)$''']
+
+[[allowlists]]
+description = "Sample credential in a capability-schema fixture (tips.overlay-token-result): a made-up placeholder that shows the shape, not a real secret"
+condition = "AND"
+paths = ['''^fixtures/tips\.overlay\-token\-result/valid/minted\.json$''']
+regexes = ['''^(tovl_Qm9vdHN0cmFwLXRva2VuLWZvci1kb2NzLW9ubHkxMjM)$''']
+
+[[allowlists]]
+description = "Sample credential in a capability-schema fixture (openre.stream-write-result): a made-up placeholder that shows the shape, not a real secret"
+condition = "AND"
+paths = ['''^fixtures/openre\.stream\-write\-result/valid/created\.json$''']
+regexes = ['''^(ovk_live_7fQ2x9Q2)$''']
+
+[[allowlists]]
+description = "Sample credential in a capability-schema fixture (openre.key-rotate-result): a made-up placeholder that shows the shape, not a real secret"
+condition = "AND"
+paths = ['''^fixtures/openre\.key\-rotate\-result/valid/grace\.json$''']
+regexes = ['''^(ovk_live_Zp41mm80)$''']
+
+[[allowlists]]
+description = "Sample credential in a capability-schema fixture (events.subscription-result): a made-up placeholder that shows the shape, not a real secret"
+condition = "AND"
+paths = ['''^fixtures/events\.subscription\-result/valid/created\.json$''']
+regexes = ['''^(whsec_4f1c0b8e2a9d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b)$''']
+
+[[allowlists]]
+description = "The made-up GitHub token in the network.github-token-result fixtures: ghp_ followed by the digits 0-9 in order (the github-pat rule matches part of it)"
+condition = "AND"
+paths = ['''^fixtures/network\.github-token-result/(valid/env|invalid/unknown-source)\.json$''']
+regexes = ['''^ghp_0123456789[A-Za-z0-9]*$''']
