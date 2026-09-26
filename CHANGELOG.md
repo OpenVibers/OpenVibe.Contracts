@@ -6,6 +6,16 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.63.0 — 2026-09-26
+
+**Project usage rollups** (roadmap WS-N task 4, ADR-014): what feeds the per-project dashboards on OpenVibe.Codes.
+- **New `common.usage-recorded@1`**: one closed window (an hour or a day) of one developer project's use of one capability in one environment, as the owning service counted it: `project_id`, `env`, `capability`, an optional `dimension` (a job type or tool id), `unit`, `window`, `window_start`, `window_end`, `quantity`, `errors`, `error_codes` (up to 20) and `samples` (up to 10 recent failures: time, code, status, trace id and a job, event, run or object id), plus `revision`. Totals, not deltas: a later rollup with the same key replaces the earlier one. It never names who did the work (no subject, app, address, session, input or message), and no producer emits one per request.
+- **New event types `tools.usage.recorded`** (a Tools satellite's hour of a project's jobs, unit `jobs`, per `tools.job.create` or `tools.tool.run` and job type or tool) **and `events.usage.recorded`** (Events: `events.app.publish` in `events`, refusals as errors; `events.app.subscribe` in `deliveries`, failed webhook attempts as errors). Both payloads are `common.usage-recorded@1`; envelope subject `{ type: project, id: <project_id> }`, visibility `internal`, priority `low`. The Tools and Events manifests produce them; Network consumes both.
+- **New `network.project-usage-result@1`**: what `GET /api/v1/projects/:project/usage?days=&env=` on Network answers a project's owner, admins and staff: daily rows and range totals per service, capability, unit and environment, the project's recorded quotas with what their current window used, and errors by code with the recent sampled failures.
+- `npm test` checks that each `<service>.usage.recorded` is the common payload, owned by its service and consumed by Network, and that a rollup carries no identity and at most ten samples.
+
+Additive.
+
 ## 0.62.0 — 2026-09-26
 
 **Operator alerts** (roadmap WS-H task 11; the delivery path that Host's Prometheus alerts lacked).

@@ -39,7 +39,8 @@
     "tools.job.started",
     "tools.job.succeeded",
     "tools.job.failed",
-    "tools.moderation.action"
+    "tools.moderation.action",
+    "tools.usage.recorded"
   ],
   "eventsConsumed": [
     "network.user.token_valid_after"

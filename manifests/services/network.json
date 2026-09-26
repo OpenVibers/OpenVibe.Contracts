@@ -69,6 +69,7 @@
     "coupons.moderation.action",
     "deals.moderation.action",
     "deals.watch.matched",
+    "events.usage.recorded",
     "games.moderation.action",
     "live.moderation.action",
     "live.stream.started",
@@ -77,6 +78,7 @@
     "reviews.moderation.action",
     "tips.interaction.moderated",
     "tools.moderation.action",
+    "tools.usage.recorded",
     "trade.alert.triggered",
     "trade.moderation.action",
     "wiki.moderation.action"

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/events.usage.recorded.v1.json",
+  "title": "EventsUsageRecordedPayload",
+  "description": "events.usage.recorded v1 (roadmap WS-N task 4, OpenVibe.Events server/usage.js). One hour of a developer project's use of OpenVibe.Events in one environment: events.app.publish in unit events (quantity counts the events stored; errors the publish requests refused with a problem, such as 429 events.quota_exceeded or 403 events.type_not_allowed) and events.app.subscribe in unit deliveries (quantity counts webhook delivery attempts to the project's subscriptions; errors the attempts without a 2xx, as events.delivery.http_<status>, events.delivery.timeout or events.delivery.failed). Counted in the transaction that stores the events or records the attempt (a refusal right after it is answered); Events stores the rollup as its own event after the hour closes, in the same transaction that marks it sent. The payload is common.usage-recorded@1. Envelope: source events, subject { type: project, id: <project_id> }, visibility internal, priority low, actor service:events.",
+  "$ref": "../../common/usage-recorded.v1.json"
+}

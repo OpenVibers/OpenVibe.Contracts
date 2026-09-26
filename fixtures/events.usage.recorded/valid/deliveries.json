@@ -1,0 +1,30 @@
+{
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "env": "production",
+  "capability": "events.app.subscribe",
+  "unit": "deliveries",
+  "window": "hour",
+  "window_start": "2026-09-26T10:00:00.000Z",
+  "window_end": "2026-09-26T11:00:00.000Z",
+  "quantity": 12,
+  "errors": 2,
+  "error_codes": {
+    "events.delivery.http_500": 1,
+    "events.delivery.timeout": 1
+  },
+  "samples": [
+    {
+      "at": "2026-09-26T10:31:00.000Z",
+      "code": "events.delivery.timeout",
+      "trace_id": "0af7651916cd43dd8448eb211c80319c",
+      "ref": "evt_01JAB2C3D4E5F6G7H8J9K0MNPT"
+    },
+    {
+      "at": "2026-09-26T10:30:00.000Z",
+      "code": "events.delivery.http_500",
+      "status": 500,
+      "trace_id": "0af7651916cd43dd8448eb211c80319c",
+      "ref": "evt_01JAB2C3D4E5F6G7H8J9K0MNPT"
+    }
+  ]
+}

@@ -27,7 +27,9 @@
     "events.app.read",
     "events.app.subscribe"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "events.usage.recorded"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [],
   "lifecycle": {

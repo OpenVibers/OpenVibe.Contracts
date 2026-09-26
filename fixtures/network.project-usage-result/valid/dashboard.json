@@ -1,0 +1,115 @@
+{
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "env": "all",
+  "range": {
+    "days": 30,
+    "from": "2026-08-28",
+    "to": "2026-09-26"
+  },
+  "generated_at": "2026-09-26T15:05:00.000Z",
+  "last_recorded_at": "2026-09-26T15:02:11.000Z",
+  "freshness": "Usage arrives as hourly rollups after each hour closes; the current hour is not counted yet.",
+  "totals": [
+    {
+      "service": "tools",
+      "capability": "tools.job.create",
+      "unit": "jobs",
+      "env": "production",
+      "quantity": 42,
+      "errors": 3
+    },
+    {
+      "service": "events",
+      "capability": "events.app.publish",
+      "unit": "events",
+      "env": "sandbox",
+      "quantity": 1800,
+      "errors": 61
+    }
+  ],
+  "daily": [
+    {
+      "day": "2026-09-26",
+      "service": "tools",
+      "capability": "tools.job.create",
+      "dimension": "img.process",
+      "unit": "jobs",
+      "env": "production",
+      "quantity": 42,
+      "errors": 3
+    },
+    {
+      "day": "2026-09-26",
+      "service": "events",
+      "capability": "events.app.publish",
+      "dimension": null,
+      "unit": "events",
+      "env": "sandbox",
+      "quantity": 1800,
+      "errors": 61
+    }
+  ],
+  "quotas": [
+    {
+      "capability": "tools.job.create",
+      "limit": 1000,
+      "window": "day",
+      "unit": "jobs",
+      "enforced_by": "openvibe.tools",
+      "used": 42,
+      "remaining": 958,
+      "window_start": "2026-09-26T00:00:00.000Z",
+      "note": null
+    },
+    {
+      "capability": "events.app.publish",
+      "limit": 120,
+      "window": "minute",
+      "unit": "events",
+      "enforced_by": "openvibe.events",
+      "used": null,
+      "remaining": null,
+      "window_start": null,
+      "note": "a minute window is enforced by the service as it happens; hourly rollups cannot show it"
+    }
+  ],
+  "errors": {
+    "total": 64,
+    "by_code": [
+      {
+        "service": "events",
+        "capability": "events.app.publish",
+        "code": "events.quota_exceeded",
+        "count": 60
+      },
+      {
+        "service": "tools",
+        "capability": "tools.job.create",
+        "code": "tools.job.failed",
+        "count": 2
+      }
+    ],
+    "recent": [
+      {
+        "at": "2026-09-26T14:51:07.412Z",
+        "env": "production",
+        "service": "tools",
+        "capability": "tools.job.create",
+        "code": "tools.job.timeout",
+        "status": 504,
+        "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
+        "ref": "job_01JAB2C3D4E5F6G7H8J9K0MNPR"
+      },
+      {
+        "at": "2026-09-26T09:59:58.120Z",
+        "env": "sandbox",
+        "service": "events",
+        "capability": "events.app.publish",
+        "code": "events.quota_exceeded",
+        "status": 429,
+        "trace_id": "0af7651916cd43dd8448eb211c80319c",
+        "ref": null
+      }
+    ]
+  }
+}

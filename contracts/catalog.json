@@ -211,6 +211,16 @@
       "adr": "ADR-022"
     },
     {
+      "id": "common.usage-recorded",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "common/usage-recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
       "id": "media.file-upload",
       "version": "1.0.0",
       "owner": "media",
@@ -2250,6 +2260,26 @@
       "adr": "ADR-022"
     },
     {
+      "id": "tools.usage.recorded",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "events/payloads/tools.usage.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
+      "id": "events.usage.recorded",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/payloads/events.usage.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
       "id": "live.stream.started",
       "version": "1.0.0",
       "owner": "live",
@@ -2512,6 +2542,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-005"
+    },
+    {
+      "id": "network.project-usage-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/project-usage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
     },
     {
       "id": "network.staff-list-result",

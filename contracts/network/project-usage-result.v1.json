@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/project-usage-result.v1.json",
+  "title": "ProjectUsageResult",
+  "description": "network.project-usage-result@1 (roadmap WS-N task 4, ADR-014): what GET /api/v1/projects/:project/usage?days=&env= on OpenVibe.Network answers a project's owner or admin (or staff): the project's usage per day, service, capability and unit, added up from the <service>.usage.recorded rollups (common.usage-recorded@1) the owning services emit after each hour closes; the project's recorded quotas with what the current window has used; and its recent failures with their codes and trace ids. Counts only, never who did what: no subject id, address, input or content.",
+  "type": "object",
+  "required": ["project_id", "env", "range", "generated_at", "last_recorded_at", "freshness", "totals", "daily", "quotas", "errors"],
+  "additionalProperties": false,
+  "$defs": {
+    "service": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+    "capability": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$", "maxLength": 80 },
+    "unit": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+    "env": { "enum": ["sandbox", "production"] },
+    "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$", "maxLength": 80 },
+    "count": { "type": "integer", "minimum": 0 }
+  },
+  "properties": {
+    "project_id": { "type": "string", "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "env": { "enum": ["all", "sandbox", "production"], "description": "The environments counted (the env query parameter; all by default)." },
+    "range": {
+      "type": "object",
+      "required": ["days", "from", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "days": { "type": "integer", "minimum": 1, "maximum": 90 },
+        "from": { "type": "string", "format": "date", "description": "First UTC day counted." },
+        "to": { "type": "string", "format": "date", "description": "Last UTC day counted (today)." }
+      }
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "last_recorded_at": { "type": ["string", "null"], "format": "date-time", "description": "When the newest rollup for this project arrived; null before the first." },
+    "freshness": { "type": "string", "maxLength": 300, "description": "How current the numbers are, in words (rollups arrive after each hour closes)." },
+    "totals": {
+      "type": "array",
+      "description": "The whole range per service, capability, unit and environment.",
+      "items": {
+        "type": "object",
+        "required": ["service", "capability", "unit", "env", "quantity", "errors"],
+        "additionalProperties": false,
+        "properties": {
+          "service": { "$ref": "#/$defs/service" }, "capability": { "$ref": "#/$defs/capability" }, "unit": { "$ref": "#/$defs/unit" },
+          "env": { "$ref": "#/$defs/env" }, "quantity": { "$ref": "#/$defs/count" }, "errors": { "$ref": "#/$defs/count" }
+        }
+      }
+    },
+    "daily": {
+      "type": "array",
+      "description": "One row per UTC day, service, capability, dimension, unit and environment that saw usage; days without any are absent. Newest day first.",
+      "items": {
+        "type": "object",
+        "required": ["day", "service", "capability", "dimension", "unit", "env", "quantity", "errors"],
+        "additionalProperties": false,
+        "properties": {
+          "day": { "type": "string", "format": "date" },
+          "service": { "$ref": "#/$defs/service" }, "capability": { "$ref": "#/$defs/capability" },
+          "dimension": { "type": ["string", "null"], "maxLength": 80 },
+          "unit": { "$ref": "#/$defs/unit" }, "env": { "$ref": "#/$defs/env" },
+          "quantity": { "$ref": "#/$defs/count" }, "errors": { "$ref": "#/$defs/count" }
+        }
+      }
+    },
+    "quotas": {
+      "type": "array",
+      "description": "The project's recorded quotas (GET /api/v1/projects/:project/quotas), each with what its current window has used, in every environment together. used is null where the rollups cannot tell (a minute or hour window, or a unit no service reports for that capability).",
+      "items": {
+        "type": "object",
+        "required": ["capability", "limit", "window", "unit", "enforced_by", "used", "remaining", "window_start", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "capability": { "$ref": "#/$defs/capability" },
+          "limit": { "type": "integer", "minimum": 0 },
+          "window": { "enum": ["minute", "hour", "day", "month", "total"] },
+          "unit": { "$ref": "#/$defs/unit" },
+          "enforced_by": { "type": ["string", "null"], "description": "The audience of the service that enforces it (openvibe.<owner>)." },
+          "used": { "type": ["integer", "null"], "minimum": 0 },
+          "remaining": { "type": ["integer", "null"], "minimum": 0 },
+          "window_start": { "type": ["string", "null"], "format": "date-time", "description": "Start of the current window counted (today, this month); null for total and when used is null." },
+          "note": { "type": ["string", "null"], "maxLength": 300 }
+        }
+      }
+    },
+    "errors": {
+      "type": "object",
+      "required": ["total", "by_code", "recent"],
+      "additionalProperties": false,
+      "properties": {
+        "total": { "$ref": "#/$defs/count" },
+        "by_code": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["service", "capability", "code", "count"],
+            "additionalProperties": false,
+            "properties": { "service": { "$ref": "#/$defs/service" }, "capability": { "$ref": "#/$defs/capability" }, "code": { "$ref": "#/$defs/code" }, "count": { "$ref": "#/$defs/count" } }
+          }
+        },
+        "recent": {
+          "type": "array",
+          "maxItems": 50,
+          "description": "The newest failures the rollups sampled, newest first.",
+          "items": {
+            "type": "object",
+            "required": ["at", "env", "service", "capability", "code", "status", "trace_id", "ref"],
+            "additionalProperties": false,
+            "properties": {
+              "at": { "type": "string", "format": "date-time" },
+              "env": { "$ref": "#/$defs/env" }, "service": { "$ref": "#/$defs/service" }, "capability": { "$ref": "#/$defs/capability" },
+              "code": { "$ref": "#/$defs/code" },
+              "status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+              "trace_id": { "type": ["string", "null"], "pattern": "^[0-9a-f]{32}$" },
+              "ref": { "type": ["string", "null"], "pattern": "^(job|evt|run|med)_[0-9A-HJKMNP-TV-Z]{26}$" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

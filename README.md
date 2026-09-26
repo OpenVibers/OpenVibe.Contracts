@@ -95,6 +95,10 @@ const r = contracts.validate(`${env.event_type}@${env.version}`, env.payload);
 
 **Redaction (ADR-026).** Any event may carry `payload.redacts` (`events.redaction-directive@1`), shaped `{ event_ids?, subject_type?, subject_ids? }` with up to 1000 ids each, to take back the producer's own earlier events. OpenVibe.Events rewrites each target into a tombstone at its original seq: `{ redacted: true, redacted_at, redacted_by }`, with the producer itself as actor. Naming another source's event refuses the whole batch with 403 `events.redaction_not_allowed`. A malformed directive gets 422 `events.invalid_redaction`. `chat.message.deleted` always carries one. Browsers are replayed only the `public` events of the last `REALTIME_PUBLIC_REPLAY_SECONDS` (default 300); an older cursor gets `event: gap` with reason `public_window`.
 
+## Project usage rollups (v0.63)
+
+The services that own a developer capability count each project's use of it and report one rollup per closed hour, never one event per request (roadmap WS-N task 4). Every `<service>.usage.recorded` event carries `common.usage-recorded@1`: project, environment, capability, optional dimension (job type, tool), unit, window, quantity, errors, errors by code and up to ten sampled failures with their trace ids. Emitted today: `tools.usage.recorded` (jobs) and `events.usage.recorded` (published events, webhook deliveries). OpenVibe.Network adds them up per project and day and answers `GET /api/v1/projects/:project/usage` (`network.project-usage-result@1`) to the project's owner and admins; OpenVibe.Codes shows it as the project's usage page. A rollup is totals, not a delta: the latest one for a key replaces the earlier, so a producer may re-send a window safely.
+
 ## Event delivery signatures
 
 OpenVibe.Events POSTs each webhook delivery as `{ "event": <events.event-envelope@1>, "seq": n }`, keyed with the subscription secret:

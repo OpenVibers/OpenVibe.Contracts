@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/tools.usage.recorded.v1.json",
+  "title": "ToolsUsageRecordedPayload",
+  "description": "tools.usage.recorded v1 (roadmap WS-N task 4, OpenVibe.Tools apps/_shared/jobs/usage.js). One hour of a developer project's jobs on one Tools satellite, per capability (tools.job.create for POST /api/v1/jobs, tools.tool.run for a tool run) and job type or tool (dimension), in unit jobs: quantity counts the jobs that ended (succeeded or failed; a cancelled job is not counted), errors the failed ones, by code, with the last failures' job ids and trace ids. Counted in the transaction that records a job's end; written to the satellite's outbox after the hour closes. Only jobs of developer-app tokens (they carry a project) are counted; sandbox jobs are counted under env sandbox. The payload is common.usage-recorded@1. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor service:tools.",
+  "$ref": "../../common/usage-recorded.v1.json"
+}

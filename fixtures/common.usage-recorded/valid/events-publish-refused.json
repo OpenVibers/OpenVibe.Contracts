@@ -1,0 +1,23 @@
+{
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "env": "sandbox",
+  "capability": "events.app.publish",
+  "unit": "events",
+  "window": "hour",
+  "window_start": "2026-09-26T09:00:00.000Z",
+  "window_end": "2026-09-26T10:00:00.000Z",
+  "quantity": 1800,
+  "errors": 61,
+  "error_codes": {
+    "events.quota_exceeded": 60,
+    "events.type_not_allowed": 1
+  },
+  "samples": [
+    {
+      "at": "2026-09-26T09:59:58.120Z",
+      "code": "events.quota_exceeded",
+      "status": 429,
+      "trace_id": "0af7651916cd43dd8448eb211c80319c"
+    }
+  ]
+}

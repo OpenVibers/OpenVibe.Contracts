@@ -791,6 +791,35 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     ok(R({ ...r, expires_in: 300 }) && !R({ ...r, expires_in: 301 }), 'a ticket lives at most 300 s');
 }
 
+// ── Project usage (WS-N task 4, ADR-014): one shared rollup payload, one event per producer ──
+// Every <service>.usage.recorded is common.usage-recorded@1, owned by its service and consumed by
+// Network (the project dashboard). A rollup counts, it never says who: no subject, app, address,
+// input or message, and at most ten sampled failures.
+{
+    const usage = contracts.catalog.filter(c => /\.usage\.recorded$/.test(c.id));
+    ok(usage.length >= 2 && ['tools', 'events'].every(svc => usage.some(c => c.id === `${svc}.usage.recorded`)), 'tools and events publish usage rollups');
+    for (const c of usage) {
+        ok(c.owner === c.id.split('.')[0] && c.adr === 'ADR-014', `${c.id} is owned by ${c.id.split('.')[0]}`);
+        ok(contracts.schema(c.id).$ref === '../../common/usage-recorded.v1.json', `${c.id} is a common.usage-recorded@1`);
+        ok(services.get('network').eventsConsumed.includes(c.id), `network consumes ${c.id} into project usage`);
+    }
+    const U = (v) => contracts.validate('common.usage-recorded@1', v).valid;
+    const base = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/common.usage-recorded/valid/tools-jobs-hour.json'), 'utf8'));
+    ok(U(base), 'an hour of jobs');
+    for (const k of ['project_id', 'env', 'capability', 'unit', 'window', 'window_start', 'window_end', 'quantity', 'errors']) ok(!U({ ...base, [k]: undefined }), `a rollup needs ${k}`);
+    for (const k of ['subject', 'owner', 'actor', 'user_id', 'app_id', 'ip', 'session', 'input', 'request_id']) ok(!U({ ...base, [k]: 'x' }), `a rollup never carries ${k}`);
+    const props = Object.keys(contracts.schema('common.usage-recorded').properties);
+    ok(!props.some(p => /subject|owner|actor|user|ip|session|address/.test(p)), 'no field of the rollup names who did it');
+    const sample = base.samples[0];
+    ok(!U({ ...base, samples: Array.from({ length: 11 }, () => sample) }), 'at most ten sampled failures: a rollup, not a request log');
+    for (const ref of ['usr_01JAB2C3D4E5F6G7H8J9K0MNPQ', 'app_01JAB2C3D4E5F6G7H8J9K0MNPQ', 'req_01JAB2C3D4E5F6G7H8J9K0MNPQ']) ok(!U({ ...base, samples: [{ ...sample, ref }] }), `a sample never refers to ${ref.slice(0, 3)}_`);
+    ok(!U({ ...base, window: 'minute' }) && U({ ...base, window: 'day' }), 'windows are an hour or a day');
+    const R = (v) => contracts.validate('network.project-usage-result@1', v).valid;
+    const res = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/network.project-usage-result/valid/dashboard.json'), 'utf8'));
+    ok(R(res) && !R({ ...res, range: { ...res.range, days: 91 } }), 'a dashboard covers at most 90 days');
+    ok(res.errors.recent.every(e => contracts.validate('common.usage-recorded@1', { ...base, samples: [{ at: e.at, code: e.code, ...(e.status ? { status: e.status } : {}), ...(e.trace_id ? { trace_id: e.trace_id } : {}), ...(e.ref ? { ref: e.ref } : {}) }] }).valid), 'the dashboard\'s recent failures are the rollups\' samples');
+}
+
 // ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──
 execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js')], { stdio: 'inherit' });
 

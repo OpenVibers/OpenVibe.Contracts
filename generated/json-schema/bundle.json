@@ -2580,6 +2580,150 @@
         }
       }
     },
+    "common.usage-recorded": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/usage-recorded.v1.json",
+        "title": "UsageRecorded",
+        "description": "common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.",
+        "type": "object",
+        "required": [
+          "project_id",
+          "env",
+          "capability",
+          "unit",
+          "window",
+          "window_start",
+          "window_end",
+          "quantity",
+          "errors"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The developer project whose app token did the work."
+          },
+          "env": {
+            "enum": [
+              "sandbox",
+              "production"
+            ],
+            "description": "The environment of that app token."
+          },
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$",
+            "maxLength": 80,
+            "description": "The capability the usage counts against: tools.job.create, tools.tool.run, events.app.publish, events.app.subscribe."
+          },
+          "dimension": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "pattern": "^[a-z0-9][a-z0-9_.:-]*$",
+            "not": {
+              "pattern": "^(usr|gst|app|mod|svc|job|evt|req)_"
+            },
+            "description": "Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job."
+          },
+          "unit": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$",
+            "description": "What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit."
+          },
+          "window": {
+            "enum": [
+              "hour",
+              "day"
+            ],
+            "description": "The length of the window."
+          },
+          "window_start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC, on the hour (midnight for a day)."
+          },
+          "window_end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "window_start plus the window, exclusive."
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Units used in the window, by work that succeeded and work that failed alike."
+          },
+          "errors": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Operations in the window that failed or were refused: a job that failed, a publish refused with a problem, a webhook attempt without a 2xx. A refused operation may use no unit, so errors can exceed quantity."
+          },
+          "error_codes": {
+            "type": "object",
+            "maxProperties": 20,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+              "maxLength": 80
+            },
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "The errors by problem code (at most 20 codes; the rest are only in errors)."
+          },
+          "samples": {
+            "type": "array",
+            "maxItems": 10,
+            "description": "The last failures of the window, newest first, so a developer can find them in their own logs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "at",
+                "code"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "code": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+                  "maxLength": 80
+                },
+                "status": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 599,
+                  "description": "The HTTP status the failure was answered with, when there was one."
+                },
+                "trace_id": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{32}$",
+                  "description": "The W3C trace id of the request (or event) that failed."
+                },
+                "ref": {
+                  "type": "string",
+                  "pattern": "^(job|evt|run|med)_[0-9A-HJKMNP-TV-Z]{26}$",
+                  "description": "What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject."
+                }
+              }
+            }
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "1 when absent. A producer that re-emits a window with corrected totals raises it."
+          }
+        }
+      }
+    },
     "media.file-upload": {
       "version": "1.0.0",
       "owner": "media",
@@ -23671,6 +23815,30 @@
         "$ref": "../../common/moderation-action.v1.json"
       }
     },
+    "tools.usage.recorded": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/tools.usage.recorded.v1.json",
+        "title": "ToolsUsageRecordedPayload",
+        "description": "tools.usage.recorded v1 (roadmap WS-N task 4, OpenVibe.Tools apps/_shared/jobs/usage.js). One hour of a developer project's jobs on one Tools satellite, per capability (tools.job.create for POST /api/v1/jobs, tools.tool.run for a tool run) and job type or tool (dimension), in unit jobs: quantity counts the jobs that ended (succeeded or failed; a cancelled job is not counted), errors the failed ones, by code, with the last failures' job ids and trace ids. Counted in the transaction that records a job's end; written to the satellite's outbox after the hour closes. Only jobs of developer-app tokens (they carry a project) are counted; sandbox jobs are counted under env sandbox. The payload is common.usage-recorded@1. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor service:tools.",
+        "$ref": "../../common/usage-recorded.v1.json"
+      }
+    },
+    "events.usage.recorded": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/events.usage.recorded.v1.json",
+        "title": "EventsUsageRecordedPayload",
+        "description": "events.usage.recorded v1 (roadmap WS-N task 4, OpenVibe.Events server/usage.js). One hour of a developer project's use of OpenVibe.Events in one environment: events.app.publish in unit events (quantity counts the events stored; errors the publish requests refused with a problem, such as 429 events.quota_exceeded or 403 events.type_not_allowed) and events.app.subscribe in unit deliveries (quantity counts webhook delivery attempts to the project's subscriptions; errors the attempts without a 2xx, as events.delivery.http_<status>, events.delivery.timeout or events.delivery.failed). Counted in the transaction that stores the events or records the attempt (a refusal right after it is answered); Events stores the rollup as its own event after the hour closes, in the same transaction that marks it sent. The payload is common.usage-recorded@1. Envelope: source events, subject { type: project, id: <project_id> }, visibility internal, priority low, actor service:events.",
+        "$ref": "../../common/usage-recorded.v1.json"
+      }
+    },
     "live.stream.started": {
       "version": "1.0.0",
       "owner": "live",
@@ -26190,6 +26358,379 @@
             "type": "string",
             "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "Whose ticket it is; a client ignores any event whose subject is someone else."
+          }
+        }
+      }
+    },
+    "network.project-usage-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/project-usage-result.v1.json",
+        "title": "ProjectUsageResult",
+        "description": "network.project-usage-result@1 (roadmap WS-N task 4, ADR-014): what GET /api/v1/projects/:project/usage?days=&env= on OpenVibe.Network answers a project's owner or admin (or staff): the project's usage per day, service, capability and unit, added up from the <service>.usage.recorded rollups (common.usage-recorded@1) the owning services emit after each hour closes; the project's recorded quotas with what the current window has used; and its recent failures with their codes and trace ids. Counts only, never who did what: no subject id, address, input or content.",
+        "type": "object",
+        "required": [
+          "project_id",
+          "env",
+          "range",
+          "generated_at",
+          "last_recorded_at",
+          "freshness",
+          "totals",
+          "daily",
+          "quotas",
+          "errors"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$",
+            "maxLength": 80
+          },
+          "unit": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$"
+          },
+          "env": {
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+            "maxLength": 80
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "env": {
+            "enum": [
+              "all",
+              "sandbox",
+              "production"
+            ],
+            "description": "The environments counted (the env query parameter; all by default)."
+          },
+          "range": {
+            "type": "object",
+            "required": [
+              "days",
+              "from",
+              "to"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "days": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 90
+              },
+              "from": {
+                "type": "string",
+                "format": "date",
+                "description": "First UTC day counted."
+              },
+              "to": {
+                "type": "string",
+                "format": "date",
+                "description": "Last UTC day counted (today)."
+              }
+            }
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_recorded_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the newest rollup for this project arrived; null before the first."
+          },
+          "freshness": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "How current the numbers are, in words (rollups arrive after each hour closes)."
+          },
+          "totals": {
+            "type": "array",
+            "description": "The whole range per service, capability, unit and environment.",
+            "items": {
+              "type": "object",
+              "required": [
+                "service",
+                "capability",
+                "unit",
+                "env",
+                "quantity",
+                "errors"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "service": {
+                  "$ref": "#/$defs/service"
+                },
+                "capability": {
+                  "$ref": "#/$defs/capability"
+                },
+                "unit": {
+                  "$ref": "#/$defs/unit"
+                },
+                "env": {
+                  "$ref": "#/$defs/env"
+                },
+                "quantity": {
+                  "$ref": "#/$defs/count"
+                },
+                "errors": {
+                  "$ref": "#/$defs/count"
+                }
+              }
+            }
+          },
+          "daily": {
+            "type": "array",
+            "description": "One row per UTC day, service, capability, dimension, unit and environment that saw usage; days without any are absent. Newest day first.",
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "service",
+                "capability",
+                "dimension",
+                "unit",
+                "env",
+                "quantity",
+                "errors"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "service": {
+                  "$ref": "#/$defs/service"
+                },
+                "capability": {
+                  "$ref": "#/$defs/capability"
+                },
+                "dimension": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80
+                },
+                "unit": {
+                  "$ref": "#/$defs/unit"
+                },
+                "env": {
+                  "$ref": "#/$defs/env"
+                },
+                "quantity": {
+                  "$ref": "#/$defs/count"
+                },
+                "errors": {
+                  "$ref": "#/$defs/count"
+                }
+              }
+            }
+          },
+          "quotas": {
+            "type": "array",
+            "description": "The project's recorded quotas (GET /api/v1/projects/:project/quotas), each with what its current window has used, in every environment together. used is null where the rollups cannot tell (a minute or hour window, or a unit no service reports for that capability).",
+            "items": {
+              "type": "object",
+              "required": [
+                "capability",
+                "limit",
+                "window",
+                "unit",
+                "enforced_by",
+                "used",
+                "remaining",
+                "window_start",
+                "note"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "capability": {
+                  "$ref": "#/$defs/capability"
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "window": {
+                  "enum": [
+                    "minute",
+                    "hour",
+                    "day",
+                    "month",
+                    "total"
+                  ]
+                },
+                "unit": {
+                  "$ref": "#/$defs/unit"
+                },
+                "enforced_by": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The audience of the service that enforces it (openvibe.<owner>)."
+                },
+                "used": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "remaining": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "window_start": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time",
+                  "description": "Start of the current window counted (today, this month); null for total and when used is null."
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 300
+                }
+              }
+            }
+          },
+          "errors": {
+            "type": "object",
+            "required": [
+              "total",
+              "by_code",
+              "recent"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "total": {
+                "$ref": "#/$defs/count"
+              },
+              "by_code": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "service",
+                    "capability",
+                    "code",
+                    "count"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "service": {
+                      "$ref": "#/$defs/service"
+                    },
+                    "capability": {
+                      "$ref": "#/$defs/capability"
+                    },
+                    "code": {
+                      "$ref": "#/$defs/code"
+                    },
+                    "count": {
+                      "$ref": "#/$defs/count"
+                    }
+                  }
+                }
+              },
+              "recent": {
+                "type": "array",
+                "maxItems": 50,
+                "description": "The newest failures the rollups sampled, newest first.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "at",
+                    "env",
+                    "service",
+                    "capability",
+                    "code",
+                    "status",
+                    "trace_id",
+                    "ref"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "env": {
+                      "$ref": "#/$defs/env"
+                    },
+                    "service": {
+                      "$ref": "#/$defs/service"
+                    },
+                    "capability": {
+                      "$ref": "#/$defs/capability"
+                    },
+                    "code": {
+                      "$ref": "#/$defs/code"
+                    },
+                    "status": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 100,
+                      "maximum": 599
+                    },
+                    "trace_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "pattern": "^[0-9a-f]{32}$"
+                    },
+                    "ref": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "pattern": "^(job|evt|run|med)_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

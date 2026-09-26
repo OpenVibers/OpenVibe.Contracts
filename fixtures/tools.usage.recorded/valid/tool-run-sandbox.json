@@ -1,0 +1,12 @@
+{
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "env": "sandbox",
+  "capability": "tools.tool.run",
+  "unit": "jobs",
+  "window": "hour",
+  "window_start": "2026-09-26T08:00:00.000Z",
+  "window_end": "2026-09-26T09:00:00.000Z",
+  "quantity": 5,
+  "errors": 0,
+  "dimension": "image-resize"
+}

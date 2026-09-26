@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/usage-recorded.v1.json",
+  "title": "UsageRecorded",
+  "description": "common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.",
+  "type": "object",
+  "required": ["project_id", "env", "capability", "unit", "window", "window_start", "window_end", "quantity", "errors"],
+  "additionalProperties": false,
+  "properties": {
+    "project_id": { "type": "string", "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The developer project whose app token did the work." },
+    "env": { "enum": ["sandbox", "production"], "description": "The environment of that app token." },
+    "capability": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$",
+      "maxLength": 80,
+      "description": "The capability the usage counts against: tools.job.create, tools.tool.run, events.app.publish, events.app.subscribe."
+    },
+    "dimension": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9][a-z0-9_.:-]*$",
+      "not": { "pattern": "^(usr|gst|app|mod|svc|job|evt|req)_" },
+      "description": "Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job."
+    },
+    "unit": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$",
+      "description": "What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit."
+    },
+    "window": { "enum": ["hour", "day"], "description": "The length of the window." },
+    "window_start": { "type": "string", "format": "date-time", "description": "UTC, on the hour (midnight for a day)." },
+    "window_end": { "type": "string", "format": "date-time", "description": "window_start plus the window, exclusive." },
+    "quantity": { "type": "integer", "minimum": 0, "description": "Units used in the window, by work that succeeded and work that failed alike." },
+    "errors": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Operations in the window that failed or were refused: a job that failed, a publish refused with a problem, a webhook attempt without a 2xx. A refused operation may use no unit, so errors can exceed quantity."
+    },
+    "error_codes": {
+      "type": "object",
+      "maxProperties": 20,
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$", "maxLength": 80 },
+      "additionalProperties": { "type": "integer", "minimum": 1 },
+      "description": "The errors by problem code (at most 20 codes; the rest are only in errors)."
+    },
+    "samples": {
+      "type": "array",
+      "maxItems": 10,
+      "description": "The last failures of the window, newest first, so a developer can find them in their own logs.",
+      "items": {
+        "type": "object",
+        "required": ["at", "code"],
+        "additionalProperties": false,
+        "properties": {
+          "at": { "type": "string", "format": "date-time" },
+          "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$", "maxLength": 80 },
+          "status": { "type": "integer", "minimum": 100, "maximum": 599, "description": "The HTTP status the failure was answered with, when there was one." },
+          "trace_id": { "type": "string", "pattern": "^[0-9a-f]{32}$", "description": "The W3C trace id of the request (or event) that failed." },
+          "ref": {
+            "type": "string",
+            "pattern": "^(job|evt|run|med)_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject."
+          }
+        }
+      }
+    },
+    "revision": { "type": "integer", "minimum": 1, "description": "1 when absent. A producer that re-emits a window with corrected totals raises it." }
+  }
+}
