@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/follow-list-result.v1.json",
+  "title": "NetworkFollowListResult",
+  "description": "network.follow-list-result@1 (ADR-030): a page of follows on OpenVibe.Network, newest first. GET /api/v1/me/follows (what the caller follows), GET /api/v1/follows/:type/:target/followers (who follows a target: the target's owner, or a service with network.follows.read). Lists are never public; counts are.",
+  "type": "object",
+  "required": ["items", "next_cursor"],
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": ["follower", "target_type", "target_id", "created_at"],
+        "additionalProperties": false,
+        "properties": {
+          "follower": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+          "target_type": { "enum": ["channel"] },
+          "target_id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+          "notify_email": { "type": "boolean" },
+          "notify_push": { "type": "boolean" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "next_cursor": { "type": ["string", "null"], "maxLength": 200 }
+  }
+}

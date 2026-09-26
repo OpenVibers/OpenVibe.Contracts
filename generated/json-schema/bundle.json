@@ -25347,6 +25347,110 @@
         }
       }
     },
+    "network.follow.created": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.follow.created.v1.json",
+        "title": "NetworkFollowCreatedPayload",
+        "description": "network.follow.created v1 (OpenVibe.Network; roadmap WS-E task 4, ADR-030). A person followed something: today a Live channel, whose target id is the channel owner's subject. Follows are the network's, kept by Network and keyed by subjects; products such as Live keep a projection they can rebuild. Written to Network's outbox in the transaction that stores the follow. A consumer applies the latest revision per (follower, target) and ignores an older one. Following again what is already followed changes nothing and sends nothing. Envelope: subject { type: user, id: <follower> }, visibility subject, actor the follower.",
+        "type": "object",
+        "required": [
+          "follower",
+          "target_type",
+          "target_id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "follower": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Who follows."
+          },
+          "target_type": {
+            "enum": [
+              "channel"
+            ],
+            "description": "What kind of thing is followed. channel: a Live channel, named by its owner's subject."
+          },
+          "target_id": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The followed target: for a channel, the channel owner's subject."
+          },
+          "notify_email": {
+            "type": "boolean"
+          },
+          "notify_push": {
+            "type": "boolean"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Grows with every change of this pair."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.follow.deleted": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.follow.deleted.v1.json",
+        "title": "NetworkFollowDeletedPayload",
+        "description": "network.follow.deleted v1 (OpenVibe.Network; roadmap WS-E task 4, ADR-030). A person stopped following something (or the follow went with an account). Written to Network's outbox in the transaction that removes the follow; unfollowing what is not followed sends nothing. A consumer applies the latest revision per (follower, target). Envelope: subject { type: user, id: <follower> }, visibility subject, actor the follower (system:network for an account removal).",
+        "type": "object",
+        "required": [
+          "follower",
+          "target_type",
+          "target_id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "follower": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "target_type": {
+            "enum": [
+              "channel"
+            ]
+          },
+          "target_id": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "reason": {
+            "enum": [
+              "unfollowed",
+              "account_removed",
+              "target_removed"
+            ],
+            "description": "Why the follow went (default unfollowed)."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "network.block.changed": {
       "version": "1.0.0",
       "owner": "network",
@@ -26187,6 +26291,119 @@
             }
           }
         ]
+      }
+    },
+    "network.follow-list-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/follow-list-result.v1.json",
+        "title": "NetworkFollowListResult",
+        "description": "network.follow-list-result@1 (ADR-030): a page of follows on OpenVibe.Network, newest first. GET /api/v1/me/follows (what the caller follows), GET /api/v1/follows/:type/:target/followers (who follows a target: the target's owner, or a service with network.follows.read). Lists are never public; counts are.",
+        "type": "object",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "type": "object",
+              "required": [
+                "follower",
+                "target_type",
+                "target_id",
+                "created_at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "follower": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "target_type": {
+                  "enum": [
+                    "channel"
+                  ]
+                },
+                "target_id": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "notify_email": {
+                  "type": "boolean"
+                },
+                "notify_push": {
+                  "type": "boolean"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "network.follow-status-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/follow-status-result.v1.json",
+        "title": "NetworkFollowStatusResult",
+        "description": "network.follow-status-result@1 (ADR-030): GET /api/v1/follows/:type/:target on OpenVibe.Network: the public follower count of a target, and, for a signed-in caller, whether they follow it and how they are notified. PUT and DELETE /api/v1/me/follows/:type/:target answer the same document after the change (idempotent: repeating either changes nothing).",
+        "type": "object",
+        "required": [
+          "target_type",
+          "target_id",
+          "followers"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "target_type": {
+            "enum": [
+              "channel"
+            ]
+          },
+          "target_id": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "followers": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "following": {
+            "type": "boolean",
+            "description": "Present for a signed-in caller."
+          },
+          "notify_email": {
+            "type": "boolean"
+          },
+          "notify_push": {
+            "type": "boolean"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the caller started following."
+          }
+        }
       }
     },
     "network.operator-alerts-request": {

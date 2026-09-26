@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/follow-status-result.v1.json",
+  "title": "NetworkFollowStatusResult",
+  "description": "network.follow-status-result@1 (ADR-030): GET /api/v1/follows/:type/:target on OpenVibe.Network: the public follower count of a target, and, for a signed-in caller, whether they follow it and how they are notified. PUT and DELETE /api/v1/me/follows/:type/:target answer the same document after the change (idempotent: repeating either changes nothing).",
+  "type": "object",
+  "required": ["target_type", "target_id", "followers"],
+  "additionalProperties": false,
+  "properties": {
+    "target_type": { "enum": ["channel"] },
+    "target_id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "followers": { "type": "integer", "minimum": 0 },
+    "following": { "type": "boolean", "description": "Present for a signed-in caller." },
+    "notify_email": { "type": "boolean" },
+    "notify_push": { "type": "boolean" },
+    "since": { "type": "string", "format": "date-time", "description": "When the caller started following." }
+  }
+}

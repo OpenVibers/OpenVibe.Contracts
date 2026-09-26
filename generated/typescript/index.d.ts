@@ -28611,6 +28611,48 @@ export interface NetworkPrincipalGrantChangedPayload {
   actor_subject?: string | null;
 }
 
+/** network.follow.created@1.0.0 (owner: network) */
+/**
+ * network.follow.created v1 (OpenVibe.Network; roadmap WS-E task 4, ADR-030). A person followed something: today a Live channel, whose target id is the channel owner's subject. Follows are the network's, kept by Network and keyed by subjects; products such as Live keep a projection they can rebuild. Written to Network's outbox in the transaction that stores the follow. A consumer applies the latest revision per (follower, target) and ignores an older one. Following again what is already followed changes nothing and sends nothing. Envelope: subject { type: user, id: <follower> }, visibility subject, actor the follower.
+ */
+export interface NetworkFollowCreatedPayload {
+  /**
+   * Who follows.
+   */
+  follower: string;
+  /**
+   * What kind of thing is followed. channel: a Live channel, named by its owner's subject.
+   */
+  target_type: "channel";
+  /**
+   * The followed target: for a channel, the channel owner's subject.
+   */
+  target_id: string;
+  notify_email?: boolean;
+  notify_push?: boolean;
+  /**
+   * Grows with every change of this pair.
+   */
+  revision: number;
+  at?: string;
+}
+
+/** network.follow.deleted@1.0.0 (owner: network) */
+/**
+ * network.follow.deleted v1 (OpenVibe.Network; roadmap WS-E task 4, ADR-030). A person stopped following something (or the follow went with an account). Written to Network's outbox in the transaction that removes the follow; unfollowing what is not followed sends nothing. A consumer applies the latest revision per (follower, target). Envelope: subject { type: user, id: <follower> }, visibility subject, actor the follower (system:network for an account removal).
+ */
+export interface NetworkFollowDeletedPayload {
+  follower: string;
+  target_type: "channel";
+  target_id: string;
+  /**
+   * Why the follow went (default unfollowed).
+   */
+  reason?: "unfollowed" | "account_removed" | "target_removed";
+  revision: number;
+  at?: string;
+}
+
 /** network.block.changed@1.0.0 (owner: network) */
 /**
  * network.block.changed v1 (OpenVibe.Network; roadmap WS-E task 5). A person blocked or unblocked someone. Blocks are the network's: kept by Network, keyed by subjects, and honoured by every product — Chat (no DM, no mention notification from someone who blocked you), Community (no reply to their threads or comments) and notifications (none from a person the recipient blocked). Written to Network's outbox in the transaction that changes the block. Consumers keep a projection and apply the latest `revision` per (blocker, blocked); a service may also read the current list at GET /internal/blocks (network.blocks.read). Envelope: subject { type: user, id: <blocker> }, visibility internal, actor the blocker.
@@ -29002,6 +29044,45 @@ export type NetworkNotificationPushResult =
       sent: number;
       total: number;
     };
+
+/** network.follow-list-result@1.0.0 (owner: network) */
+/**
+ * network.follow-list-result@1 (ADR-030): a page of follows on OpenVibe.Network, newest first. GET /api/v1/me/follows (what the caller follows), GET /api/v1/follows/:type/:target/followers (who follows a target: the target's owner, or a service with network.follows.read). Lists are never public; counts are.
+ */
+export interface NetworkFollowListResult {
+  /**
+   * @maxItems 500
+   */
+  items: {
+    follower: string;
+    target_type: "channel";
+    target_id: string;
+    notify_email?: boolean;
+    notify_push?: boolean;
+    created_at: string;
+  }[];
+  next_cursor: string | null;
+}
+
+/** network.follow-status-result@1.0.0 (owner: network) */
+/**
+ * network.follow-status-result@1 (ADR-030): GET /api/v1/follows/:type/:target on OpenVibe.Network: the public follower count of a target, and, for a signed-in caller, whether they follow it and how they are notified. PUT and DELETE /api/v1/me/follows/:type/:target answer the same document after the change (idempotent: repeating either changes nothing).
+ */
+export interface NetworkFollowStatusResult {
+  target_type: "channel";
+  target_id: string;
+  followers: number;
+  /**
+   * Present for a signed-in caller.
+   */
+  following?: boolean;
+  notify_email?: boolean;
+  notify_push?: boolean;
+  /**
+   * When the caller started following.
+   */
+  since?: string;
+}
 
 /** network.operator-alerts-request@1.0.0 (owner: network) */
 /**

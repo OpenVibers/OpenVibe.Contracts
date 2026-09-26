@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.follow.deleted.v1.json",
+  "title": "NetworkFollowDeletedPayload",
+  "description": "network.follow.deleted v1 (OpenVibe.Network; roadmap WS-E task 4, ADR-030). A person stopped following something (or the follow went with an account). Written to Network's outbox in the transaction that removes the follow; unfollowing what is not followed sends nothing. A consumer applies the latest revision per (follower, target). Envelope: subject { type: user, id: <follower> }, visibility subject, actor the follower (system:network for an account removal).",
+  "type": "object",
+  "required": ["follower", "target_type", "target_id", "revision"],
+  "additionalProperties": false,
+  "properties": {
+    "follower": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "target_type": { "enum": ["channel"] },
+    "target_id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "reason": { "enum": ["unfollowed", "account_removed", "target_removed"], "description": "Why the follow went (default unfollowed)." },
+    "revision": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

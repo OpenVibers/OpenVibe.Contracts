@@ -2407,6 +2407,26 @@
       "status": "active"
     },
     {
+      "id": "network.follow.created",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.follow.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-030"
+    },
+    {
+      "id": "network.follow.deleted",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.follow.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-030"
+    },
+    {
       "id": "network.block.changed",
       "version": "1.0.0",
       "owner": "network",
@@ -2514,6 +2534,26 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.follow-list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/follow-list-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-030"
+    },
+    {
+      "id": "network.follow-status-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/follow-status-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-030"
     },
     {
       "id": "network.operator-alerts-request",

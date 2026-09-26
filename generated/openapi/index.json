@@ -96,8 +96,8 @@
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 12,
-      "capabilities": 11
+      "operations": 13,
+      "capabilities": 12
     },
     {
       "service": "news",

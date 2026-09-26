@@ -1,0 +1,15 @@
+{
+  "id": "network.follows.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read who follows a target (subjects only), as an owning service: go-live and other notifications, and product projections that rebuild from Network (ADR-030). Counts are public without it. Never grantable to apps.",
+  "permissions": ["follows:read"],
+  "resourceConstraints": [],
+  "quotaClass": "follows-read",
+  "events": ["network.follow.created", "network.follow.deleted"],
+  "implementedBy": ["GET /api/v1/follows/:type/:target/followers"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.follow-list-result@1"
+}

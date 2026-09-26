@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.65.0 — 2026-09-26
+
+**The follow graph on Network** (roadmap WS-E task 4, ADR-030).
+- **New event types** `network.follow.created` and `network.follow.deleted` (subject visibility for the follower). Their payloads carry `follower`, `target_type` (`channel` today: a Live channel named by its owner's subject), `target_id`, the notify flags, a per-pair `revision`, and for a delete a `reason`. Products keep projections they can rebuild.
+- **New schemas** `network.follow-status-result@1` (the public follower count, plus the caller's own follow when signed in) and `network.follow-list-result@1` (a page of follows, never public).
+- **New capability** `network.follows.read` (first-party, never for apps): who follows a target, for notifications and projections.
+
 ## 0.64.0 — 2026-09-26
 
 **Wiki VIP spaces and pages** (roadmap WS-K task 8).
