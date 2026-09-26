@@ -4,7 +4,7 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.59.0 — 2026-09-26
 
 **Media namespaces and grants** (roadmap WS-G task 2). Media's grants are five verbs, each one capability checked per namespace: read (`media.object.read`), list, write (`media.object.upload`), delete and transform (`media.derivative.create`).
 - **New capabilities**, public and active, namespace-scoped: `media.object.list` (object, job, namespace and v1 file lists; answers `media.object-list@1`) and `media.object.delete` (soft delete, restore, v1 file delete; answers `media.object@1`, announces `media.object.deleted`). The Media manifest lists them. Media keeps accepting the older ids for them: `media.object.read` lists and `media.object.upload` deletes and transforms, unless a namespace's policy is `strict_verbs`.
