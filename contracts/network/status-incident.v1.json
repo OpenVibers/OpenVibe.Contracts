@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/status-incident.v1.json",
+  "title": "NetworkStatusIncident",
+  "description": "network.status-incident@1 (roadmap WS-N task 12): one incident or maintenance window on openvibe.network/status, public. An incident moves investigating → identified → monitoring → resolved; a maintenance window scheduled → in_progress → completed. Each change adds an update with its message; the newest state is the incident's. Services are registry ids. Messages are plain text written for people (no internal hostnames, secrets or personal data).",
+  "type": "object",
+  "required": ["id", "kind", "title", "state", "services", "starts_at", "updates", "created_at", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^inc_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "kind": { "enum": ["incident", "maintenance"] },
+    "title": { "type": "string", "minLength": 3, "maxLength": 140 },
+    "severity": { "enum": ["minor", "major", "critical"], "description": "Incidents only." },
+    "state": { "enum": ["investigating", "identified", "monitoring", "resolved", "scheduled", "in_progress", "completed"] },
+    "services": { "type": "array", "maxItems": 40, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" } },
+    "starts_at": { "type": "string", "format": "date-time" },
+    "ends_at": { "type": ["string", "null"], "format": "date-time", "description": "When it ended, or a maintenance window's planned end." },
+    "updates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["at", "state", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "at": { "type": "string", "format": "date-time" },
+          "state": { "enum": ["investigating", "identified", "monitoring", "resolved", "scheduled", "in_progress", "completed"] },
+          "message": { "type": "string", "minLength": 1, "maxLength": 2000 }
+        }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

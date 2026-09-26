@@ -2594,6 +2594,33 @@
       "adr": "ADR-014"
     },
     {
+      "id": "network.status-incident",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/status-incident.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.status-incident-list",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/status-incident-list.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.status-incident-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/status-incident-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.staff-list-result",
       "version": "1.0.0",
       "owner": "network",

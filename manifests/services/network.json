@@ -46,7 +46,8 @@
     "network.operator.alert",
     "network.project.manage",
     "network.project.read",
-    "network.staff.read"
+    "network.staff.read",
+    "network.status.incident"
   ],
   "eventsProduced": [
     "network.app.created",

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/status-incident-request.v1.json",
+  "title": "NetworkStatusIncidentRequest",
+  "description": "network.status-incident-request@1 (capability network.status.incident; staff admins or the Host principal). POST /api/v1/status/incidents opens one: { kind, title, severity? (incidents), services, message, starts_at? (default now), ends_at? (a maintenance window's planned end), state? (default investigating, or scheduled for maintenance) }. POST /api/v1/status/incidents/:id/updates adds an update: { state, message, ends_at? }. A resolved incident or a completed window is closed; updates to it are refused.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["kind", "title", "services", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["incident", "maintenance"] },
+        "title": { "type": "string", "minLength": 3, "maxLength": 140 },
+        "severity": { "enum": ["minor", "major", "critical"] },
+        "state": { "enum": ["investigating", "identified", "monitoring", "scheduled", "in_progress"] },
+        "services": { "type": "array", "minItems": 1, "maxItems": 40, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" } },
+        "message": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "starts_at": { "type": "string", "format": "date-time" },
+        "ends_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["state", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["investigating", "identified", "monitoring", "resolved", "scheduled", "in_progress", "completed"] },
+        "message": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "ends_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  ]
+}

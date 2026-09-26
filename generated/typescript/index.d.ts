@@ -29383,6 +29383,82 @@ export interface ProjectUsageResult {
   };
 }
 
+/** network.status-incident@1.0.0 (owner: network) */
+/**
+ * network.status-incident@1 (roadmap WS-N task 12): one incident or maintenance window on openvibe.network/status, public. An incident moves investigating → identified → monitoring → resolved; a maintenance window scheduled → in_progress → completed. Each change adds an update with its message; the newest state is the incident's. Services are registry ids. Messages are plain text written for people (no internal hostnames, secrets or personal data).
+ */
+export interface NetworkStatusIncident {
+  id: string;
+  kind: "incident" | "maintenance";
+  title: string;
+  /**
+   * Incidents only.
+   */
+  severity?: "minor" | "major" | "critical";
+  state: "investigating" | "identified" | "monitoring" | "resolved" | "scheduled" | "in_progress" | "completed";
+  /**
+   * @maxItems 40
+   */
+  services: string[];
+  starts_at: string;
+  /**
+   * When it ended, or a maintenance window's planned end.
+   */
+  ends_at?: string | null;
+  /**
+   * @minItems 1
+   * @maxItems 100
+   */
+  updates: [
+    {
+      at: string;
+      state: "investigating" | "identified" | "monitoring" | "resolved" | "scheduled" | "in_progress" | "completed";
+      message: string;
+    },
+    ...{
+      at: string;
+      state: "investigating" | "identified" | "monitoring" | "resolved" | "scheduled" | "in_progress" | "completed";
+      message: string;
+    }[]
+  ];
+  created_at: string;
+  updated_at: string;
+}
+
+/** network.status-incident-list@1.0.0 (owner: network) */
+/**
+ * network.status-incident-list@1: GET /api/v1/status/incidents on OpenVibe.Network (public): open incidents and current or upcoming maintenance windows (`active`), and those closed in the last 30 days (`recent`), newest first.
+ */
+export interface NetworkStatusIncidentList {
+  active: NetworkStatusIncident[];
+  recent: NetworkStatusIncident[];
+}
+
+/** network.status-incident-request@1.0.0 (owner: network) */
+/**
+ * network.status-incident-request@1 (capability network.status.incident; staff admins or the Host principal). POST /api/v1/status/incidents opens one: { kind, title, severity? (incidents), services, message, starts_at? (default now), ends_at? (a maintenance window's planned end), state? (default investigating, or scheduled for maintenance) }. POST /api/v1/status/incidents/:id/updates adds an update: { state, message, ends_at? }. A resolved incident or a completed window is closed; updates to it are refused.
+ */
+export type NetworkStatusIncidentRequest =
+  | {
+      kind: "incident" | "maintenance";
+      title: string;
+      severity?: "minor" | "major" | "critical";
+      state?: "investigating" | "identified" | "monitoring" | "scheduled" | "in_progress";
+      /**
+       * @minItems 1
+       * @maxItems 40
+       */
+      services: [string, ...string[]];
+      message: string;
+      starts_at?: string;
+      ends_at?: string;
+    }
+  | {
+      state: "investigating" | "identified" | "monitoring" | "resolved" | "scheduled" | "in_progress" | "completed";
+      message: string;
+      ends_at?: string;
+    };
+
 /** network.staff-list-result@1.0.0 (owner: network) */
 /**
  * network.staff-list-result@1: the answer of network.staff.read on OpenVibe.Network. GET /api/v1/staff/moderators[?service=chat|live|community|pastes|calls] (a service token holding network.staff.read, or a signed-in person holding staff.moderation.logs) → { service, staff }: the network's global moderators, admins and the owner who are not banned, with the staff capabilities their role holds in the contracts staff map; ?service keeps those holding the capability that moderates that service (another service name keeps those holding staff.content.moderate; an invalid value is ignored and answered as null). Answered with Cache-Control: private, no-store; a person without staff.moderation.logs gets 403 { error: forbidden }.

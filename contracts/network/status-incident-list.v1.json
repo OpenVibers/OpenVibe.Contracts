@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/status-incident-list.v1.json",
+  "title": "NetworkStatusIncidentList",
+  "description": "network.status-incident-list@1: GET /api/v1/status/incidents on OpenVibe.Network (public): open incidents and current or upcoming maintenance windows (`active`), and those closed in the last 30 days (`recent`), newest first.",
+  "type": "object",
+  "required": ["active", "recent"],
+  "additionalProperties": false,
+  "properties": {
+    "active": { "type": "array", "items": { "$ref": "./status-incident.v1.json" } },
+    "recent": { "type": "array", "items": { "$ref": "./status-incident.v1.json" } }
+  }
+}

@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.66.0 — 2026-09-26
+
+**Incidents and maintenance on the status page** (roadmap WS-N task 12).
+- **New schemas** `network.status-incident@1` (an incident or maintenance window: kind, title, severity, state, services, start and end, updates), `network.status-incident-list@1` (public: `active` and the last 30 days' `recent`) and `network.status-incident-request@1` (open one, or add an update).
+- **New capability** `network.status.incident` (internal, never for apps). It covers POST /api/v1/status/incidents and /:id/updates, for staff admins and the Host principal (`ovhost incident`, `ovhost maintenance`).
+- ADR-032 (containers for platform services) is accepted: services stay systemd units.
+
 ## 0.65.0 — 2026-09-26
 
 **The follow graph on Network** (roadmap WS-E task 4, ADR-030).

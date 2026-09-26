@@ -1,0 +1,15 @@
+{
+  "id": "network.status.incident",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Open and update incidents and maintenance windows on the public status page (openvibe.network/status): the operator's tooling (ovhost incident / maintenance, as the Host principal) and staff admins. Never grantable to apps.",
+  "permissions": ["status:write"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": ["POST /api/v1/status/incidents", "POST /api/v1/status/incidents/:id/updates"],
+  "inputSchema": "network.status-incident-request@1",
+  "outputSchema": "network.status-incident@1"
+}
