@@ -51,3 +51,9 @@ description = "The made-up GitHub token in the network.github-token-result fixtu
 condition = "AND"
 paths = ['''^fixtures/network\.github-token-result/(valid/env|invalid/unknown-source)\.json$''']
 regexes = ['''^ghp_0123456789[A-Za-z0-9]*$''']
+
+[[allowlists]]
+description = "Sample realtime tickets in network.realtime-ticket-result fixtures: an empty payload and the literal signature \"signature\" (base64 c2lnbmF0dXJl), a shape example, not a token"
+condition = "AND"
+paths = ['''^fixtures/network\.realtime\-ticket\-result/(valid|invalid)/[a-z-]+\.json$''']
+regexes = ['''^eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9\.eyJ0eXAiOiJyZWFsdGltZSJ9\.c2lnbmF0dXJl$''']
