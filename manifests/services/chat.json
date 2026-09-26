@@ -20,7 +20,9 @@
     "chat.message.created",
     "chat.message.deleted",
     "chat.dm.created",
-    "chat.moderation.action"
+    "chat.moderation.action",
+    "chat.room.message.created",
+    "chat.room.message.deleted"
   ],
   "eventsConsumed": [
     "network.block.changed",

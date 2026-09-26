@@ -6487,6 +6487,49 @@ export interface ChatMessageDeletedPayload {
   redacts: RedactionDirective;
 }
 
+/** chat.room.message.created@1.0.0 (owner: chat) */
+/**
+ * chat.room.message.created v1 (OpenVibe.Chat server/rooms/rooms.js post, WS-I task 9). A message was posted in a PUBLIC chat room, so it reaches the realtime plane (browsers subscribed to chat.room.*). Private rooms and DMs never emit it: they stay on Chat's own WebSocket. Envelope: subject { type: chat_room_message, id }, visibility public, actor the author (user). Written in the transaction that stores the message; chat.room.message.deleted redacts it.
+ */
+export interface ChatRoomMessageCreatedPayload {
+  message_id: number;
+  room: {
+    /**
+     * The room's page is https://openvibe.chat/rooms/<slug>.
+     */
+    slug: string;
+    name?: string;
+  };
+  /**
+   * The author's usr_ subject, when they have one.
+   */
+  user_subject?: string | null;
+  username?: string | null;
+  display_name?: string | null;
+  /**
+   * The message as shown in the room (after the word filter).
+   */
+  text: string;
+  created_at: string;
+}
+
+/** chat.room.message.deleted@1.0.0 (owner: chat) */
+/**
+ * chat.room.message.deleted v1 (OpenVibe.Chat server/rooms/rooms.js, WS-I task 9). Messages of a public room were deleted (by the author, a room mod or chat staff), or the room turned private or was archived, so what it had published must stop being replayable. Envelope: subject { type: chat_room_message, id: <first id> }, visibility public, actor service:chat. Carries ids only; payload.redacts makes OpenVibe.Events tombstone the chat.room.message.created of each id.
+ */
+export interface ChatRoomMessageDeletedPayload {
+  /**
+   * The room's slug.
+   */
+  room?: string;
+  /**
+   * @minItems 1
+   * @maxItems 500
+   */
+  message_ids: [number, ...number[]];
+  redacts: RedactionDirective;
+}
+
 /** sources.item.created@1.0.0 (owner: sources) */
 /**
  * sources.item.created v1 (OpenVibe.Sources server/items.js ingest → itemEvent). A successful fetch, or a manual entry, produced an item Sources had not seen (revision 1). A summary only: consumers fetch the full sources.item@1 with sources.item.read. Envelope: subject { type: item, id: <item_id>, revision }, visibility internal, priority important, actor service:sources.

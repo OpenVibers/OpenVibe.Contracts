@@ -454,6 +454,26 @@
       "adr": "ADR-026"
     },
     {
+      "id": "chat.room.message.created",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "events/payloads/chat.room.message.created.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-005"
+    },
+    {
+      "id": "chat.room.message.deleted",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "events/payloads/chat.room.message.deleted.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-026"
+    },
+    {
       "id": "sources.item.created",
       "version": "1.0.0",
       "owner": "sources",

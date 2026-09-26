@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.57.0 — 2026-09-26
+
+**Chat rooms on the realtime plane** (roadmap WS-I task 9). Two event types OpenVibe.Chat produces, with payload contracts:
+- `chat.room.message.created` — a message in a **public** room, visibility public, so browsers subscribed to `chat.room.*` get it over Events realtime (replay capped by the public window). Private rooms and DMs never emit it; they stay on Chat's WebSocket.
+- `chat.room.message.deleted` — ids only, with `redacts` (subject_type `chat_room_message`), when a public room's messages are deleted or the room turns private or is archived, so the text stops being replayable.
+
 ## 0.56.1 — 2026-09-26
 
 **ADR-005 amendment 1: presence** (roadmap WS-F task 2). Presence is ephemeral and lives in Chat's delivery plane: room user lists over Chat's WebSocket, and `GET /api/chat/online?users=` for other products; no Events topic carries it, and people hidden by `chat.presence_prefs` (or whose preference is unknown) read as offline. `test/presence-policy.test.js`: no presence event type in any manifest. Documentation and a test; no schema change.

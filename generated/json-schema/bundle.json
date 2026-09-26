@@ -5245,6 +5245,118 @@
         }
       }
     },
+    "chat.room.message.created": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/chat.room.message.created.v1.json",
+        "title": "ChatRoomMessageCreatedPayload",
+        "description": "chat.room.message.created v1 (OpenVibe.Chat server/rooms/rooms.js post, WS-I task 9). A message was posted in a PUBLIC chat room, so it reaches the realtime plane (browsers subscribed to chat.room.*). Private rooms and DMs never emit it: they stay on Chat's own WebSocket. Envelope: subject { type: chat_room_message, id }, visibility public, actor the author (user). Written in the transaction that stores the message; chat.room.message.deleted redacts it.",
+        "type": "object",
+        "required": [
+          "message_id",
+          "room",
+          "text",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "message_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "room": {
+            "type": "object",
+            "required": [
+              "slug"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "slug": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "The room's page is https://openvibe.chat/rooms/<slug>."
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 120
+              }
+            }
+          },
+          "user_subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40,
+            "description": "The author's usr_ subject, when they have one."
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "The message as shown in the room (after the word filter)."
+          },
+          "created_at": {
+            "type": "string",
+            "maxLength": 40
+          }
+        }
+      }
+    },
+    "chat.room.message.deleted": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/chat.room.message.deleted.v1.json",
+        "title": "ChatRoomMessageDeletedPayload",
+        "description": "chat.room.message.deleted v1 (OpenVibe.Chat server/rooms/rooms.js, WS-I task 9). Messages of a public room were deleted (by the author, a room mod or chat staff), or the room turned private or was archived, so what it had published must stop being replayable. Envelope: subject { type: chat_room_message, id: <first id> }, visibility public, actor service:chat. Carries ids only; payload.redacts makes OpenVibe.Events tombstone the chat.room.message.created of each id.",
+        "type": "object",
+        "required": [
+          "message_ids",
+          "redacts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "room": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "The room's slug."
+          },
+          "message_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 500,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "redacts": {
+            "$ref": "../redaction-directive.v1.json",
+            "description": "{ subject_type: chat_room_message, subject_ids: message_ids as strings }."
+          }
+        }
+      }
+    },
     "sources.item.created": {
       "version": "1.0.0",
       "owner": "sources",
