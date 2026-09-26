@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.56.1 — 2026-09-26
+
+**ADR-005 amendment 1: presence** (roadmap WS-F task 2). Presence is ephemeral and lives in Chat's delivery plane: room user lists over Chat's WebSocket, and `GET /api/chat/online?users=` for other products; no Events topic carries it, and people hidden by `chat.presence_prefs` (or whose preference is unknown) read as offline. `test/presence-policy.test.js`: no presence event type in any manifest. Documentation and a test; no schema change.
+
 ## 0.56.0 — 2026-09-26
 
 **Loyalty summary and the loyalty-is-never-money test** (roadmap WS-K task 9).

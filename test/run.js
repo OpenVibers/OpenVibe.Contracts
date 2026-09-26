@@ -729,6 +729,8 @@ execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js
 execFileSync(process.execPath, [path.join(__dirname, 'openapi.test.js')], { stdio: 'inherit' });
 // Loyalty is never money (ADR-012, WS-K task 9).
 execFileSync(process.execPath, [path.join(__dirname, 'loyalty-policy.test.js')], { stdio: 'inherit' });
+// Presence is ephemeral, in Chat's delivery plane; no Events topic (ADR-005 amendment 1).
+execFileSync(process.execPath, [path.join(__dirname, 'presence-policy.test.js')], { stdio: 'inherit' });
 
 // ── Generated output and compatibility gate ──────────────────────────────
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });
