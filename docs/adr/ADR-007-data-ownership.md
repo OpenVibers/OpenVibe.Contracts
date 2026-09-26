@@ -71,3 +71,31 @@ transaction inside one `better-sqlite3` transaction together with its funds chec
   journal still sums to zero.
 - A lag test: a replica read is never used for a balance, entitlement or grant decision.
 - Redis flushed mid-run changes no money or account answer.
+
+## Amendment 2026-09-26: persistence reviewed per service (WS-S task 1)
+
+Every service stays on SQLite (WAL mode, one process writing, one host). This is the reviewed state, not
+a default nobody checked. The three candidates the roadmap names were measured on production on
+2026-09-26:
+
+| Service | Database | Load measured | Stance |
+|---|---|---|---|
+| Events | 17 MB, 11.9 k events | 6.5 k events on the busiest day (2026-09-25); the busiest minute 1,816 (a backfill burst, about 30 a second) | SQLite |
+| Chat | 25 MB, 70.9 k messages | tens of messages a day this week; the busiest minute 6 | SQLite |
+| Billing | 0.7 MB, 996 ledger entries | not yet the ledger (`BILLING_AUTHORITY=live`); every money path runs in one `BEGIN IMMEDIATE` transaction, serialised by SQLite's single writer | SQLite |
+
+SQLite in WAL mode sustains thousands of small transactions a second on this host, two orders of
+magnitude above the busiest minute, so no service has a load reason to move. A single writer also
+makes Billing's money paths serialisable by construction, which PostgreSQL would have to reach with
+SERIALIZABLE and row locks (Amendment 2026-09-24).
+
+**What moves a service** (any one of these, measured, not forecast):
+- a second host or a second writing process for the same data;
+- sustained writes over 200 a second for ten minutes, or p99 write latency over 50 ms at the database;
+- a database over 20 GB, or a nightly backup taking over 15 minutes;
+- for Billing, becoming the ledger (`BILLING_AUTHORITY=billing`) with more than one writer.
+
+The move then follows the Decision and Amendment 2026-09-24: rehearsed, expand/migrate/contract,
+with `/ready` reporting the store the process actually uses, and never a PostgreSQL runtime
+reported from a loader or a config value. The numbers are rechecked at every WS-S review, or when
+a service's `/ready` or the release-health view shows write latency rising.

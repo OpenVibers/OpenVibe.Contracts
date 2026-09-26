@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased
+
+- ADR-007 amendment 2026-09-26: SQLite recorded as the reviewed store for every service, with Events', Chat's and Billing's measured production load and the thresholds that would move a service to PostgreSQL (WS-S task 1). Documentation only.
+
 ## 0.60.0 — 2026-09-26
 
 **Release manifest 1.2.0** (`registry.release-manifest`, roadmap WS-P task 7, ADR-016 amendment 2). Three optional fields:
