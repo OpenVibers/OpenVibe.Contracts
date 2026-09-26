@@ -41889,63 +41889,67 @@ export type HostSiteManageRequest =
 
 /** host.deploy.activated@1.0.0 (owner: host) */
 /**
- * host.deploy.activated v1. A deploy became the one that serves. Two producers inside OpenVibe.Host, told apart by the envelope subject and by the payload's fields (exactly one shape matches). (1) A network service's release went live (roadmap WS-P task 9, ADR-016): the operator plane, lib/announce.js, after `ovhost deploy|rollback <service>` went live and for `ovhost announce <service>` (services deployed by their own scripts: Live, Tools, Sites, OpenRe, Games). Envelope: subject { type: release, id: <service>:<release> }, visibility public (signed-out browsers get it over Events realtime), priority low, actor service:host. Open tabs whose /release.json names `service` check it when `release` is not the one they run; the event carries identifiers only, never what changed. At most one per service and release unless an operator forces it; a retry reuses the event_id. (2) A Stage B tenant site's active deploy changed: server/domain/deploys.js, in the transaction that moves the pointer. Envelope: subject { type: deploy, id: <deploy id> }, visibility internal (never streamed to browsers), actor the person or app that switched it.
+ * host.deploy.activated v1 (OpenVibe.Host server/domain/deploys.js switchPointer, Stage B tenant hosting). A tenant site's active deploy changed, written into Host's event outbox in the transaction that moves the pointer (activate or rollback). Envelope: subject { type: deploy, id: <deploy id> }, visibility internal, priority low, actor the person or app that switched it. A network service's release going live is host.release.published, not this.
  */
-export type HostDeployActivatedPayload =
-  | {
-      /**
-       * The service id the pages' /release.json names (registry.release-manifest@1 `service`): live, tools, or a Sites placeholder's id such as news.
-       */
-      service: string;
-      /**
-       * The release id that service's /release.json reports now (registry.release-manifest@1 `release`). A client compares it with the release it runs, treating a hex prefix of the other as the same release.
-       */
-      release: string;
-      /**
-       * The deployed commit when it is known and `release` is its prefix, or what the operator passed; null otherwise (a Sites placeholder's release is a page hash).
-       */
-      commit: string | null;
-      /**
-       * The public origin the release serves (https://openvibe.live): the inventory's origin or the service manifest's publicOrigin; null when neither is known.
-       */
-      origin: string | null;
-      /**
-       * When Host announced it (UTC); after `ovhost deploy`, just after the service answered ready.
-       */
-      deployed_at: string;
-      /**
-       * Optional. The component versions /release.json reported (registry.release-manifest 1.1.0 `components`, kind and version only).
-       */
-      components?: {
-        [k: string]:
-          | {
-              kind: "style" | "content" | "script" | "server";
-              version: string;
-            }
-          | undefined;
-      };
-      /**
-       * Present after `ovhost rollback`: the release is an older one.
-       */
-      rollback?: true;
-    }
-  | {
-      project_id: string;
-      site_id: string;
-      /**
-       * The site's name (<site>.openvibe.host).
-       */
-      site: string;
-      deploy_id: string;
-      /**
-       * The deploy that served before; null for the site's first activation.
-       */
-      previous_deploy_id: string | null;
-      /**
-       * true when the switch was a rollback.
-       */
-      rollback: boolean;
-    };
+export interface HostDeployActivatedPayload {
+  project_id: string;
+  site_id: string;
+  /**
+   * The site's name (<site>.openvibe.host).
+   */
+  site: string;
+  deploy_id: string;
+  /**
+   * The deploy that served before; null for the site's first activation.
+   */
+  previous_deploy_id: string | null;
+  /**
+   * true when the switch was a rollback.
+   */
+  rollback: boolean;
+}
+
+/** host.release.published@1.0.0 (owner: host) */
+/**
+ * host.release.published v1 (roadmap WS-P task 9, ADR-016 amendment 1). A network service's release went live. OpenVibe.Host's operator plane (lib/announce.js) publishes it after `ovhost deploy|rollback <service>` went live and for `ovhost announce <service>` (services deployed by their own scripts: Live, Tools, Sites, OpenRe, Games). Envelope: subject { type: release, id: <service>:<release> }, visibility public (signed-out browsers get it over Events realtime), priority low, actor service:host. Open tabs whose /release.json names `service` (openvibe-shared release-watch 1.17.0, topics=host.release.published) check it when `release` is not the one they run. It carries identifiers only, never what changed. At most one per service and release unless an operator forces it; a retry reuses the event_id. Tenant sites' activations are host.deploy.activated, not this.
+ */
+export interface HostReleasePublishedPayload {
+  /**
+   * The service id the pages' /release.json names (registry.release-manifest@1 `service`): live, tools, or a Sites placeholder's id such as news.
+   */
+  service: string;
+  /**
+   * The release id that service's /release.json reports now (registry.release-manifest@1 `release`). A client compares it with the release it runs, treating a hex prefix of the other as the same release.
+   */
+  release: string;
+  /**
+   * The deployed commit when it is known and `release` is its prefix, or what the operator passed; null otherwise (a Sites placeholder's release is a page hash).
+   */
+  commit: string | null;
+  /**
+   * The public origin the release serves (https://openvibe.live): the inventory's origin or the service manifest's publicOrigin; null when neither is known.
+   */
+  origin: string | null;
+  /**
+   * When Host announced it (UTC); after `ovhost deploy`, just after the service answered ready.
+   */
+  deployed_at: string;
+  /**
+   * Optional. The component versions /release.json reported (registry.release-manifest 1.1.0 `components`, kind and version only).
+   */
+  components?: {
+    [k: string]:
+      | {
+          kind: "style" | "content" | "script" | "server";
+          version: string;
+        }
+      | undefined;
+  };
+  /**
+   * Present after `ovhost rollback`: the release is an older one.
+   */
+  rollback?: true;
+}
 
 /** host.site-manage-result@1.0.0 (owner: host) */
 /**

@@ -1,0 +1,8 @@
+{
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "site_id": "site_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "site": "my-site",
+  "deploy_id": "dpl_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "previous_deploy_id": "dpl_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "rollback": true
+}

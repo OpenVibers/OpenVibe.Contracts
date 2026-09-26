@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/host.release.published.v1.json",
+  "title": "HostReleasePublishedPayload",
+  "description": "host.release.published v1 (roadmap WS-P task 9, ADR-016 amendment 1). A network service's release went live. OpenVibe.Host's operator plane (lib/announce.js) publishes it after `ovhost deploy|rollback <service>` went live and for `ovhost announce <service>` (services deployed by their own scripts: Live, Tools, Sites, OpenRe, Games). Envelope: subject { type: release, id: <service>:<release> }, visibility public (signed-out browsers get it over Events realtime), priority low, actor service:host. Open tabs whose /release.json names `service` (openvibe-shared release-watch 1.17.0, topics=host.release.published) check it when `release` is not the one they run. It carries identifiers only, never what changed. At most one per service and release unless an operator forces it; a retry reuses the event_id. Tenant sites' activations are host.deploy.activated, not this.",
+  "type": "object",
+  "required": [
+    "service",
+    "release",
+    "commit",
+    "origin",
+    "deployed_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$",
+      "description": "The service id the pages' /release.json names (registry.release-manifest@1 `service`): live, tools, or a Sites placeholder's id such as news."
+    },
+    "release": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "The release id that service's /release.json reports now (registry.release-manifest@1 `release`). A client compares it with the release it runs, treating a hex prefix of the other as the same release."
+    },
+    "commit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "The deployed commit when it is known and `release` is its prefix, or what the operator passed; null otherwise (a Sites placeholder's release is a page hash)."
+    },
+    "origin": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "pattern": "^https?://[^/?#]+$",
+      "description": "The public origin the release serves (https://openvibe.live): the inventory's origin or the service manifest's publicOrigin; null when neither is known."
+    },
+    "deployed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When Host announced it (UTC); after `ovhost deploy`, just after the service answered ready."
+    },
+    "components": {
+      "type": "object",
+      "description": "Optional. The component versions /release.json reported (registry.release-manifest 1.1.0 `components`, kind and version only).",
+      "maxProperties": 32,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]{0,39}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "kind",
+          "version"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "style",
+              "content",
+              "script",
+              "server"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9A-Za-z._+-]{1,64}$"
+          }
+        }
+      }
+    },
+    "rollback": {
+      "const": true,
+      "description": "Present after `ovhost rollback`: the release is an older one."
+    }
+  }
+}

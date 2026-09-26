@@ -4582,6 +4582,16 @@
       "version": "1.0.0",
       "owner": "host",
       "schema": "events/payloads/host.deploy.activated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "host.release.published",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "events/payloads/host.release.published.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active",

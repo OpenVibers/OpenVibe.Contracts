@@ -722,22 +722,25 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     ok(!M({ ...base, text: 'the post' }) && !M({ ...base, target: { ...base.target, title: 'Hi' } }), 'it never carries the content');
 }
 
-// ── Release notifications (WS-P task 9, ADR-016): host.deploy.activated, two shapes, one public ──
-// A network service's release (subject release, visibility public: browsers get it over Events
-// realtime) and a tenant site's activation (subject deploy, visibility internal). Exactly one shape
-// matches; the release shape carries identifiers only.
+// ── Release notifications (WS-P task 9, ADR-016): host.release.published, public, identifiers only ──
+// A network service's release went live (subject release, visibility public: browsers get it over
+// Events realtime). Tenant hosting's activations stay host.deploy.activated (first-party, its own shape);
+// neither payload passes for the other.
 {
-    const H = (p) => contracts.validate('host.deploy.activated@1', p).valid;
-    const cat = contracts.catalog.find(c => c.id === 'host.deploy.activated');
-    ok(cat && cat.owner === 'host' && cat.visibility === 'public' && services.get('host').eventsProduced.includes('host.deploy.activated'), 'host.deploy.activated is a public Host event');
+    const R = (p) => contracts.validate('host.release.published@1', p).valid;
+    const D = (p) => contracts.validate('host.deploy.activated@1', p).valid;
+    const cat = (id) => contracts.catalog.find(c => c.id === id);
+    ok(cat('host.release.published') && cat('host.release.published').owner === 'host' && cat('host.release.published').visibility === 'public', 'host.release.published is a public Host event');
+    ok(cat('host.deploy.activated') && cat('host.deploy.activated').visibility === 'first-party', 'host.deploy.activated stays first-party (tenant hosting)');
+    for (const id of ['host.release.published', 'host.deploy.activated']) ok(services.get('host').eventsProduced.includes(id), `the host manifest produces ${id}`);
     const rel = { service: 'live', release: 'd4e849f2', commit: null, origin: 'https://openvibe.live', deployed_at: '2026-09-26T08:00:05.000Z' };
     const ten = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/host.deploy.activated/valid/tenant-site.json'), 'utf8'));
-    ok(H(rel) && H(ten), 'a service release and a tenant activation are both host.deploy.activated@1');
-    ok(!H({ ...rel, ...ten }), 'the two shapes never mix');
-    for (const k of ['service', 'release', 'commit', 'origin', 'deployed_at']) ok(!H({ ...rel, [k]: undefined }), `a service release needs ${k} (commit and origin may be null)`);
-    for (const extra of [{ commits: [] }, { notes: 'x' }, { url: 'https://openvibe.live/updates' }]) ok(!H({ ...rel, ...extra }), `a service release carries identifiers only (${Object.keys(extra)[0]})`);
-    ok(H({ ...rel, release: 'd4e849f2a1b3c5d7e9f0a2b4c6d8e0f1a3b5c7d9' }) && !H({ ...rel, release: 'd4e84' }), 'a release is 7 to 40 hex, as registry.release-manifest@1 says');
-    ok(contracts.schema('registry.release-manifest').properties.release.pattern === contracts.schema('host.deploy.activated').oneOf[0].properties.release.pattern, 'the release pattern is the release manifest\'s');
+    ok(R(rel) && D(ten) && !R(ten) && !D(rel) && !R({ ...rel, ...ten }), 'a release and a tenant activation are two contracts that never mix');
+    ok(!contracts.schema('host.deploy.activated').oneOf && !contracts.schema('host.release.published').oneOf, 'one shape each');
+    for (const k of ['service', 'release', 'commit', 'origin', 'deployed_at']) ok(!R({ ...rel, [k]: undefined }), `a release needs ${k} (commit and origin may be null)`);
+    for (const extra of [{ commits: [] }, { notes: 'x' }, { url: 'https://openvibe.live/updates' }]) ok(!R({ ...rel, ...extra }), `a release carries identifiers only (${Object.keys(extra)[0]})`);
+    ok(R({ ...rel, release: 'd4e849f2a1b3c5d7e9f0a2b4c6d8e0f1a3b5c7d9' }) && !R({ ...rel, release: 'd4e84' }), 'a release is 7 to 40 hex, as registry.release-manifest@1 says');
+    ok(contracts.schema('registry.release-manifest').properties.release.pattern === contracts.schema('host.release.published').properties.release.pattern, 'the release pattern is the release manifest\'s');
 }
 
 // ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──

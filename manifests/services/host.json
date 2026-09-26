@@ -36,6 +36,7 @@
     "host.deploy.created",
     "host.deploy.activated",
     "host.deploy.failed",
+    "host.release.published",
     "host.domain.verified"
   ],
   "eventsConsumed": [],
@@ -94,5 +95,5 @@
       ]
     }
   },
-  "notes": "Stage A: the ovhost operator CLI (no server). Stage B: the Host API service on port 4910 (unit openvibe-host.service, state /var/lib/openvibe-host-api): tenant projects keyed by project id (prj_, network_project_id once Network has projects, ADR-014), static sites served by Host header at <site>.openvibe.host (a registrable domain separate from every other OpenVibe domain) and on TXT-verified custom domains, immutable content-addressed deploys with rollback, quotas enforced here, upload logs. Consumes OpenVibe.Network (SSO, JWKS, client-credentials) and publishes through OpenVibe.Events (events.event.publish). The ovhost CLI publishes host.deploy.activated too, with subject release and visibility public, when a network service's release goes live (ovhost deploy/rollback/announce; release notifications, WS-P task 9); Stage B's tenant activations are subject deploy, visibility internal. Stage C (sandboxed user code) is not started."
+  "notes": "Stage A: the ovhost operator CLI (no server). Stage B: the Host API service on port 4910 (unit openvibe-host.service, state /var/lib/openvibe-host-api): tenant projects keyed by project id (prj_, network_project_id once Network has projects, ADR-014), static sites served by Host header at <site>.openvibe.host (a registrable domain separate from every other OpenVibe domain) and on TXT-verified custom domains, immutable content-addressed deploys with rollback, quotas enforced here, upload logs. Consumes OpenVibe.Network (SSO, JWKS, client-credentials) and publishes through OpenVibe.Events (events.event.publish). The ovhost CLI publishes host.release.published (subject release, visibility public) when a network service's release goes live (ovhost deploy/rollback/announce; release notifications, WS-P task 9); host.deploy.activated is Stage B's tenant activations only. Stage C (sandboxed user code) is not started."
 }

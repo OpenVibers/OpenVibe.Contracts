@@ -6,11 +6,12 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.58.0 — 2026-09-26
 
-**Release notifications** (roadmap WS-P task 9, ADR-016 amendment 1). `host.deploy.activated` gets its payload contract, `host.deploy.activated@1` (catalog visibility public). The type has two shapes, and exactly one matches:
-- **A network service's release went live.** OpenVibe.Host's operator plane publishes it (`ovhost deploy|rollback`, and `ovhost announce` for services deployed by their own scripts). The envelope has subject `{ type: release, id: <service>:<release> }` and visibility public, so signed-out browsers get it over Events realtime and openvibe-shared release-watch checks `/release.json` at once. The payload is `service`, `release` (the `/release.json` release id, the release manifest's pattern), `commit` (or null), `origin` (or null), `deployed_at`, and optionally `components` (kind and version only) and `rollback: true`. Identifiers only.
-- **A Stage B tenant site's active deploy changed.** This is what Host's API already emitted: `project_id`, `site_id`, `site`, `deploy_id`, `previous_deploy_id`, `rollback`. It has subject `deploy` and visibility internal.
+**Release notifications** (roadmap WS-P task 9, ADR-016 amendment 1). A new event type, **`host.release.published`**, with the payload contract `host.release.published@1` (catalog visibility public). It means a network service's release went live.
+- **Who publishes it.** OpenVibe.Host's operator plane: `ovhost deploy|rollback`, and `ovhost announce` for services deployed by their own scripts.
+- **Envelope.** Subject `{ type: release, id: <service>:<release> }` and visibility public. Signed-out browsers get it over Events realtime, and openvibe-shared release-watch (1.17.0, `topics=host.release.published`) checks `/release.json` at once.
+- **Payload.** `service`, `release` (the `/release.json` release id, with the release manifest's pattern), `commit` or null, `origin` (an http(s) origin) or null, `deployed_at`, and optionally `components` (kind and version only, at most 32) and `rollback: true`. Identifiers only.
 
-It has fixtures for both shapes (mixing them fails), and the host manifest's notes name the operator-plane producer. The event type was already in the host manifest's `eventsProduced`, so nothing is renamed. Additive.
+`host.deploy.activated` also gets its payload contract, `host.deploy.activated@1` (first-party), which is what Host's Stage B already emits for a tenant site's activation: `project_id`, `site_id`, `site`, `deploy_id`, `previous_deploy_id`, `rollback`. It has subject `deploy` and visibility internal. The two types never share a payload, and fixtures check that neither passes for the other. The host manifest lists `host.release.published` in `eventsProduced`. Additive.
 
 ## 0.57.2 — 2026-09-26
 

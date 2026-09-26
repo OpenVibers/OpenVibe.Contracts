@@ -42,17 +42,18 @@ The manifest is advisory; removing it returns clients to today's behaviour.
 
 Roadmap WS-P task 9.
 
-- **Event.** When a network service's release goes live, OpenVibe.Host publishes `host.deploy.activated`
+- **Event.** When a network service's release goes live, OpenVibe.Host publishes `host.release.published`
   with subject `{ type: release, id: <service>:<release> }` and visibility public. The payload contract
-  is `host.deploy.activated@1`: `service`, `release`, `commit`, `origin`, `deployed_at`, and optionally
+  is `host.release.published@1`: `service`, `release`, `commit`, `origin`, `deployed_at`, and optionally
   `components` and `rollback`. It carries identifiers only; what changed stays in `/release.json`.
   - **Sent by:** `ovhost deploy|rollback` after a release went live, and `ovhost announce <service>` for
     services deployed by their own scripts.
   - **Frequency:** one event per service and release.
   - **Delivery:** best effort, and never fails a deploy. Polling is the fallback.
-  - **Stage B:** tenant activations share the type, with subject `deploy` and visibility internal.
+  - **Stage B:** tenant activations stay `host.deploy.activated` (subject `deploy`, visibility internal),
+    a separate event type with its own payload. The two are never mixed.
 - **Client.** openvibe-shared `release-watch.js` (1.17.0) opens one anonymous EventSource per tab on
-  `topics=host.deploy.activated`.
+  `topics=host.release.published`.
   - It acts only on events whose `payload.service` is the page's service.
   - It ignores the release it already runs or already knows (a hex prefix counts as the same release),
     and ignores repeats of an event id.
