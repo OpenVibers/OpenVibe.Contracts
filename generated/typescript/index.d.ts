@@ -29064,6 +29064,16 @@ export interface NetworkFollowListResult {
   next_cursor: string | null;
 }
 
+/** network.follow-write-request@1.0.0 (owner: network) */
+/**
+ * network.follow-write-request@1 (ADR-030 step 4; capability network.follows.write): a first-party product records a follow or unfollow on a person's behalf, where they pressed the button. PUT /internal/follows/:type/:target { follower, notify_email?, notify_push? } follows (idempotent; flags change a follow). DELETE /internal/follows/:type/:target?follower=usr_… unfollows (idempotent). Answers network.follow-status-result@1 for the follower. Network emits network.follow.* as for a person's own change.
+ */
+export interface NetworkFollowWriteRequest {
+  follower: string;
+  notify_email?: boolean;
+  notify_push?: boolean;
+}
+
 /** network.follow-status-result@1.0.0 (owner: network) */
 /**
  * network.follow-status-result@1 (ADR-030): GET /api/v1/follows/:type/:target on OpenVibe.Network: the public follower count of a target, and, for a signed-in caller, whether they follow it and how they are notified. PUT and DELETE /api/v1/me/follows/:type/:target answer the same document after the change (idempotent: repeating either changes nothing).

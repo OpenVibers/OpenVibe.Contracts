@@ -1,0 +1,15 @@
+{
+  "id": "network.follows.write",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Follow or unfollow on a person's behalf, as the first-party product where they pressed the button (Live's follow buttons, ADR-030 step 4). The follower is named in the request; Network keeps the graph and emits the events. Never grantable to apps.",
+  "permissions": ["follows:write"],
+  "resourceConstraints": [],
+  "quotaClass": "follows-write",
+  "events": ["network.follow.created", "network.follow.deleted"],
+  "implementedBy": ["PUT /internal/follows/:type/:target", "DELETE /internal/follows/:type/:target"],
+  "inputSchema": "network.follow-write-request@1",
+  "outputSchema": "network.follow-status-result@1"
+}

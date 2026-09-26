@@ -2546,6 +2546,16 @@
       "adr": "ADR-030"
     },
     {
+      "id": "network.follow-write-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/follow-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-030"
+    },
+    {
       "id": "network.follow-status-result",
       "version": "1.0.0",
       "owner": "network",

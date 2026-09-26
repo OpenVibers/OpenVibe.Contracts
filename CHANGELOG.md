@@ -6,6 +6,12 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.67.0 — 2026-09-26
+
+**Products write follows on a person's behalf** (ADR-030 step 4).
+- **New capability** `network.follows.write` (first-party, never for apps): PUT and DELETE `/internal/follows/:type/:target` on Network, with the follower named in the request.
+- **New schema** `network.follow-write-request@1` (`follower`, `notify_email?`, `notify_push?`). Live's follow buttons use it, and Live keeps its table as a projection of `network.follow.*`.
+
 ## 0.66.0 — 2026-09-26
 
 **Incidents and maintenance on the status page** (roadmap WS-N task 12).

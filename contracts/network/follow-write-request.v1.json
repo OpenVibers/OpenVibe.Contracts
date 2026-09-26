@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/follow-write-request.v1.json",
+  "title": "NetworkFollowWriteRequest",
+  "description": "network.follow-write-request@1 (ADR-030 step 4; capability network.follows.write): a first-party product records a follow or unfollow on a person's behalf, where they pressed the button. PUT /internal/follows/:type/:target { follower, notify_email?, notify_push? } follows (idempotent; flags change a follow). DELETE /internal/follows/:type/:target?follower=usr_… unfollows (idempotent). Answers network.follow-status-result@1 for the follower. Network emits network.follow.* as for a person's own change.",
+  "type": "object",
+  "required": ["follower"],
+  "additionalProperties": false,
+  "properties": {
+    "follower": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "notify_email": { "type": "boolean" },
+    "notify_push": { "type": "boolean" }
+  }
+}
