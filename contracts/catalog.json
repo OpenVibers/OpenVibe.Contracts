@@ -2200,6 +2200,16 @@
       "status": "active"
     },
     {
+      "id": "media.moderation.action",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
+    },
+    {
       "id": "tools.moderation.action",
       "version": "1.0.0",
       "owner": "tools",

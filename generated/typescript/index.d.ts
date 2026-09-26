@@ -24557,6 +24557,37 @@ export interface ToolsJobFailedPayload {
   retryable: boolean;
 }
 
+/** media.moderation.action@1.0.0 (owner: media) */
+/**
+ * media.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff action on someone else's media in OpenVibe.Media: a retention hold placed or released (moderation, dmca, admin, evidence), and a staff deletion or visibility change of someone else's VOD, clip or object. Not an owner acting on their own media, and not a creator's own pin. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member (or the service acting for an app's staff). Never carries the media itself.
+ */
+export interface MediaModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** tools.moderation.action@1.0.0 (owner: tools) */
 /**
  * tools.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Tools (apps/gateway and its guard), such as guard blocks and unblocks of an account, an app or an address, and staff actions on someone else's jobs or tool pages. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.

@@ -660,7 +660,7 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 // without an older shape are common.moderation-action@1, and Network consumes every one of them.
 {
     const moderation = contracts.catalog.filter(c => /\.moderation\.action$/.test(c.id));
-    for (const svc of ['tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'codes']) {
+    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'codes']) {
         const id = `${svc}.moderation.action`;
         const c = moderation.find(x => x.id === id);
         ok(c && c.owner === svc && c.adr === 'ADR-022', `${id} is owned by ${svc}`);

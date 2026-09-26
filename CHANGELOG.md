@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.54.0 — 2026-09-26
+
+**`media.moderation.action`** (ADR-022, WS-D task 1): Media's staff actions on someone else's media, which are retention holds placed or released and staff deletions or visibility changes. The payload is common.moderation-action@1, produced by media and consumed by network.
+
 ## 0.53.0 — 2026-09-26
 
 **Moderation audit events for ten more producers** (ADR-022, roadmap WS-D task 1). **`common.moderation-action@1`** (owner network, public) is one staff or moderator action on someone else's content or account, modelled on `community.moderation.action`: `action` (a short verb id such as `post.hidden`), `target { type, id, owner_subject? }` and `actor_subject` are required; `reason` and `details` are optional; it never carries the content. Events requires an event's prefix to match its source, so each producer gets its own type, a thin schema over the shared one: **`tools.moderation.action`**, **`games.moderation.action`**, **`wiki.moderation.action`**, **`blog.moderation.action`**, **`news.moderation.action`**, **`reviews.moderation.action`**, **`deals.moderation.action`**, **`coupons.moderation.action`**, **`trade.moderation.action`** and **`codes.moderation.action`**. Each service manifest produces its type, and the network manifest consumes all ten into the moderation audit log. Fixtures for each; `npm test` checks that every one is the shared payload and that Network consumes every `*.moderation.action`. Additive.

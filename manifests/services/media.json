@@ -47,6 +47,7 @@
     "media.job.retrying",
     "media.job.started",
     "media.job.succeeded",
+    "media.moderation.action",
     "media.object.deleted",
     "media.object.uploaded",
     "media.object.visibility_changed",

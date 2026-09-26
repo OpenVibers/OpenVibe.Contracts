@@ -70,6 +70,7 @@
     "games.moderation.action",
     "live.moderation.action",
     "live.stream.started",
+    "media.moderation.action",
     "news.moderation.action",
     "reviews.moderation.action",
     "tips.interaction.moderated",

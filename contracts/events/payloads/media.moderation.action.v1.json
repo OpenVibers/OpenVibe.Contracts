@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.moderation.action.v1.json",
+  "title": "MediaModerationActionPayload",
+  "description": "media.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff action on someone else's media in OpenVibe.Media: a retention hold placed or released (moderation, dmca, admin, evidence), and a staff deletion or visibility change of someone else's VOD, clip or object. Not an owner acting on their own media, and not a creator's own pin. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member (or the service acting for an app's staff). Never carries the media itself.",
+  "$ref": "../../common/moderation-action.v1.json"
+}
