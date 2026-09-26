@@ -10,7 +10,7 @@
     "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
     "name": { "type": "string", "minLength": 1, "maxLength": 200 },
     "kind": { "enum": ["official", "user"] },
-    "visibility": { "enum": ["public", "members", "private"] },
+    "visibility": { "enum": ["public", "members", "vip", "private"] },
     "deleted": { "type": "boolean" },
     "change": { "enum": ["created", "renamed", "visibility", "settings", "roles", "deleted"], "description": "What changed. renamed = a new slug." },
     "url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "Canonical URL of the space." }

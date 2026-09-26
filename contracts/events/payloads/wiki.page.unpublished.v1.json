@@ -12,6 +12,6 @@
     "indexability": { "type": ["object", "null"], "required": ["decision", "reasons"], "additionalProperties": false, "properties": { "decision": { "enum": ["index", "noindex"] }, "reasons": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" } } }, "description": "The last gate decision, or null when there is none." },
     "space": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$", "description": "Space slug." },
     "slug": { "type": "string", "minLength": 1, "maxLength": 80, "description": "Page slug inside the space." },
-    "visibility": { "enum": ["public", "members", "private"], "description": "Effective visibility (the page's, narrowed by its space's)." }
+    "visibility": { "enum": ["public", "members", "vip", "private"], "description": "Effective visibility (the page's, narrowed by its space's)." }
   }
 }

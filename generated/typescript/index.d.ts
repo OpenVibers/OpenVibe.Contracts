@@ -13181,7 +13181,7 @@ export interface WikiSpaceUpdatedPayload {
   slug: string;
   name: string;
   kind: "official" | "user";
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
   deleted: boolean;
   /**
    * What changed. renamed = a new slug.
@@ -13417,7 +13417,7 @@ export interface WikiPagePublishedPayload {
   /**
    * Effective visibility (the page's, narrowed by its space's).
    */
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
 }
 
 /** wiki.page.updated@1.0.0 (owner: wiki) */
@@ -13577,7 +13577,7 @@ export interface WikiPageUpdatedPayload {
   /**
    * Effective visibility (the page's, narrowed by its space's).
    */
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
 }
 
 /** wiki.page.unpublished@1.0.0 (owner: wiki) */
@@ -13743,7 +13743,7 @@ export interface WikiPageUnpublishedPayload {
   /**
    * Effective visibility (the page's, narrowed by its space's).
    */
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
 }
 
 /** wiki.page.deleted@1.0.0 (owner: wiki) */
@@ -13909,7 +13909,7 @@ export interface WikiPageDeletedPayload {
   /**
    * Effective visibility (the page's, narrowed by its space's).
    */
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
 }
 
 /** wiki.index_document.upserted@1.0.0 (owner: wiki) */
@@ -14085,7 +14085,7 @@ export type WikiPageWriteRequest =
        */
       infobox?: {}[];
       parent_id?: string | null;
-      visibility?: "public" | "members" | "private";
+      visibility?: "public" | "members" | "vip" | "private";
       /**
        * At most 50. Each needs a URL (with retrieved_at) or a Sources item id (url, title and retrieval come from the item).
        *
@@ -14152,7 +14152,7 @@ export type WikiPageWriteRequest =
   | {
       slug?: string;
       parent_id?: string | null;
-      visibility?: "public" | "members" | "private";
+      visibility?: "public" | "members" | "vip" | "private";
       noindex?: boolean;
     }
   | {
@@ -14196,7 +14196,7 @@ export type WikiPageWriteRequest =
             license_note?: string | null;
             anchor?: string | null;
           }[];
-          visibility?: "public" | "members" | "private";
+          visibility?: "public" | "members" | "vip" | "private";
           message?: string | null;
         },
         ...{
@@ -14230,7 +14230,7 @@ export type WikiPageWriteRequest =
             license_note?: string | null;
             anchor?: string | null;
           }[];
-          visibility?: "public" | "members" | "private";
+          visibility?: "public" | "members" | "vip" | "private";
           message?: string | null;
         }[]
       ];
@@ -14296,7 +14296,7 @@ export interface WikiPage {
    * draft, published, deleted, …
    */
   state: string;
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
   noindex: boolean;
   published_revision: number | null;
   published_at?: string | null;
@@ -14473,7 +14473,7 @@ export type WikiSpaceWriteRequest =
       slug?: string;
       description?: string | null;
       kind?: "official" | "user";
-      visibility?: "public" | "members" | "private";
+      visibility?: "public" | "members" | "vip" | "private";
     }
   | {
       role: "owner" | "editor" | "viewer" | null;
@@ -14506,7 +14506,7 @@ export interface WikiSpace {
   name: string;
   description?: string | null;
   kind: "official" | "user";
-  visibility: "public" | "members" | "private";
+  visibility: "public" | "members" | "vip" | "private";
   created_at: string;
   updated_at: string;
 }

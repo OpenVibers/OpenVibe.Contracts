@@ -7202,6 +7202,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ]
           },
@@ -7470,6 +7471,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ],
             "description": "Effective visibility (the page's, narrowed by its space's)."
@@ -7546,6 +7548,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ],
             "description": "Effective visibility (the page's, narrowed by its space's)."
@@ -7627,6 +7630,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ],
             "description": "Effective visibility (the page's, narrowed by its space's)."
@@ -7708,6 +7712,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ],
             "description": "Effective visibility (the page's, narrowed by its space's)."
@@ -8207,6 +8212,7 @@
                 "enum": [
                   "public",
                   "members",
+                  "vip",
                   "private"
                 ]
               },
@@ -8406,6 +8412,7 @@
                 "enum": [
                   "public",
                   "members",
+                  "vip",
                   "private"
                 ]
               },
@@ -8550,6 +8557,7 @@
                       "enum": [
                         "public",
                         "members",
+                        "vip",
                         "private"
                       ]
                     },
@@ -8780,6 +8788,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ]
           },
@@ -9413,6 +9422,7 @@
                 "enum": [
                   "public",
                   "members",
+                  "vip",
                   "private"
                 ]
               }
@@ -9550,6 +9560,7 @@
             "enum": [
               "public",
               "members",
+              "vip",
               "private"
             ]
           },

@@ -42,6 +42,7 @@
           "enum": [
             "public",
             "members",
+            "vip",
             "private"
           ]
         },
@@ -241,6 +242,7 @@
           "enum": [
             "public",
             "members",
+            "vip",
             "private"
           ]
         },
@@ -385,6 +387,7 @@
                 "enum": [
                   "public",
                   "members",
+                  "vip",
                   "private"
                 ]
               },

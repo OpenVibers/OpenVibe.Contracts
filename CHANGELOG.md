@@ -6,6 +6,15 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.64.0 — 2026-09-26
+
+**Wiki VIP spaces and pages** (roadmap WS-K task 8).
+- **`vip` joins Wiki's visibilities** (between `members` and `private`). It covers `wiki.space@1`, `wiki.page@1`, `wiki.space-write-request@1`, `wiki.page-write-request@1` and the `wiki.page.updated`, `wiki.page.published`, `wiki.page.unpublished`, `wiki.page.deleted` and `wiki.space.updated` payloads.
+- **Who reads it:** a `vip` space or page is read by the space's roles and by the viewers OpenVibe.VIP admits as members of the space owner. OpenVibe.Wiki asks `vip.resource.policy.evaluate` with the resource `wiki/page/<id>` when the page itself is VIP-only (else `wiki/space/<id>`), and the fallback `{ requirement: 'member', binding: 'wiki:gated_page' }`.
+- **Where it never appears:** in search, sitemaps or feeds (its index document is a tombstone, like `members`).
+- **Official spaces** have no VIP owner, so Wiki refuses `vip` there.
+- Widening only: every earlier value stays valid.
+
 ## 0.63.0 — 2026-09-26
 
 **Project usage rollups** (roadmap WS-N task 4, ADR-014): what feeds the per-project dashboards on OpenVibe.Codes.

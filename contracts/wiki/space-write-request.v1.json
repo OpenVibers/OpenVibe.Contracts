@@ -30,6 +30,7 @@
           "enum": [
             "public",
             "members",
+            "vip",
             "private"
           ]
         }
