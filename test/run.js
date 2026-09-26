@@ -727,6 +727,8 @@ execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js
 
 // ── OpenAPI per service (WS-C task 6): generated/openapi valid, complete and up to date ──
 execFileSync(process.execPath, [path.join(__dirname, 'openapi.test.js')], { stdio: 'inherit' });
+// Loyalty is never money (ADR-012, WS-K task 9).
+execFileSync(process.execPath, [path.join(__dirname, 'loyalty-policy.test.js')], { stdio: 'inherit' });
 
 // ── Generated output and compatibility gate ──────────────────────────────
 execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });

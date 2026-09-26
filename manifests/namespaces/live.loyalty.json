@@ -1,0 +1,50 @@
+{
+  "namespace": "live.loyalty",
+  "owner": "live",
+  "version": 1,
+  "description": "This person's loyalty on OpenVibe.Live: channel points per channel and their Arena Trash Level. A summary written by Live; Live's channel_points and arena_trash_levels stay the truth. Loyalty is never money (ADR-012): it is earned, never bought, never cashed out and never converted into Vibes or anything withdrawable. Private.",
+  "writers": [
+    "owner"
+  ],
+  "publicFields": [],
+  "quotaBytes": 2048,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "channel_points_total": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Channel points held across every channel."
+      },
+      "channels": {
+        "type": "array",
+        "maxItems": 10,
+        "description": "The channels this person holds the most points in, most first.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["channel", "points"],
+          "properties": {
+            "channel": { "type": "string", "maxLength": 64, "description": "The channel's username (its page is /@<channel>)." },
+            "points": { "type": "integer", "minimum": 0 }
+          }
+        }
+      },
+      "arena_level": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Arena Trash Level."
+      },
+      "arena_xp": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "computed_at": {
+        "type": "string",
+        "maxLength": 40
+      }
+    }
+  }
+}

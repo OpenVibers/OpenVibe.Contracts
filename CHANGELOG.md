@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.56.0 — 2026-09-26
+
+**Loyalty summary and the loyalty-is-never-money test** (roadmap WS-K task 9).
+- New user-module namespace `live.loyalty` (owner live, private): `channel_points_total`, the top ten `channels` by points (`channel`, `points`), `arena_level`, `arena_xp`, `computed_at`. A summary Live writes; Live's `channel_points` and `arena_trash_levels` stay the truth.
+- `test/loyalty-policy.test.js` (run by `npm test`): loyalty namespaces are private and carry no money-like field; no `network.coins.*` or loyalty capability withdraws, cashes out, converts or prices loyalty; no `billing.*` capability takes or pays loyalty; the OpenCoins request bodies carry no price. The OpenCoins transfer grant stays revoked in Network (`REVOKED_GRANTS`, ADR-012 rule 5).
+
 ## 0.55.1 — 2026-09-26
 
 **Lifecycle declarations follow the shutdown and fencing fixes** (WS-P task 1 follow-ups). Manifest text only; no schema change.
