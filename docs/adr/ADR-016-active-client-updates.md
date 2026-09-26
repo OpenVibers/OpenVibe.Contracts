@@ -37,3 +37,31 @@ The manifest is advisory; removing it returns clients to today's behaviour.
 - A client one release behind keeps working for 24 hours after a deploy.
 - A deploy during an upload, call or stream does not interrupt it.
 - An outdated tab prompts and does not reload while the user is typing.
+
+## Amendment 1 (2026-09-26): release notifications over the Events realtime plane
+
+Roadmap WS-P task 9.
+
+- **Event.** When a network service's release goes live, OpenVibe.Host publishes `host.deploy.activated`
+  with subject `{ type: release, id: <service>:<release> }` and visibility public. The payload contract
+  is `host.deploy.activated@1`: `service`, `release`, `commit`, `origin`, `deployed_at`, and optionally
+  `components` and `rollback`. It carries identifiers only; what changed stays in `/release.json`.
+  - **Sent by:** `ovhost deploy|rollback` after a release went live, and `ovhost announce <service>` for
+    services deployed by their own scripts.
+  - **Frequency:** one event per service and release.
+  - **Delivery:** best effort, and never fails a deploy. Polling is the fallback.
+  - **Stage B:** tenant activations share the type, with subject `deploy` and visibility internal.
+- **Client.** openvibe-shared `release-watch.js` (1.17.0) opens one anonymous EventSource per tab on
+  `topics=host.deploy.activated`.
+  - It acts only on events whose `payload.service` is the page's service.
+  - It ignores the release it already runs or already knows (a hex prefix counts as the same release),
+    and ignores repeats of an event id.
+  - It collapses bursts: at most one check per 30 s, after a random 0–20 s delay so tabs do not all
+    fetch at once. The check is the usual `/release.json` path: the release window, the update plan and
+    the safety rules are unchanged.
+  - The stream is public, so a change of account changes nothing and never opens a second stream.
+  - A tab hidden for 5 minutes closes its stream; hidden tabs are covered by the poll and the check on
+    becoming visible. Errors back off, from 30 s to 15 minutes, and after repeated failures the tab keeps
+    only the poll.
+- **Rollback.** Stop announcing (`--no-announce`, or remove the credentials): tabs fall back to polling,
+  as before.

@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.58.0 — 2026-09-26
+
+**Release notifications** (roadmap WS-P task 9, ADR-016 amendment 1). `host.deploy.activated` gets its payload contract, `host.deploy.activated@1` (catalog visibility public). The type has two shapes, and exactly one matches:
+- **A network service's release went live.** OpenVibe.Host's operator plane publishes it (`ovhost deploy|rollback`, and `ovhost announce` for services deployed by their own scripts). The envelope has subject `{ type: release, id: <service>:<release> }` and visibility public, so signed-out browsers get it over Events realtime and openvibe-shared release-watch checks `/release.json` at once. The payload is `service`, `release` (the `/release.json` release id, the release manifest's pattern), `commit` (or null), `origin` (or null), `deployed_at`, and optionally `components` (kind and version only) and `rollback: true`. Identifiers only.
+- **A Stage B tenant site's active deploy changed.** This is what Host's API already emitted: `project_id`, `site_id`, `site`, `deploy_id`, `previous_deploy_id`, `rollback`. It has subject `deploy` and visibility internal.
+
+It has fixtures for both shapes (mixing them fails), and the host manifest's notes name the operator-plane producer. The event type was already in the host manifest's `eventsProduced`, so nothing is renamed. Additive.
+
 ## 0.57.2 — 2026-09-26
 
 **Three decisions** (documentation only): ADR-029 account merge (WS-B task 5), ADR-030 follow graph (WS-E task 4), ADR-031 S3-compatible surface for Media (WS-N task 8). Each is accepted with its acceptance tests; the implementations follow in Network, Live and Media.

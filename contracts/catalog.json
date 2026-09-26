@@ -4578,6 +4578,16 @@
       "status": "active"
     },
     {
+      "id": "host.deploy.activated",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "events/payloads/host.deploy.activated.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-016"
+    },
+    {
       "id": "host.site-manage-result",
       "version": "1.0.0",
       "owner": "host",

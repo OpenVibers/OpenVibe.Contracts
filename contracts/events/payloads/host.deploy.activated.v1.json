@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/host.deploy.activated.v1.json",
+  "title": "HostDeployActivatedPayload",
+  "description": "host.deploy.activated v1. A deploy became the one that serves. Two producers inside OpenVibe.Host, told apart by the envelope subject and by the payload's fields (exactly one shape matches). (1) A network service's release went live (roadmap WS-P task 9, ADR-016): the operator plane, lib/announce.js, after `ovhost deploy|rollback <service>` went live and for `ovhost announce <service>` (services deployed by their own scripts: Live, Tools, Sites, OpenRe, Games). Envelope: subject { type: release, id: <service>:<release> }, visibility public (signed-out browsers get it over Events realtime), priority low, actor service:host. Open tabs whose /release.json names `service` check it when `release` is not the one they run; the event carries identifiers only, never what changed. At most one per service and release unless an operator forces it; a retry reuses the event_id. (2) A Stage B tenant site's active deploy changed: server/domain/deploys.js, in the transaction that moves the pointer. Envelope: subject { type: deploy, id: <deploy id> }, visibility internal (never streamed to browsers), actor the person or app that switched it.",
+  "type": "object",
+  "oneOf": [
+    {
+      "description": "A network service's release went live (subject release, visibility public).",
+      "type": "object",
+      "required": ["service", "release", "commit", "origin", "deployed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "service": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "The service id the pages' /release.json names (registry.release-manifest@1 `service`): live, tools, or a Sites placeholder's id such as news." },
+        "release": { "type": "string", "pattern": "^[0-9a-f]{7,40}$", "description": "The release id that service's /release.json reports now (registry.release-manifest@1 `release`). A client compares it with the release it runs, treating a hex prefix of the other as the same release." },
+        "commit": { "type": ["string", "null"], "pattern": "^[0-9a-f]{7,40}$", "description": "The deployed commit when it is known and `release` is its prefix, or what the operator passed; null otherwise (a Sites placeholder's release is a page hash)." },
+        "origin": { "type": ["string", "null"], "format": "uri", "pattern": "^https?://[^/?#]+$", "description": "The public origin the release serves (https://openvibe.live): the inventory's origin or the service manifest's publicOrigin; null when neither is known." },
+        "deployed_at": { "type": "string", "format": "date-time", "description": "When Host announced it (UTC); after `ovhost deploy`, just after the service answered ready." },
+        "components": {
+          "type": "object",
+          "description": "Optional. The component versions /release.json reported (registry.release-manifest 1.1.0 `components`, kind and version only).",
+          "maxProperties": 32,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,39}$" },
+          "additionalProperties": {
+            "type": "object",
+            "required": ["kind", "version"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "enum": ["style", "content", "script", "server"] },
+              "version": { "type": "string", "pattern": "^[0-9A-Za-z._+-]{1,64}$" }
+            }
+          }
+        },
+        "rollback": { "const": true, "description": "Present after `ovhost rollback`: the release is an older one." }
+      }
+    },
+    {
+      "description": "A Stage B tenant site's active deploy changed (subject deploy, visibility internal).",
+      "type": "object",
+      "required": ["project_id", "site_id", "site", "deploy_id", "previous_deploy_id", "rollback"],
+      "additionalProperties": false,
+      "properties": {
+        "project_id": { "type": "string", "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "site_id": { "type": "string", "pattern": "^site_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "site": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$", "description": "The site's name (<site>.openvibe.host)." },
+        "deploy_id": { "type": "string", "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "previous_deploy_id": { "type": ["string", "null"], "pattern": "^dpl_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The deploy that served before; null for the site's first activation." },
+        "rollback": { "type": "boolean", "description": "true when the switch was a rollback." }
+      }
+    }
+  ]
+}
