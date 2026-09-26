@@ -59,8 +59,8 @@ Guessed private topic yields nothing; reconnect from a cursor gets the complete 
 - **A ticket is never a session.** Three rules each refuse it as one: its issuer is not the session issuer, it carries `typ`, and its only audience is Events. Events accepts it only as `?ticket=` on the stream, never as Bearer or cookie, and accepts each `jti` once while the ticket is valid. It never logs the ticket. A reconnect asks for a fresh ticket and resumes with `last_event_id`, so a ticket that leaked into a proxy log is spent or expired. Guests get no ticket (403 `realtime.guest`). `REALTIME_TICKETS=off` on Network answers 503 `realtime.disabled`, and every badge stays on polling.
 - **The badge** (openvibe-shared `notification-live.js`, loaded by `notification-ui.js` when a site sets `notificationsRealtime: true`) behaves as follows:
   - On a `network.notification.*` event whose subject is its own, it re-reads the count and toasts what is new. On `event: gap` it re-reads the count and the open lists.
-  - Errors back off from 2 s to 15 min, with jitter. A tab hidden for 5 min closes the stream and resumes from its cursor when shown.
-  - A Content-Security-Policy refusal, or eight failures in a row, leaves polling only.
+  - Errors back off from 2 s, doubling, with jitter. A tab hidden for 5 min closes the stream and resumes from its cursor when shown.
+  - A Content-Security-Policy refusal, or ten failures in a row (about 9 to 17 minutes of retries), leaves polling only until the browser is back `online`.
   - Polling stays the fallback: every 15 s without a stream, and every 2 min while the stream is open, as a safety net for reads made on other sites.
 
 **Alternatives considered.**
