@@ -35,3 +35,4 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-029](ADR-029-account-merge.md) | Merging two accounts: survivor keeps the subject, the other becomes an alias, services follow `network.subject.merged` | Accepted 2026-09-26; implementation pending |
 | [ADR-030](ADR-030-follow-graph.md) | Follow graph: Network owns follows by subject, Live keeps a projection; expand/migrate/contract with reconciliation | Accepted 2026-09-26; migration pending |
 | [ADR-031](ADR-031-s3-compatible-surface.md) | S3-compatible subset for Media: bucket = project namespace, object CRUD + ListObjectsV2 + presign, per-project keys | Accepted 2026-09-26; implementation pending |
+| [ADR-032](ADR-032-containers.md) | Containers: platform services stay systemd units (one adapter in ovhost, a reserved `runtime` field); tenant code isolation belongs to Stage C | Accepted 2026-09-26 |
