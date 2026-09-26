@@ -115,9 +115,9 @@
       "claims": [
         {
           "what": "a media_jobs row while its handler runs",
-          "holder": "the Media process (status running)",
-          "expires": "lease_until = claim + 120 s, renewed while the handler runs; an expired lease makes the job interrupted (retried or failed)",
-          "fencing": "none beyond status: succeed() and fail() match status = running only, with no owner token, so this is safe only because one Media process runs the queue (lease-expiry recovery skips the jobs that process still runs)"
+          "holder": "the Media process that claimed it (status running, lease_token = its claim's random token)",
+          "expires": "lease_until = claim + 120 s, renewed while the handler runs; once it has run out, recovery requeues or fails the job, fenced on the token it read",
+          "fencing": "lease_token: a claim writes a fresh random token; renew, checkpoint, succeed, fail and cancel must match job id and token, so a holder that lost the job is refused (logged, counted in media_job_stale_completions_total) and its heartbeat aborts the handler"
         }
       ]
     }

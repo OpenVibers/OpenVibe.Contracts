@@ -67,9 +67,12 @@
       "signal": "SIGTERM",
       "deadlineSeconds": 5,
       "drains": [
-        "HTTP server closed"
+        "Pulse subscription retries, the community.profile scan and the search-document scans stopped",
+        "stops taking connections; idle keep-alive connections closed (kept 65 s otherwise); requests in flight answered with Connection: close and allowed to finish (4 s at most, then cut)",
+        "the profile scan in progress (it stops between people), the Discord relay's drain and the events outbox's send awaited; unsent rows stay in their tables",
+        "community.db closed, exit 0"
       ],
-      "note": "only the HTTP server is closed: the events outbox, the Discord relay and the profile and search-document scans are not stopped and end with the process"
+      "note": "server/graceful.js; a stop that passes 5 s exits 1. Only the in-memory rate-limit sweeps end with the process. The unit sets no TimeoutStopSec (systemd's 90 s default applies)"
     },
     "startupRecovery": {
       "resumes": [

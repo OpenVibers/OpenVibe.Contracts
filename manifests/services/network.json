@@ -94,11 +94,12 @@
       "signal": "SIGTERM",
       "deadlineSeconds": 10,
       "drains": [
-        "stops accepting connections and closes idle keep-alive ones",
-        "requests in flight finish",
-        "exit"
+        "maintenance timers (notifications, email queue, retired-module sweep, session cleanup), the analytics prune, the ecosystem, deploy-drift and library-tag pollers, the frame refreshes and the profile-event and grant-expiry timers stopped",
+        "stops taking connections; idle keep-alive connections closed; requests in flight answered with Connection: close and allowed to finish (8 s at most, then cut)",
+        "the developer, profile and grant event relay's send in progress awaited (unsent rows stay in the outbox)",
+        "analytics flushed and closed; network.db closed; exit 0"
       ],
-      "note": "timers, pollers and relays are not stopped: they end with the process, and their work is kept in the database for the next start"
+      "note": "server/graceful.js; a stop that passes 10 s exits 1. Only the Discord link's in-memory state sweep ends with the process; the email queue and the outboxes resume from the database on the next start"
     },
     "startupRecovery": {
       "resumes": [

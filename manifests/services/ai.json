@@ -48,10 +48,11 @@
         "housekeeping timer, user-module sync and Network key refresh stopped",
         "open HTTP connections closed (closeAllConnections), then the server",
         "runs in progress awaited (runs.drain)",
+        "ai.run.* outbox relay stopped after the runs (its send in progress awaited; unsent rows stay for the next start)",
         "whisper child processes killed",
         "database closed"
       ],
-      "note": "the forced exit after 10 s exits 1; the ai.run.* outbox relay is not stopped and ends with the process"
+      "note": "the forced exit after 10 s exits 1"
     },
     "startupRecovery": {
       "resumes": [

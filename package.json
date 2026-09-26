@@ -1,6 +1,6 @@
 {
   "name": "openvibe-contracts",
-  "version": "0.55.0",
+  "version": "0.55.1",
   "description": "Machine-readable contracts for the OpenVibe network: schemas, manifests, ids, error envelope, capability checks.",
   "main": "index.js",
   "types": "generated/typescript/index.d.ts",

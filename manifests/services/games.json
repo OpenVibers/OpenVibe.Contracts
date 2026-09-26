@@ -59,15 +59,18 @@
     },
     "shutdown": {
       "signal": "SIGTERM",
-      "deadlineSeconds": 0,
+      "deadlineSeconds": 10,
       "drains": [
-        "metrics timer stopped",
+        "stops taking connections and WebSocket upgrades (503); requests in flight carry on, answered with Connection: close",
+        "simulation tick, metrics and outbox-prune timers, editor lock sweeper and media mirror stopped",
+        "every player told the server is restarting, then every game and editor socket closed with 1012 (service restart); each game close saves that character and records games.player.left",
+        "a socket that has not finished the close handshake after 3 s is terminated",
         "world saved: every session marked dirty and flushed (game.shutdown)",
-        "media mirror stopped; outbox stop requested, not awaited (unsent rows stay in the outbox)",
-        "store closed, HTTP close requested, physics disposed",
-        "process exits at once"
+        "requests in flight finish (5 s at most, then cut)",
+        "the media mirror's pass in progress (2 s at most), the progress-summary writes (1 s) and the outbox's last send (2 s) awaited; unsent rows stay in the outbox",
+        "world.db closed, physics disposed, exit 0"
       ],
-      "note": "exits synchronously: open WebSocket sessions are cut, not drained, and in-flight HTTP requests are dropped"
+      "note": "clients reconnect on their own after 1012; the whole stop is bounded at 10 s (exit 1 past it), inside the unit's TimeoutStopSec=30"
     },
     "startupRecovery": {
       "resumes": [

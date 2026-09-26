@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.55.1 — 2026-09-26
+
+**Lifecycle declarations follow the shutdown and fencing fixes** (WS-P task 1 follow-ups). Manifest text only; no schema change.
+- `tools`: every process, the gateway included, stops through a shared graceful stop: timers, pollers and job workers first, then the HTTP drain (4 s, Connection: close, event streams closed), usage flush, databases and pools, exit 0 within the 5 s already declared. The note about the gateway having no SIGTERM handler is gone.
+- `games`: `deadlineSeconds` 0 → 10 (the unit allows 30). The stop now refuses new connections and upgrades, stops the simulation and timers, closes every game and editor socket with 1012 after announcing the restart (each close saves that character), saves the world, lets requests finish, awaits the mirror, the progress summaries and the outbox, then closes world.db.
+- `community`: the Pulse subscription retries, the profile and search-document scans, the Discord relay and the events outbox are now stopped (the work in flight awaited) before community.db closes, within 5 s.
+- `media`: `leases.claims[0].fencing` is a real fence now: a claim's random `lease_token`, matched by renew, checkpoint, succeed, fail and cancel; a stale holder is refused and counted (`media_job_stale_completions_total`).
+- `network`: the timers, pollers and the event relay are stopped on SIGTERM, analytics and network.db are closed; requests in flight get Connection: close (8 s at most).
+- `ai`: the ai.run.* outbox relay is stopped after the runs drain, before the database closes.
+
 ## 0.55.0 — 2026-09-26
 
 **Lifecycle declarations** (roadmap WS-P task 1). `registry.service-manifest@1` gains an optional `lifecycle` block, and every one of the 31 manifests fills it from its service's code and systemd units:

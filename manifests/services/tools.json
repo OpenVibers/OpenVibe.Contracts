@@ -56,10 +56,13 @@
       "signal": "SIGTERM",
       "deadlineSeconds": 5,
       "drains": [
-        "tool apps (maps, food, img, yt, audio, text, docs): analytics flushed and closed, jobs store and worker pool closed (img, audio, docs), guard closed, HTTP server closed",
-        "running jobs stay running in jobs.db for the next boot"
+        "timers, pollers and job workers stopped: the gateway's catalog, services and satellite pollers and search indexer; the retention timers and job workers of img, audio and docs (open job event streams end); yt's download cleanup",
+        "stops taking connections; idle keep-alive connections closed; requests in flight answered with Connection: close and allowed to finish (4 s at most, then cut); open event streams closed (EventSource reconnects)",
+        "recent-tool usage flushed to Network (1 s at most)",
+        "analytics flushed and closed; jobs store and worker pools closed (running jobs stay running in jobs.db for the next boot); guard closed; the gateway's cutoff store closed",
+        "exit 0"
       ],
-      "note": "the gateway (openvibe-tools.service) has no SIGTERM handler: Node's default action ends it at once, cutting requests in flight; the apps force-exit 1 after 5 s"
+      "note": "every Tools process (the gateway, openvibe-tools.service, and the seven satellites) stops through apps/_shared/graceful.js; a stop that passes 5 s exits 1. The units set no TimeoutStopSec (systemd's 90 s default applies)"
     },
     "startupRecovery": {
       "resumes": [
