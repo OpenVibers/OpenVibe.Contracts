@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/realtime-ticket-result.v1.json",
+  "title": "NetworkRealtimeTicketResult",
+  "description": "What POST /api/v1/realtime/ticket answers (OpenVibe.Network; ADR-005 amendment 2): a realtime ticket (identity.realtime-ticket-claims@1) for the signed-in person, and where to use it. The caller is the person's own session (Bearer Network JWT, or the ov_token cookie on openvibe.network); guests are refused (403 realtime.guest), and 503 realtime.disabled means the operator turned browser realtime off (REALTIME_TICKETS=off): the client stays on polling. The client opens `${stream_url}?topics=${topics}&ticket=${ticket}` (plus last_event_id when it resumes) at once, and asks for a fresh ticket for every reconnect: a ticket opens one stream.",
+  "type": "object",
+  "required": [
+    "ticket",
+    "expires_at",
+    "expires_in",
+    "stream_url",
+    "topics",
+    "subject"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ticket": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+      "maxLength": 4096,
+      "description": "The signed ticket (a compact JWS). Never logged, never stored."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_in": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 300,
+      "description": "Seconds until the ticket expires (120)."
+    },
+    "stream_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://[^?#]+/realtime/stream$",
+      "description": "Events' realtime stream (https://events.openvibe.network/realtime/stream)."
+    },
+    "topics": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$"
+      },
+      "description": "The topic patterns the notification badge subscribes to: [\"network.notification.*\"]."
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Whose ticket it is; a client ignores any event whose subject is someone else."
+    }
+  }
+}

@@ -90,6 +90,43 @@ export type ServiceTokenClaims = {
   [k: string]: unknown | undefined;
 };
 
+/** identity.realtime-ticket-claims@1.0.0 (owner: network) */
+/**
+ * Claims of a realtime ticket (ADR-005 amendment 2; roadmap WS-E task 3, WS-F task 1): a two-minute RS256 JWT that OpenVibe.Network signs for the signed-in person (POST /api/v1/realtime/ticket) so a browser on any OpenVibe site can open Events' /realtime/stream?ticket=... as that person. A browser cannot put a header on an EventSource, and the ov_token cookie of events.openvibe.network is third-party on every other site, so the ticket travels in the URL; that is why it is short-lived, single-purpose and single-use. It is never a session token, by three independent rules: its issuer is Network's issuer followed by /realtime (every service checks the issuer of a session token), it carries typ (services refuse a session token that has one, as for FedCM assertions), and its only audience is openvibe.events. Events accepts it only as ?ticket= on /realtime/stream, verifies the signature with Network's key, iss, aud, typ, purpose and expiry (lifetime at most 300 s), refuses a jti it has already seen while the ticket is valid, and never logs it. The connection then sees what the person's session would: public events and subject events addressed to `sub`.
+ */
+export interface RealtimeTicketClaims {
+  /**
+   * Network's issuer followed by /realtime (https://openvibe.network/realtime in production): not the issuer of a session.
+   */
+  iss: string;
+  /**
+   * The person's subject id; subject-visibility events for this subject reach the connection.
+   */
+  sub: string;
+  /**
+   * @minItems 1
+   * @maxItems 1
+   */
+  aud: ["openvibe.events"];
+  /**
+   * Token class. A service that finds typ on a Network token does not treat it as a session.
+   */
+  typ: "realtime";
+  /**
+   * Single purpose: opening one realtime stream.
+   */
+  purpose: "realtime";
+  iat: number;
+  /**
+   * iat + 120 as Network mints it; Events refuses a lifetime over 300 s.
+   */
+  exp: number;
+  /**
+   * Unique per ticket; Events accepts each once.
+   */
+  jti: string;
+}
+
 /** identity.resolve-request@1.0.0 (owner: network) */
 /**
  * identity.resolve-request@1: the request of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve?subject_id= or ?system=&id=[&type=user] takes no body. POST /internal/identity/resolve-batch: { subject_ids } or { system, type?, ids } (at most 500; 413 beyond).
@@ -25769,6 +25806,38 @@ export interface NetworkUserTokenValidAfterPayload {
     "password_changed" | "password_reset" | "signed_out_everywhere" | "banned" | "account_deleted" | "staff_revoked";
 }
 
+/** network.notification.created@1.0.0 (owner: network) */
+/**
+ * network.notification.created v1 (OpenVibe.Network server/notifications/notification-service.js; roadmap WS-E task 3, ADR-005 amendment 2). A notification was added to a person's inbox (Network is the only notification store, ADR-020). Written to Network's outbox in the transaction that stores the notification, so it exists if and only if the notification does; a muted category, a blocked sender or a go-live dedupe creates neither. Envelope: subject { type: user, id: <recipient usr_> }, visibility subject, actor system:network (never the sender: Events streams a subject event to its actor too), priority low. It is the person's realtime topic ("user:<id>" in the roadmap): a browser subscribes to `network.notification.*` on Events' /realtime/stream with a realtime ticket (identity.realtime-ticket-claims@1) and receives only its own; anyone else's subscription to the same pattern yields nothing. It carries what the notification badge needs and nothing it shows: never the title, the message, the link or the sender. The badge re-reads the unread count and the newest items from Network's API, which stays authoritative (reads, dismissals, other devices). Guests (anonymous accounts) and accounts without a usr_ subject get no event.
+ */
+export interface NetworkNotificationCreatedPayload {
+  /**
+   * The notification's id in Network's store (a UUID today): the id GET /api/notifications returns and POST /api/notifications/:id/read takes.
+   */
+  notification_id: string;
+  /**
+   * The notification type (openvibe-shared notifications TYPES, e.g. STREAM_LIVE, CONTENT_REPLY, DEAL_WATCH_MATCH); GENERIC when the stored type has another shape.
+   */
+  type: string;
+  /**
+   * The preference category it was filed under (social, chat, stream, service, moderation, system, ...).
+   */
+  category: string;
+  /**
+   * The notification's priority (the badge may ring or toast on high and critical).
+   */
+  priority: "low" | "normal" | "high" | "critical";
+  /**
+   * The service it is about (live, deals, trade, ...), or null.
+   */
+  service?: string | null;
+  created_at: string;
+  /**
+   * The recipient's unread count right after this notification was stored, so a badge can update without a request. A later read elsewhere is not an event: the badge re-reads the count on focus and on its fallback poll.
+   */
+  unread_count: number;
+}
+
 /** network.blocks-result@1.0.0 (owner: network) */
 /**
  * network.blocks-result@1: the answer of network.blocks.read on OpenVibe.Network. GET /internal/blocks?subject=usr_… (a service token holding network.blocks.read; the shared internal key is refused) → { subject, blocks, blocked_by }: the people the subject has blocked and the people who have blocked the subject, as usr_ subjects in subject order, active blocks only (a person may hold at most 5000). Answered with Cache-Control: no-store. A subject that is not a usr_ id is refused with 400 blocks.bad_subject (problem+json).
@@ -26041,6 +26110,168 @@ export type NetworkNotificationPushResult =
       sent: number;
       total: number;
     };
+
+/** network.realtime-ticket-result@1.0.0 (owner: network) */
+/**
+ * What POST /api/v1/realtime/ticket answers (OpenVibe.Network; ADR-005 amendment 2): a realtime ticket (identity.realtime-ticket-claims@1) for the signed-in person, and where to use it. The caller is the person's own session (Bearer Network JWT, or the ov_token cookie on openvibe.network); guests are refused (403 realtime.guest), and 503 realtime.disabled means the operator turned browser realtime off (REALTIME_TICKETS=off): the client stays on polling. The client opens `${stream_url}?topics=${topics}&ticket=${ticket}` (plus last_event_id when it resumes) at once, and asks for a fresh ticket for every reconnect: a ticket opens one stream.
+ */
+export interface NetworkRealtimeTicketResult {
+  /**
+   * The signed ticket (a compact JWS). Never logged, never stored.
+   */
+  ticket: string;
+  expires_at: string;
+  /**
+   * Seconds until the ticket expires (120).
+   */
+  expires_in: number;
+  /**
+   * Events' realtime stream (https://events.openvibe.network/realtime/stream).
+   */
+  stream_url: string;
+  /**
+   * The topic patterns the notification badge subscribes to: ["network.notification.*"].
+   *
+   * @minItems 1
+   * @maxItems 20
+   */
+  topics:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * Whose ticket it is; a client ignores any event whose subject is someone else.
+   */
+  subject: string;
+}
 
 /** network.staff-list-result@1.0.0 (owner: network) */
 /**

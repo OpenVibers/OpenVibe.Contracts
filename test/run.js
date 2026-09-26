@@ -763,6 +763,34 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     ok(contracts.schema('registry.release-manifest').properties.release.pattern === contracts.schema('host.release.published').properties.release.pattern, 'the release pattern is the release manifest\'s');
 }
 
+// ── A person's realtime topic (WS-E task 3, WS-F task 1; ADR-005 amendment 2) ──
+// network.notification.created carries what a badge needs and nothing it shows; a realtime ticket can
+// never pass for a session (issuer, typ, audience); the badge's topics are Events patterns, never user:<id>.
+{
+    const cat = (id) => contracts.catalog.find(c => c.id === id);
+    for (const id of ['network.notification.created', 'identity.realtime-ticket-claims', 'network.realtime-ticket-result']) {
+        ok(cat(id) && cat(id).owner === 'network' && cat(id).visibility === 'first-party' && cat(id).adr === 'ADR-005', `${id} is a first-party Network contract under ADR-005`);
+    }
+    ok(services.get('network').eventsProduced.includes('network.notification.created'), 'the network manifest produces network.notification.created');
+    const N = (p) => contracts.validate('network.notification.created@1', p).valid;
+    const n = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/network.notification.created/valid/stream-live.json'), 'utf8'));
+    ok(N(n), 'a go-live notification event');
+    for (const k of ['title', 'message', 'url', 'icon', 'sender_id', 'sender_name', 'sender_avatar', 'rich_content', 'user_id', 'subject']) ok(!N({ ...n, [k]: 'x' }), `the event never carries ${k}`);
+    for (const k of ['notification_id', 'type', 'category', 'priority', 'created_at', 'unread_count']) ok(!N({ ...n, [k]: undefined }), `the event needs ${k}`);
+    const T = (c) => contracts.validate('identity.realtime-ticket-claims@1', c).valid;
+    const t = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/identity.realtime-ticket-claims/valid/badge-ticket.json'), 'utf8'));
+    ok(T(t), 'a realtime ticket');
+    ok(!T({ ...t, iss: 'https://openvibe.network' }) && !T({ ...t, typ: undefined }) && !T({ ...t, aud: ['openvibe.network'] }), 'a ticket never has a session\'s issuer, lacks typ, or names another audience');
+    ok(!T({ ...t, subject_id: t.sub }) && !T({ ...t, id: 57 }) && !T({ ...t, cap: ['events.event.read'] }), 'a ticket carries no session or principal claims');
+    const R = (r) => contracts.validate('network.realtime-ticket-result@1', r).valid;
+    const r = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/network.realtime-ticket-result/valid/badge.json'), 'utf8'));
+    ok(R(r) && !R({ ...r, topics: ['user:' + t.sub] }) && !R({ ...r, topics: ['network.notification:x'] }), 'the badge subscribes to Events patterns, never user:<id>');
+    // The badge's pattern matches the event type (Events topics.js: `*` is one or more whole segments).
+    const match = (p, type) => new RegExp(`^${p.split('.').map(s => (s === '*' ? '[a-z0-9_]+(?:\\.[a-z0-9_]+)*' : s)).join('\\.')}$`).test(type);
+    ok(r.topics.every(p => match(p, 'network.notification.created')), 'the ticket\'s topics match network.notification.created');
+    ok(R({ ...r, expires_in: 300 }) && !R({ ...r, expires_in: 301 }), 'a ticket lives at most 300 s');
+}
+
 // ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──
 execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js')], { stdio: 'inherit' });
 

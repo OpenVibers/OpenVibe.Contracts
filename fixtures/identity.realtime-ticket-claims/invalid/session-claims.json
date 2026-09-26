@@ -1,0 +1,12 @@
+{
+  "iss": "https://openvibe.network/realtime",
+  "sub": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "aud": ["openvibe.events"],
+  "typ": "realtime",
+  "purpose": "realtime",
+  "iat": 1790000000,
+  "exp": 1790000120,
+  "jti": "rtk_0123456789abcdef01234567",
+  "username": "alice",
+  "role": "admin"
+}

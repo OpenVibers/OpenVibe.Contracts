@@ -1,0 +1,8 @@
+{
+  "ticket": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJyZWFsdGltZSJ9.c2lnbmF0dXJl",
+  "expires_at": "2026-09-26T18:05:08.000Z",
+  "expires_in": 120,
+  "stream_url": "https://events.openvibe.network/realtime/stream?ticket=x",
+  "topics": ["network.notification.*"],
+  "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+}

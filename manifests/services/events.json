@@ -76,5 +76,5 @@
       "none": "no claims: one process owns events.db (better-sqlite3, single writer); one delivery per subscription is in flight at a time, tracked in memory"
     }
   },
-  "notes": "Durable events, subscriptions, signed delivery with retry, dead letters and replay; SSE realtime gateway at /realtime/stream until ADR-005 decides where Realtime lives."
+  "notes": "Durable events, subscriptions, signed delivery with retry, dead letters and replay; SSE realtime gateway at /realtime/stream (ADR-005); browsers on any OpenVibe site authenticate a stream with a two-minute, single-use realtime ticket from Network (?ticket=, identity.realtime-ticket-claims@1; ADR-005 amendment 2)."
 }

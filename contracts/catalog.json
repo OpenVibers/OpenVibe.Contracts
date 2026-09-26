@@ -32,6 +32,16 @@
       "adr": "ADR-003"
     },
     {
+      "id": "identity.realtime-ticket-claims",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/realtime-ticket-claims.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-005"
+    },
+    {
       "id": "identity.resolve-request",
       "version": "1.0.0",
       "owner": "network",
@@ -2394,6 +2404,16 @@
       "status": "active"
     },
     {
+      "id": "network.notification.created",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.notification.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-005"
+    },
+    {
       "id": "network.blocks-result",
       "version": "1.0.0",
       "owner": "network",
@@ -2464,6 +2484,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.realtime-ticket-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/realtime-ticket-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-005"
     },
     {
       "id": "network.staff-list-result",

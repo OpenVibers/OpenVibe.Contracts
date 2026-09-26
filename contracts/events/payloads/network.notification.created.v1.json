@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.notification.created.v1.json",
+  "title": "NetworkNotificationCreatedPayload",
+  "description": "network.notification.created v1 (OpenVibe.Network server/notifications/notification-service.js; roadmap WS-E task 3, ADR-005 amendment 2). A notification was added to a person's inbox (Network is the only notification store, ADR-020). Written to Network's outbox in the transaction that stores the notification, so it exists if and only if the notification does; a muted category, a blocked sender or a go-live dedupe creates neither. Envelope: subject { type: user, id: <recipient usr_> }, visibility subject, actor system:network (never the sender: Events streams a subject event to its actor too), priority low. It is the person's realtime topic (\"user:<id>\" in the roadmap): a browser subscribes to `network.notification.*` on Events' /realtime/stream with a realtime ticket (identity.realtime-ticket-claims@1) and receives only its own; anyone else's subscription to the same pattern yields nothing. It carries what the notification badge needs and nothing it shows: never the title, the message, the link or the sender. The badge re-reads the unread count and the newest items from Network's API, which stays authoritative (reads, dismissals, other devices). Guests (anonymous accounts) and accounts without a usr_ subject get no event.",
+  "type": "object",
+  "required": [
+    "notification_id",
+    "type",
+    "category",
+    "priority",
+    "created_at",
+    "unread_count"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "notification_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "description": "The notification's id in Network's store (a UUID today): the id GET /api/notifications returns and POST /api/notifications/:id/read takes."
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{1,63}$",
+      "description": "The notification type (openvibe-shared notifications TYPES, e.g. STREAM_LIVE, CONTENT_REPLY, DEAL_WATCH_MATCH); GENERIC when the stored type has another shape."
+    },
+    "category": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,31}$",
+      "description": "The preference category it was filed under (social, chat, stream, service, moderation, system, ...)."
+    },
+    "priority": {
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "critical"
+      ],
+      "description": "The notification's priority (the badge may ring or toast on high and critical)."
+    },
+    "service": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-z][a-z0-9-]{1,39}$",
+      "description": "The service it is about (live, deals, trade, ...), or null."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "unread_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "description": "The recipient's unread count right after this notification was stored, so a badge can update without a request. A later read elsewhere is not an event: the badge re-reads the count on focus and on its fallback poll."
+    }
+  }
+}

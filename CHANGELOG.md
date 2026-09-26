@@ -6,7 +6,17 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
-- ADR-007 amendment 2026-09-26: SQLite recorded as the reviewed store for every service, with Events', Chat's and Billing's measured production load and the thresholds that would move a service to PostgreSQL (WS-S task 1). Documentation only.
+## 0.61.0 — 2026-09-26
+
+**A person's realtime topic and realtime tickets** (roadmap WS-E task 3, WS-F task 1; ADR-005 amendment 2).
+- **New event type `network.notification.created`**, payload `network.notification.created@1`. Network writes it to its outbox in the transaction that stores a notification. Envelope: subject `{ type: user, id: <recipient usr_> }`, visibility `subject`, actor `system:network`. The payload is the id, type, category, priority, service, `created_at` and the recipient's unread count; never the title, message, link or sender. The Network manifest produces it. "`user:<id>`" in the roadmap is this event type plus subject visibility: a browser subscribes to `network.notification.*` and receives its own events only.
+- **New `identity.realtime-ticket-claims@1`**: the two-minute, single-use RS256 ticket with which a browser opens Events' `/realtime/stream?ticket=…`. Its claims are `iss <network issuer>/realtime`, `sub <usr_>`, `aud [openvibe.events]`, `typ realtime`, `purpose realtime`, `iat`, `exp` and `jti rtk_…`. Three rules each keep it from passing for a session: the issuer, `typ` and the audience.
+- **New `network.realtime-ticket-result@1`**: what `POST /api/v1/realtime/ticket` answers. That is the ticket, `expires_at`, `expires_in` (at most 300), `stream_url`, `topics` (Events patterns only, never `user:…`) and `subject`.
+- The Events manifest's notes name the ticket. There are fixtures for all three contracts, and `npm test` checks that the event never carries notification text or the sender, and that a ticket never has a session's issuer or claims.
+
+Additive.
+
+Also in this release, ADR-007 amendment 2026-09-26: SQLite recorded as the reviewed store for every service, with Events', Chat's and Billing's measured production load and the thresholds that would move a service to PostgreSQL (WS-S task 1). Documentation only.
 
 ## 0.60.0 — 2026-09-26
 

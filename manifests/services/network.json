@@ -54,6 +54,7 @@
     "network.credential.rotated",
     "network.grant.changed",
     "network.module.updated",
+    "network.notification.created",
     "network.principal_grant.changed",
     "network.user.token_valid_after",
     "network.user.updated"

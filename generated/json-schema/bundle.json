@@ -272,6 +272,72 @@
         ]
       }
     },
+    "identity.realtime-ticket-claims": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/realtime-ticket-claims.v1.json",
+        "title": "RealtimeTicketClaims",
+        "description": "Claims of a realtime ticket (ADR-005 amendment 2; roadmap WS-E task 3, WS-F task 1): a two-minute RS256 JWT that OpenVibe.Network signs for the signed-in person (POST /api/v1/realtime/ticket) so a browser on any OpenVibe site can open Events' /realtime/stream?ticket=... as that person. A browser cannot put a header on an EventSource, and the ov_token cookie of events.openvibe.network is third-party on every other site, so the ticket travels in the URL; that is why it is short-lived, single-purpose and single-use. It is never a session token, by three independent rules: its issuer is Network's issuer followed by /realtime (every service checks the issuer of a session token), it carries typ (services refuse a session token that has one, as for FedCM assertions), and its only audience is openvibe.events. Events accepts it only as ?ticket= on /realtime/stream, verifies the signature with Network's key, iss, aud, typ, purpose and expiry (lifetime at most 300 s), refuses a jti it has already seen while the ticket is valid, and never logs it. The connection then sees what the person's session would: public events and subject events addressed to `sub`.",
+        "type": "object",
+        "required": [
+          "iss",
+          "sub",
+          "aud",
+          "typ",
+          "purpose",
+          "iat",
+          "exp",
+          "jti"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "iss": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://[^/?#]+/realtime$",
+            "description": "Network's issuer followed by /realtime (https://openvibe.network/realtime in production): not the issuer of a session."
+          },
+          "sub": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person's subject id; subject-visibility events for this subject reach the connection."
+          },
+          "aud": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "const": "openvibe.events"
+            }
+          },
+          "typ": {
+            "const": "realtime",
+            "description": "Token class. A service that finds typ on a Network token does not treat it as a session."
+          },
+          "purpose": {
+            "const": "realtime",
+            "description": "Single purpose: opening one realtime stream."
+          },
+          "iat": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "exp": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "iat + 120 as Network mints it; Events refuses a lifetime over 300 s."
+          },
+          "jti": {
+            "type": "string",
+            "pattern": "^rtk_[0-9a-f]{24}$",
+            "description": "Unique per ticket; Events accepts each once."
+          }
+        }
+      }
+    },
     "identity.resolve-request": {
       "version": "1.0.0",
       "owner": "network",
@@ -25308,6 +25374,71 @@
         }
       }
     },
+    "network.notification.created": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.notification.created.v1.json",
+        "title": "NetworkNotificationCreatedPayload",
+        "description": "network.notification.created v1 (OpenVibe.Network server/notifications/notification-service.js; roadmap WS-E task 3, ADR-005 amendment 2). A notification was added to a person's inbox (Network is the only notification store, ADR-020). Written to Network's outbox in the transaction that stores the notification, so it exists if and only if the notification does; a muted category, a blocked sender or a go-live dedupe creates neither. Envelope: subject { type: user, id: <recipient usr_> }, visibility subject, actor system:network (never the sender: Events streams a subject event to its actor too), priority low. It is the person's realtime topic (\"user:<id>\" in the roadmap): a browser subscribes to `network.notification.*` on Events' /realtime/stream with a realtime ticket (identity.realtime-ticket-claims@1) and receives only its own; anyone else's subscription to the same pattern yields nothing. It carries what the notification badge needs and nothing it shows: never the title, the message, the link or the sender. The badge re-reads the unread count and the newest items from Network's API, which stays authoritative (reads, dismissals, other devices). Guests (anonymous accounts) and accounts without a usr_ subject get no event.",
+        "type": "object",
+        "required": [
+          "notification_id",
+          "type",
+          "category",
+          "priority",
+          "created_at",
+          "unread_count"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "notification_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "description": "The notification's id in Network's store (a UUID today): the id GET /api/notifications returns and POST /api/notifications/:id/read takes."
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{1,63}$",
+            "description": "The notification type (openvibe-shared notifications TYPES, e.g. STREAM_LIVE, CONTENT_REPLY, DEAL_WATCH_MATCH); GENERIC when the stored type has another shape."
+          },
+          "category": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,31}$",
+            "description": "The preference category it was filed under (social, chat, stream, service, moderation, system, ...)."
+          },
+          "priority": {
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "critical"
+            ],
+            "description": "The notification's priority (the badge may ring or toast on high and critical)."
+          },
+          "service": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The service it is about (live, deals, trade, ...), or null."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unread_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "The recipient's unread count right after this notification was stored, so a badge can update without a request. A later read elsewhere is not an event: the badge re-reads the count on focus and on its fallback poll."
+          }
+        }
+      }
+    },
     "network.blocks-result": {
       "version": "1.0.0",
       "owner": "network",
@@ -25877,6 +26008,66 @@
             }
           }
         ]
+      }
+    },
+    "network.realtime-ticket-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/realtime-ticket-result.v1.json",
+        "title": "NetworkRealtimeTicketResult",
+        "description": "What POST /api/v1/realtime/ticket answers (OpenVibe.Network; ADR-005 amendment 2): a realtime ticket (identity.realtime-ticket-claims@1) for the signed-in person, and where to use it. The caller is the person's own session (Bearer Network JWT, or the ov_token cookie on openvibe.network); guests are refused (403 realtime.guest), and 503 realtime.disabled means the operator turned browser realtime off (REALTIME_TICKETS=off): the client stays on polling. The client opens `${stream_url}?topics=${topics}&ticket=${ticket}` (plus last_event_id when it resumes) at once, and asks for a fresh ticket for every reconnect: a ticket opens one stream.",
+        "type": "object",
+        "required": [
+          "ticket",
+          "expires_at",
+          "expires_in",
+          "stream_url",
+          "topics",
+          "subject"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+            "maxLength": 4096,
+            "description": "The signed ticket (a compact JWS). Never logged, never stored."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_in": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 300,
+            "description": "Seconds until the ticket expires (120)."
+          },
+          "stream_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://[^?#]+/realtime/stream$",
+            "description": "Events' realtime stream (https://events.openvibe.network/realtime/stream)."
+          },
+          "topics": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "pattern": "^(\\*|[a-z0-9_]+)(\\.(\\*|[a-z0-9_]+))*$"
+            },
+            "description": "The topic patterns the notification badge subscribes to: [\"network.notification.*\"]."
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Whose ticket it is; a client ignores any event whose subject is someone else."
+          }
+        }
       }
     },
     "network.staff-list-result": {
