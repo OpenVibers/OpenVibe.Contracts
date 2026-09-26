@@ -69,7 +69,7 @@ export type ServiceTokenClaims = {
    */
   cap: string[];
   /**
-   * Namespace constraints, e.g. live.* or mod.example.*
+   * Namespace constraints, e.g. live.* or mod.example.*. A developer app token carries its project_id (the whole project, as issued before namespaces were rows) and app.<project_id>.*: on Media, app.<project_id> and app.<project_id>.sandbox are the project's production and sandbox namespaces, with children below them.
    */
   ns?: string[];
   iat: number;
@@ -39230,6 +39230,78 @@ export interface MediaFile {
   sandbox?: true;
   url_expires_at?: string | number;
   created_at: string;
+}
+
+/** media.object@1.0.0 (owner: media) */
+/**
+ * media.object@1: one object of the OpenVibe.Media object API v2 (/api/v2/:app/objects; Media server/objects/model.js objectPublic): its id and legacy ref, tenant and namespace (the tenant's root, or a namespace below it), kind, owner, visibility, lifecycle, type, size and hash, readiness, and where it is served. Copies are described by provider and state, never by path or key. More fields may be added.
+ */
+export interface MediaObject {
+  id: string;
+  media_ref?: MediaRef;
+  /**
+   * legacy:<app>:<kind>:<id> for an object projected from a VOD, clip, file or paste row; null for a native v2 object.
+   */
+  legacy_ref?: string | null;
+  /**
+   * The tenant: an app id, or prj_<ULID> / prj_<ULID>-sandbox for a developer project.
+   */
+  app_id: string;
+  /**
+   * The namespace grants name: the tenant's root (its app id; app.<project_id> or app.<project_id>.sandbox for a developer project) or a namespace below it (<root>.<segment>…).
+   */
+  namespace: string;
+  kind: "vod" | "clip" | "file" | "thumbnail" | "screenshot" | "avatar" | "asset";
+  owner?: {
+    subject?: string | null;
+    app?: string | null;
+    user_id?: number | null;
+  };
+  visibility: "public" | "unlisted" | "private";
+  lifecycle_status: "uploading" | "ready" | "failed" | "archived" | "deleted";
+  mime_type?: string | null;
+  size_bytes: number;
+  /**
+   * sha256 hex of the bytes, once known.
+   */
+  content_hash?: string | null;
+  metadata?: {};
+  /**
+   * Under a retention hold (its own, or a clip's source VOD's).
+   */
+  held?: boolean;
+  readiness?: {
+    metadata?: boolean;
+    bytes_verified?: boolean;
+    playable?: boolean;
+    reason?: string | null;
+  };
+  /**
+   * Where a public or unlisted ready object is served; null for private and sandbox objects (download signs them).
+   */
+  public_url?: string | null;
+  sandbox?: true;
+  locations?: {
+    provider: "local" | "b2" | "r2";
+    storage_class?: string | null;
+    state: "present" | "missing" | "pending" | "corrupt";
+    size_bytes?: number | null;
+    verified_at?: string | null;
+    canonical?: boolean;
+  }[];
+  created_at: string;
+  updated_at?: string | null;
+  deleted_at?: string | null;
+}
+
+/** media.object-list@1.0.0 (owner: media) */
+/**
+ * media.object-list@1: a page of GET /api/v2/:app/objects (media.object.list), newest first: the objects the caller may list in the tenant (a Network token sees only the namespaces its grant covers; ?namespace= narrows to one namespace and those below it), without their locations, and the cursor of the next page (null on the last).
+ */
+export interface MediaObjectList {
+  objects: MediaObject[];
+  next_cursor: string | null;
+  limit: number;
 }
 
 /** community.paste.created@1.0.0 (owner: community) */

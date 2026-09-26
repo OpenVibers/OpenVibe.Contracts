@@ -4,7 +4,7 @@
   "owner": "media",
   "status": "planned",
   "visibility": "public",
-  "description": "PLANNED as its own grant: derive new objects from an existing one as idempotent jobs (roadmap §30.2 media.derivative.*): object.split, object.remux or thumbnail.regenerate, and approve a proposed job. Derived objects are private and linked derived_from; the source never changes. Waveforms, sprites and previews are not built yet (roadmap §28.3 m3). The routes serve production today but Media checks media.object.upload on the jobs API (and an app key on the v1 thumbnail route); a token holding only this id is refused until Media's guard accepts it.",
+  "description": "PLANNED as its own grant: derive new objects from an existing one as idempotent jobs (roadmap §30.2 media.derivative.*): object.split, object.remux, object.waveform, object.sprite or thumbnail.regenerate, and approve or cancel a job. Derived objects are private, linked derived_from and stored in the source's namespace; the source never changes. Media's jobs API accepts it as the transform verb of its namespace grants (WS-G task 2), checked for the namespace of the job's object, and media.object.upload still grants that verb; the v1 thumbnail route takes an app key only. It becomes active (grantable to apps) once the job request and answer have schemas.",
   "permissions": [
     "media:write"
   ],
@@ -25,6 +25,7 @@
   "implementedBy": [
     "POST /api/v2/:app/jobs",
     "POST /api/v2/:app/jobs/:jobId/approve",
+    "POST /api/v2/:app/jobs/:jobId/cancel",
     "POST /api/v1/:app/thumbnails/:kind/:id"
   ]
 }

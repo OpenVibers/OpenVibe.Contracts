@@ -29,6 +29,8 @@
   "capabilities": [
     "media.object.upload",
     "media.object.read",
+    "media.object.list",
+    "media.object.delete",
     "media.upload.create",
     "media.derivative.create",
     "media.derivative.read",

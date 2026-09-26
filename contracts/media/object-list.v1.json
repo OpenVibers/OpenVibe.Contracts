@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/object-list.v1.json",
+  "title": "MediaObjectList",
+  "description": "media.object-list@1: a page of GET /api/v2/:app/objects (media.object.list), newest first: the objects the caller may list in the tenant (a Network token sees only the namespaces its grant covers; ?namespace= narrows to one namespace and those below it), without their locations, and the cursor of the next page (null on the last).",
+  "type": "object",
+  "required": [
+    "objects",
+    "next_cursor",
+    "limit"
+  ],
+  "properties": {
+    "objects": {
+      "type": "array",
+      "items": {
+        "$ref": "object.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200
+    }
+  }
+}

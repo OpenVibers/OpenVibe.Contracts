@@ -1,0 +1,23 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "app:app_01J0000000000000000000000Z",
+  "actor_type": "app",
+  "aud": [
+    "openvibe.media"
+  ],
+  "cap": [
+    "media.object.upload",
+    "media.object.read",
+    "media.object.list",
+    "media.object.delete"
+  ],
+  "ns": [
+    "prj_01J0000000000000000000000Z",
+    "app.prj_01J0000000000000000000000Z.*"
+  ],
+  "iat": 1790000000,
+  "exp": 1790000300,
+  "jti": "tok_abcdef13",
+  "project_id": "prj_01J0000000000000000000000Z",
+  "env": "production"
+}

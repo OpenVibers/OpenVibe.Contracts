@@ -431,6 +431,26 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
 }
 
 // ── Retired services (v0.34.0) ───────────────────────────────────────────
+// ── Media namespace grants (WS-G task 2) ──────────────────────────────────
+// Five verbs per namespace: read, list, write (upload), delete and transform. list and delete are
+// their own public, active, namespace-scoped capabilities; a family grant covers them; a developer
+// app token's app.<project_id>.* covers both of the project's tenants' namespaces and nothing else.
+{
+    for (const [id, out] of [['media.object.list', 'media.object-list@1'], ['media.object.delete', 'media.object@1']]) {
+        const c = capabilities.get(id);
+        ok(c && c.owner === 'media' && c.status === 'active' && c.visibility === 'public' && c.resourceConstraints.includes('namespace') && c.outputSchema === out && c.inputSchema === 'common.no-body@1', `${id} is a public, active, namespace-scoped capability answering ${out}`);
+    }
+    ok(capabilities.get('media.object.delete').events.includes('media.object.deleted'), 'media.object.delete announces media.object.deleted');
+    ok(capabilities.check({ cap: ['media.object.*'], ns: ['community'] }, 'media.object.delete', { namespace: 'community' }).allowed, 'the media.object.* family grants delete');
+    ok(capabilities.check({ cap: ['media.object.list'], ns: ['community.*'] }, 'media.object.list', { namespace: 'community.avatars' }).allowed, 'a child namespace under a wildcard');
+    ok(capabilities.check({ cap: ['media.object.list'], ns: ['community'] }, 'media.object.list', { namespace: 'community.avatars' }).code === 'capability.namespace_denied', 'the root alone is not its children');
+    const app = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/identity.service-token-claims/valid/app-project-namespaces.json'), 'utf8'));
+    const P = app.project_id;
+    ok(app.ns.includes(P) && app.ns.includes(`app.${P}.*`), 'an app token names its project and app.<project_id>.*');
+    ok(['', '.sandbox', '.avatars', '.sandbox.avatars'].every((x) => capabilities.namespaceAllowed(app.ns, `app.${P}${x}`)) && !capabilities.namespaceAllowed(app.ns, 'app.prj_01J00000000000000000000000.avatars'), 'app.<project_id>.* covers the project\'s namespaces only');
+    ok(capabilities.get('media.derivative.create').status === 'planned' && /transform verb/.test(capabilities.get('media.derivative.create').description), 'media.derivative.create says Media accepts it as the transform verb');
+}
+
 // A retired manifest offers nothing: no domain, capability, event or namespace. Realtime was closed
 // by ADR-005 (realtime runs inside OpenVibe.Events), so it is retired, not a placeholder.
 {

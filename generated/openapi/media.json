@@ -146,6 +146,190 @@
     }
    }
   },
+  "/api/v2/{app}/objects": {
+   "get": {
+    "operationId": "get_api_v2_app_objects",
+    "summary": "List the objects of a namespace (the list verb of Media's namespace grants, WS-G task 2): a Network token sees only the namespaces its ns covers, and ?namespace= narrows the list to one namespace and ",
+    "description": "**media.object.list** (public): List the objects of a namespace (the list verb of Media's namespace grants, WS-G task 2): a Network token sees only the namespaces its ns covers, and ?namespace= narrows the list to one namespace and those below it. The same verb guards the job list (GET /api/v2/:app/jobs), the namespace list with quotas and usage (GET /api/v2/:app/namespaces) and the v1 file list (GET /api/v1/:app/files). media.object.read also grants it, for tokens issued before the verbs were split, unless the namespace's policy is strict_verbs.",
+    "tags": [
+     "media.object"
+    ],
+    "x-openvibe-capabilities": [
+     "media.object.list"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "media-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "media.object.list"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "app",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/media.object-list.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v2/{app}/objects/{id}": {
+   "delete": {
+    "operationId": "delete_api_v2_app_objects_id",
+    "summary": "Delete an object in a namespace (the delete verb of Media's namespace grants, WS-G task 2): a soft delete that keeps the bytes for the retention period, and the restore that undoes it within that peri",
+    "description": "**media.object.delete** (public): Delete an object in a namespace (the delete verb of Media's namespace grants, WS-G task 2): a soft delete that keeps the bytes for the retention period, and the restore that undoes it within that period (checked against the namespace's quotas); refused while the object is under a retention hold. The same verb guards the v1 file delete (DELETE /api/v1/:app/files/:key). media.object.upload also grants it, for tokens issued before the verbs were split, unless the namespace's policy is strict_verbs.",
+    "tags": [
+     "media.object"
+    ],
+    "x-openvibe-capabilities": [
+     "media.object.delete"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "media-write",
+    "security": [
+     {
+      "openvibeToken": [
+       "media.object.delete"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "app",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/media.object.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v2/{app}/objects/{id}/restore": {
+   "post": {
+    "operationId": "post_api_v2_app_objects_id_restore",
+    "summary": "Delete an object in a namespace (the delete verb of Media's namespace grants, WS-G task 2): a soft delete that keeps the bytes for the retention period, and the restore that undoes it within that peri",
+    "description": "**media.object.delete** (public): Delete an object in a namespace (the delete verb of Media's namespace grants, WS-G task 2): a soft delete that keeps the bytes for the retention period, and the restore that undoes it within that period (checked against the namespace's quotas); refused while the object is under a retention hold. The same verb guards the v1 file delete (DELETE /api/v1/:app/files/:key). media.object.upload also grants it, for tokens issued before the verbs were split, unless the namespace's policy is strict_verbs.",
+    "tags": [
+     "media.object"
+    ],
+    "x-openvibe-capabilities": [
+     "media.object.delete"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "media-write",
+    "security": [
+     {
+      "openvibeToken": [
+       "media.object.delete"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "app",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/media.object.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/f/{key}": {
    "get": {
     "operationId": "get_f_key",
@@ -358,6 +542,265 @@
      },
      "created_at": {
       "type": "string"
+     }
+    }
+   },
+   "media.media-ref.v1": {
+    "title": "MediaRef",
+    "description": "Reference to a Media object. Canonical ids (med_<ULID>) arrive with the Wave 4 object model; until then legacy:<app>:<kind>:<id> addresses today's VOD/clip/file/paste/thumbnail rows.",
+    "type": "object",
+    "required": [
+     "media_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "media_id": {
+      "type": "string",
+      "pattern": "^(med_[0-9A-HJKMNP-TV-Z]{26}|legacy:[a-z][a-z0-9-]{1,39}:(vod|clip|file|paste|thumbnail|avatar):[A-Za-z0-9._/-]{1,200})$"
+     },
+     "role": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,39}$"
+     },
+     "variant": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$"
+     }
+    }
+   },
+   "media.object-list.v1": {
+    "title": "MediaObjectList",
+    "description": "media.object-list@1: a page of GET /api/v2/:app/objects (media.object.list), newest first: the objects the caller may list in the tenant (a Network token sees only the namespaces its grant covers; ?namespace= narrows to one namespace and those below it), without their locations, and the cursor of the next page (null on the last).",
+    "type": "object",
+    "required": [
+     "objects",
+     "next_cursor",
+     "limit"
+    ],
+    "properties": {
+     "objects": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/media.object.v1"
+      }
+     },
+     "next_cursor": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200
+     }
+    }
+   },
+   "media.object.v1": {
+    "title": "MediaObject",
+    "description": "media.object@1: one object of the OpenVibe.Media object API v2 (/api/v2/:app/objects; Media server/objects/model.js objectPublic): its id and legacy ref, tenant and namespace (the tenant's root, or a namespace below it), kind, owner, visibility, lifecycle, type, size and hash, readiness, and where it is served. Copies are described by provider and state, never by path or key. More fields may be added.",
+    "type": "object",
+    "required": [
+     "id",
+     "app_id",
+     "namespace",
+     "kind",
+     "visibility",
+     "lifecycle_status",
+     "size_bytes",
+     "created_at"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "media_ref": {
+      "$ref": "#/components/schemas/media.media-ref.v1"
+     },
+     "legacy_ref": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "legacy:<app>:<kind>:<id> for an object projected from a VOD, clip, file or paste row; null for a native v2 object."
+     },
+     "app_id": {
+      "type": "string",
+      "description": "The tenant: an app id, or prj_<ULID> / prj_<ULID>-sandbox for a developer project."
+     },
+     "namespace": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The namespace grants name: the tenant's root (its app id; app.<project_id> or app.<project_id>.sandbox for a developer project) or a namespace below it (<root>.<segment>…)."
+     },
+     "kind": {
+      "enum": [
+       "vod",
+       "clip",
+       "file",
+       "thumbnail",
+       "screenshot",
+       "avatar",
+       "asset"
+      ]
+     },
+     "owner": {
+      "type": "object",
+      "properties": {
+       "subject": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "app": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "user_id": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       }
+      }
+     },
+     "visibility": {
+      "enum": [
+       "public",
+       "unlisted",
+       "private"
+      ]
+     },
+     "lifecycle_status": {
+      "enum": [
+       "uploading",
+       "ready",
+       "failed",
+       "archived",
+       "deleted"
+      ]
+     },
+     "mime_type": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "size_bytes": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "content_hash": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "sha256 hex of the bytes, once known."
+     },
+     "metadata": {
+      "type": "object"
+     },
+     "held": {
+      "type": "boolean",
+      "description": "Under a retention hold (its own, or a clip's source VOD's)."
+     },
+     "readiness": {
+      "type": "object",
+      "properties": {
+       "metadata": {
+        "type": "boolean"
+       },
+       "bytes_verified": {
+        "type": "boolean"
+       },
+       "playable": {
+        "type": "boolean"
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     },
+     "public_url": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Where a public or unlisted ready object is served; null for private and sandbox objects (download signs them)."
+     },
+     "sandbox": {
+      "const": true
+     },
+     "locations": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "provider",
+        "state"
+       ],
+       "properties": {
+        "provider": {
+         "enum": [
+          "local",
+          "b2",
+          "r2"
+         ]
+        },
+        "storage_class": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "state": {
+         "enum": [
+          "present",
+          "missing",
+          "pending",
+          "corrupt"
+         ]
+        },
+        "size_bytes": {
+         "type": [
+          "integer",
+          "null"
+         ]
+        },
+        "verified_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "canonical": {
+         "type": "boolean"
+        }
+       }
+      }
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "updated_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "deleted_at": {
+      "type": [
+       "string",
+       "null"
+      ]
      }
     }
    }

@@ -53,7 +53,7 @@
       "items": {
         "type": "string"
       },
-      "description": "Namespace constraints, e.g. live.* or mod.example.*"
+      "description": "Namespace constraints, e.g. live.* or mod.example.*. A developer app token carries its project_id (the whole project, as issued before namespaces were rows) and app.<project_id>.*: on Media, app.<project_id> and app.<project_id>.sandbox are the project's production and sandbox namespaces, with children below them."
     },
     "iat": {
       "type": "integer"

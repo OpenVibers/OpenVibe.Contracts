@@ -1,0 +1,21 @@
+{
+  "id": "media.object.list",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "public",
+  "description": "List the objects of a namespace (the list verb of Media's namespace grants, WS-G task 2): a Network token sees only the namespaces its ns covers, and ?namespace= narrows the list to one namespace and those below it. The same verb guards the job list (GET /api/v2/:app/jobs), the namespace list with quotas and usage (GET /api/v2/:app/namespaces) and the v1 file list (GET /api/v1/:app/files). media.object.read also grants it, for tokens issued before the verbs were split, unless the namespace's policy is strict_verbs.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "media.object-list@1",
+  "permissions": [
+    "media:read"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "media-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v2/:app/objects"
+  ]
+}

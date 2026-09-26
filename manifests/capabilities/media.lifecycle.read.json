@@ -4,7 +4,7 @@
   "owner": "media",
   "status": "planned",
   "visibility": "public",
-  "description": "PLANNED as its own grant: read an object's lifecycle status (uploading, ready, failed, archived, deleted), its retention holds, deletion time and storage locations (roadmap §30.2 media.lifecycle.read). The routes serve production today but Media checks media.object.read on them; a token holding only this id is refused until Media's guard accepts it.",
+  "description": "PLANNED as its own grant: read an object's lifecycle status (uploading, ready, failed, archived, deleted), its retention holds, deletion time and storage locations (roadmap §30.2 media.lifecycle.read). The routes serve production today but Media checks media.object.read on them (the list with media.object.list, which media.object.read also grants); a token holding only this id is refused until Media's guard accepts it.",
   "permissions": [
     "media:read"
   ],

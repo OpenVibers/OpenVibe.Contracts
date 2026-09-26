@@ -1,0 +1,25 @@
+{
+  "id": "media.object.delete",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "public",
+  "description": "Delete an object in a namespace (the delete verb of Media's namespace grants, WS-G task 2): a soft delete that keeps the bytes for the retention period, and the restore that undoes it within that period (checked against the namespace's quotas); refused while the object is under a retention hold. The same verb guards the v1 file delete (DELETE /api/v1/:app/files/:key). media.object.upload also grants it, for tokens issued before the verbs were split, unless the namespace's policy is strict_verbs.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "media.object@1",
+  "permissions": [
+    "media:write"
+  ],
+  "resourceConstraints": [
+    "namespace",
+    "owner"
+  ],
+  "quotaClass": "media-write",
+  "events": [
+    "media.object.deleted"
+  ],
+  "implementedBy": [
+    "DELETE /api/v2/:app/objects/:id",
+    "POST /api/v2/:app/objects/:id/restore"
+  ]
+}

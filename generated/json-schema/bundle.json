@@ -220,7 +220,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Namespace constraints, e.g. live.* or mod.example.*"
+            "description": "Namespace constraints, e.g. live.* or mod.example.*. A developer app token carries its project_id (the whole project, as issued before namespaces were rows) and app.<project_id>.*: on Media, app.<project_id> and app.<project_id>.sandbox are the project's production and sandbox namespaces, with children below them."
           },
           "iat": {
             "type": "integer"
@@ -44200,6 +44200,256 @@
           },
           "created_at": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "media.object": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/object.v1.json",
+        "title": "MediaObject",
+        "description": "media.object@1: one object of the OpenVibe.Media object API v2 (/api/v2/:app/objects; Media server/objects/model.js objectPublic): its id and legacy ref, tenant and namespace (the tenant's root, or a namespace below it), kind, owner, visibility, lifecycle, type, size and hash, readiness, and where it is served. Copies are described by provider and state, never by path or key. More fields may be added.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "namespace",
+          "kind",
+          "visibility",
+          "lifecycle_status",
+          "size_bytes",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "media_ref": {
+            "$ref": "media-ref.v1.json"
+          },
+          "legacy_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "legacy:<app>:<kind>:<id> for an object projected from a VOD, clip, file or paste row; null for a native v2 object."
+          },
+          "app_id": {
+            "type": "string",
+            "description": "The tenant: an app id, or prj_<ULID> / prj_<ULID>-sandbox for a developer project."
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The namespace grants name: the tenant's root (its app id; app.<project_id> or app.<project_id>.sandbox for a developer project) or a namespace below it (<root>.<segment>…)."
+          },
+          "kind": {
+            "enum": [
+              "vod",
+              "clip",
+              "file",
+              "thumbnail",
+              "screenshot",
+              "avatar",
+              "asset"
+            ]
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "app": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "private"
+            ]
+          },
+          "lifecycle_status": {
+            "enum": [
+              "uploading",
+              "ready",
+              "failed",
+              "archived",
+              "deleted"
+            ]
+          },
+          "mime_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "content_hash": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "sha256 hex of the bytes, once known."
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "held": {
+            "type": "boolean",
+            "description": "Under a retention hold (its own, or a clip's source VOD's)."
+          },
+          "readiness": {
+            "type": "object",
+            "properties": {
+              "metadata": {
+                "type": "boolean"
+              },
+              "bytes_verified": {
+                "type": "boolean"
+              },
+              "playable": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "public_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Where a public or unlisted ready object is served; null for private and sandbox objects (download signs them)."
+          },
+          "sandbox": {
+            "const": true
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "provider",
+                "state"
+              ],
+              "properties": {
+                "provider": {
+                  "enum": [
+                    "local",
+                    "b2",
+                    "r2"
+                  ]
+                },
+                "storage_class": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "state": {
+                  "enum": [
+                    "present",
+                    "missing",
+                    "pending",
+                    "corrupt"
+                  ]
+                },
+                "size_bytes": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "verified_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "canonical": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "media.object-list": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/object-list.v1.json",
+        "title": "MediaObjectList",
+        "description": "media.object-list@1: a page of GET /api/v2/:app/objects (media.object.list), newest first: the objects the caller may list in the tenant (a Network token sees only the namespaces its grant covers; ?namespace= narrows to one namespace and those below it), without their locations, and the cursor of the next page (null on the last).",
+        "type": "object",
+        "required": [
+          "objects",
+          "next_cursor",
+          "limit"
+        ],
+        "properties": {
+          "objects": {
+            "type": "array",
+            "items": {
+              "$ref": "object.v1.json"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
           }
         }
       }

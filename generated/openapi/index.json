@@ -89,8 +89,8 @@
       "service": "media",
       "name": "OpenVibe.Media",
       "origin": "https://openvibe.media",
-      "operations": 3,
-      "capabilities": 2
+      "operations": 6,
+      "capabilities": 4
     },
     {
       "service": "network",

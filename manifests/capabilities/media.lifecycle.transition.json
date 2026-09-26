@@ -4,7 +4,7 @@
   "owner": "media",
   "status": "planned",
   "visibility": "first-party",
-  "description": "PLANNED as its own grant: change an object's lifecycle (roadmap §30.2 media.lifecycle.transition): restore a soft-deleted object within retention, place or release retention holds (moderation, dmca, creator_pin, admin, evidence), and move VOD bytes between storage tiers. Soft delete itself is DELETE /api/v2/:app/objects/:id; no route sets archived. Today restore checks media.object.upload and holds and tier moves take an app key only.",
+  "description": "PLANNED as its own grant: change an object's lifecycle (roadmap §30.2 media.lifecycle.transition): restore a soft-deleted object within retention, place or release retention holds (moderation, dmca, creator_pin, admin, evidence), and move VOD bytes between storage tiers. Soft delete itself is DELETE /api/v2/:app/objects/:id; no route sets archived. Today restore checks the delete verb (media.object.delete, or media.object.upload) and holds and tier moves take an app key only.",
   "permissions": [
     "media:write"
   ],

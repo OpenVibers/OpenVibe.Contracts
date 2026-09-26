@@ -4017,6 +4017,24 @@
       "status": "active"
     },
     {
+      "id": "media.object",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/object.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.object-list",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/object-list.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "community.paste.created",
       "version": "1.0.0",
       "owner": "community",
