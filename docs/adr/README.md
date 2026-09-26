@@ -27,7 +27,7 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 | [ADR-021](ADR-021-analytics.md) | Analytics ownership and privacy bounds | Accepted 2026-09-23: contract now, 30-day raw retention; extraction decided 2026-09-24: no analytics service |
 | [ADR-022](ADR-022-moderation-console.md) | Moderation and policy console | Accepted 2026-09-23: Network module + audit events; Wave 12 revisit 2026-09-24: stands |
 | [ADR-023](ADR-023-client-surfaces.md) | First-party client surfaces | Accepted 2026-09-23: OpenVibe.Extensions at Wave 18 |
-| [ADR-024](ADR-024-theme-authority.md) | Theme authority between Network and Shared | Accepted 2026-09-23 |
+| [ADR-024](ADR-024-theme-authority.md) | Theme authority between Network and Shared | Accepted 2026-09-23; amendment 1 (2026-09-26): preference stays Network data, reviewed community themes, allow-listed values |
 | [ADR-025](ADR-025-marketplace-scope.md) | Marketplace and commerce scope | Accepted 2026-09-23: Trade stays informational |
 | [ADR-026](ADR-026-event-redaction.md) | Producer redaction of its own events (`payload.redacts`) and event payload contracts | Accepted and implemented 2026-09-23 (OpenVibe.Events, Chat) |
 | [ADR-027](ADR-027-tools-platform-api.md) | Tools platform API: descriptors, one run API, caller tiers, probes, abuse log, legacy sunset | Accepted 2026-09-23; contracts v0.33.0, routes planned |

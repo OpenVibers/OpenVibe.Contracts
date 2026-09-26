@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.57.1 — 2026-09-26
+
+**ADR-024 amendment 1** (roadmap WS-E task 2): the theme preference stays Network's own data (not a user module); community themes are reviewed before they are public; theme names and values are allow-listed (shared tokens; colours, numbers, lengths and shadows only); themes import and export as `openvibe-theme@1` files. Documentation only.
+
 ## 0.57.0 — 2026-09-26
 
 **Chat rooms on the realtime plane** (roadmap WS-I task 9). Two event types OpenVibe.Chat produces, with payload contracts:

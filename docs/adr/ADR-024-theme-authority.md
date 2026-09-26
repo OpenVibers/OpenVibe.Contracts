@@ -36,3 +36,14 @@ Not applicable.
 
 - With Network down, every site paints with the default theme.
 - A user's preference follows them across sites.
+
+## Amendment 1 (2026-09-26): the preference, community themes, and what a theme may contain
+
+**Status:** Accepted (roadmap WS-E task 2).
+
+- **The preference stays Network's own data**, in its `user_preferences` table (`theme_id`, custom overrides, display preferences), read at `GET /api/themes/me/active` by every site's loader. It is not a user module: Network owns both the catalog and the module store, and a module would copy the same row with nothing gained. This replaces "as a user module" in the decision above.
+- **Community themes are reviewed.** A submission, or an imported file, is pending and private to its author, who can use it at once, until an admin approves it (`/api/admin/themes`, a reason is required to reject). The public catalog and theme pages show approved themes only. At most five submissions wait per person.
+- **What a theme may contain is allow-listed**, because every site applies it as CSS custom properties. Names: only the token vocabulary OpenVibe.Shared ships. Values: colours, numbers, lengths and shadows only — no `url()`, `var()`, `expression()`, quotes, semicolons or braces. The same rule applies to a person's custom overrides.
+- **Import and export:** `GET /api/themes/:id/export` writes an `openvibe-theme@1` file (name, slug, description, mode, variables, tags); `POST /api/themes/import` takes one back as a new submission.
+
+**Acceptance.** Network `test/themes-review.test.js`: pending themes are hidden from others and the catalog; approval publishes; rejection needs a note; `url()`, break-outs, `var()` and unknown tokens are refused; export and import round-trip; the pending limit holds.
