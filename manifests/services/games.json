@@ -52,5 +52,58 @@
   "namespacesOwned": [
     "games.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/healthz",
+      "means": "the process is up and answers HTTP; liveness only (world.db and the simulation tick are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 0,
+      "drains": [
+        "metrics timer stopped",
+        "world saved: every session marked dirty and flushed (game.shutdown)",
+        "media mirror stopped; outbox stop requested, not awaited (unsent rows stay in the outbox)",
+        "store closed, HTTP close requested, physics disposed",
+        "process exits at once"
+      ],
+      "note": "exits synchronously: open WebSocket sessions are cut, not drained, and in-flight HTTP requests are dropped"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "the world is restored from world.db before the network opens (schema migrated forward first)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        },
+        {
+          "kind": "jobs",
+          "what": "the media mirror backfills what it has not uploaded yet, then keeps mirroring"
+        },
+        {
+          "kind": "sessions",
+          "what": "players reconnect; characters were saved on shutdown"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "manual only: Games is not managed by ovhost (pnpm workspace with a TypeScript build); check out the previous commit, rebuild and restart openvibe-games.service"
+      ],
+      "window": "as long as world.db has not been migrated past the older build's SCHEMA_VERSION",
+      "blockers": [
+        "a build refuses a world.db whose meta.schema_version is newer than its own (SCHEMA_VERSION 13 today, forward-only migrations): going back past a schema bump fails at boot"
+      ]
+    },
+    "contracts": {
+      "range": ">=0.8.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns world.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Scraplandia (browser runtime). Players are keyed by canonical Network subjects (ADR-0006 in the repo). Calls Events (events.event.publish), Media (media.object.upload, namespace games: map-editor assets) and Network identity (identity.subject.resolve, batch legacy adoption) with the games client-credentials principal. Mods: games-content@1 declarative packs only; executable mods wait for OpenVibe.Host Stage C. No achievement system exists, so there are no games.achievement.* events."
 }

@@ -63,5 +63,53 @@
   "namespacesOwned": [
     "news.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "worker stopped (Sources cursor pull)",
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "consumer",
+          "what": "the OpenVibe.Sources change feed is pulled again from the stored cursor, so items published during the stop arrive (idempotent per item revision)"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers sources.item.* and sources.fetch.failed that were pending during the stop (at least once, deduped by event_id)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.19.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns news.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Port 4820. Owns news_topics, news_source_items, news_story_clusters, news_stories, news_story_revisions, news_story_sources, news_perspectives, news_timeline_entries, news_editorial_flags in its own SQLite (openvibe-publishing packages, prefixes news_story and news). Consumes OpenVibe.Sources (sources.item.read, optionally sources.source.read) through an Events subscription (sources.item.*, sources.fetch.failed; events.subscription.manage) and a cursor pull; OpenVibe.Network (SSO, identity.subject.resolve); optionally OpenVibe.AI (ai.run.create, namespace news) for news.summarize_story and news.compare_perspectives drafts; publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads news.index_document.* from Events."
 }

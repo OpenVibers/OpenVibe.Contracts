@@ -65,5 +65,57 @@
   "namespacesOwned": [
     "tips.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process answers and reports the outbox status from its database; it checks no dependency (Billing and the Network key are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "job timers cleared",
+        "overlay streams closed",
+        "outbox relay and Network key refresh stopped",
+        "HTTP server closed, then the database"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "pending chat effects are delivered again with retries; due Billing transfers of funded checkouts are sent again"
+        },
+        {
+          "kind": "schedule",
+          "what": "overlay deliveries past their window are marked failed"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers billing.transaction.settled, billing.transaction.reversed and billing.receipt.external that were pending during the stop (at least once, deduped by event_id)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.11.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns tips.db (better-sqlite3, single writer); an effect moves with a compare-and-set on its state"
+    }
+  },
   "notes": "Creator support (roadmap Wave 9): tip interactions whose payment state mirrors OpenVibe.Billing (keyed by Billing transaction id) and whose delivery state is Tips' own; goals derived from settled interactions; paid messages, TTS and media requests created on settlement; scoped revocable overlay tokens with SSE overlays; simulation mode. Tips never moves money (ADR-012). Alpha: deployed internally (loopback only), not launched publicly: openvibe.tips serves the OpenVibe.Sites placeholder until the launch rule in README.md holds."
 }

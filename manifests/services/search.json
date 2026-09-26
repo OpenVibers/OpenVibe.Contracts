@@ -33,5 +33,55 @@
     "*.index_document.deleted"
   ],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "outbox prune timer and key refresh stopped",
+        "outbox relay stopped (awaited)",
+        "CDN purger stopped (awaited)",
+        "open HTTP connections closed, then the server",
+        "database closed"
+      ],
+      "note": "the forced exit after 10 s exits 1"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        },
+        {
+          "kind": "jobs",
+          "what": "the purger resumes the cdn_purges rows still pending; the removals feed stays readable by products"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers *.index_document.upserted and *.index_document.deleted that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.7.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns search.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Canonical index document (search.index-document@1), event-fed and direct indexing with revision ordering and tombstones, permission-aware query over SQLite FTS5 (docs/adr-engine.md). Anonymous queries need no token."
 }

@@ -40,5 +40,45 @@
   "namespacesOwned": [
     "codes.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ],
+      "note": "keepAliveTimeout is 65 s, so an idle keep-alive connection can hold server.close() until the forced exit at 5 s"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": [
+        "the trust table was rebuilt once to the ADR-013 tier names (server/db.js maps the old values): a release from before it expects the old tier names"
+      ]
+    },
+    "contracts": {
+      "range": ">=0.26.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns codes.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Port 4900, unit openvibe-codes.service, state /var/lib/openvibe-codes. The developer portal (ADR-014): projects, members, apps, credentials, grants and quotas are OWNED BY NETWORK and shown through Network's /api/v1/projects API with the signed-in person's own token; Codes stores none of them and never a secret. Codes owns only manifests, releases (+ append-only release_log), trust tiers (metadata) and playground run logs in its own SQLite. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client codes, JWKS, the projects API, the registry, client-credentials) and publishes through OpenVibe.Events (events.event.publish). Playgrounds call Events and Media with the APP's own token only. Docs are generated at boot from the pinned openvibe-contracts and openvibe-sdk."
 }

@@ -32,6 +32,67 @@
     "chat.dm_settings",
     "chat.presence_prefs"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (Chat's database and the Live sync are what /ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 8,
+      "drains": [
+        "server_restart notice broadcast to every chat socket",
+        "Live sync, outbox relay, Live mirror, Events consumer and subscriptions stopped",
+        "Live mirror flushed (at most 3 s)",
+        "chat and call WebSocket servers closed",
+        "HTTP server closed, then the database"
+      ],
+      "note": "at most 3 s of mirror flush, then a forced exit 5 s later"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "a first sync with Live (waited on for at most 15 s) runs before the socket listens"
+        },
+        {
+          "kind": "sessions",
+          "what": "clients reconnect after the restart notice; the audio queue finishes rows that were playing and plays the rest once a room has listeners again; call rooms left open are closed with reason restart"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox and changes queued in live_mirror_outbox (the read mirror Live keeps for a rollback) are sent again"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers the events of Chat's subscriptions (network.block.changed, network.user.token_valid_after, live.release.deployed, …) that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.13.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "a Live release's deploy card (deploy_releases, keyed by the head commit)",
+          "holder": "the first path that stores it: the Live bridge or the live.release.deployed event",
+          "expires": "never (the row stays); a live.release.deployed older than 6 hours announces nothing",
+          "fencing": "the claim and the card are written in one transaction, so the second path folds into the existing card instead of posting another"
+        }
+      ]
+    }
+  },
   "notes": "Wave 6: Live's chat (WebSocket, DMs, history, TTS, sounds, moderation) behind a service boundary on 127.0.0.1:4400, serving Live's chat paths since 2026-09-23. Since 2026-09-24 also its own site, openvibe.chat (global chat, messages, settings, sign-in with the Network), which works while Live is down.",
   "health": "/health",
   "ready": "/ready",

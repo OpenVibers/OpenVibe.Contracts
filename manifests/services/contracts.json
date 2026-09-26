@@ -19,5 +19,32 @@
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "a library (openvibe-contracts); nothing runs"
+    },
+    "shutdown": {
+      "none": "a library (openvibe-contracts); nothing runs"
+    },
+    "startupRecovery": {
+      "none": "a library (openvibe-contracts); nothing runs"
+    },
+    "rollback": {
+      "conditions": [
+        "manual: consumers pin release tags; going back means pinning the previous tag in package.json and redeploying the consumer"
+      ],
+      "window": "any time; a published tag is never moved or deleted",
+      "blockers": [
+        "a consumer that already uses an API added in the newer tag must drop that use first"
+      ]
+    },
+    "leases": {
+      "none": "a library (openvibe-contracts); nothing runs"
+    },
+    "contracts": {
+      "range": ">=0.2.0 <1.0.0",
+      "note": "its own release line; consumers pin a tag"
+    }
+  },
   "notes": "Machine-readable contracts for the whole OpenVibe network. Artifact repository; no runtime."
 }

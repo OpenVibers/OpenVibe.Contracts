@@ -15,5 +15,31 @@
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "a library (openvibe-sdk); nothing runs"
+    },
+    "shutdown": {
+      "none": "a library (openvibe-sdk); nothing runs"
+    },
+    "startupRecovery": {
+      "none": "a library (openvibe-sdk); nothing runs"
+    },
+    "rollback": {
+      "conditions": [
+        "manual: consumers pin release tags; going back means pinning the previous tag in package.json and redeploying the consumer"
+      ],
+      "window": "any time; a published tag is never moved or deleted",
+      "blockers": [
+        "a consumer that already uses an API added in the newer tag must drop that use first"
+      ]
+    },
+    "leases": {
+      "none": "a library (openvibe-sdk); nothing runs"
+    },
+    "contracts": {
+      "none": "no manifest range: it pins openvibe-contracts v0.49.0 in package.json"
+    }
+  },
   "notes": "Supported browser and server clients for the OpenVibe platform (openvibe-sdk). A released library, not a runtime: tagged releases installed from https://codeload.github.com/OpenVibers/OpenVibe.SDK/tar.gz/refs/tags/<tag> (v0.4.0 on 2026-09-23). Nothing to deploy or poll."
 }

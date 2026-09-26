@@ -52,5 +52,56 @@
   "namespacesOwned": [
     "wiki.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "schedule, media-check and projects timers cleared",
+        "outbox relay stopped (awaited)",
+        "HTTP server closed",
+        "database closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "scheduled publish/unpublish jobs that fell due, and running jobs whose lease expired, are claimed again (openvibe-publishing/schedule, at least once, re-run safe)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.13.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "a scheduled publication job (wiki_schedule_jobs)",
+          "holder": "lease_owner = WIKI_WORKER_ID, default wiki-<pid>",
+          "expires": "lease_until = claim time + 60 s (scheduleLeaseMs default); taken again only after it passed",
+          "fencing": "complete, retry and fail only count WHERE lease_owner is the caller, so a worker whose lease was taken over cannot overwrite the new owner's result"
+        }
+      ]
+    }
+  },
   "notes": "Wiki spaces (official and user), page trees with canonical slugs and history-aware redirects, immutable revisions with diff and revert, typed infoboxes, [[internal links]] with red links, citations per revision (Sources items or URLs with retrieval time), Media attachments with an explicit broken state, Community discussion references, watchers notified through wiki.watch.triggered, AI proposals held for a person's approval. Server-rendered public routes useful without JavaScript; sitemaps, Atom/JSON feeds and Search index events only for public, published, indexable pages (openvibe-publishing v0.2.0). Deployed and public at https://openvibe.wiki."
 }

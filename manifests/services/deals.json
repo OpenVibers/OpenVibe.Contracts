@@ -59,5 +59,53 @@
   "namespacesOwned": [
     "deals.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "worker stopped (expiry, hotness, freshness, Sources, housekeeping)",
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "the next worker tick applies stated expiries, hotness and freshness that fell due; every step is idempotent"
+        },
+        {
+          "kind": "consumer",
+          "what": "the OpenVibe.Sources change feed is pulled again from the stored cursor, so items published during the stop arrive (idempotent per item revision)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.19.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns deals.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Port 4840. Owns deal_products, deal_product_aliases, deal_offers, deal_offer_sources, deal_votes, deal_hotness_snapshots, deal_watches, deal_price_observations, deal_flags (+ deal_stores) in its own SQLite. Consumes OpenVibe.Network (SSO, identity.subject.resolve), OpenVibe.Sources (sources.item.read; sources.item.* events only wake the pull), OpenVibe.Community (community.comment.write, community.comment.moderate) and publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads deals.index_document.* from Events; OpenVibe.Network turns deals.watch.matched into notifications (server/notifications/events-consumer.js)."
 }

@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": "^0.1.0"
+  },
+  "id": "media",
+  "name": "OpenVibe.Media",
+  "status": "beta",
+  "repository": "OpenVibers/OpenVibe.Media",
+  "domains": [
+    "openvibe.media"
+  ],
+  "publicOrigin": "https://openvibe.media",
+  "health": "/healthz",
+  "capabilities": [
+    "media.object.upload",
+    "media.object.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "media.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/healthz",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 70,
+      "drains": [
+        "recordings stopped",
+        "HTTP server closed, then the database"
+      ],
+      "note": "forced exit after 70 s"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "magic",
+          "what": "jobs left running are retried or failed"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events go to OpenVibe.Events"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: readiness not reached after the restart"
+      ],
+      "window": "while the deploy waits for readiness",
+      "blockers": {
+        "none": "the schema code only adds"
+      }
+    },
+    "contracts": {
+      "range": "^0.1.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "a job row",
+          "holder": "the Media process",
+          "expires": "lease_until, renewed while running",
+          "fencing": "status must still be running"
+        }
+      ]
+    }
+  }
+}

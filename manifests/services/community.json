@@ -57,5 +57,51 @@
     "what": "Share text and code with a link, comment, and follow what people on OpenVibe are making.",
     "legalProfile": "ugc",
     "position": 2
+  },
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "HTTP server closed"
+      ],
+      "note": "only the HTTP server is closed: the events outbox, the Discord relay, the Pulse subscriptions and the profile and search-document scans are not stopped and end with the process"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        },
+        {
+          "kind": "schedule",
+          "what": "the Roadmap space re-syncs from docs/roadmap/public.json; the community.profile and search-document scans start again from what changed"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.block.changed and network.user.token_valid_after (and the Pulse subscriptions, re-created idempotently at boot) that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.5.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns community.db (better-sqlite3, single writer)"
+    }
   }
 }

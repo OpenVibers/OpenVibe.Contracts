@@ -44,5 +44,60 @@
   "namespacesOwned": [
     "billing.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process answers and reads the economy freeze flag from its database; it reports the authority, providers and relay but checks no dependency"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "job timers cleared (provider-event retry, renewal sweep, reconciliation)",
+        "outbox relay and Network key refresh stopped",
+        "HTTP server closed",
+        "database closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "stored provider events without processed_at are processed again every minute (processPending); each applies at most once"
+        },
+        {
+          "kind": "schedule",
+          "what": "the hourly subscription renewal sweep and the reconciliation run (first one 60 s after boot) pick up what fell due"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.5.1 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "a stored provider event (provider_events row) while it is applied",
+          "holder": "the connection that takes the SQLite write lock (IMMEDIATE transaction)",
+          "expires": "at commit or rollback of that transaction",
+          "fencing": "processed_at is re-read inside the transaction, so a second process or connection that waited applies nothing; ledger postings carry idempotency keys"
+        }
+      ]
+    }
+  },
   "notes": "The isolated money ledger (ADR-012): balanced append-only journal, provider receipts, subscriptions/entitlements, refunds and payouts. Alpha, shadow mode: Live stays authoritative for money until the Wave 8 cutover; Billing imports and reconciles."
 }

@@ -42,5 +42,57 @@
   "namespacesOwned": [
     "host.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP (the Host API on 4910; the ovhost CLI is not a daemon); it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "worker stopped (domain checks, object sweep, outbox prune)",
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "metrics stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "pending custom domains are checked again; objects no deploy references and interrupted temp files are swept after an hour"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.10.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "one ovhost operation at a time per service (deploy and rollback; a drill and backup --all take their own locks)",
+          "holder": "the ovhost process: <stateDir>/locks/<service>.lock holds its pid",
+          "expires": "when the operation releases it",
+          "fencing": "a lock whose pid is no longer alive is removed and taken again (exclusive create); a live holder refuses the second operation"
+        }
+      ]
+    }
+  },
   "notes": "Stage A: the ovhost operator CLI (no server). Stage B: the Host API service on port 4910 (unit openvibe-host.service, state /var/lib/openvibe-host-api): tenant projects keyed by project id (prj_, network_project_id once Network has projects, ADR-014), static sites served by Host header at <site>.openvibe.host (a registrable domain separate from every other OpenVibe domain) and on TXT-verified custom domains, immutable content-addressed deploys with rollback, quotas enforced here, upload logs. Consumes OpenVibe.Network (SSO, JWKS, client-credentials) and publishes through OpenVibe.Events (events.event.publish). Stage C (sandboxed user code) is not started."
 }

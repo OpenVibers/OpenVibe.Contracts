@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.55.0 — 2026-09-26
+
+**Lifecycle declarations** (roadmap WS-P task 1). `registry.service-manifest@1` gains an optional `lifecycle` block, and every one of the 31 manifests fills it from its service's code and systemd units:
+- `liveness`: the endpoint (the manifest's `health`) and what a 200 from it proves;
+- `shutdown`: `signal`, `deadlineSeconds` (the longest the process takes from the signal to exiting, as its own forced-exit timer bounds it), `drains` in order, optional `workers` (worker units that drain on their own, OpenRe's) and a `note` for gaps (the Tools gateway has no SIGTERM handler; Games and Community drain almost nothing);
+- `startupRecovery.resumes`: what the next start picks up, each as outbox, jobs, sessions, consumer, schedule or state;
+- `rollback`: `conditions` (automatic and manual), `window` and `blockers` (forward-only migrations, table rebuilds, authority switches);
+- `contracts.range`: the openvibe-contracts versions accepted, the same as `contractRanges`;
+- `leases.claims`: what is claimed, by whom, when it lapses and how a stale holder is fenced.
+
+A part that does not apply is `{ "none": "<why>" }` (libraries, the Examples repository, retired Realtime, static Sites). `npm test` checks that every manifest declares all six, that a running service's liveness endpoint is its `health` and its shutdown is concrete, that a library declares none for liveness, shutdown and recovery, that `contracts.range` matches `contractRanges`, and that every lifecycle field has a description. `ovhost validate` (OpenVibe.Host) refuses a host service whose lifecycle lacks a field or whose deadline exceeds its unit's TimeoutStopSec. Additive.
+
 ## 0.54.0 — 2026-09-26
 
 **`media.moderation.action`** (ADR-022, WS-D task 1): Media's staff actions on someone else's media, which are retention holds placed or released and staff deletions or visibility changes. The payload is common.moderation-action@1, produced by media and consumed by network.

@@ -34,5 +34,50 @@
   ],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 20,
+      "drains": [
+        "scheduler stopped; runs in flight get up to 15 s to finish",
+        "outbox relay stopped (awaited)",
+        "open HTTP connections closed, then the server",
+        "database closed"
+      ],
+      "note": "the forced exit after 20 s exits 1"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "sources whose next_due_at passed during the stop are fetched on the first ticks, oldest first"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.7.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns sources.db (better-sqlite3, single writer); a second run of a source already in flight is refused in memory"
+    }
+  },
   "notes": "Source registry and ingestion workers (RSS/Atom, sitemaps, JSON-LD, mapped official APIs, manual). Every item carries provenance; every fetch is a recorded run with an explicit state; failures never create or modify items."
 }

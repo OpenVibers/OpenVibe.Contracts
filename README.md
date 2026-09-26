@@ -188,6 +188,21 @@ Tools' problem codes are listed with the routes that answer them (`tools.run-req
 `503 tools.unavailable` (a program or upstream a tool needs is missing), and, with `Retry-After`,
 `429 tools.quota.exceeded` and `503 tools.busy`.
 
+## Lifecycle declarations (v0.55)
+
+Each service manifest has a `lifecycle` block, filled from the service's code and systemd units (roadmap WS-P task 1). A part that does not apply is `{ "none": "<why>" }`.
+
+| Field | What it says |
+|---|---|
+| `liveness` | `endpoint` (the manifest's `health`) and `means`: what a 200 proves. Readiness stays `ready`. |
+| `shutdown` | `signal`, `deadlineSeconds` (signal to exit, as the process's own forced-exit timer bounds it), `drains` in order, optional `workers` (worker units that drain on their own) and `note` |
+| `startupRecovery` | `resumes`: what the next start picks up, each `{ kind: outbox\|jobs\|sessions\|consumer\|schedule\|state, what }` |
+| `rollback` | `conditions` (automatic and manual), `window`, `blockers` (forward-only migrations, table rebuilds, authority switches) |
+| `contracts` | `range`: the openvibe-contracts versions accepted, equal to `contractRanges['openvibe-contracts']` |
+| `leases` | `claims`: `{ what, holder, expires, fencing }` for each thing claimed so that one owner acts at a time |
+
+`ovhost validate <service>` (OpenVibe.Host) reads the block from the inventory or from this package's manifest. It fails when a field is missing, when `deadlineSeconds` exceeds the unit's TimeoutStopSec or the unit's KillSignal is a different signal, and when the checkout's installed openvibe-contracts is outside `contracts.range`.
+
 ## Versioning and compatibility
 
 - A contract id is permanent. Minor versions only add optional fields.

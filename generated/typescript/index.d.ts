@@ -251,6 +251,223 @@ export interface ServiceManifest {
   contractRanges?: {
     [k: string]: string | undefined;
   };
+  /**
+   * How the service starts, stops, recovers and is rolled back (roadmap WS-P task 1), taken from its code and its systemd units, never from intent. A part that does not apply is { "none": "<why>" }. `ovhost validate` refuses a host service whose lifecycle lacks a field, whose shutdown deadline exceeds its unit's TimeoutStopSec, or whose installed openvibe-contracts is outside contracts.range.
+   */
+  lifecycle?: {
+    /**
+     * The endpoint that says the process is alive, and what a 200 from it proves. Readiness (can it serve?) is `ready`.
+     */
+    liveness:
+      | {
+          /**
+           * A path on internalOrigin; the same as `health`.
+           */
+          endpoint: string;
+          /**
+           * What a 200 proves, and what it does not check.
+           */
+          means: string;
+        }
+      | {
+          /**
+           * Why there is none.
+           */
+          none: string;
+        };
+    /**
+     * What happens between the stop signal and the process exiting.
+     */
+    shutdown:
+      | {
+          /**
+           * The signal the unit sends (KillSignal=, systemd's default SIGTERM) and the process handles.
+           */
+          signal: "SIGTERM" | "SIGINT" | "SIGQUIT" | "SIGHUP";
+          /**
+           * The longest the process takes from the signal to exiting, as its own code bounds it (a forced-exit timer); 0 when it exits at once. Must not exceed the unit's TimeoutStopSec, after which systemd kills it mid-drain.
+           */
+          deadlineSeconds: number;
+          /**
+           * What it stops, finishes, flushes or closes before exiting, in order.
+           *
+           * @minItems 1
+           */
+          drains: [string, ...string[]];
+          /**
+           * Worker units the service owns that drain on their own (ovhost never restarts them): how long a stop signal lets them run.
+           */
+          workers?: {
+            /**
+             * The longest a worker keeps running after the stop signal, as its code bounds it.
+             */
+            deadlineSeconds: number;
+            /**
+             * What a worker keeps serving, and what it ends, before exiting.
+             *
+             * @minItems 1
+             */
+            drains: [string, ...string[]];
+          };
+          /**
+           * Anything the fields above do not say (a gap the code has, a handler that is missing).
+           */
+          note?: string;
+        }
+      | {
+          /**
+           * Why there is none.
+           */
+          none: string;
+        };
+    /**
+     * Work a stop or a crash interrupted that the next start picks up.
+     */
+    startupRecovery:
+      | {
+          /**
+           * Each thing the process resumes at boot.
+           *
+           * @minItems 1
+           */
+          resumes: [
+            {
+              /**
+               * outbox: unsent events; jobs: queued or interrupted background work; sessions: client connections or media sessions; consumer: an event or change feed redelivered or read from a stored cursor; schedule: timed work that fell due; state: in-memory state rebuilt from storage.
+               */
+              kind: "outbox" | "jobs" | "sessions" | "consumer" | "schedule" | "state";
+              /**
+               * What is resumed, and how.
+               */
+              what: string;
+            },
+            ...{
+              /**
+               * outbox: unsent events; jobs: queued or interrupted background work; sessions: client connections or media sessions; consumer: an event or change feed redelivered or read from a stored cursor; schedule: timed work that fell due; state: in-memory state rebuilt from storage.
+               */
+              kind: "outbox" | "jobs" | "sessions" | "consumer" | "schedule" | "state";
+              /**
+               * What is resumed, and how.
+               */
+              what: string;
+            }[]
+          ];
+        }
+      | {
+          /**
+           * Why there is none.
+           */
+          none: string;
+        };
+    /**
+     * When a release is rolled back, for how long that happens by itself, and what makes going back unsafe.
+     */
+    rollback:
+      | {
+          /**
+           * What triggers a rollback: automatic (readiness not reached after the restart) and manual.
+           *
+           * @minItems 1
+           */
+          conditions: [string, ...string[]];
+          /**
+           * How long after a deploy the rollback is automatic, and what bounds a manual one.
+           */
+          window: string;
+          /**
+           * Changes a previous release cannot live with (forward-only migrations, table rebuilds, authority switches), or { none } with the reason.
+           */
+          blockers:
+            | [string, ...string[]]
+            | {
+                /**
+                 * Why there is none.
+                 */
+                none: string;
+              };
+        }
+      | {
+          /**
+           * Why there is none.
+           */
+          none: string;
+        };
+    /**
+     * The openvibe-contracts versions the service accepts.
+     */
+    contracts:
+      | {
+          /**
+           * The accepted versions, the same range as contractRanges['openvibe-contracts'].
+           */
+          range: string;
+          /**
+           * Where the range comes from, when it is not the obvious one.
+           */
+          note?: string;
+        }
+      | {
+          /**
+           * Why there is none.
+           */
+          none: string;
+        };
+    /**
+     * What the service claims so that one owner acts at a time, and how a stale owner is fenced.
+     */
+    leases:
+      | {
+          /**
+           * Each thing claimed, with its holder, expiry and fencing.
+           *
+           * @minItems 1
+           */
+          claims: [
+            {
+              /**
+               * What is claimed.
+               */
+              what: string;
+              /**
+               * Who holds the claim (a process, a worker id, a row).
+               */
+              holder: string;
+              /**
+               * When the claim lapses and how it is renewed.
+               */
+              expires: string;
+              /**
+               * How a stale owner is kept from acting after its claim lapsed.
+               */
+              fencing: string;
+            },
+            ...{
+              /**
+               * What is claimed.
+               */
+              what: string;
+              /**
+               * Who holds the claim (a process, a worker id, a row).
+               */
+              holder: string;
+              /**
+               * When the claim lapses and how it is renewed.
+               */
+              expires: string;
+              /**
+               * How a stale owner is kept from acting after its claim lapsed.
+               */
+              fencing: string;
+            }[]
+          ];
+        }
+      | {
+          /**
+           * Why there is none.
+           */
+          none: string;
+        };
+  };
   notes?: string;
 }
 

@@ -16,5 +16,25 @@
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "retired (ADR-005); nothing runs"
+    },
+    "shutdown": {
+      "none": "retired (ADR-005); nothing runs"
+    },
+    "startupRecovery": {
+      "none": "retired (ADR-005); nothing runs"
+    },
+    "rollback": {
+      "none": "retired (ADR-005); nothing is deployed"
+    },
+    "contracts": {
+      "range": "^0.1.0"
+    },
+    "leases": {
+      "none": "retired (ADR-005); nothing runs"
+    }
+  },
   "notes": "Closed by ADR-005 (accepted 2026-09-22): browser realtime is a delivery plane inside OpenVibe.Events (SSE /realtime/stream with per-topic authorisation, Last-Event-ID resume and gap markers), so OpenVibe.Realtime is not built. The repository holds its charter and the closure note only: no runtime, domain, capability or event. Reopened only as ADR-005 says (measured connection counts or fan-out latency that need an independently scaled process), by a new ADR."
 }

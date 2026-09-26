@@ -61,5 +61,65 @@
   ],
   "namespacesOwned": [
     "media.*"
-  ]
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/healthz",
+      "means": "the process answers and reads its apps table and active recordings (a database failure makes it fail); storage and the Network key are what /api/ready checks"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 70,
+      "drains": [
+        "recordings stopped: ffmpeg gets SIGINT to write its trailer, then SIGTERM after VOD_STOP_GRACE_MS (60 s)",
+        "storage tiering, health scan, copy verification, media_jobs worker and owner-subject jobs stopped",
+        "JWKS refresh stopped, event relay reset, timers cleared",
+        "HTTP server closed, then the database"
+      ],
+      "note": "forced exit after 70 s"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "media_jobs left running are retried (attempts left) or failed; failed clip cuts are re-cut with auto-retry"
+        },
+        {
+          "kind": "sessions",
+          "what": "recordings left is_recording with no ffmpeg are finalized from what reached the disk (a vod.finalize job, or once at boot without the job worker)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent media events in the outbox go to OpenVibe.Events; search documents resume"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.user.token_valid_after that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (60 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": [
+        "media_jobs was rebuilt once into the app_id shape (server/db/database.js migrateJobsTable): releases from before it predate that table"
+      ]
+    },
+    "contracts": {
+      "range": ">=0.2.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "a media_jobs row while its handler runs",
+          "holder": "the Media process (status running)",
+          "expires": "lease_until = claim + 120 s, renewed while the handler runs; an expired lease makes the job interrupted (retried or failed)",
+          "fencing": "none beyond status: succeed() and fail() match status = running only, with no owner token, so this is safe only because one Media process runs the queue (lease-expiry recovery skips the jobs that process still runs)"
+        }
+      ]
+    }
+  }
 }

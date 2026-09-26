@@ -30,5 +30,51 @@
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "retention timer stopped",
+        "realtime (SSE) streams stopped",
+        "delivery worker stopped, deliveries in flight awaited",
+        "open HTTP connections closed (closeAllConnections), then the server",
+        "database closed"
+      ],
+      "note": "the forced exit after 10 s exits 1"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "pending deliveries are retried from their next attempt time; one cut by the stop is sent again (at least once; consumers dedupe by event_id)"
+        },
+        {
+          "kind": "sessions",
+          "what": "SSE clients reconnect and resume from their cursor (browsers get the public events of the last REALTIME_PUBLIC_REPLAY_SECONDS, older cursors a gap)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.5.1 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns events.db (better-sqlite3, single writer); one delivery per subscription is in flight at a time, tracked in memory"
+    }
+  },
   "notes": "Durable events, subscriptions, signed delivery with retry, dead letters and replay; SSE realtime gateway at /realtime/stream until ADR-005 decides where Realtime lives."
 }

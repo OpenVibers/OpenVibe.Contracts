@@ -59,5 +59,57 @@
   "namespacesOwned": [
     "trade.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "worker stopped (Sources sync, freshness)",
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "consumer",
+          "what": "the OpenVibe.Sources change feed is pulled again from the stored cursor, so items published during the stop arrive (idempotent per item revision)"
+        },
+        {
+          "kind": "schedule",
+          "what": "freshness is re-evaluated on Trade's clock; documents whose gate changed are sent again"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers sources.item.* and sources.fetch.failed that were pending during the stop (at least once, deduped by event_id)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.19.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns trade.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Port 4860. Informational only (ADR-025): no custody, order execution, escrow, listings between users or personalised advice. Owns trade_instruments, trade_instrument_aliases, trade_watchlists, trade_watchlist_items, trade_market_observations, trade_source_documents, trade_alert_rules, trade_alert_deliveries, trade_context_revisions in its own SQLite. Reads OpenVibe.Sources (sources.item.read, sources.source.read, category trade) by cursor and wakes on signed sources.* webhook deliveries; consumes OpenVibe.AI trade.summarize_market_context output as reviewed drafts; publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads trade.index_document.* from Events."
 }

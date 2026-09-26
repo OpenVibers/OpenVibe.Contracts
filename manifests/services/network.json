@@ -84,5 +84,58 @@
     "network.*",
     "theme.*",
     "notification.*"
-  ]
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "stops accepting connections and closes idle keep-alive ones",
+        "requests in flight finish",
+        "exit"
+      ],
+      "note": "timers, pollers and relays are not stopped; the forced exit after 10 s ends them, and their work is kept in the database"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "the developer-app, profile and grant event outboxes (developer/event-relay.js, identity/profile-events.js) send what is unsent"
+        },
+        {
+          "kind": "jobs",
+          "what": "the email queue is processed again every 2 minutes; the retired-owner module sweep runs 5 minutes after boot"
+        },
+        {
+          "kind": "state",
+          "what": "the ecosystem registry polls every service's readiness and release again; deploy drift and library tags refresh"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers the moderation, staff and module events it consumes that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": [
+        "chrome_cache/chrome_hits were renamed to frame_cache/frame_hits (2026-09-24): a release from before that starts with empty caches",
+        "tool_domains was rebuilt once to allow the mirror role: a release from before it does not know mirror rows"
+      ]
+    },
+    "contracts": {
+      "range": ">=0.2.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns network.db (better-sqlite3, single writer); a stream-live announcement is claimed per streamer with a cooldown and a daily cap in the same database"
+    }
+  }
 }

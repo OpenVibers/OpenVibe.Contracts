@@ -58,5 +58,68 @@
   "namespacesOwned": [
     "live.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP (uptime, chat connections); it checks nothing else (/api/ready flips only when every boot step the request paths need is done)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5.3,
+      "drains": [
+        "server_restart notice to chat sockets",
+        "transcription, timeline-capture and media-analysis children killed; RobotStreamer passthroughs ended",
+        "readiness flips to not ready; job loops stopped; SSE streams closed",
+        "after 300 ms: restreams, recorder, call/chat/control/broadcast WebSockets, JSMPEG, SFU and RTMP stopped; analytics and the database closed",
+        "HTTP server closed"
+      ],
+      "note": "forced exit 5 s after the 300 ms notice delay; the listening socket belongs to openvibe-live.socket, so new HTTP connections queue through the restart while WebSockets, WHIP, RTMP and WebRTC sessions end"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "streams still marked live get a fresh heartbeat (broadcasters have 5 minutes to reconnect); their restreams, chat relays, RobotStreamer and AI bots start again"
+        },
+        {
+          "kind": "jobs",
+          "what": "VOD/clip transcripts left processing go back to retry (progress kept); earlier failures get a fresh retry ladder"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent stream events and index documents in the transactional outbox (server/events/stream-events.js) go to OpenVibe.Events; staged chat-table changes queued in chat_staged_outbox go to OpenVibe.Chat when CHAT_AUTHORITY=chat"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers media.vod.*, media.clip.*, media.storage.* and network.user.token_valid_after that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: deploy/scripts/deploy.sh switches back to the previous release when /api/ready does not answer within READY_TIMEOUT (90 s) after the restart (exit 3)",
+        "manual: deploy/scripts/deploy.sh --rollback switches to the previous release"
+      ],
+      "window": "automatic during the 90 s readiness wait; manual while the previous release is still in releases/ and no blocker applies",
+      "blockers": [
+        "ledger migrations (server/db/migrations.js) are forward-only and may transform data (001_vibes_decimal_to_bits multiplied Vibes amounts by 100): a release from before one misreads the data",
+        "with BILLING_AUTHORITY=billing, a release from before the money-authority tripwire would write the legacy money tables",
+        "with a staged chat table at chat (chat_table_authority), a release from before server/chat/chat-tables.js would write it directly"
+      ]
+    },
+    "contracts": {
+      "range": ">=0.2.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "write authority over money and over each staged chat table",
+          "holder": "BILLING_AUTHORITY (env) and app_state chat_table_authority, per table",
+          "expires": "only when an operator hands it over (POST /internal/chat-tables/:table; the Billing cutover runbook)",
+          "fencing": "a database-level tripwire throws on any write to the money tables when BILLING_AUTHORITY=billing; chat-tables write() sends a staged table's writes to Chat once it is at chat"
+        }
+      ]
+    }
+  },
   "notes": "Still hosts chat, ingest, money and AI authorities until Waves 6-13; paste authority moved to Community (W5)."
 }

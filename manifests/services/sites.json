@@ -17,5 +17,31 @@
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "static files served by nginx; there is no process of its own"
+    },
+    "shutdown": {
+      "none": "static files served by nginx; there is no process of its own to stop"
+    },
+    "startupRecovery": {
+      "none": "static files; nothing is in flight"
+    },
+    "rollback": {
+      "conditions": [
+        "manual: ovhost rollback sites --to <sha> rebuilds that commit and installs its vhosts (nginx -t before the reload); there is no ready URL, so nothing is automatic"
+      ],
+      "window": "any time; each deploy builds from a commit",
+      "blockers": {
+        "none": "a static build with no database"
+      }
+    },
+    "contracts": {
+      "range": ">=0.2.0 <1.0.0"
+    },
+    "leases": {
+      "none": "static files; nothing runs"
+    }
+  },
   "notes": "Static placeholder generator; not a runtime."
 }

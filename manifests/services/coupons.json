@@ -50,5 +50,53 @@
   "namespacesOwned": [
     "coupons.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "worker stopped (expiry sweep, Sources import)",
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "the expiry sweep records codes whose expiry passed during the stop (active lists filter on expires_at anyway)"
+        },
+        {
+          "kind": "consumer",
+          "what": "the OpenVibe.Sources change feed is pulled again from the stored cursor, so items published during the stop arrive (idempotent per item revision)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.19.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns coupons.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Port 4850. Owns coupon_merchants, coupon_merchant_domains, coupons, coupon_sources, coupon_restrictions, coupon_validation_reports, coupon_status_history, coupon_application_hints, coupon_watches in its own SQLite, plus extension_installs (cpx_ browser-helper tokens, scopes coupons.lookup and coupons.report, hashed, revocable). Consumes OpenVibe.Network (SSO, JWKS) and OpenVibe.Sources (sources.item.read, category coupons); publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads coupons.index_document.* from Events. The browser helper lives in OpenVibers/OpenVibe.Extensions (ADR-023)."
 }

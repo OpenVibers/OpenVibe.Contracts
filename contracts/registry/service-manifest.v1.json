@@ -190,6 +190,405 @@
         "type": "string"
       }
     },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "liveness",
+        "shutdown",
+        "startupRecovery",
+        "rollback",
+        "contracts",
+        "leases"
+      ],
+      "description": "How the service starts, stops, recovers and is rolled back (roadmap WS-P task 1), taken from its code and its systemd units, never from intent. A part that does not apply is { \"none\": \"<why>\" }. `ovhost validate` refuses a host service whose lifecycle lacks a field, whose shutdown deadline exceeds its unit's TimeoutStopSec, or whose installed openvibe-contracts is outside contracts.range.",
+      "properties": {
+        "liveness": {
+          "description": "The endpoint that says the process is alive, and what a 200 from it proves. Readiness (can it serve?) is `ready`.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "endpoint",
+                "means"
+              ],
+              "properties": {
+                "endpoint": {
+                  "type": "string",
+                  "pattern": "^/",
+                  "description": "A path on internalOrigin; the same as `health`."
+                },
+                "means": {
+                  "type": "string",
+                  "minLength": 10,
+                  "maxLength": 300,
+                  "description": "What a 200 proves, and what it does not check."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "none"
+              ],
+              "description": "No liveness endpoint, and why (a library, a static site, a retired service, or code that has none).",
+              "properties": {
+                "none": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Why there is none."
+                }
+              }
+            }
+          ]
+        },
+        "shutdown": {
+          "description": "What happens between the stop signal and the process exiting.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "signal",
+                "deadlineSeconds",
+                "drains"
+              ],
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "SIGTERM",
+                    "SIGINT",
+                    "SIGQUIT",
+                    "SIGHUP"
+                  ],
+                  "description": "The signal the unit sends (KillSignal=, systemd's default SIGTERM) and the process handles."
+                },
+                "deadlineSeconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 86400,
+                  "description": "The longest the process takes from the signal to exiting, as its own code bounds it (a forced-exit timer); 0 when it exits at once. Must not exceed the unit's TimeoutStopSec, after which systemd kills it mid-drain."
+                },
+                "drains": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 240
+                  },
+                  "description": "What it stops, finishes, flushes or closes before exiting, in order."
+                },
+                "workers": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "deadlineSeconds",
+                    "drains"
+                  ],
+                  "description": "Worker units the service owns that drain on their own (ovhost never restarts them): how long a stop signal lets them run.",
+                  "properties": {
+                    "deadlineSeconds": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 604800,
+                      "description": "The longest a worker keeps running after the stop signal, as its code bounds it."
+                    },
+                    "drains": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 240
+                      },
+                      "description": "What a worker keeps serving, and what it ends, before exiting."
+                    }
+                  }
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 400,
+                  "description": "Anything the fields above do not say (a gap the code has, a handler that is missing)."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "none"
+              ],
+              "description": "No shutdown sequence, and why (a library, a static site, a retired service, or code that has none).",
+              "properties": {
+                "none": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Why there is none."
+                }
+              }
+            }
+          ]
+        },
+        "startupRecovery": {
+          "description": "Work a stop or a crash interrupted that the next start picks up.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "resumes"
+              ],
+              "properties": {
+                "resumes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "description": "Each thing the process resumes at boot.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "kind",
+                      "what"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "outbox",
+                          "jobs",
+                          "sessions",
+                          "consumer",
+                          "schedule",
+                          "state"
+                        ],
+                        "description": "outbox: unsent events; jobs: queued or interrupted background work; sessions: client connections or media sessions; consumer: an event or change feed redelivered or read from a stored cursor; schedule: timed work that fell due; state: in-memory state rebuilt from storage."
+                      },
+                      "what": {
+                        "type": "string",
+                        "minLength": 10,
+                        "maxLength": 300,
+                        "description": "What is resumed, and how."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "none"
+              ],
+              "description": "No startup recovery, and why (a library, a static site, a retired service, or code that has none).",
+              "properties": {
+                "none": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Why there is none."
+                }
+              }
+            }
+          ]
+        },
+        "rollback": {
+          "description": "When a release is rolled back, for how long that happens by itself, and what makes going back unsafe.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "conditions",
+                "window",
+                "blockers"
+              ],
+              "properties": {
+                "conditions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 300
+                  },
+                  "description": "What triggers a rollback: automatic (readiness not reached after the restart) and manual."
+                },
+                "window": {
+                  "type": "string",
+                  "minLength": 10,
+                  "maxLength": 300,
+                  "description": "How long after a deploy the rollback is automatic, and what bounds a manual one."
+                },
+                "blockers": {
+                  "description": "Changes a previous release cannot live with (forward-only migrations, table rebuilds, authority switches), or { none } with the reason.",
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "minLength": 10,
+                        "maxLength": 300
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "none"
+                      ],
+                      "description": "No rollback blockers, and why (a library, a static site, a retired service, or code that has none).",
+                      "properties": {
+                        "none": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 300,
+                          "description": "Why there is none."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "none"
+              ],
+              "description": "No rollback, and why (a library, a static site, a retired service, or code that has none).",
+              "properties": {
+                "none": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Why there is none."
+                }
+              }
+            }
+          ]
+        },
+        "contracts": {
+          "description": "The openvibe-contracts versions the service accepts.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "range"
+              ],
+              "properties": {
+                "range": {
+                  "type": "string",
+                  "pattern": "^(\\^|>=)?\\d+\\.\\d+\\.\\d+( <\\d+\\.\\d+\\.\\d+)?$",
+                  "description": "The accepted versions, the same range as contractRanges['openvibe-contracts']."
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Where the range comes from, when it is not the obvious one."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "none"
+              ],
+              "description": "No contracts range, and why (a library, a static site, a retired service, or code that has none).",
+              "properties": {
+                "none": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Why there is none."
+                }
+              }
+            }
+          ]
+        },
+        "leases": {
+          "description": "What the service claims so that one owner acts at a time, and how a stale owner is fenced.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "claims"
+              ],
+              "properties": {
+                "claims": {
+                  "type": "array",
+                  "minItems": 1,
+                  "description": "Each thing claimed, with its holder, expiry and fencing.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "what",
+                      "holder",
+                      "expires",
+                      "fencing"
+                    ],
+                    "properties": {
+                      "what": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 200,
+                        "description": "What is claimed."
+                      },
+                      "holder": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 200,
+                        "description": "Who holds the claim (a process, a worker id, a row)."
+                      },
+                      "expires": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 200,
+                        "description": "When the claim lapses and how it is renewed."
+                      },
+                      "fencing": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 300,
+                        "description": "How a stale owner is kept from acting after its claim lapsed."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "none"
+              ],
+              "description": "No leases, and why (a library, a static site, a retired service, or code that has none).",
+              "properties": {
+                "none": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 300,
+                  "description": "Why there is none."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "notes": {
       "type": "string"
     }

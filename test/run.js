@@ -568,6 +568,53 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     ok(ms.filter(m => m.site).length >= 10, 'the network\'s sites are in the manifests');
 }
 
+// ── Lifecycle declarations (WS-P task 1): liveness, shutdown, recovery, rollback, contracts, leases ──
+// Every manifest declares all six; a part that does not apply is { none: reason }. A service that runs
+// (it has an internalOrigin) declares a real liveness endpoint (its `health`) and a real shutdown; one
+// that runs nothing (library, repository, retired) declares none for both. contracts.range is the
+// contractRanges entry, so the two cannot drift.
+{
+    const PARTS = ['liveness', 'shutdown', 'startupRecovery', 'rollback', 'contracts', 'leases'];
+    const isNone = (v) => !!v && typeof v.none === 'string' && Object.keys(v).length === 1;
+    for (const m of services.manifests) {
+        const lc = m.lifecycle;
+        ok(lc && PARTS.every(k => lc[k]), `${m.id} declares its lifecycle (${PARTS.join(', ')})`);
+        const runs = typeof m.internalOrigin === 'string';
+        if (runs) {
+            ok(!isNone(lc.liveness) && lc.liveness.endpoint === m.health, `${m.id} liveness endpoint is its health path (${m.health})`);
+            ok(!isNone(lc.shutdown) && typeof lc.shutdown.deadlineSeconds === 'number' && lc.shutdown.drains.length > 0, `${m.id} runs: it declares its shutdown signal, deadline and drains`);
+            ok(!isNone(lc.startupRecovery) && !isNone(lc.rollback), `${m.id} runs: it declares what it resumes at boot and how it is rolled back`);
+        }
+        if (['library', 'repository', 'retired'].includes(m.exposure.state)) ok(isNone(lc.liveness) && isNone(lc.shutdown) && isNone(lc.startupRecovery), `${m.id} runs nothing: liveness, shutdown and recovery are none`);
+        const range = m.contractRanges && m.contractRanges['openvibe-contracts'];
+        if (range) ok(lc.contracts.range === range, `${m.id} lifecycle.contracts.range is its contractRanges entry (${range})`);
+        else ok(isNone(lc.contracts), `${m.id} has no contractRanges entry, so its lifecycle.contracts is none`);
+        if (!isNone(lc.shutdown) && lc.shutdown.workers) ok(lc.shutdown.workers.deadlineSeconds >= lc.shutdown.deadlineSeconds, `${m.id} workers drain at least as long as the main process`);
+        if (!isNone(lc.leases)) for (const c of lc.leases.claims) ok(c.fencing.length >= 10, `${m.id} says how a stale holder of "${c.what}" is fenced`);
+    }
+    // Each lifecycle field carries a short description (walked through oneOf branches).
+    const described = [];
+    (function walk(node, at) {
+        if (!node || typeof node !== 'object') return;
+        for (const [k, v] of Object.entries(node.properties || {})) {
+            described.push([`${at}.${k}`, typeof v.description === 'string' && v.description.length > 0]);
+            walk(v, `${at}.${k}`);
+            for (const b of v.oneOf || []) walk(b, `${at}.${k}`);
+            if (v.items) walk(v.items, `${at}.${k}[]`);
+        }
+    })(contracts.schema('registry.service-manifest').properties.lifecycle, 'lifecycle');
+    ok(described.length >= 25, `lifecycle schema fields walked (${described.length})`);
+    for (const [at, has] of described) ok(has, `${at} has a description`);
+    const V = (lifecycle) => contracts.validate('registry.service-manifest@1', { ...services.get('media'), lifecycle }).valid;
+    const media = services.get('media').lifecycle;
+    ok(V(media), 'the media lifecycle validates on its own manifest');
+    ok(!V({ ...media, shutdown: { ...media.shutdown, deadlineSeconds: -1 } }), 'a negative deadline fails');
+    ok(!V({ ...media, shutdown: { ...media.shutdown, signal: 'SIGKILL' } }), 'SIGKILL is not a stop signal a process can handle');
+    ok(!V({ ...media, rollback: { ...media.rollback, blockers: [] } }), 'blockers is a non-empty list or { none }');
+    ok(!V({ ...media, contracts: { range: 'latest' } }), 'contracts.range is a version range');
+    ok(!V({ ...media, liveness: { none: 'x', endpoint: '/healthz' } }), 'none stands alone');
+}
+
 // ── User-module namespaces ────────────────────────────────────────────────
 {
     const { modules } = contracts;

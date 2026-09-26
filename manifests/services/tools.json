@@ -47,5 +47,52 @@
   "namespacesOwned": [
     "tools.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the gateway answers HTTP and reports the tool registry, run API and jobs facade counters; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "tool apps (maps, food, img, yt, audio, text, docs): analytics flushed and closed, jobs store and worker pool closed (img, audio, docs), guard closed, HTTP server closed",
+        "running jobs stay running in jobs.db for the next boot"
+      ],
+      "note": "the gateway (openvibe-tools.service) has no SIGTERM handler: Node's default action ends it at once, cutting requests in flight; the apps force-exit 1 after 5 s"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "jobs left running in img, audio and docs jobs.db are re-queued while attempts remain (onRestart requeue), else failed as retryable"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent tools.job.* events go to OpenVibe.Events"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.user.token_valid_after that were pending during the stop (at least once, deduped by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (60 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.7.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns each app's jobs.db (better-sqlite3, single writer); a job is taken with a compare-and-set (queued → running)"
+    }
+  },
   "notes": "Public at openvibe.tools: 169 tools in 9 families on the gateway (port 4001) and its satellites, catalogue at GET /api/catalog.json (re-served by Network). Asynchronous jobs (Wave 11) run on the img, audio and docs satellites only (POST /api/v1/jobs, GET/DELETE /api/v1/jobs/:id, POST /api/v1/jobs/:id/retry, PUT|DELETE /api/v1/jobs/:id/references/:ref, SSE events, result files); the gateway has no /api/v1/jobs yet. Job results are stored as private Media objects (TOOLS_JOB_RESULTS=media: Tools holds media.object.upload and media.object.read, namespace tools) and job lifecycle events tools.job.created|started|succeeded|failed are published to OpenVibe.Events through an outbox in each satellite's jobs.db (EVENTS_URL set; events.event.publish). The tool registry (ADR-027, tools.tool.read) is served: GET /api/v1/tools[/:id[/schema]] on the gateway, for all 169 tools, and on the img, audio, docs, text, yt, maps and food satellites for their own. Planned (ADR-027): the uniform run API POST /api/v1/tools/:id/run (tools.tool.run; network probes need tools.net.probe), a jobs facade on the gateway, tiered quotas and a pseudonymous abuse log; the legacy /api/process, /api/net/* and /api/dev/* routes keep working with Deprecation and Sunset (2026-12-31) headers. GET /api/ready is truthful on the gateway (it checks every satellite) and on each satellite."
 }

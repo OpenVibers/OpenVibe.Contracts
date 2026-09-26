@@ -50,5 +50,72 @@
   "namespacesOwned": [
     "openre.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP (openre-api; the coordinator and workers are separate processes); it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "openre-api: handles closed; workers are separate processes and keep running",
+        "openre-session-coordinator: coordinator stopped, then the database"
+      ],
+      "workers": {
+        "deadlineSeconds": 86400,
+        "drains": [
+          "SIGTERM starts a drain: the public listener closes; publishers and restream outputs keep running until they end or OPENRE_DRAIN_MAX_MS (default 24 h) passes",
+          "at that deadline ingest sessions end and restream outputs move to the newest generation; the worker exits 0 once idle"
+        ]
+      },
+      "note": "api and coordinator force-exit after 10 s; ovhost never stops or restarts the worker units (a deploy starts a new generation and the coordinator drains the old one)"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "the coordinator fails the open sessions of workers without a heartbeat (worker_lost) and of expired leases; their outputs go back to pending for the newest restream generation"
+        },
+        {
+          "kind": "state",
+          "what": "a new worker registers as the next generation; older ready generations drain"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent openre.* events go to OpenVibe.Events from the coordinator's relay"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: deploy/scripts/deploy.sh switches back to the previous release when openre-api is not ready within 60 s",
+        "manual: a deploy of the previous release (workers: start the previous generation; the coordinator drains the newer one)"
+      ],
+      "window": "automatic during the 60 s readiness wait; manual while the previous release is still in releases/",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.13.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "the coordinator role",
+          "holder": "leases row coordinator, holder coordinator:<pid>",
+          "expires": "OPENRE_WORKER_LEASE_MS (15 s), renewed every tick",
+          "fencing": "taken only when the row is the caller's or expired, so a deploy overlap leaves one coordinator acting"
+        },
+        {
+          "what": "a worker and every session it owns",
+          "holder": "the worker process (worker_id, generation) by heartbeat every 2 s",
+          "expires": "lost after 15 s without a heartbeat (OPENRE_WORKER_LEASE_MS); ingest sessions carry lease_expires_at",
+          "fencing": "the coordinator fails a lost worker's sessions (worker_lost) and reassigns its outputs; session changes are compare-and-set on state, so whoever commits first wins; new sessions reach only the newest ready generation"
+        }
+      ]
+    }
+  },
   "notes": "Ingest and restream authority (ADR-009). Alpha: RTMP ingest and RTMP/SRT restream run in transport workers with generations and leases, separate from the API; WHIP, WebRTC/SFU and JSMPEG are still ingested by Live. Runs in parallel with Live; slots move one at a time behind Live's per-slot ingest_authority switch."
 }

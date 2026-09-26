@@ -55,5 +55,52 @@
   "namespacesOwned": [
     "vip.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process answers and reports its release and the outbox status from its database; it checks no dependency"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "job timers cleared",
+        "outbox relay, Network key refresh and metrics stopped",
+        "HTTP server closed, then the database"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "entitlement projections due for re-confirmation with Billing are refreshed"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers billing.entitlement.changed, billing.subscription.canceled and billing.transaction.reversed that were pending during the stop (at least once, deduped by event_id)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": [
+        "idx_vip_rules_resource (one active rule per resource) was replaced by a per-creator unique index: a release from before it recreates the narrower index, which fails at boot once two creators gate the same resource"
+      ]
+    },
+    "contracts": {
+      "range": ">=0.14.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns vip.db (better-sqlite3, single writer)"
+    }
+  },
   "notes": "Memberships (ADR-012): plans, immutable versioned plan terms, perks, product bindings, member preferences and gated-resource policy. OpenVibe.Billing holds subscriptions, charges, renewals, refunds and the canonical entitlements; VIP keeps a short-lived projection of them (valid_until, authoritative fallback, 'unknown' never authorizes). Alpha: deployed internally (loopback only), not launched publicly: openvibe.vip serves the OpenVibe.Sites placeholder until the launch rule holds."
 }

@@ -1,0 +1,31 @@
+{
+  "id": "sdk-like",
+  "version": "0.1.0",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.SDK",
+  "domains": [],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "a library; nothing runs"
+    },
+    "shutdown": {
+      "none": "a library; nothing runs"
+    },
+    "startupRecovery": {
+      "none": "a library; nothing runs"
+    },
+    "rollback": {
+      "none": "consumers pin tags"
+    },
+    "contracts": {
+      "none": "no manifest range"
+    },
+    "leases": {
+      "none": "a library; nothing runs"
+    }
+  }
+}

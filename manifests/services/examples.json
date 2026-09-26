@@ -17,5 +17,25 @@
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "a repository with CI; nothing is released or run"
+    },
+    "shutdown": {
+      "none": "a repository with CI; nothing runs"
+    },
+    "startupRecovery": {
+      "none": "a repository with CI; nothing runs"
+    },
+    "rollback": {
+      "none": "a repository with CI; nothing is deployed"
+    },
+    "contracts": {
+      "range": ">=0.28.0 <1.0.0"
+    },
+    "leases": {
+      "none": "a repository with CI; nothing runs"
+    }
+  },
   "notes": "Executable public integration examples (developer apps on openvibe-sdk), each with a smoke test that CI runs against openvibe-sdk/testing's mock platform. A repository with CI, not a runtime and not a published package; nothing to deploy or poll."
 }

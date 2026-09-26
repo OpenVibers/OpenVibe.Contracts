@@ -55,5 +55,57 @@
   "namespacesOwned": [
     "blog.*"
   ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "schedule and media-verification worker stopped",
+        "changelog worker stopped",
+        "HTTP server closed",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "scheduled publish/unpublish jobs that fell due, and running jobs whose lease expired, are claimed again (openvibe-publishing/schedule, at least once, re-run safe)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.13.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "a scheduled publication job (blog_schedule_jobs)",
+          "holder": "lease_owner = BLOG_WORKER_ID, default blog-<pid>",
+          "expires": "lease_until = claim time + 60 s (leaseMs); taken again only after it passed",
+          "fencing": "complete, retry and fail only count WHERE lease_owner is the caller, so a worker whose lease was taken over cannot overwrite the new owner's result"
+        }
+      ]
+    }
+  },
   "notes": "Port 4810. Owns blogs, blog_memberships, blog_posts, blog_post_revisions, blog_series, blog_taxonomy, blog_post_terms, blog_schedules, blog_redirects, blog_feed_settings in its own SQLite (openvibe-publishing packages, prefix blog). Consumes OpenVibe.Network (SSO, identity.subject.resolve), OpenVibe.Community (community.comment.write, community.comment.moderate), OpenVibe.Media (media.object.read, namespace blog) and publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads blog.index_document.* from Events."
 }
