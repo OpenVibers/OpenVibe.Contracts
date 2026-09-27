@@ -744,7 +744,7 @@ export interface LineageResolution {
 
 /** modules.namespace@1.0.0 (owner: network) */
 /**
- * Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5). The person's account decides what happens to their records in every namespace: when an account is removed, Network deletes all of its records; when two accounts are merged, the surviving account keeps its own record in a namespace where both have one (the other is deleted), and a record only the absorbed account had moves to the survivor. Each of these changes is announced as network.module.updated (reason subject_removed or subject_merged). That is separate from onOwnerRemoved, which says what happens to a namespace's records when the service that owns the namespace is retired.
+ * Policy for one user-module namespace: portable per-subject summaries and preferences stored by OpenVibe.Network. Never domain truth, money or authoritative game inventory (roadmap 4.3-4.5). The person's account decides what happens to their records in every namespace: when an account is removed, Network deletes all of its records; when two accounts are merged (ADR-029), in a namespace where both have a record the survivor keeps its own and gains only the top-level fields it lacks from the other (its own values always win), a record only the absorbed account had moves to the survivor, and the absorbed account's records are deleted. Each of these changes is announced as network.module.updated (reason subject_removed or subject_merged). That is separate from onOwnerRemoved, which says what happens to a namespace's records when the service that owns the namespace is retired.
  */
 export interface ModuleNamespace {
   namespace: string;
@@ -28772,7 +28772,7 @@ export interface NetworkUserUpdatedPayload {
 
 /** network.user.token_valid_after@1.0.0 (owner: network) */
 /**
- * network.user.token_valid_after v1 (OpenVibe.Network server/auth/revocation.js). A person's tokens issued before valid_after are no longer good: every service that accepts Network user tokens refuses one whose iat (seconds) * 1000 is less than valid_after (milliseconds), exactly as Network does, drops what it cached for that person's older tokens and closes the sockets they opened. Emitted in the transaction that moves the cutoff: a password change or reset, sign out everywhere, a ban, an account deletion, or staff ending someone's sessions. Consumers keep the latest valid_after per subject and ignore an older one (events can arrive out of order). Envelope: subject { type: user, id }, visibility internal, actor the person (their own change) or the staff member / system:network.
+ * network.user.token_valid_after v1 (OpenVibe.Network server/auth/revocation.js). A person's tokens issued before valid_after are no longer good: every service that accepts Network user tokens refuses one whose iat (seconds) * 1000 is less than valid_after (milliseconds), exactly as Network does, drops what it cached for that person's older tokens and closes the sockets they opened. Emitted in the transaction that moves the cutoff: a password change or reset, sign out everywhere, a ban, an account deletion, an account merged into another (ADR-029: its sessions moved to the survivor), or staff ending someone's sessions. Consumers keep the latest valid_after per subject and ignore an older one (events can arrive out of order). Envelope: subject { type: user, id }, visibility internal, actor the person (their own change) or the staff member / system:network.
  */
 export interface NetworkUserTokenValidAfterPayload {
   /**
@@ -28790,7 +28790,13 @@ export interface NetworkUserTokenValidAfterPayload {
    * Why the cutoff moved. Consumers treat every reason the same; it is for logs and support.
    */
   reason:
-    "password_changed" | "password_reset" | "signed_out_everywhere" | "banned" | "account_deleted" | "staff_revoked";
+    | "password_changed"
+    | "password_reset"
+    | "signed_out_everywhere"
+    | "banned"
+    | "account_deleted"
+    | "staff_revoked"
+    | "account_merged";
 }
 
 /** network.notification.created@1.0.0 (owner: network) */

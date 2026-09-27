@@ -6,6 +6,12 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.70.0 — 2026-09-27
+
+**Account merge, the revocation reason and module policy** (roadmap WS-B task 5, ADR-029).
+- `network.user.token_valid_after` gains the reason `account_merged`: a folded-in account's tokens end when it merges (its sessions moved to the survivor). Consumers treat every reason the same.
+- `modules.namespace@1`'s description follows ADR-029. When both accounts have a record in a namespace, the survivor keeps its own and gains only the top-level fields it lacks; its values always win. Before, the absorbed record was simply dropped.
+
 ## 0.69.0 — 2026-09-27
 
 **Account merge** (roadmap WS-B task 5, ADR-029).
