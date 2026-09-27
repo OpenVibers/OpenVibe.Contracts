@@ -11818,6 +11818,189 @@
         }
       }
     },
+    "ai.credential-put": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/credential-put.v1.json",
+        "title": "AiCredentialPut",
+        "description": "ai.credential-put@1 (OpenVibe.AI; roadmap WS-O task 2): a person's own provider key, stored by the service that holds their consent (Live, for a streamer's AI viewers), PUT /api/v1/credentials/{subject} with capability ai.credential.manage. OpenVibe.AI encrypts the key at rest and never returns it; runs that name the credential call that provider with it, never a shared key, and are limited by `budget_usd_per_day`. `base_url` is any https endpoint (OpenAI-compatible or Anthropic); OpenVibe.AI connects only to public addresses.",
+        "type": "object",
+        "required": [
+          "provider",
+          "api_key"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "enum": [
+              "openai",
+              "anthropic"
+            ],
+            "description": "openai = any OpenAI-compatible endpoint."
+          },
+          "base_url": {
+            "type": "string",
+            "maxLength": 300,
+            "pattern": "^https://[^\\s/?#@]+(/[^\\s?#]*)?$"
+          },
+          "api_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 400
+          },
+          "models": {
+            "type": "object",
+            "additionalProperties": false,
+            "maxProperties": 5,
+            "properties": {
+              "chat": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "vision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "director": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "legacy": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "description": "Model per Live role; `chat` is the default for the others."
+          },
+          "budget_usd_per_day": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000,
+            "description": "The person's own daily cap on estimated spend with this key; 0 or absent = no cap."
+          }
+        }
+      }
+    },
+    "ai.credential": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/credential.v1.json",
+        "title": "AiCredential",
+        "description": "ai.credential@1 (OpenVibe.AI; roadmap WS-O task 2): a stored credential as its owner service reads it (GET or PUT /api/v1/credentials/{subject}): never the key, only its last four characters.",
+        "type": "object",
+        "required": [
+          "subject",
+          "owner",
+          "provider",
+          "key_hint",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,31}$",
+            "description": "The service that stored it; only it may use or change it."
+          },
+          "provider": {
+            "enum": [
+              "openai",
+              "anthropic"
+            ]
+          },
+          "base_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          },
+          "key_hint": {
+            "type": "string",
+            "pattern": "^…[\\s\\S]{1,4}$"
+          },
+          "models": {
+            "type": "object",
+            "additionalProperties": false,
+            "maxProperties": 5,
+            "properties": {
+              "chat": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "vision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "director": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "legacy": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "description": "Model per Live role; `chat` is the default for the others."
+          },
+          "budget_usd_per_day": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "spent_usd_today": {
+            "type": "number",
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_used_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "ai.run-request": {
       "version": "1.0.0",
       "owner": "ai",
@@ -11877,6 +12060,20 @@
                 "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
               }
             }
+          },
+          "credential": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "subject"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "description": "Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision)."
           }
         }
       }

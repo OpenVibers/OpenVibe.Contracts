@@ -6,6 +6,12 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.73.0 — 2026-09-28
+
+**A person's own provider key lives in OpenVibe.AI** (roadmap WS-O task 2).
+- `ai.credential.manage` (first-party): the service that holds a person's consent (Live, for a streamer's AI viewers) stores their key at `PUT /api/v1/credentials/{subject}` (`ai.credential-put@1`: provider openai or anthropic, an https `base_url`, the key, models per role, and an optional `budget_usd_per_day`). It reads it back without the key (`ai.credential@1`, a four-character hint and today's spend) or deletes it. Only the storing service uses or changes a credential.
+- `ai.run-request@1` gains the optional `credential { subject }`. The run calls that provider with that key only: no fallback, never cached, the shared paid budget untouched, and the credential's own daily budget enforced. Chat operations only.
+
 ## 0.72.0 — 2026-09-27
 
 **Mod principals in Network** (roadmap WS-M task 3, ADR-013).

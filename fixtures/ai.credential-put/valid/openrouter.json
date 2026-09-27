@@ -1,0 +1,1 @@
+{"provider":"openai","base_url":"https://openrouter.ai/api/v1","api_key":"sk-or-v1-EXAMPLEEXAMPLEEXAMPLE","models":{"chat":"gpt-4o-mini"},"budget_usd_per_day":2}

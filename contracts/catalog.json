@@ -1206,6 +1206,24 @@
       "status": "active"
     },
     {
+      "id": "ai.credential-put",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/credential-put.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.credential",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/credential.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.run-request",
       "version": "1.0.0",
       "owner": "ai",

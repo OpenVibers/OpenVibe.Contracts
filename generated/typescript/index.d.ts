@@ -15769,6 +15769,63 @@ export interface BlogThemeRequest {
   theme: "vibe" | "paper" | "slate" | "sand" | "nord" | "high-contrast";
 }
 
+/** ai.credential-put@1.0.0 (owner: ai) */
+/**
+ * ai.credential-put@1 (OpenVibe.AI; roadmap WS-O task 2): a person's own provider key, stored by the service that holds their consent (Live, for a streamer's AI viewers), PUT /api/v1/credentials/{subject} with capability ai.credential.manage. OpenVibe.AI encrypts the key at rest and never returns it; runs that name the credential call that provider with it, never a shared key, and are limited by `budget_usd_per_day`. `base_url` is any https endpoint (OpenAI-compatible or Anthropic); OpenVibe.AI connects only to public addresses.
+ */
+export interface AiCredentialPut {
+  /**
+   * openai = any OpenAI-compatible endpoint.
+   */
+  provider: "openai" | "anthropic";
+  base_url?: string;
+  api_key: string;
+  /**
+   * Model per Live role; `chat` is the default for the others.
+   */
+  models?: {
+    chat?: string;
+    vision?: string;
+    director?: string;
+    summary?: string;
+    legacy?: string;
+  };
+  /**
+   * The person's own daily cap on estimated spend with this key; 0 or absent = no cap.
+   */
+  budget_usd_per_day?: number;
+}
+
+/** ai.credential@1.0.0 (owner: ai) */
+/**
+ * ai.credential@1 (OpenVibe.AI; roadmap WS-O task 2): a stored credential as its owner service reads it (GET or PUT /api/v1/credentials/{subject}): never the key, only its last four characters.
+ */
+export interface AiCredential {
+  subject: string;
+  /**
+   * The service that stored it; only it may use or change it.
+   */
+  owner: string;
+  provider: "openai" | "anthropic";
+  base_url?: string | null;
+  key_hint: string;
+  /**
+   * Model per Live role; `chat` is the default for the others.
+   */
+  models?: {
+    chat?: string;
+    vision?: string;
+    director?: string;
+    summary?: string;
+    legacy?: string;
+  };
+  budget_usd_per_day?: number | null;
+  spent_usd_today?: number;
+  created_at: string;
+  updated_at: string;
+  last_used_at?: string | null;
+}
+
 /** ai.run-request@1.0.0 (owner: ai) */
 /**
  * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.
@@ -15802,6 +15859,12 @@ export interface AiRunRequest {
      * Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on.
      */
     debug?: boolean;
+  };
+  /**
+   * Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision).
+   */
+  credential?: {
+    subject: string;
   };
 }
 

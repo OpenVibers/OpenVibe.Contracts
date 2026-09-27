@@ -5,8 +5,8 @@
       "service": "ai",
       "name": "OpenVibe.AI",
       "origin": "https://ai.openvibe.network",
-      "operations": 37,
-      "capabilities": 5
+      "operations": 40,
+      "capabilities": 6
     },
     {
       "service": "billing",
