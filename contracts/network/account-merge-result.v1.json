@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/account-merge-result.v1.json",
+  "title": "NetworkAccountMergeResult",
+  "description": "network.account-merge-result@1 (OpenVibe.Network; roadmap WS-B task 5, ADR-029): the answer of a merge, POST /api/v1/account/merge (the person, signed in to the survivor, with a fresh sign-in proof of the other account) or POST /api/admin/account-merges (staff.identity.merge, with a reason). What Network moved in its one transaction, as counts; everything else follows network.subject.merged. A retried merge of the same pair answers the first merge (replayed: true) and moves nothing again.",
+  "type": "object",
+  "required": ["merge_id", "from", "into", "merged_at", "split_until", "moved", "replayed"],
+  "additionalProperties": false,
+  "properties": {
+    "merge_id": { "type": "string", "pattern": "^mrg_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "from": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "into": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "merged_at": { "type": "string", "format": "date-time" },
+    "split_until": { "type": "string", "format": "date-time" },
+    "moved": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providers", "sessions", "oauth_grants", "projects", "coins", "modules"],
+      "properties": {
+        "providers": { "type": "integer", "minimum": 0, "description": "Linked sign-in providers now on the survivor." },
+        "sessions": { "type": "integer", "minimum": 0, "description": "Sessions and devices moved; both sets stay valid until they expire." },
+        "oauth_grants": { "type": "integer", "minimum": 0 },
+        "projects": { "type": "integer", "minimum": 0, "description": "Developer projects, still owned, now by the survivor." },
+        "coins": { "type": "integer", "minimum": 0, "description": "OpenCoins added to the survivor (one ledger entry per side, reason account_merge)." },
+        "modules": { "type": "integer", "minimum": 0, "description": "User-module records changed on the survivor (its own fields win)." }
+      }
+    },
+    "replayed": { "type": "boolean" }
+  }
+}

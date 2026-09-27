@@ -59,6 +59,7 @@
     "network.credential.rotated",
     "network.follow.created",
     "network.follow.deleted",
+    "network.subject.merged",
     "network.grant.changed",
     "network.module.updated",
     "network.notification.created",

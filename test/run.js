@@ -398,6 +398,10 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(!staff.can({ ...oldAdmin, staff_map: '1.1.0' }, 'staff.editorial.manage'), 'a token from map 1.1.0 holds only what was issued');
     ok(!staff.can({ role: 'global_mod', staff_caps: ['staff.moderation.chat'] }, 'staff.editorial.manage') && staff.can({ role: 'global_mod', staff_caps: ['staff.moderation.chat'] }, 'staff.content.moderate'), 'the role decides, never more than it holds');
     ok(!staff.can({ role: 'admin', staff_caps: ['staff.moderation.chat'] }, 'staff.users.manage'), 'capabilities from map 1.0.0 still come only from what was issued');
+    // Map 1.2.0 (v0.69.0, ADR-029): account-recovery merges are the owner's alone, and reach an owner's older token by role.
+    ok(staff.get('staff.identity.merge').since === '1.2.0' && staff.get('staff.identity.merge').minRole === 'owner', 'staff.identity.merge: owner, since 1.2.0');
+    ok(staff.can({ role: 'admin', is_owner: true, staff_caps: [], staff_map: '1.1.0' }, 'staff.identity.merge'), 'an owner token (admin + is_owner) from map 1.1.0 merges by role');
+    ok(!staff.can({ role: 'admin', staff_caps: staff.capabilitiesOf('admin'), staff_map: '1.2.0' }, 'staff.identity.merge'), 'an admin never merges accounts');
     ok(map.rules.some(x => /never delegated/.test(x)) && map.rules.some(x => /equal or higher/.test(x)) && map.rules.some(x => /owner's account/.test(x)), 'rules: no delegation, rank protection, owner protection');
     const adr = fs.readFileSync(path.join(ROOT, 'docs/adr/ADR-022-moderation-console.md'), 'utf8');
     ok(/manifests\/policy\/staff-roles\.json/.test(adr), 'ADR-022 points at the staff map');

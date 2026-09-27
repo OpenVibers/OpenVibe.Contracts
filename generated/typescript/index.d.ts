@@ -28636,6 +28636,34 @@ export interface NetworkPrincipalGrantChangedPayload {
   actor_subject?: string | null;
 }
 
+/** network.subject.merged@1.0.0 (owner: network) */
+/**
+ * network.subject.merged v1 (OpenVibe.Network; roadmap WS-B task 5, ADR-029). Two accounts became one: `from`, the folded-in subject, is now an alias of `into`, the survivor, which keeps its subject, username, profile and settings. Network has already moved what it owns (linked providers, sessions, OAuth grants, developer projects, OpenCoins and user modules) in the transaction that writes this event to its outbox. Every service that stores subjects repoints its own rows from `from` to `into` in its own transaction and keeps no copy under `from`; a row it cannot move (a unique conflict, such as both accounts following the same channel) keeps the survivor's row and drops the other, as a counted, logged outcome. Until a service has applied it, its rows stay under `from`, which still resolves to `into` through Network's aliases. Apply once per merge_id. Envelope: subject { type: user, id: <into> }, visibility internal, actor the person who merged (or the staff member, for an account-recovery merge).
+ */
+export interface NetworkSubjectMergedPayload {
+  /**
+   * The merge; a redelivery carries the same id.
+   */
+  merge_id: string;
+  /**
+   * The folded-in subject, now an alias.
+   */
+  from: string;
+  /**
+   * The survivor.
+   */
+  into: string;
+  merged_at: string;
+  /**
+   * person: the account holder, signed in to both accounts. staff: an account-recovery merge (staff.identity.merge, with a written reason and an audit row).
+   */
+  initiated_by: "person" | "staff";
+  /**
+   * Until then Network keeps the folded-in account's pre-merge state, so staff can split a mistaken merge by hand (30 days).
+   */
+  split_until?: string;
+}
+
 /** network.follow.created@1.0.0 (owner: network) */
 /**
  * network.follow.created v1 (OpenVibe.Network; roadmap WS-E task 4, ADR-030). A person followed something: today a Live channel, whose target id is the channel owner's subject. Follows are the network's, kept by Network and keyed by subjects; products such as Live keep a projection they can rebuild. Written to Network's outbox in the transaction that stores the follow. A consumer applies the latest revision per (follower, target) and ignores an older one. Following again what is already followed changes nothing and sends nothing. Envelope: subject { type: user, id: <follower> }, visibility subject, actor the follower.
@@ -29099,6 +29127,42 @@ export interface NetworkCreatorAnalyticsResult {
     messages?: number;
     watch_minutes?: number;
   }[];
+}
+
+/** network.account-merge-result@1.0.0 (owner: network) */
+/**
+ * network.account-merge-result@1 (OpenVibe.Network; roadmap WS-B task 5, ADR-029): the answer of a merge, POST /api/v1/account/merge (the person, signed in to the survivor, with a fresh sign-in proof of the other account) or POST /api/admin/account-merges (staff.identity.merge, with a reason). What Network moved in its one transaction, as counts; everything else follows network.subject.merged. A retried merge of the same pair answers the first merge (replayed: true) and moves nothing again.
+ */
+export interface NetworkAccountMergeResult {
+  merge_id: string;
+  from: string;
+  into: string;
+  merged_at: string;
+  split_until: string;
+  moved: {
+    /**
+     * Linked sign-in providers now on the survivor.
+     */
+    providers: number;
+    /**
+     * Sessions and devices moved; both sets stay valid until they expire.
+     */
+    sessions: number;
+    oauth_grants: number;
+    /**
+     * Developer projects, still owned, now by the survivor.
+     */
+    projects: number;
+    /**
+     * OpenCoins added to the survivor (one ledger entry per side, reason account_merge).
+     */
+    coins: number;
+    /**
+     * User-module records changed on the survivor (its own fields win).
+     */
+    modules: number;
+  };
+  replayed: boolean;
 }
 
 /** network.follow-list-result@1.0.0 (owner: network) */

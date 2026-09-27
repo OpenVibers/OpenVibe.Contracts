@@ -2407,6 +2407,16 @@
       "status": "active"
     },
     {
+      "id": "network.subject.merged",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.subject.merged.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-029"
+    },
+    {
       "id": "network.follow.created",
       "version": "1.0.0",
       "owner": "network",
@@ -2544,6 +2554,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-021"
+    },
+    {
+      "id": "network.account-merge-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/account-merge-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-029"
     },
     {
       "id": "network.follow-list-result",

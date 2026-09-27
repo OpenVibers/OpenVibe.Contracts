@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "roles": [
     {
       "id": "user",
@@ -454,6 +454,17 @@
       "gates": {
         "live": [
           "monetization/cosmetics-routes.js:49 (→ cosmetics.js:202)"
+        ]
+      }
+    },
+    {
+      "id": "staff.identity.merge",
+      "minRole": "owner",
+      "since": "1.2.0",
+      "description": "Merge two accounts for account recovery (ADR-029), with a written reason and an audit row; never silently. People merge their own accounts without it, signed in to both.",
+      "gates": {
+        "network": [
+          "identity/account-merge.js (POST /api/admin/account-merges)"
         ]
       }
     },

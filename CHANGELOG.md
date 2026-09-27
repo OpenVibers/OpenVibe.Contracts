@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.69.0 — 2026-09-27
+
+**Account merge** (roadmap WS-B task 5, ADR-029).
+- **`network.subject.merged@1`** (event, first-party, visibility internal): `{ merge_id, from, into, merged_at, initiated_by, split_until? }`. `from` is now an alias of `into`. Network has moved what it owns (providers, sessions, OAuth grants, developer projects, OpenCoins, user modules) in the transaction that queues it. Each service repoints its own rows from `from` to `into`; a row it cannot move keeps the survivor's and drops the other, counted. Apply once per `merge_id`. Listed in Network's manifest `eventsProduced`.
+- **`network.account-merge-result@1`**: the answer of a merge, what Network moved as counts, and `replayed` for a retried merge.
+- **Staff map 1.2.0: `staff.identity.merge`** (owner, since 1.2.0): an account-recovery merge with a written reason and an audit row. People merge their own accounts without it, signed in to both. An owner token issued from map 1.1.0 holds it by role.
+
 ## 0.68.0 — 2026-09-26
 
 **Creator analytics from events** (roadmap WS-E task 6).

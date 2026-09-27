@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.subject.merged.v1.json",
+  "title": "NetworkSubjectMergedPayload",
+  "description": "network.subject.merged v1 (OpenVibe.Network; roadmap WS-B task 5, ADR-029). Two accounts became one: `from`, the folded-in subject, is now an alias of `into`, the survivor, which keeps its subject, username, profile and settings. Network has already moved what it owns (linked providers, sessions, OAuth grants, developer projects, OpenCoins and user modules) in the transaction that writes this event to its outbox. Every service that stores subjects repoints its own rows from `from` to `into` in its own transaction and keeps no copy under `from`; a row it cannot move (a unique conflict, such as both accounts following the same channel) keeps the survivor's row and drops the other, as a counted, logged outcome. Until a service has applied it, its rows stay under `from`, which still resolves to `into` through Network's aliases. Apply once per merge_id. Envelope: subject { type: user, id: <into> }, visibility internal, actor the person who merged (or the staff member, for an account-recovery merge).",
+  "type": "object",
+  "required": ["merge_id", "from", "into", "merged_at", "initiated_by"],
+  "additionalProperties": false,
+  "properties": {
+    "merge_id": { "type": "string", "pattern": "^mrg_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The merge; a redelivery carries the same id." },
+    "from": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The folded-in subject, now an alias." },
+    "into": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The survivor." },
+    "merged_at": { "type": "string", "format": "date-time" },
+    "initiated_by": { "enum": ["person", "staff"], "description": "person: the account holder, signed in to both accounts. staff: an account-recovery merge (staff.identity.merge, with a written reason and an audit row)." },
+    "split_until": { "type": "string", "format": "date-time", "description": "Until then Network keeps the folded-in account's pre-merge state, so staff can split a mistaken merge by hand (30 days)." }
+  }
+}
