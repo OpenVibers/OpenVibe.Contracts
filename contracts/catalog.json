@@ -2477,6 +2477,46 @@
       "adr": "ADR-033"
     },
     {
+      "id": "network.mod.grants_changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.mod.grants_changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-013"
+    },
+    {
+      "id": "network.mod-install-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/mod-install-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-013"
+    },
+    {
+      "id": "network.mod-grant-change",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/mod-grant-change.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-013"
+    },
+    {
+      "id": "network.mod-principal",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/mod-principal.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-013"
+    },
+    {
       "id": "network.subject.merged",
       "version": "1.0.0",
       "owner": "network",

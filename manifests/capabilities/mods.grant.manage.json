@@ -2,13 +2,26 @@
   "id": "mods.grant.manage",
   "version": "1.0",
   "owner": "network",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
-  "description": "Planned (ADR-013, grants in Network): create the `mod` principal (mod:mod_<ULID>) for an install and approve or revoke the subset of its manifest's requested capabilities, so a mod's grants are checked like any other principal's. Until Network implements it, each runtime keeps the approved subset itself (OpenVibe.Games: mod_grants).",
-  "inputSchema": "mods.mod-manifest@1",
-  "permissions": ["network:grants:admin"],
-  "resourceConstraints": ["none"],
+  "description": "Register a mod install's principal (mod:<mod_id>, ADR-013) and approve or revoke the subset of its manifest's requested capabilities, so a mod's grants live in Network like any other principal's. Only the runtime that registered a mod (its owner) changes it; Network staff (staff.games.manage) can too. Every change is network.mod.grants_changed.",
+  "inputSchema": "network.mod-install-request@1",
+  "permissions": [
+    "network:grants:admin"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
   "quotaClass": "network-admin",
-  "events": [],
-  "implementedBy": []
+  "events": [
+    "network.mod.grants_changed"
+  ],
+  "implementedBy": [
+    "POST /internal/mods",
+    "GET /internal/mods",
+    "GET /internal/mods/:mod_id",
+    "POST /internal/mods/:mod_id/grants",
+    "POST /internal/mods/:mod_id/revoke"
+  ],
+  "outputSchema": "network.mod-principal@1"
 }

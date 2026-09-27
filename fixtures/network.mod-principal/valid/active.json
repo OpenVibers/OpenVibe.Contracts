@@ -1,0 +1,1 @@
+{"principal":"mod:mod_01JAB2C3D4E5F6G7H8J9K0MNPQ","mod_id":"mod_01JAB2C3D4E5F6G7H8J9K0MNPQ","owner":"games","runtime":"games-content@1","name":"Lanterns","version":"1.0.0","status":"active","requested":["games.world.announce","games.prop.place"],"approved":["games.world.announce"],"pending":["games.prop.place"],"revoked":[],"revision":1,"updated_at":"2026-09-27T23:40:00.000Z"}

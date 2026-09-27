@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/mod-principal.v1.json",
+  "title": "NetworkModPrincipal",
+  "description": "network.mod-principal@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a mod install's principal, `mod:<mod_id>`. Its grants are the approved subset of the capabilities its manifest requests; the rest are pending (never approved) or revoked. A revoked principal (the install ended) has no approved grants and never gets any again. The owning runtime keeps a copy of `approved` for its hot path and follows network.mod.grants_changed.",
+  "type": "object",
+  "required": [
+    "principal",
+    "mod_id",
+    "owner",
+    "runtime",
+    "status",
+    "requested",
+    "approved",
+    "pending",
+    "revoked",
+    "revision",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "principal": {
+      "type": "string",
+      "pattern": "^mod:mod_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "mod_id": {
+      "type": "string",
+      "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,31}$",
+      "description": "The runtime service that registered it (games)."
+    },
+    "runtime": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "The manifest's runtime, e.g. games-content@1."
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "status": {
+      "enum": [
+        "active",
+        "revoked"
+      ]
+    },
+    "requested": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      }
+    },
+    "approved": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      }
+    },
+    "pending": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      }
+    },
+    "revoked": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      }
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

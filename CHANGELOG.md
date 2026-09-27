@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.72.0 — 2026-09-27
+
+**Mod principals in Network** (roadmap WS-M task 3, ADR-013).
+- `mods.grant.manage` is active. A runtime (OpenVibe.Games) registers an install's principal `mod:<mod_id>` (`POST /internal/mods`, `network.mod-install-request@1`: the manifest, and the subset staff approved at install; the rest stays pending). It then approves or revokes one capability (`POST /internal/mods/{mod_id}/grants`, `network.mod-grant-change@1`) or revokes the install (`POST /internal/mods/{mod_id}/revoke`). It reads them with `GET /internal/mods[/{mod_id}]`. Only the owning runtime or Network staff (`staff.games.manage`) change a mod.
+- `network.mod-principal@1`: the principal with requested, approved, pending and revoked capabilities, and a revision.
+- `network.mod.grants_changed@1` (internal): after every change, the complete approved set (by revision), the change, and whether the runtime or staff made it. The owning runtime sets its copy to it. Games lists it as consumed.
+
 ## 0.71.0 — 2026-09-27
 
 **Account export and deletion** (roadmap WS-B task 7, ADR-033).

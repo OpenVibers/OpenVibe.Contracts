@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/mod-install-request.v1.json",
+  "title": "NetworkModInstallRequest",
+  "description": "network.mod-install-request@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a runtime (OpenVibe.Games) registers an install's mod principal, POST /internal/mods with capability mods.grant.manage. The manifest (mods.mod-manifest@1) names the requested capabilities; `approve` is the subset staff approved at install, and the rest stays pending. The runtime that registers a mod is its owner: only it (or Network staff) changes its grants. Registering the same mod again answers the existing principal.",
+  "type": "object",
+  "required": [
+    "manifest"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "manifest": {
+      "type": "object",
+      "description": "The mod's manifest, mods.mod-manifest@1."
+    },
+    "approve": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      },
+      "description": "Approved at install; each must be requested by the manifest."
+    },
+    "actor": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "Who installed it at the runtime (a subject or 'games'), for the audit row."
+    }
+  }
+}

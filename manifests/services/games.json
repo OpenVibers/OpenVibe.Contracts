@@ -49,6 +49,7 @@
   "eventsConsumed": [
     "network.account.deleted",
     "network.account.export_requested",
+    "network.mod.grants_changed",
     "network.user.token_valid_after"
   ],
   "namespacesOwned": [

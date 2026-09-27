@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/mod-grant-change.v1.json",
+  "title": "NetworkModGrantChange",
+  "description": "network.mod-grant-change@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): approve or revoke one requested capability of a mod principal, POST /internal/mods/{mod_id}/grants (the owning runtime, mods.grant.manage) or POST /api/admin/mods/{mod_id}/grants (staff.games.manage, with a reason).",
+  "type": "object",
+  "required": [
+    "capability",
+    "action"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "capability": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+    },
+    "action": {
+      "enum": [
+        "approve",
+        "revoke"
+      ]
+    },
+    "actor": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.mod.grants_changed.v1.json",
+  "title": "NetworkModGrantsChangedPayload",
+  "description": "network.mod.grants_changed v1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a mod principal's grants changed: registered, a capability approved or revoked, or the whole install revoked. `approved` is the complete approved set after the change, so the owning runtime sets its copy to it (idempotent by revision: an older revision changes nothing). `by` says whether the owning runtime or Network staff made the change; a runtime applies both.",
+  "type": "object",
+  "required": [
+    "mod_id",
+    "owner",
+    "status",
+    "approved",
+    "revision",
+    "change",
+    "by"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "mod_id": {
+      "type": "string",
+      "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,31}$"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "revoked"
+      ]
+    },
+    "approved": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      }
+    },
+    "pending": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      }
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "register",
+            "approve",
+            "revoke",
+            "revoke_all"
+          ]
+        },
+        "capability": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+        }
+      }
+    },
+    "by": {
+      "enum": [
+        "runtime",
+        "staff"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

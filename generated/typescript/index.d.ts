@@ -28804,6 +28804,101 @@ export interface NetworkAccountDataReceipt {
   replaced: boolean;
 }
 
+/** network.mod.grants_changed@1.0.0 (owner: network) */
+/**
+ * network.mod.grants_changed v1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a mod principal's grants changed: registered, a capability approved or revoked, or the whole install revoked. `approved` is the complete approved set after the change, so the owning runtime sets its copy to it (idempotent by revision: an older revision changes nothing). `by` says whether the owning runtime or Network staff made the change; a runtime applies both.
+ */
+export interface NetworkModGrantsChangedPayload {
+  mod_id: string;
+  owner: string;
+  status: "active" | "revoked";
+  /**
+   * @maxItems 64
+   */
+  approved: string[];
+  /**
+   * @maxItems 64
+   */
+  pending?: string[];
+  revision: number;
+  change: {
+    action: "register" | "approve" | "revoke" | "revoke_all";
+    capability?: string;
+  };
+  by: "runtime" | "staff";
+  reason?: string;
+}
+
+/** network.mod-install-request@1.0.0 (owner: network) */
+/**
+ * network.mod-install-request@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a runtime (OpenVibe.Games) registers an install's mod principal, POST /internal/mods with capability mods.grant.manage. The manifest (mods.mod-manifest@1) names the requested capabilities; `approve` is the subset staff approved at install, and the rest stays pending. The runtime that registers a mod is its owner: only it (or Network staff) changes its grants. Registering the same mod again answers the existing principal.
+ */
+export interface NetworkModInstallRequest {
+  /**
+   * The mod's manifest, mods.mod-manifest@1.
+   */
+  manifest: {};
+  /**
+   * Approved at install; each must be requested by the manifest.
+   *
+   * @maxItems 64
+   */
+  approve?: string[];
+  /**
+   * Who installed it at the runtime (a subject or 'games'), for the audit row.
+   */
+  actor?: string;
+}
+
+/** network.mod-grant-change@1.0.0 (owner: network) */
+/**
+ * network.mod-grant-change@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): approve or revoke one requested capability of a mod principal, POST /internal/mods/{mod_id}/grants (the owning runtime, mods.grant.manage) or POST /api/admin/mods/{mod_id}/grants (staff.games.manage, with a reason).
+ */
+export interface NetworkModGrantChange {
+  capability: string;
+  action: "approve" | "revoke";
+  actor?: string;
+  reason?: string;
+}
+
+/** network.mod-principal@1.0.0 (owner: network) */
+/**
+ * network.mod-principal@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a mod install's principal, `mod:<mod_id>`. Its grants are the approved subset of the capabilities its manifest requests; the rest are pending (never approved) or revoked. A revoked principal (the install ended) has no approved grants and never gets any again. The owning runtime keeps a copy of `approved` for its hot path and follows network.mod.grants_changed.
+ */
+export interface NetworkModPrincipal {
+  principal: string;
+  mod_id: string;
+  /**
+   * The runtime service that registered it (games).
+   */
+  owner: string;
+  /**
+   * The manifest's runtime, e.g. games-content@1.
+   */
+  runtime: string;
+  name?: string;
+  version?: string;
+  status: "active" | "revoked";
+  /**
+   * @maxItems 64
+   */
+  requested: string[];
+  /**
+   * @maxItems 64
+   */
+  approved: string[];
+  /**
+   * @maxItems 64
+   */
+  pending: string[];
+  /**
+   * @maxItems 64
+   */
+  revoked: string[];
+  revision: number;
+  updated_at: string;
+}
+
 /** network.subject.merged@1.0.0 (owner: network) */
 /**
  * network.subject.merged v1 (OpenVibe.Network; roadmap WS-B task 5, ADR-029). Two accounts became one: `from`, the folded-in subject, is now an alias of `into`, the survivor, which keeps its subject, username, profile and settings. Network has already moved what it owns (linked providers, sessions, OAuth grants, developer projects, OpenCoins and user modules) in the transaction that writes this event to its outbox. Every service that stores subjects repoints its own rows from `from` to `into` in its own transaction and keeps no copy under `from`; a row it cannot move (a unique conflict, such as both accounts following the same channel) keeps the survivor's row and drops the other, as a counted, logged outcome. Until a service has applied it, its rows stay under `from`, which still resolves to `into` through Network's aliases. Apply once per merge_id. Envelope: subject { type: user, id: <into> }, visibility internal, actor the person who merged (or the staff member, for an account-recovery merge).

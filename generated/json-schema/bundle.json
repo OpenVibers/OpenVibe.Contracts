@@ -25752,6 +25752,275 @@
         }
       }
     },
+    "network.mod.grants_changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.mod.grants_changed.v1.json",
+        "title": "NetworkModGrantsChangedPayload",
+        "description": "network.mod.grants_changed v1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a mod principal's grants changed: registered, a capability approved or revoked, or the whole install revoked. `approved` is the complete approved set after the change, so the owning runtime sets its copy to it (idempotent by revision: an older revision changes nothing). `by` says whether the owning runtime or Network staff made the change; a runtime applies both.",
+        "type": "object",
+        "required": [
+          "mod_id",
+          "owner",
+          "status",
+          "approved",
+          "revision",
+          "change",
+          "by"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "mod_id": {
+            "type": "string",
+            "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,31}$"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "revoked"
+            ]
+          },
+          "approved": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            }
+          },
+          "pending": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            }
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "change": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "enum": [
+                  "register",
+                  "approve",
+                  "revoke",
+                  "revoke_all"
+                ]
+              },
+              "capability": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+              }
+            }
+          },
+          "by": {
+            "enum": [
+              "runtime",
+              "staff"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "network.mod-install-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/mod-install-request.v1.json",
+        "title": "NetworkModInstallRequest",
+        "description": "network.mod-install-request@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a runtime (OpenVibe.Games) registers an install's mod principal, POST /internal/mods with capability mods.grant.manage. The manifest (mods.mod-manifest@1) names the requested capabilities; `approve` is the subset staff approved at install, and the rest stays pending. The runtime that registers a mod is its owner: only it (or Network staff) changes its grants. Registering the same mod again answers the existing principal.",
+        "type": "object",
+        "required": [
+          "manifest"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "manifest": {
+            "type": "object",
+            "description": "The mod's manifest, mods.mod-manifest@1."
+          },
+          "approve": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            },
+            "description": "Approved at install; each must be requested by the manifest."
+          },
+          "actor": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "Who installed it at the runtime (a subject or 'games'), for the audit row."
+          }
+        }
+      }
+    },
+    "network.mod-grant-change": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/mod-grant-change.v1.json",
+        "title": "NetworkModGrantChange",
+        "description": "network.mod-grant-change@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): approve or revoke one requested capability of a mod principal, POST /internal/mods/{mod_id}/grants (the owning runtime, mods.grant.manage) or POST /api/admin/mods/{mod_id}/grants (staff.games.manage, with a reason).",
+        "type": "object",
+        "required": [
+          "capability",
+          "action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+          },
+          "action": {
+            "enum": [
+              "approve",
+              "revoke"
+            ]
+          },
+          "actor": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "network.mod-principal": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/mod-principal.v1.json",
+        "title": "NetworkModPrincipal",
+        "description": "network.mod-principal@1 (OpenVibe.Network; roadmap WS-M task 3, ADR-013): a mod install's principal, `mod:<mod_id>`. Its grants are the approved subset of the capabilities its manifest requests; the rest are pending (never approved) or revoked. A revoked principal (the install ended) has no approved grants and never gets any again. The owning runtime keeps a copy of `approved` for its hot path and follows network.mod.grants_changed.",
+        "type": "object",
+        "required": [
+          "principal",
+          "mod_id",
+          "owner",
+          "runtime",
+          "status",
+          "requested",
+          "approved",
+          "pending",
+          "revoked",
+          "revision",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "principal": {
+            "type": "string",
+            "pattern": "^mod:mod_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "mod_id": {
+            "type": "string",
+            "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,31}$",
+            "description": "The runtime service that registered it (games)."
+          },
+          "runtime": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "The manifest's runtime, e.g. games-content@1."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "status": {
+            "enum": [
+              "active",
+              "revoked"
+            ]
+          },
+          "requested": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            }
+          },
+          "approved": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            }
+          },
+          "pending": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            }
+          },
+          "revoked": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            }
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "network.subject.merged": {
       "version": "1.0.0",
       "owner": "network",

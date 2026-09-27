@@ -54,6 +54,8 @@
     "network.status.incident"
   ],
   "eventsProduced": [
+    "network.account.deleted",
+    "network.account.export_requested",
     "network.app.created",
     "network.app.revoked",
     "network.block.changed",
@@ -61,13 +63,12 @@
     "network.credential.rotated",
     "network.follow.created",
     "network.follow.deleted",
-    "network.subject.merged",
-    "network.account.export_requested",
-    "network.account.deleted",
     "network.grant.changed",
+    "network.mod.grants_changed",
     "network.module.updated",
     "network.notification.created",
     "network.principal_grant.changed",
+    "network.subject.merged",
     "network.user.token_valid_after",
     "network.user.updated"
   ],
