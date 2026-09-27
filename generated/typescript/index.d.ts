@@ -28636,6 +28636,174 @@ export interface NetworkPrincipalGrantChangedPayload {
   actor_subject?: string | null;
 }
 
+/** network.account.export_requested@1.0.0 (owner: network) */
+/**
+ * network.account.export_requested v1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033). A person asked for a copy of their data. Each service that keeps data about people pushes its part before the deadline: POST /internal/account-exports/{export_id}/parts (network.account-export-part@1, capability network.account.export.contribute), with only the subject's own rows. A redelivery carries the same export_id; a second part from the same service replaces the first.
+ */
+export interface NetworkAccountExportRequestedPayload {
+  /**
+   * The export job; a redelivery carries the same id.
+   */
+  export_id: string;
+  /**
+   * The person whose data is exported.
+   */
+  subject: string;
+  requested_at: string;
+  /**
+   * Network builds the archive when every expected service has answered, or at this time (30 minutes after the request); a later part is refused.
+   */
+  deadline: string;
+}
+
+/** network.account.deleted@1.0.0 (owner: network) */
+/**
+ * network.account.deleted v1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033). An account's 30-day grace ended and Network erased what it owns; the subject is a tombstone and is never reused. Each service erases its own rows about the subject once per deletion_id: authored content is removed (an item with other people's replies beneath it stays as an authorless tombstone), likes, votes and reactions go with counts recomputed, money and ledger rows stay pseudonymised, and media under a retention hold stays. It then confirms: POST /internal/account-deletions/{deletion_id}/confirmations (network.account-deletion-confirmation@1, capability network.account.deletion.confirm).
+ */
+export interface NetworkAccountDeletedPayload {
+  /**
+   * The deletion; a redelivery carries the same id.
+   */
+  deletion_id: string;
+  /**
+   * The deleted account.
+   */
+  subject: string;
+  /**
+   * Subjects merged into this account earlier (ADR-029); a service that still keeps rows under one erases them too.
+   *
+   * @maxItems 50
+   */
+  aliases?: string[];
+  /**
+   * When the person scheduled the deletion.
+   */
+  requested_at: string;
+  deleted_at: string;
+}
+
+/** network.account-export@1.0.0 (owner: network) */
+/**
+ * network.account-export@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): a person's data export job. POST /api/v1/account/export starts one (one open at a time, one a day) and GET /api/v1/account/export/{id} answers its state. When ready or partial, GET /api/v1/account/export/{id}/download serves the zip to the same person until expires_at.
+ */
+export interface NetworkAccountExport {
+  export_id: string;
+  /**
+   * pending: waiting for the services' parts. ready: every expected service answered. partial: the deadline passed without some (services[].status missing). expired: the archive is gone (7 days). failed: the archive could not be built.
+   */
+  status: "pending" | "ready" | "partial" | "expired" | "failed";
+  requested_at: string;
+  deadline: string;
+  /**
+   * When the archive was built.
+   */
+  ready_at?: string;
+  /**
+   * The archive is deleted then (7 days after ready_at).
+   */
+  expires_at?: string;
+  size_bytes?: number;
+  /**
+   * @maxItems 64
+   */
+  services: {
+    service: string;
+    status: "received" | "waiting" | "missing";
+    files?: number;
+    bytes?: number;
+  }[];
+}
+
+/** network.account-export-part@1.0.0 (owner: network) */
+/**
+ * network.account-export-part@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): one service's part of a person's data export, POST /internal/account-exports/{export_id}/parts with capability network.account.export.contribute (a token speaks only for its own service). Files are JSON documents of the subject's own rows (never another person's data), at most 20 MB in all; each lands in the archive as <service>/<name>. A second part from the same service replaces the first.
+ */
+export interface NetworkAccountExportPart {
+  /**
+   * Must be the export's subject.
+   */
+  subject: string;
+  /**
+   * @maxItems 64
+   */
+  files: {
+    /**
+     * A flat file name ending in .json.
+     */
+    name: string;
+    /**
+     * Any JSON value: the rows, as the service describes them.
+     */
+    content: {
+      [k: string]: unknown | undefined;
+    };
+  }[];
+  /**
+   * Files cut at the service's own row limit, named so the README says so.
+   *
+   * @maxItems 64
+   */
+  truncated?: string[];
+  /**
+   * A line for the README, such as where media files are downloaded.
+   */
+  note?: string;
+}
+
+/** network.account-deletion@1.0.0 (owner: network) */
+/**
+ * network.account-deletion@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): a person's scheduled account deletion. POST /api/v1/account/deletion (a fresh sign-in, auth_time within 10 minutes, and the username typed out) schedules it 30 days ahead; GET answers it; DELETE cancels it before delete_after.
+ */
+export interface NetworkAccountDeletion {
+  deletion_id: string;
+  status: "scheduled" | "cancelled" | "deleted";
+  requested_at: string;
+  /**
+   * Nothing leaves Network before this time; the account works normally until then.
+   */
+  delete_after: string;
+  cancelled_at?: string;
+  deleted_at?: string;
+}
+
+/** network.account-deletion-confirmation@1.0.0 (owner: network) */
+/**
+ * network.account-deletion-confirmation@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): one service confirms it erased a deleted account's rows, POST /internal/account-deletions/{deletion_id}/confirmations with capability network.account.deletion.confirm (a token speaks only for its own service). Counts only: what it erased and what it keeps (money and ledger rows pseudonymised, media under a retention hold, tombstones that keep others' replies in place). A repeat confirmation replaces the first.
+ */
+export interface NetworkAccountDeletionConfirmation {
+  /**
+   * Must be the deletion's subject.
+   */
+  subject: string;
+  completed_at: string;
+  /**
+   * Rows erased, by kind (messages, follows, pastes, …).
+   */
+  erased: {
+    [k: string]: number | undefined;
+  };
+  /**
+   * Rows kept, by kind, each pseudonymised or held (ledger, held_media, tombstones, …).
+   */
+  retained?: {
+    [k: string]: number | undefined;
+  };
+}
+
+/** network.account-data-receipt@1.0.0 (owner: network) */
+/**
+ * network.account-data-receipt@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): Network's answer to a service's export part (network.account.export.contribute) or deletion confirmation (network.account.deletion.confirm). replaced: this service had already sent one for the same job, and this one replaced it.
+ */
+export interface NetworkAccountDataReceipt {
+  /**
+   * The export or deletion.
+   */
+  id: string;
+  service: string;
+  received_at: string;
+  replaced: boolean;
+}
+
 /** network.subject.merged@1.0.0 (owner: network) */
 /**
  * network.subject.merged v1 (OpenVibe.Network; roadmap WS-B task 5, ADR-029). Two accounts became one: `from`, the folded-in subject, is now an alias of `into`, the survivor, which keeps its subject, username, profile and settings. Network has already moved what it owns (linked providers, sessions, OAuth grants, developer projects, OpenCoins and user modules) in the transaction that writes this event to its outbox. Every service that stores subjects repoints its own rows from `from` to `into` in its own transaction and keeps no copy under `from`; a row it cannot move (a unique conflict, such as both accounts following the same channel) keeps the survivor's row and drops the other, as a counted, logged outcome. Until a service has applied it, its rows stay under `from`, which still resolves to `into` through Network's aliases. Apply once per merge_id. Envelope: subject { type: user, id: <into> }, visibility internal, actor the person who merged (or the staff member, for an account-recovery merge).

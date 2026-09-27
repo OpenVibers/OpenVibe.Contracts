@@ -25,6 +25,8 @@
     "chat.room.message.deleted"
   ],
   "eventsConsumed": [
+    "network.account.deleted",
+    "network.account.export_requested",
     "network.block.changed",
     "network.user.token_valid_after"
   ],

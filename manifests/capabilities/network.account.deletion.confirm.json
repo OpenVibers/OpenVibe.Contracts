@@ -1,0 +1,21 @@
+{
+  "id": "network.account.deletion.confirm",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Confirm that a deleted account's rows are erased at a service (ADR-033), with counts of what was erased and what is kept (pseudonymised money rows, held media, tombstones). A token may only speak for its own service.",
+  "permissions": [
+    "account:delete"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "account-data",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/account-deletions/:deletion_id/confirmations"
+  ],
+  "inputSchema": "network.account-deletion-confirmation@1",
+  "outputSchema": "network.account-data-receipt@1"
+}

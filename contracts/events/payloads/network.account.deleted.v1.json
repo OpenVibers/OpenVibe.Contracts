@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.account.deleted.v1.json",
+  "title": "NetworkAccountDeletedPayload",
+  "description": "network.account.deleted v1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033). An account's 30-day grace ended and Network erased what it owns; the subject is a tombstone and is never reused. Each service erases its own rows about the subject once per deletion_id: authored content is removed (an item with other people's replies beneath it stays as an authorless tombstone), likes, votes and reactions go with counts recomputed, money and ledger rows stay pseudonymised, and media under a retention hold stays. It then confirms: POST /internal/account-deletions/{deletion_id}/confirmations (network.account-deletion-confirmation@1, capability network.account.deletion.confirm).",
+  "type": "object",
+  "required": [
+    "deletion_id",
+    "subject",
+    "requested_at",
+    "deleted_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "deletion_id": {
+      "type": "string",
+      "pattern": "^del_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The deletion; a redelivery carries the same id."
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The deleted account."
+    },
+    "aliases": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "description": "Subjects merged into this account earlier (ADR-029); a service that still keeps rows under one erases them too."
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the person scheduled the deletion."
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/account-data-receipt.v1.json",
+  "title": "NetworkAccountDataReceipt",
+  "description": "network.account-data-receipt@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): Network's answer to a service's export part (network.account.export.contribute) or deletion confirmation (network.account.deletion.confirm). replaced: this service had already sent one for the same job, and this one replaced it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "service",
+    "received_at",
+    "replaced"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(exp|del)_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The export or deletion."
+    },
+    "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,31}$"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "replaced": {
+      "type": "boolean"
+    }
+  }
+}

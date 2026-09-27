@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/account-export.v1.json",
+  "title": "NetworkAccountExport",
+  "description": "network.account-export@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): a person's data export job. POST /api/v1/account/export starts one (one open at a time, one a day) and GET /api/v1/account/export/{id} answers its state. When ready or partial, GET /api/v1/account/export/{id}/download serves the zip to the same person until expires_at.",
+  "type": "object",
+  "required": [
+    "export_id",
+    "status",
+    "requested_at",
+    "deadline",
+    "services"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "export_id": {
+      "type": "string",
+      "pattern": "^exp_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "ready",
+        "partial",
+        "expired",
+        "failed"
+      ],
+      "description": "pending: waiting for the services' parts. ready: every expected service answered. partial: the deadline passed without some (services[].status missing). expired: the archive is gone (7 days). failed: the archive could not be built."
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ready_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the archive was built."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The archive is deleted then (7 days after ready_at)."
+    },
+    "size_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "services": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "service",
+          "status"
+        ],
+        "properties": {
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,31}$"
+          },
+          "status": {
+            "enum": [
+              "received",
+              "waiting",
+              "missing"
+            ]
+          },
+          "files": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

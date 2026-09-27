@@ -51,6 +51,8 @@
     "media.clip.*",
     "media.storage.*",
     "media.vod.*",
+    "network.account.deleted",
+    "network.account.export_requested",
     "network.user.token_valid_after",
     "network.user.updated",
     "openre.session.*"

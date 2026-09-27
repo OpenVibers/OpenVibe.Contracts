@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/account-export-part.v1.json",
+  "title": "NetworkAccountExportPart",
+  "description": "network.account-export-part@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): one service's part of a person's data export, POST /internal/account-exports/{export_id}/parts with capability network.account.export.contribute (a token speaks only for its own service). Files are JSON documents of the subject's own rows (never another person's data), at most 20 MB in all; each lands in the archive as <service>/<name>. A second part from the same service replaces the first.",
+  "type": "object",
+  "required": [
+    "subject",
+    "files"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Must be the export's subject."
+    },
+    "files": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "content"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_.-]{0,62}\\.json$",
+            "description": "A flat file name ending in .json."
+          },
+          "content": {
+            "description": "Any JSON value: the rows, as the service describes them."
+          }
+        }
+      }
+    },
+    "truncated": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "string",
+        "maxLength": 64
+      },
+      "description": "Files cut at the service's own row limit, named so the README says so."
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "A line for the README, such as where media files are downloaded."
+    }
+  }
+}

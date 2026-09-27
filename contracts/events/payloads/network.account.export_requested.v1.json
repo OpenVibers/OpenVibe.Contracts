@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.account.export_requested.v1.json",
+  "title": "NetworkAccountExportRequestedPayload",
+  "description": "network.account.export_requested v1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033). A person asked for a copy of their data. Each service that keeps data about people pushes its part before the deadline: POST /internal/account-exports/{export_id}/parts (network.account-export-part@1, capability network.account.export.contribute), with only the subject's own rows. A redelivery carries the same export_id; a second part from the same service replaces the first.",
+  "type": "object",
+  "required": [
+    "export_id",
+    "subject",
+    "requested_at",
+    "deadline"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "export_id": {
+      "type": "string",
+      "pattern": "^exp_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The export job; a redelivery carries the same id."
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person whose data is exported."
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Network builds the archive when every expected service has answered, or at this time (30 minutes after the request); a later part is refused."
+    }
+  }
+}

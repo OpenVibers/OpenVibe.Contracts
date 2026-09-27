@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/account-deletion.v1.json",
+  "title": "NetworkAccountDeletion",
+  "description": "network.account-deletion@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): a person's scheduled account deletion. POST /api/v1/account/deletion (a fresh sign-in, auth_time within 10 minutes, and the username typed out) schedules it 30 days ahead; GET answers it; DELETE cancels it before delete_after.",
+  "type": "object",
+  "required": [
+    "deletion_id",
+    "status",
+    "requested_at",
+    "delete_after"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "deletion_id": {
+      "type": "string",
+      "pattern": "^del_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "status": {
+      "enum": [
+        "scheduled",
+        "cancelled",
+        "deleted"
+      ]
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "delete_after": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Nothing leaves Network before this time; the account works normally until then."
+    },
+    "cancelled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

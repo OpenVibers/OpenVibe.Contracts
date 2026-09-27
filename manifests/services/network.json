@@ -34,6 +34,8 @@
   "capabilities": [
     "identity.subject.resolve",
     "mods.grant.manage",
+    "network.account.deletion.confirm",
+    "network.account.export.contribute",
     "network.analytics.creator.read",
     "network.blocks.read",
     "network.coins.credit",
@@ -60,6 +62,8 @@
     "network.follow.created",
     "network.follow.deleted",
     "network.subject.merged",
+    "network.account.export_requested",
+    "network.account.deleted",
     "network.grant.changed",
     "network.module.updated",
     "network.notification.created",

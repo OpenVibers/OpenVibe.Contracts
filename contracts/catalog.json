@@ -2407,6 +2407,76 @@
       "status": "active"
     },
     {
+      "id": "network.account.export_requested",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.account.export_requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
+      "id": "network.account.deleted",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.account.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
+      "id": "network.account-export",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/account-export.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
+      "id": "network.account-export-part",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/account-export-part.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
+      "id": "network.account-deletion",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/account-deletion.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
+      "id": "network.account-deletion-confirmation",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/account-deletion-confirmation.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
+      "id": "network.account-data-receipt",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/account-data-receipt.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
       "id": "network.subject.merged",
       "version": "1.0.0",
       "owner": "network",

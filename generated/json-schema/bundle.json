@@ -25379,6 +25379,379 @@
         }
       }
     },
+    "network.account.export_requested": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.account.export_requested.v1.json",
+        "title": "NetworkAccountExportRequestedPayload",
+        "description": "network.account.export_requested v1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033). A person asked for a copy of their data. Each service that keeps data about people pushes its part before the deadline: POST /internal/account-exports/{export_id}/parts (network.account-export-part@1, capability network.account.export.contribute), with only the subject's own rows. A redelivery carries the same export_id; a second part from the same service replaces the first.",
+        "type": "object",
+        "required": [
+          "export_id",
+          "subject",
+          "requested_at",
+          "deadline"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "export_id": {
+            "type": "string",
+            "pattern": "^exp_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The export job; a redelivery carries the same id."
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person whose data is exported."
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Network builds the archive when every expected service has answered, or at this time (30 minutes after the request); a later part is refused."
+          }
+        }
+      }
+    },
+    "network.account.deleted": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.account.deleted.v1.json",
+        "title": "NetworkAccountDeletedPayload",
+        "description": "network.account.deleted v1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033). An account's 30-day grace ended and Network erased what it owns; the subject is a tombstone and is never reused. Each service erases its own rows about the subject once per deletion_id: authored content is removed (an item with other people's replies beneath it stays as an authorless tombstone), likes, votes and reactions go with counts recomputed, money and ledger rows stay pseudonymised, and media under a retention hold stays. It then confirms: POST /internal/account-deletions/{deletion_id}/confirmations (network.account-deletion-confirmation@1, capability network.account.deletion.confirm).",
+        "type": "object",
+        "required": [
+          "deletion_id",
+          "subject",
+          "requested_at",
+          "deleted_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "deletion_id": {
+            "type": "string",
+            "pattern": "^del_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The deletion; a redelivery carries the same id."
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The deleted account."
+          },
+          "aliases": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "description": "Subjects merged into this account earlier (ADR-029); a service that still keeps rows under one erases them too."
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the person scheduled the deletion."
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.account-export": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/account-export.v1.json",
+        "title": "NetworkAccountExport",
+        "description": "network.account-export@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): a person's data export job. POST /api/v1/account/export starts one (one open at a time, one a day) and GET /api/v1/account/export/{id} answers its state. When ready or partial, GET /api/v1/account/export/{id}/download serves the zip to the same person until expires_at.",
+        "type": "object",
+        "required": [
+          "export_id",
+          "status",
+          "requested_at",
+          "deadline",
+          "services"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "export_id": {
+            "type": "string",
+            "pattern": "^exp_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "ready",
+              "partial",
+              "expired",
+              "failed"
+            ],
+            "description": "pending: waiting for the services' parts. ready: every expected service answered. partial: the deadline passed without some (services[].status missing). expired: the archive is gone (7 days). failed: the archive could not be built."
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ready_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the archive was built."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The archive is deleted then (7 days after ready_at)."
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "services": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "service",
+                "status"
+              ],
+              "properties": {
+                "service": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,31}$"
+                },
+                "status": {
+                  "enum": [
+                    "received",
+                    "waiting",
+                    "missing"
+                  ]
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network.account-export-part": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/account-export-part.v1.json",
+        "title": "NetworkAccountExportPart",
+        "description": "network.account-export-part@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): one service's part of a person's data export, POST /internal/account-exports/{export_id}/parts with capability network.account.export.contribute (a token speaks only for its own service). Files are JSON documents of the subject's own rows (never another person's data), at most 20 MB in all; each lands in the archive as <service>/<name>. A second part from the same service replaces the first.",
+        "type": "object",
+        "required": [
+          "subject",
+          "files"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Must be the export's subject."
+          },
+          "files": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "content"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_.-]{0,62}\\.json$",
+                  "description": "A flat file name ending in .json."
+                },
+                "content": {
+                  "description": "Any JSON value: the rows, as the service describes them."
+                }
+              }
+            }
+          },
+          "truncated": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "description": "Files cut at the service's own row limit, named so the README says so."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "A line for the README, such as where media files are downloaded."
+          }
+        }
+      }
+    },
+    "network.account-deletion": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/account-deletion.v1.json",
+        "title": "NetworkAccountDeletion",
+        "description": "network.account-deletion@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): a person's scheduled account deletion. POST /api/v1/account/deletion (a fresh sign-in, auth_time within 10 minutes, and the username typed out) schedules it 30 days ahead; GET answers it; DELETE cancels it before delete_after.",
+        "type": "object",
+        "required": [
+          "deletion_id",
+          "status",
+          "requested_at",
+          "delete_after"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "deletion_id": {
+            "type": "string",
+            "pattern": "^del_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "cancelled",
+              "deleted"
+            ]
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delete_after": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Nothing leaves Network before this time; the account works normally until then."
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.account-deletion-confirmation": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/account-deletion-confirmation.v1.json",
+        "title": "NetworkAccountDeletionConfirmation",
+        "description": "network.account-deletion-confirmation@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): one service confirms it erased a deleted account's rows, POST /internal/account-deletions/{deletion_id}/confirmations with capability network.account.deletion.confirm (a token speaks only for its own service). Counts only: what it erased and what it keeps (money and ledger rows pseudonymised, media under a retention hold, tombstones that keep others' replies in place). A repeat confirmation replaces the first.",
+        "type": "object",
+        "required": [
+          "subject",
+          "completed_at",
+          "erased"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Must be the deletion's subject."
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "erased": {
+            "type": "object",
+            "maxProperties": 64,
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Rows erased, by kind (messages, follows, pastes, …)."
+          },
+          "retained": {
+            "type": "object",
+            "maxProperties": 64,
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Rows kept, by kind, each pseudonymised or held (ledger, held_media, tombstones, …)."
+          }
+        }
+      }
+    },
+    "network.account-data-receipt": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/account-data-receipt.v1.json",
+        "title": "NetworkAccountDataReceipt",
+        "description": "network.account-data-receipt@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): Network's answer to a service's export part (network.account.export.contribute) or deletion confirmation (network.account.deletion.confirm). replaced: this service had already sent one for the same job, and this one replaced it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "service",
+          "received_at",
+          "replaced"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(exp|del)_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The export or deletion."
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,31}$"
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "replaced": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
     "network.subject.merged": {
       "version": "1.0.0",
       "owner": "network",

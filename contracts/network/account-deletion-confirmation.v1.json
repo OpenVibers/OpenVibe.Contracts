@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/account-deletion-confirmation.v1.json",
+  "title": "NetworkAccountDeletionConfirmation",
+  "description": "network.account-deletion-confirmation@1 (OpenVibe.Network; roadmap WS-B task 7, ADR-033): one service confirms it erased a deleted account's rows, POST /internal/account-deletions/{deletion_id}/confirmations with capability network.account.deletion.confirm (a token speaks only for its own service). Counts only: what it erased and what it keeps (money and ledger rows pseudonymised, media under a retention hold, tombstones that keep others' replies in place). A repeat confirmation replaces the first.",
+  "type": "object",
+  "required": [
+    "subject",
+    "completed_at",
+    "erased"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Must be the deletion's subject."
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "erased": {
+      "type": "object",
+      "maxProperties": 64,
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Rows erased, by kind (messages, follows, pastes, …)."
+    },
+    "retained": {
+      "type": "object",
+      "maxProperties": 64,
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Rows kept, by kind, each pseudonymised or held (ledger, held_media, tombstones, …)."
+    }
+  }
+}

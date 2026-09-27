@@ -6,6 +6,19 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.71.0 — 2026-09-27
+
+**Account export and deletion** (roadmap WS-B task 7, ADR-033).
+- `network.account.export_requested@1` (internal): a person asked for a copy of their data. Each service that keeps data about people pushes its part to `POST /internal/account-exports/{export_id}/parts` (`network.account-export-part@1`: JSON files of the subject's own rows, at most 20 MB) with the new capability `network.account.export.contribute`, before the deadline (30 minutes).
+- `network.account.deleted@1` (internal): the 30-day grace ended and Network erased what it owns. Each service erases its rows once per `deletion_id`, as follows:
+  - authored content goes, except items with others' replies, which stay as authorless tombstones;
+  - votes go, and counts are recomputed;
+  - money rows stay, pseudonymised, and held media stays.
+
+  It then confirms at `POST /internal/account-deletions/{deletion_id}/confirmations` (`network.account-deletion-confirmation@1`, counts only) with `network.account.deletion.confirm`. `aliases` names subjects merged into the account earlier.
+- `network.account-export@1` (the job the person sees: pending, ready, partial, expired or failed, with each service's state), `network.account-deletion@1` (scheduled, cancelled or deleted), and `network.account-data-receipt@1` (Network's answer to a part or confirmation).
+- Live, Chat, Community, Media and Games list both events as consumed.
+
 ## 0.70.0 — 2026-09-27
 
 **Account merge, the revocation reason and module policy** (roadmap WS-B task 5, ADR-029).
