@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/node-list-result.v1.json",
+  "title": "NetworkNodeListResult",
+  "description": "network.node-list-result@1: GET /api/v1/nodes on OpenVibe.Network (public, cacheable): every node of the platform, filterable by ?role= and ?region=. The input of openvibe-sdk/geo's nearest().",
+  "type": "object",
+  "required": ["nodes", "generated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "nodes": { "type": "array", "items": { "$ref": "node.v1.json" } },
+    "generated_at": { "type": "string", "format": "date-time" }
+  }
+}

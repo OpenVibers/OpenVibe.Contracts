@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/node.v1.json",
+  "title": "NetworkNode",
+  "description": "network.node@1: one machine of the OpenVibe platform as the node registry lists it (ADR-034 section 12; roadmap WS-X1). Roles are what it serves; location is region-level; the beacon is an HTTPS URL a client times to measure its own round trip. No addresses, capacity or secrets are public: a node is found by role and location, and reached through the service that uses it.",
+  "type": "object",
+  "required": ["id", "roles", "location", "health", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+    "name": { "type": "string", "maxLength": 80 },
+    "roles": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "enum": ["web", "app", "data", "media-worker", "ingest", "edge-probe", "edge-relay", "edge-cache", "gpu", "staging", "ci"] }
+    },
+    "location": {
+      "type": "object",
+      "required": ["region", "country"],
+      "additionalProperties": false,
+      "properties": {
+        "region": { "type": "string", "pattern": "^[a-z]{2}-[a-z]+(-[0-9])?$", "description": "e.g. us-west, eu-central" },
+        "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "city": { "type": "string", "maxLength": 80 },
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon": { "type": "number", "minimum": -180, "maximum": 180 }
+      }
+    },
+    "provider": { "type": "string", "maxLength": 40 },
+    "beacon": { "type": "string", "format": "uri", "pattern": "^https://", "description": "Timed by clients (GET, tiny body, no caching) to measure round-trip time." },
+    "health": {
+      "type": "object",
+      "required": ["status", "checked_at"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["up", "degraded", "down", "unknown"] },
+        "checked_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.76.0 — 2026-09-28
+
+**The node registry** (ADR-034 section 12; roadmap WS-X1).
+- `network.node@1`: one machine of the platform as the registry lists it: its roles (web, app, data, media-worker, ingest, edge-probe, edge-relay, edge-cache, gpu, staging, ci), region-level location (region, country, optional city and coordinates), provider, an HTTPS beacon clients time for their round trip, and health. No addresses, capacity or secrets are public.
+- `network.node-report-request@1` and `network.node.report` (internal, held by Host): `POST /internal/nodes/report` sends the complete set of nodes one inventory knows. A node absent from a later report of the same source is marked down, never silently deleted.
+- `network.node-list-result@1`: `GET /api/v1/nodes` (public, `?role=`, `?region=`), the input of openvibe-sdk/geo's `nearest()`.
+
 ## 0.75.0 — 2026-09-28
 
 **Per-streamer AI budgets are AI quotas** (roadmap WS-O task 2).

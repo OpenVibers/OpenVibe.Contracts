@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/node-report-request.v1.json",
+  "title": "NetworkNodeReportRequest",
+  "description": "network.node-report-request@1: POST /internal/nodes/report on OpenVibe.Network (capability network.node.report, held by the Host principal). The complete set of nodes one Host inventory knows, with their health now: a node absent from a later report of the same source is marked down, never deleted silently.",
+  "type": "object",
+  "required": ["source", "nodes"],
+  "additionalProperties": false,
+  "properties": {
+    "source": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$", "description": "The reporting inventory (e.g. the host id)." },
+    "nodes": { "type": "array", "maxItems": 500, "items": { "$ref": "node.v1.json" } }
+  }
+}

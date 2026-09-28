@@ -48,6 +48,7 @@
     "network.modules.write",
     "network.notifications.push",
     "network.operator.alert",
+    "network.node.report",
     "network.project.manage",
     "network.project.read",
     "network.staff.read",

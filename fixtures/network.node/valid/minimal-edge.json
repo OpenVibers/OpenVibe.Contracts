@@ -1,0 +1,1 @@
+{ "id": "probe-fra", "roles": ["edge-probe", "edge-relay"], "location": { "region": "eu-central", "country": "DE" }, "health": { "status": "unknown", "checked_at": "2026-09-28T12:00:00Z" }, "updated_at": "2026-09-28T12:00:00Z" }

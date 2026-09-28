@@ -4973,6 +4973,36 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.node",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/node.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "network.node-report-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/node-report-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "network.node-list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/node-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
     }
   ]
 }

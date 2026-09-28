@@ -46194,3 +46194,87 @@ export interface HostSite {
   created_at: string;
   updated_at: string;
 }
+
+/** network.node@1.0.0 (owner: network) */
+/**
+ * network.node@1: one machine of the OpenVibe platform as the node registry lists it (ADR-034 section 12; roadmap WS-X1). Roles are what it serves; location is region-level; the beacon is an HTTPS URL a client times to measure its own round trip. No addresses, capacity or secrets are public: a node is found by role and location, and reached through the service that uses it.
+ */
+export interface NetworkNode {
+  id: string;
+  name?: string;
+  /**
+   * @minItems 1
+   */
+  roles: [
+    (
+      | "web"
+      | "app"
+      | "data"
+      | "media-worker"
+      | "ingest"
+      | "edge-probe"
+      | "edge-relay"
+      | "edge-cache"
+      | "gpu"
+      | "staging"
+      | "ci"
+    ),
+    ...(
+      | "web"
+      | "app"
+      | "data"
+      | "media-worker"
+      | "ingest"
+      | "edge-probe"
+      | "edge-relay"
+      | "edge-cache"
+      | "gpu"
+      | "staging"
+      | "ci"
+    )[]
+  ];
+  location: {
+    /**
+     * e.g. us-west, eu-central
+     */
+    region: string;
+    country: string;
+    city?: string;
+    lat?: number;
+    lon?: number;
+  };
+  provider?: string;
+  /**
+   * Timed by clients (GET, tiny body, no caching) to measure round-trip time.
+   */
+  beacon?: string;
+  health: {
+    status: "up" | "degraded" | "down" | "unknown";
+    checked_at: string;
+  };
+  updated_at: string;
+}
+
+/** network.node-report-request@1.0.0 (owner: network) */
+/**
+ * network.node-report-request@1: POST /internal/nodes/report on OpenVibe.Network (capability network.node.report, held by the Host principal). The complete set of nodes one Host inventory knows, with their health now: a node absent from a later report of the same source is marked down, never deleted silently.
+ */
+export interface NetworkNodeReportRequest {
+  /**
+   * The reporting inventory (e.g. the host id).
+   */
+  source: string;
+  /**
+   * @maxItems 500
+   */
+  nodes: NetworkNode[];
+}
+
+/** network.node-list-result@1.0.0 (owner: network) */
+/**
+ * network.node-list-result@1: GET /api/v1/nodes on OpenVibe.Network (public, cacheable): every node of the platform, filterable by ?role= and ?region=. The input of openvibe-sdk/geo's nearest().
+ */
+export interface NetworkNodeListResult {
+  nodes: NetworkNode[];
+  generated_at: string;
+}
