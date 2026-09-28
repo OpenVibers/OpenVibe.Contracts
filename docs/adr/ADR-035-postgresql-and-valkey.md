@@ -84,3 +84,33 @@
   - flushing Valkey mid-run changes no money or account answer.
 - **A point-in-time restore drill** from pgBackRest reproduces a service's database at a chosen time.
 - **Truthful readiness:** each migrated service's `/ready` reports `postgresql` and its pool state, and a service not yet migrated reports `sqlite`.
+
+## Amendment 2026-09-28 (same day): one dialect, async-first, every service
+
+The owner confirmed after the costs were laid out: "everything should be async focused and highly optimized/efficient in the first place … migrate all of it". So:
+
+1. **One SQL dialect.** Services write PostgreSQL SQL only. The data layer has no SQLite adapter.
+   - Tests run real PostgreSQL in-process through **PGlite** (PostgreSQL compiled to WASM). What is tested is what runs, and there is no dual-dialect drift.
+   - CI also runs each migrated suite against a real PostgreSQL 18 + PgBouncer (transaction mode) + Valkey container set, which catches what only the pooler forbids.
+   - Item 4's "PostgreSQL and SQLite adapters" becomes "PostgreSQL (`pg`, through PgBouncer) and PGlite (tests, embedded)".
+2. **A one-time import from SQLite.** `openvibe-sdk/db` ships a verified importer from a service's SQLite file into its PostgreSQL schema:
+   - batched `COPY`;
+   - type mapping: 0/1 to boolean, text timestamps to `timestamptz`, JSON text to `jsonb`;
+   - per-table row counts and content checksums.
+
+   Item 6's per-service steps become:
+   1. the PostgreSQL schema;
+   2. data access async on the layer;
+   3. per-process state to Valkey;
+   4. suites on PGlite and CI PostgreSQL;
+   5. a rehearsal on a production copy;
+   6. a short write freeze, the import and the switch;
+   7. the SQLite file kept read-only for the N-1 window as the rollback, then archived and deleted.
+3. **Every service migrates,** in item 6's order. The roadmap's engineering standards (section 4B.7) bind each one:
+   - async request paths;
+   - bounded pools;
+   - Valkey for shared state;
+   - indexes for every query shape;
+   - keyset pagination;
+   - no N+1 queries;
+   - measured budgets.
