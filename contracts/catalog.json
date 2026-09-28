@@ -5003,6 +5003,136 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
+    },
+    {
+      "id": "platform.resource-offer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/resource-offer.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.workload-requirements",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/workload-requirements.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.placement-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/placement-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.placement-plan",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/placement-plan.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.rate-card",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/rate-card.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.provider-state",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/provider-state.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.cost-snapshot",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/cost-snapshot.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.capacity-snapshot",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/capacity-snapshot.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "events.delivery-policy",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/delivery-policy.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "common.resource-summary",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/resource-summary.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "common.resource-list-result",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/resource-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "common.resource-cost",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/resource-cost.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "network.confirmation-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/confirmation-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
     }
   ]
 }

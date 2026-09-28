@@ -1,0 +1,12 @@
+{
+  "id": "rc",
+  "provider": "p",
+  "metric": "m",
+  "unit_size": 1,
+  "unit_price_usd": -1,
+  "free_allowance": 0,
+  "reset_period": "month",
+  "effective_from": "2026-09-01",
+  "source": "https://example.com",
+  "verified_at": "2026-09-28"
+}

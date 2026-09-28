@@ -6,6 +6,18 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.77.0 — 2026-09-28
+
+**Agents, confirmations, the adaptive fabric and the resource index** (roadmap section 4C: WS-Z1, WS-Z2, WS-Z3, WS-Z7, WS-Z9).
+- `identity.subject-ref@1` gains the **agent** subject (`agt_<ULID>`): an agent (OpenVibe.Actor, or a developer app's agent) acting under grants its owner delegated. `ids` knows the `agt` and `cnf` prefixes; `principalSub` accepts agents (`agent:agt_…`).
+- `events.event-envelope@1`: optional `on_behalf_of`, the person or project an agent or app acted for.
+- `capabilities.capability@1`: optional `sensitive`. Sixteen capabilities with external side effects are marked (money movement, publishing, sending messages, deleting): an agent needs its owner's confirmation for them unless a standing rule covers it.
+- `network.confirmation-request@1`: a sensitive action waiting for its owner (pending, approved, denied, expired, cancelled; once, session, until, always).
+- `events.delivery-policy@1`: an event type's delivery class (realtime_ephemeral … webhook), durability, per-key ordering, latency targets, retention tiers, routing objective, batching, residency and a payload ceiling of 64 KB.
+- The fabric (`platform.*`, first-party): `resource-offer@1` (a node's or provider's capabilities, multidimensional capacity, latency, health, pricing), `workload-requirements@1`, `placement-result@1` (the explain answer), `placement-plan@1` (signed, expiring route plans), `rate-card@1` (a provider price in its real unit, with its free allowance, source and verification date), `provider-state@1` (usage, forecast, reserve), `cost-snapshot@1` (with counterfactuals), `capacity-snapshot@1`.
+- The resource index: `common.resource-summary@1` and `common.resource-list-result@1` (GET /api/v1/resources in every service); `common.resource-cost@1` (a charge in weighted cost units with an idempotency key).
+- Fixtures for each, and the regenerated OpenAPI and JSON Schema bundle.
+
 ## 0.76.0 — 2026-09-28
 
 **The node registry** (ADR-034 section 12; roadmap WS-X1).

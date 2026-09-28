@@ -4,6 +4,7 @@
   "owner": "news",
   "status": "active",
   "visibility": "first-party",
+  "sensitive": true,
   "description": "Publish a revision (refused while it cites no source, rests on a source removed upstream or detached, or is AI-generated/AI-assisted without a person's approval), or unpublish a story. Publishing resolves the upstream flags the revision answers and publishes pending correction/update notes.",
   "permissions": [
     "news:write"

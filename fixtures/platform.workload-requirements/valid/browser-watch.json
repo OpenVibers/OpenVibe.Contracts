@@ -1,0 +1,22 @@
+{
+  "kind": "watch.browser",
+  "mobility": "job",
+  "latency_class": "interactive",
+  "objective": "balanced",
+  "max_latency_ms": 1000,
+  "max_cost_usd": 0.002,
+  "durability": "at-least-once",
+  "trust": [
+    "first-party",
+    "partner"
+  ],
+  "region": "nearest",
+  "capabilities": [
+    "worker:browser"
+  ],
+  "resources": {
+    "cpu": 2,
+    "memory_mb": 1024,
+    "egress": "public"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "window_start": "2026-09-28T00:00:00Z",
+  "window_end": "2026-09-29T00:00:00Z",
+  "scope": "events",
+  "by_target": [
+    {
+      "id": "pg-delivery",
+      "units": 18294,
+      "cost_usd": 0,
+      "p50_ms": 11,
+      "p95_ms": 37
+    }
+  ],
+  "actual_usd": 0,
+  "counterfactual_usd": {
+    "all_provider": 0.02
+  }
+}

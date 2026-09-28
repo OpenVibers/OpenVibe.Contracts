@@ -1,0 +1,16 @@
+{
+  "offer_id": "x",
+  "kind": "node",
+  "region": "us-west",
+  "trust": "first-party",
+  "capabilities": [
+    "Browser"
+  ],
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "prepaid"
+  },
+  "updated_at": "2026-09-28T23:00:00Z"
+}

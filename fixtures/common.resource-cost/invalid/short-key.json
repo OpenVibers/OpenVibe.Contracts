@@ -1,0 +1,12 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01J0000000000000000000000A"
+  },
+  "unit": "job-run",
+  "amount": 1,
+  "state": "reserved",
+  "idempotency_key": "k",
+  "service": "x",
+  "at": "2026-09-28T23:00:00Z"
+}

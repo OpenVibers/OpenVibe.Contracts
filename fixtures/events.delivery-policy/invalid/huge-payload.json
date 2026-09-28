@@ -1,0 +1,6 @@
+{
+  "class": "domain",
+  "durability": "required",
+  "delivery_semantics": "at_least_once",
+  "max_payload_bytes": 1048576
+}

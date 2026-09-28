@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/delivery-policy.v1.json",
+  "title": "DeliveryPolicy",
+  "description": "How an event type is carried (roadmap WS-Z3 task 2): its delivery class sets the minimum semantics, which a publisher's intent may raise and never lower; ordering is per key; the route planner picks the carrier.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "class",
+    "durability",
+    "delivery_semantics"
+  ],
+  "properties": {
+    "class": {
+      "type": "string",
+      "enum": [
+        "realtime_ephemeral",
+        "interactive",
+        "interactive_durable",
+        "domain",
+        "critical",
+        "background",
+        "bulk",
+        "webhook"
+      ]
+    },
+    "durability": {
+      "type": "string",
+      "enum": [
+        "none",
+        "optional",
+        "required"
+      ]
+    },
+    "delivery_semantics": {
+      "type": "string",
+      "enum": [
+        "at_most_once",
+        "at_least_once"
+      ]
+    },
+    "ordering": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "scope",
+        "key"
+      ]
+    },
+    "latency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target_p95_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum_p95_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hot": {
+          "type": "string",
+          "pattern": "^[0-9]+[hdm]$"
+        },
+        "replay": {
+          "type": "string",
+          "pattern": "^[0-9]+[hdm]$"
+        },
+        "archive": {
+          "type": "string",
+          "pattern": "^[0-9]+[hdmy]$"
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "objective": {
+          "type": "string",
+          "enum": [
+            "latency_first",
+            "cheapest",
+            "balanced",
+            "correctness"
+          ]
+        },
+        "multi_provider": {
+          "type": "boolean"
+        }
+      }
+    },
+    "batching": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_messages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_delay_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "residency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inherit_project_region": {
+          "type": "boolean"
+        },
+        "region": {
+          "type": "string"
+        }
+      }
+    },
+    "max_payload_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65536
+    }
+  }
+}

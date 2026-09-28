@@ -4,6 +4,7 @@
   "owner": "reviews",
   "status": "active",
   "visibility": "first-party",
+  "sensitive": true,
   "description": "Write, review (approve or reject), publish and unpublish summary revisions as the editor named in X-OV-Subject. Publishing refuses AI or system-prepared revisions without a person's approval and any revision with a point that cites no live signal of the entity.",
   "permissions": [
     "reviews:summary:publish"

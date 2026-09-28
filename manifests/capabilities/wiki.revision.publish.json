@@ -4,6 +4,7 @@
   "owner": "wiki",
   "status": "active",
   "visibility": "first-party",
+  "sensitive": true,
   "description": "Publish a revision now or at a scheduled time (idempotent), unpublish a page, and record a person's review (approved or rejected) of an AI proposal or of an existing AI-assisted revision, on behalf of the editor named in X-OV-Subject. AI-generated revisions cannot be published without an approving review by a person.",
   "permissions": [
     "wiki:revision:publish"

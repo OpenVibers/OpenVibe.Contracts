@@ -1,0 +1,12 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01J0000000000000000000000A"
+  },
+  "unit": "coins",
+  "amount": 1,
+  "state": "committed",
+  "idempotency_key": "abcdefgh",
+  "service": "x",
+  "at": "2026-09-28T23:00:00Z"
+}

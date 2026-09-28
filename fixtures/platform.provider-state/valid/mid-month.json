@@ -1,0 +1,16 @@
+{
+  "provider": "example-queues",
+  "period_start": "2026-09-01T00:00:00Z",
+  "period_end": "2026-10-01T00:00:00Z",
+  "usage": {
+    "queue-operation-64kb": 430000
+  },
+  "forecast": {
+    "queue-operation-64kb": 1930000
+  },
+  "reserve": {
+    "queue-operation-64kb": 0.2
+  },
+  "health": "up",
+  "updated_at": "2026-09-28T23:00:00Z"
+}

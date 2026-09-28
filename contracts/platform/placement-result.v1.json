@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/placement-result.v1.json",
+  "title": "PlacementResult",
+  "description": "Where a workload was (or would be) placed and why: the chosen candidate, the reasons, and every candidate with its eligibility, estimated cost and latency (POST /api/v1/placement/explain; roadmap WS-Z9).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "selected",
+    "objective",
+    "candidates",
+    "decided_at"
+  ],
+  "properties": {
+    "selected": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string",
+      "enum": [
+        "cheapest",
+        "lowest-latency",
+        "balanced",
+        "private",
+        "local-only",
+        "first-party-only",
+        "high-reliability",
+        "correctness"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "eligible": {
+            "type": "boolean"
+          },
+          "excluded_because": {
+            "type": "string"
+          },
+          "estimated_cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "estimated_latency_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "score": {
+            "type": "number"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "eligible"
+        ]
+      }
+    },
+    "plan_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

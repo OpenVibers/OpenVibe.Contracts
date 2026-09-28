@@ -1,0 +1,5 @@
+{
+  "class": "fast",
+  "durability": "required",
+  "delivery_semantics": "at_least_once"
+}

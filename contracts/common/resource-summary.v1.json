@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/resource-summary.v1.json",
+  "title": "ResourceSummary",
+  "description": "One resource of any service, as the resource index lists it (roadmap WS-Z7): every service answers GET /api/v1/resources with these, so OpenVibe.Services shows any resource without owning its data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "service",
+    "state",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "description": "service.kind, e.g. watch.watch, actor.actor, media.object, events.subscription"
+    },
+    "service": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      },
+      "properties": {},
+      "description": "cost units by name (WS-Z1)"
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri"
+        },
+        "console": {
+          "type": "string",
+          "format": "uri"
+        },
+        "docs": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "class": "bulk",
+  "durability": "optional",
+  "delivery_semantics": "at_least_once",
+  "latency": {
+    "maximum_p95_ms": 30000
+  },
+  "routing": {
+    "objective": "cheapest"
+  },
+  "batching": {
+    "max_messages": 1000,
+    "max_delay_ms": 5000
+  }
+}

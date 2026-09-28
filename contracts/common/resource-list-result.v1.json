@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/resource-list-result.v1.json",
+  "title": "ResourceListResult",
+  "description": "A page of the resource index (roadmap WS-Z7).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "resources",
+    "next_cursor"
+  ],
+  "properties": {
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "resource-summary.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

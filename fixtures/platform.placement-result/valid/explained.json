@@ -1,0 +1,25 @@
+{
+  "selected": "off_oregon_1",
+  "objective": "balanced",
+  "reasons": [
+    "meets the latency target",
+    "already-paid capacity available",
+    "estimated marginal cost 0"
+  ],
+  "candidates": [
+    {
+      "id": "off_oregon_1",
+      "eligible": true,
+      "estimated_cost_usd": 0,
+      "estimated_latency_ms": 31,
+      "score": 0.041
+    },
+    {
+      "id": "off_community_331",
+      "eligible": false,
+      "excluded_because": "workload requires first-party trust"
+    }
+  ],
+  "plan_epoch": 42,
+  "decided_at": "2026-09-28T23:00:00Z"
+}

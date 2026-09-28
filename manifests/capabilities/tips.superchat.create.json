@@ -4,6 +4,7 @@
   "owner": "tips",
   "status": "active",
   "visibility": "first-party",
+  "sensitive": true,
   "description": "Start a paid (highlighted) chat message for a supporter; the paid_messages row exists only after Billing settles it.",
   "permissions": [
     "tips:checkout"

@@ -4,6 +4,7 @@
   "owner": "tips",
   "status": "active",
   "visibility": "first-party",
+  "sensitive": true,
   "description": "Start a tip for a supporter (on_behalf SubjectRef): paid from the supporter's Billing credit (billing.transfer.create) or through a Billing checkout intent (billing.intent.create). Tips never prices money; Billing does. Idempotent by Idempotency-Key.",
   "permissions": [
     "tips:checkout"

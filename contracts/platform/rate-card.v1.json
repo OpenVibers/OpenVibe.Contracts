@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/rate-card.v1.json",
+  "title": "RateCard",
+  "description": "One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). Changed only by review; never written by an AI on its own.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "provider",
+    "metric",
+    "unit_size",
+    "unit_price_usd",
+    "free_allowance",
+    "reset_period",
+    "effective_from",
+    "source",
+    "verified_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "adapter": {
+      "type": "string"
+    },
+    "metric": {
+      "type": "string",
+      "description": "e.g. queue-operation-64kb, request, gib-delivered, message, gb-month, class-a-op"
+    },
+    "unit_size": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unit_price_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "free_allowance": {
+      "type": "number",
+      "minimum": 0
+    },
+    "reset_period": {
+      "type": "string",
+      "enum": [
+        "day",
+        "month",
+        "none"
+      ]
+    },
+    "region": {
+      "type": "string"
+    },
+    "effective_from": {
+      "type": "string",
+      "format": "date"
+    },
+    "effective_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "string",
+      "format": "uri"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

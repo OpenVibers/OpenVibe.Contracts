@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/provider-state.v1.json",
+  "title": "ProviderState",
+  "description": "A provider's usage against its allowances this billing period and its forecast, used to compute marginal cost (roadmap WS-Z3 task 5).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider",
+    "period_start",
+    "period_end",
+    "usage",
+    "updated_at"
+  ],
+  "properties": {
+    "provider": {
+      "type": "string"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      },
+      "properties": {},
+      "description": "used units per rate-card metric"
+    },
+    "forecast": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      },
+      "properties": {},
+      "description": "projected units at period end"
+    },
+    "reserve": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "properties": {},
+      "description": "share of each free allowance kept for higher-priority classes"
+    },
+    "health": {
+      "type": "string",
+      "enum": [
+        "up",
+        "degraded",
+        "down"
+      ]
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

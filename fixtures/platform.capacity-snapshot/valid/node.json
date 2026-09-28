@@ -1,0 +1,22 @@
+{
+  "node_id": "ovh-oregon-1",
+  "cell": "wnam-1",
+  "capacity": {
+    "cpu": {
+      "utilization": 0.37
+    },
+    "memory": {
+      "utilization": 0.51
+    },
+    "event_loop_lag_ms": 4
+  },
+  "services": {
+    "chat": {
+      "instances": 1,
+      "active_requests": 12,
+      "p95_ms": 12.8,
+      "error_rate": 0.0003
+    }
+  },
+  "reported_at": "2026-09-28T23:00:00Z"
+}

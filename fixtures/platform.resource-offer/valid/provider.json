@@ -1,0 +1,21 @@
+{
+  "offer_id": "off_cf_queue",
+  "kind": "provider",
+  "provider": "cloudflare",
+  "adapter": "cf-queue-v1",
+  "region": "global",
+  "trust": "external",
+  "capabilities": [
+    "events:queue",
+    "events:durable"
+  ],
+  "health": {
+    "status": "up",
+    "error_rate": 0.0001
+  },
+  "pricing": {
+    "model": "per-operation",
+    "rate_card": "rc_cf_queue_ops"
+  },
+  "updated_at": "2026-09-28T23:00:00Z"
+}

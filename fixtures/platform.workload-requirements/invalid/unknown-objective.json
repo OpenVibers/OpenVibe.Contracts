@@ -1,0 +1,6 @@
+{
+  "kind": "x",
+  "mobility": "job",
+  "latency_class": "background",
+  "objective": "free"
+}

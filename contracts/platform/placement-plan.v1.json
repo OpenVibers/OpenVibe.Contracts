@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/placement-plan.v1.json",
+  "title": "PlacementPlan",
+  "description": "A signed, expiring route plan (roadmap WS-Z3 and WS-Z9): which carrier or pool serves each route. Every SDK and service caches the last valid plan and keeps working while the control plane is unreachable; unsigned or expired plans are refused.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "epoch",
+    "issued_at",
+    "expires_at",
+    "issuer",
+    "key_id",
+    "routes",
+    "signature"
+  ],
+  "properties": {
+    "epoch": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "issuer": {
+      "type": "string"
+    },
+    "key_id": {
+      "type": "string"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "route": {
+            "type": "string",
+            "description": "a route name: an event delivery class and scope, a workload kind, a service"
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "id",
+                "weight"
+              ]
+            },
+            "minItems": 1
+          },
+          "draining": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "since_epoch": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "route",
+          "targets"
+        ]
+      }
+    },
+    "signature": {
+      "type": "string",
+      "description": "Ed25519 over the canonical JSON of every other field, base64url"
+    }
+  }
+}

@@ -4,6 +4,7 @@
   "owner": "billing",
   "status": "active",
   "visibility": "internal",
+  "sensitive": true,
   "description": "Give CREDIT to someone (tip, donation, paid interaction): user_credit of the giver to creator_payable of the recipient. Self-dealing is refused by subject. Also refunds a credit-funded transfer back to its giver (e.g. a media request that never played). Idempotent by Idempotency-Key.",
   "permissions": [
     "billing:transfer"

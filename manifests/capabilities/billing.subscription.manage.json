@@ -4,6 +4,7 @@
   "owner": "billing",
   "status": "active",
   "visibility": "internal",
+  "sensitive": true,
   "description": "Start or renew a channel subscription paid from credit (the streamer share is credited on every period), and cancel at period end (Stripe subscriptions are cancelled at Stripe). Receipt-paid subscriptions through the API additionally need billing.ledger.admin.",
   "permissions": [
     "billing:subscriptions"

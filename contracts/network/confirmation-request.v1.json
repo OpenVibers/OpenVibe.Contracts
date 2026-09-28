@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/confirmation-request.v1.json",
+  "title": "ConfirmationRequest",
+  "description": "A sensitive action waiting for its owner's approval (roadmap WS-Z2): an agent (or app) asks to do something with an external side effect; the owner approves or denies from any OpenVibe site; the decision is an event.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "requested_by",
+    "capability",
+    "summary",
+    "state",
+    "expires_at",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^cnf_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "requested_by": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "capability": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[a-z0-9-]+\\.[a-z0-9-]+$"
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "details": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "../common/entity-ref.v1.json"
+      }
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "denied",
+        "expired",
+        "cancelled"
+      ]
+    },
+    "standing_rule": {
+      "type": "string",
+      "enum": [
+        "once",
+        "session",
+        "until",
+        "always"
+      ]
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

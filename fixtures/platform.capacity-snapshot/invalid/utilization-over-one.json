@@ -1,0 +1,9 @@
+{
+  "node_id": "n",
+  "capacity": {
+    "cpu": {
+      "utilization": 1.5
+    }
+  },
+  "reported_at": "2026-09-28T23:00:00Z"
+}

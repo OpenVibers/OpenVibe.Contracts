@@ -4,6 +4,7 @@
   "owner": "network",
   "status": "active",
   "visibility": "internal",
+  "sensitive": true,
   "description": "Atomically move OpenCoins between two Network users. A token may only act for its own app_id.",
   "permissions": [
     "coins:write"

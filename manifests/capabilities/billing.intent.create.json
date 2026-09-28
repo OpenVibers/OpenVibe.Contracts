@@ -4,6 +4,7 @@
   "owner": "billing",
   "status": "active",
   "visibility": "internal",
+  "sensitive": true,
   "description": "Start a checkout: create a payment intent priced by Billing (never by the client) for a Vibes purchase or a channel subscription, and get the provider checkout URL or PowerChat app_ref. Also reads intents and captures approved PayPal orders.",
   "permissions": [
     "billing:intents"

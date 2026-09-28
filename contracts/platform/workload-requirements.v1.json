@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/workload-requirements.v1.json",
+  "title": "WorkloadRequirements",
+  "description": "What a workload needs, so the platform can place it (roadmap WS-Z9). Hard constraints are filtered before any objective is scored; a cheaper candidate that misses one is never chosen.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "mobility",
+    "latency_class",
+    "objective"
+  ],
+  "properties": {
+    "kind": {
+      "type": "string",
+      "description": "what runs, e.g. watch.browser, media.transcode, ai.run, events.deliver"
+    },
+    "mobility": {
+      "type": "string",
+      "enum": [
+        "request",
+        "job",
+        "session",
+        "stateful-partition"
+      ]
+    },
+    "latency_class": {
+      "type": "string",
+      "enum": [
+        "realtime",
+        "interactive",
+        "background",
+        "bulk",
+        "critical"
+      ]
+    },
+    "objective": {
+      "type": "string",
+      "enum": [
+        "cheapest",
+        "lowest-latency",
+        "balanced",
+        "private",
+        "local-only",
+        "first-party-only",
+        "high-reliability",
+        "correctness"
+      ]
+    },
+    "max_latency_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "deadline_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "max_cost_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "durability": {
+      "type": "string",
+      "enum": [
+        "none",
+        "at-least-once",
+        "authoritative"
+      ]
+    },
+    "residency": {
+      "type": "string",
+      "description": "region or jurisdiction the work and its data must stay in"
+    },
+    "trust": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "first-party",
+          "partner",
+          "community",
+          "external"
+        ]
+      },
+      "minItems": 1,
+      "description": "trust levels allowed to run it"
+    },
+    "region": {
+      "type": "string",
+      "description": "a region, or 'nearest'"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "capabilities a candidate must offer (worker:browser, …)"
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpu": {
+          "type": "number",
+          "minimum": 0
+        },
+        "memory_mb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "gpu": {
+          "type": "boolean"
+        },
+        "scratch_gb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "egress": {
+          "type": "string",
+          "enum": [
+            "none",
+            "public",
+            "openvibe-only"
+          ]
+        }
+      }
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "partition_key": {
+      "type": "string",
+      "description": "stable key for rendezvous placement (room, stream, session)"
+    }
+  }
+}

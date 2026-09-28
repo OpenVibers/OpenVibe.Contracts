@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/capacity-snapshot.v1.json",
+  "title": "CapacitySnapshot",
+  "description": "A node's reported capacity at one moment, sent by its Host agent (roadmap WS-Z9 task 1).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "node_id",
+    "capacity",
+    "reported_at"
+  ],
+  "properties": {
+    "node_id": {
+      "type": "string"
+    },
+    "cell": {
+      "type": "string"
+    },
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpu": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "utilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "available_cores": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "memory": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "utilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "available_mb": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ingress_mbps": {
+              "type": "number",
+              "minimum": 0
+            },
+            "egress_mbps": {
+              "type": "number",
+              "minimum": 0
+            },
+            "available_mbps": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "disk": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "iops_available": {
+              "type": "number",
+              "minimum": 0
+            },
+            "scratch_gb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "utilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "gpu": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "vram_free_mb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "utilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "workers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "properties": {},
+          "description": "free worker slots by kind (browser, ffmpeg, ai, …)"
+        },
+        "queues": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "depth": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "oldest_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          },
+          "properties": {},
+          "description": "queue depth and age by name"
+        },
+        "event_loop_lag_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "services": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "instances": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "active_requests": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "p50_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "p95_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "error_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      },
+      "properties": {}
+    },
+    "reported_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "rc_example_queue_ops",
+  "provider": "example-queues",
+  "adapter": "example-queue-v1",
+  "metric": "queue-operation-64kb",
+  "unit_size": 1000000,
+  "unit_price_usd": 0.4,
+  "free_allowance": 1000000,
+  "reset_period": "month",
+  "effective_from": "2026-09-01",
+  "source": "https://example.com/pricing",
+  "verified_at": "2026-09-28"
+}

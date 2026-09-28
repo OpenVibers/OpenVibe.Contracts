@@ -25,6 +25,10 @@ export type SubjectRef =
   | {
       type: "service" | "system";
       id: string;
+    }
+  | {
+      type: "agent";
+      id: string;
     };
 
 /** identity.legacy-identity-map@1.0.0 (owner: network) */
@@ -529,6 +533,10 @@ export interface Capability {
    * Current route(s) that perform this action today, e.g. 'POST /api/v1/:app/files'.
    */
   implementedBy?: string[];
+  /**
+   * The action has an external side effect (money, sending as the person, publishing, applying, deleting, physical control): an agent needs its owner's confirmation unless a standing rule covers it (roadmap WS-Z2).
+   */
+  sensitive?: boolean;
 }
 
 /** events.event-envelope@1.0.0 (owner: events) */
@@ -542,6 +550,7 @@ export interface EventEnvelope {
   version: number;
   source: string;
   actor: SubjectRef;
+  on_behalf_of?: SubjectRef;
   timestamp: string;
   priority?: "critical" | "important" | "low";
   visibility?: "public" | "subject" | "internal";
@@ -46277,4 +46286,498 @@ export interface NetworkNodeReportRequest {
 export interface NetworkNodeListResult {
   nodes: NetworkNode[];
   generated_at: string;
+}
+
+/** platform.resource-offer@1.0.0 (owner: network) */
+/**
+ * What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.
+ */
+export interface ResourceOffer {
+  offer_id: string;
+  kind: "node" | "provider";
+  /**
+   * network.node@1 id, for kind node
+   */
+  node_id?: string;
+  /**
+   * provider or hosting company
+   */
+  provider?: string;
+  /**
+   * carrier or provider adapter id, for kind provider (e.g. nats-v1, cf-queue-v1)
+   */
+  adapter?: string;
+  region: string;
+  cell?: string;
+  trust: "first-party" | "partner" | "community" | "external";
+  /**
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2
+   */
+  capabilities: string[];
+  capacity?: {
+    cpu?: {
+      utilization?: number;
+      available_cores?: number;
+    };
+    memory?: {
+      utilization?: number;
+      available_mb?: number;
+    };
+    network?: {
+      ingress_mbps?: number;
+      egress_mbps?: number;
+      available_mbps?: number;
+    };
+    disk?: {
+      iops_available?: number;
+      scratch_gb?: number;
+      utilization?: number;
+    };
+    gpu?: {
+      type?: string;
+      vram_free_mb?: number;
+      utilization?: number;
+    };
+    /**
+     * free worker slots by kind (browser, ffmpeg, ai, …)
+     */
+    workers?: {
+      [k: string]: number | undefined;
+    };
+    /**
+     * queue depth and age by name
+     */
+    queues?: {
+      [k: string]:
+        | {
+            depth?: number;
+            oldest_ms?: number;
+          }
+        | undefined;
+    };
+    event_loop_lag_ms?: number;
+  };
+  /**
+   * measured p50/p95 by operation, e.g. publish_p95, ack_p95
+   */
+  latency_ms?: {
+    [k: string]: number | undefined;
+  };
+  health: {
+    status: "up" | "degraded" | "down" | "draining";
+    error_rate?: number;
+    checked_at?: string;
+  };
+  pricing: {
+    model: "prepaid" | "per-request" | "per-byte" | "per-operation" | "per-second" | "free-allowance" | "mixed";
+    marginal_usd_per_unit?: number;
+    unit?: string;
+    /**
+     * platform.rate-card id when the price comes from one
+     */
+    rate_card?: string;
+  };
+  updated_at: string;
+}
+
+/** platform.workload-requirements@1.0.0 (owner: network) */
+/**
+ * What a workload needs, so the platform can place it (roadmap WS-Z9). Hard constraints are filtered before any objective is scored; a cheaper candidate that misses one is never chosen.
+ */
+export interface WorkloadRequirements {
+  /**
+   * what runs, e.g. watch.browser, media.transcode, ai.run, events.deliver
+   */
+  kind: string;
+  mobility: "request" | "job" | "session" | "stateful-partition";
+  latency_class: "realtime" | "interactive" | "background" | "bulk" | "critical";
+  objective:
+    | "cheapest"
+    | "lowest-latency"
+    | "balanced"
+    | "private"
+    | "local-only"
+    | "first-party-only"
+    | "high-reliability"
+    | "correctness";
+  max_latency_ms?: number;
+  deadline_ms?: number;
+  max_cost_usd?: number;
+  durability?: "none" | "at-least-once" | "authoritative";
+  /**
+   * region or jurisdiction the work and its data must stay in
+   */
+  residency?: string;
+  /**
+   * trust levels allowed to run it
+   *
+   * @minItems 1
+   */
+  trust?: [
+    "first-party" | "partner" | "community" | "external",
+    ...("first-party" | "partner" | "community" | "external")[]
+  ];
+  /**
+   * a region, or 'nearest'
+   */
+  region?: string;
+  /**
+   * capabilities a candidate must offer (worker:browser, …)
+   */
+  capabilities?: string[];
+  resources?: {
+    cpu?: number;
+    memory_mb?: number;
+    gpu?: boolean;
+    scratch_gb?: number;
+    egress?: "none" | "public" | "openvibe-only";
+  };
+  project_id?: string;
+  /**
+   * stable key for rendezvous placement (room, stream, session)
+   */
+  partition_key?: string;
+}
+
+/** platform.placement-result@1.0.0 (owner: network) */
+/**
+ * Where a workload was (or would be) placed and why: the chosen candidate, the reasons, and every candidate with its eligibility, estimated cost and latency (POST /api/v1/placement/explain; roadmap WS-Z9).
+ */
+export interface PlacementResult {
+  selected: string;
+  objective:
+    | "cheapest"
+    | "lowest-latency"
+    | "balanced"
+    | "private"
+    | "local-only"
+    | "first-party-only"
+    | "high-reliability"
+    | "correctness";
+  reasons?: string[];
+  candidates: {
+    id: string;
+    eligible: boolean;
+    excluded_because?: string;
+    estimated_cost_usd?: number;
+    estimated_latency_ms?: number;
+    score?: number;
+    reasons?: string[];
+  }[];
+  plan_epoch?: number;
+  decided_at: string;
+}
+
+/** platform.placement-plan@1.0.0 (owner: network) */
+/**
+ * A signed, expiring route plan (roadmap WS-Z3 and WS-Z9): which carrier or pool serves each route. Every SDK and service caches the last valid plan and keeps working while the control plane is unreachable; unsigned or expired plans are refused.
+ */
+export interface PlacementPlan {
+  epoch: number;
+  issued_at: string;
+  expires_at: string;
+  issuer: string;
+  key_id: string;
+  routes: {
+    /**
+     * a route name: an event delivery class and scope, a workload kind, a service
+     */
+    route: string;
+    /**
+     * @minItems 1
+     */
+    targets: [
+      {
+        id: string;
+        weight: number;
+      },
+      ...{
+        id: string;
+        weight: number;
+      }[]
+    ];
+    draining?: string[];
+    since_epoch?: number;
+  }[];
+  /**
+   * Ed25519 over the canonical JSON of every other field, base64url
+   */
+  signature: string;
+}
+
+/** platform.rate-card@1.0.0 (owner: network) */
+/**
+ * One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). Changed only by review; never written by an AI on its own.
+ */
+export interface RateCard {
+  id: string;
+  provider: string;
+  adapter?: string;
+  /**
+   * e.g. queue-operation-64kb, request, gib-delivered, message, gb-month, class-a-op
+   */
+  metric: string;
+  unit_size: number;
+  unit_price_usd: number;
+  free_allowance: number;
+  reset_period: "day" | "month" | "none";
+  region?: string;
+  effective_from: string;
+  effective_until?: string;
+  source: string;
+  verified_at: string;
+}
+
+/** platform.provider-state@1.0.0 (owner: network) */
+/**
+ * A provider's usage against its allowances this billing period and its forecast, used to compute marginal cost (roadmap WS-Z3 task 5).
+ */
+export interface ProviderState {
+  provider: string;
+  period_start: string;
+  period_end: string;
+  /**
+   * used units per rate-card metric
+   */
+  usage: {
+    [k: string]: number | undefined;
+  };
+  /**
+   * projected units at period end
+   */
+  forecast?: {
+    [k: string]: number | undefined;
+  };
+  /**
+   * share of each free allowance kept for higher-priority classes
+   */
+  reserve?: {
+    [k: string]: number | undefined;
+  };
+  health?: "up" | "degraded" | "down";
+  updated_at: string;
+}
+
+/** platform.cost-snapshot@1.0.0 (owner: network) */
+/**
+ * Cost and volume for a window, by carrier or provider, with the counterfactuals: what the same work would have cost all-local, all-provider and with the optimiser (roadmap WS-Z9 task 6).
+ */
+export interface CostSnapshot {
+  window_start: string;
+  window_end: string;
+  project_id?: string;
+  /**
+   * events, jobs, ai, media, …
+   */
+  scope: string;
+  by_target: {
+    id: string;
+    units: number;
+    cost_usd: number;
+    p50_ms?: number;
+    p95_ms?: number;
+  }[];
+  actual_usd: number;
+  /**
+   * e.g. all_local, all_provider, lowest_latency
+   */
+  counterfactual_usd?: {
+    [k: string]: number | undefined;
+  };
+}
+
+/** platform.capacity-snapshot@1.0.0 (owner: network) */
+/**
+ * A node's reported capacity at one moment, sent by its Host agent (roadmap WS-Z9 task 1).
+ */
+export interface CapacitySnapshot {
+  node_id: string;
+  cell?: string;
+  capacity: {
+    cpu?: {
+      utilization?: number;
+      available_cores?: number;
+    };
+    memory?: {
+      utilization?: number;
+      available_mb?: number;
+    };
+    network?: {
+      ingress_mbps?: number;
+      egress_mbps?: number;
+      available_mbps?: number;
+    };
+    disk?: {
+      iops_available?: number;
+      scratch_gb?: number;
+      utilization?: number;
+    };
+    gpu?: {
+      type?: string;
+      vram_free_mb?: number;
+      utilization?: number;
+    };
+    /**
+     * free worker slots by kind (browser, ffmpeg, ai, …)
+     */
+    workers?: {
+      [k: string]: number | undefined;
+    };
+    /**
+     * queue depth and age by name
+     */
+    queues?: {
+      [k: string]:
+        | {
+            depth?: number;
+            oldest_ms?: number;
+          }
+        | undefined;
+    };
+    event_loop_lag_ms?: number;
+  };
+  services?: {
+    [k: string]:
+      | {
+          instances?: number;
+          active_requests?: number;
+          p50_ms?: number;
+          p95_ms?: number;
+          error_rate?: number;
+        }
+      | undefined;
+  };
+  reported_at: string;
+}
+
+/** events.delivery-policy@1.0.0 (owner: events) */
+/**
+ * How an event type is carried (roadmap WS-Z3 task 2): its delivery class sets the minimum semantics, which a publisher's intent may raise and never lower; ordering is per key; the route planner picks the carrier.
+ */
+export interface DeliveryPolicy {
+  class:
+    | "realtime_ephemeral"
+    | "interactive"
+    | "interactive_durable"
+    | "domain"
+    | "critical"
+    | "background"
+    | "bulk"
+    | "webhook";
+  durability: "none" | "optional" | "required";
+  delivery_semantics: "at_most_once" | "at_least_once";
+  ordering?: {
+    scope: string;
+    key: string;
+  };
+  latency?: {
+    target_p95_ms?: number;
+    maximum_p95_ms?: number;
+  };
+  retention?: {
+    hot?: string;
+    replay?: string;
+    archive?: string;
+  };
+  routing?: {
+    objective?: "latency_first" | "cheapest" | "balanced" | "correctness";
+    multi_provider?: boolean;
+  };
+  batching?: {
+    max_messages?: number;
+    max_delay_ms?: number;
+  };
+  residency?: {
+    inherit_project_region?: boolean;
+    region?: string;
+  };
+  max_payload_bytes?: number;
+}
+
+/** common.resource-summary@1.0.0 (owner: contracts) */
+/**
+ * One resource of any service, as the resource index lists it (roadmap WS-Z7): every service answers GET /api/v1/resources with these, so OpenVibe.Services shows any resource without owning its data.
+ */
+export interface ResourceSummary {
+  id: string;
+  /**
+   * service.kind, e.g. watch.watch, actor.actor, media.object, events.subscription
+   */
+  kind: string;
+  service: string;
+  project_id?: string;
+  owner?: SubjectRef;
+  name?: string;
+  state: string;
+  created_at: string;
+  updated_at?: string;
+  /**
+   * cost units by name (WS-Z1)
+   */
+  usage?: {
+    [k: string]: number | undefined;
+  };
+  links?: {
+    self?: string;
+    console?: string;
+    docs?: string;
+  };
+}
+
+/** common.resource-list-result@1.0.0 (owner: contracts) */
+/**
+ * A page of the resource index (roadmap WS-Z7).
+ */
+export interface ResourceListResult {
+  resources: ResourceSummary[];
+  next_cursor: string | null;
+}
+
+/** common.resource-cost@1.0.0 (owner: contracts) */
+/**
+ * One charge in weighted cost units (roadmap WS-Z1): which subject used what, reserved and committed or released, with an idempotency key so a retried charge counts once.
+ */
+export interface ResourceCost {
+  subject: SubjectRef;
+  project_id?: string;
+  unit:
+    | "browser-second"
+    | "ai-token"
+    | "ai-usd"
+    | "gpu-second"
+    | "video-minute"
+    | "bandwidth-byte"
+    | "storage-byte-day"
+    | "event"
+    | "watch-check"
+    | "bot-control-second"
+    | "job-run"
+    | "upload-byte"
+    | "download-byte";
+  amount: number;
+  state: "reserved" | "committed" | "released";
+  idempotency_key: string;
+  service: string;
+  at: string;
+}
+
+/** network.confirmation-request@1.0.0 (owner: network) */
+/**
+ * A sensitive action waiting for its owner's approval (roadmap WS-Z2): an agent (or app) asks to do something with an external side effect; the owner approves or denies from any OpenVibe site; the decision is an event.
+ */
+export interface ConfirmationRequest {
+  id: string;
+  owner: SubjectRef;
+  requested_by: SubjectRef;
+  capability: string;
+  summary: string;
+  details?: {
+    [k: string]: unknown | undefined;
+  };
+  resources?: EntityRef[];
+  state: "pending" | "approved" | "denied" | "expired" | "cancelled";
+  standing_rule?: "once" | "session" | "until" | "always";
+  expires_at: string;
+  decided_at?: string;
+  created_at: string;
 }

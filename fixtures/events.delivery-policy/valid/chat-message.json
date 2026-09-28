@@ -1,0 +1,25 @@
+{
+  "class": "interactive_durable",
+  "durability": "required",
+  "delivery_semantics": "at_least_once",
+  "ordering": {
+    "scope": "room",
+    "key": "room_id"
+  },
+  "latency": {
+    "target_p95_ms": 50,
+    "maximum_p95_ms": 100
+  },
+  "retention": {
+    "hot": "7d",
+    "replay": "30d",
+    "archive": "365d"
+  },
+  "routing": {
+    "objective": "latency_first",
+    "multi_provider": true
+  },
+  "residency": {
+    "inherit_project_region": true
+  }
+}

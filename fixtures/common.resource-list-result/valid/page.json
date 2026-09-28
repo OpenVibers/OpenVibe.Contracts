@@ -1,0 +1,12 @@
+{
+  "resources": [
+    {
+      "id": "sub_1",
+      "kind": "events.subscription",
+      "service": "events",
+      "state": "enabled",
+      "created_at": "2026-09-28T23:00:00Z"
+    }
+  ],
+  "next_cursor": null
+}

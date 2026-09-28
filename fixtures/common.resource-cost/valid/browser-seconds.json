@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "type": "agent",
+    "id": "agt_01J0000000000000000000000A"
+  },
+  "project_id": "prj_01J0000000000000000000000A",
+  "unit": "browser-second",
+  "amount": 12.5,
+  "state": "committed",
+  "idempotency_key": "run_01J-step-4",
+  "service": "actor",
+  "at": "2026-09-28T23:00:00Z"
+}

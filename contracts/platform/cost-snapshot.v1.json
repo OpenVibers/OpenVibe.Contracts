@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/cost-snapshot.v1.json",
+  "title": "CostSnapshot",
+  "description": "Cost and volume for a window, by carrier or provider, with the counterfactuals: what the same work would have cost all-local, all-provider and with the optimiser (roadmap WS-Z9 task 6).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "window_start",
+    "window_end",
+    "scope",
+    "by_target",
+    "actual_usd"
+  ],
+  "properties": {
+    "window_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "window_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "scope": {
+      "type": "string",
+      "description": "events, jobs, ai, media, …"
+    },
+    "by_target": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "units": {
+            "type": "number",
+            "minimum": 0
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "p50_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "p95_ms": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "units",
+          "cost_usd"
+        ]
+      }
+    },
+    "actual_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "counterfactual_usd": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      },
+      "properties": {},
+      "description": "e.g. all_local, all_provider, lowest_latency"
+    }
+  }
+}

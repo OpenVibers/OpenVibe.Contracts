@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/resource-cost.v1.json",
+  "title": "ResourceCost",
+  "description": "One charge in weighted cost units (roadmap WS-Z1): which subject used what, reserved and committed or released, with an idempotency key so a retried charge counts once.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subject",
+    "unit",
+    "amount",
+    "state",
+    "idempotency_key",
+    "service",
+    "at"
+  ],
+  "properties": {
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "browser-second",
+        "ai-token",
+        "ai-usd",
+        "gpu-second",
+        "video-minute",
+        "bandwidth-byte",
+        "storage-byte-day",
+        "event",
+        "watch-check",
+        "bot-control-second",
+        "job-run",
+        "upload-byte",
+        "download-byte"
+      ]
+    },
+    "amount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "reserved",
+        "committed",
+        "released"
+      ]
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 200
+    },
+    "service": {
+      "type": "string"
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

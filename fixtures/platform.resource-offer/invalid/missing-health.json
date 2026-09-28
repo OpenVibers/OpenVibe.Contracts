@@ -1,0 +1,13 @@
+{
+  "offer_id": "x",
+  "kind": "node",
+  "region": "us-west",
+  "trust": "first-party",
+  "capabilities": [
+    "node:http"
+  ],
+  "pricing": {
+    "model": "prepaid"
+  },
+  "updated_at": "2026-09-28T23:00:00Z"
+}

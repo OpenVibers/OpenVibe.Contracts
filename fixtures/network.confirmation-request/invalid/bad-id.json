@@ -1,0 +1,16 @@
+{
+  "id": "cnf_x",
+  "owner": {
+    "type": "user",
+    "id": "usr_01J0000000000000000000000A"
+  },
+  "requested_by": {
+    "type": "agent",
+    "id": "agt_01J0000000000000000000000A"
+  },
+  "capability": "a.b.c",
+  "summary": "s",
+  "state": "pending",
+  "expires_at": "2026-09-28T23:00:00Z",
+  "created_at": "2026-09-28T23:00:00Z"
+}

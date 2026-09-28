@@ -96,6 +96,24 @@
         }
       },
       "description": "PrincipalSubject"
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "agent"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "description": "AgentSubject: an agent (OpenVibe.Actor, or a developer app's agent) acting under grants its owner delegated (roadmap WS-Z2). In an event envelope, on_behalf_of names the owner."
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "epoch": 43,
+  "issued_at": "2026-09-28T23:00:00Z",
+  "expires_at": "2026-09-29T00:00:00Z",
+  "issuer": "network",
+  "key_id": "route-2026-09",
+  "routes": [
+    {
+      "route": "events:background",
+      "targets": [
+        {
+          "id": "valkey-streams",
+          "weight": 1
+        }
+      ],
+      "draining": [
+        "pg-delivery"
+      ],
+      "since_epoch": 43
+    }
+  ],
+  "signature": "c2lnbmF0dXJl"
+}

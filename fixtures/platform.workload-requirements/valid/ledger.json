@@ -1,0 +1,7 @@
+{
+  "kind": "billing.post",
+  "mobility": "stateful-partition",
+  "latency_class": "critical",
+  "objective": "correctness",
+  "durability": "authoritative"
+}

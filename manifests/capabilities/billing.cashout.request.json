@@ -4,6 +4,7 @@
   "owner": "billing",
   "status": "active",
   "visibility": "internal",
+  "sensitive": true,
   "description": "Request a cashout of creator payable into escrow (minimum and escrow period enforced by Billing), or recycle creator payable into the subject's own spendable credit. Bought credit is never withdrawable.",
   "permissions": [
     "billing:cashout"

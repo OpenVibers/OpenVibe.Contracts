@@ -13,6 +13,7 @@
     "version": { "type": "integer", "minimum": 1 },
     "source": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
     "actor": { "$ref": "../identity/subject-ref.v1.json" },
+    "on_behalf_of": { "$ref": "../identity/subject-ref.v1.json" },
     "timestamp": { "type": "string", "format": "date-time" },
     "priority": { "enum": ["critical", "important", "low"], "default": "important" },
     "visibility": { "enum": ["public", "subject", "internal"], "default": "internal" },

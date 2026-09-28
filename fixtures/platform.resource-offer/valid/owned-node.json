@@ -1,0 +1,46 @@
+{
+  "offer_id": "off_oregon_1",
+  "kind": "node",
+  "node_id": "ovh-oregon-1",
+  "provider": "ovh",
+  "region": "us-west",
+  "cell": "wnam-1",
+  "trust": "first-party",
+  "capabilities": [
+    "node:http",
+    "worker:browser",
+    "worker:ffmpeg",
+    "events:durable"
+  ],
+  "capacity": {
+    "cpu": {
+      "utilization": 0.31,
+      "available_cores": 5.5
+    },
+    "memory": {
+      "available_mb": 18300
+    },
+    "workers": {
+      "browser": 6,
+      "ffmpeg": 3
+    },
+    "queues": {
+      "media-jobs": {
+        "depth": 2,
+        "oldest_ms": 40
+      }
+    }
+  },
+  "latency_ms": {
+    "publish_p95": 3.1
+  },
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "prepaid",
+    "marginal_usd_per_unit": 0,
+    "unit": "job"
+  },
+  "updated_at": "2026-09-28T23:00:00Z"
+}

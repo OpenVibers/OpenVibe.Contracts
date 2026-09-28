@@ -19,6 +19,7 @@
     "resourceConstraints": { "type": "array", "items": { "enum": ["namespace", "owner", "room_member", "space_member", "project", "none"] } },
     "quotaClass": { "type": "string" },
     "events": { "type": "array", "items": { "type": "string" } },
-    "implementedBy": { "type": "array", "items": { "type": "string" }, "description": "Current route(s) that perform this action today, e.g. 'POST /api/v1/:app/files'." }
+    "implementedBy": { "type": "array", "items": { "type": "string" }, "description": "Current route(s) that perform this action today, e.g. 'POST /api/v1/:app/files'." },
+    "sensitive": { "type": "boolean", "description": "The action has an external side effect (money, sending as the person, publishing, applying, deleting, physical control): an agent needs its owner's confirmation unless a standing rule covers it (roadmap WS-Z2)." }
   }
 }
