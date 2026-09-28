@@ -1,6 +1,6 @@
 # ADR-007: Logical data ownership and database technology
 
-**Status:** Accepted 2026-09-22. Amended 2026-09-24: PostgreSQL runtime posture (pooling, replicas, money-path isolation, Redis non-authoritative; roadmap §28.3 m10).
+**Status:** Accepted 2026-09-22. Superseded in part 2026-09-28 by ADR-035 (PostgreSQL and Valkey now, not on a trigger; the ownership rule and the 2026-09-24 runtime posture still hold). Amended 2026-09-24: PostgreSQL runtime posture (pooling, replicas, money-path isolation, Redis non-authoritative; roadmap §28.3 m10).
 
 ## Context and current evidence
 
