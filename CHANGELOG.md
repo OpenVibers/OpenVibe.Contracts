@@ -6,6 +6,10 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.74.0 — 2026-09-28
+
+- `ai.credential-put@1`: `api_key` is optional after the first put. The stored key is kept for a change of models or budget, but must be entered again to change `provider` or `base_url`, so a key never follows a new endpoint on its own (400 `credential.key_required` otherwise). Roadmap WS-O task 2.
+
 ## 0.73.0 — 2026-09-28
 
 **A person's own provider key lives in OpenVibe.AI** (roadmap WS-O task 2).

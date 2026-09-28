@@ -15779,7 +15779,10 @@ export interface AiCredentialPut {
    */
   provider: "openai" | "anthropic";
   base_url?: string;
-  api_key: string;
+  /**
+   * Required the first time, and whenever provider or base_url changes (a key is never sent to a new endpoint without being entered again); otherwise the stored key is kept.
+   */
+  api_key?: string;
   /**
    * Model per Live role; `chat` is the default for the others.
    */
