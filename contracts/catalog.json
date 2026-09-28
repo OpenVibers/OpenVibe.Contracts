@@ -1224,6 +1224,24 @@
       "status": "active"
     },
     {
+      "id": "ai.attribution-quota-put",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/attribution-quota-put.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.attribution-quota",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/attribution-quota.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.run-request",
       "version": "1.0.0",
       "owner": "ai",

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/attribution-quota-put.v1.json",
+  "title": "AiAttributionQuotaPut",
+  "description": "ai.attribution-quota-put@1 (OpenVibe.AI; roadmap WS-O task 2): a cap on runs attributed to one of the caller's own entities, PUT /api/v1/attribution-quotas/{attribution} with capability ai.quota.attribution.manage; the attribution's service must be the caller (Live caps live:user:<id>, a streamer's AI viewers). Over the cap a run is refused 429 quota.exceeded before any provider is called. Cost counts what runs have cost so far in the window, so the run that crosses the cap finishes and the next is refused.",
+  "type": "object",
+  "required": [
+    "window"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "window": {
+      "enum": [
+        "hour",
+        "day"
+      ]
+    },
+    "max_cost_usd": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "max_requests": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "workflow_prefix": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.-]{1,79}$",
+      "description": "Only runs of workflows whose key starts with this (live.viewers.)."
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "max_cost_usd"
+      ]
+    },
+    {
+      "required": [
+        "max_requests"
+      ]
+    }
+  ]
+}

@@ -6,6 +6,11 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## Unreleased
 
+## 0.75.0 — 2026-09-28
+
+**Per-streamer AI budgets are AI quotas** (roadmap WS-O task 2).
+- `ai.quota.attribution.manage` (first-party): a service caps what runs attributed to one of its own entities may cost or request per hour or day (`PUT /api/v1/attribution-quotas/{attribution}`, `ai.attribution-quota-put@1`, optionally only for workflows under a prefix). It reads the cap with what the window has used (`ai.attribution-quota@1`) or removes it. The attribution's service must be the caller: Live caps `live:user:<id>`, a streamer's daily AI-viewer budget. A run over the cap is refused 429 `quota.exceeded` before any provider is called.
+
 ## 0.74.0 — 2026-09-28
 
 - `ai.credential-put@1`: `api_key` is optional after the first put. The stored key is kept for a change of models or budget, but must be entered again to change `provider` or `base_url`, so a key never follows a new endpoint on its own (400 `credential.key_required` otherwise). Roadmap WS-O task 2.

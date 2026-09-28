@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/attribution-quota.v1.json",
+  "title": "AiAttributionQuota",
+  "description": "ai.attribution-quota@1 (OpenVibe.AI; roadmap WS-O task 2): a cap on one attribution as its service reads it (GET or PUT /api/v1/attribution-quotas/{attribution}), with what the current window has used.",
+  "type": "object",
+  "required": [
+    "attribution",
+    "window",
+    "used",
+    "window_resets_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "attribution": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,31}:[a-z][a-z0-9_]{1,31}:[A-Za-z0-9_.-]{1,80}$",
+      "description": "<service>:<type>:<id>, the run's attribution as AI keys it (Live: live:user:<id>)."
+    },
+    "window": {
+      "enum": [
+        "hour",
+        "day"
+      ]
+    },
+    "workflow_prefix": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "max_cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "max_requests": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "used": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requests",
+        "cost_usd"
+      ],
+      "properties": {
+        "requests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "window_resets_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

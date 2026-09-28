@@ -15829,6 +15829,43 @@ export interface AiCredential {
   last_used_at?: string | null;
 }
 
+/** ai.attribution-quota-put@1.0.0 (owner: ai) */
+/**
+ * ai.attribution-quota-put@1 (OpenVibe.AI; roadmap WS-O task 2): a cap on runs attributed to one of the caller's own entities, PUT /api/v1/attribution-quotas/{attribution} with capability ai.quota.attribution.manage; the attribution's service must be the caller (Live caps live:user:<id>, a streamer's AI viewers). Over the cap a run is refused 429 quota.exceeded before any provider is called. Cost counts what runs have cost so far in the window, so the run that crosses the cap finishes and the next is refused.
+ */
+export type AiAttributionQuotaPut = {
+  [k: string]: unknown | undefined;
+} & {
+  window: "hour" | "day";
+  max_cost_usd?: number;
+  max_requests?: number;
+  /**
+   * Only runs of workflows whose key starts with this (live.viewers.).
+   */
+  workflow_prefix?: string;
+};
+
+/** ai.attribution-quota@1.0.0 (owner: ai) */
+/**
+ * ai.attribution-quota@1 (OpenVibe.AI; roadmap WS-O task 2): a cap on one attribution as its service reads it (GET or PUT /api/v1/attribution-quotas/{attribution}), with what the current window has used.
+ */
+export interface AiAttributionQuota {
+  /**
+   * <service>:<type>:<id>, the run's attribution as AI keys it (Live: live:user:<id>).
+   */
+  attribution: string;
+  window: "hour" | "day";
+  workflow_prefix?: string | null;
+  max_cost_usd?: number | null;
+  max_requests?: number | null;
+  used: {
+    requests: number;
+    cost_usd: number;
+  };
+  window_resets_at: string;
+  updated_at: string;
+}
+
 /** ai.run-request@1.0.0 (owner: ai) */
 /**
  * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.
