@@ -97,7 +97,8 @@
     },
     "rollback": {
       "conditions": [
-        "manual only: Games is not managed by ovhost (pnpm workspace with a TypeScript build); check out the previous commit, rebuild and restart openvibe-games.service"
+        "automatic: ovhost deploy games (strategy pnpm-build) restores the previous sha, rebuilds and restarts when the ready URL does not answer 2xx after the restart",
+        "manual: sudo ovhost rollback games --to <sha> (rebuilds the workspace)"
       ],
       "window": "as long as world.db has not been migrated past the older build's SCHEMA_VERSION",
       "blockers": [
