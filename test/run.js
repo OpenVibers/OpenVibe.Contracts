@@ -2,7 +2,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { execFileSync, spawnSync } = require('child_process');
 const contracts = require('..');
 const { ids, http, capabilities, services } = contracts;
 
@@ -10,6 +10,31 @@ const ROOT = path.join(__dirname, '..');
 const BASE = 'https://openvibe.network/contracts/';
 let n = 0;
 const ok = (cond, msg) => { assert.ok(cond, msg); n++; };
+
+// Skips: a sub-script below that cannot run something prints `<label>: skipped (<why>)`, and then the
+// last line says `N checks passed, K skipped (…)`, never the plain `N checks passed`; --strict (or
+// OV_TEST_STRICT=1) makes a skip fail the run. SKIP_RE and skipsIn are openvibe-shared/test-runner's,
+// copied because this package does not depend on openvibe-shared.
+const SKIP_RE = /^[ \t]*[\w .,'()/+#-]{1,120}: skipped \((.+)\)[ \t]*$/gm;
+function skipsIn(output) {
+    const out = [];
+    for (const m of String(output || '').matchAll(SKIP_RE)) {
+        const line = m[0].trim();
+        if (!out.includes(line)) out.push(line);
+    }
+    return out;
+}
+const strict = process.argv.includes('--strict') || process.env.OV_TEST_STRICT === '1';
+const skips = [];
+/** Runs a script with its output shown, as the inherited-stdio calls did (a failure throws), and reads its skip lines. */
+function sub(file, ...args) {
+    const r = spawnSync(process.execPath, [file, ...args], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+    process.stdout.write(r.stdout || '');
+    process.stderr.write(r.stderr || '');
+    if (r.error) throw r.error;
+    if (r.status !== 0) throw new Error(`${path.relative(ROOT, file)} exited ${r.status ?? r.signal}`);
+    for (const line of skipsIn(`${r.stdout}${r.stderr}`)) if (!skips.includes(line)) skips.push(line);
+}
 
 // ── Catalog integrity ────────────────────────────────────────────────────
 const files = [];
@@ -825,18 +850,18 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 }
 
 // ── Capability schemas (WS-C task 4): a ratchet over compatibility/capability-schema-gaps.json ──
-execFileSync(process.execPath, [path.join(__dirname, 'capability-schemas.test.js')], { stdio: 'inherit' });
+sub(path.join(__dirname, 'capability-schemas.test.js'));
 
 // ── OpenAPI per service (WS-C task 6): generated/openapi valid, complete and up to date ──
-execFileSync(process.execPath, [path.join(__dirname, 'openapi.test.js')], { stdio: 'inherit' });
+sub(path.join(__dirname, 'openapi.test.js'));
 // Loyalty is never money (ADR-012, WS-K task 9).
-execFileSync(process.execPath, [path.join(__dirname, 'loyalty-policy.test.js')], { stdio: 'inherit' });
+sub(path.join(__dirname, 'loyalty-policy.test.js'));
 // Presence is ephemeral, in Chat's delivery plane; no Events topic (ADR-005 amendment 1).
-execFileSync(process.execPath, [path.join(__dirname, 'presence-policy.test.js')], { stdio: 'inherit' });
+sub(path.join(__dirname, 'presence-policy.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
-execFileSync(process.execPath, [path.join(ROOT, 'scripts/generate.js'), '--check'], { stdio: 'inherit' });
-execFileSync(process.execPath, [path.join(ROOT, 'scripts/compat.js')], { stdio: 'inherit' });
+sub(path.join(ROOT, 'scripts/generate.js'), '--check');
+sub(path.join(ROOT, 'scripts/compat.js'));
 {
     // A $ref with sibling keywords makes json-schema-to-typescript emit SubjectRef1 & co. without declaring them.
     const dts = fs.readFileSync(path.join(ROOT, 'generated/typescript/index.d.ts'), 'utf8');
@@ -845,5 +870,8 @@ execFileSync(process.execPath, [path.join(ROOT, 'scripts/compat.js')], { stdio: 
     ok(dangling.length === 0, `generated types reference undeclared names: ${dangling.join(', ')}`);
 }
 
-console.log(`openvibe-contracts: ${n} checks passed`);
+console.log(skips.length
+    ? `openvibe-contracts: ${n} checks passed, ${skips.length} skipped (${skips.join(' | ')})${strict ? ' — strict: skips fail the run' : ''}`
+    : `openvibe-contracts: ${n} checks passed`);
+if (strict && skips.length) process.exit(1);
 })().catch((err) => { console.error(err); process.exit(1); });
