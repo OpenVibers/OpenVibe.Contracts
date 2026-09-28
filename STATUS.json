@@ -5,5 +5,19 @@
   "wave": "W1",
   "dependsOn": ["OpenVibe.Network"],
   "plan": "OpenVibe Development Roadmap (combined), Wave 1; implementation plan rev 3 section 3.1",
-  "updated": "2026-09-24"
+  "deployed": false,
+  "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
+  "contracts": "openvibe-contracts v0.75.0 (this package; the newest tag)",
+  "features": [
+    "540 JSON Schemas with valid and invalid fixtures",
+    "31 service manifests with lifecycle declarations",
+    "205 capability manifests and the staff capability map",
+    "13 user-module namespace manifests",
+    "validate, ids, http (problem+json, trace and idempotency middleware), capabilities.check and serviceAuth",
+    "openvibe-contracts-check for service CI",
+    "generated TypeScript types, JSON Schema bundle and per-service OpenAPI 3.1",
+    "compatibility check against the previous tag (scripts/compat.js)",
+    "documentation-currency check (scripts/docs-currency.js)"
+  ],
+  "updated": "2026-09-28"
 }

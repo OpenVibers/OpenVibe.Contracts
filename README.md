@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.34.0 (first released in Wave 1). 147 schemas (117 of them event payloads), 31 service manifests, 191 capability manifests, 6 namespace manifests and the staff capability map. 23 repositories run `openvibe-contracts-check` in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Deployed consumers pin different tags (Games v0.8.0, the rest v0.11.0 to v0.29.0); Network, which serves the registry, pins v0.28.0. No N/N-1 compatibility fixtures exist yet.  
+**Status:** alpha, v0.75.0 (first released in Wave 1). 540 schemas in `contracts/catalog.json`, 31 service manifests, 205 capability manifests, 13 namespace manifests and the staff capability map. Service repositories run `openvibe-contracts-check` and the pin-drift check in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Consumers pin release tags (each repository's `STATUS.json` names its pin; `node scripts/docs-currency.js <root>` checks that it matches `package.json`).  
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
 
@@ -245,9 +245,10 @@ The canonical, versioned source of every cross-service contract: subject identit
 
 ## Capabilities and events
 
-- contract validation CI consumed by Network, Live, Media, Community and every new service
-
-Events: n/a
+Contracts implements no capability and produces or consumes no event (its service manifest lists
+none). It defines them: every capability manifest in `manifests/capabilities/` names its owner, and
+`capabilities.check()` / `serviceAuth.requireCapability()` are how the other services enforce them.
+It calls no service. `openvibe-contracts-check` is the contract validation CI every service runs.
 
 ## Depends on
 
@@ -262,6 +263,26 @@ Events: n/a
 ## Bootstrap / extraction source
 
 Derived from the implicit contracts already in the eleven current repositories (workspace `CONTRACTS.md`, Network prose contracts, Media/Live/Community route shapes). First deliverables: subject, errors, service manifest, capability schema, event envelope, media object IDs, service-token claims.
+
+## Security
+
+Reporting a vulnerability: [SECURITY.md](SECURITY.md). Contracts has no runtime, but its code runs in
+every service, so:
+
+- `serviceAuth` judges a request that presents a Bearer token on that token alone (a bad token is never
+  rescued by a legacy header), verifies RS256 signatures, issuer, audience and expiry, and grants a
+  capability only by exact id or a `family.*` grant (`capabilities.check()`).
+- The staff capability map (`manifests/policy/staff-roles.json`) is the one source for staff gates.
+- Schemas carry no secrets and no personal data; fixtures use fake values (gitleaks scans history in CI).
+- Dependencies are `ajv` and `ajv-formats` only.
+
+## Deploy
+
+Nothing is deployed from this repository: there is no unit, port or env file. A release is a git tag
+(`vX.Y.Z`, after `node scripts/compat.js <latest tag>` passes); services pin the tag's tarball in
+`package.json` and pick it up with their next deploy (`sudo ovhost deploy <service>`). Network serves the
+registry (`/api/v1/registry/services`) from the tag it pins. A bad release is rolled back by
+consumers pinning the previous tag; a published tag is never moved.
 
 ## Launch rule
 
