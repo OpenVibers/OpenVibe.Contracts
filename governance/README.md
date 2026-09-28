@@ -22,6 +22,16 @@ owner of the OpenVibers organization approves them.
 | Public roadmap | the Roadmap space on [openvibe.community](https://openvibe.community), synced from OpenVibe.Community `docs/roadmap/public.json` | the owner's plan, summarised each release |
 | Security reports | `SECURITY.md` in every repository; `/.well-known/security.txt` on every site | |
 
+## Documentation currency
+
+Every service's README has a section for each of: Purpose, Owns, Does not own, Depends on, Capabilities (or Grants),
+Acceptance (or Tests), Security and Deploy; its `STATUS.json` has `repository`, `stage`, `deployed`, `contracts`,
+`features` and `updated`, names the openvibe-contracts tag `package.json` pins, and is refreshed whenever the pins
+change (roadmap WS-U task 3). Check every checkout at once:
+
+    node scripts/docs-currency.js ~/OpenVibers          # ✓/✗ per service, exit 1 on any gap
+    node scripts/docs-currency.js ~/OpenVibers --only search,live --json
+
 ## Licences on 2026-09-26
 
 What each repository declares, for the owner's decision on licences and a DCO or CLA (roadmap WS-U task 2).
