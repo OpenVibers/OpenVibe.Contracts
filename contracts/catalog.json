@@ -4485,6 +4485,33 @@
       "status": "active"
     },
     {
+      "id": "chat.channel-moderation-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/channel-moderation-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.moderated-channels-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/moderated-channels-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.emote-count-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/emote-count-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.moderation.action",
       "version": "1.0.0",
       "owner": "live",

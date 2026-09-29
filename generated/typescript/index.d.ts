@@ -43710,6 +43710,66 @@ export type ChatSendResult =
       }[];
     };
 
+/** chat.channel-moderation-result@1.0.0 (owner: chat) */
+/**
+ * chat.channel-moderation-result@1: the answer of GET /internal/moderation/channels/:channelId on OpenVibe.Chat (capability chat.moderation.read): { ok: true, settings, moderator_ids } — one channel's moderation settings and the ids of the people who moderate it, for OpenVibe.Live's stream chat. settings carries every channel_moderation_settings column (Live's own defaults when the channel has no row yet, database.js getChannelModerationSettings); the switches are 0/1 as the table stores them. moderator_ids are Live user ids (channel_moderators.user_id), never names. A failure is { ok: false, error }; a caller without the grant gets 401 { ok: false }.
+ */
+export type ChatChannelModerationResult =
+  | {
+      ok: true;
+      settings: Settings;
+      /**
+       * The channel's moderators, oldest first (channel_moderators.created_at); empty when it has none.
+       */
+      moderator_ids: number[];
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
+/** chat.moderated-channels-result@1.0.0 (owner: chat) */
+/**
+ * chat.moderated-channels-result@1: the answer of GET /internal/moderation/users/:userId/channels on OpenVibe.Chat (capability chat.moderation.read): { ok: true, channels } — the channels one Live user moderates (channel_moderators rows joined with their channels, database.js getChannelsByModerator), so a stream chat can answer 'may I moderate' without asking per message. Empty when the person moderates none. A failure is { ok: false, error }.
+ */
+export type ChatModeratedChannelsResult =
+  | {
+      ok: true;
+      channels: {
+        channel_id: number;
+        /**
+         * The channel's title, for a label; never required to decide.
+         */
+        title?: string | null;
+        /**
+         * The channel owner's Live user id (channels.user_id).
+         */
+        owner_user_id?: number | null;
+        /**
+         * The owner's handle; a public name, never a profile.
+         */
+        owner_username?: string | null;
+      }[];
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
+/** chat.emote-count-result@1.0.0 (owner: chat) */
+/**
+ * chat.emote-count-result@1: the answer of GET /internal/moderation/channels/:channelId/emote-count on OpenVibe.Chat (capability chat.moderation.read): { ok: true, count } — how many custom emotes a channel holds (the emotes rows with that channel as their owner), so a stream chat can tell an owner whether their uploads landed and show a mod panel a count without shipping every emote. Counts only, never the emotes themselves. A failure is { ok: false, error }.
+ */
+export type ChatEmoteCountResult =
+  | {
+      ok: true;
+      count: number;
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
 /** live.moderation.action@1.0.0 (owner: live) */
 /**
  * live.moderation.action v1 (OpenVibe.Live server/db/database.js logModerationAction; ADR-022). A staff or channel moderator action taken on OpenVibe.Live outside chat: site and global bans, IP bans, message deletes and purges from Live's admin panel, a stream force-ended, relay users hidden, channel moderators added or removed. Not a person tidying their own messages or configuring their own channel. Written to Live's outbox in the transaction that records the action. OpenVibe.Network keeps it in the moderation audit log. Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/moderated-channels-result.v1.json",
+  "title": "ChatModeratedChannelsResult",
+  "description": "chat.moderated-channels-result@1: the answer of GET /internal/moderation/users/:userId/channels on OpenVibe.Chat (capability chat.moderation.read): { ok: true, channels } — the channels one Live user moderates (channel_moderators rows joined with their channels, database.js getChannelsByModerator), so a stream chat can answer 'may I moderate' without asking per message. Empty when the person moderates none. A failure is { ok: false, error }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "channels"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "channel_id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "channel_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "title": {
+                "type": ["string", "null"],
+                "description": "The channel's title, for a label; never required to decide."
+              },
+              "owner_user_id": {
+                "type": ["integer", "null"],
+                "description": "The channel owner's Live user id (channels.user_id)."
+              },
+              "owner_username": {
+                "type": ["string", "null"],
+                "description": "The owner's handle; a public name, never a profile."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

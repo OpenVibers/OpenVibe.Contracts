@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/emote-count-result.v1.json",
+  "title": "ChatEmoteCountResult",
+  "description": "chat.emote-count-result@1: the answer of GET /internal/moderation/channels/:channelId/emote-count on OpenVibe.Chat (capability chat.moderation.read): { ok: true, count } — how many custom emotes a channel holds (the emotes rows with that channel as their owner), so a stream chat can tell an owner whether their uploads landed and show a mod panel a count without shipping every emote. Counts only, never the emotes themselves. A failure is { ok: false, error }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "count"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

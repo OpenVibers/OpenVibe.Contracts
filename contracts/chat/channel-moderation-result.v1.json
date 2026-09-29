@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/channel-moderation-result.v1.json",
+  "title": "ChatChannelModerationResult",
+  "description": "chat.channel-moderation-result@1: the answer of GET /internal/moderation/channels/:channelId on OpenVibe.Chat (capability chat.moderation.read): { ok: true, settings, moderator_ids } — one channel's moderation settings and the ids of the people who moderate it, for OpenVibe.Live's stream chat. settings carries every channel_moderation_settings column (Live's own defaults when the channel has no row yet, database.js getChannelModerationSettings); the switches are 0/1 as the table stores them. moderator_ids are Live user ids (channel_moderators.user_id), never names. A failure is { ok: false, error }; a caller without the grant gets 401 { ok: false }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "settings",
+        "moderator_ids"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "settings": {
+          "$ref": "#/$defs/settings"
+        },
+        "moderator_ids": {
+          "type": "array",
+          "description": "The channel's moderators, oldest first (channel_moderators.created_at); empty when it has none.",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "flag": {
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "description": "A switch as the SQLite table stores it."
+    },
+    "settings": {
+      "type": "object",
+      "description": "One row of channel_moderation_settings, or Live's defaults for a channel that has no row. Every column is present; the switches are 0/1.",
+      "required": [
+        "channel_id",
+        "slow_mode_seconds",
+        "followers_only",
+        "emote_only",
+        "allow_anonymous",
+        "links_allowed",
+        "gifs_enabled",
+        "account_age_gate_hours",
+        "caps_percentage_limit",
+        "aggressive_filter",
+        "max_message_length",
+        "tts_max_length",
+        "slur_filter_enabled",
+        "slur_filter_use_builtin",
+        "slur_filter_terms",
+        "slur_filter_regexes",
+        "slur_filter_nudge_message",
+        "slur_filter_disabled_categories",
+        "ip_approval_mode",
+        "soundboard_enabled",
+        "soundboard_allow_pitch",
+        "soundboard_allow_speed",
+        "soundboard_banned_ids",
+        "viewer_auto_delete_enabled",
+        "viewer_delete_all_enabled",
+        "custom_emotes_enabled",
+        "custom_sounds_enabled",
+        "max_sound_seconds",
+        "uploads_mods_only",
+        "mods_can_edit_about",
+        "emote_scale",
+        "emote_size_min",
+        "emote_size_max",
+        "sounds_mods_only",
+        "sound_min_speed",
+        "sound_max_speed",
+        "sound_min_pitch_cents",
+        "sound_max_pitch_cents",
+        "sub_only"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "channel_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "slow_mode_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "followers_only": { "$ref": "#/$defs/flag" },
+        "emote_only": { "$ref": "#/$defs/flag" },
+        "allow_anonymous": { "$ref": "#/$defs/flag" },
+        "links_allowed": { "$ref": "#/$defs/flag" },
+        "gifs_enabled": { "$ref": "#/$defs/flag" },
+        "account_age_gate_hours": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "caps_percentage_limit": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Percent of a message that may be capitals; 0 means off."
+        },
+        "aggressive_filter": { "$ref": "#/$defs/flag" },
+        "max_message_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tts_max_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "slur_filter_enabled": { "$ref": "#/$defs/flag" },
+        "slur_filter_use_builtin": { "$ref": "#/$defs/flag" },
+        "slur_filter_terms": {
+          "type": "string",
+          "maxLength": 8192,
+          "description": "Extra terms, comma separated; a channel's own filter list, never a network-wide secret."
+        },
+        "slur_filter_regexes": {
+          "type": "string",
+          "maxLength": 8192,
+          "description": "Extra patterns, one per line."
+        },
+        "slur_filter_nudge_message": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "slur_filter_disabled_categories": {
+          "type": "string",
+          "description": "A JSON array string of disabled built-in categories ('[]' when none)."
+        },
+        "ip_approval_mode": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2,
+          "description": "0 off, 1 approve before chatting, 2 approved addresses only."
+        },
+        "soundboard_enabled": { "$ref": "#/$defs/flag" },
+        "soundboard_allow_pitch": { "$ref": "#/$defs/flag" },
+        "soundboard_allow_speed": { "$ref": "#/$defs/flag" },
+        "soundboard_banned_ids": {
+          "type": "string",
+          "maxLength": 8192,
+          "description": "Banned channel sound ids, comma separated."
+        },
+        "viewer_auto_delete_enabled": { "$ref": "#/$defs/flag" },
+        "viewer_delete_all_enabled": { "$ref": "#/$defs/flag" },
+        "custom_emotes_enabled": { "$ref": "#/$defs/flag" },
+        "custom_sounds_enabled": { "$ref": "#/$defs/flag" },
+        "max_sound_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "uploads_mods_only": { "$ref": "#/$defs/flag" },
+        "mods_can_edit_about": { "$ref": "#/$defs/flag" },
+        "emote_scale": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 300,
+          "description": "Emote display size in chat, percent of the base height (100 is the default)."
+        },
+        "emote_size_min": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "emote_size_max": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sounds_mods_only": { "$ref": "#/$defs/flag" },
+        "sound_min_speed": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "sound_max_speed": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "sound_min_pitch_cents": {
+          "type": "integer"
+        },
+        "sound_max_pitch_cents": {
+          "type": "integer"
+        },
+        "sub_only": { "$ref": "#/$defs/flag" },
+        "donation_sound_url": {
+          "type": ["string", "null"],
+          "description": "Optional alert sounds set by the streamer; absent or null when unset."
+        },
+        "donation_sound_mime": {
+          "type": ["string", "null"]
+        },
+        "goal_sound_url": {
+          "type": ["string", "null"]
+        },
+        "goal_sound_mime": {
+          "type": ["string", "null"]
+        },
+        "updated_at": {
+          "type": ["string", "null"],
+          "description": "When the row was last written; absent or null when the channel still has its defaults."
+        }
+      }
+    }
+  }
+}

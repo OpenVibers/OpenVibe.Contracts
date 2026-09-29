@@ -1,0 +1,23 @@
+{
+  "id": "chat.moderation.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read one channel's moderation settings and moderator ids, the channels a person moderates, and a channel's custom emote count: how OpenVibe.Live reads what it needs from the six chat tables OpenVibe.Chat owns (plan T3). Loopback only, service token.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/moderation/channels/:channelId",
+    "GET /internal/moderation/users/:userId/channels",
+    "GET /internal/moderation/channels/:channelId/emote-count"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.channel-moderation-result@1"
+}

@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.80.0 — 2026-09-29
+
+**`chat.moderation.read`: how Live reads the chat tables Chat owns** (plan T3, the six staged tables).
+- New internal capability (owner `chat`, active): `GET /internal/moderation/channels/:channelId` (a channel's moderation
+  settings, every `channel_moderation_settings` column with Live's defaults when there is no row, and its moderator ids),
+  `GET /internal/moderation/users/:userId/channels` (the channels a person moderates) and
+  `GET /internal/moderation/channels/:channelId/emote-count`. Loopback only, service token.
+- Result contracts with fixtures: `chat.channel-moderation-result@1`, `chat.moderated-channels-result@1`,
+  `chat.emote-count-result@1`. Chat's manifest lists the capability.
+
 ## 0.79.0 — 2026-09-29
 
 **Service-token capabilities for every internal call that still used X-Internal-Key** (plan T2, register C-50–C-58).
