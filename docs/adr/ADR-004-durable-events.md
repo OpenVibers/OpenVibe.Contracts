@@ -28,7 +28,7 @@ Cross-service side effects are best-effort POSTs and HMAC webhooks; a consumer t
 
 ## Alternatives considered
 
-- Kafka/NATS now: rejected, operational weight far beyond current volume.
+- Kafka/NATS now: rejected, operational weight far beyond current volume. (Superseded for the STREAM carrier class by ADR-042, 2026-09-29: JetStream carries retained, per-key ordered streams; PostgreSQL stays the record.)
 - Webhooks only: rejected, no durability or replay.
 
 ## Migration consequences
