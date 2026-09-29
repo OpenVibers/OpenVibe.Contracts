@@ -46659,6 +46659,49 @@ export type HostSiteManageRequest =
     }
   | NoBody;
 
+/** host.site-config@1.0.0 (owner: host) */
+/**
+ * host.site-config@1: one Host site's serving configuration (plan T12 J3). headers are applied to every response of the site before the platform's own, which always win; the platform's security, routing, caching, scope and transport headers (Content-Security-Policy, Strict-Transport-Security, Set-Cookie, Cache-Control, Content-Type, Location, Service-Worker-Allowed, Alt-Svc and the rest of Host's reserved list) and every X-Forwarded-* header are refused. redirects are local paths only (no scheme, host, protocol-relative URL, backslash or control character, also after percent-decoding). spa serves /index.html for an extensionless path that has no file. A site with no configuration answers { headers: {}, redirects: [], spa: false }.
+ */
+export interface HostSiteConfig {
+  headers: {
+    [k: string]: string | undefined;
+  };
+  /**
+   * @maxItems 200
+   */
+  redirects: {
+    from: string;
+    to: string;
+    status: 301 | 302 | 307 | 308;
+  }[];
+  spa: boolean;
+}
+
+/** host.site-config-request@1.0.0 (owner: host) */
+/**
+ * host.site-config-request@1: the body of PUT /api/v1/sites/:id/config on OpenVibe.Host (host.site.config; the acting principal must be a maintainer or owner of the site's project). { headers?, redirects?, spa? } replaces the whole configuration: a field left out is reset to its default. A redirect's status defaults to 301. Refusals are 422 problem+json: site_config.reserved_header, site_config.header_name, site_config.header_value (longer than 1024 characters or a control character), site_config.too_many (over 50 headers or 200 redirects), site_config.redirect (not a local path, a duplicate from, or a status outside 301/302/307/308), site_config.headers and site_config.redirects (wrong type). GET and DELETE /api/v1/sites/:id/config take no body (DELETE resets to the defaults).
+ */
+export interface HostSiteConfigRequest {
+  headers?: {
+    [k: string]: string | undefined;
+  };
+  redirects?: {
+    from: string;
+    to: string;
+    status?: 301 | 302 | 307 | 308;
+  }[];
+  spa?: boolean;
+}
+
+/** host.site-config-result@1.0.0 (owner: host) */
+/**
+ * host.site-config-result@1: every answer of host.site.config on OpenVibe.Host. GET, PUT and DELETE /api/v1/sites/:id/config → { config } (after a PUT, the configuration as stored; after a DELETE, the defaults).
+ */
+export interface HostSiteConfigResult {
+  config: HostSiteConfig;
+}
+
 /** host.deploy.activated@1.0.0 (owner: host) */
 /**
  * host.deploy.activated v1 (OpenVibe.Host server/domain/deploys.js switchPointer, Stage B tenant hosting). A tenant site's active deploy changed, written into Host's event outbox in the transaction that moves the pointer (activate or rollback). Envelope: subject { type: deploy, id: <deploy id> }, visibility internal, priority low, actor the person or app that switched it. A network service's release going live is host.release.published, not this.

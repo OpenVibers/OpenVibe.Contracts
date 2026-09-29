@@ -1,0 +1,1 @@
+{ "redirects": [{ "from": "/a", "to": "/b", "status": 303 }] }

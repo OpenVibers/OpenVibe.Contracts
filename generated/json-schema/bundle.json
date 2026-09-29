@@ -56267,6 +56267,145 @@
         ]
       }
     },
+    "host.site-config": {
+      "version": "1.0.0",
+      "owner": "host",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/host/site-config.v1.json",
+        "title": "HostSiteConfig",
+        "description": "host.site-config@1: one Host site's serving configuration (plan T12 J3). headers are applied to every response of the site before the platform's own, which always win; the platform's security, routing, caching, scope and transport headers (Content-Security-Policy, Strict-Transport-Security, Set-Cookie, Cache-Control, Content-Type, Location, Service-Worker-Allowed, Alt-Svc and the rest of Host's reserved list) and every X-Forwarded-* header are refused. redirects are local paths only (no scheme, host, protocol-relative URL, backslash or control character, also after percent-decoding). spa serves /index.html for an extensionless path that has no file. A site with no configuration answers { headers: {}, redirects: [], spa: false }.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "headers",
+          "redirects",
+          "spa"
+        ],
+        "properties": {
+          "headers": {
+            "type": "object",
+            "maxProperties": 50,
+            "propertyNames": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,63}$"
+            },
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 1024
+            }
+          },
+          "redirects": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to",
+                "status"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^/(?!/)",
+                  "maxLength": 1024
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^/(?!/)",
+                  "maxLength": 1024
+                },
+                "status": {
+                  "enum": [
+                    301,
+                    302,
+                    307,
+                    308
+                  ]
+                }
+              }
+            }
+          },
+          "spa": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "host.site-config-request": {
+      "version": "1.0.0",
+      "owner": "host",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/host/site-config-request.v1.json",
+        "title": "HostSiteConfigRequest",
+        "description": "host.site-config-request@1: the body of PUT /api/v1/sites/:id/config on OpenVibe.Host (host.site.config; the acting principal must be a maintainer or owner of the site's project). { headers?, redirects?, spa? } replaces the whole configuration: a field left out is reset to its default. A redirect's status defaults to 301. Refusals are 422 problem+json: site_config.reserved_header, site_config.header_name, site_config.header_value (longer than 1024 characters or a control character), site_config.too_many (over 50 headers or 200 redirects), site_config.redirect (not a local path, a duplicate from, or a status outside 301/302/307/308), site_config.headers and site_config.redirects (wrong type). GET and DELETE /api/v1/sites/:id/config take no body (DELETE resets to the defaults).",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "redirects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    301,
+                    302,
+                    307,
+                    308
+                  ]
+                }
+              }
+            }
+          },
+          "spa": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "host.site-config-result": {
+      "version": "1.0.0",
+      "owner": "host",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/host/site-config-result.v1.json",
+        "title": "HostSiteConfigResult",
+        "description": "host.site-config-result@1: every answer of host.site.config on OpenVibe.Host. GET, PUT and DELETE /api/v1/sites/:id/config → { config } (after a PUT, the configuration as stored; after a DELETE, the defaults).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "config"
+        ],
+        "properties": {
+          "config": {
+            "$ref": "site-config.v1.json"
+          }
+        }
+      }
+    },
     "host.deploy.activated": {
       "version": "1.0.0",
       "owner": "host",

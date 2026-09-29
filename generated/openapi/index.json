@@ -75,8 +75,8 @@
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
-      "operations": 27,
-      "capabilities": 3
+      "operations": 30,
+      "capabilities": 4
     },
     {
       "service": "live",

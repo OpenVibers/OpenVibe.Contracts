@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/site-config-result.v1.json",
+  "title": "HostSiteConfigResult",
+  "description": "host.site-config-result@1: every answer of host.site.config on OpenVibe.Host. GET, PUT and DELETE /api/v1/sites/:id/config → { config } (after a PUT, the configuration as stored; after a DELETE, the defaults).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["config"],
+  "properties": {
+    "config": { "$ref": "site-config.v1.json" }
+  }
+}

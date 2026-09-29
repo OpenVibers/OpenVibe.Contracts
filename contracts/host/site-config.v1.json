@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/site-config.v1.json",
+  "title": "HostSiteConfig",
+  "description": "host.site-config@1: one Host site's serving configuration (plan T12 J3). headers are applied to every response of the site before the platform's own, which always win; the platform's security, routing, caching, scope and transport headers (Content-Security-Policy, Strict-Transport-Security, Set-Cookie, Cache-Control, Content-Type, Location, Service-Worker-Allowed, Alt-Svc and the rest of Host's reserved list) and every X-Forwarded-* header are refused. redirects are local paths only (no scheme, host, protocol-relative URL, backslash or control character, also after percent-decoding). spa serves /index.html for an extensionless path that has no file. A site with no configuration answers { headers: {}, redirects: [], spa: false }.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["headers", "redirects", "spa"],
+  "properties": {
+    "headers": {
+      "type": "object",
+      "maxProperties": 50,
+      "propertyNames": { "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,63}$" },
+      "additionalProperties": { "type": "string", "maxLength": 1024 }
+    },
+    "redirects": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "status"],
+        "properties": {
+          "from": { "type": "string", "pattern": "^/(?!/)", "maxLength": 1024 },
+          "to": { "type": "string", "pattern": "^/(?!/)", "maxLength": 1024 },
+          "status": { "enum": [301, 302, 307, 308] }
+        }
+      }
+    },
+    "spa": { "type": "boolean" }
+  }
+}

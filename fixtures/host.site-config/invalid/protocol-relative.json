@@ -1,0 +1,1 @@
+{ "headers": {}, "redirects": [{ "from": "/a", "to": "//evil.example/", "status": 301 }], "spa": false }

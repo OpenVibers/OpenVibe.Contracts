@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.83.0 — 2026-09-29
+
+**Host site configuration** (plan T12 J3): the capability `host.site.config` (active, first-party, `host:write`, project
+role checked by Host) with `host.site-config@1`, `host.site-config-request@1` and `host.site-config-result@1` and their
+fixtures, listed by `manifests/services/host.json`. GET, PUT and DELETE `/api/v1/sites/:id/config` read, replace and
+reset a site's response headers (the platform's security, routing, caching, scope and transport headers and every
+X-Forwarded-* are refused), its local-only redirects and its SPA fallback. Additive.
+
 ## 0.82.0 — 2026-09-29
 
 **Space and the media hub: the forum moves off Community and the three new products register** (plan T10, D1–D4).
