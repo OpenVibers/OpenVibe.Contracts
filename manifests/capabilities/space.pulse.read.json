@@ -1,0 +1,17 @@
+{
+  "id": "space.pulse.read",
+  "version": "1.0",
+  "owner": "space",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: read the network Pulse activity OpenVibe.Space shows beside its forums (plan T10 D3). Community keeps the Pulse store and its own community.pulse.read/write; Space reads the same public feed for its pages. Not built.",
+  "permissions": [
+    "space:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "space-read",
+  "events": [],
+  "implementedBy": []
+}

@@ -1,0 +1,23 @@
+{
+  "id": "space.forum.read",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "public",
+  "description": "List the spaces the caller can open and read one space's metadata (renamed from community.space.read, plan T10 D3: OpenVibe.Space owns the forum). Anonymous callers see public spaces, signed-in people also members spaces, moderators also staff spaces; members-only (VIP) spaces are flagged. Served to anyone; Space checks space visibility itself.",
+  "outputSchema": "space.forum-read-result@1",
+  "permissions": [
+    "space:read"
+  ],
+  "resourceConstraints": [
+    "space_member"
+  ],
+  "quotaClass": "space-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/spaces",
+    "GET /api/v1/spaces/:space",
+    "GET /s"
+  ],
+  "inputSchema": "common.no-body@1"
+}

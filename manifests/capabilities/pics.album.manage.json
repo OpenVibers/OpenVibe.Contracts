@@ -1,0 +1,18 @@
+{
+  "id": "pics.album.manage",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED: create, rename and delete an album and add or remove its images on openvibe.pics (plan T10 D5). Account-only.",
+  "permissions": [
+    "pics:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "pics-write",
+  "events": [],
+  "implementedBy": []
+}

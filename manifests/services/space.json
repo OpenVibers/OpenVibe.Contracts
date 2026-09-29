@@ -1,0 +1,61 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.82.0 <1.0.0"
+  },
+  "id": "space",
+  "name": "OpenVibe.Space",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Space",
+  "domains": [
+    "openvibe.space"
+  ],
+  "publicOrigin": "https://openvibe.space",
+  "exposure": {
+    "state": "placeholder",
+    "publicSite": "placeholder",
+    "note": "planned: no OpenVibe.Space service yet; openvibe.space still serves the OpenVibe.Sites placeholder. T10 item 13 installs its own vhost"
+  },
+  "site": {
+    "name": "Space",
+    "icon": "space",
+    "tagline": "Forums, boards and threads",
+    "what": "OpenVibe's forums: public and members-only spaces, threads, posts, votes, categories and the Discord relay, moved off Community (plan T10, D1/D2).",
+    "legalProfile": "ugc",
+    "position": 19
+  },
+  "capabilities": [
+    "space.forum.read",
+    "space.forum.manage",
+    "space.thread.read",
+    "space.thread.write",
+    "space.post.write",
+    "space.pulse.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "space.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "none": "planned service: no OpenVibe.Space process runs yet (plan T10 item 3)"
+    },
+    "shutdown": {
+      "none": "planned service: nothing to stop yet"
+    },
+    "startupRecovery": {
+      "none": "planned service: nothing runs to resume"
+    },
+    "rollback": {
+      "none": "planned service: nothing is deployed to roll back"
+    },
+    "contracts": {
+      "range": ">=0.82.0 <1.0.0"
+    },
+    "leases": {
+      "none": "planned service: no process, no claims"
+    }
+  },
+  "notes": "Planned. Owns the forum subsystem moved from OpenVibe.Community (spaces, threads, posts, votes, categories, reactions, moderation, chat-room attach, Discord relay) in its own database ov_space; the community.space.*/thread.read/post.create capabilities are renamed space.* and the community.space/thread/post contracts are deprecated with space.forum-*/thread-*/post-* replacements (plan T10, D1-D3). The routes these capabilities name are served by Community today and move at T10 item 4."
+}

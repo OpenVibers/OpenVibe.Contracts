@@ -1,0 +1,18 @@
+{
+  "id": "video.playlist.manage",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED: create, rename, reorder and delete a playlist on openvibe.video as the acting person (plan T10 D6). Account-only.",
+  "permissions": [
+    "video:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "video-write",
+  "events": [],
+  "implementedBy": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "video.vod.read",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: read one VOD or clip for a watch page on openvibe.video: the player source (a Media object), its chapters (derived from the AI moments/timeline), the WebVTT caption track (rendered from the AI transcript) and the playlists it belongs to. Bytes stay in OpenVibe.Media; the media hub reads Media, AI and Live (plan T10, D4/D6).",
+  "permissions": [
+    "video:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "video-read",
+  "events": [],
+  "implementedBy": []
+}

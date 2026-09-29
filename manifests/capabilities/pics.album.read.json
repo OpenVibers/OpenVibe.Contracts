@@ -1,0 +1,17 @@
+{
+  "id": "pics.album.read",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: read an album and its images on openvibe.pics (plan T10 D5).",
+  "permissions": [
+    "pics:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "pics-read",
+  "events": [],
+  "implementedBy": []
+}

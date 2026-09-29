@@ -1,0 +1,17 @@
+{
+  "id": "video.playlist.read",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: read a playlist and its ordered items on openvibe.video (a new table; playlists do not exist anywhere today, plan T10 D6).",
+  "permissions": [
+    "video:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "video-read",
+  "events": [],
+  "implementedBy": []
+}

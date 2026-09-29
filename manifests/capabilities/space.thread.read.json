@@ -1,0 +1,26 @@
+{
+  "id": "space.thread.read",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read a space's threads (hot, new or top, paged) and one thread with its posts, plus the RSS feeds (renamed from community.thread.read, plan T10 D3). Space checks space visibility and the VIP gate (403 vip.members_only); writing threads and replies is space.post.write and space.thread.write.",
+  "outputSchema": "space.thread-read-result@1",
+  "permissions": [
+    "space:read"
+  ],
+  "resourceConstraints": [
+    "space_member"
+  ],
+  "quotaClass": "space-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/spaces/:space/threads",
+    "GET /api/v1/spaces/:space/threads/:slug",
+    "GET /s/:space",
+    "GET /s/:space/t/:slug",
+    "GET /s/feed.xml",
+    "GET /s/:space/feed.xml"
+  ],
+  "inputSchema": "common.no-body@1"
+}

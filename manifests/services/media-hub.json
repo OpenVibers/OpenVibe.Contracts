@@ -1,0 +1,69 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.82.0 <1.0.0"
+  },
+  "id": "media-hub",
+  "name": "OpenVibe.MediaHub",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.MediaHub",
+  "domains": [
+    "openvibe.video",
+    "openvibe.pics",
+    "openvibe.download"
+  ],
+  "publicOrigin": "https://openvibe.video",
+  "exposure": {
+    "state": "placeholder",
+    "publicSite": "placeholder",
+    "note": "planned: no media-hub service yet; openvibe.video, openvibe.pics and openvibe.download still serve the OpenVibe.Sites placeholder. One service, three brand surfaces (plan T10, D4)"
+  },
+  "site": {
+    "name": "Media Hub",
+    "icon": "media-hub",
+    "tagline": "Video, pics and downloads",
+    "what": "The media-hub products in one service: video watch pages, chapters, captions and playlists (openvibe.video); image hosting and albums (openvibe.pics); share links, drive and backup (openvibe.download). Bytes stay in OpenVibe.Media.",
+    "legalProfile": "hosting",
+    "position": 20
+  },
+  "capabilities": [
+    "video.vod.read",
+    "video.playlist.read",
+    "video.playlist.manage",
+    "pics.image.read",
+    "pics.image.upload",
+    "pics.album.read",
+    "pics.album.manage",
+    "download.file.read",
+    "download.file.upload",
+    "download.share.create"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "video.*",
+    "pics.*",
+    "download.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "none": "planned service: no OpenVibe.MediaHub process runs yet (plan T10 items 10-12)"
+    },
+    "shutdown": {
+      "none": "planned service: nothing to stop yet"
+    },
+    "startupRecovery": {
+      "none": "planned service: nothing runs to resume"
+    },
+    "rollback": {
+      "none": "planned service: nothing is deployed to roll back"
+    },
+    "contracts": {
+      "range": ">=0.82.0 <1.0.0"
+    },
+    "leases": {
+      "none": "planned service: no process, no claims"
+    }
+  },
+  "notes": "One planned media-hub service with three brand profiles (plan T10, D4). The three domains are carried in one manifest (domains is a list, as network/live/openre/games already do); the single `site` block presents the hub, and the per-brand nav profiles await the Web platform brand mechanism (ADR-039, T11). Uploads are account-only until T14 (D8). No video.*, pics.* or download.* capability is active, so none has a request/result contract yet."
+}

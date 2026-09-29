@@ -1,0 +1,17 @@
+{
+  "id": "pics.image.read",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: read an image on openvibe.pics: its metadata and page, and the image pastes/screenshots that become Pics (plan T10 D5). Bytes are Media objects under a pics tenant.",
+  "permissions": [
+    "pics:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "pics-read",
+  "events": [],
+  "implementedBy": []
+}

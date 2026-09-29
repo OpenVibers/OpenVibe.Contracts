@@ -1,0 +1,17 @@
+{
+  "id": "download.file.read",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED: list and read files and folders in the caller's drive on openvibe.download, and resolve a share link (plan T10 item 12). Bytes are Media files/objects.",
+  "permissions": [
+    "download:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "download-read",
+  "events": [],
+  "implementedBy": []
+}

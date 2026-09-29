@@ -45238,6 +45238,435 @@ export type CommunityThreadReadResult =
     }
   | string;
 
+/** space.forum-post@1.0.0 (owner: space) */
+/**
+ * space.forum-post@1: one forum post (the opening post of a thread or a reply) as OpenVibe.Space's API shows it (server/forum/service.js shapePost). A deleted post keeps its place with no author, body, attachments or pastes.
+ */
+export interface SpaceForumPost {
+  id: number;
+  thread_id: number;
+  is_opening: boolean;
+  origin: string;
+  /**
+   * The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.
+   */
+  author: {
+    subject?: string | null;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+    is_ai?: true;
+    is_system?: true;
+  } | null;
+  body_markdown: string | null;
+  body_html: string | null;
+  revision: number;
+  deleted: boolean;
+  created_at?: string | null;
+  updated_at?: string | null;
+  can_edit: boolean;
+  /**
+   * @maxItems 4
+   */
+  attachments:
+    | []
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ]
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ]
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ]
+    | [
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        },
+        {
+          media_id: string;
+          url: string;
+          filename?: string | null;
+          mime?: string;
+          size_bytes?: number;
+        }
+      ];
+  /**
+   * @maxItems 4
+   */
+  pastes:
+    | []
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ]
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ]
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ]
+    | [
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        },
+        {
+          slug: string;
+          title?: string;
+          language?: string;
+          type?: string;
+          url: string;
+          screenshot_url?: string | null;
+          lines?: number;
+          excerpt?: string | null;
+        }
+      ];
+}
+
+/** space.forum-read-result@1.0.0 (owner: space) */
+/**
+ * space.forum-read-result@1: answers of space.forum.read on OpenVibe.Space. GET /api/v1/spaces → { spaces, groups } (the spaces the caller can open, each with its last post, and the board index: groups in order with their top-level spaces and child boards); GET /api/v1/spaces/:space → { space } (a staff or members-only space the caller cannot open is 404 or 401/403 vip.members_only); GET /s is the board index as an HTML page.
+ */
+export type SpaceForumReadResult =
+  | {
+      spaces: SpaceForumSpace[];
+      groups: {
+        slug: string | null;
+        name: string;
+        description?: string | null;
+        spaces: unknown[];
+      }[];
+    }
+  | {
+      space: SpaceForumSpace;
+    }
+  | string;
+
+/** space.forum-space@1.0.0 (owner: space) */
+/**
+ * space.forum-space@1: one forum space as OpenVibe.Space's /api/v1/spaces API shows it (server/forum/service.js shapeSpace): its slug, name, visibility, thread kind and statuses, style, whether votes and reactions are on, its group and parent board, the members-only gate and, in lists, its counts and last activity.
+ */
+export interface SpaceForumSpace {
+  slug: string;
+  name: string;
+  description?: string | null;
+  visibility: "public" | "members" | "staff";
+  url: string;
+  thread_kind: string;
+  statuses: string[];
+  style: "feed" | "forum";
+  votes: boolean;
+  reactions: boolean;
+  group: {
+    slug?: string;
+    name?: string;
+  } | null;
+  parent: {
+    slug?: string;
+    name?: string;
+  } | null;
+  post_count?: number;
+  thread_count?: number;
+  last_activity_at?: string | null;
+  members_only: {
+    owner?: string;
+    owner_username?: string | null;
+    join_url?: string | null;
+  } | null;
+  last_post?: {} | null;
+  children?: unknown[];
+}
+
+/** space.forum-thread@1.0.0 (owner: space) */
+/**
+ * space.forum-thread@1: one forum thread as OpenVibe.Space's /api/v1/spaces API shows it (server/forum/service.js shapeThread): where it lives, its kind and status, category, members-only gate, author, origin, pin and lock state, score, reply count, views, pages, the last post and the caller's vote.
+ */
+export interface SpaceForumThread {
+  id: number;
+  space: string;
+  slug: string;
+  title: string;
+  /**
+   * /s/<space>/t/<slug>
+   */
+  url: string;
+  /**
+   * discussion, request, roadmap, …
+   */
+  kind: string;
+  status?: string | null;
+  category?: {
+    slug?: string;
+    name?: string;
+    description?: string | null;
+    position?: unknown;
+    thread_count?: number;
+  } | null;
+  members_only?: {
+    owner?: string;
+    owner_username?: string | null;
+    join_url?: string | null;
+  } | null;
+  /**
+   * The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.
+   */
+  author: {
+    subject?: string | null;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+    is_ai?: true;
+    is_system?: true;
+  } | null;
+  origin: string;
+  pinned: boolean;
+  locked: boolean;
+  score: number;
+  reply_count: number;
+  views?: number;
+  pages: number;
+  last_post?: {
+    id?: number;
+    /**
+     * The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.
+     */
+    author?: {
+      subject?: string | null;
+      username?: string | null;
+      display_name?: string | null;
+      avatar_url?: string | null;
+      profile_color?: string | null;
+      is_ai?: true;
+      is_system?: true;
+    } | null;
+  } | null;
+  crosspost_of?: unknown;
+  last_activity_at?: string | null;
+  created_at: string | null;
+  my_vote: 1 | -1 | 0;
+}
+
+/** space.post-write-request@1.0.0 (owner: space) */
+/**
+ * space.post-write-request@1: bodies of the forum writes on OpenVibe.Space (space.post.write; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).
+ */
+export type SpacePostWriteRequest =
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      /**
+       * A thread vote; 0 takes the vote back.
+       */
+      value: 1 | -1 | 0 | "1" | "-1" | "0";
+    }
+  | NoBody;
+
+/** space.post-write-result@1.0.0 (owner: space) */
+/**
+ * space.post-write-result@1: answers of the forum writes on OpenVibe.Space (space.post.write). POST /api/v1/spaces/:space/threads → 201 { thread, post } (the thread and its opening post); POST …/threads/:slug/posts → 201 { post, page, url } (the reply, the page it lands on and its address with #post-<id>); PUT /api/v1/posts/:id → { post }; POST …/threads/:slug/votes → { thread_id, score, upvotes, downvotes, my_vote }; DELETE /api/v1/posts/:id → { ok, id } (deleting the opening post deletes the thread: { ok, id, deleted: thread }); DELETE /api/v1/spaces/:space/threads/:slug → { ok, id, deleted: thread }. Refusals are problem+json.
+ */
+export type SpacePostWriteResult =
+  | {
+      thread: SpaceForumThread;
+      post: SpaceForumPost;
+    }
+  | {
+      post: SpaceForumPost;
+      page?: number;
+      url?: string;
+    }
+  | {
+      thread_id: number;
+      score: number;
+      upvotes: number;
+      downvotes: number;
+      my_vote: 1 | -1 | 0;
+    }
+  | {
+      ok: true;
+      id: number;
+      deleted?: "thread";
+    };
+
+/** space.thread-read-result@1.0.0 (owner: space) */
+/**
+ * space.thread-read-result@1: answers of space.thread.read on OpenVibe.Space. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.
+ */
+export type SpaceThreadReadResult =
+  | {
+      space: {};
+      sort?: string;
+      page: number;
+      per_page?: number;
+      total: number;
+      pages: number;
+      categories?: unknown[];
+      category?: string | null;
+      status?: string | null;
+      viewer?: {};
+      children?: unknown[];
+      groups?: unknown[];
+      threads: SpaceForumThread[];
+    }
+  | {
+      space: {};
+      thread: SpaceForumThread;
+      posts: SpaceForumPost[];
+      reactions?: unknown[];
+      crosspost?: {};
+      categories?: unknown[];
+      attachments?: {};
+      page: number;
+      per_page?: number;
+      pages: number;
+      total?: number;
+      viewer?: {};
+    }
+  | string;
+
 /** openre.destination@1.0.0 (owner: openre) */
 /**
  * openre.destination@1: one restream destination of a stream on OpenRe.Stream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.

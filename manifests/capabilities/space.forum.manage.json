@@ -1,0 +1,19 @@
+{
+  "id": "space.forum.manage",
+  "version": "1.0",
+  "owner": "space",
+  "status": "planned",
+  "visibility": "internal",
+  "description": "PLANNED: staff administration of forum spaces: create, rename, set visibility, and gate a space to one creator's VIP members (renamed from community.space.manage, plan T10 D3). Nothing creates or edits spaces yet; OpenVibe.Space is not built.",
+  "permissions": [
+    "space:moderate"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "space-moderate",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/spaces/:space/members-only"
+  ]
+}

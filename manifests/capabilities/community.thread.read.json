@@ -2,9 +2,9 @@
   "id": "community.thread.read",
   "version": "1.0",
   "owner": "community",
-  "status": "active",
+  "status": "deprecated",
   "visibility": "public",
-  "description": "Read a space's threads (hot, new or top, paged) and one thread with its posts, plus the RSS feeds. Community checks space visibility and the VIP gate (403 vip.members_only). Creating threads and replies stays community.post.create.",
+  "description": "DEPRECATED in favour of space.thread.read (plan T10, D3): Read a space's threads (hot, new or top, paged) and one thread with its posts, plus the RSS feeds. Community checks space visibility and the VIP gate (403 vip.members_only). Creating threads and replies stays community.post.create.",
   "outputSchema": "community.thread-read-result@1",
   "permissions": [
     "community:read"

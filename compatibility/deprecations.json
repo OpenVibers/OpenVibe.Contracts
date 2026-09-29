@@ -1,1 +1,54 @@
-{ "_about": "Deprecated contracts: { id, replacement, since, removeAfter, reason }. A deprecated contract stays loadable until removeAfter.", "deprecations": [] }
+{
+  "_about": "Deprecated contracts: { id, replacement, since, removeAfter, reason }. A deprecated contract stays loadable until removeAfter.",
+  "deprecations": [
+    {
+      "id": "community.forum-space",
+      "replacement": "space.forum-space@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "the forum, its spaces/threads/posts and the community.space.*/thread.read/post.create capabilities move to OpenVibe.Space (plan T10, D1/D3)"
+    },
+    {
+      "id": "community.forum-thread",
+      "replacement": "space.forum-thread@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "the forum data moves to OpenVibe.Space (plan T10, D1/D3)"
+    },
+    {
+      "id": "community.forum-post",
+      "replacement": "space.forum-post@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "the forum data moves to OpenVibe.Space (plan T10, D1/D3)"
+    },
+    {
+      "id": "community.space-read-result",
+      "replacement": "space.forum-read-result@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "community.space.read is renamed space.forum.read (plan T10, D3)"
+    },
+    {
+      "id": "community.thread-read-result",
+      "replacement": "space.thread-read-result@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "community.thread.read is renamed space.thread.read (plan T10, D3)"
+    },
+    {
+      "id": "community.post-write-request",
+      "replacement": "space.post-write-request@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "community.post.create is renamed space.post.write (plan T10, D3)"
+    },
+    {
+      "id": "community.post-write-result",
+      "replacement": "space.post-write-result@1",
+      "since": "0.82.0",
+      "removeAfter": "0.84.0",
+      "reason": "community.post.create is renamed space.post.write (plan T10, D3)"
+    }
+  ]
+}

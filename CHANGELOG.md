@@ -4,6 +4,28 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.82.0 — 2026-09-29
+
+**Space and the media hub: the forum moves off Community and the three new products register** (plan T10, D1–D4).
+- Two service manifests, both `status: placeholder` / `exposure.state: placeholder` (the schema has no `planned`; a
+  placeholder is "charter only", which is what these are until each serves): `manifests/services/space.json`
+  (OpenVibe.Space, `openvibe.space`) and `manifests/services/media-hub.json` (OpenVibe.MediaHub). The media hub carries
+  all three brand domains in one manifest (`domains: [openvibe.video, openvibe.pics, openvibe.download]`, the same list
+  mechanism Network/Live/OpenRe/Games already use); the per-brand nav entry awaits the ADR-039 brand mechanism (T11).
+- The forum capabilities are renamed off Community: `community.space.read` → `space.forum.read` (active),
+  `community.space.manage` → `space.forum.manage` (planned), `community.thread.read` → `space.thread.read` (active),
+  `community.post.create` → `space.post.write` (active), plus the new planned `space.thread.write` and
+  `space.pulse.read`. The four old capability manifests stay loadable with `status: deprecated` and are still listed by
+  `community` until their window closes.
+- The seven forum contracts are re-owned under `space.*` (`space.forum-space/thread/post`, `space.forum-read-result`,
+  `space.thread-read-result`, `space.post-write-request/result`) with fixtures; the `community.*` originals go
+  `deprecated` in the catalog and get a `compatibility/deprecations.json` record naming the replacement and window
+  (compat vs v0.80.0: no breaking changes). Contracts only exist for the three active capabilities.
+- The smallest honest set for the media hub, all planned: `video.vod.read`, `video.playlist.read`,
+  `video.playlist.manage`; `pics.image.read`, `pics.image.upload`, `pics.album.read`, `pics.album.manage`;
+  `download.file.read`, `download.file.upload`, `download.share.create`. No media-hub capability is active, so none has
+  a request/result contract yet.
+
 ## 0.81.0 — 2026-09-29
 
 **Opaque cursors beside the global seq** (plan T7, ADR-042, additive).

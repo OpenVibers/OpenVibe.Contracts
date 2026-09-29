@@ -440,7 +440,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     const gaps = {
         'live.channel.read': 'active', 'live.stream.read': 'active', 'live.discovery.read': 'active', 'live.owner.resolve': 'planned',
         'media.upload.create': 'planned', 'media.derivative.create': 'planned', 'media.derivative.read': 'planned', 'media.lifecycle.read': 'planned', 'media.lifecycle.transition': 'planned',
-        'community.space.read': 'active', 'community.space.manage': 'planned', 'community.thread.read': 'active', 'community.vote.set': 'planned', 'community.pulse.read': 'active',
+        'community.vote.set': 'planned', 'community.pulse.read': 'active', 'space.forum.read': 'active', 'space.forum.manage': 'planned', 'space.thread.read': 'active',
         'search.query.run': 'active',
     };
     for (const [id, status] of Object.entries(gaps)) {
@@ -451,7 +451,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     }
     for (const id of ['media.upload.create', 'media.derivative.create']) ok(/media\.object\.upload/.test(capabilities.get(id).description) && capabilities.get(id).implementedBy.length > 0, `${id} names its routes and the id that guards them today`);
     ok(/media\.object\.read/.test(capabilities.get('media.lifecycle.read').description), 'media.lifecycle.read says media.object.read guards its routes today');
-    ok(/community\.post\.create/.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/.test(capabilities.get('community.vote.set').description), 'community.vote.set says which grants cover its routes today');
+    ok(/space\.post\.write/.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/.test(capabilities.get('community.vote.set').description), 'community.vote.set says which grants cover its routes today');
     ok(capabilities.get('live.owner.resolve').implementedBy.length === 0 && capabilities.get('live.owner.resolve').outputSchema === 'lineage.resolution@1', 'live.owner.resolve has no public route yet and answers lineage.resolution@1');
     ok(JSON.stringify(capabilities.get('search.query.run').implementedBy) === JSON.stringify(capabilities.get('search.query.delegate').implementedBy), 'search.query.run and search.query.delegate are the same routes, asked anonymously or for a person');
     const pub = services.get('publishing');

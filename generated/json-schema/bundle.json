@@ -51068,7 +51068,7 @@
     "community.post-write-request": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/post-write-request.v1.json",
@@ -51235,7 +51235,7 @@
     "community.forum-post": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-post.v1.json",
@@ -51430,7 +51430,7 @@
     "community.forum-thread": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-thread.v1.json",
@@ -51715,7 +51715,7 @@
     "community.post-write-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/post-write-result.v1.json",
@@ -52304,7 +52304,7 @@
     "community.forum-space": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-space.v1.json",
@@ -52606,7 +52606,7 @@
     "community.space-read-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/space-read-result.v1.json",
@@ -52681,12 +52681,1040 @@
     "community.thread-read-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "deprecated",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/thread-read-result.v1.json",
         "title": "CommunityThreadReadResult",
         "description": "community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "space",
+              "threads",
+              "page",
+              "pages",
+              "total"
+            ],
+            "properties": {
+              "space": {
+                "type": "object"
+              },
+              "sort": {
+                "type": "string"
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "per_page": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pages": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "categories": {
+                "type": "array"
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "viewer": {
+                "type": "object"
+              },
+              "children": {
+                "type": "array"
+              },
+              "groups": {
+                "type": "array"
+              },
+              "threads": {
+                "type": "array",
+                "items": {
+                  "$ref": "forum-thread.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "space",
+              "thread",
+              "posts",
+              "page",
+              "pages"
+            ],
+            "properties": {
+              "space": {
+                "type": "object"
+              },
+              "thread": {
+                "$ref": "forum-thread.v1.json"
+              },
+              "posts": {
+                "type": "array",
+                "items": {
+                  "$ref": "forum-post.v1.json"
+                }
+              },
+              "reactions": {
+                "type": "array"
+              },
+              "crosspost": {
+                "type": "object"
+              },
+              "categories": {
+                "type": "array"
+              },
+              "attachments": {
+                "type": "object"
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "per_page": {
+                "type": "integer"
+              },
+              "pages": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "total": {
+                "type": "integer"
+              },
+              "viewer": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "contentMediaType": "text/html",
+            "description": "GET /s/:space and /s/:space/t/:slug: HTML pages."
+          },
+          {
+            "type": "string",
+            "contentMediaType": "application/rss+xml",
+            "description": "GET /s/feed.xml and /s/:space/feed.xml: RSS feeds."
+          }
+        ]
+      }
+    },
+    "space.forum-post": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/forum-post.v1.json",
+        "title": "SpaceForumPost",
+        "description": "space.forum-post@1: one forum post (the opening post of a thread or a reply) as OpenVibe.Space's API shows it (server/forum/service.js shapePost). A deleted post keeps its place with no author, body, attachments or pastes.",
+        "type": "object",
+        "required": [
+          "id",
+          "thread_id",
+          "is_opening",
+          "origin",
+          "author",
+          "body_markdown",
+          "body_html",
+          "revision",
+          "deleted",
+          "can_edit",
+          "attachments",
+          "pastes"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "thread_id": {
+            "type": "integer"
+          },
+          "is_opening": {
+            "type": "boolean"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "author": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.",
+            "properties": {
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_ai": {
+                "const": true
+              },
+              "is_system": {
+                "const": true
+              }
+            }
+          },
+          "body_markdown": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "body_html": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "can_edit": {
+            "type": "boolean"
+          },
+          "attachments": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": [
+                "media_id",
+                "url"
+              ],
+              "properties": {
+                "media_id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "filename": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "mime": {
+                  "type": "string"
+                },
+                "size_bytes": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "pastes": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": [
+                "slug",
+                "url"
+              ],
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "screenshot_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "lines": {
+                  "type": "integer"
+                },
+                "excerpt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "space.forum-read-result": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/forum-read-result.v1.json",
+        "title": "SpaceForumReadResult",
+        "description": "space.forum-read-result@1: answers of space.forum.read on OpenVibe.Space. GET /api/v1/spaces → { spaces, groups } (the spaces the caller can open, each with its last post, and the board index: groups in order with their top-level spaces and child boards); GET /api/v1/spaces/:space → { space } (a staff or members-only space the caller cannot open is 404 or 401/403 vip.members_only); GET /s is the board index as an HTML page.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "spaces",
+              "groups"
+            ],
+            "properties": {
+              "spaces": {
+                "type": "array",
+                "items": {
+                  "$ref": "forum-space.v1.json"
+                }
+              },
+              "groups": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "slug",
+                    "name",
+                    "spaces"
+                  ],
+                  "properties": {
+                    "slug": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "spaces": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "space"
+            ],
+            "properties": {
+              "space": {
+                "$ref": "forum-space.v1.json"
+              }
+            }
+          },
+          {
+            "type": "string",
+            "contentMediaType": "text/html",
+            "description": "GET /s: the board index page."
+          }
+        ]
+      }
+    },
+    "space.forum-space": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/forum-space.v1.json",
+        "title": "SpaceForumSpace",
+        "description": "space.forum-space@1: one forum space as OpenVibe.Space's /api/v1/spaces API shows it (server/forum/service.js shapeSpace): its slug, name, visibility, thread kind and statuses, style, whether votes and reactions are on, its group and parent board, the members-only gate and, in lists, its counts and last activity.",
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "visibility",
+          "url",
+          "thread_kind",
+          "statuses",
+          "style",
+          "votes",
+          "reactions",
+          "group",
+          "parent",
+          "members_only"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "staff"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "thread_kind": {
+            "type": "string"
+          },
+          "statuses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style": {
+            "enum": [
+              "feed",
+              "forum"
+            ]
+          },
+          "votes": {
+            "type": "boolean"
+          },
+          "reactions": {
+            "type": "boolean"
+          },
+          "group": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "parent": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "post_count": {
+            "type": "integer"
+          },
+          "thread_count": {
+            "type": "integer"
+          },
+          "last_activity_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "members_only": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string"
+              },
+              "owner_username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "join_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "last_post": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "children": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "space.forum-thread": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/forum-thread.v1.json",
+        "title": "SpaceForumThread",
+        "description": "space.forum-thread@1: one forum thread as OpenVibe.Space's /api/v1/spaces API shows it (server/forum/service.js shapeThread): where it lives, its kind and status, category, members-only gate, author, origin, pin and lock state, score, reply count, views, pages, the last post and the caller's vote.",
+        "type": "object",
+        "required": [
+          "id",
+          "space",
+          "slug",
+          "title",
+          "url",
+          "kind",
+          "author",
+          "origin",
+          "pinned",
+          "locked",
+          "score",
+          "reply_count",
+          "pages",
+          "created_at",
+          "my_vote"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "space": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "url": {
+            "type": "string",
+            "description": "/s/<space>/t/<slug>"
+          },
+          "kind": {
+            "type": "string",
+            "description": "discussion, request, roadmap, …"
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "position": {},
+              "thread_count": {
+                "type": "integer"
+              }
+            }
+          },
+          "members_only": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string"
+              },
+              "owner_username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "join_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "author": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.",
+            "properties": {
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "is_ai": {
+                "const": true
+              },
+              "is_system": {
+                "const": true
+              }
+            }
+          },
+          "origin": {
+            "type": "string"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "score": {
+            "type": "integer"
+          },
+          "reply_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pages": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "last_post": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "author": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The author projection: a person (subject and Network profile), OpenVibe AI (is_ai) or the system (is_system); null when unknown or deleted.",
+                "properties": {
+                  "subject": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "username": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "display_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "avatar_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "profile_color": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "is_ai": {
+                    "const": true
+                  },
+                  "is_system": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          "crosspost_of": {},
+          "last_activity_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "my_vote": {
+            "enum": [
+              1,
+              -1,
+              0
+            ]
+          }
+        }
+      }
+    },
+    "space.post-write-request": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/post-write-request.v1.json",
+        "title": "SpacePostWriteRequest",
+        "description": "space.post-write-request@1: bodies of the forum writes on OpenVibe.Space (space.post.write; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).",
+        "anyOf": [
+          {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "body"
+                ]
+              },
+              {
+                "required": [
+                  "body_markdown"
+                ]
+              }
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "A new thread's title."
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40000,
+                "description": "Markdown."
+              },
+              "body_markdown": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40000,
+                "description": "Read when body is absent."
+              },
+              "members_only": {
+                "description": "A new thread only: true gates it to the author's own VIP members; { owner: usr_… } (or the subject itself) names the creator (moderators, or the author naming themselves); null or false: open.",
+                "anyOf": [
+                  {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^usr_"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "owner"
+                    ],
+                    "properties": {
+                      "owner": {
+                        "type": "string",
+                        "pattern": "^usr_"
+                      }
+                    }
+                  }
+                ]
+              },
+              "category": {
+                "type": "string",
+                "description": "A new thread only: the slug of one of the space's categories."
+              },
+              "attachments": {
+                "description": "At most 4 images the writer uploaded (POST /api/v1/spaces/:space/attachments) and has not used yet, by media id. People only.",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  {
+                    "type": "array",
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  }
+                ]
+              },
+              "pastes": {
+                "description": "At most 4 shareable pastes (not private, not burn-after-read) by slug or /p/<slug> link: an array, or one string separated by spaces or commas.",
+                "type": [
+                  "array",
+                  "string"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "value": {
+                "enum": [
+                  1,
+                  -1,
+                  0,
+                  "1",
+                  "-1",
+                  "0"
+                ],
+                "description": "A thread vote; 0 takes the vote back."
+              }
+            }
+          },
+          {
+            "$ref": "../common/no-body.v1.json"
+          }
+        ]
+      }
+    },
+    "space.post-write-result": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/post-write-result.v1.json",
+        "title": "SpacePostWriteResult",
+        "description": "space.post-write-result@1: answers of the forum writes on OpenVibe.Space (space.post.write). POST /api/v1/spaces/:space/threads → 201 { thread, post } (the thread and its opening post); POST …/threads/:slug/posts → 201 { post, page, url } (the reply, the page it lands on and its address with #post-<id>); PUT /api/v1/posts/:id → { post }; POST …/threads/:slug/votes → { thread_id, score, upvotes, downvotes, my_vote }; DELETE /api/v1/posts/:id → { ok, id } (deleting the opening post deletes the thread: { ok, id, deleted: thread }); DELETE /api/v1/spaces/:space/threads/:slug → { ok, id, deleted: thread }. Refusals are problem+json.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "thread",
+              "post"
+            ],
+            "properties": {
+              "thread": {
+                "$ref": "forum-thread.v1.json"
+              },
+              "post": {
+                "$ref": "forum-post.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "post"
+            ],
+            "properties": {
+              "post": {
+                "$ref": "forum-post.v1.json"
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "thread_id",
+              "score",
+              "upvotes",
+              "downvotes",
+              "my_vote"
+            ],
+            "properties": {
+              "thread_id": {
+                "type": "integer"
+              },
+              "score": {
+                "type": "integer"
+              },
+              "upvotes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "downvotes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "my_vote": {
+                "enum": [
+                  1,
+                  -1,
+                  0
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "id"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "id": {
+                "type": "integer"
+              },
+              "deleted": {
+                "const": "thread"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "space.thread-read-result": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/thread-read-result.v1.json",
+        "title": "SpaceThreadReadResult",
+        "description": "space.thread-read-result@1: answers of space.thread.read on OpenVibe.Space. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.",
         "anyOf": [
           {
             "type": "object",

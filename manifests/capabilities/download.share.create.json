@@ -1,0 +1,18 @@
+{
+  "id": "download.share.create",
+  "version": "1.0",
+  "owner": "media-hub",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED: create a share link for a file or folder on openvibe.download (plan T10 item 12). Account-only.",
+  "permissions": [
+    "download:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "download-share",
+  "events": [],
+  "implementedBy": []
+}
