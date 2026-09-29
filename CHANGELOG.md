@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.81.0 — 2026-09-29
+
+**Opaque cursors beside the global seq** (plan T7, ADR-042, additive).
+- `events.publish-result@1` gains an optional `cursor` per stored event; `events.read-result@1` gains `cursor` per
+  event, `next_cursor` per page and `cursor` on a single event. A cursor is opaque (a position plus a retention epoch):
+  hand it back as `after=` or `Last-Event-ID`, never parse it. Events returns both `seq` and `cursor` for one release,
+  then `seq`, `next_after_seq`, `latest_seq` and the global-order promise go.
+- ADR-042 (the events fabric) is recorded in docs/adr.
+
 ## 0.80.0 — 2026-09-29
 
 **`chat.moderation.read`: how Live reads the chat tables Chat owns** (plan T3, the six staged tables).

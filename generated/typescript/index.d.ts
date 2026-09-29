@@ -7492,7 +7492,7 @@ export type EventsDeliveryAdminResult =
 
 /** events.publish-result@1.0.0 (owner: events) */
 /**
- * events.publish-result@1: the answer of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps). One envelope → { event_id, seq, duplicate } (201 when stored, 200 when every event was a repeat); a batch { events: [...] } (at most 100, atomic) → { results } in the same order. Refusals are problem+json: 422 events.invalid_envelope / events.invalid_redaction, 403 events.source_mismatch / events.type_not_allowed / events.actor_mismatch, 413 events.payload_too_large / events.batch_too_large, 429 events.quota_exceeded (apps).
+ * events.publish-result@1: the answer of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps). One envelope → { event_id, seq, duplicate, cursor? } (201 when stored, 200 when every event was a repeat); a batch { events: [...] } (at most 100, atomic) → { results } in the same order. Refusals are problem+json: 422 events.invalid_envelope / events.invalid_redaction, 403 events.source_mismatch / events.type_not_allowed / events.actor_mismatch, 413 events.payload_too_large / events.batch_too_large, 429 events.quota_exceeded (apps).
  */
 export type EventsPublishResult =
   | {
@@ -7502,6 +7502,10 @@ export type EventsPublishResult =
        * true: this event_id was stored before; the stored seq is returned and nothing is stored twice.
        */
       duplicate: boolean;
+      /**
+       * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+       */
+      cursor?: string;
     }
   | {
       /**
@@ -7516,6 +7520,10 @@ export type EventsPublishResult =
            * true: this event_id was stored before; the stored seq is returned and nothing is stored twice.
            */
           duplicate: boolean;
+          /**
+           * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+           */
+          cursor?: string;
         },
         ...{
           event_id: string;
@@ -7524,6 +7532,10 @@ export type EventsPublishResult =
            * true: this event_id was stored before; the stored seq is returned and nothing is stored twice.
            */
           duplicate: boolean;
+          /**
+           * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+           */
+          cursor?: string;
         }[]
       ];
     };
@@ -7547,7 +7559,7 @@ export type EventsReadRequest =
 
 /** events.read-result@1.0.0 (owner: events) */
 /**
- * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, event }], next_after_seq, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } (id: the seq; a gap message when the cursor is older than retention). An app sees only its project's events in its token's environment plus public first-party events.
+ * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, cursor?, event }], next_after_seq, next_cursor?, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } (id: the cursor once Events sends one, else the seq; a gap message when the cursor is older than retention). An app sees only its project's events in its token's environment plus public first-party events.
  */
 export type EventsReadResult =
   | {
@@ -7557,6 +7569,10 @@ export type EventsReadResult =
       events: {
         seq: number;
         event: EventEnvelope;
+        /**
+         * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+         */
+        cursor?: string;
       }[];
       next_after_seq: number;
       latest_seq: number;
@@ -7564,10 +7580,18 @@ export type EventsReadResult =
         from_seq: number;
         to_seq: number;
       };
+      /**
+       * Opaque position after this page (ADR-042): pass it back as after= for the next page. Returned beside next_after_seq for one release.
+       */
+      next_cursor?: string;
     }
   | {
       seq: number;
       event: EventEnvelope;
+      /**
+       * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+       */
+      cursor?: string;
     }
   | {
       consumer: string;
