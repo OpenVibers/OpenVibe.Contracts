@@ -4,7 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.78.0 — 2026-09-29
+
+**OpenVibe.Realtime is gone from the estate** (plan T0).
+- **The `realtime` service manifest is removed** (`manifests/services/realtime.json`). ADR-005 (accepted 2026-09-22) closed OpenVibe.Realtime: browser realtime is a delivery plane inside OpenVibe.Events, and the service was never built, so the estate described something that does not exist. The ADR-005 contracts it did define are unaffected and stay: `identity.realtime-ticket-claims@1`, `network.realtime-ticket-result@1` and `network.notification.created@1` are all first-party Network contracts. No capability, event, namespace or contract referenced the service, so nothing else changes. Reopening it, as ADR-005 says (measured connection counts or fan-out latency that need an independently scaled process), would be a new ADR and a new manifest.
 
 ## 0.77.0 — 2026-09-28
 

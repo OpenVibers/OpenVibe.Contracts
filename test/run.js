@@ -480,14 +480,15 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(capabilities.get('media.derivative.create').status === 'planned' && /transform verb/.test(capabilities.get('media.derivative.create').description), 'media.derivative.create says Media accepts it as the transform verb');
 }
 
-// A retired manifest offers nothing: no domain, capability, event or namespace. Realtime was closed
-// by ADR-005 (realtime runs inside OpenVibe.Events), so it is retired, not a placeholder.
+// A retired manifest offers nothing: no domain, capability, event or namespace. OpenVibe.Realtime was
+// closed by ADR-005 and never built, so it has no manifest at all: the estate describes no such service.
 {
     for (const m of services.manifests.filter(s => s.status === 'retired')) {
         ok(['domains', 'capabilities', 'eventsProduced', 'eventsConsumed', 'namespacesOwned'].every(k => m[k].length === 0) && !m.publicOrigin && !m.health && !m.ready, `retired ${m.id} offers nothing`);
     }
-    const rt = services.get('realtime');
-    ok(rt.status === 'retired' && /ADR-005/.test(rt.notes) && /OpenVibe\.Events/.test(rt.notes), 'realtime is retired by ADR-005: realtime runs inside OpenVibe.Events');
+    ok(services.get('realtime') === undefined, 'no realtime manifest: ADR-005 closed the service before it was built');
+    const catalogJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/catalog.json'), 'utf8'));
+    ok(!catalogJson.contracts.some(c => c.owner === 'realtime'), 'no contract names realtime as its owner');
 }
 
 // ── Ids ──────────────────────────────────────────────────────────────────

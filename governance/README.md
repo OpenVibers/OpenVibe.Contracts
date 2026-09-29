@@ -59,7 +59,6 @@ before anyone relies on either.
 | OpenVibe.Network | MIT | — | no LICENSE file |
 | OpenVibe.News | AGPL-3.0-only | AGPL-3.0 | consistent |
 | OpenVibe.Publishing | MIT | MIT | consistent |
-| OpenVibe.Realtime | — | AGPL-3.0 | no license field in package.json |
 | OpenVibe.Reviews | AGPL-3.0-only | AGPL-3.0 | consistent |
 | OpenVibe.SDK | MIT | MIT | consistent |
 | OpenVibe.Search | AGPL-3.0-only | AGPL-3.0 | consistent |
