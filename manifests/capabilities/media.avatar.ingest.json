@@ -1,0 +1,21 @@
+{
+  "id": "media.avatar.ingest",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Network asks Media to fetch a person's new avatar from a URL they chose (through Media's egress guard) and store it as their avatar object on openvibe.media.",
+  "permissions": [
+    "avatars:ingest"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/avatar-ingest"
+  ],
+  "inputSchema": "media.avatar-ingest-request@1",
+  "outputSchema": "media.avatar-ingest-result@1"
+}

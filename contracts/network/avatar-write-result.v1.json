@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/avatar-write-result.v1.json",
+  "title": "NetworkAvatarWriteResult",
+  "description": "network.avatar-write-result@1: the answer of POST /internal/user-avatar on OpenVibe.Network: { ok: true, changed } — changed is false when the account already had this picture (nothing was written, and nothing is fanned out to the sites). Refusals are { error } (400, 404, 422, 503).",
+  "type": "object",
+  "required": [
+    "ok",
+    "changed"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "changed": {
+      "type": "boolean"
+    }
+  }
+}

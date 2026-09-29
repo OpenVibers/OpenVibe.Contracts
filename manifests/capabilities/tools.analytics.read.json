@@ -1,0 +1,22 @@
+{
+  "id": "tools.analytics.read",
+  "version": "1.0",
+  "owner": "tools",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read the Tools gateway's and each tool site's aggregate analytics (totals and bot counts, never rows) for Network's admin dashboard.",
+  "permissions": [
+    "analytics:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/internal/analytics",
+    "GET /api/internal/analytics/bots"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "tools.analytics-read-result@1"
+}

@@ -2894,6 +2894,15 @@
       "status": "active"
     },
     {
+      "id": "tools.analytics-read-result",
+      "version": "1.0.0",
+      "owner": "tools",
+      "schema": "tools/analytics-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "tools.job-read-result",
       "version": "1.0.0",
       "owner": "tools",
@@ -4340,6 +4349,24 @@
       "status": "active"
     },
     {
+      "id": "media.avatar-ingest-request",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/avatar-ingest-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.avatar-ingest-result",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/avatar-ingest-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.file-read-result",
       "version": "1.0.0",
       "owner": "media",
@@ -4481,6 +4508,42 @@
       "version": "1.0.0",
       "owner": "live",
       "schema": "live/discovery-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.analytics-read-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/analytics-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.avatar-write-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/avatar-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.avatar-write-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/avatar-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.url-registry-refresh-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/url-registry-refresh-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -5003,6 +5066,42 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
+    },
+    {
+      "id": "network.avatar-write-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/avatar-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.avatar-write-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/avatar-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.registry-read-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/registry-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.coins-read-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/coins-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "platform.resource-offer",

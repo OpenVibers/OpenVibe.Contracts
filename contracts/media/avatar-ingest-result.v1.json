@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/avatar-ingest-result.v1.json",
+  "title": "MediaAvatarIngestResult",
+  "description": "media.avatar-ingest-result@1: the answer of POST /internal/avatar-ingest on OpenVibe.Media: { ok: true, slug, url, width, height, bytes } — the unlisted paste holding the re-encoded avatar and its public https://openvibe.media/p/<slug>/screenshot address (always a 512×512 WebP). Refusals are { ok: false, error } (400, 422).",
+  "type": "object",
+  "required": [
+    "ok",
+    "slug",
+    "url",
+    "width",
+    "height",
+    "bytes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "slug": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "bytes": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

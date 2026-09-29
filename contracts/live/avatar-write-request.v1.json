@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/avatar-write-request.v1.json",
+  "title": "LiveAvatarWriteRequest",
+  "description": "live.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Live (capability live.avatar.write). Network tells Live that a person's avatar changed \u2014 the avatar is network-wide, and Live keeps a copy on its own user row for stream cards, chat and profiles. The account is found by openvibenetwork_id (through linked_accounts) or, failing that, by username; avatar_url must be an https://openvibe.media/\u2026 address of at most 500 characters, and null clears the picture. Refusals are { ok: false, error }: 400 for a malformed URL, 404 when no Live user matches, 422 when the URL is not on openvibe.media.",
+  "type": "object",
+  "required": [
+    "openvibenetwork_id",
+    "avatar_url"
+  ],
+  "properties": {
+    "openvibenetwork_id": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "description": "The Network (SSO) user id; matched against linked_accounts. A Live id never goes here."
+    },
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Fallback when no linked account matches."
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500,
+      "description": "An https://openvibe.media/\u2026 picture; null clears the avatar.",
+      "pattern": "^https://openvibe\\.media/"
+    }
+  }
+}

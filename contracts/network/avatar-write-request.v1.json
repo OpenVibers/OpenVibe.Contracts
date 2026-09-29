@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/avatar-write-request.v1.json",
+  "title": "NetworkAvatarWriteRequest",
+  "description": "network.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Network (capability network.avatar.write, held by the site a person picked the avatar on; Live posts here through its notify helper). Adopts the picture as the account's avatar and fans it out to the other sites. Only an openvibe.media address is accepted, so an avatar can never be a tracking pixel or a third-party file. Refusals are { error }: 400 without a user_id, 404 for an unknown user, 422 for anything but an openvibe.media address, 503 while the avatar service is down.",
+  "type": "object",
+  "required": [
+    "user_id",
+    "avatar_url"
+  ],
+  "properties": {
+    "user_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The Network (SSO) user id."
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "An https://openvibe.media/\u2026 picture; null clears the avatar.",
+      "pattern": "^https://openvibe\\.media/",
+      "maxLength": 500
+    },
+    "origin": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "Who asked ('live', 'network'); kept in the audit row and used to avoid echoing a push back."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/avatar-write-result.v1.json",
+  "title": "LiveAvatarWriteResult",
+  "description": "live.avatar-write-result@1: the answer of POST /internal/user-avatar on OpenVibe.Live: { ok: true, id, changed } — id is the Live user the picture was stored on and changed is false when it already matched. Refusals are { ok: false, error } (400, 404, 422, 500).",
+  "type": "object",
+  "required": [
+    "ok",
+    "id",
+    "changed"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "changed": {
+      "type": "boolean"
+    }
+  }
+}

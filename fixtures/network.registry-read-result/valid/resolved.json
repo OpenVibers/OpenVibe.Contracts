@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "registry": {
+    "NETWORK_PUBLIC_URL": "https://openvibe.network",
+    "LIVE_PUBLIC_URL": "https://openvibe.live",
+    "MEDIA_PUBLIC_URL": "https://openvibe.media"
+  }
+}

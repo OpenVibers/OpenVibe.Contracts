@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.79.0 — 2026-09-29
+
+**Service-token capabilities for every internal call that still used X-Internal-Key** (plan T2, register C-50–C-58).
+- New internal capabilities, each with request/result contracts and fixtures: `network.avatar.write` (a site reports an
+  avatar change to Network), `network.registry.read` (the resolved URL registry), `network.coins.read` (OpenCoins totals,
+  never balances of named people), `live.avatar.write` (Network pushes an avatar to Live), `live.url_registry.refresh`,
+  `live.analytics.read` (aggregate totals for Network's navigation), `media.avatar.ingest` (Network asks Media to import
+  an avatar), `tools.analytics.read` (the Tools gateway's and tool sites' aggregate analytics).
+- Avatar URLs in the avatar requests must be on `https://openvibe.media/`.
+- The owning services' manifests list them.
+
 ## 0.78.0 — 2026-09-29
 
 **OpenVibe.Realtime is gone from the estate** (plan T0).

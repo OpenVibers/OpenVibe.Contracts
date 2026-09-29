@@ -1,0 +1,21 @@
+{
+  "id": "network.avatar.write",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A site reports that a person changed their avatar on it (Live's avatar picker); Network adopts it as the account's avatar and fans it out to the other sites. The URL must be on openvibe.media.",
+  "permissions": [
+    "profile:avatar"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/user-avatar"
+  ],
+  "inputSchema": "network.avatar-write-request@1",
+  "outputSchema": "network.avatar-write-result@1"
+}

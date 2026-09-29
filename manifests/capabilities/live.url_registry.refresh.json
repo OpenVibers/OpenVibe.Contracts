@@ -1,0 +1,21 @@
+{
+  "id": "live.url_registry.refresh",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Ask Live to reload Network's URL registry now (after an operator changed a site's URL).",
+  "permissions": [
+    "registry:refresh"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/url-registry/refresh"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "live.url-registry-refresh-result@1"
+}

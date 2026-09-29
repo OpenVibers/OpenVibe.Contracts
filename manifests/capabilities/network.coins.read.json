@@ -1,0 +1,21 @@
+{
+  "id": "network.coins.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read OpenCoins totals (supply, holders, daily flow) for a site's own dashboards; never balances of named people.",
+  "permissions": [
+    "coins:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/coins/stats"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.coins-read-result@1"
+}

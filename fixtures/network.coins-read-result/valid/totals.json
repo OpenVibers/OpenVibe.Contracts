@@ -1,0 +1,12 @@
+{
+  "earned": 128400,
+  "spent": 91200,
+  "circulating": 37200,
+  "holders": 1842,
+  "transactions": 44190,
+  "recent": {
+    "earned": { "w": 6400, "pw": 5900 },
+    "spent": { "w": 4100, "pw": 4300 },
+    "holders": { "w": 210, "pw": 198 }
+  }
+}

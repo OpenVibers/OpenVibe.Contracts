@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "analytics": {
+    "summary": { "total_pageviews": 40231, "avg_response_ms": 84 },
+    "realtime": { "online": 12 },
+    "apps": [
+      { "name": "img", "total_pageviews": 20000 },
+      { "name": "docs", "total_pageviews": 20231 }
+    ]
+  }
+}

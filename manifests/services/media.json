@@ -27,15 +27,16 @@
     "position": 4
   },
   "capabilities": [
-    "media.object.upload",
-    "media.object.read",
-    "media.object.list",
-    "media.object.delete",
-    "media.upload.create",
+    "media.avatar.ingest",
     "media.derivative.create",
     "media.derivative.read",
     "media.lifecycle.read",
-    "media.lifecycle.transition"
+    "media.lifecycle.transition",
+    "media.object.delete",
+    "media.object.list",
+    "media.object.read",
+    "media.object.upload",
+    "media.upload.create"
   ],
   "eventsProduced": [
     "media.clip.failed",

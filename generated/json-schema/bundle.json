@@ -30143,6 +30143,31 @@
         ]
       }
     },
+    "tools.analytics-read-result": {
+      "version": "1.0.0",
+      "owner": "tools",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/tools/analytics-read-result.v1.json",
+        "title": "ToolsAnalyticsReadResult",
+        "description": "tools.analytics-read-result@1: the answer of GET /api/internal/analytics on the Tools gateway and on each satellite (capability tools.analytics.read; internal key plus loopback only): { ok: true, analytics } — the satellites' analytics added up (summary totals, realtime, per-app numbers, with the busiest satellite's detail tables beside them) for Network's admin dashboard. Aggregate counts only, never rows; analytics is open (its shape is each satellite's).",
+        "type": "object",
+        "required": [
+          "ok",
+          "analytics"
+        ],
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "analytics": {
+            "type": "object",
+            "description": "Aggregate analytics; open."
+          }
+        }
+      }
+    },
     "tools.job-read-result": {
       "version": "1.0.0",
       "owner": "tools",
@@ -46861,6 +46886,86 @@
         }
       }
     },
+    "media.avatar-ingest-request": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/avatar-ingest-request.v1.json",
+        "title": "MediaAvatarIngestRequest",
+        "description": "media.avatar-ingest-request@1: the body of POST /internal/avatar-ingest on OpenVibe.Media (capability media.avatar.ingest; Network calls it while adopting an avatar a person pointed at somewhere else on the web). Media fetches the URL once through its egress guard (https only, public addresses only, at most 8 MB and 10 s), re-encodes it to a 512×512 WebP and stores it as an unlisted screenshot paste owned by user_id, so no OpenVibe site ever serves or stores a third-party address. Refusals are { ok: false, error } (400 without url or user_id, 422 when the link is not a usable picture).",
+        "type": "object",
+        "required": [
+          "url",
+          "user_id"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The https address of the picture to import."
+          },
+          "user_id": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The account that owns the stored paste."
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Used only for the paste title."
+          }
+        }
+      }
+    },
+    "media.avatar-ingest-result": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/avatar-ingest-result.v1.json",
+        "title": "MediaAvatarIngestResult",
+        "description": "media.avatar-ingest-result@1: the answer of POST /internal/avatar-ingest on OpenVibe.Media: { ok: true, slug, url, width, height, bytes } — the unlisted paste holding the re-encoded avatar and its public https://openvibe.media/p/<slug>/screenshot address (always a 512×512 WebP). Refusals are { ok: false, error } (400, 422).",
+        "type": "object",
+        "required": [
+          "ok",
+          "slug",
+          "url",
+          "width",
+          "height",
+          "bytes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "slug": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
     "media.file-read-result": {
       "version": "1.0.0",
       "owner": "media",
@@ -48656,6 +48761,164 @@
               },
               "partial": {
                 "type": "boolean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.analytics-read-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/analytics-read-result.v1.json",
+        "title": "LiveAnalyticsReadResult",
+        "description": "live.analytics-read-result@1: the answer of GET /internal/analytics-summary?days=1-90 on OpenVibe.Live (capability live.analytics.read): { ok: true, summary } — Live's aggregate traffic totals only, for Network's navigation ordering (which sites are really used), never rows or people. summary is open (it grows with what Live measures). A failure is { ok: false, error }; a caller without the internal key gets 401 { ok: false }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "summary"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "summary": {
+                "type": "object",
+                "description": "Aggregate totals; open."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "error"
+            ],
+            "properties": {
+              "ok": {
+                "const": false
+              },
+              "error": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.avatar-write-request": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/avatar-write-request.v1.json",
+        "title": "LiveAvatarWriteRequest",
+        "description": "live.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Live (capability live.avatar.write). Network tells Live that a person's avatar changed — the avatar is network-wide, and Live keeps a copy on its own user row for stream cards, chat and profiles. The account is found by openvibenetwork_id (through linked_accounts) or, failing that, by username; avatar_url must be an https://openvibe.media/… address of at most 500 characters, and null clears the picture. Refusals are { ok: false, error }: 400 for a malformed URL, 404 when no Live user matches, 422 when the URL is not on openvibe.media.",
+        "type": "object",
+        "required": [
+          "openvibenetwork_id",
+          "avatar_url"
+        ],
+        "properties": {
+          "openvibenetwork_id": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The Network (SSO) user id; matched against linked_accounts. A Live id never goes here."
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Fallback when no linked account matches."
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "description": "An https://openvibe.media/… picture; null clears the avatar.",
+            "pattern": "^https://openvibe\\.media/"
+          }
+        }
+      }
+    },
+    "live.avatar-write-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/avatar-write-result.v1.json",
+        "title": "LiveAvatarWriteResult",
+        "description": "live.avatar-write-result@1: the answer of POST /internal/user-avatar on OpenVibe.Live: { ok: true, id, changed } — id is the Live user the picture was stored on and changed is false when it already matched. Refusals are { ok: false, error } (400, 404, 422, 500).",
+        "type": "object",
+        "required": [
+          "ok",
+          "id",
+          "changed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "changed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "live.url-registry-refresh-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/url-registry-refresh-result.v1.json",
+        "title": "LiveUrlRegistryRefreshResult",
+        "description": "live.url-registry-refresh-result@1: the answer of POST /internal/url-registry/refresh on OpenVibe.Live (capability live.url_registry.refresh): { ok: true, message } after Live reloaded Network's URL registry now (an operator changed a site's URL), or { ok: false, error } when the reload failed.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "message"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "error"
+            ],
+            "properties": {
+              "ok": {
+                "const": false
+              },
+              "error": {
+                "type": "string"
               }
             }
           }
@@ -55226,6 +55489,176 @@
           "generated_at": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.avatar-write-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/avatar-write-request.v1.json",
+        "title": "NetworkAvatarWriteRequest",
+        "description": "network.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Network (capability network.avatar.write, held by the site a person picked the avatar on; Live posts here through its notify helper). Adopts the picture as the account's avatar and fans it out to the other sites. Only an openvibe.media address is accepted, so an avatar can never be a tracking pixel or a third-party file. Refusals are { error }: 400 without a user_id, 404 for an unknown user, 422 for anything but an openvibe.media address, 503 while the avatar service is down.",
+        "type": "object",
+        "required": [
+          "user_id",
+          "avatar_url"
+        ],
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The Network (SSO) user id."
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "An https://openvibe.media/… picture; null clears the avatar.",
+            "pattern": "^https://openvibe\\.media/",
+            "maxLength": 500
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Who asked ('live', 'network'); kept in the audit row and used to avoid echoing a push back."
+          }
+        }
+      }
+    },
+    "network.avatar-write-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/avatar-write-result.v1.json",
+        "title": "NetworkAvatarWriteResult",
+        "description": "network.avatar-write-result@1: the answer of POST /internal/user-avatar on OpenVibe.Network: { ok: true, changed } — changed is false when the account already had this picture (nothing was written, and nothing is fanned out to the sites). Refusals are { error } (400, 404, 422, 503).",
+        "type": "object",
+        "required": [
+          "ok",
+          "changed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "changed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "network.registry-read-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/registry-read-result.v1.json",
+        "title": "NetworkRegistryReadResult",
+        "description": "network.registry-read-result@1: the answer of GET /internal/url-registry/resolved on OpenVibe.Network (capability network.registry.read): { ok: true, registry } — every site's resolved base URLs, keyed by setting name, that the shared navbar and service clients use. Secret-typed entries (deploy tokens) and sensitive keys are filtered out, so a caller never gets a credential. The keys are open (the registry grows with the sites); a failure is { ok: false, error }.",
+        "type": "object",
+        "required": [
+          "ok",
+          "registry"
+        ],
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "registry": {
+            "type": "object",
+            "description": "Setting name → resolved value; secrets and sensitive keys are omitted."
+          }
+        }
+      }
+    },
+    "network.coins-read-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/coins-read-result.v1.json",
+        "title": "NetworkCoinsReadResult",
+        "description": "network.coins-read-result@1: the answer of GET /internal/coins/stats on OpenVibe.Network (capability network.coins.read): site-wide OpenCoins totals for public stat displays — earned, spent, circulating and holders, the transaction count, and two rolling seven-day windows (recent.<metric>.w is this week, .pw the seven days before it) so a display can say whether the economy is speeding up. Counts only, never a named person's balance. The answer is held for a minute; a failure is { error }.",
+        "type": "object",
+        "required": [
+          "earned",
+          "spent",
+          "circulating",
+          "holders",
+          "transactions",
+          "recent"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "earned": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "spent": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "circulating": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "holders": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "transactions": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "recent": {
+            "type": "object",
+            "required": [
+              "earned",
+              "spent",
+              "holders"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "earned": {
+                "$ref": "#/$defs/window"
+              },
+              "spent": {
+                "$ref": "#/$defs/window"
+              },
+              "holders": {
+                "$ref": "#/$defs/window"
+              }
+            }
+          }
+        },
+        "$defs": {
+          "window": {
+            "type": "object",
+            "required": [
+              "w",
+              "pw"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "w": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pw": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
           }
         }
       }

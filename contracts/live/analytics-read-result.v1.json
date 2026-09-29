@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/analytics-read-result.v1.json",
+  "title": "LiveAnalyticsReadResult",
+  "description": "live.analytics-read-result@1: the answer of GET /internal/analytics-summary?days=1-90 on OpenVibe.Live (capability live.analytics.read): { ok: true, summary } — Live's aggregate traffic totals only, for Network's navigation ordering (which sites are really used), never rows or people. summary is open (it grows with what Live measures). A failure is { ok: false, error }; a caller without the internal key gets 401 { ok: false }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "summary"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "summary": {
+          "type": "object",
+          "description": "Aggregate totals; open."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

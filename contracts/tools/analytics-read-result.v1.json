@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/analytics-read-result.v1.json",
+  "title": "ToolsAnalyticsReadResult",
+  "description": "tools.analytics-read-result@1: the answer of GET /api/internal/analytics on the Tools gateway and on each satellite (capability tools.analytics.read; internal key plus loopback only): { ok: true, analytics } — the satellites' analytics added up (summary totals, realtime, per-app numbers, with the busiest satellite's detail tables beside them) for Network's admin dashboard. Aggregate counts only, never rows; analytics is open (its shape is each satellite's).",
+  "type": "object",
+  "required": [
+    "ok",
+    "analytics"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "analytics": {
+      "type": "object",
+      "description": "Aggregate analytics; open."
+    }
+  }
+}

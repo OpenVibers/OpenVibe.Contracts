@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/avatar-ingest-request.v1.json",
+  "title": "MediaAvatarIngestRequest",
+  "description": "media.avatar-ingest-request@1: the body of POST /internal/avatar-ingest on OpenVibe.Media (capability media.avatar.ingest; Network calls it while adopting an avatar a person pointed at somewhere else on the web). Media fetches the URL once through its egress guard (https only, public addresses only, at most 8 MB and 10 s), re-encodes it to a 512×512 WebP and stores it as an unlisted screenshot paste owned by user_id, so no OpenVibe site ever serves or stores a third-party address. Refusals are { ok: false, error } (400 without url or user_id, 422 when the link is not a usable picture).",
+  "type": "object",
+  "required": [
+    "url",
+    "user_id"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "The https address of the picture to import."
+    },
+    "user_id": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "description": "The account that owns the stored paste."
+    },
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Used only for the paste title."
+    }
+  }
+}

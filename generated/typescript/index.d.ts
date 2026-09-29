@@ -30500,6 +30500,18 @@ export interface ToolsJobRequest {
  */
 export type ToolsJobCreateRequest = ToolsJobRequest | NoBody;
 
+/** tools.analytics-read-result@1.0.0 (owner: tools) */
+/**
+ * tools.analytics-read-result@1: the answer of GET /api/internal/analytics on the Tools gateway and on each satellite (capability tools.analytics.read; internal key plus loopback only): { ok: true, analytics } — the satellites' analytics added up (summary totals, realtime, per-app numbers, with the busiest satellite's detail tables beside them) for Network's admin dashboard. Aggregate counts only, never rows; analytics is open (its shape is each satellite's).
+ */
+export interface ToolsAnalyticsReadResult {
+  ok: true;
+  /**
+   * Aggregate analytics; open.
+   */
+  analytics: {};
+}
+
 /** tools.job-read-result@1.0.0 (owner: tools) */
 /**
  * tools.job-read-result@1: answers of tools.job.read on the Tools satellites. GET /api/v1/jobs/:id → tools.job@1, and so is the data of every event on GET /api/v1/jobs/:id/events (Server-Sent Events, Last-Event-ID resume); GET /api/v1/jobs/:id/files/:n → the result file's bytes (Content-Type of the file; 409 tools.job.not_ready before the job succeeded).
@@ -43291,6 +43303,38 @@ export interface MediaObjectVisibilityChangedPayload {
   changed_at: string;
 }
 
+/** media.avatar-ingest-request@1.0.0 (owner: media) */
+/**
+ * media.avatar-ingest-request@1: the body of POST /internal/avatar-ingest on OpenVibe.Media (capability media.avatar.ingest; Network calls it while adopting an avatar a person pointed at somewhere else on the web). Media fetches the URL once through its egress guard (https only, public addresses only, at most 8 MB and 10 s), re-encodes it to a 512×512 WebP and stores it as an unlisted screenshot paste owned by user_id, so no OpenVibe site ever serves or stores a third-party address. Refusals are { ok: false, error } (400 without url or user_id, 422 when the link is not a usable picture).
+ */
+export interface MediaAvatarIngestRequest {
+  /**
+   * The https address of the picture to import.
+   */
+  url: string;
+  /**
+   * The account that owns the stored paste.
+   */
+  user_id: number | string;
+  /**
+   * Used only for the paste title.
+   */
+  username?: string | null;
+}
+
+/** media.avatar-ingest-result@1.0.0 (owner: media) */
+/**
+ * media.avatar-ingest-result@1: the answer of POST /internal/avatar-ingest on OpenVibe.Media: { ok: true, slug, url, width, height, bytes } — the unlisted paste holding the re-encoded avatar and its public https://openvibe.media/p/<slug>/screenshot address (always a 512×512 WebP). Refusals are { ok: false, error } (400, 422).
+ */
+export interface MediaAvatarIngestResult {
+  ok: true;
+  slug: string;
+  url: string;
+  width: number;
+  height: number;
+  bytes: number;
+}
+
 /** media.file-read-result@1.0.0 (owner: media) */
 /**
  * media.file-read-result@1: answers of media.object.read on OpenVibe.Media. GET /api/v1/:app/files/:key → media.file@1 (the file's metadata; 404 when it is not the tenant's); GET /f/:key → the bytes, with Content-Type and Range (a sandbox file only through its signed URL).
@@ -43884,6 +43928,66 @@ export type LiveDiscoveryResult =
       next: string | null;
       sources: {};
       partial: boolean;
+    };
+
+/** live.analytics-read-result@1.0.0 (owner: live) */
+/**
+ * live.analytics-read-result@1: the answer of GET /internal/analytics-summary?days=1-90 on OpenVibe.Live (capability live.analytics.read): { ok: true, summary } — Live's aggregate traffic totals only, for Network's navigation ordering (which sites are really used), never rows or people. summary is open (it grows with what Live measures). A failure is { ok: false, error }; a caller without the internal key gets 401 { ok: false }.
+ */
+export type LiveAnalyticsReadResult =
+  | {
+      ok: true;
+      /**
+       * Aggregate totals; open.
+       */
+      summary: {};
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
+/** live.avatar-write-request@1.0.0 (owner: live) */
+/**
+ * live.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Live (capability live.avatar.write). Network tells Live that a person's avatar changed — the avatar is network-wide, and Live keeps a copy on its own user row for stream cards, chat and profiles. The account is found by openvibenetwork_id (through linked_accounts) or, failing that, by username; avatar_url must be an https://openvibe.media/… address of at most 500 characters, and null clears the picture. Refusals are { ok: false, error }: 400 for a malformed URL, 404 when no Live user matches, 422 when the URL is not on openvibe.media.
+ */
+export interface LiveAvatarWriteRequest {
+  /**
+   * The Network (SSO) user id; matched against linked_accounts. A Live id never goes here.
+   */
+  openvibenetwork_id: number | string;
+  /**
+   * Fallback when no linked account matches.
+   */
+  username?: string | null;
+  /**
+   * An https://openvibe.media/… picture; null clears the avatar.
+   */
+  avatar_url: string | null;
+}
+
+/** live.avatar-write-result@1.0.0 (owner: live) */
+/**
+ * live.avatar-write-result@1: the answer of POST /internal/user-avatar on OpenVibe.Live: { ok: true, id, changed } — id is the Live user the picture was stored on and changed is false when it already matched. Refusals are { ok: false, error } (400, 404, 422, 500).
+ */
+export interface LiveAvatarWriteResult {
+  ok: true;
+  id: number;
+  changed: boolean;
+}
+
+/** live.url-registry-refresh-result@1.0.0 (owner: live) */
+/**
+ * live.url-registry-refresh-result@1: the answer of POST /internal/url-registry/refresh on OpenVibe.Live (capability live.url_registry.refresh): { ok: true, message } after Live reloaded Network's URL registry now (an operator changed a site's URL), or { ok: false, error } when the reload failed.
+ */
+export type LiveUrlRegistryRefreshResult =
+  | {
+      ok: true;
+      message: string;
+    }
+  | {
+      ok: false;
+      error: string;
     };
 
 /** live.follower-page@1.0.0 (owner: live) */
@@ -46286,6 +46390,63 @@ export interface NetworkNodeReportRequest {
 export interface NetworkNodeListResult {
   nodes: NetworkNode[];
   generated_at: string;
+}
+
+/** network.avatar-write-request@1.0.0 (owner: network) */
+/**
+ * network.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Network (capability network.avatar.write, held by the site a person picked the avatar on; Live posts here through its notify helper). Adopts the picture as the account's avatar and fans it out to the other sites. Only an openvibe.media address is accepted, so an avatar can never be a tracking pixel or a third-party file. Refusals are { error }: 400 without a user_id, 404 for an unknown user, 422 for anything but an openvibe.media address, 503 while the avatar service is down.
+ */
+export interface NetworkAvatarWriteRequest {
+  /**
+   * The Network (SSO) user id.
+   */
+  user_id: number;
+  /**
+   * An https://openvibe.media/… picture; null clears the avatar.
+   */
+  avatar_url: string | null;
+  /**
+   * Who asked ('live', 'network'); kept in the audit row and used to avoid echoing a push back.
+   */
+  origin?: string;
+}
+
+/** network.avatar-write-result@1.0.0 (owner: network) */
+/**
+ * network.avatar-write-result@1: the answer of POST /internal/user-avatar on OpenVibe.Network: { ok: true, changed } — changed is false when the account already had this picture (nothing was written, and nothing is fanned out to the sites). Refusals are { error } (400, 404, 422, 503).
+ */
+export interface NetworkAvatarWriteResult {
+  ok: true;
+  changed: boolean;
+}
+
+/** network.registry-read-result@1.0.0 (owner: network) */
+/**
+ * network.registry-read-result@1: the answer of GET /internal/url-registry/resolved on OpenVibe.Network (capability network.registry.read): { ok: true, registry } — every site's resolved base URLs, keyed by setting name, that the shared navbar and service clients use. Secret-typed entries (deploy tokens) and sensitive keys are filtered out, so a caller never gets a credential. The keys are open (the registry grows with the sites); a failure is { ok: false, error }.
+ */
+export interface NetworkRegistryReadResult {
+  ok: true;
+  /**
+   * Setting name → resolved value; secrets and sensitive keys are omitted.
+   */
+  registry: {};
+}
+
+/** network.coins-read-result@1.0.0 (owner: network) */
+/**
+ * network.coins-read-result@1: the answer of GET /internal/coins/stats on OpenVibe.Network (capability network.coins.read): site-wide OpenCoins totals for public stat displays — earned, spent, circulating and holders, the transaction count, and two rolling seven-day windows (recent.<metric>.w is this week, .pw the seven days before it) so a display can say whether the economy is speeding up. Counts only, never a named person's balance. The answer is held for a minute; a failure is { error }.
+ */
+export interface NetworkCoinsReadResult {
+  earned: number;
+  spent: number;
+  circulating: number;
+  holders: number;
+  transactions: number;
+  recent: {
+    earned: Window;
+    spent: Window;
+    holders: Window;
+  };
 }
 
 /** platform.resource-offer@1.0.0 (owner: network) */

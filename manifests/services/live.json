@@ -28,16 +28,19 @@
     "position": 0
   },
   "capabilities": [
+    "live.analytics.read",
+    "live.avatar.write",
+    "live.channel.read",
     "live.chat_context.read",
     "live.chat_effects.write",
     "live.chat_mirror.write",
+    "live.discovery.read",
     "live.follower.read",
     "live.lineage.resolve",
-    "live.tips_delivery.write",
-    "live.channel.read",
+    "live.owner.resolve",
     "live.stream.read",
-    "live.discovery.read",
-    "live.owner.resolve"
+    "live.tips_delivery.write",
+    "live.url_registry.refresh"
   ],
   "eventsProduced": [
     "live.index_document.deleted",

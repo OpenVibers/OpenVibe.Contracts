@@ -1,0 +1,21 @@
+{
+  "id": "network.registry.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read the resolved URL registry (every site's public and internal base URLs) that the shared navbar and service clients use.",
+  "permissions": [
+    "registry:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/url-registry/resolved"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.registry-read-result@1"
+}

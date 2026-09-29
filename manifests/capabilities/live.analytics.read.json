@@ -1,0 +1,21 @@
+{
+  "id": "live.analytics.read",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read Live's aggregate traffic totals (never rows or people) for Network's navigation ordering.",
+  "permissions": [
+    "analytics:summary"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/analytics-summary"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "live.analytics-read-result@1"
+}

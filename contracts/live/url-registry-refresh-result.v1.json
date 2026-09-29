@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/url-registry-refresh-result.v1.json",
+  "title": "LiveUrlRegistryRefreshResult",
+  "description": "live.url-registry-refresh-result@1: the answer of POST /internal/url-registry/refresh on OpenVibe.Live (capability live.url_registry.refresh): { ok: true, message } after Live reloaded Network's URL registry now (an operator changed a site's URL), or { ok: false, error } when the reload failed.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "message"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/registry-read-result.v1.json",
+  "title": "NetworkRegistryReadResult",
+  "description": "network.registry-read-result@1: the answer of GET /internal/url-registry/resolved on OpenVibe.Network (capability network.registry.read): { ok: true, registry } — every site's resolved base URLs, keyed by setting name, that the shared navbar and service clients use. Secret-typed entries (deploy tokens) and sensitive keys are filtered out, so a caller never gets a credential. The keys are open (the registry grows with the sites); a failure is { ok: false, error }.",
+  "type": "object",
+  "required": [
+    "ok",
+    "registry"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "registry": {
+      "type": "object",
+      "description": "Setting name → resolved value; secrets and sensitive keys are omitted."
+    }
+  }
+}

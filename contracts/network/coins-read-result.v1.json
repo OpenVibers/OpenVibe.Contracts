@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/coins-read-result.v1.json",
+  "title": "NetworkCoinsReadResult",
+  "description": "network.coins-read-result@1: the answer of GET /internal/coins/stats on OpenVibe.Network (capability network.coins.read): site-wide OpenCoins totals for public stat displays — earned, spent, circulating and holders, the transaction count, and two rolling seven-day windows (recent.<metric>.w is this week, .pw the seven days before it) so a display can say whether the economy is speeding up. Counts only, never a named person's balance. The answer is held for a minute; a failure is { error }.",
+  "type": "object",
+  "required": [
+    "earned",
+    "spent",
+    "circulating",
+    "holders",
+    "transactions",
+    "recent"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "earned": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "spent": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "circulating": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "holders": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "transactions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "recent": {
+      "type": "object",
+      "required": [
+        "earned",
+        "spent",
+        "holders"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "earned": {
+          "$ref": "#/$defs/window"
+        },
+        "spent": {
+          "$ref": "#/$defs/window"
+        },
+        "holders": {
+          "$ref": "#/$defs/window"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "required": [
+        "w",
+        "pw"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "w": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pw": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

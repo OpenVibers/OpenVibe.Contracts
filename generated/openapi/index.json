@@ -82,22 +82,22 @@
       "service": "live",
       "name": "OpenVibe.Live",
       "origin": "https://openvibe.live",
-      "operations": 27,
-      "capabilities": 6
+      "operations": 30,
+      "capabilities": 9
     },
     {
       "service": "media",
       "name": "OpenVibe.Media",
       "origin": "https://openvibe.media",
-      "operations": 6,
-      "capabilities": 4
+      "operations": 7,
+      "capabilities": 5
     },
     {
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 26,
-      "capabilities": 19
+      "operations": 29,
+      "capabilities": 22
     },
     {
       "service": "news",
@@ -145,8 +145,8 @@
       "service": "tools",
       "name": "OpenVibe.Tools",
       "origin": "https://openvibe.tools",
-      "operations": 12,
-      "capabilities": 6
+      "operations": 14,
+      "capabilities": 7
     },
     {
       "service": "trade",

@@ -1,0 +1,21 @@
+{
+  "id": "live.avatar.write",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Network tells Live that a person's avatar changed (the avatar is network-wide; Live keeps a copy on its user row for stream cards and chat). The URL must be on openvibe.media.",
+  "permissions": [
+    "users:avatar"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/user-avatar"
+  ],
+  "inputSchema": "live.avatar-write-request@1",
+  "outputSchema": "live.avatar-write-result@1"
+}
