@@ -867,10 +867,13 @@ sub(path.join(__dirname, 'platform-fabric.test.js'));
 sub(path.join(ROOT, 'scripts/generate.js'), '--check');
 sub(path.join(ROOT, 'scripts/compat.js'));
 {
-    // A $ref with sibling keywords makes json-schema-to-typescript emit SubjectRef1 & co. without declaring them.
+    // A $ref with sibling keywords (SubjectRef1 & co.) or to a $defs entry (Tld, Service...) makes
+    // json-schema-to-typescript emit a type name it never declares; every name used as a type must be declared.
     const dts = fs.readFileSync(path.join(ROOT, 'generated/typescript/index.d.ts'), 'utf8');
     const declared = new Set([...dts.matchAll(/^export (?:interface|type) (\w+)/gm)].map(m => m[1]));
-    const dangling = [...new Set([...dts.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\b([A-Z][A-Za-z]*\d+)\b/g)].map(m => m[1]))].filter(n => !declared.has(n));
+    const code = dts.replace(/\/\*[\s\S]*?\*\//g, '').replace(/"(?:[^"\\]|\\.)*"/g, '""');
+    const used = [...code.matchAll(/(?:[:|&=<(]|\bextends)\s*([A-Z]\w*)\b(?!\s*\??:)/g)].map(m => m[1]);
+    const dangling = [...new Set(used)].filter(n => !declared.has(n));
     ok(dangling.length === 0, `generated types reference undeclared names: ${dangling.join(', ')}`);
 }
 

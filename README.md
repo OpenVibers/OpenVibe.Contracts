@@ -301,7 +301,8 @@ following exist here (plan §12.12):
 6. a migration/seed strategy, a security/threat review, and sitemap/robots/feed behaviour;
 7. acceptance tests proving the advertised functionality.
 
-The launch release removes the domain from `OpenVibe.Sites/sites.json`, switches routing and
+The launch release moves the domain's catalog entry from `manifests/products/<domain>.json` to its
+service manifest's `site` (`registry.service-manifest` 1.1.0, without `launch`), switches routing and
 registers maturity in the ecosystem registry atomically. A placeholder is never counted as an
 implemented service.
 
