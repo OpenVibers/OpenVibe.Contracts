@@ -58278,6 +58278,1142 @@
         }
       }
     },
+    "platform.usage-sample": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/usage-sample.v1.json",
+        "title": "UsageSample",
+        "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "idempotency_key",
+          "service",
+          "operation",
+          "quantity",
+          "unit",
+          "at",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "description": "Stable across retries"
+          },
+          "service": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "cell": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "unit": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cost_estimate": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated USD"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "examples": [
+          {
+            "id": "use-1",
+            "idempotency_key": "media:delivery:1",
+            "service": "media",
+            "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "resource": "object-1",
+            "provider": "local",
+            "node": "node-1",
+            "cell": "cell-west",
+            "region": "us-west",
+            "operation": "deliver",
+            "quantity": 1.5,
+            "unit": "GiB",
+            "at": "2026-09-30T10:00:00Z",
+            "cost_estimate": 0.03,
+            "source": "media.egress"
+          }
+        ]
+      }
+    },
+    "platform.telemetry-sample": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/telemetry-sample.v1.json",
+        "title": "TelemetrySample",
+        "description": "Universal operation observation for routing and autoscaling, with product dimensions in extra (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "service",
+          "operation",
+          "at"
+        ],
+        "properties": {
+          "service": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "cell": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latency_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "queue_delay_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ttfb_ms": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Time to first byte in milliseconds"
+          },
+          "throughput_per_second": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Operation units per second"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string"
+          },
+          "cache_status": {
+            "type": "string"
+          },
+          "cost_estimate": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated USD"
+          },
+          "route_epoch": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "trace_id": {
+            "type": "string"
+          },
+          "extra": {
+            "type": "object",
+            "description": "Product-specific scalar dimensions; no payloads or secrets",
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          }
+        },
+        "examples": [
+          {
+            "service": "media",
+            "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "resource": "object-1",
+            "provider": "local",
+            "node": "node-1",
+            "cell": "cell-west",
+            "region": "us-west",
+            "operation": "deliver",
+            "at": "2026-09-30T10:00:00Z",
+            "latency_ms": 28,
+            "queue_delay_ms": 2,
+            "ttfb_ms": 11,
+            "throughput_per_second": 1048576,
+            "bytes": 4096,
+            "status": "ok",
+            "cache_status": "hit",
+            "cost_estimate": 0.0001,
+            "route_epoch": 3,
+            "trace_id": "tr-42",
+            "extra": {
+              "transport": "http"
+            }
+          }
+        ]
+      }
+    },
+    "platform.node-capabilities": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/node-capabilities.v1.json",
+        "title": "NodeCapabilities",
+        "description": "Node hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "node_id",
+          "cpu",
+          "arch",
+          "memory_mb",
+          "storage",
+          "network",
+          "regions",
+          "tags",
+          "costs"
+        ],
+        "properties": {
+          "node_id": {
+            "type": "string"
+          },
+          "cpu": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cores": {
+                "type": "number",
+                "minimum": 0
+              },
+              "threads": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "cores"
+            ]
+          },
+          "arch": {
+            "type": "string",
+            "description": "CPU architecture"
+          },
+          "memory_mb": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "gpu": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "model": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "vram_mb": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "model",
+              "count"
+            ]
+          },
+          "storage": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "capacity_gb": {
+                "type": "number",
+                "minimum": 0
+              },
+              "available_gb": {
+                "type": "number",
+                "minimum": 0
+              },
+              "kind": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "capacity_gb"
+            ]
+          },
+          "network": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "ingress_mbps": {
+                "type": "number",
+                "minimum": 0
+              },
+              "egress_mbps": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "ingress_mbps",
+              "egress_mbps"
+            ]
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "costs": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "per_hour_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              },
+              "egress_per_gb_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              }
+            },
+            "required": [
+              "per_hour_usd"
+            ]
+          }
+        },
+        "examples": [
+          {
+            "node_id": "node-1",
+            "cpu": {
+              "cores": 8,
+              "threads": 16
+            },
+            "arch": "x86_64",
+            "memory_mb": 16384,
+            "gpu": {
+              "model": "L4",
+              "count": 1,
+              "vram_mb": 24576
+            },
+            "storage": {
+              "capacity_gb": 500,
+              "available_gb": 300,
+              "kind": "ssd"
+            },
+            "network": {
+              "ingress_mbps": 1000,
+              "egress_mbps": 1000
+            },
+            "regions": [
+              "us-west"
+            ],
+            "tags": [
+              "gpu",
+              "edge"
+            ],
+            "costs": {
+              "per_hour_usd": 0.2,
+              "egress_per_gb_usd": 0.01
+            }
+          }
+        ]
+      }
+    },
+    "platform.service-instance": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/service-instance.v1.json",
+        "title": "ServiceInstance",
+        "description": "One running instance registered in a cell (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "service",
+          "version",
+          "cell",
+          "node",
+          "region",
+          "endpoints",
+          "state",
+          "started_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "cell": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "minItems": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "starting",
+              "ready",
+              "degraded",
+              "draining",
+              "stopped"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "examples": [
+          {
+            "id": "inst-1",
+            "service": "media",
+            "version": "1.4.0",
+            "cell": "cell-west",
+            "node": "node-1",
+            "region": "us-west",
+            "endpoints": [
+              "https://media.internal.example"
+            ],
+            "state": "ready",
+            "started_at": "2026-09-30T10:00:00Z"
+          }
+        ]
+      }
+    },
+    "platform.runtime-offer": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/runtime-offer.v1.json",
+        "title": "RuntimeOffer",
+        "description": "Available execution capacity for code on a node (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "region",
+          "node",
+          "limits",
+          "price",
+          "availability",
+          "constraints"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "container",
+              "process",
+              "wasm",
+              "vm",
+              "function"
+            ]
+          },
+          "region": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cpu_cores": {
+                "type": "number",
+                "minimum": 0
+              },
+              "memory_mb": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "duration_seconds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "concurrency": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "cpu_cores",
+              "memory_mb"
+            ]
+          },
+          "price": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              },
+              "unit": {
+                "type": "string",
+                "enum": [
+                  "second",
+                  "hour",
+                  "invocation"
+                ]
+              }
+            },
+            "required": [
+              "amount_usd",
+              "unit"
+            ]
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "available",
+              "limited",
+              "unavailable"
+            ]
+          },
+          "constraints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "examples": [
+          {
+            "id": "runtime-1",
+            "kind": "container",
+            "region": "us-west",
+            "node": "node-1",
+            "limits": {
+              "cpu_cores": 2,
+              "memory_mb": 4096,
+              "duration_seconds": 3600
+            },
+            "price": {
+              "amount_usd": 0.05,
+              "unit": "hour"
+            },
+            "availability": "available",
+            "constraints": [
+              "first-party"
+            ]
+          }
+        ]
+      }
+    },
+    "platform.storage-offer": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/storage-offer.v1.json",
+        "title": "StorageOffer",
+        "description": "Durable storage capacity and operation pricing (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "class",
+          "capacity_gb",
+          "price_per_gb_month_usd",
+          "price_per_operation_usd",
+          "region",
+          "node",
+          "durability",
+          "lifecycle_rules"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "class": {
+            "type": "string",
+            "enum": [
+              "hot",
+              "warm",
+              "cold"
+            ]
+          },
+          "capacity_gb": {
+            "type": "number",
+            "minimum": 0
+          },
+          "price_per_gb_month_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated USD"
+          },
+          "price_per_operation_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated USD"
+          },
+          "region": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "durability": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "replicas": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "target_nines": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Advertised durability nines"
+              }
+            },
+            "required": [
+              "replicas"
+            ]
+          },
+          "lifecycle_rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "after_days": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "transition",
+                    "expire"
+                  ]
+                },
+                "target_class": {
+                  "type": "string",
+                  "enum": [
+                    "hot",
+                    "warm",
+                    "cold"
+                  ]
+                }
+              },
+              "required": [
+                "after_days",
+                "action"
+              ]
+            }
+          }
+        },
+        "examples": [
+          {
+            "id": "storage-1",
+            "class": "warm",
+            "capacity_gb": 1000,
+            "price_per_gb_month_usd": 0.02,
+            "price_per_operation_usd": 0.00001,
+            "region": "us-west",
+            "node": "node-1",
+            "durability": {
+              "replicas": 3,
+              "target_nines": 9
+            },
+            "lifecycle_rules": [
+              {
+                "after_days": 90,
+                "action": "transition",
+                "target_class": "cold"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "platform.delivery-offer": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/delivery-offer.v1.json",
+        "title": "DeliveryOffer",
+        "description": "Transport and edge delivery capacity with cache policy and pricing (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "transports",
+          "regions",
+          "edge",
+          "price_per_gb_usd",
+          "price_per_request_usd",
+          "cache_rules"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "transports": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "http",
+                "hls",
+                "rtmp",
+                "srt",
+                "ws"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "edge": {
+            "type": "boolean"
+          },
+          "node": {
+            "type": "string"
+          },
+          "price_per_gb_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated USD"
+          },
+          "price_per_request_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated USD"
+          },
+          "cache_rules": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "ttl_seconds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max_object_mb": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "enabled"
+            ]
+          }
+        },
+        "examples": [
+          {
+            "id": "delivery-1",
+            "transports": [
+              "http",
+              "hls"
+            ],
+            "regions": [
+              "us-west"
+            ],
+            "edge": true,
+            "node": "node-1",
+            "price_per_gb_usd": 0.02,
+            "price_per_request_usd": 0.00001,
+            "cache_rules": {
+              "enabled": true,
+              "ttl_seconds": 300,
+              "max_object_mb": 100
+            }
+          }
+        ]
+      }
+    },
+    "platform.agent-offer": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/agent-offer.v1.json",
+        "title": "AgentOffer",
+        "description": "Agent model capacity and token pricing (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "harness",
+          "provider",
+          "model",
+          "context_limits",
+          "concurrency",
+          "price_per_1k_tokens",
+          "availability_windows"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "harness": {
+            "type": "string",
+            "description": "Registered harness offer id"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "context_limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "input_tokens",
+              "output_tokens"
+            ]
+          },
+          "concurrency": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "price_per_1k_tokens": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "fresh_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              },
+              "cached_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              },
+              "output_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              }
+            },
+            "required": [
+              "fresh_usd",
+              "cached_usd",
+              "output_usd"
+            ]
+          },
+          "availability_windows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ]
+            },
+            "description": "Empty means no time restriction"
+          }
+        },
+        "examples": [
+          {
+            "id": "agent-1",
+            "harness": "harness-1",
+            "provider": "example-ai",
+            "model": "model-1",
+            "context_limits": {
+              "input_tokens": 128000,
+              "output_tokens": 8192
+            },
+            "concurrency": 4,
+            "price_per_1k_tokens": {
+              "fresh_usd": 0.003,
+              "cached_usd": 0.001,
+              "output_usd": 0.01
+            },
+            "availability_windows": []
+          }
+        ]
+      }
+    },
+    "platform.harness-offer": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/harness-offer.v1.json",
+        "title": "HarnessOffer",
+        "description": "Registered coding or agent harness, its access method, limits, and price (T1 Universal Fabric; ADR-034 proposed).",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "provider",
+          "capabilities",
+          "address",
+          "price",
+          "limits"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host_access": {
+                "type": "boolean"
+              },
+              "mcp": {
+                "type": "boolean"
+              },
+              "long_autonomy": {
+                "type": "boolean"
+              },
+              "resume": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "host_access",
+              "mcp",
+              "long_autonomy",
+              "resume"
+            ]
+          },
+          "address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "api",
+                  "cli",
+                  "mcp"
+                ]
+              },
+              "target": {
+                "type": "string",
+                "description": "Endpoint URI, executable, or MCP server name"
+              }
+            },
+            "required": [
+              "kind",
+              "target"
+            ]
+          },
+          "price": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated USD"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Billing unit"
+              }
+            },
+            "required": [
+              "amount_usd",
+              "unit"
+            ]
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "max_duration_seconds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max_concurrent_runs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max_context_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "max_duration_seconds",
+              "max_concurrent_runs"
+            ]
+          }
+        },
+        "examples": [
+          {
+            "id": "harness-1",
+            "name": "Example Agent",
+            "provider": "example-ai",
+            "capabilities": {
+              "host_access": true,
+              "mcp": true,
+              "long_autonomy": true,
+              "resume": true
+            },
+            "address": {
+              "kind": "cli",
+              "target": "example-agent"
+            },
+            "price": {
+              "amount_usd": 0.1,
+              "unit": "hour"
+            },
+            "limits": {
+              "max_duration_seconds": 7200,
+              "max_concurrent_runs": 4,
+              "max_context_tokens": 128000
+            }
+          }
+        ]
+      }
+    },
     "events.delivery-policy": {
       "version": "1.0.0",
       "owner": "events",

@@ -47367,6 +47367,309 @@ export interface CapacitySnapshot {
   reported_at: string;
 }
 
+/** platform.usage-sample@1.0.0 (owner: network) */
+/**
+ * One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface UsageSample {
+  id: string;
+  /**
+   * Stable across retries
+   */
+  idempotency_key: string;
+  service: string;
+  project?: string;
+  subject?: string;
+  resource?: string;
+  provider?: string;
+  node?: string;
+  cell?: string;
+  region?: string;
+  operation: string;
+  quantity: number;
+  unit: string;
+  at: string;
+  /**
+   * Estimated USD
+   */
+  cost_estimate?: number;
+  source: string;
+}
+
+/** platform.telemetry-sample@1.0.0 (owner: network) */
+/**
+ * Universal operation observation for routing and autoscaling, with product dimensions in extra (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface TelemetrySample {
+  service: string;
+  project?: string;
+  subject?: string;
+  resource?: string;
+  provider?: string;
+  node?: string;
+  cell?: string;
+  region?: string;
+  operation: string;
+  at: string;
+  latency_ms?: number;
+  queue_delay_ms?: number;
+  /**
+   * Time to first byte in milliseconds
+   */
+  ttfb_ms?: number;
+  /**
+   * Operation units per second
+   */
+  throughput_per_second?: number;
+  bytes?: number;
+  status?: string;
+  cache_status?: string;
+  /**
+   * Estimated USD
+   */
+  cost_estimate?: number;
+  route_epoch?: number;
+  trace_id?: string;
+  /**
+   * Product-specific scalar dimensions; no payloads or secrets
+   */
+  extra?: {
+    [k: string]: (string | number | boolean) | undefined;
+  };
+}
+
+/** platform.node-capabilities@1.0.0 (owner: network) */
+/**
+ * Node hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface NodeCapabilities {
+  node_id: string;
+  cpu: {
+    cores: number;
+    threads?: number;
+  };
+  /**
+   * CPU architecture
+   */
+  arch: string;
+  memory_mb: number;
+  gpu?: {
+    model: string;
+    count: number;
+    vram_mb?: number;
+  };
+  storage: {
+    capacity_gb: number;
+    available_gb?: number;
+    kind?: string;
+  };
+  network: {
+    ingress_mbps: number;
+    egress_mbps: number;
+  };
+  /**
+   * @minItems 1
+   */
+  regions: [string, ...string[]];
+  tags: string[];
+  costs: {
+    /**
+     * Estimated USD
+     */
+    per_hour_usd: number;
+    /**
+     * Estimated USD
+     */
+    egress_per_gb_usd?: number;
+  };
+}
+
+/** platform.service-instance@1.0.0 (owner: network) */
+/**
+ * One running instance registered in a cell (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface ServiceInstance {
+  id: string;
+  service: string;
+  version: string;
+  cell: string;
+  node: string;
+  region: string;
+  /**
+   * @minItems 1
+   */
+  endpoints: [string, ...string[]];
+  state: "starting" | "ready" | "degraded" | "draining" | "stopped";
+  started_at: string;
+}
+
+/** platform.runtime-offer@1.0.0 (owner: network) */
+/**
+ * Available execution capacity for code on a node (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface RuntimeOffer {
+  id: string;
+  kind: "container" | "process" | "wasm" | "vm" | "function";
+  region: string;
+  node: string;
+  limits: {
+    cpu_cores: number;
+    memory_mb: number;
+    duration_seconds?: number;
+    concurrency?: number;
+  };
+  price: {
+    /**
+     * Estimated USD
+     */
+    amount_usd: number;
+    unit: "second" | "hour" | "invocation";
+  };
+  availability: "available" | "limited" | "unavailable";
+  constraints: string[];
+}
+
+/** platform.storage-offer@1.0.0 (owner: network) */
+/**
+ * Durable storage capacity and operation pricing (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface StorageOffer {
+  id: string;
+  class: "hot" | "warm" | "cold";
+  capacity_gb: number;
+  /**
+   * Estimated USD
+   */
+  price_per_gb_month_usd: number;
+  /**
+   * Estimated USD
+   */
+  price_per_operation_usd: number;
+  region: string;
+  node: string;
+  durability: {
+    replicas: number;
+    /**
+     * Advertised durability nines
+     */
+    target_nines?: number;
+  };
+  lifecycle_rules: {
+    after_days: number;
+    action: "transition" | "expire";
+    target_class?: "hot" | "warm" | "cold";
+  }[];
+}
+
+/** platform.delivery-offer@1.0.0 (owner: network) */
+/**
+ * Transport and edge delivery capacity with cache policy and pricing (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface DeliveryOffer {
+  id: string;
+  /**
+   * @minItems 1
+   */
+  transports: ["http" | "hls" | "rtmp" | "srt" | "ws", ...("http" | "hls" | "rtmp" | "srt" | "ws")[]];
+  /**
+   * @minItems 1
+   */
+  regions: [string, ...string[]];
+  edge: boolean;
+  node?: string;
+  /**
+   * Estimated USD
+   */
+  price_per_gb_usd: number;
+  /**
+   * Estimated USD
+   */
+  price_per_request_usd: number;
+  cache_rules: {
+    enabled: boolean;
+    ttl_seconds?: number;
+    max_object_mb?: number;
+  };
+}
+
+/** platform.agent-offer@1.0.0 (owner: network) */
+/**
+ * Agent model capacity and token pricing (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface AgentOffer {
+  id: string;
+  /**
+   * Registered harness offer id
+   */
+  harness: string;
+  provider: string;
+  model: string;
+  context_limits: {
+    input_tokens: number;
+    output_tokens: number;
+  };
+  concurrency: number;
+  price_per_1k_tokens: {
+    /**
+     * Estimated USD
+     */
+    fresh_usd: number;
+    /**
+     * Estimated USD
+     */
+    cached_usd: number;
+    /**
+     * Estimated USD
+     */
+    output_usd: number;
+  };
+  /**
+   * Empty means no time restriction
+   */
+  availability_windows: {
+    start: string;
+    end: string;
+  }[];
+}
+
+/** platform.harness-offer@1.0.0 (owner: network) */
+/**
+ * Registered coding or agent harness, its access method, limits, and price (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface HarnessOffer {
+  id: string;
+  name: string;
+  provider: string;
+  capabilities: {
+    host_access: boolean;
+    mcp: boolean;
+    long_autonomy: boolean;
+    resume: boolean;
+  };
+  address: {
+    kind: "api" | "cli" | "mcp";
+    /**
+     * Endpoint URI, executable, or MCP server name
+     */
+    target: string;
+  };
+  price: {
+    /**
+     * Estimated USD
+     */
+    amount_usd: number;
+    /**
+     * Billing unit
+     */
+    unit: string;
+  };
+  limits: {
+    max_duration_seconds: number;
+    max_concurrent_runs: number;
+    max_context_tokens?: number;
+  };
+}
+
 /** events.delivery-policy@1.0.0 (owner: events) */
 /**
  * How an event type is carried (roadmap WS-Z3 task 2): its delivery class sets the minimum semantics, which a publisher's intent may raise and never lower; ordering is per key; the route planner picks the carrier.

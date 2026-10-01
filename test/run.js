@@ -861,6 +861,7 @@ sub(path.join(__dirname, 'loyalty-policy.test.js'));
 sub(path.join(__dirname, 'presence-policy.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
+sub(path.join(__dirname, 'platform-fabric.test.js'));
 sub(path.join(ROOT, 'scripts/generate.js'), '--check');
 sub(path.join(ROOT, 'scripts/compat.js'));
 {

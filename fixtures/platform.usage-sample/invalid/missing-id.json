@@ -1,0 +1,17 @@
+{
+  "idempotency_key": "media:delivery:1",
+  "service": "media",
+  "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "resource": "object-1",
+  "provider": "local",
+  "node": "node-1",
+  "cell": "cell-west",
+  "region": "us-west",
+  "operation": "deliver",
+  "quantity": 1.5,
+  "unit": "GiB",
+  "at": "2026-09-30T10:00:00Z",
+  "cost_estimate": 0.03,
+  "source": "media.egress"
+}

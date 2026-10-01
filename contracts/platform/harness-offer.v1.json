@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/harness-offer.v1.json",
+  "title": "HarnessOffer",
+  "description": "Registered coding or agent harness, its access method, limits, and price (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "provider",
+    "capabilities",
+    "address",
+    "price",
+    "limits"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "host_access": {
+          "type": "boolean"
+        },
+        "mcp": {
+          "type": "boolean"
+        },
+        "long_autonomy": {
+          "type": "boolean"
+        },
+        "resume": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "host_access",
+        "mcp",
+        "long_autonomy",
+        "resume"
+      ]
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "api",
+            "cli",
+            "mcp"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "description": "Endpoint URI, executable, or MCP server name"
+        }
+      },
+      "required": [
+        "kind",
+        "target"
+      ]
+    },
+    "price": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amount_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Billing unit"
+        }
+      },
+      "required": [
+        "amount_usd",
+        "unit"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_duration_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_concurrent_runs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_context_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "max_duration_seconds",
+        "max_concurrent_runs"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "id": "harness-1",
+      "name": "Example Agent",
+      "provider": "example-ai",
+      "capabilities": {
+        "host_access": true,
+        "mcp": true,
+        "long_autonomy": true,
+        "resume": true
+      },
+      "address": {
+        "kind": "cli",
+        "target": "example-agent"
+      },
+      "price": {
+        "amount_usd": 0.1,
+        "unit": "hour"
+      },
+      "limits": {
+        "max_duration_seconds": 7200,
+        "max_concurrent_runs": 4,
+        "max_context_tokens": 128000
+      }
+    }
+  ]
+}

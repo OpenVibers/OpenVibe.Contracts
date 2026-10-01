@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/delivery-offer.v1.json",
+  "title": "DeliveryOffer",
+  "description": "Transport and edge delivery capacity with cache policy and pricing (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "transports",
+    "regions",
+    "edge",
+    "price_per_gb_usd",
+    "price_per_request_usd",
+    "cache_rules"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "transports": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "http",
+          "hls",
+          "rtmp",
+          "srt",
+          "ws"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "edge": {
+      "type": "boolean"
+    },
+    "node": {
+      "type": "string"
+    },
+    "price_per_gb_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated USD"
+    },
+    "price_per_request_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated USD"
+    },
+    "cache_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_object_mb": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "enabled"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "id": "delivery-1",
+      "transports": [
+        "http",
+        "hls"
+      ],
+      "regions": [
+        "us-west"
+      ],
+      "edge": true,
+      "node": "node-1",
+      "price_per_gb_usd": 0.02,
+      "price_per_request_usd": 1e-05,
+      "cache_rules": {
+        "enabled": true,
+        "ttl_seconds": 300,
+        "max_object_mb": 100
+      }
+    }
+  ]
+}

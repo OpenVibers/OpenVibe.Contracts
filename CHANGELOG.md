@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased — T1 Universal Fabric
+
+Add nine public `platform.*@1` schemas: usage and telemetry samples; node capabilities and
+service instances; runtime, storage, delivery, agent, and harness offers. Each has valid and
+invalid fixtures. ADR-034 is proposed. Generated types and bundle include all nine.
+
 ## 0.83.0 — 2026-09-29
 
 **Host site configuration** (plan T12 J3): the capability `host.site.config` (active, first-party, `host:write`, project

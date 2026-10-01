@@ -5301,6 +5301,96 @@
       "adr": "ADR-034"
     },
     {
+      "id": "platform.usage-sample",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/usage-sample.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.telemetry-sample",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/telemetry-sample.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.node-capabilities",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/node-capabilities.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.service-instance",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/service-instance.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.runtime-offer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/runtime-offer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.storage-offer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/storage-offer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.delivery-offer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/delivery-offer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.agent-offer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/agent-offer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.harness-offer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/harness-offer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
       "id": "events.delivery-policy",
       "version": "1.0.0",
       "owner": "events",
