@@ -51028,7 +51028,7 @@ export interface CapacitySnapshot {
 
 /** platform.usage-sample@1.0.0 (owner: network) */
 /**
- * One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed).
+ * One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`.
  */
 export interface UsageSample {
   id: string;
@@ -51052,6 +51052,16 @@ export interface UsageSample {
    * Estimated USD
    */
   cost_estimate?: number;
+  /**
+   * How much of this reading's `quantity` the free allowance covered (platform.rate-card@1 `free_allowance` for this provider/metric and period), in the reading's own `unit`, not in rate-card units, money or Vibes: a 1.5 GiB reading with 1 GiB free carries 1. Never more than `quantity`; 0 when nothing was free. Absent: not rated against a rate card.
+   */
+  free_allowance_used?: number;
+  /**
+   * Vibes charged for this reading, as an integer count of vibes-bits (Billing's ledger minor unit, currency `vibes-bits`; balance credit and ledger amounts use the same unit). Never whole Vibes, USD or a fraction: round once, when rating. Covers only `quantity` minus `free_allowance_used`; 0 means rated and nothing charged. Absent means not rated (yet). Records a charge already made in Billing's ledger; it is never a request to charge.
+   */
+  vibes_charged?: number;
+  route_epoch?: number;
+  trace_id?: string;
   source: string;
 }
 

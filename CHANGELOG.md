@@ -10,6 +10,13 @@ Add nine public `platform.*@1` schemas: usage and telemetry samples; node capabi
 service instances; runtime, storage, delivery, agent, and harness offers. Each has valid and
 invalid fixtures. ADR-034 is proposed. Generated types and bundle include all nine.
 
+`platform.usage-sample@1` can carry all 15 plan T5 usage fields in one reading (lane F). It gains four optional
+fields: `free_allowance_used` (non-negative number in the reading's own `unit`, at most `quantity`),
+`vibes_charged` (non-negative integer count of vibes-bits, Billing's ledger minor unit; absent means not rated),
+and `route_epoch` and `trace_id` (same types as in `platform.telemetry-sample@1`). Readings without these fields
+still validate. New fixtures: `all-fifteen-fields` and `minimal` (valid); a fractional or negative `vibes_charged` and
+a negative `free_allowance_used` (invalid). Additive.
+
 ## Unreleased — the product catalog (plan T11 lane D)
 
 The OpenVibe.Sites catalog (`sites.json`, 33 domains) moves into Contracts so Sites can be deleted. Additive.

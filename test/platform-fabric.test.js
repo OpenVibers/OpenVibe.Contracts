@@ -28,4 +28,30 @@ for (const name of names) {
         }
     }
 }
+// One usage reading carries all 15 plan T5 fields; the money fields are strict, and readings
+// from before they existed still validate.
+const usage = contracts.schema('platform.usage-sample');
+const planFields = [
+    'project', 'subject', 'service', 'operation', 'provider', 'resource', 'region', 'quantity', 'unit',
+    'cost_estimate', 'free_allowance_used', 'vibes_charged', 'route_epoch', 'trace_id', 'at',
+];
+const full = usage.examples.find(e => planFields.every(f => f in e));
+assert.ok(full, 'a usage-sample example carries all 15 plan fields');
+assert.strictEqual(contracts.validate('platform.usage-sample', full).valid, true);
+for (const [field, value] of [['vibes_charged', 1.5], ['vibes_charged', -1], ['free_allowance_used', -1]]) {
+    assert.strictEqual(contracts.validate('platform.usage-sample', { ...full, [field]: value }).valid, false, `${field} ${value} is refused`);
+    checks++;
+}
+const telemetry = contracts.schema('platform.telemetry-sample').properties;
+for (const field of ['route_epoch', 'trace_id']) {
+    const { description, ...shape } = usage.properties[field];
+    assert.deepStrictEqual(shape, telemetry[field], `${field} has the telemetry-sample shape`);
+    checks++;
+}
+const legacy = Object.fromEntries(Object.entries(full).filter(([k]) => !['free_allowance_used', 'vibes_charged', 'route_epoch', 'trace_id'].includes(k)));
+assert.strictEqual(contracts.validate('platform.usage-sample', legacy).valid, true, 'a reading without the new fields validates');
+const minimal = Object.fromEntries(usage.required.map(k => [k, full[k]]));
+assert.strictEqual(contracts.validate('platform.usage-sample', minimal).valid, true, 'a reading with only the required fields validates');
+checks += 3;
+
 console.log(`platform fabric: ${checks} example and required-field checks passed`);
