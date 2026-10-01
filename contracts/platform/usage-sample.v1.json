@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/platform/usage-sample.v1.json",
   "title": "UsageSample",
-  "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed).",
+  "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`.",
   "$comment": "Additive optional fields may extend this v1 contract.",
   "type": "object",
   "additionalProperties": false,
@@ -68,6 +68,23 @@
       "minimum": 0,
       "description": "Estimated USD"
     },
+    "free_allowance_used": {
+      "type": "number",
+      "minimum": 0,
+      "description": "How much of this reading's `quantity` the free allowance covered (platform.rate-card@1 `free_allowance` for this provider/metric and period), in the reading's own `unit`, not in rate-card units, money or Vibes: a 1.5 GiB reading with 1 GiB free carries 1. Never more than `quantity`; 0 when nothing was free. Absent: not rated against a rate card."
+    },
+    "vibes_charged": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Vibes charged for this reading, as an integer count of vibes-bits (Billing's ledger minor unit, currency `vibes-bits`; balance credit and ledger amounts use the same unit). Never whole Vibes, USD or a fraction: round once, when rating. Covers only `quantity` minus `free_allowance_used`; 0 means rated and nothing charged. Absent means not rated (yet). Records a charge already made in Billing's ledger; it is never a request to charge."
+    },
+    "route_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "trace_id": {
+      "type": "string"
+    },
     "source": {
       "type": "string"
     }
@@ -90,6 +107,28 @@
       "at": "2026-09-30T10:00:00Z",
       "cost_estimate": 0.03,
       "source": "media.egress"
+    },
+    {
+      "id": "use-2",
+      "idempotency_key": "media:delivery:2",
+      "service": "media",
+      "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "resource": "object-1",
+      "provider": "local",
+      "node": "node-1",
+      "cell": "cell-west",
+      "region": "us-west",
+      "operation": "deliver",
+      "quantity": 1.5,
+      "unit": "GiB",
+      "at": "2026-09-30T10:00:00Z",
+      "cost_estimate": 0.03,
+      "source": "media.egress",
+      "free_allowance_used": 1,
+      "vibes_charged": 4,
+      "route_epoch": 3,
+      "trace_id": "tr-42"
     }
   ]
 }
