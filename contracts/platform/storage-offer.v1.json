@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/storage-offer.v1.json",
+  "title": "StorageOffer",
+  "description": "Durable storage capacity and operation pricing (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "class",
+    "capacity_gb",
+    "price_per_gb_month_usd",
+    "price_per_operation_usd",
+    "region",
+    "node",
+    "durability",
+    "lifecycle_rules"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "class": {
+      "type": "string",
+      "enum": [
+        "hot",
+        "warm",
+        "cold"
+      ]
+    },
+    "capacity_gb": {
+      "type": "number",
+      "minimum": 0
+    },
+    "price_per_gb_month_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated USD"
+    },
+    "price_per_operation_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated USD"
+    },
+    "region": {
+      "type": "string"
+    },
+    "node": {
+      "type": "string"
+    },
+    "durability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "target_nines": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Advertised durability nines"
+        }
+      },
+      "required": [
+        "replicas"
+      ]
+    },
+    "lifecycle_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "after_days": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "transition",
+              "expire"
+            ]
+          },
+          "target_class": {
+            "type": "string",
+            "enum": [
+              "hot",
+              "warm",
+              "cold"
+            ]
+          }
+        },
+        "required": [
+          "after_days",
+          "action"
+        ]
+      }
+    }
+  },
+  "examples": [
+    {
+      "id": "storage-1",
+      "class": "warm",
+      "capacity_gb": 1000,
+      "price_per_gb_month_usd": 0.02,
+      "price_per_operation_usd": 1e-05,
+      "region": "us-west",
+      "node": "node-1",
+      "durability": {
+        "replicas": 3,
+        "target_nines": 9
+      },
+      "lifecycle_rules": [
+        {
+          "after_days": 90,
+          "action": "transition",
+          "target_class": "cold"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "service": "media",
+  "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "resource": "object-1",
+  "provider": "local",
+  "node": "node-1",
+  "cell": "cell-west",
+  "region": "us-west",
+  "operation": "deliver",
+  "at": "2026-09-30T10:00:00Z",
+  "latency_ms": 28,
+  "queue_delay_ms": 2,
+  "ttfb_ms": 11,
+  "throughput_per_second": 1048576,
+  "bytes": 4096,
+  "status": "ok",
+  "cache_status": "hit",
+  "cost_estimate": 0.0001,
+  "route_epoch": 3,
+  "trace_id": "tr-42",
+  "extra": {
+    "transport": "http"
+  }
+}

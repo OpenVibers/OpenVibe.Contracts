@@ -9,7 +9,7 @@
   "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
   "contracts": "openvibe-contracts v0.75.0 (this package; the newest tag)",
   "features": [
-    "540 JSON Schemas with valid and invalid fixtures",
+    "589 JSON Schemas with valid and invalid fixtures",
     "31 service manifests with lifecycle declarations",
     "205 capability manifests and the staff capability map",
     "13 user-module namespace manifests",
@@ -19,5 +19,5 @@
     "compatibility check against the previous tag (scripts/compat.js)",
     "documentation-currency check (scripts/docs-currency.js)"
   ],
-  "updated": "2026-09-28"
+  "updated": "2026-09-30"
 }

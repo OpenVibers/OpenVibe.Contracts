@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/agent-offer.v1.json",
+  "title": "AgentOffer",
+  "description": "Agent model capacity and token pricing (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "harness",
+    "provider",
+    "model",
+    "context_limits",
+    "concurrency",
+    "price_per_1k_tokens",
+    "availability_windows"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "harness": {
+      "type": "string",
+      "description": "Registered harness offer id"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "context_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "input_tokens",
+        "output_tokens"
+      ]
+    },
+    "concurrency": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "price_per_1k_tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fresh_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        },
+        "cached_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        },
+        "output_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        }
+      },
+      "required": [
+        "fresh_usd",
+        "cached_usd",
+        "output_usd"
+      ]
+    },
+    "availability_windows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
+      },
+      "description": "Empty means no time restriction"
+    }
+  },
+  "examples": [
+    {
+      "id": "agent-1",
+      "harness": "harness-1",
+      "provider": "example-ai",
+      "model": "model-1",
+      "context_limits": {
+        "input_tokens": 128000,
+        "output_tokens": 8192
+      },
+      "concurrency": 4,
+      "price_per_1k_tokens": {
+        "fresh_usd": 0.003,
+        "cached_usd": 0.001,
+        "output_usd": 0.01
+      },
+      "availability_windows": []
+    }
+  ]
+}

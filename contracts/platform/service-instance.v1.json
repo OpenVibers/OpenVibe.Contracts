@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/service-instance.v1.json",
+  "title": "ServiceInstance",
+  "description": "One running instance registered in a cell (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "service",
+    "version",
+    "cell",
+    "node",
+    "region",
+    "endpoints",
+    "state",
+    "started_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "service": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "cell": {
+      "type": "string"
+    },
+    "node": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "minItems": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "starting",
+        "ready",
+        "degraded",
+        "draining",
+        "stopped"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "examples": [
+    {
+      "id": "inst-1",
+      "service": "media",
+      "version": "1.4.0",
+      "cell": "cell-west",
+      "node": "node-1",
+      "region": "us-west",
+      "endpoints": [
+        "https://media.internal.example"
+      ],
+      "state": "ready",
+      "started_at": "2026-09-30T10:00:00Z"
+    }
+  ]
+}

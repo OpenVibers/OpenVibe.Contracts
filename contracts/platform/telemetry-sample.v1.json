@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/telemetry-sample.v1.json",
+  "title": "TelemetrySample",
+  "description": "Universal operation observation for routing and autoscaling, with product dimensions in extra (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "service",
+    "operation",
+    "at"
+  ],
+  "properties": {
+    "service": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "resource": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "node": {
+      "type": "string"
+    },
+    "cell": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "operation": {
+      "type": "string"
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "latency_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "queue_delay_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "ttfb_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Time to first byte in milliseconds"
+    },
+    "throughput_per_second": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Operation units per second"
+    },
+    "bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "type": "string"
+    },
+    "cache_status": {
+      "type": "string"
+    },
+    "cost_estimate": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated USD"
+    },
+    "route_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "trace_id": {
+      "type": "string"
+    },
+    "extra": {
+      "type": "object",
+      "description": "Product-specific scalar dimensions; no payloads or secrets",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean"
+        ]
+      }
+    }
+  },
+  "examples": [
+    {
+      "service": "media",
+      "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "resource": "object-1",
+      "provider": "local",
+      "node": "node-1",
+      "cell": "cell-west",
+      "region": "us-west",
+      "operation": "deliver",
+      "at": "2026-09-30T10:00:00Z",
+      "latency_ms": 28,
+      "queue_delay_ms": 2,
+      "ttfb_ms": 11,
+      "throughput_per_second": 1048576,
+      "bytes": 4096,
+      "status": "ok",
+      "cache_status": "hit",
+      "cost_estimate": 0.0001,
+      "route_epoch": 3,
+      "trace_id": "tr-42",
+      "extra": {
+        "transport": "http"
+      }
+    }
+  ]
+}

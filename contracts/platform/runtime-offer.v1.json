@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/runtime-offer.v1.json",
+  "title": "RuntimeOffer",
+  "description": "Available execution capacity for code on a node (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "region",
+    "node",
+    "limits",
+    "price",
+    "availability",
+    "constraints"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "container",
+        "process",
+        "wasm",
+        "vm",
+        "function"
+      ]
+    },
+    "region": {
+      "type": "string"
+    },
+    "node": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpu_cores": {
+          "type": "number",
+          "minimum": 0
+        },
+        "memory_mb": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "concurrency": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "cpu_cores",
+        "memory_mb"
+      ]
+    },
+    "price": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amount_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        },
+        "unit": {
+          "type": "string",
+          "enum": [
+            "second",
+            "hour",
+            "invocation"
+          ]
+        }
+      },
+      "required": [
+        "amount_usd",
+        "unit"
+      ]
+    },
+    "availability": {
+      "type": "string",
+      "enum": [
+        "available",
+        "limited",
+        "unavailable"
+      ]
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "examples": [
+    {
+      "id": "runtime-1",
+      "kind": "container",
+      "region": "us-west",
+      "node": "node-1",
+      "limits": {
+        "cpu_cores": 2,
+        "memory_mb": 4096,
+        "duration_seconds": 3600
+      },
+      "price": {
+        "amount_usd": 0.05,
+        "unit": "hour"
+      },
+      "availability": "available",
+      "constraints": [
+        "first-party"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/node-capabilities.v1.json",
+  "title": "NodeCapabilities",
+  "description": "Node hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "node_id",
+    "cpu",
+    "arch",
+    "memory_mb",
+    "storage",
+    "network",
+    "regions",
+    "tags",
+    "costs"
+  ],
+  "properties": {
+    "node_id": {
+      "type": "string"
+    },
+    "cpu": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cores": {
+          "type": "number",
+          "minimum": 0
+        },
+        "threads": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "cores"
+      ]
+    },
+    "arch": {
+      "type": "string",
+      "description": "CPU architecture"
+    },
+    "memory_mb": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "gpu": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vram_mb": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "model",
+        "count"
+      ]
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "capacity_gb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "available_gb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "capacity_gb"
+      ]
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ingress_mbps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "egress_mbps": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "ingress_mbps",
+        "egress_mbps"
+      ]
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "per_hour_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        },
+        "egress_per_gb_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated USD"
+        }
+      },
+      "required": [
+        "per_hour_usd"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "node_id": "node-1",
+      "cpu": {
+        "cores": 8,
+        "threads": 16
+      },
+      "arch": "x86_64",
+      "memory_mb": 16384,
+      "gpu": {
+        "model": "L4",
+        "count": 1,
+        "vram_mb": 24576
+      },
+      "storage": {
+        "capacity_gb": 500,
+        "available_gb": 300,
+        "kind": "ssd"
+      },
+      "network": {
+        "ingress_mbps": 1000,
+        "egress_mbps": 1000
+      },
+      "regions": [
+        "us-west"
+      ],
+      "tags": [
+        "gpu",
+        "edge"
+      ],
+      "costs": {
+        "per_hour_usd": 0.2,
+        "egress_per_gb_usd": 0.01
+      }
+    }
+  ]
+}

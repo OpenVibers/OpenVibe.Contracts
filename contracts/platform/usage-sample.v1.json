@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/usage-sample.v1.json",
+  "title": "UsageSample",
+  "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed).",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "idempotency_key",
+    "service",
+    "operation",
+    "quantity",
+    "unit",
+    "at",
+    "source"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "description": "Stable across retries"
+    },
+    "service": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "resource": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "node": {
+      "type": "string"
+    },
+    "cell": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "operation": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unit": {
+      "type": "string"
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cost_estimate": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated USD"
+    },
+    "source": {
+      "type": "string"
+    }
+  },
+  "examples": [
+    {
+      "id": "use-1",
+      "idempotency_key": "media:delivery:1",
+      "service": "media",
+      "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "resource": "object-1",
+      "provider": "local",
+      "node": "node-1",
+      "cell": "cell-west",
+      "region": "us-west",
+      "operation": "deliver",
+      "quantity": 1.5,
+      "unit": "GiB",
+      "at": "2026-09-30T10:00:00Z",
+      "cost_estimate": 0.03,
+      "source": "media.egress"
+    }
+  ]
+}
