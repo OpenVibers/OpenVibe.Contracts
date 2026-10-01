@@ -25,7 +25,40 @@
     "tagline": "Watchlists and alerts",
     "what": "Informational watchlists, sourced market context and alerts. No custody, no order execution.",
     "legalProfile": "ugc",
-    "position": 14
+    "position": 14,
+    "tld": "trade",
+    "accent": "#60a5fa",
+    "description": "OpenVibe.Trade is the market intelligence room of the OpenVibe network: watchlists, alerts, summaries and community discussion for markets, collectibles and deals — information and tools, never advice.",
+    "pillars": [
+      {
+        "title": "Watchlists & alerts",
+        "text": "Track what you care about, get told when it moves."
+      },
+      {
+        "title": "Summaries",
+        "text": "What happened and why, with sources."
+      },
+      {
+        "title": "Community",
+        "text": "Discuss with people, not bots."
+      },
+      {
+        "title": "Not advice",
+        "text": "Tools and information only — always labelled as such."
+      }
+    ],
+    "keywords": "openvibe trade, watchlists, market alerts, community trading tools",
+    "launch": "a verified data source and editors adding the first instruments",
+    "relationships": {
+      "plannedRepo": "OpenVibe.Trade",
+      "meanwhile": [
+        {
+          "label": "Deals",
+          "url": "https://openvibe.deals",
+          "note": "Deal discovery is the sibling room."
+        }
+      ]
+    }
   },
   "capabilities": [
     "trade.instrument.resolve",

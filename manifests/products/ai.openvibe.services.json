@@ -1,0 +1,41 @@
+{
+  "domain": "ai.openvibe.services",
+  "tld": "ai",
+  "name": "ai.openvibe.services",
+  "icon": "fa-robot",
+  "accent": "#c084fc",
+  "tagline": "One AI gateway for every model you choose.",
+  "legalProfile": "info",
+  "description": "OpenVibe.AI is the network's AI gateway: OpenAI-compatible providers, Anthropic, local and open models behind one API, with routing for cost, speed, quality or privacy, provider fallback, versioned prompt templates and typed workflows, durable runs, structured output, embeddings, speech to text and media analysis, budgets and your own provider keys. It runs today as an internal service that OpenVibe.Live and OpenVibe.Network call; its public API and playground open here.",
+  "pillars": [
+    {
+      "title": "Any provider",
+      "text": "OpenAI-compatible, Anthropic, local llama.cpp and open models, one API."
+    },
+    {
+      "title": "Routing & fallback",
+      "text": "Cheap, fast, best or private: routes choose, and fall back when a provider fails."
+    },
+    {
+      "title": "Templates & workflows",
+      "text": "Versioned prompts and typed workflows with durable, resumable runs."
+    },
+    {
+      "title": "Your keys, your budget",
+      "text": "Bring your own provider keys; quotas and budgets per project."
+    }
+  ],
+  "keywords": "ai gateway, open source ai api, llm router, model routing, prompt templates, ai workflows, speech to text api, openvibe ai",
+  "launch": "a public API with its own keys, quotas and playground; today only other OpenVibe services call it",
+  "relationships": {
+    "service": "ai",
+    "plannedRepo": "OpenVibe.AI",
+    "meanwhile": [
+      {
+        "label": "AI on OpenVibe.Live",
+        "url": "https://openvibe.live",
+        "note": "Live's AI moments, recaps, summaries and translations run through OpenVibe.AI; captions still run inside Live."
+      }
+    ]
+  }
+}

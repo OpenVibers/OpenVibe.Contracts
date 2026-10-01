@@ -224,7 +224,7 @@ export interface Problem {
   [k: string]: unknown | undefined;
 }
 
-/** registry.service-manifest@1.0.0 (owner: network) */
+/** registry.service-manifest@1.1.0 (owner: network) */
 /**
  * What a service is, where it lives and what it offers. The ecosystem registry is built from these, not from hard-coded route maps.
  */
@@ -262,7 +262,7 @@ export interface ServiceManifest {
     repo?: string;
   };
   /**
-   * How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site.
+   * How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site. 1.1.0 (plan T11 lane D) adds the optional showcase fields copied from the OpenVibe.Sites catalog (tld, accent, description, pillars, faq, keywords, vision, highlight, launch, relationships; defined in registry.product@1): a site carrying tld is the catalog home of its domain (its publicOrigin host, or host), so that domain has no manifests/products file.
    */
   site?: {
     /**
@@ -284,6 +284,31 @@ export interface ServiceManifest {
      * Only while the manifest has no publicOrigin.
      */
     host?: string;
+    /**
+     * The product's short name used everywhere (frame service names, /shared paths), e.g. food for openvibe.food. Not unique: a moved product keeps it on both addresses.
+     */
+    tld?: string;
+    /**
+     * Brand colour, lower-case hex.
+     */
+    accent?: string;
+    /**
+     * The catalog's description, verbatim.
+     */
+    description?: string;
+    pillars?: Pillars;
+    faq?: Faq;
+    /**
+     * Comma-separated search keywords, verbatim.
+     */
+    keywords?: string;
+    vision?: Vision;
+    highlight?: Highlight;
+    /**
+     * What a person still has to do or decide before the product launches. Absent once nothing blocks it.
+     */
+    launch?: string;
+    relationships?: Relationships;
   };
   capabilities: string[];
   eventsProduced: string[];
@@ -510,6 +535,44 @@ export interface ServiceManifest {
         };
   };
   notes?: string;
+}
+
+/** registry.product@1.0.0 (owner: network) */
+/**
+ * A product domain of the network's catalog (manifests/products/<domain>.json) that has no service manifest presenting it as a site: a planned product, a sub-domain of a service, a brand domain of a multi-domain service, a closed or moved address. Carries what the network's showcase pages need, copied from the OpenVibe.Sites catalog (plan T11 lane D) so Sites can be deleted. A product whose service manifest has a site block carries the same fields there (registry.service-manifest 1.1.0 site); every catalog domain has exactly one of the two homes. The $defs are shared with that site block.
+ */
+export interface Product {
+  /**
+   * The product's host, unique across the catalog.
+   */
+  domain: string;
+  tld: Tld;
+  /**
+   * Full name, e.g. OpenVibe.Food.
+   */
+  name: string;
+  /**
+   * Icon name of the showcase pages (a Font Awesome name such as fa-utensils).
+   */
+  icon: string;
+  accent: Accent;
+  tagline: string;
+  description: Description;
+  /**
+   * Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal), as in a service manifest's site.
+   */
+  legalProfile?: "streaming" | "tools" | "ugc" | "games" | "hosting" | "account" | "info";
+  /**
+   * Absent for a product page. closed: the address was decided against and points elsewhere; moved: the product lives at another address; status: the address shows the network's status. relationships.links say where.
+   */
+  kind?: "closed" | "moved" | "status";
+  pillars?: Pillars;
+  faq?: Faq;
+  keywords: Keywords;
+  vision?: Vision;
+  highlight?: Highlight;
+  launch?: Launch;
+  relationships?: Relationships;
 }
 
 /** capabilities.capability@1.0.0 (owner: network) */

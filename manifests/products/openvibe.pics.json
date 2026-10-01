@@ -1,0 +1,45 @@
+{
+  "domain": "openvibe.pics",
+  "tld": "pics",
+  "name": "OpenVibe.Pics",
+  "icon": "fa-images",
+  "accent": "#f472b6",
+  "tagline": "Share pictures. Fast, open, yours.",
+  "description": "OpenVibe.Pics will be the picture home of the OpenVibe network: quick uploads and share links with or without an account, albums and galleries, image processing and optimisation served from a shared CDN, and AI image tools, an open and modular alternative to Imgur that is also usable through the OpenVibe API.",
+  "pillars": [
+    {
+      "title": "Upload & share",
+      "text": "Drop a picture, get a link, with or without an account."
+    },
+    {
+      "title": "Albums & galleries",
+      "text": "Collections, embeds and community galleries."
+    },
+    {
+      "title": "Processing",
+      "text": "Resize, convert and optimise on the fly, cached close to viewers."
+    },
+    {
+      "title": "AI image tools",
+      "text": "Describe, tag, edit and generate with the network's shared AI."
+    }
+  ],
+  "keywords": "openvibe pics, image hosting, image upload, imgur alternative, image cdn, ai image tools",
+  "launch": "the shared image upload and processing service",
+  "relationships": {
+    "service": "media-hub",
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Media",
+        "url": "https://openvibe.media",
+        "note": "Media already stores and serves the network's pictures and video."
+      },
+      {
+        "label": "Image tools",
+        "url": "https://img.openvibe.tools",
+        "note": "Convert, resize and compress images today."
+      }
+    ]
+  }
+}

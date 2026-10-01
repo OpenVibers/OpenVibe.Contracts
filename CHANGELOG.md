@@ -10,6 +10,22 @@ Add nine public `platform.*@1` schemas: usage and telemetry samples; node capabi
 service instances; runtime, storage, delivery, agent, and harness offers. Each has valid and
 invalid fixtures. ADR-034 is proposed. Generated types and bundle include all nine.
 
+## Unreleased — the product catalog (plan T11 lane D)
+
+The OpenVibe.Sites catalog (`sites.json`, 33 domains) moves into Contracts so Sites can be deleted. Additive.
+- `registry.service-manifest` 1.1.0: `site` gains the optional `tld`, `accent`, `description`, `pillars`, `faq`,
+  `keywords`, `vision`, `highlight`, `launch` and `relationships` (`service`, `plannedRepo`, `noRepo`, `linksLead`,
+  `links`, `meanwhile`, `statusApi`), defined once in `registry.product@1`'s `$defs`. Filled from the catalog for the
+  ten services whose site presents their catalog domain: news, reviews, tips, vip, trade, host, deals, coupons,
+  openre (openre.stream) and space.
+- `registry.product@1` (new) and `manifests/products/<domain>.json` for the other 23 catalog domains, with no
+  invented service manifests: the Network sub-domains (auth, api, admin, themes), the media-hub brands (video, pics,
+  download), ai.openvibe.network (moved) and ai.openvibe.services, realtime (closed), status, openvibe.events and the
+  planned products (food, quest, rent, homes, services, run, website, help, bot, watch, actor).
+  `relationships.service` names the manifest that serves a domain when one does.
+- `contracts.products` (`manifests`, `get`, `siteDomain`, `catalog()`); `test/product-catalog.test.js` asserts each
+  of the 33 snapshotted Sites domains has exactly one home and every home validates.
+
 ## 0.83.0 — 2026-09-29
 
 **Host site configuration** (plan T12 J3): the capability `host.site.config` (active, first-party, `host:write`, project

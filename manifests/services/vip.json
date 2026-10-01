@@ -25,7 +25,40 @@
     "tagline": "Memberships and perks",
     "what": "Creator and network memberships: plans, perks and benefits recognised on every OpenVibe site.",
     "legalProfile": "account",
-    "position": 13
+    "position": 13,
+    "tld": "vip",
+    "accent": "#e879f9",
+    "description": "OpenVibe.VIP is the membership layer of the OpenVibe network: creator memberships, channel subscriptions, VIP tiers and perks that unlock across Live, Community, Blog and more.",
+    "pillars": [
+      {
+        "title": "Creator memberships",
+        "text": "Subscribe to the people you watch; perks follow you everywhere."
+      },
+      {
+        "title": "Network VIP",
+        "text": "One membership that supports the whole network."
+      },
+      {
+        "title": "Perks",
+        "text": "Badges, emotes, early access, gated posts — set by creators."
+      },
+      {
+        "title": "Transparent",
+        "text": "What it costs and where it goes, in the open."
+      }
+    ],
+    "keywords": "openvibe vip, creator memberships, subscriptions",
+    "launch": "the payments cutover to OpenVibe.Billing; checkout stays closed until then",
+    "relationships": {
+      "plannedRepo": "OpenVibe.VIP",
+      "meanwhile": [
+        {
+          "label": "Subscriptions on OpenVibe.Live",
+          "url": "https://openvibe.live",
+          "note": "Channel subscriptions exist on Live today."
+        }
+      ]
+    }
   },
   "capabilities": [
     "vip.plan.create",

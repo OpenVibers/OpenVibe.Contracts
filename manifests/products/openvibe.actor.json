@@ -1,0 +1,393 @@
+{
+  "domain": "openvibe.actor",
+  "tld": "actor",
+  "name": "OpenVibe.Actor",
+  "icon": "fa-user-astronaut",
+  "accent": "#a78bfa",
+  "tagline": "Every AI agent, every device, one command console.",
+  "description": "OpenVibe.Actor sends each task to the best agent for it, across hosted agent platforms, open-source runtimes, coding agents and OpenVibe's own, balanced live on price, speed and success. Install the OpenVibe Node on your computers, servers, Raspberry Pis and robots, and your agents can work on them for real, at the control level you choose, with a kill switch you hold. Run everything from one console, or host the whole thing yourself.",
+  "pillars": [
+    {
+      "title": "Your agents",
+      "text": "Personas, memory, tools, schedules and budgets you control."
+    },
+    {
+      "title": "Permission first",
+      "text": "Delegated grants and approvals, never an all-powerful account."
+    },
+    {
+      "title": "Any model",
+      "text": "Routed through OpenVibe.AI: hosted, open or local models."
+    },
+    {
+      "title": "Works with everything",
+      "text": "Watch, Website, Work, Bot, Events, Tools and more."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Is this like OpenRouter?",
+      "answer": "Yes, for agents: one API and one bill for many agent systems, with live prices and rankings. Actor routes whole tasks rather than single model calls, and it checks the results before you get them."
+    },
+    {
+      "question": "Which agent systems does it use?",
+      "answer": "OpenVibe's own runtime, hosted agent platforms from companies like OpenAI and Anthropic, coding agents, and open-source agents on OpenVibe's hardware. Each is an adapter, so new ones join quickly."
+    },
+    {
+      "question": "How does it choose?",
+      "answer": "For each kind of task it compares price, speed, success rate and current health across agent systems, then applies your mode and budget. Every choice is recorded and explained."
+    },
+    {
+      "question": "Can I keep my data on OpenVibe?",
+      "answer": "Yes. Private mode uses only OpenVibe's own runtime and open models on its own hardware."
+    },
+    {
+      "question": "Can it act without asking?",
+      "answer": "Only as far as you allow. Anything with consequences, like publishing, spending or moving a robot, waits for your approval, and every action is logged."
+    },
+    {
+      "question": "Can an agent take full control of my computer?",
+      "answer": "Only if you set that Node to Full control on the device itself. It is time-boxed and recorded, you can see when an agent is in control, and a button, a hotkey or one command ends it. Most people use Trusted: routine actions run and risky ones ask first."
+    },
+    {
+      "question": "Can I run Actor myself?",
+      "answer": "Yes. The router, the runtime, the console and the Node are open source and run on your own server with local models, and can link to openvibe.actor when you want hosted agents or the rest of the network."
+    },
+    {
+      "question": "What will it cost?",
+      "answer": "You will be able to start without paying, within limits published before launch; bigger tasks and stronger agents will be paid, with the cost shown per task."
+    }
+  ],
+  "keywords": "ai agent router, openrouter for agents, ai agent that controls your computer, remote control computer with ai, self-hosted ai agent, computer use agent, ai command console, agent api, cloud ai agent, mcp server",
+  "vision": {
+    "badge": "being built",
+    "cta": [
+      "See the network",
+      "https://openvibe.network/#network",
+      "fa-circle-nodes"
+    ],
+    "viz": {
+      "kind": "router",
+      "budget": "budget 50¢",
+      "task": "Research five competitors of my shop and write a one-page brief with sources.",
+      "modes": [
+        "Cheapest",
+        "Balanced",
+        "Best",
+        "Fastest",
+        "Private"
+      ],
+      "mode": "Balanced",
+      "candidates": [
+        {
+          "icon": "fa-circle-nodes",
+          "name": "OpenVibe runtime",
+          "cost": "6¢",
+          "time": "3 min",
+          "success": "92%",
+          "pick": true
+        },
+        {
+          "icon": "fa-cloud",
+          "name": "Hosted frontier agent",
+          "cost": "31¢",
+          "time": "2 min",
+          "success": "95%"
+        },
+        {
+          "icon": "fa-code",
+          "name": "Coding agent",
+          "cost": "12¢",
+          "time": "4 min",
+          "success": "81%"
+        },
+        {
+          "icon": "fa-lock",
+          "name": "Open model on OpenVibe",
+          "cost": "1¢",
+          "time": "7 min",
+          "success": "74%"
+        }
+      ],
+      "why": "Meets this task's quality bar at the lowest expected cost; a second model family checks the brief before you get it.",
+      "caption": "Design preview; the numbers are illustrative",
+      "label": "Design preview: a task routed across four agent systems with cost, time and success estimates, the balanced mode selected"
+    },
+    "stepsTitle": "How a task runs",
+    "stepsLead": "Send a task from the site, the API or any OpenVibe app. Actor does the rest.",
+    "steps": [
+      [
+        "Describe the task",
+        "Say what you want done, pick a mode and set a budget. Attach files or give it a robot, a site or a stream to work with."
+      ],
+      [
+        "Actor picks the agent",
+        "It weighs every agent system on live price, speed and success for this kind of task, picks one, and tells you why."
+      ],
+      [
+        "Checked, then delivered",
+        "A different model checks the result; a failed check moves the task to a stronger agent. You see the cost to the cent."
+      ]
+    ],
+    "featuresTitle": "Modes",
+    "featuresLead": "Tell Actor what matters most. It balances the rest.",
+    "features": [
+      [
+        "fa-coins",
+        "Cheapest",
+        "The lowest expected cost that still meets the task's quality bar."
+      ],
+      [
+        "fa-scale-balanced",
+        "Balanced",
+        "The default: cost, quality and speed weighed together."
+      ],
+      [
+        "fa-trophy",
+        "Best",
+        "The highest chance of a right answer first time; cost comes second."
+      ],
+      [
+        "fa-bolt",
+        "Fastest",
+        "The shortest time to a checked result."
+      ],
+      [
+        "fa-lock",
+        "Private",
+        "Only agents that keep your data on OpenVibe: its own runtime and open models on its hardware."
+      ],
+      [
+        "fa-wallet",
+        "Budgets",
+        "A hard limit per task and per day. Actor never goes over it."
+      ]
+    ],
+    "more": [
+      {
+        "id": "routes",
+        "title": "What it routes to",
+        "lead": "Every agent system worth using, behind one API, one key and one bill.",
+        "cards": [
+          [
+            "fa-circle-nodes",
+            "OpenVibe's own runtime",
+            "Uses every OpenVibe product as a tool, with models chosen by OpenVibe.AI."
+          ],
+          [
+            "fa-cloud",
+            "Hosted agent platforms",
+            "Agent platforms from companies like OpenAI and Anthropic, with their browsers, code runners and search."
+          ],
+          [
+            "fa-code",
+            "Coding agents",
+            "For tasks that are really code: fixes, features, reviews and tests."
+          ],
+          [
+            "fa-server",
+            "Open-source agents",
+            "Open runtimes and open models on OpenVibe's own hardware: the Private mode."
+          ],
+          [
+            "fa-key",
+            "Your own keys",
+            "Bring a key for any platform and pay it directly; Actor still routes, checks and explains."
+          ],
+          [
+            "fa-plug-circle-plus",
+            "New ones, fast",
+            "A new agent platform is one adapter. The day it lands, every app and agent can use it."
+          ]
+        ]
+      },
+      {
+        "id": "devices",
+        "title": "Your devices, under control",
+        "lead": "Install the OpenVibe Node on a computer, a server, a Raspberry Pi or a phone. No open ports: it connects out. You decide how much an agent may do.",
+        "cards": [
+          [
+            "fa-terminal",
+            "Terminal and files",
+            "A live terminal, a file browser, processes and services, from anywhere, for you and your agents."
+          ],
+          [
+            "fa-display",
+            "Screen, keyboard and mouse",
+            "Agents can use any app on the machine the way you would, and you watch the screen while they work."
+          ],
+          [
+            "fa-code-branch",
+            "Your own coding agents",
+            "The coding agents already installed on the machine become agents Actor can hand tasks to."
+          ],
+          [
+            "fa-sliders",
+            "Four control levels",
+            "Observe, Ask, Trusted or Full control, set on the device itself. Full control is time-boxed and recorded."
+          ],
+          [
+            "fa-power-off",
+            "A kill switch you hold",
+            "A button, a hotkey or one command on the device ends any agent session at once. Work can stay inside a container."
+          ],
+          [
+            "fa-robot",
+            "Robots too",
+            "The same Node drives robots on OpenVibe.Bot, so one install covers your computers and your robots.",
+            "https://openvibe.bot"
+          ]
+        ]
+      },
+      {
+        "id": "console",
+        "title": "One console for everything",
+        "lead": "Agents, tasks, approvals, devices, robots, sites, streams and costs in one place, on the web and on your phone.",
+        "cards": [
+          [
+            "fa-keyboard",
+            "Command bar",
+            "Type what you want in plain words or as a slash command; it goes to the right agent, device or product."
+          ],
+          [
+            "fa-list-check",
+            "Tasks and approvals",
+            "Live progress for every task, and one inbox for everything waiting on you."
+          ],
+          [
+            "fa-server",
+            "Devices",
+            "Every Node with its status, a terminal, its files and its screen."
+          ],
+          [
+            "fa-robot",
+            "Robots",
+            "Your robots' control panels from OpenVibe.Bot, next to everything else.",
+            "https://openvibe.bot"
+          ],
+          [
+            "fa-tower-broadcast",
+            "Sites and streams",
+            "Deploys on OpenVibe.Host and your streams on OpenVibe.Live and openre.stream."
+          ],
+          [
+            "fa-wave-square",
+            "Events and costs",
+            "What happened across the network, live, and what every task cost."
+          ]
+        ]
+      },
+      {
+        "title": "Balanced live, explained always",
+        "lead": "Choices come from what actually happens, not from marketing pages.",
+        "cards": [
+          [
+            "fa-chart-line",
+            "Live signals",
+            "Price, speed, success rate and outages per agent system and per kind of task, updated from real runs."
+          ],
+          [
+            "fa-arrows-rotate",
+            "Failover",
+            "When an agent system slows down or fails, tasks move to the next best one at once."
+          ],
+          [
+            "fa-list-check",
+            "Checked results",
+            "Cheap first, then stronger agents only when a check fails: you pay for strength only when a task needs it."
+          ],
+          [
+            "fa-magnifying-glass-chart",
+            "Public rankings",
+            "Success, cost and time per agent system for each kind of task, from real traffic, with dates.",
+            null
+          ],
+          [
+            "fa-receipt",
+            "Every choice explained",
+            "Which agent ran, why it won, what else was considered and what it cost."
+          ],
+          [
+            "fa-user-astronaut",
+            "Your agents, on top",
+            "Always-on agents with memory, schedules and approvals; every task they take goes through the router."
+          ]
+        ]
+      }
+    ],
+    "templates": {
+      "title": "Start an agent from a template",
+      "lead": "Each one is a starting point you can change, and each routes its work through Actor.",
+      "items": [
+        [
+          "fa-tower-broadcast",
+          "Stream co-host"
+        ],
+        [
+          "fa-shield",
+          "Chat moderator"
+        ],
+        [
+          "fa-magnifying-glass",
+          "Research assistant"
+        ],
+        [
+          "fa-globe",
+          "Site builder"
+        ],
+        [
+          "fa-robot",
+          "Robot pilot"
+        ],
+        [
+          "fa-calendar-check",
+          "Personal assistant"
+        ]
+      ]
+    },
+    "connectTitle": "Reachable everywhere",
+    "connectLead": "Actor is part of the network, not a separate app.",
+    "connect": [
+      [
+        "fa-bars",
+        "On every OpenVibe site",
+        "An agent button in the navbar, with the page you are on as context."
+      ],
+      [
+        "fa-comments",
+        "In chat",
+        "Direct messages on OpenVibe.Chat and @mentions in Live chat and Community threads.",
+        "https://openvibe.chat"
+      ],
+      [
+        "fa-robot",
+        "With your robots",
+        "Give an agent a robot on OpenVibe.Bot to patrol, check on or perform with, with your approval.",
+        "https://openvibe.bot"
+      ],
+      [
+        "fa-plug",
+        "From your own apps",
+        "An API, webhooks and an MCP server, so other assistants can hand tasks to Actor.",
+        "https://openvibe.codes"
+      ]
+    ],
+    "building": "OpenVibe.Actor is being built now, on the network's accounts, AI router and event system that already run."
+  },
+  "launch": "the task router with its first agent adapters, then personal agents on OpenVibe.Network accounts",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Tools",
+        "url": "https://openvibe.tools",
+        "note": "Tools agents will call, usable by people today."
+      },
+      {
+        "label": "OpenVibe.Codes",
+        "url": "https://openvibe.codes",
+        "note": "The API and SDK agents are built on."
+      }
+    ]
+  }
+}

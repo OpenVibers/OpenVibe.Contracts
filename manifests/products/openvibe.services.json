@@ -1,0 +1,39 @@
+{
+  "domain": "openvibe.services",
+  "tld": "services",
+  "name": "OpenVibe.Services",
+  "icon": "fa-server",
+  "accent": "#38bdf8",
+  "tagline": "Build with the whole network.",
+  "description": "OpenVibe.Services will be the way into everything programmable on OpenVibe. Start from what you want to build (monitor a page and summarise changes, run an AI agent, process uploads, control a robot, add support to a site) and it assembles the services, keys, permissions and working code for you. Then operate it all in one place: projects, grants, usage, quotas, runs, events, deploys and health, with each service keeping its own data.",
+  "pillars": [
+    {
+      "title": "Discover",
+      "text": "A catalog of services, recipes and templates, by what they do."
+    },
+    {
+      "title": "Build",
+      "text": "Projects, apps, keys, capabilities, playgrounds and starter code."
+    },
+    {
+      "title": "Operate",
+      "text": "Every resource across the network: runs, events, usage, quotas, health."
+    },
+    {
+      "title": "Learn",
+      "text": "Help, Wiki and Codes docs, linked from every page."
+    }
+  ],
+  "keywords": "openvibe services, developer platform, open source backend, api platform, event bus api, ai gateway, website monitoring api, developer console",
+  "launch": "the catalog and console over the services that already run (AI, Events, Media, Search, Sources, Host, Tools)",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Codes",
+        "url": "https://openvibe.codes",
+        "note": "The developer portal and docs work today."
+      }
+    ]
+  }
+}

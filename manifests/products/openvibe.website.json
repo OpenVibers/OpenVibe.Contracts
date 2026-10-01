@@ -1,0 +1,44 @@
+{
+  "domain": "openvibe.website",
+  "tld": "website",
+  "name": "OpenVibe.Website",
+  "icon": "fa-globe",
+  "accent": "#22d3ee",
+  "tagline": "Websites that work, not just pages.",
+  "description": "OpenVibe.Website will be an AI-assisted website and small-app builder with a real file tree: generate a site from a description, import one or fork a Git repository, edit HTML, CSS, JavaScript or Markdown by hand or visually, and publish to yourname.openvibe.website or your own domain. Sites can sign people in with OpenVibe, take bookings and forms, show media, run a blog or docs, and add chat, comments, memberships or support, with good SEO built in.",
+  "pillars": [
+    {
+      "title": "Generate or code",
+      "text": "Describe it, import it, fork it, or write it yourself."
+    },
+    {
+      "title": "Real features",
+      "text": "Sign-in, forms, bookings, media, blogs and support from the network."
+    },
+    {
+      "title": "Your files",
+      "text": "Every generated site is readable, editable source."
+    },
+    {
+      "title": "Publish anywhere",
+      "text": "yourname.openvibe.website or your own domain, with rollback."
+    }
+  ],
+  "keywords": "ai website builder, open source website builder, static site builder, portfolio builder, website generator, docs site generator",
+  "launch": "tenant hosting on OpenVibe.Host (built, not launched) and the editor",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Codes",
+        "url": "https://openvibe.codes",
+        "note": "The developer portal, API and SDK docs work today."
+      },
+      {
+        "label": "OpenVibe.Tools",
+        "url": "https://openvibe.tools",
+        "note": "Dozens of tools that run in the browser today."
+      }
+    ]
+  }
+}

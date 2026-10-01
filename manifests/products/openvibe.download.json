@@ -1,0 +1,45 @@
+{
+  "domain": "openvibe.download",
+  "tld": "download",
+  "name": "OpenVibe.Download",
+  "icon": "fa-cloud-arrow-down",
+  "accent": "#34d399",
+  "tagline": "Upload anything. Share it anywhere.",
+  "description": "OpenVibe.Download will be the file home of the OpenVibe network: large uploads and simple share links with or without an account, folders, sync and backups when you sign in, and AI that previews, sorts and finds your files, in the spirit of MediaFire and MEGA, built on OpenVibe.Media and open through the API.",
+  "pillars": [
+    {
+      "title": "Share links",
+      "text": "Big files, simple links, clear limits."
+    },
+    {
+      "title": "Drive & backup",
+      "text": "Folders, sync and backups under your OpenVibe account."
+    },
+    {
+      "title": "Smart files",
+      "text": "Previews, search and summaries from the network's AI."
+    },
+    {
+      "title": "Built for apps",
+      "text": "The same file service every OpenVibe site and your own apps use."
+    }
+  ],
+  "keywords": "openvibe download, file sharing, file upload, cloud storage, backup, mediafire alternative",
+  "launch": "the shared file service on OpenVibe.Media",
+  "relationships": {
+    "service": "media-hub",
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Media",
+        "url": "https://openvibe.media",
+        "note": "Media already stores the network's uploads."
+      },
+      {
+        "label": "Document tools",
+        "url": "https://docs.openvibe.tools",
+        "note": "Convert and work with documents today."
+      }
+    ]
+  }
+}

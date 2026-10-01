@@ -1,0 +1,40 @@
+{
+  "domain": "openvibe.events",
+  "tld": "events",
+  "name": "OpenVibe.Events",
+  "icon": "fa-bolt",
+  "accent": "#34d399",
+  "tagline": "Events, queues and webhooks you can build on.",
+  "description": "OpenVibe.Events is the network's event system: durable events, topics and subscriptions, signed webhooks with retries, dead-letter queues and replay, pull consumers with checkpoints, and realtime delivery to browsers with cursor resume. Every OpenVibe product already publishes through it. This domain becomes its home, with queues, streams, project namespaces and developer tools.",
+  "pillars": [
+    {
+      "title": "Topics & webhooks",
+      "text": "Fan out to subscribers with signed, retried deliveries."
+    },
+    {
+      "title": "Queues & streams",
+      "text": "Competing consumers with leases, and ordered history with cursors."
+    },
+    {
+      "title": "Realtime",
+      "text": "Server-sent events to browsers, resuming where they left off."
+    },
+    {
+      "title": "Replay & DLQ",
+      "text": "Nothing is lost quietly: replay it, or inspect what failed."
+    }
+  ],
+  "keywords": "event bus api, webhook retry service, sqs alternative, sns alternative, pub sub api, realtime sse api, dead letter queue, webhook replay",
+  "launch": "the developer site and queue and stream primitives; the API runs at events.openvibe.network",
+  "relationships": {
+    "service": "events",
+    "plannedRepo": "OpenVibe.Events",
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Codes",
+        "url": "https://openvibe.codes",
+        "note": "Events API and SDK reference."
+      }
+    ]
+  }
+}

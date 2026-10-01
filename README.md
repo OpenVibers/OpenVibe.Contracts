@@ -69,6 +69,8 @@ Manifests: `manifests/services/` (30 services as of v0.34.0: 24 `alpha`, 1 `beta
 
 ## User modules (v0.4)
 
+`manifests/products/<domain>.json` (`registry.product@1`) is the product catalog the OpenVibe.Sites repository used to hold (plan T11 lane D): one file per product domain that no service manifest presents as a site (planned products, a service's sub-domains and extra brand domains, closed or moved addresses), with its tld, accent, description, pillars, FAQ, keywords, vision, launch requirement and relationships. A service manifest whose `site` carries `tld` (`registry.service-manifest` 1.1.0) is the catalog home of its own domain instead. `contracts.products.catalog()` lists both homes; every domain has exactly one (`test/product-catalog.test.js`, against the 33-domain Sites snapshot in `test/fixtures/sites-domains.json`).
+
 `manifests/namespaces/*.json` define per-subject module namespaces (`modules.namespace@1`): owner, data schema, writers (`owner` service and/or the `user`), public fields, quota and what happens when the owner is retired. OpenVibe.Network stores the records (`modules.module-record@1`, revision-checked writes). `contracts.modules.validateData / publicView / canWrite` apply the same rules everywhere. Modules hold portable preferences and summaries, never domain truth, money or authoritative game inventory.
 
 Every change to a record is announced as `network.module.updated` (v0.32): the revision after the change, the changed field names and only the new values of changed public fields. Removing an account deletes its records; merging two keeps the survivor's record where both have one and moves the rest. `onOwnerRemoved` is about the owning service being retired, not the person.

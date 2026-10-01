@@ -1,0 +1,39 @@
+{
+  "domain": "openvibe.homes",
+  "tld": "homes",
+  "name": "OpenVibe.Homes",
+  "icon": "fa-house",
+  "accent": "#a3e635",
+  "tagline": "Homes to own, clearly explained.",
+  "description": "OpenVibe.Homes will be the owning side of OpenVibe.Rent: homes for sale, property records and neighbourhood context in one place, with alerts and AI summaries that always link their sources.",
+  "pillars": [
+    {
+      "title": "Listings",
+      "text": "Homes for sale from many sources, in one search."
+    },
+    {
+      "title": "Property records",
+      "text": "Sale history and public records, with their sources."
+    },
+    {
+      "title": "Neighbourhoods",
+      "text": "Context that helps you decide."
+    },
+    {
+      "title": "Alerts",
+      "text": "Be told when a home that fits appears."
+    }
+  ],
+  "keywords": "openvibe homes, homes for sale, property records, real estate search, home alerts",
+  "launch": "verified listing and records sources",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Deals",
+        "url": "https://openvibe.deals",
+        "note": "Deal discovery is the sibling room."
+      }
+    ]
+  }
+}

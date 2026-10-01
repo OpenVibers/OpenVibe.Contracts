@@ -25,7 +25,40 @@
     "tagline": "Codes that work",
     "what": "Coupon codes with merchant matching, restrictions, expiry and real-people validity reports.",
     "legalProfile": "info",
-    "position": 17
+    "position": 17,
+    "tld": "coupons",
+    "accent": "#fbbf24",
+    "description": "OpenVibe.Coupons is community-checked coupon discovery: codes matched to stores, validity reported by real people, expirations tracked, and a browser helper on the way.",
+    "pillars": [
+      {
+        "title": "Checked by people",
+        "text": "Codes that worked, codes that didn't, reported honestly."
+      },
+      {
+        "title": "Store matching",
+        "text": "The right codes for the store you are on."
+      },
+      {
+        "title": "Expiry tracking",
+        "text": "Dead codes go away."
+      },
+      {
+        "title": "Browser helper",
+        "text": "Apply codes where you shop — coming with the site."
+      }
+    ],
+    "keywords": "openvibe coupons, coupon codes, community coupons",
+    "launch": "a person to verify a coupons source's terms and switch it on",
+    "relationships": {
+      "plannedRepo": "OpenVibe.Coupons",
+      "meanwhile": [
+        {
+          "label": "Deals",
+          "url": "https://openvibe.deals",
+          "note": "Deal discovery is the sibling of this room."
+        }
+      ]
+    }
   },
   "capabilities": [
     "coupons.coupon.submit",

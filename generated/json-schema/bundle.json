@@ -636,7 +636,7 @@
       }
     },
     "registry.service-manifest": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -758,7 +758,7 @@
               "what",
               "legalProfile"
             ],
-            "description": "How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site.",
+            "description": "How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site. 1.1.0 (plan T11 lane D) adds the optional showcase fields copied from the OpenVibe.Sites catalog (tld, accent, description, pillars, faq, keywords, vision, highlight, launch, relationships; defined in registry.product@1): a site carrying tld is the catalog home of its domain (its publicOrigin host, or host), so that domain has no manifests/products file.",
             "properties": {
               "name": {
                 "type": "string",
@@ -798,6 +798,36 @@
                 "type": "string",
                 "pattern": "^[a-z0-9.-]+$",
                 "description": "Only while the manifest has no publicOrigin."
+              },
+              "tld": {
+                "$ref": "product.v1.json#/$defs/tld"
+              },
+              "accent": {
+                "$ref": "product.v1.json#/$defs/accent"
+              },
+              "description": {
+                "$ref": "product.v1.json#/$defs/description"
+              },
+              "pillars": {
+                "$ref": "product.v1.json#/$defs/pillars"
+              },
+              "faq": {
+                "$ref": "product.v1.json#/$defs/faq"
+              },
+              "keywords": {
+                "$ref": "product.v1.json#/$defs/keywords"
+              },
+              "vision": {
+                "$ref": "product.v1.json#/$defs/vision"
+              },
+              "highlight": {
+                "$ref": "product.v1.json#/$defs/highlight"
+              },
+              "launch": {
+                "$ref": "product.v1.json#/$defs/launch"
+              },
+              "relationships": {
+                "$ref": "product.v1.json#/$defs/relationships"
               }
             }
           },
@@ -1232,6 +1262,293 @@
           },
           "notes": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "registry.product": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/registry/product.v1.json",
+        "title": "Product",
+        "description": "A product domain of the network's catalog (manifests/products/<domain>.json) that has no service manifest presenting it as a site: a planned product, a sub-domain of a service, a brand domain of a multi-domain service, a closed or moved address. Carries what the network's showcase pages need, copied from the OpenVibe.Sites catalog (plan T11 lane D) so Sites can be deleted. A product whose service manifest has a site block carries the same fields there (registry.service-manifest 1.1.0 site); every catalog domain has exactly one of the two homes. The $defs are shared with that site block.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domain",
+          "tld",
+          "name",
+          "icon",
+          "accent",
+          "tagline",
+          "description",
+          "keywords"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)+$",
+            "description": "The product's host, unique across the catalog."
+          },
+          "tld": {
+            "$ref": "#/$defs/tld"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "Full name, e.g. OpenVibe.Food."
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Icon name of the showcase pages (a Font Awesome name such as fa-utensils)."
+          },
+          "accent": {
+            "$ref": "#/$defs/accent"
+          },
+          "tagline": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "description": {
+            "$ref": "#/$defs/description"
+          },
+          "legalProfile": {
+            "enum": [
+              "streaming",
+              "tools",
+              "ugc",
+              "games",
+              "hosting",
+              "account",
+              "info"
+            ],
+            "description": "Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal), as in a service manifest's site."
+          },
+          "kind": {
+            "enum": [
+              "closed",
+              "moved",
+              "status"
+            ],
+            "description": "Absent for a product page. closed: the address was decided against and points elsewhere; moved: the product lives at another address; status: the address shows the network's status. relationships.links say where."
+          },
+          "pillars": {
+            "$ref": "#/$defs/pillars"
+          },
+          "faq": {
+            "$ref": "#/$defs/faq"
+          },
+          "keywords": {
+            "$ref": "#/$defs/keywords"
+          },
+          "vision": {
+            "$ref": "#/$defs/vision"
+          },
+          "highlight": {
+            "$ref": "#/$defs/highlight"
+          },
+          "launch": {
+            "$ref": "#/$defs/launch"
+          },
+          "relationships": {
+            "$ref": "#/$defs/relationships"
+          }
+        },
+        "$defs": {
+          "tld": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "The product's short name used everywhere (frame service names, /shared paths), e.g. food for openvibe.food. Not unique: a moved product keeps it on both addresses."
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-f]{6}$",
+            "description": "Brand colour, lower-case hex."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "description": "The catalog's description, verbatim."
+          },
+          "keywords": {
+            "type": "string",
+            "maxLength": 400,
+            "description": "Comma-separated search keywords, verbatim."
+          },
+          "launch": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "What a person still has to do or decide before the product launches. Absent once nothing blocks it."
+          },
+          "text": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "text"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          "pillars": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/text"
+            },
+            "maxItems": 8,
+            "description": "Feature pillars, in display order."
+          },
+          "faq": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "question",
+                "answer"
+              ],
+              "properties": {
+                "question": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "answer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1000
+                }
+              }
+            }
+          },
+          "link": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "url"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              "note": {
+                "type": "string",
+                "maxLength": 300
+              }
+            }
+          },
+          "highlight": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "text"
+            ],
+            "description": "A featured block on the product page.",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 600
+              },
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "maxItems": 10
+              },
+              "cta": {
+                "$ref": "#/$defs/link"
+              },
+              "more": {
+                "$ref": "#/$defs/link"
+              }
+            }
+          },
+          "vision": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "The product page's vision section (badge, call to action, design preview, steps, choices, features, connections), kept verbatim from the catalog: a presentation payload the showcase renders as it is, not a domain contract."
+          },
+          "relationships": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "How the product relates to services, repositories and other pages.",
+            "properties": {
+              "service": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$",
+                "description": "The service manifest (manifests/services/<id>.json) that serves or will serve this product, when one exists."
+              },
+              "plannedRepo": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9.-]+$",
+                "description": "The repository planned or used for the product (under github.com/OpenVibers)."
+              },
+              "noRepo": {
+                "const": true,
+                "description": "No repository exists for the product yet."
+              },
+              "linksLead": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "The sentence introducing links."
+              },
+              "links": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/link"
+                },
+                "maxItems": 10,
+                "description": "Where to go instead (a closed, moved or status address)."
+              },
+              "meanwhile": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/link"
+                },
+                "maxItems": 10,
+                "description": "What already works elsewhere on the network while the product is not launched."
+              },
+              "statusApi": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "description": "The status API a status page reads."
+              }
+            }
           }
         }
       }

@@ -1,0 +1,50 @@
+{
+  "domain": "api.openvibe.network",
+  "tld": "api",
+  "name": "api.openvibe.network",
+  "icon": "fa-plug",
+  "accent": "#22d3ee",
+  "tagline": "The network, machine-readable.",
+  "legalProfile": "info",
+  "description": "api.openvibe.network is the planned home of the network's public APIs. The ecosystem registry (services, capabilities, event topics, namespaces and releases, backed by the OpenVibe contracts) already answers on openvibe.network; this subdomain is not routed to it yet.",
+  "pillars": [
+    {
+      "title": "Service registry",
+      "text": "Every service, its domains, health and maturity, in one catalog."
+    },
+    {
+      "title": "Capabilities",
+      "text": "Action-level permissions apps and mods can request and be granted."
+    },
+    {
+      "title": "Event topics",
+      "text": "Durable event families and their schemas."
+    },
+    {
+      "title": "Releases",
+      "text": "Release manifests and compatibility ranges per service."
+    }
+  ],
+  "keywords": "openvibe api, openvibe network api, openvibe platform",
+  "relationships": {
+    "service": "network",
+    "plannedRepo": "OpenVibe.Network",
+    "meanwhile": [
+      {
+        "label": "Registry API",
+        "url": "https://openvibe.network/api/v1/registry",
+        "note": "Services, capabilities, namespaces, event topics and releases, as JSON."
+      },
+      {
+        "label": "Service discovery",
+        "url": "https://openvibe.network/.well-known/openvibe",
+        "note": "The issuer, token and key endpoints, and where each service answers."
+      },
+      {
+        "label": "Developer portal",
+        "url": "https://openvibe.codes",
+        "note": "Projects, apps and credentials, contract and SDK docs on OpenVibe.Codes."
+      }
+    ]
+  }
+}

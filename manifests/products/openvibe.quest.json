@@ -1,0 +1,39 @@
+{
+  "domain": "openvibe.quest",
+  "tld": "quest",
+  "name": "OpenVibe.Quest",
+  "icon": "fa-map",
+  "accent": "#fbbf24",
+  "tagline": "Quests across the whole network.",
+  "description": "OpenVibe.Quest will be the network's shared quest and rewards system: quests that span every OpenVibe site, from a streamer's getting-started steps on OpenVibe.Live to community challenges, cosmetics and OpenCoins, moddable and open to anyone through the API.",
+  "pillars": [
+    {
+      "title": "Quests everywhere",
+      "text": "One quest log across every OpenVibe site."
+    },
+    {
+      "title": "Rewards",
+      "text": "Cosmetics, badges and OpenCoins."
+    },
+    {
+      "title": "Make your own",
+      "text": "Streamers, modders and developers create quests for their communities."
+    },
+    {
+      "title": "Built for games",
+      "text": "The quest layer for OpenVibe.Games and its creators."
+    }
+  ],
+  "keywords": "openvibe quest, quests, achievements, rewards, gamification, streamer quests",
+  "launch": "the shared quest service",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Live",
+        "url": "https://openvibe.live",
+        "note": "Streamers' getting-started steps are on OpenVibe.Live today."
+      }
+    ]
+  }
+}
