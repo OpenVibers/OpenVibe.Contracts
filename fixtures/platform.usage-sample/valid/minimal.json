@@ -1,0 +1,10 @@
+{
+  "id": "use-3",
+  "idempotency_key": "media:delivery:3",
+  "service": "media",
+  "operation": "deliver",
+  "quantity": 0.25,
+  "unit": "GiB",
+  "at": "2026-09-30T10:05:00Z",
+  "source": "media.egress"
+}
