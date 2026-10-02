@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/job-frame.v1.json",
+  "title": "JobFrame",
+  "description": "platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe.Node's WebSocket to OpenVibe.Bot (Node docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.",
+  "$comment": "Additive: new frame types and optional fields may extend this v1 contract; a receiver ignores frame types it does not know.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Server to device: run this job (platform.job@1). Resent until acked; the job id makes a resend harmless.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "job"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job" },
+        "job": { "$ref": "job.v1.json" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Server to device: stop this job. A running job's process group is killed and `job_exit` says `cancelled`; a job not yet started never starts; an ended or unknown id is ignored (the ended job's `job_exit` is resent if not yet acked).",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_cancel" },
+        "id": { "$ref": "#/$defs/job_id" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Server to device: every usage reading of this job is recorded (written or replayed by Billing), so the worker may forget it and stops resending its `job_exit`.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_exit_ack" },
+        "id": { "$ref": "#/$defs/job_id" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Device to server: the job's process started. `started_ms` anchors every usage second of the job and never changes.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "started_ms"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_started" },
+        "id": { "$ref": "#/$defs/job_id" },
+        "started_ms": { "$ref": "#/$defs/started_ms" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Device to server: a chunk of the job's stdout, best effort (a chunk lost with the link is not resent; a receiver drops a `chunk_seq` it already has). Never metered.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "chunk_seq",
+        "chunk"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_stdout" },
+        "id": { "$ref": "#/$defs/job_id" },
+        "chunk_seq": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The job's own chunk counter from 1, across reconnects (the envelope `seq` is the connection's)"
+        },
+        "chunk": {
+          "type": "string",
+          "maxLength": 65536,
+          "description": "UTF-8 text"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Device to server: wall-clock second `second` of the job has fully elapsed. Metering (platform.usage-sample@1, written through billing.usage.record by whoever terminates the link: OpenVibe.Bot now, Fabric later): second n is [started_ms + n*1000, started_ms + (n+1)*1000) on the worker's monotonic clock. A worker sends `job_usage` for n only once that second has fully elapsed, so every `job_usage` stands for quantity 1; the partial last second is never sent here, only in `job_exit`. Each second is exactly one reading: `id` and `idempotency_key` `run:<job id>:<n>`, `service` `run`, `operation` `function.invoke`, `unit` `s`, `quantity` 1 (the partial last second: (wall_ms mod 1000)/1000, never 0), `at` new Date(started_ms + n*1000).toISOString(), `resource` the job id, `node` the worker's device id, `source` `openvibe-node.worker`, and `project`, `subject` and `provider` from the dispatcher's own record of the job. No field depends on when or how often a frame was sent, and no rating fields (`cost_estimate`, `free_allowance_used`, `vibes_charged`) are set, because Billing keeps the first reading under a key, replays an identical one and refuses a different one (409): a resend after a reconnect, a `job_usage` and the `job_exit` backfill of the same second, and two writers of one job all land on one record.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "started_ms",
+        "second"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_usage" },
+        "id": { "$ref": "#/$defs/job_id" },
+        "started_ms": { "$ref": "#/$defs/started_ms" },
+        "second": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "n, counted from 0 at `started_ms`"
+        },
+        "cpu_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "CPU time used in this second; informational, never billed"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Device to server: the job ended (only after an `ack`). Its `usage` is authoritative for metering: from it the writer writes (or replays) seconds 0 to floor(wall_ms/1000) - 1 with quantity 1 and, when wall_ms mod 1000 > 0, the partial last second, so a lost `job_usage` is backfilled and none is billed twice. Every reason is billed for the seconds the process held. The worker resends the same `job_exit` after every reconnect until `job_exit_ack`. wall_ms comes from the monotonic clock `job_usage` uses, so it is at least (n+1)*1000 for every second n already sent.",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "reason",
+        "code",
+        "result",
+        "usage"
+      ],
+      "properties": {
+        "v": { "$ref": "#/$defs/v" },
+        "seq": { "$ref": "#/$defs/seq" },
+        "ts": { "$ref": "#/$defs/ts" },
+        "type": { "const": "job_exit" },
+        "id": { "$ref": "#/$defs/job_id" },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "exited",
+            "cancelled",
+            "ttl",
+            "limit",
+            "stopped",
+            "failed"
+          ],
+          "description": "exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or e-stop; failed: the worker could not run it (spawn error, missing artifact)"
+        },
+        "code": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The process's exit status; null when it was killed or never ran"
+        },
+        "result": {
+          "description": "The artifact's declared output (any JSON); null unless reason is `exited` with code 0"
+        },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "wall_ms"
+          ],
+          "properties": {
+            "started_ms": { "$ref": "#/$defs/started_ms" },
+            "wall_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Running time from `started_ms` to the process's end, monotonic clock; 0 when it never started"
+            },
+            "cpu_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Informational, never billed"
+            },
+            "mem_peak_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Informational, never billed"
+            }
+          },
+          "if": {
+            "properties": {
+              "wall_ms": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "started_ms"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "v": {
+      "const": 1
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "platform.job@1 `id`"
+    },
+    "started_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "When the job's process started, worker's wall clock, Unix ms"
+    }
+  },
+  "examples": [
+    {
+      "v": 1,
+      "seq": 7,
+      "ts": 1790935200000,
+      "type": "job",
+      "job": {
+        "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "class": "function",
+        "artifact": {
+          "name": "thumbnail",
+          "version": "1.2.0"
+        },
+        "args": {
+          "width": 320
+        },
+        "ttl_ms": 60000,
+        "limits": {
+          "wall_ms": 30000,
+          "cpu_ms": 30000,
+          "mem_bytes": 268435456
+        }
+      }
+    },
+    {
+      "v": 1,
+      "seq": 12,
+      "ts": 1790935201250,
+      "type": "job_usage",
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "started_ms": 1790935200250,
+      "second": 0,
+      "cpu_ms": 640
+    },
+    {
+      "v": 1,
+      "seq": 15,
+      "ts": 1790935202600,
+      "type": "job_exit",
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "reason": "exited",
+      "code": 0,
+      "result": {
+        "url": "media:object-7"
+      },
+      "usage": {
+        "started_ms": 1790935200250,
+        "wall_ms": 2350,
+        "cpu_ms": 1800,
+        "mem_peak_bytes": 41943040
+      }
+    }
+  ]
+}

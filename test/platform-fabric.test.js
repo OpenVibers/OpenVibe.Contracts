@@ -4,7 +4,7 @@ const contracts = require('..');
 
 const names = [
     'usage-sample', 'telemetry-sample', 'node-capabilities', 'service-instance',
-    'runtime-offer', 'storage-offer', 'delivery-offer', 'agent-offer', 'harness-offer',
+    'runtime-offer', 'storage-offer', 'delivery-offer', 'agent-offer', 'harness-offer', 'job',
 ];
 
 let checks = 0;

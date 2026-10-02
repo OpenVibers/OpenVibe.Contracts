@@ -51082,7 +51082,7 @@ export interface CapacitySnapshot {
 
 /** platform.usage-sample@1.0.0 (owner: network) */
 /**
- * One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`.
+ * One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`. A running platform.job@1 `function` job is one reading per wall-clock second (service `run`, operation `function.invoke`, unit `s`, idempotency_key `run:<job id>:<second>`), derived as platform.job-frame@1 `job_usage` describes.
  */
 export interface UsageSample {
   id: string;
@@ -51405,6 +51405,194 @@ export interface HarnessOffer {
     max_context_tokens?: number;
   };
 }
+
+/** platform.runtime-class@1.0.0 (owner: network) */
+/**
+ * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names.
+ */
+export type RuntimeClass = ("function" | "code" | "browser" | "linux" | "desktop" | "gpu") & string;
+
+/** platform.job@1.0.0 (owner: network) */
+/**
+ * platform.job@1: one unit of work a dispatcher (OpenVibe.Bot now, Fabric later) hands to an execution worker (plan T14 Run; ADR-034 proposed). It rides the device control link inside a `job` frame (platform.job-frame@1). The worker answers it with `ack` (accepted) or `nack` (refused: an unknown or unimplemented class, a missing artifact, limits it cannot honor, the local kill switch), then runs it at most once. Metering: a running `function` job is billed by wall-clock second as platform.usage-sample@1 readings; platform.job-frame@1 `job_usage` gives the mapping.
+ */
+export type Job = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`).
+   */
+  id: string;
+  class: RuntimeClass;
+  /**
+   * The pre-registered artifact to run; required for class `function`.
+   */
+  artifact?: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  };
+  /**
+   * The artifact's declared input as JSON; the whole `job` frame stays within the link's 1 MiB frame limit.
+   */
+  args: {};
+  /**
+   * Lifetime from the worker's receipt of the job, covering any wait and the run; the worker caps it with its own local maximum (the stricter wins, as with `max_command_ms`). When it runs out, a job not yet started never starts and a running one is killed; either way `job_exit` says `ttl`.
+   */
+  ttl_ms: number;
+  /**
+   * Caps the worker enforces on the running process (merged stricter with its local caps); exceeding one kills the job and `job_exit` says `limit`.
+   */
+  limits: {
+    /**
+     * Running time from `job_started`
+     */
+    wall_ms: number;
+    /**
+     * CPU time, user plus system
+     */
+    cpu_ms: number;
+    /**
+     * Peak resident memory
+     */
+    mem_bytes: number;
+  };
+  /**
+   * Network policy; absent means `deny` (no network at all). Further policies are added to v1 additively, and a worker refuses (`nack`) a policy it does not know.
+   */
+  net?: "deny";
+};
+
+/** platform.job-frame@1.0.0 (owner: network) */
+/**
+ * platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe.Node's WebSocket to OpenVibe.Bot (Node docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.
+ */
+export type JobFrame =
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job";
+      job: Job;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_cancel";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_exit_ack";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_started";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+      /**
+       * When the job's process started, worker's wall clock, Unix ms
+       */
+      started_ms: number;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_stdout";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+      /**
+       * The job's own chunk counter from 1, across reconnects (the envelope `seq` is the connection's)
+       */
+      chunk_seq: number;
+      /**
+       * UTF-8 text
+       */
+      chunk: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_usage";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+      /**
+       * When the job's process started, worker's wall clock, Unix ms
+       */
+      started_ms: number;
+      /**
+       * n, counted from 0 at `started_ms`
+       */
+      second: number;
+      /**
+       * CPU time used in this second; informational, never billed
+       */
+      cpu_ms?: number;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "job_exit";
+      /**
+       * platform.job@1 `id`
+       */
+      id: string;
+      /**
+       * exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or e-stop; failed: the worker could not run it (spawn error, missing artifact)
+       */
+      reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
+      /**
+       * The process's exit status; null when it was killed or never ran
+       */
+      code: number | null;
+      /**
+       * The artifact's declared output (any JSON); null unless reason is `exited` with code 0
+       */
+      result: {
+        [k: string]: unknown | undefined;
+      };
+      usage: {
+        /**
+         * When the job's process started, worker's wall clock, Unix ms
+         */
+        started_ms?: number;
+        /**
+         * Running time from `started_ms` to the process's end, monotonic clock; 0 when it never started
+         */
+        wall_ms: number;
+        /**
+         * Informational, never billed
+         */
+        cpu_ms?: number;
+        /**
+         * Informational, never billed
+         */
+        mem_peak_bytes?: number;
+      };
+    };
 
 /** events.delivery-policy@1.0.0 (owner: events) */
 /**

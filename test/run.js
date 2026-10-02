@@ -871,6 +871,7 @@ sub(path.join(__dirname, 'product-catalog.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));
+sub(path.join(__dirname, 'platform-run.test.js'));
 sub(path.join(ROOT, 'scripts/generate.js'), '--check');
 sub(path.join(ROOT, 'scripts/compat.js'));
 {

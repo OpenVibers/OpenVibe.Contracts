@@ -1,0 +1,14 @@
+{
+  "id": "run:job_01JAB2C3D4E5F6G7H8J9K0MNPQ:0",
+  "idempotency_key": "run:job_01JAB2C3D4E5F6G7H8J9K0MNPQ:0",
+  "service": "run",
+  "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "resource": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "node": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+  "operation": "function.invoke",
+  "quantity": 1,
+  "unit": "s",
+  "at": "2026-10-02T10:00:00.250Z",
+  "source": "openvibe-node.worker"
+}

@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/job.v1.json",
+  "title": "Job",
+  "description": "platform.job@1: one unit of work a dispatcher (OpenVibe.Bot now, Fabric later) hands to an execution worker (plan T14 Run; ADR-034 proposed). It rides the device control link inside a `job` frame (platform.job-frame@1). The worker answers it with `ack` (accepted) or `nack` (refused: an unknown or unimplemented class, a missing artifact, limits it cannot honor, the local kill switch), then runs it at most once. Metering: a running `function` job is billed by wall-clock second as platform.usage-sample@1 readings; platform.job-frame@1 `job_usage` gives the mapping.",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "class",
+    "args",
+    "ttl_ms",
+    "limits"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
+    },
+    "class": {
+      "$ref": "runtime-class.v1.json"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The pre-registered artifact to run; required for class `function`.",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]{0,63}$",
+          "description": "One exact version, never a range"
+        }
+      }
+    },
+    "args": {
+      "type": "object",
+      "description": "The artifact's declared input as JSON; the whole `job` frame stays within the link's 1 MiB frame limit."
+    },
+    "ttl_ms": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Lifetime from the worker's receipt of the job, covering any wait and the run; the worker caps it with its own local maximum (the stricter wins, as with `max_command_ms`). When it runs out, a job not yet started never starts and a running one is killed; either way `job_exit` says `ttl`."
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Caps the worker enforces on the running process (merged stricter with its local caps); exceeding one kills the job and `job_exit` says `limit`.",
+      "required": [
+        "wall_ms",
+        "cpu_ms",
+        "mem_bytes"
+      ],
+      "properties": {
+        "wall_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Running time from `job_started`"
+        },
+        "cpu_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "CPU time, user plus system"
+        },
+        "mem_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Peak resident memory"
+        }
+      }
+    },
+    "net": {
+      "type": "string",
+      "enum": [
+        "deny"
+      ],
+      "default": "deny",
+      "description": "Network policy; absent means `deny` (no network at all). Further policies are added to v1 additively, and a worker refuses (`nack`) a policy it does not know."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "class"
+        ],
+        "properties": {
+          "class": {
+            "const": "function"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "artifact"
+        ]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "class": "function",
+      "artifact": {
+        "name": "thumbnail",
+        "version": "1.2.0"
+      },
+      "args": {
+        "width": 320
+      },
+      "ttl_ms": 60000,
+      "limits": {
+        "wall_ms": 30000,
+        "cpu_ms": 30000,
+        "mem_bytes": 268435456
+      },
+      "net": "deny"
+    }
+  ]
+}
