@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "seq": 15,
+  "ts": 1790935202600,
+  "type": "job_exit",
+  "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "reason": "oom",
+  "code": null,
+  "result": null,
+  "usage": {
+    "started_ms": 1790935200250,
+    "wall_ms": 2350
+  }
+}

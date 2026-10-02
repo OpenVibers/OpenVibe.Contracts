@@ -3618,7 +3618,7 @@
    },
    "platform.usage-sample.v1": {
     "title": "UsageSample",
-    "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`.",
+    "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`. A running platform.job@1 `function` job is one reading per wall-clock second (service `run`, operation `function.invoke`, unit `s`, idempotency_key `run:<job id>:<second>`), derived as platform.job-frame@1 `job_usage` describes.",
     "$comment": "Additive optional fields may extend this v1 contract.",
     "type": "object",
     "additionalProperties": false,
@@ -3745,6 +3745,20 @@
       "vibes_charged": 4,
       "route_epoch": 3,
       "trace_id": "tr-42"
+     },
+     {
+      "id": "run:job_01JAB2C3D4E5F6G7H8J9K0MNPQ:0",
+      "idempotency_key": "run:job_01JAB2C3D4E5F6G7H8J9K0MNPQ:0",
+      "service": "run",
+      "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "resource": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "node": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+      "operation": "function.invoke",
+      "quantity": 1,
+      "unit": "s",
+      "at": "2026-10-02T10:00:00.250Z",
+      "source": "openvibe-node.worker"
      }
     ]
    }

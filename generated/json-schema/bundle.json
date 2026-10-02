@@ -58889,7 +58889,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/platform/usage-sample.v1.json",
         "title": "UsageSample",
-        "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`.",
+        "description": "One metered usage reading with retry-safe attribution (T1 Universal Fabric; ADR-034 proposed). Consumers dedupe on `idempotency_key`. A running platform.job@1 `function` job is one reading per wall-clock second (service `run`, operation `function.invoke`, unit `s`, idempotency_key `run:<job id>:<second>`), derived as platform.job-frame@1 `job_usage` describes.",
         "$comment": "Additive optional fields may extend this v1 contract.",
         "type": "object",
         "additionalProperties": false,
@@ -59016,6 +59016,20 @@
             "vibes_charged": 4,
             "route_epoch": 3,
             "trace_id": "tr-42"
+          },
+          {
+            "id": "run:job_01JAB2C3D4E5F6G7H8J9K0MNPQ:0",
+            "idempotency_key": "run:job_01JAB2C3D4E5F6G7H8J9K0MNPQ:0",
+            "service": "run",
+            "project": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "resource": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "node": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+            "operation": "function.invoke",
+            "quantity": 1,
+            "unit": "s",
+            "at": "2026-10-02T10:00:00.250Z",
+            "source": "openvibe-node.worker"
           }
         ]
       }
@@ -60074,6 +60088,573 @@
               "max_duration_seconds": 7200,
               "max_concurrent_runs": 4,
               "max_context_tokens": 128000
+            }
+          }
+        ]
+      }
+    },
+    "platform.runtime-class": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/runtime-class.v1.json",
+        "title": "RuntimeClass",
+        "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names.",
+        "$comment": "Additive: a class may be added to v1; none is removed, renamed or reordered.",
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "function",
+            "description": "A pre-registered artifact (name and exact version) run once with declared args to one result: single-shot, no persistent filesystem, no dependency resolution, network denied."
+          },
+          {
+            "const": "code",
+            "description": "Arbitrary source with its dependency tree in a longer-lived environment; needs image handling and isolation stronger than a container."
+          },
+          {
+            "const": "browser",
+            "description": "A headless or headed web browser session driven remotely."
+          },
+          {
+            "const": "linux",
+            "description": "A full Linux environment (shell, filesystem, processes) that lives across commands."
+          },
+          {
+            "const": "desktop",
+            "description": "A graphical desktop session with screen and input under control levels."
+          },
+          {
+            "const": "gpu",
+            "description": "A workload that holds one or more GPUs for its lifetime."
+          }
+        ],
+        "examples": [
+          "function",
+          "gpu"
+        ]
+      }
+    },
+    "platform.job": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/job.v1.json",
+        "title": "Job",
+        "description": "platform.job@1: one unit of work a dispatcher (OpenVibe.Bot now, Fabric later) hands to an execution worker (plan T14 Run; ADR-034 proposed). It rides the device control link inside a `job` frame (platform.job-frame@1). The worker answers it with `ack` (accepted) or `nack` (refused: an unknown or unimplemented class, a missing artifact, limits it cannot honor, the local kill switch), then runs it at most once. Metering: a running `function` job is billed by wall-clock second as platform.usage-sample@1 readings; platform.job-frame@1 `job_usage` gives the mapping.",
+        "$comment": "Additive optional fields may extend this v1 contract.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "class",
+          "args",
+          "ttl_ms",
+          "limits"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
+          },
+          "class": {
+            "$ref": "runtime-class.v1.json"
+          },
+          "artifact": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The pre-registered artifact to run; required for class `function`.",
+            "required": [
+              "name",
+              "version"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]{0,63}$",
+                "description": "One exact version, never a range"
+              }
+            }
+          },
+          "args": {
+            "type": "object",
+            "description": "The artifact's declared input as JSON; the whole `job` frame stays within the link's 1 MiB frame limit."
+          },
+          "ttl_ms": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Lifetime from the worker's receipt of the job, covering any wait and the run; the worker caps it with its own local maximum (the stricter wins, as with `max_command_ms`). When it runs out, a job not yet started never starts and a running one is killed; either way `job_exit` says `ttl`."
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Caps the worker enforces on the running process (merged stricter with its local caps); exceeding one kills the job and `job_exit` says `limit`.",
+            "required": [
+              "wall_ms",
+              "cpu_ms",
+              "mem_bytes"
+            ],
+            "properties": {
+              "wall_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Running time from `job_started`"
+              },
+              "cpu_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "CPU time, user plus system"
+              },
+              "mem_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Peak resident memory"
+              }
+            }
+          },
+          "net": {
+            "type": "string",
+            "enum": [
+              "deny"
+            ],
+            "default": "deny",
+            "description": "Network policy; absent means `deny` (no network at all). Further policies are added to v1 additively, and a worker refuses (`nack`) a policy it does not know."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "class"
+              ],
+              "properties": {
+                "class": {
+                  "const": "function"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "artifact"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "class": "function",
+            "artifact": {
+              "name": "thumbnail",
+              "version": "1.2.0"
+            },
+            "args": {
+              "width": 320
+            },
+            "ttl_ms": 60000,
+            "limits": {
+              "wall_ms": 30000,
+              "cpu_ms": 30000,
+              "mem_bytes": 268435456
+            },
+            "net": "deny"
+          }
+        ]
+      }
+    },
+    "platform.job-frame": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/job-frame.v1.json",
+        "title": "JobFrame",
+        "description": "platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe.Node's WebSocket to OpenVibe.Bot (Node docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.",
+        "$comment": "Additive: new frame types and optional fields may extend this v1 contract; a receiver ignores frame types it does not know.",
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Server to device: run this job (platform.job@1). Resent until acked; the job id makes a resend harmless.",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "job"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job"
+              },
+              "job": {
+                "$ref": "job.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Server to device: stop this job. A running job's process group is killed and `job_exit` says `cancelled`; a job not yet started never starts; an ended or unknown id is ignored (the ended job's `job_exit` is resent if not yet acked).",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "id"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job_cancel"
+              },
+              "id": {
+                "$ref": "#/$defs/job_id"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Server to device: every usage reading of this job is recorded (written or replayed by Billing), so the worker may forget it and stops resending its `job_exit`.",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "id"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job_exit_ack"
+              },
+              "id": {
+                "$ref": "#/$defs/job_id"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Device to server: the job's process started. `started_ms` anchors every usage second of the job and never changes.",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "id",
+              "started_ms"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job_started"
+              },
+              "id": {
+                "$ref": "#/$defs/job_id"
+              },
+              "started_ms": {
+                "$ref": "#/$defs/started_ms"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Device to server: a chunk of the job's stdout, best effort (a chunk lost with the link is not resent; a receiver drops a `chunk_seq` it already has). Never metered.",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "id",
+              "chunk_seq",
+              "chunk"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job_stdout"
+              },
+              "id": {
+                "$ref": "#/$defs/job_id"
+              },
+              "chunk_seq": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The job's own chunk counter from 1, across reconnects (the envelope `seq` is the connection's)"
+              },
+              "chunk": {
+                "type": "string",
+                "maxLength": 65536,
+                "description": "UTF-8 text"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Device to server: wall-clock second `second` of the job has fully elapsed. Metering (platform.usage-sample@1, written through billing.usage.record by whoever terminates the link: OpenVibe.Bot now, Fabric later): second n is [started_ms + n*1000, started_ms + (n+1)*1000) on the worker's monotonic clock. A worker sends `job_usage` for n only once that second has fully elapsed, so every `job_usage` stands for quantity 1; the partial last second is never sent here, only in `job_exit`. Each second is exactly one reading: `id` and `idempotency_key` `run:<job id>:<n>`, `service` `run`, `operation` `function.invoke`, `unit` `s`, `quantity` 1 (the partial last second: (wall_ms mod 1000)/1000, never 0), `at` new Date(started_ms + n*1000).toISOString(), `resource` the job id, `node` the worker's device id, `source` `openvibe-node.worker`, and `project`, `subject` and `provider` from the dispatcher's own record of the job. No field depends on when or how often a frame was sent, and no rating fields (`cost_estimate`, `free_allowance_used`, `vibes_charged`) are set, because Billing keeps the first reading under a key, replays an identical one and refuses a different one (409): a resend after a reconnect, a `job_usage` and the `job_exit` backfill of the same second, and two writers of one job all land on one record.",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "id",
+              "started_ms",
+              "second"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job_usage"
+              },
+              "id": {
+                "$ref": "#/$defs/job_id"
+              },
+              "started_ms": {
+                "$ref": "#/$defs/started_ms"
+              },
+              "second": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "n, counted from 0 at `started_ms`"
+              },
+              "cpu_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "CPU time used in this second; informational, never billed"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Device to server: the job ended (only after an `ack`). Its `usage` is authoritative for metering: from it the writer writes (or replays) seconds 0 to floor(wall_ms/1000) - 1 with quantity 1 and, when wall_ms mod 1000 > 0, the partial last second, so a lost `job_usage` is backfilled and none is billed twice. Every reason is billed for the seconds the process held. The worker resends the same `job_exit` after every reconnect until `job_exit_ack`. wall_ms comes from the monotonic clock `job_usage` uses, so it is at least (n+1)*1000 for every second n already sent.",
+            "required": [
+              "v",
+              "seq",
+              "ts",
+              "type",
+              "id",
+              "reason",
+              "code",
+              "result",
+              "usage"
+            ],
+            "properties": {
+              "v": {
+                "$ref": "#/$defs/v"
+              },
+              "seq": {
+                "$ref": "#/$defs/seq"
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "type": {
+                "const": "job_exit"
+              },
+              "id": {
+                "$ref": "#/$defs/job_id"
+              },
+              "reason": {
+                "type": "string",
+                "enum": [
+                  "exited",
+                  "cancelled",
+                  "ttl",
+                  "limit",
+                  "stopped",
+                  "failed"
+                ],
+                "description": "exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or e-stop; failed: the worker could not run it (spawn error, missing artifact)"
+              },
+              "code": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "The process's exit status; null when it was killed or never ran"
+              },
+              "result": {
+                "description": "The artifact's declared output (any JSON); null unless reason is `exited` with code 0"
+              },
+              "usage": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "wall_ms"
+                ],
+                "properties": {
+                  "started_ms": {
+                    "$ref": "#/$defs/started_ms"
+                  },
+                  "wall_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Running time from `started_ms` to the process's end, monotonic clock; 0 when it never started"
+                  },
+                  "cpu_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Informational, never billed"
+                  },
+                  "mem_peak_bytes": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Informational, never billed"
+                  }
+                },
+                "if": {
+                  "properties": {
+                    "wall_ms": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "started_ms"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "v": {
+            "const": 1
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "ts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "platform.job@1 `id`"
+          },
+          "started_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "When the job's process started, worker's wall clock, Unix ms"
+          }
+        },
+        "examples": [
+          {
+            "v": 1,
+            "seq": 7,
+            "ts": 1790935200000,
+            "type": "job",
+            "job": {
+              "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+              "class": "function",
+              "artifact": {
+                "name": "thumbnail",
+                "version": "1.2.0"
+              },
+              "args": {
+                "width": 320
+              },
+              "ttl_ms": 60000,
+              "limits": {
+                "wall_ms": 30000,
+                "cpu_ms": 30000,
+                "mem_bytes": 268435456
+              }
+            }
+          },
+          {
+            "v": 1,
+            "seq": 12,
+            "ts": 1790935201250,
+            "type": "job_usage",
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "started_ms": 1790935200250,
+            "second": 0,
+            "cpu_ms": 640
+          },
+          {
+            "v": 1,
+            "seq": 15,
+            "ts": 1790935202600,
+            "type": "job_exit",
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "reason": "exited",
+            "code": 0,
+            "result": {
+              "url": "media:object-7"
+            },
+            "usage": {
+              "started_ms": 1790935200250,
+              "wall_ms": 2350,
+              "cpu_ms": 1800,
+              "mem_peak_bytes": 41943040
             }
           }
         ]

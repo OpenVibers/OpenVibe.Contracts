@@ -4,6 +4,24 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased
+
+**Run jobs and their metering** (plan T14 lane G, follow-up 1 of the Node gap audit):
+- New `platform.runtime-class@1`: the classes `function`, `code`, `browser`, `linux`, `desktop` and `gpu`, names
+  only; `function` is the first one implemented.
+- New `platform.job@1`: `id` (`job_<ULID>`, the idempotency and ack key), `class`, `artifact` {`name`, `version`}
+  (required for `function`), `args`, `ttl_ms`, `limits` {`wall_ms`, `cpu_ms`, `mem_bytes`} and `net` (only `deny`,
+  the default).
+- New `platform.job-frame@1`: the job frames on the device control link, in its `v`/`seq`/`ts` envelope. Server to
+  device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout` (`chunk_seq`, because
+  `seq` is the envelope's), `job_usage`, `job_exit` (`reason`, `code`, `result`, `usage`).
+- Metering, documented in `job_usage` and `job_exit`: one `platform.usage-sample@1` reading per wall-clock second,
+  `run:<job id>:<second>`, service `run`, operation `function.invoke`, unit `s`, quantity 1, or the fraction for the
+  partial last second, which only `job_exit` reports. Every field comes from the job and the second, so resends and
+  the `job_exit` backfill replay in Billing instead of being billed twice. The link's terminator (Bot now) writes the
+  readings. `usage-sample` gains a description sentence, a `function` example and two fixtures; no field changed.
+- `test/platform-run.test.js` checks the derivation. Additive.
+
 ## 0.85.0 — 2026-10-02
 
 **Billing records usage readings** (plan T5 lane F): the capability `billing.usage.record` (active, internal,

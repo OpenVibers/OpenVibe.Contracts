@@ -5409,6 +5409,36 @@
       "adr": "ADR-034"
     },
     {
+      "id": "platform.runtime-class",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/runtime-class.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.job",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/job.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "platform.job-frame",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/job-frame.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
       "id": "events.delivery-policy",
       "version": "1.0.0",
       "owner": "events",

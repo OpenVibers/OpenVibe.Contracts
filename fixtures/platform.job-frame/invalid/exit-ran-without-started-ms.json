@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 15,
+  "ts": 1790935202600,
+  "type": "job_exit",
+  "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "reason": "exited",
+  "code": 0,
+  "result": null,
+  "usage": {
+    "wall_ms": 2350
+  }
+}

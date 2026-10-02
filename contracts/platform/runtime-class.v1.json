@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/runtime-class.v1.json",
+  "title": "RuntimeClass",
+  "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names.",
+  "$comment": "Additive: a class may be added to v1; none is removed, renamed or reordered.",
+  "type": "string",
+  "oneOf": [
+    {
+      "const": "function",
+      "description": "A pre-registered artifact (name and exact version) run once with declared args to one result: single-shot, no persistent filesystem, no dependency resolution, network denied."
+    },
+    {
+      "const": "code",
+      "description": "Arbitrary source with its dependency tree in a longer-lived environment; needs image handling and isolation stronger than a container."
+    },
+    {
+      "const": "browser",
+      "description": "A headless or headed web browser session driven remotely."
+    },
+    {
+      "const": "linux",
+      "description": "A full Linux environment (shell, filesystem, processes) that lives across commands."
+    },
+    {
+      "const": "desktop",
+      "description": "A graphical desktop session with screen and input under control levels."
+    },
+    {
+      "const": "gpu",
+      "description": "A workload that holds one or more GPUs for its lifetime."
+    }
+  ],
+  "examples": [
+    "function",
+    "gpu"
+  ]
+}
