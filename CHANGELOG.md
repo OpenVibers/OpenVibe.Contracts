@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.85.0 — 2026-10-02
+
+**Billing records usage readings** (plan T5 lane F): the capability `billing.usage.record` (active, internal,
+`billing:usage`, resource constraint `none`, quota class `ledger-write`), released from OpenVibe.Billing's proposal and
+listed by `manifests/services/billing.json`. `POST /api/v1/usage` takes one `platform.usage-sample@1` reading (its
+`inputSchema`) and stores it without moving money; the reading's `idempotency_key` deduplicates retries (same reading:
+200 with the stored row; a different one under the same key: 409 `billing.usage_key_reused`). Listing all readings
+(`GET /api/v1/usage`) stays under `billing.ledger.admin`. New `billing.usage-record-result@1` (its `outputSchema`):
+`{ record }` with the stored row's `id`, `idempotency_key`, `project`, `subject`, `service`, `at`, `received_at`,
+`principal` and the `reading` itself; fixtures `recorded` (valid) and `reading-without-idempotency-key` (invalid).
+Network grants for the usage producers follow this release. Additive.
+
 ## 0.84.0 — 2026-10-02
 
 Add nine public `platform.*@1` schemas: usage and telemetry samples; node capabilities and

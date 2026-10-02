@@ -23575,6 +23575,74 @@
         }
       }
     },
+    "billing.usage-record-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/usage-record-result.v1.json",
+        "title": "BillingUsageRecordResult",
+        "description": "billing.usage-record-result@1: answer of billing.usage.record on OpenVibe.Billing. POST /api/v1/usage → { record } (201 when stored; 200 with `Idempotent-Replayed: true` when the same reading was already stored under its idempotency_key). Storing a reading charges nothing.",
+        "type": "object",
+        "required": [
+          "record"
+        ],
+        "properties": {
+          "record": {
+            "type": "object",
+            "required": [
+              "id",
+              "idempotency_key",
+              "service",
+              "at",
+              "received_at",
+              "principal",
+              "reading"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "idempotency_key": {
+                "type": "string",
+                "description": "The reading's own idempotency_key"
+              },
+              "project": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "received_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "principal": {
+                "type": "string",
+                "description": "The service principal that recorded the reading"
+              },
+              "reading": {
+                "$ref": "../platform/usage-sample.v1.json"
+              }
+            }
+          }
+        }
+      }
+    },
     "deals.watch.matched": {
       "version": "1.0.0",
       "owner": "deals",

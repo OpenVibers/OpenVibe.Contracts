@@ -29302,6 +29302,30 @@ export interface BillingTransferResult {
   };
 }
 
+/** billing.usage-record-result@1.0.0 (owner: billing) */
+/**
+ * billing.usage-record-result@1: answer of billing.usage.record on OpenVibe.Billing. POST /api/v1/usage → { record } (201 when stored; 200 with `Idempotent-Replayed: true` when the same reading was already stored under its idempotency_key). Storing a reading charges nothing.
+ */
+export interface BillingUsageRecordResult {
+  record: {
+    id: string;
+    /**
+     * The reading's own idempotency_key
+     */
+    idempotency_key: string;
+    project?: string | null;
+    subject?: string | null;
+    service: string;
+    at: string;
+    received_at: string;
+    /**
+     * The service principal that recorded the reading
+     */
+    principal: string;
+    reading: UsageSample;
+  };
+}
+
 /** deals.watch.matched@1.0.0 (owner: deals) */
 /**
  * deals.watch.matched v1 (OpenVibe.Deals server/domain/watches.js onObservation). A person's keyword, product or price-below watch matched a fresh observation of an active offer, inside the transaction that recorded the observation. At most one event per (watch, observation); a keyword/product watch notifies once per offer, a price-below watch again only for a lower price. Saved searches (kind search) never notify. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:deals. OpenVibe.Network turns it into a DEAL_WATCH_MATCH notification for payload.recipient (server/notifications/events-consumer.js). A price is the decimal exactly as stated, never inferred; null when the observation stated none.
