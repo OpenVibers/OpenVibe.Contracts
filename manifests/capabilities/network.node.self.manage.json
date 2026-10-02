@@ -1,0 +1,20 @@
+{
+  "id": "network.node.self.manage",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A paired machine presents its own capabilities and rotates its own credential, never another machine's.",
+  "permissions": [
+    "nodes:self"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/node/self/capabilities",
+    "POST /api/v1/node/self/credential"
+  ]
+}

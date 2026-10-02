@@ -1,0 +1,36 @@
+{
+  "offer_id": "off_delivery_1",
+  "kind": "delivery",
+  "provider": "example",
+  "region": "us-west",
+  "trust": "first-party",
+  "capabilities": [
+    "delivery:hls"
+  ],
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "per-operation"
+  },
+  "updated_at": "2026-10-02T00:00:00Z",
+  "detail": {
+    "id": "delivery-1",
+    "transports": [
+      "http",
+      "hls"
+    ],
+    "regions": [
+      "us-west"
+    ],
+    "edge": true,
+    "node": "node-1",
+    "price_per_gb_usd": 0.02,
+    "price_per_request_usd": 1e-05,
+    "cache_rules": {
+      "enabled": true,
+      "ttl_seconds": 300,
+      "max_object_mb": 100
+    }
+  }
+}

@@ -136,6 +136,84 @@
     }
    }
   },
+  "/api/v1/node/self/capabilities": {
+   "put": {
+    "operationId": "put_api_v1_node_self_capabilities",
+    "summary": "A paired machine presents its own capabilities and rotates its own credential, never another machine's.",
+    "description": "**network.node.self.manage** (internal): A paired machine presents its own capabilities and rotates its own credential, never another machine's.",
+    "tags": [
+     "network.node"
+    ],
+    "x-openvibe-capabilities": [
+     "network.node.self.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.node.self.manage"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success"
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/node/self/credential": {
+   "post": {
+    "operationId": "post_api_v1_node_self_credential",
+    "summary": "A paired machine presents its own capabilities and rotates its own credential, never another machine's.",
+    "description": "**network.node.self.manage** (internal): A paired machine presents its own capabilities and rotates its own credential, never another machine's.",
+    "tags": [
+     "network.node"
+    ],
+    "x-openvibe-capabilities": [
+     "network.node.self.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.node.self.manage"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success"
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/v1/staff/moderators": {
    "get": {
     "operationId": "get_api_v1_staff_moderators",
@@ -1517,6 +1595,143 @@
     }
    }
   },
+  "/internal/node-pairings": {
+   "post": {
+    "operationId": "post_internal_node_pairings",
+    "summary": "A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired.",
+    "description": "**network.node.manage** (internal): A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired. Never grantable to apps.",
+    "tags": [
+     "network.node"
+    ],
+    "x-openvibe-capabilities": [
+     "network.node.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.node.manage"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success"
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/node-principals/{id}": {
+   "get": {
+    "operationId": "get_internal_node_principals_id",
+    "summary": "A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired.",
+    "description": "**network.node.manage** (internal): A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired. Never grantable to apps.",
+    "tags": [
+     "network.node"
+    ],
+    "x-openvibe-capabilities": [
+     "network.node.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.node.manage"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success"
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/node-principals/{id}/revoke": {
+   "post": {
+    "operationId": "post_internal_node_principals_id_revoke",
+    "summary": "A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired.",
+    "description": "**network.node.manage** (internal): A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired. Never grantable to apps.",
+    "tags": [
+     "network.node"
+    ],
+    "x-openvibe-capabilities": [
+     "network.node.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.node.manage"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success"
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/internal/nodes/report": {
    "post": {
     "operationId": "post_internal_nodes_report",
@@ -1671,6 +1886,101 @@
         }
        }
       }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/registry/instances/report": {
+   "post": {
+    "operationId": "post_internal_registry_instances_report",
+    "summary": "Report the machines of the platform (roles, region-level location, beacon, health) to the node registry, which the geo API and every location-aware product read (ADR-034 section 12).",
+    "description": "**network.node.report** (internal): Report the machines of the platform (roles, region-level location, beacon, health) to the node registry, which the geo API and every location-aware product read (ADR-034 section 12).",
+    "tags": [
+     "network.node"
+    ],
+    "x-openvibe-capabilities": [
+     "network.node.report"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.node.report"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/network.node-report-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/network.node-list-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/resources/report": {
+   "post": {
+    "operationId": "post_internal_resources_report",
+    "summary": "Report the complete set of a source's resource offers (platform.resource-offer@1) to the registry; offers absent from a later report of the same source are marked down.",
+    "description": "**network.resource.report** (internal): Report the complete set of a source's resource offers (platform.resource-offer@1) to the registry; offers absent from a later report of the same source are marked down.",
+    "tags": [
+     "network.resource"
+    ],
+    "x-openvibe-capabilities": [
+     "network.resource.report"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.resource.report"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success"
      },
      "default": {
       "description": "An error (RFC 9457 problem details)",
@@ -3182,6 +3492,11 @@
      "updated_at": {
       "type": "string",
       "format": "date-time"
+     },
+     "cell": {
+      "type": "string",
+      "pattern": "^[a-z]{2,8}-[0-9]{1,3}$",
+      "description": "Cell the node belongs to, e.g. wnam-1."
      }
     }
    },

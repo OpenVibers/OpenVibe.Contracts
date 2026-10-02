@@ -57,6 +57,12 @@
     "started_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "route_weight": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000,
+      "description": "Share of this service's traffic the router sends to this instance, relative to its siblings; absent means equal weight."
     }
   },
   "examples": [

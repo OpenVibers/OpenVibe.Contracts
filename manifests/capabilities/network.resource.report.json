@@ -1,0 +1,19 @@
+{
+  "id": "network.resource.report",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Report the complete set of a source's resource offers (platform.resource-offer@1) to the registry; offers absent from a later report of the same source are marked down.",
+  "permissions": [
+    "resources:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/resources/report"
+  ]
+}

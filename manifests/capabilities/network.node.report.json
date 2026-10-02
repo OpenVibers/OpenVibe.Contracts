@@ -14,7 +14,8 @@
   "quotaClass": "admin",
   "events": [],
   "implementedBy": [
-    "POST /internal/nodes/report"
+    "POST /internal/nodes/report",
+    "POST /internal/registry/instances/report"
   ],
   "inputSchema": "network.node-report-request@1",
   "outputSchema": "network.node-list-result@1"

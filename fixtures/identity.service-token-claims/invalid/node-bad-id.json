@@ -1,0 +1,14 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "node:nod_42",
+  "actor_type": "node",
+  "aud": [
+    "openvibe.bot"
+  ],
+  "cap": [
+    "network.node.self.manage"
+  ],
+  "iat": 1790000000,
+  "exp": 1790000300,
+  "jti": "tok_node0001"
+}

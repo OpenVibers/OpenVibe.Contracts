@@ -16,6 +16,31 @@ listed by `manifests/services/billing.json`. `POST /api/v1/usage` takes one `pla
 `principal` and the `reading` itself; fixtures `recorded` (valid) and `reading-without-idempotency-key` (invalid).
 Network grants for the usage producers follow this release. Additive.
 
+**Node principals, node capabilities and per-kind resource offers** (plan T1 lane A, the contracts brief of
+OpenVibe.Network `docs/t2-cells-and-node-principal.md` §9.1):
+- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'node', id })` gives `node:nod_<ULID>`. A node is a
+  principal only: `node` is not a `SUBJECT_TYPES` entry nor an `identity.subject-ref@1` type.
+- `identity.service-token-claims`: `sub` also accepts `node:nod_<ULID>` and `actor_type` gains `node`, so
+  `verifyServiceToken` accepts a node token and still rejects a malformed node id. Fixtures `node-token` (valid) and
+  `node-bad-id` (invalid).
+- New capabilities `network.node.manage` (a service mints pairing codes and reads or revokes the node principals it
+  paired; `nodes:pair`, `nodes:read`, `nodes:revoke`), `network.node.self.manage` (a paired machine presents its own
+  capabilities and rotates its own credential; `nodes:self`) and `network.resource.report` (a source reports its
+  complete set of `platform.resource-offer@1`; `resources:write`), all active, internal and listed by
+  `manifests/services/network.json`. Their bodies are Network-local, so they name no schemas and are recorded in
+  `compatibility/capability-schema-gaps.json`. `network.node.report` is also implemented by
+  `POST /internal/registry/instances/report`.
+- `platform.resource-offer`: `kind` gains `storage`, `delivery`, `runtime`, `agent` and `harness`; the new
+  optional `detail` is required for those kinds and validated by the kind's own `platform.<kind>-offer@1`, and is
+  forbidden for `node` and `provider`. Fixtures `storage`, `delivery`, `runtime`, `agent`, `harness` (valid, beside
+  `owned-node` and `provider`), `storage-without-detail` and `node-with-detail` (invalid).
+- Optional fields: `platform.service-instance` `route_weight` (integer 0-1000); `platform.node-capabilities`
+  `capabilities` (resource-offer capability form), `agent_version` (at most 40 characters) and `updated_at`
+  (date-time); `network.node` `cell` (`^[a-z]{2,8}-[0-9]{1,3}$`). Fixtures `route-weight`, `agent-report` and
+  `with-cell` (valid), `route-weight-over-1000`, `bad-capability` and `bad-cell` (invalid).
+
+Additive.
+
 ## 0.84.0 — 2026-10-02
 
 Add nine public `platform.*@1` schemas: usage and telemetry samples; node capabilities and

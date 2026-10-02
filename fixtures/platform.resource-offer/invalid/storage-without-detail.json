@@ -1,0 +1,17 @@
+{
+  "offer_id": "off_storage_1",
+  "kind": "storage",
+  "provider": "example",
+  "region": "us-west",
+  "trust": "first-party",
+  "capabilities": [
+    "object:r2"
+  ],
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "per-operation"
+  },
+  "updated_at": "2026-10-02T00:00:00Z"
+}

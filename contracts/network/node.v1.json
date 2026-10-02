@@ -36,6 +36,7 @@
         "checked_at": { "type": "string", "format": "date-time" }
       }
     },
-    "updated_at": { "type": "string", "format": "date-time" }
+    "updated_at": { "type": "string", "format": "date-time" },
+    "cell": { "type": "string", "pattern": "^[a-z]{2,8}-[0-9]{1,3}$", "description": "Cell the node belongs to, e.g. wnam-1." }
   }
 }
