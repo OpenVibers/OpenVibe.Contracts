@@ -136,6 +136,23 @@
       "required": [
         "per_hour_usd"
       ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*:[a-z0-9.-]+$"
+      },
+      "description": "What the machine offers, in the platform.resource-offer@1 capability form (e.g. node:http, worker:ffmpeg)."
+    },
+    "agent_version": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "Version of the node agent that reported."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "examples": [

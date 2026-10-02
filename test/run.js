@@ -500,6 +500,10 @@ for (const kind of ['user', 'guest', 'app', 'mod']) {
 ok(ids.newId('user', 1000) < ids.newId('user', 2000), 'ulids sort by time');
 ok(ids.parseSubject('user:42') === null && ids.parseSubject('user') === null && ids.parseSubject('svc:live') === null, 'malformed subjects are rejected');
 ok(ids.principalSub({ type: 'service', id: 'live' }) === 'svc:live', 'service principal sub');
+const nodeId = ids.newId('node');
+ok(nodeId.startsWith('nod_') && ids.principalSub({ type: 'node', id: nodeId }) === `node:${nodeId}`, 'node principal sub is node:nod_<ULID>');
+assert.throws(() => ids.principalSub({ type: 'node', id: 'nod_42' }), /principals/);
+ok(!ids.SUBJECT_TYPES.includes('node') && ids.parseSubject(`node:${nodeId}`) === null, 'a node is a principal, never a subject');
 assert.throws(() => ids.principalSub({ type: 'user', id: ids.newId('user') }), /principals/);
 ok(contracts.validate('media.media-ref', { media_id: ids.legacyMediaId('live', 'vod', 42) }).valid, 'legacyMediaId is a valid MediaRef');
 ok(contracts.validate('events.event-envelope', { event_id: ids.newId('event'), event_type: 'network.user.created', version: 1, source: 'network', actor: { type: 'system', id: 'network' }, timestamp: new Date().toISOString(), subject: { type: 'user', id: ids.newId('user') }, payload: {} }).valid, 'newId(event) builds a valid envelope');
@@ -563,6 +567,9 @@ ok(V(sandboxTok, { acceptSandbox: true }).ok, 'sandbox app token accepted when t
 ok(V(serviceAuth.signServiceToken({ ...appClaims, env: 'production' }, kp.privateKey)).ok, 'production app token accepted');
 ok(V(serviceAuth.signServiceToken((({ project_id, ...rest }) => rest)(appClaims), kp.privateKey)).code === 'token.invalid_claims', 'an app token needs project_id');
 ok(contracts.ids.newId('project').startsWith('prj_'), 'project ids use the prj prefix');
+const nodeClaims = { ...claims, sub: 'node:nod_01J0000000000000000000000Z', actor_type: 'node' };
+ok(V(serviceAuth.signServiceToken(nodeClaims, kp.privateKey)).ok, 'node token accepted');
+ok(V(serviceAuth.signServiceToken({ ...nodeClaims, sub: 'node:nod_42' }, kp.privateKey)).code === 'token.invalid_claims', 'a malformed node id is rejected');
 
 const run = (guard, headers) => new Promise((resolve) => {
     const req = { headers, body: {} };

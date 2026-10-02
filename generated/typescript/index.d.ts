@@ -53,7 +53,7 @@ export interface LegacyIdentityMapEntry {
 
 /** identity.service-token-claims@1.2.0 (owner: network) */
 /**
- * Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service or app principal. Replaces X-Internal-Key. App tokens (actor_type app) also carry project_id and env; receivers refuse env=sandbox unless they opted in.
+ * Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service, app, mod or node principal. Replaces X-Internal-Key. App tokens (actor_type app) also carry project_id and env; receivers refuse env=sandbox unless they opted in.
  */
 export type ServiceTokenClaims = {
   [k: string]: unknown | undefined;
@@ -63,7 +63,7 @@ export type ServiceTokenClaims = {
    */
   iss: string;
   sub: string;
-  actor_type: "service" | "app" | "mod";
+  actor_type: "service" | "app" | "mod" | "node";
   /**
    * @minItems 1
    */
@@ -50616,6 +50616,10 @@ export interface NetworkNode {
     checked_at: string;
   };
   updated_at: string;
+  /**
+   * Cell the node belongs to, e.g. wnam-1.
+   */
+  cell?: string;
 }
 
 /** network.node-report-request@1.0.0 (owner: network) */
@@ -50712,9 +50716,11 @@ export interface NetworkCoinsReadResult {
 /**
  * What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.
  */
-export interface ResourceOffer {
+export type ResourceOffer = {
+  [k: string]: unknown | undefined;
+} & {
   offer_id: string;
-  kind: "node" | "provider";
+  kind: "node" | "provider" | "storage" | "delivery" | "runtime" | "agent" | "harness";
   /**
    * network.node@1 id, for kind node
    */
@@ -50798,7 +50804,11 @@ export interface ResourceOffer {
     rate_card?: string;
   };
   updated_at: string;
-}
+  /**
+   * The kind's own offer: platform.storage-offer@1, platform.delivery-offer@1, platform.runtime-offer@1, platform.agent-offer@1 or platform.harness-offer@1 for those kinds; absent for kind node and provider.
+   */
+  detail?: {};
+};
 
 /** platform.workload-requirements@1.0.0 (owner: network) */
 /**
@@ -51195,6 +51205,15 @@ export interface NodeCapabilities {
      */
     egress_per_gb_usd?: number;
   };
+  /**
+   * What the machine offers, in the platform.resource-offer@1 capability form (e.g. node:http, worker:ffmpeg).
+   */
+  capabilities?: string[];
+  /**
+   * Version of the node agent that reported.
+   */
+  agent_version?: string;
+  updated_at?: string;
 }
 
 /** platform.service-instance@1.0.0 (owner: network) */
@@ -51214,6 +51233,10 @@ export interface ServiceInstance {
   endpoints: [string, ...string[]];
   state: "starting" | "ready" | "degraded" | "draining" | "stopped";
   started_at: string;
+  /**
+   * Share of this service's traffic the router sends to this instance, relative to its siblings; absent means equal weight.
+   */
+  route_weight?: number;
 }
 
 /** platform.runtime-offer@1.0.0 (owner: network) */

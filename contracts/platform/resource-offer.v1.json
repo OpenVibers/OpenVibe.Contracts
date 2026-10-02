@@ -23,7 +23,12 @@
       "type": "string",
       "enum": [
         "node",
-        "provider"
+        "provider",
+        "storage",
+        "delivery",
+        "runtime",
+        "agent",
+        "harness"
       ]
     },
     "node_id": {
@@ -255,6 +260,144 @@
     "updated_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "detail": {
+      "type": "object",
+      "description": "The kind's own offer: platform.storage-offer@1, platform.delivery-offer@1, platform.runtime-offer@1, platform.agent-offer@1 or platform.harness-offer@1 for those kinds; absent for kind node and provider."
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "storage"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "detail"
+        ],
+        "properties": {
+          "detail": {
+            "$ref": "storage-offer.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "delivery"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "detail"
+        ],
+        "properties": {
+          "detail": {
+            "$ref": "delivery-offer.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "runtime"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "detail"
+        ],
+        "properties": {
+          "detail": {
+            "$ref": "runtime-offer.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "agent"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "detail"
+        ],
+        "properties": {
+          "detail": {
+            "$ref": "agent-offer.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "harness"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "detail"
+        ],
+        "properties": {
+          "detail": {
+            "$ref": "harness-offer.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "node",
+              "provider"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "detail"
+          ]
+        }
+      }
+    }
+  ]
 }
