@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/billing/admin-result.v1.json",
   "title": "BillingAdminResult",
-  "description": "billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }.",
+  "description": "billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }; GET /api/v1/usage → { records, next_cursor }.",
   "anyOf": [
     {
       "type": "object",
@@ -208,6 +208,69 @@
           "items": {
             "type": "object"
           }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "records",
+        "next_cursor"
+      ],
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "idempotency_key",
+              "service",
+              "at",
+              "received_at",
+              "principal",
+              "reading"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "idempotency_key": {
+                "type": "string",
+                "description": "The reading's own idempotency_key"
+              },
+              "project": {
+                "type": ["string", "null"]
+              },
+              "subject": {
+                "type": ["string", "null"]
+              },
+              "service": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "received_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "principal": {
+                "type": "string",
+                "description": "The service principal that recorded the reading"
+              },
+              "reading": {
+                "$ref": "../platform/usage-sample.v1.json"
+              }
+            }
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     }

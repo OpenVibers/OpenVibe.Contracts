@@ -1,0 +1,1 @@
+{ "record": { "id": "1", "idempotency_key": "media:delivery:2", "project": null, "subject": null, "service": "media", "at": "2026-09-30T10:00:00.000Z", "received_at": "2026-09-30T10:00:01.000Z", "principal": "media", "reading": { "id": "use-2", "service": "media", "operation": "deliver", "quantity": 1.5, "unit": "GiB", "at": "2026-09-30T10:00:00Z", "source": "media.egress" } } }

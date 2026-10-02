@@ -12,8 +12,8 @@
       "service": "billing",
       "name": "OpenVibe.Billing",
       "origin": "https://billing.openvibe.network",
-      "operations": 28,
-      "capabilities": 8
+      "operations": 30,
+      "capabilities": 9
     },
     {
       "service": "blog",

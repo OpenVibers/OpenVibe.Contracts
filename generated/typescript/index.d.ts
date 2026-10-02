@@ -28805,7 +28805,7 @@ export type BillingAdminRequest =
 
 /** billing.admin-result@1.0.0 (owner: billing) */
 /**
- * billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }.
+ * billing.admin-result@1: answers of billing.ledger.admin on OpenVibe.Billing. GET|POST /api/v1/admin/freeze → { frozen, reason, frozen_at, frozen_by } (POST adds processed_after_unfreeze); GET /api/v1/admin/reconcile → the reconciliation report { id, ok, trigger, started_at, finished_at, checks, warnings, totals }; POST /api/v1/admin/adjustments and POST /api/v1/purchases/settle → { transaction } (settle adds duplicate_receipt); GET /api/v1/admin/provider-events → { events }; POST …/provider-events/:id/reprocess → { event }; POST /api/v1/admin/sweep → { renewed, expired, canceled, skipped }; GET /api/v1/admin/import-holds → { holds }; GET /api/v1/usage → { records, next_cursor }.
  */
 export type BillingAdminResult =
   | {
@@ -28855,6 +28855,26 @@ export type BillingAdminResult =
     }
   | {
       holds: {}[];
+    }
+  | {
+      records: {
+        id: string;
+        /**
+         * The reading's own idempotency_key
+         */
+        idempotency_key: string;
+        project?: string | null;
+        subject?: string | null;
+        service: string;
+        at: string;
+        received_at: string;
+        /**
+         * The service principal that recorded the reading
+         */
+        principal: string;
+        reading: UsageSample;
+      }[];
+      next_cursor: string | null;
     };
 
 /** billing.balance-read-result@1.0.0 (owner: billing) */
@@ -29299,6 +29319,30 @@ export interface BillingTransferResult {
   transaction: BillingTransaction;
   balance?: {
     credit: number;
+  };
+}
+
+/** billing.usage-record-result@1.0.0 (owner: billing) */
+/**
+ * billing.usage-record-result@1: answer of billing.usage.record on OpenVibe.Billing. POST /api/v1/usage → { record } (201 when stored; 200 with `Idempotent-Replayed: true` when the same reading was already stored under its idempotency_key). Storing a reading charges nothing.
+ */
+export interface BillingUsageRecordResult {
+  record: {
+    id: string;
+    /**
+     * The reading's own idempotency_key
+     */
+    idempotency_key: string;
+    project?: string | null;
+    subject?: string | null;
+    service: string;
+    at: string;
+    received_at: string;
+    /**
+     * The service principal that recorded the reading
+     */
+    principal: string;
+    reading: UsageSample;
   };
 }
 

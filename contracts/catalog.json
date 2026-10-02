@@ -2230,6 +2230,15 @@
       "status": "active"
     },
     {
+      "id": "billing.usage-record-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/usage-record-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "deals.watch.matched",
       "version": "1.0.0",
       "owner": "deals",
