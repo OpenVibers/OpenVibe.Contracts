@@ -117,7 +117,7 @@
         "what",
         "legalProfile"
       ],
-      "description": "How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site.",
+      "description": "How the network presents the service as a site people visit (the navigation, the network home page, legal pages). A service without it is not a site. 1.1.0 (plan T11 lane D) adds the optional showcase fields copied from the OpenVibe.Sites catalog (tld, accent, description, pillars, faq, keywords, vision, highlight, launch, relationships; defined in registry.product@1): a site carrying tld is the catalog home of its domain (its publicOrigin host, or host), so that domain has no manifests/products file.",
       "properties": {
         "name": {
           "type": "string",
@@ -157,6 +157,36 @@
           "type": "string",
           "pattern": "^[a-z0-9.-]+$",
           "description": "Only while the manifest has no publicOrigin."
+        },
+        "tld": {
+          "$ref": "product.v1.json#/$defs/tld"
+        },
+        "accent": {
+          "$ref": "product.v1.json#/$defs/accent"
+        },
+        "description": {
+          "$ref": "product.v1.json#/$defs/description"
+        },
+        "pillars": {
+          "$ref": "product.v1.json#/$defs/pillars"
+        },
+        "faq": {
+          "$ref": "product.v1.json#/$defs/faq"
+        },
+        "keywords": {
+          "$ref": "product.v1.json#/$defs/keywords"
+        },
+        "vision": {
+          "$ref": "product.v1.json#/$defs/vision"
+        },
+        "highlight": {
+          "$ref": "product.v1.json#/$defs/highlight"
+        },
+        "launch": {
+          "$ref": "product.v1.json#/$defs/launch"
+        },
+        "relationships": {
+          "$ref": "product.v1.json#/$defs/relationships"
         }
       }
     },

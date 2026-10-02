@@ -1,0 +1,44 @@
+{
+  "domain": "openvibe.watch",
+  "tld": "watch",
+  "name": "OpenVibe.Watch",
+  "icon": "fa-eye",
+  "accent": "#facc15",
+  "tagline": "Watch anything. Hear about what matters.",
+  "description": "OpenVibe.Watch will watch web pages, feeds, APIs, prices and stock, Git releases, OpenVibe activity, videos, livestreams and your own cameras, pull out what changed or what matters, and tell you, your apps or your AI agents. Checks respect site terms and robots rules, heavy work runs on shared workers, and cameras are read by a small agent on your own network so nothing is exposed to the internet.",
+  "pillars": [
+    {
+      "title": "Any source",
+      "text": "Pages, feeds, APIs, repos, videos, streams and cameras."
+    },
+    {
+      "title": "What changed",
+      "text": "Extraction, diffs and conditions, with AI summaries when you want them."
+    },
+    {
+      "title": "Anywhere it matters",
+      "text": "Notifications, events, webhooks and agent triggers."
+    },
+    {
+      "title": "Respectful and safe",
+      "text": "Site terms, robots rules and fair limits on every check."
+    }
+  ],
+  "keywords": "website change monitoring, uptime monitoring api, price drop alerts, restock alerts, release monitoring, youtube video analysis, security camera alerts",
+  "launch": "the watch service on the shared queue and workers",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Sources",
+        "url": "https://github.com/OpenVibers/OpenVibe.Sources",
+        "note": "Permitted-source ingestion that Watch builds on runs today."
+      },
+      {
+        "label": "OpenVibe.Tools",
+        "url": "https://openvibe.tools",
+        "note": "Dozens of tools that run in the browser today."
+      }
+    ]
+  }
+}

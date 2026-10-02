@@ -22,7 +22,40 @@
     "tagline": "Forums, boards and threads",
     "what": "OpenVibe's forums: public and members-only spaces, threads, posts, votes, categories and the Discord relay, moved off Community (plan T10, D1/D2).",
     "legalProfile": "ugc",
-    "position": 19
+    "position": 19,
+    "tld": "space",
+    "accent": "#818cf8",
+    "description": "OpenVibe.Space will be the forums of the OpenVibe network: create a forum for any topic, with the depth of classic boards like XenForo and phpBB, the feel of a modern community, and AI help for topics, research and moderation. The forums on OpenVibe.Community move here when it launches.",
+    "pillars": [
+      {
+        "title": "Any forum",
+        "text": "Anyone can start one, for any topic."
+      },
+      {
+        "title": "Classic depth",
+        "text": "Sub-forums, threads, ranks, moderation tools."
+      },
+      {
+        "title": "AI assist",
+        "text": "Topic ideas, research and summaries, always labelled."
+      },
+      {
+        "title": "One account",
+        "text": "Your OpenVibe identity, everywhere on the network."
+      }
+    ],
+    "keywords": "openvibe space, forums, create a forum, community boards, xenforo alternative, phpbb alternative",
+    "launch": "the forum engine moving over from OpenVibe.Community",
+    "relationships": {
+      "noRepo": true,
+      "meanwhile": [
+        {
+          "label": "OpenVibe.Community",
+          "url": "https://openvibe.community",
+          "note": "Forums, pastes and people live there today."
+        }
+      ]
+    }
   },
   "capabilities": [
     "space.forum.read",

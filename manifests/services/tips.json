@@ -25,7 +25,40 @@
     "tagline": "Support creators",
     "what": "Tips, goals, paid messages and alerts for creators, settled by the network's billing ledger.",
     "legalProfile": "streaming",
-    "position": 12
+    "position": 12,
+    "tld": "tips",
+    "accent": "#4ade80",
+    "description": "OpenVibe.Tips is the tipping and alerts layer of the OpenVibe network: tips, donation goals, superchats, paid text-to-speech and media requests, with alert overlays for creators.",
+    "pillars": [
+      {
+        "title": "Tips & goals",
+        "text": "Tip a creator, fund a goal, see it land on stream."
+      },
+      {
+        "title": "Superchat & TTS",
+        "text": "Paid messages read out on stream, through OpenVibe.Chat."
+      },
+      {
+        "title": "Alert overlays",
+        "text": "Overlays for OBS and the browser, themed with the network."
+      },
+      {
+        "title": "One ledger",
+        "text": "Every transaction on the network's own ledger, visible to you."
+      }
+    ],
+    "keywords": "openvibe tips, tip streamers, donation alerts, superchat",
+    "launch": "the payments cutover to OpenVibe.Billing and a security review; tips keep working on OpenVibe.Live meanwhile",
+    "relationships": {
+      "plannedRepo": "OpenVibe.Tips",
+      "meanwhile": [
+        {
+          "label": "Tip with Vibes on OpenVibe.Live",
+          "url": "https://openvibe.live",
+          "note": "Tips already work on Live today."
+        }
+      ]
+    }
   },
   "capabilities": [
     "tips.profile.get",

@@ -1,0 +1,40 @@
+{
+  "domain": "themes.openvibe.network",
+  "tld": "themes",
+  "name": "themes.openvibe.network",
+  "icon": "fa-palette",
+  "accent": "#a78bfa",
+  "tagline": "Your look, on every site.",
+  "legalProfile": "info",
+  "description": "themes.openvibe.network will be the theme catalog and API: built-in and community themes, previews, per-site overrides, import/export and the shared design tokens every OpenVibe site renders.",
+  "pillars": [
+    {
+      "title": "Catalog",
+      "text": "Built-in, migrated and community themes with previews."
+    },
+    {
+      "title": "Per-site overrides",
+      "text": "One global choice, tweaked per service if you like."
+    },
+    {
+      "title": "Import / export",
+      "text": "Share a theme as a file or a link."
+    },
+    {
+      "title": "Design tokens",
+      "text": "The versioned tokens behind every OpenVibe page."
+    }
+  ],
+  "keywords": "openvibe themes, openvibe network themes, openvibe platform",
+  "relationships": {
+    "service": "network",
+    "plannedRepo": "OpenVibe.Network",
+    "meanwhile": [
+      {
+        "label": "Pick a theme today",
+        "url": "https://openvibe.network/themes",
+        "note": "Themes already work across the network from openvibe.network."
+      }
+    ]
+  }
+}

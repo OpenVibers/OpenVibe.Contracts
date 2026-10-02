@@ -25,7 +25,45 @@
     "tagline": "Deploy and host",
     "what": "The network's deployment plane first, then simple hosting for community sites, bots and mods.",
     "legalProfile": "hosting",
-    "position": 15
+    "position": 15,
+    "tld": "host",
+    "accent": "#94a3b8",
+    "description": "OpenVibe.Host is the network's deployment tooling and, next, static site hosting for OpenVibe projects. The tooling (ovhost) already runs on the network's host: deploys with automatic rollback, backups and restore drills for the network's own services. The hosting part will let a project upload a folder of HTML, CSS, JavaScript and images, serve it at <site>.openvibe.host and roll back to any earlier deploy in one step. Static files only: nothing uploaded is run as code.",
+    "pillars": [
+      {
+        "title": "Static sites",
+        "text": "Upload a folder or a .tar.gz of HTML, CSS, JavaScript, images and fonts; it is served at <site>.openvibe.host over HTTPS."
+      },
+      {
+        "title": "Every deploy kept",
+        "text": "Deploys are immutable and content-addressed: switch to, or roll back to, any earlier one in one step."
+      },
+      {
+        "title": "Your own domain",
+        "text": "Custom domains you prove with a DNS TXT record; their certificates are issued by an operator for now."
+      },
+      {
+        "title": "Static only",
+        "text": "No build step and no server-side code: nothing you upload is run. Running bots, mods or apps is not offered; that needs isolation the network has not built yet."
+      }
+    ],
+    "keywords": "openvibe host, static site hosting, deployment, openvibe projects",
+    "launch": "the owner's go on its launch checklist",
+    "relationships": {
+      "plannedRepo": "OpenVibe.Host",
+      "meanwhile": [
+        {
+          "label": "OpenVibe.Host on GitHub",
+          "url": "https://github.com/OpenVibers/OpenVibe.Host",
+          "note": "The code, the launch checklist and the threat review."
+        },
+        {
+          "label": "Build on OpenVibe",
+          "url": "https://openvibe.codes",
+          "note": "Projects, apps and credentials on OpenVibe.Codes, the developer portal."
+        }
+      ]
+    }
   },
   "capabilities": [
     "host.site.manage",

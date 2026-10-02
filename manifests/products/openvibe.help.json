@@ -1,0 +1,44 @@
+{
+  "domain": "openvibe.help",
+  "tld": "help",
+  "name": "OpenVibe.Help",
+  "icon": "fa-life-ring",
+  "accent": "#4ade80",
+  "tagline": "Answers, support and a way to reach people.",
+  "description": "OpenVibe.Help will be the help and support center for every OpenVibe site: search answers drawn from the docs, wiki, blog and service status, follow troubleshooting guides, and open a ticket that stays one conversation on the web and by email. A Report Problem button on every site will attach the safe details staff need (release, request and trace ids) and never secrets.",
+  "pillars": [
+    {
+      "title": "Grounded answers",
+      "text": "From the real docs, wiki and status, with sources."
+    },
+    {
+      "title": "One support inbox",
+      "text": "Signed in or not, on the web or by email."
+    },
+    {
+      "title": "Report a problem",
+      "text": "Useful, privacy-scrubbed details attached for you."
+    },
+    {
+      "title": "For your projects",
+      "text": "A support widget and help center for sites built on OpenVibe."
+    }
+  ],
+  "keywords": "openvibe help, openvibe support, help center, support tickets, troubleshooting",
+  "launch": "the ticket service and the Frame's Help button",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "Network status",
+        "url": "https://openvibe.network/status",
+        "note": "Service health and incidents today."
+      },
+      {
+        "label": "OpenVibe.Wiki",
+        "url": "https://openvibe.wiki",
+        "note": "Guides and concepts."
+      }
+    ]
+  }
+}

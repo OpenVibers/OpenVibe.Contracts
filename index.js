@@ -21,6 +21,7 @@ module.exports = {
     http: require('./lib/http'),
     capabilities: require('./lib/capabilities'),
     services: require('./lib/services'),
+    products: require('./lib/products'),
     serviceAuth: require('./lib/service-auth'),
     modules: require('./lib/modules'),
     tools: require('./lib/tools'),

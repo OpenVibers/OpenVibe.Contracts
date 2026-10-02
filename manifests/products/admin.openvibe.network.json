@@ -1,0 +1,40 @@
+{
+  "domain": "admin.openvibe.network",
+  "tld": "admin",
+  "name": "admin.openvibe.network",
+  "icon": "fa-shield-halved",
+  "accent": "#f59e0b",
+  "tagline": "One operator console for every service.",
+  "legalProfile": "account",
+  "description": "admin.openvibe.network will be the federated operator console: users, roles, bans, registry and policy, event queues, storage, billing, migrations and emergency controls, discovered from each service rather than hard-wired.",
+  "pillars": [
+    {
+      "title": "Users & roles",
+      "text": "Accounts, staff roles, restrictions and platform bans."
+    },
+    {
+      "title": "Registry & policy",
+      "text": "Service manifests, capability grants and namespaces."
+    },
+    {
+      "title": "Queues & storage",
+      "text": "Event delivery, dead letters, media diagnostics."
+    },
+    {
+      "title": "Audit",
+      "text": "Every privileged action recorded."
+    }
+  ],
+  "keywords": "openvibe admin, openvibe network admin, openvibe platform",
+  "relationships": {
+    "service": "network",
+    "plannedRepo": "OpenVibe.Network",
+    "meanwhile": [
+      {
+        "label": "Current admin on openvibe.network",
+        "url": "https://openvibe.network/admin",
+        "note": "Staff only. The present admin surface."
+      }
+    ]
+  }
+}

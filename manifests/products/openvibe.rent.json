@@ -1,0 +1,39 @@
+{
+  "domain": "openvibe.rent",
+  "tld": "rent",
+  "name": "OpenVibe.Rent",
+  "icon": "fa-key",
+  "accent": "#22d3ee",
+  "tagline": "Every rental, one search.",
+  "description": "OpenVibe.Rent will bring rentals into one place: apartments, rooms, commercial space, equipment and services from many listing sites, with alerts, AI summaries that link their sources, and one OpenVibe account for your searches.",
+  "pillars": [
+    {
+      "title": "One search",
+      "text": "Listings from many sites, in one list."
+    },
+    {
+      "title": "Alerts",
+      "text": "Be told when something that fits appears."
+    },
+    {
+      "title": "Clear summaries",
+      "text": "AI summaries that always link the original listing."
+    },
+    {
+      "title": "Your account",
+      "text": "Saved searches and favourites under your OpenVibe account."
+    }
+  ],
+  "keywords": "openvibe rent, rental search, apartments for rent, rooms for rent, commercial rentals, rental alerts",
+  "launch": "verified listing sources and the shared discovery system",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Deals",
+        "url": "https://openvibe.deals",
+        "note": "Deal discovery is the sibling room."
+      }
+    ]
+  }
+}

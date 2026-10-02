@@ -25,7 +25,40 @@
     "tagline": "Deals worth sharing",
     "what": "Deals submitted and voted on by the community, with source, price and freshness always shown.",
     "legalProfile": "info",
-    "position": 16
+    "position": 16,
+    "tld": "deals",
+    "accent": "#f97316",
+    "description": "OpenVibe.Deals is community deal discovery for the OpenVibe network: deals people vote on, hotness that reflects real interest, keyword alerts, price comparisons and honest discussion.",
+    "pillars": [
+      {
+        "title": "Voted, not paid for",
+        "text": "Deals rise because people like them."
+      },
+      {
+        "title": "Alerts",
+        "text": "Tell it what you want; it tells you when it is cheap."
+      },
+      {
+        "title": "Compare",
+        "text": "Summaries and comparisons, with sources."
+      },
+      {
+        "title": "Discuss",
+        "text": "Threads through OpenVibe.Community."
+      }
+    ],
+    "keywords": "openvibe deals, community deals, deal alerts",
+    "launch": "a person to verify a deals source's terms and switch it on",
+    "relationships": {
+      "plannedRepo": "OpenVibe.Deals",
+      "meanwhile": [
+        {
+          "label": "Coupons",
+          "url": "https://openvibe.coupons",
+          "note": "The coupon room is the sibling of this one."
+        }
+      ]
+    }
   },
   "capabilities": [
     "deals.offer.submit",

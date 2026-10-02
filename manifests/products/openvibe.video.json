@@ -1,0 +1,45 @@
+{
+  "domain": "openvibe.video",
+  "tld": "video",
+  "name": "OpenVibe.Video",
+  "icon": "fa-film",
+  "accent": "#f87171",
+  "tagline": "Your videos, everywhere.",
+  "description": "OpenVibe.Video will be the home of long-form video on the OpenVibe network: watch pages, channels and playlists for uploads and past streams, a creator tool that publishes one upload to many platforms, and AI captions, highlights and editing, delivered by OpenVibe.Media.",
+  "pillars": [
+    {
+      "title": "Watch",
+      "text": "Channels, playlists and search for uploads and past streams."
+    },
+    {
+      "title": "Publish everywhere",
+      "text": "One upload, sent to the platforms you choose, tracked in one place."
+    },
+    {
+      "title": "AI tools",
+      "text": "Captions, translations, highlights and shorts from long videos."
+    },
+    {
+      "title": "From your streams",
+      "text": "Recordings from OpenVibe.Live land here, ready to share."
+    }
+  ],
+  "keywords": "openvibe video, video hosting, youtube alternative, multi-platform upload, ai video tools",
+  "launch": "the video service on OpenVibe.Media",
+  "relationships": {
+    "service": "media-hub",
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Live",
+        "url": "https://openvibe.live",
+        "note": "Streams, recordings and clips live on OpenVibe.Live today."
+      },
+      {
+        "label": "OpenRe.Stream",
+        "url": "https://openre.stream",
+        "note": "Restreaming to many platforms is the sibling product."
+      }
+    ]
+  }
+}

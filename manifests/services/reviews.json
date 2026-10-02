@@ -25,7 +25,40 @@
     "tagline": "Reviews with receipts",
     "what": "Review signals gathered across sources with provenance, pros and cons, and community discussion. No invented ratings.",
     "legalProfile": "ugc",
-    "position": 11
+    "position": 11,
+    "tld": "reviews",
+    "accent": "#facc15",
+    "description": "OpenVibe.Reviews gathers what people say about products, services, employers, hosts and communities across many sources — with provenance, without fake ratings — and lets the community discuss it.",
+    "pillars": [
+      {
+        "title": "Entity pages",
+        "text": "One page per product, service or place, built from many sources."
+      },
+      {
+        "title": "Provenance",
+        "text": "Every quote links back to where it was said."
+      },
+      {
+        "title": "No fake ratings",
+        "text": "Summaries, not invented stars."
+      },
+      {
+        "title": "Discussion",
+        "text": "Community threads through OpenVibe.Community."
+      }
+    ],
+    "keywords": "openvibe reviews, review aggregation, honest reviews",
+    "launch": "a person to verify a review source's terms and an editor to publish the first reviewed summary",
+    "relationships": {
+      "plannedRepo": "OpenVibe.Reviews",
+      "meanwhile": [
+        {
+          "label": "Talk about it",
+          "url": "https://openvibe.community",
+          "note": "Community threads are the first stop."
+        }
+      ]
+    }
   },
   "capabilities": [
     "reviews.entity.resolve",

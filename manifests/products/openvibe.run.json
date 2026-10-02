@@ -1,0 +1,39 @@
+{
+  "domain": "openvibe.run",
+  "tld": "run",
+  "name": "OpenVibe.Run",
+  "icon": "fa-terminal",
+  "accent": "#a78bfa",
+  "tagline": "Run anything, safely.",
+  "description": "OpenVibe.Run will run code, tools and AI agent tasks in sandboxes: quick jobs in WebAssembly, full environments in small virtual machines, with queued jobs, live output, and files through OpenVibe.Download. A free, limited tier for everyone, and the engine the rest of the network uses to get work done.",
+  "pillars": [
+    {
+      "title": "Sandboxed",
+      "text": "Every run is isolated, budgeted and stoppable."
+    },
+    {
+      "title": "Async & streaming",
+      "text": "Queue work, watch its output live, get the result."
+    },
+    {
+      "title": "Agent tasks",
+      "text": "Let AI tools run steps for you, safely."
+    },
+    {
+      "title": "For every site",
+      "text": "The same engine behind tools, pictures, video and chat."
+    }
+  ],
+  "keywords": "openvibe run, code sandbox, run code online, serverless functions, ai agent tasks",
+  "launch": "the sandbox runtime",
+  "relationships": {
+    "noRepo": true,
+    "meanwhile": [
+      {
+        "label": "OpenVibe.Tools",
+        "url": "https://openvibe.tools",
+        "note": "Hundreds of online tools work today."
+      }
+    ]
+  }
+}

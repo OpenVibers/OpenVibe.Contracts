@@ -26,7 +26,85 @@
     "tagline": "Restream anywhere",
     "what": "Ingest once and send the stream to every platform at once; keys, destinations and output health in one place.",
     "legalProfile": "streaming",
-    "position": 18
+    "position": 18,
+    "tld": "stream",
+    "accent": "#ef4444",
+    "description": "OpenRe.Stream is OpenVibe's open streaming engine, split out of OpenVibe.Live. Go live from a web browser with no OBS, no downloads and no follower minimum, or send RTMP or WHIP from any encoder, and restream to Twitch, YouTube, Kick and any RTMP, RTMPS or SRT destination. Browser broadcasts start on OpenVibe.Live today, and move to OpenRe.Stream ingest channel by channel.",
+    "pillars": [
+      {
+        "title": "Browser go-live",
+        "text": "Stream from a browser over WebRTC and WHIP, with nothing to install and no follower minimum."
+      },
+      {
+        "title": "Ingest",
+        "text": "RTMP ingest with keys and lifecycle in one place, plus WHIP/WebRTC; SRT ingest to follow."
+      },
+      {
+        "title": "Restream",
+        "text": "Twitch, YouTube, Kick and any RTMP, RTMPS or SRT destination."
+      },
+      {
+        "title": "Open API and SDK",
+        "text": "Streams, sessions and destinations through the OpenVibe API and SDK; run it yourself from GitHub."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Can I stream without OBS?",
+        "answer": "Yes. Go live from your browser on OpenVibe.Live: press Go Live, allow your camera and microphone, and you are live. There is nothing to install."
+      },
+      {
+        "question": "Do I need followers or subscribers to go live?",
+        "answer": "No. Every OpenVibe account can go live from the first minute, with no follower, subscriber or past-stream requirement."
+      },
+      {
+        "question": "Can I stream from a Chromebook or a phone?",
+        "answer": "Yes. The broadcaster runs in Chrome, Edge, Firefox and Safari, on ChromeOS, Android and iOS as well as Windows, macOS and Linux."
+      },
+      {
+        "question": "Can I restream to Twitch, YouTube and Kick at the same time?",
+        "answer": "Yes. One broadcast can go to Twitch, YouTube, Kick and any RTMP, RTMPS or SRT server at once."
+      },
+      {
+        "question": "Can I use OBS if I want to?",
+        "answer": "Yes. OBS and any RTMP encoder work, and so do WHIP encoders (OBS 30 and later, ffmpeg, GStreamer)."
+      }
+    ],
+    "keywords": "go live from browser, stream without obs, browser streaming, no follower minimum, stream from chromebook, webrtc streaming, whip, rtmp ingest, srt, restream to twitch youtube kick, open source streaming",
+    "highlight": {
+      "title": "Go live from your browser — no OBS needed",
+      "text": "Press Go Live, allow your camera and microphone, and you're live, with your own channel and chat. There's nothing to install and no follower or subscriber minimum. It works on a Chromebook, a laptop or a phone.",
+      "points": [
+        "No OBS, plug-ins or capture card: WebRTC in the browser, with under a second of delay",
+        "No follower, subscriber or past-stream requirement",
+        "Share your screen, a window or a tab, with your camera over it",
+        "When you want scenes, use OBS or any RTMP or WHIP encoder"
+      ],
+      "cta": {
+        "label": "Go live now on OpenVibe.Live",
+        "url": "https://openvibe.live/broadcast"
+      },
+      "more": {
+        "label": "How browser streaming works",
+        "url": "https://openvibe.live/docs/go-live-in-your-browser"
+      }
+    },
+    "launch": "the stream slots to move from OpenVibe.Live's ingest to OpenRe.Stream, one at a time; no stream uses it yet",
+    "relationships": {
+      "plannedRepo": "OpenRe.Stream",
+      "meanwhile": [
+        {
+          "label": "Go live on OpenVibe.Live",
+          "url": "https://openvibe.live/broadcast",
+          "note": "Ingest and restreaming run inside Live today."
+        },
+        {
+          "label": "Restreaming docs",
+          "url": "https://openvibe.live/docs/restreaming",
+          "note": "How the restream paths work."
+        }
+      ]
+    }
   },
   "capabilities": [
     "openre.stream.read",
