@@ -1624,6 +1624,53 @@
    }
   },
   "/api/v1/usage": {
+   "get": {
+    "operationId": "get_api_v1_usage",
+    "summary": "Operate the ledger: economy freeze switch (writes refused, reads served, webhooks queued), reconciliation runs, balanced manual adjustments with a reason, settling a verified provider receipt, provide",
+    "description": "**billing.ledger.admin** (internal): Operate the ledger: economy freeze switch (writes refused, reads served, webhooks queued), reconciliation runs, balanced manual adjustments with a reason, settling a verified provider receipt, provider-event reprocessing, the renewal sweep and import holds.",
+    "tags": [
+     "billing.ledger"
+    ],
+    "x-openvibe-capabilities": [
+     "billing.ledger.admin"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "ledger-admin",
+    "security": [
+     {
+      "openvibeToken": [
+       "billing.ledger.admin"
+      ]
+     }
+    ],
+    "x-openvibe-input": {
+     "$ref": "#/components/schemas/billing.admin-request.v1"
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/billing.admin-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   },
    "post": {
     "operationId": "post_api_v1_usage",
     "summary": "Record a platform.usage-sample@1 reading without moving money.",
