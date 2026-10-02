@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.85.0 <1.0.0"
+    "openvibe-contracts": ">=0.79.0 <1.0.0"
   },
   "id": "bot",
   "name": "OpenVibe.Bot",
@@ -15,10 +15,15 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4630",
   "exposure": {
-    "state": "live",
-    "publicSite": "service"
+    "state": "repository",
+    "publicSite": "placeholder"
   },
-  "capabilities": [],
+  "capabilities": [
+    "bot.robot.read",
+    "bot.robot.manage",
+    "bot.robot.control",
+    "bot.device.connect"
+  ],
   "eventsProduced": [
     "bot.robot.online",
     "bot.robot.offline",
@@ -37,12 +42,16 @@
       "signal": "SIGTERM",
       "deadlineSeconds": 5,
       "drains": [
-        "job timers and Network key refresh stopped",
-        "device and operator WebSockets closed; outbox relay stopped",
-        "HTTP connections drained for up to 4 s, then the server closed",
-        "PostgreSQL pool and Valkey client closed"
+        "SIGTERM and SIGINT both run shutdown(), which first arms a 5 s exit timer",
+        "job timers cleared",
+        "Network key refresh stopped",
+        "device and operator WebSockets closed (hub.close)",
+        "outbox relay stopped",
+        "HTTP server closed (server.close)",
+        "PostgreSQL pool closed",
+        "Valkey client closed; the process exits 0"
       ],
-      "note": "openvibe-sdk/service forces exit after 5 s; the unit allows 10 s (TimeoutStopSec)"
+      "note": "the process forces its own exit after 5 s (a timer in server/index.js, not openvibe-sdk); the unit allows 10 s (TimeoutStopSec)"
     },
     "startupRecovery": {
       "resumes": [
@@ -71,11 +80,11 @@
       }
     },
     "contracts": {
-      "range": ">=0.85.0 <1.0.0"
+      "range": ">=0.79.0 <1.0.0"
     },
     "leases": {
       "none": "no expiring work claims: PostgreSQL row locks serialize queue changes and an advisory lock serializes boot migrations; WebSocket sessions are in memory"
     }
   },
-  "notes": "Robot and device control service on openvibe-ovh since 2026-10-02; the public site uses HTTPS while health and readiness are loopback-only."
+  "notes": "Robot and device control service. Not deployed yet: openvibe-ovh runs no bot service until the owner provisions it; exposure becomes live in the release that points openvibe.bot at it."
 }

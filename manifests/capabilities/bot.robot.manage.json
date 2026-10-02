@@ -1,0 +1,27 @@
+{
+  "id": "bot.robot.manage",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Create, rename, reconfigure and delete robots, issue one-time pairing codes and add or remove operators, for the owner the body's owner or X-OV-Subject names. Deleting a robot is irreversible.",
+  "permissions": [
+    "bot:robot:manage"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-manage",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/robots",
+    "PATCH /api/v1/robots/:id",
+    "DELETE /api/v1/robots/:id",
+    "POST /api/v1/robots/:id/pairing-code",
+    "POST /api/v1/robots/:id/operators",
+    "DELETE /api/v1/robots/:id/operators/:subject"
+  ],
+  "inputSchema": "bot.robot-manage-request@1",
+  "outputSchema": "bot.robot-manage-result@1"
+}

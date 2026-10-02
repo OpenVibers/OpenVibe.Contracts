@@ -1,0 +1,26 @@
+{
+  "id": "bot.robot.control",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Physically control a robot for the person named in X-OV-Subject, with that person's role: latch the e-stop (owner or operator), clear it (owner only), and drive it on the operator WebSocket (/control), where a service token with this capability is admitted on the same gate.",
+  "permissions": [
+    "bot:robot:control"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-control",
+  "events": [
+    "bot.estop.set",
+    "bot.estop.cleared"
+  ],
+  "implementedBy": [
+    "POST /api/v1/robots/:id/estop",
+    "POST /api/v1/robots/:id/estop/clear"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bot.robot-control-result@1"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+  "name": "Rover",
+  "profile_id": "adeept.adr036",
+  "profile_version": 1,
+  "access_policy": "private",
+  "limits": {
+    "max_command_ms": 300
+  },
+  "estop": {
+    "latched": false,
+    "by": null,
+    "at": null
+  },
+  "created_at": "2026-09-29T19:20:00.000Z",
+  "updated_at": "2026-09-29T19:20:00.000Z"
+}

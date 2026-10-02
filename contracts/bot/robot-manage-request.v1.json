@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot-manage-request.v1.json",
+  "title": "BotRobotManageRequest",
+  "description": "bot.robot-manage-request@1: bodies of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → { owner (the person a service acts for), name, profile_id, access_policy?, limits? }; PATCH …/robots/:id → { name?, access_policy?, limits? }; POST …/robots/:id/operators → { subject, role? (operator by default) }. POST …/robots/:id/pairing-code and both DELETE routes take no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "name",
+        "profile_id"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "access_policy": {
+          "enum": [
+            "private",
+            "invite",
+            "queue"
+          ]
+        },
+        "limits": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "access_policy": {
+          "enum": [
+            "private",
+            "invite",
+            "queue"
+          ]
+        },
+        "limits": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "subject"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "role": {
+          "enum": [
+            "operator",
+            "viewer"
+          ]
+        }
+      }
+    }
+  ]
+}

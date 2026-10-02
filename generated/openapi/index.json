@@ -23,6 +23,13 @@
       "capabilities": 12
     },
     {
+      "service": "bot",
+      "name": "OpenVibe.Bot",
+      "origin": "https://openvibe.bot",
+      "operations": 15,
+      "capabilities": 4
+    },
+    {
       "service": "chat",
       "name": "OpenVibe.Chat",
       "origin": "https://openvibe.chat",

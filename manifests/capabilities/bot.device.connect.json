@@ -1,0 +1,23 @@
+{
+  "id": "bot.device.connect",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Manage a paired device's credentials for the robot's owner: rotate them (the new credential and publish key are shown once) or revoke the device, which closes its socket at once.",
+  "permissions": [
+    "bot:device:connect"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-device",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/devices/:id/rotate",
+    "POST /api/v1/devices/:id/revoke"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bot.device-connect-result@1"
+}
