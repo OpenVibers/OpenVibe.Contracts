@@ -4,7 +4,7 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased — T1 Universal Fabric
+## 0.84.0 — 2026-10-02
 
 Add nine public `platform.*@1` schemas: usage and telemetry samples; node capabilities and
 service instances; runtime, storage, delivery, agent, and harness offers. Each has valid and
@@ -16,8 +16,6 @@ fields: `free_allowance_used` (non-negative number in the reading's own `unit`, 
 and `route_epoch` and `trace_id` (same types as in `platform.telemetry-sample@1`). Readings without these fields
 still validate. New fixtures: `all-fifteen-fields` and `minimal` (valid); a fractional or negative `vibes_charged` and
 a negative `free_allowance_used` (invalid). Additive.
-
-## Unreleased — the product catalog (plan T11 lane D)
 
 The OpenVibe.Sites catalog (`sites.json`, 33 domains) moves into Contracts so Sites can be deleted. Additive.
 - `registry.service-manifest` 1.1.0: `site` gains the optional `tld`, `accent`, `description`, `pillars`, `faq`,
