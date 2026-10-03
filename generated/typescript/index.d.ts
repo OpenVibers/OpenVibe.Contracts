@@ -46901,6 +46901,176 @@ export interface MediaObjectVisibilityChangedPayload {
   changed_at: string;
 }
 
+/** media.replica.requested@1.0.0 (owner: media) */
+/**
+ * media.replica.requested v1 (OpenVibe.Media server/objects/tiering.js promote(), the recordPlacement inside the transaction that starts the copy; PR #18). Media decided to place a replica of a ready object: the canonical copy stays where it is and the bytes are copied to the target provider (R2, the popularity cache). Recorded before the copy, so a request with no following media.replica.ready means the copy never verified and no replica exists. The payload is deliberately narrow: the object id and its tenant, the placement class, the decision and the two providers. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none. The event type is inside media.* because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name.
+ */
+export interface MediaReplicaRequestedPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * promote copies the object to the target provider, demote removes a replica from it.
+   */
+  action: "promote" | "demote";
+  /**
+   * The canonical provider the copy is read from; null when the object has no canonical copy at request time.
+   */
+  from: "local" | "b2" | "r2" | null;
+  /**
+   * The provider the replica is placed on.
+   */
+  to: "local" | "b2" | "r2";
+  /**
+   * The replica provider, named again so the decision is readable on its own.
+   */
+  provider: "local" | "b2" | "r2";
+}
+
+/** media.replica.ready@1.0.0 (owner: media) */
+/**
+ * media.replica.ready v1 (OpenVibe.Media server/objects/tiering.js promote(), the recordPlacement in the transaction that upserts the verified media_locations row; PR #18). A replica finished copying and verified: the bytes read back from the target provider hash to the object's recorded content_hash before this is recorded. The payload carries where the copy lives and how big it is, so consumers and the placement view can act without reading the object API. A media.replica.requested with no ready for the same object is a copy that never verified (the bytes are removed, nothing was recorded). Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.
+ */
+export interface MediaReplicaReadyPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * promote placed a copy on the provider, demote removed one.
+   */
+  action: "promote" | "demote";
+  /**
+   * The provider that now holds the verified replica.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The object key of the replica in the provider's bucket.
+   */
+  key: string;
+  /**
+   * The size in bytes that was copied and verified.
+   */
+  bytes: number;
+  /**
+   * When the verified replica was recorded, ISO 8601 UTC; a fresh row restarts the demotion residency clock.
+   */
+  replica_since: string;
+}
+
+/** media.replica.draining@1.0.0 (owner: media) */
+/**
+ * media.replica.draining v1 (OpenVibe.Media server/objects/tiering.js demote(), the recordPlacement before the replica is deleted; PR #18). Media decided to drain a replica: the canonical copy has been confirmed good, the replica is about to be removed, and reads should stop being routed to it. Recorded before the delete, so a draining with no following media.replica.evicted means the delete failed and the replica is still there. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.
+ */
+export interface MediaReplicaDrainingPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * Draining is always part of a demotion.
+   */
+  action: "demote";
+  /**
+   * The provider whose replica is being drained.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The object key of the replica being removed.
+   */
+  key: string;
+}
+
+/** media.replica.evicted@1.0.0 (owner: media) */
+/**
+ * media.replica.evicted v1 (OpenVibe.Media server/objects/tiering.js demote(), the recordPlacement in the transaction that deletes the media_locations row; PR #18). The replica is gone: the bytes were deleted from the provider and the location row removed, so nothing routes reads there any more. Paired with the media.replica.draining that preceded it; draining without evicted is a delete that failed. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.
+ */
+export interface MediaReplicaEvictedPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * Eviction is always the end of a demotion.
+   */
+  action: "demote";
+  /**
+   * The provider the replica was removed from.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The object key that no longer exists in the provider's bucket.
+   */
+  key: string;
+}
+
+/** media.provider.health_degraded@1.0.0 (owner: media) */
+/**
+ * media.provider.health_degraded v1 (OpenVibe.Media server/placement/providers.js liveHealth(), the announceProviderEvent on a healthy→unhealthy flip; PR #18). A storage provider that was healthy failed its per-minute HeadBucket, so the fabric stops routing to it until it answers again. Emitted once per flip, not once per tick: another failing HEAD while it is already unhealthy records nothing, and a recovery is a media.storage.recovered style state change, not another degradation. The event lives in the media namespace because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name; the original provider.* type could never be published by source media (403 events.type_not_allowed). Envelope: subject { type: provider, id: <provider> }, visibility internal, priority low, actor service:media, source media.
+ */
+export interface MediaProviderHealthDegradedPayload {
+  /**
+   * Always null: a provider serves every tenant, so the signal belongs to no one app.
+   */
+  app_id: string | null;
+  /**
+   * The provider that failed its health check.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * This event exists only for the healthy→unhealthy flip, so it is always false.
+   */
+  healthy: false;
+  /**
+   * The error the failed health check recorded.
+   */
+  last_error: string;
+}
+
+/** media.provider.capacity_warning@1.0.0 (owner: media) */
+/**
+ * media.provider.capacity_warning v1 (OpenVibe.Media server/placement/providers.js setCapabilities(), the announceProviderEvent when a completed probe leaves the provider in fewer classes; PR #18). A provider that was passing lost one or more classes: the probe now fails a capability the class needs (for example R2 no longer serving a 206 range, so it stops being online-hot), and the router removes it from those classes until a later probe passes again. Emitted once per class loss, not once per probe. The event lives in the media namespace because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name; the original provider.* type could never be published by source media (403 events.type_not_allowed). Envelope: subject { type: provider, id: <provider> }, visibility internal, priority low, actor service:media, source media.
+ */
+export interface MediaProviderCapacityWarningPayload {
+  /**
+   * Always null: a provider serves every tenant, so the signal belongs to no one app.
+   */
+  app_id: string | null;
+  /**
+   * The provider that lost classes.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The classes the provider still serves after the probe; a strict subset of previous_classes.
+   */
+  classes: ("online-canonical" | "online-hot" | "regional-cache")[];
+  /**
+   * The classes the provider served before the probe.
+   */
+  previous_classes: ("online-canonical" | "online-hot" | "regional-cache")[];
+}
+
 /** media.avatar-ingest-request@1.0.0 (owner: media) */
 /**
  * media.avatar-ingest-request@1: the body of POST /internal/avatar-ingest on OpenVibe.Media (capability media.avatar.ingest; Network calls it while adopting an avatar a person pointed at somewhere else on the web). Media fetches the URL once through its egress guard (https only, public addresses only, at most 8 MB and 10 s), re-encodes it to a 512×512 WebP and stores it as an unlisted screenshot paste owned by user_id, so no OpenVibe site ever serves or stores a third-party address. Refusals are { ok: false, error } (400 without url or user_id, 422 when the link is not a usable picture).

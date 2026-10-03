@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.provider.health_degraded.v1.json",
+  "title": "MediaProviderHealthDegradedPayload",
+  "description": "media.provider.health_degraded v1 (OpenVibe.Media server/placement/providers.js liveHealth(), the announceProviderEvent on a healthy→unhealthy flip; PR #18). A storage provider that was healthy failed its per-minute HeadBucket, so the fabric stops routing to it until it answers again. Emitted once per flip, not once per tick: another failing HEAD while it is already unhealthy records nothing, and a recovery is a media.storage.recovered style state change, not another degradation. The event lives in the media namespace because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name; the original provider.* type could never be published by source media (403 events.type_not_allowed). Envelope: subject { type: provider, id: <provider> }, visibility internal, priority low, actor service:media, source media.",
+  "type": "object",
+  "required": [
+    "app_id",
+    "provider",
+    "healthy",
+    "last_error"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "app_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Always null: a provider serves every tenant, so the signal belongs to no one app."
+    },
+    "provider": {
+      "enum": [
+        "local",
+        "b2",
+        "r2"
+      ],
+      "description": "The provider that failed its health check."
+    },
+    "healthy": {
+      "const": false,
+      "description": "This event exists only for the healthy→unhealthy flip, so it is always false."
+    },
+    "last_error": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "The error the failed health check recorded."
+    }
+  }
+}

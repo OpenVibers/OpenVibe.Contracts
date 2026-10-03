@@ -357,6 +357,26 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(services.get('media').eventsProduced.includes('media.object.deleted') && services.get('media').eventsProduced.includes('media.object.visibility_changed'), 'the media manifest lists its object events');
 }
 
+// ── Media placement events (PR #18 follow-up): replicas and provider transitions ──
+// OpenVibe.Events gates a service's event_type to a prefix that starts with its source key
+// (OpenVibe.Events server/config.js sourcePrefixes), so a provider.* type can never be published by
+// source media: both provider events are media.provider.*. Every type here is emitted by Media's
+// placement outbox today, and each carries only the decision, never the object's bytes or metadata.
+{
+    const placement = ['media.replica.requested', 'media.replica.ready', 'media.replica.draining', 'media.replica.evicted',
+        'media.provider.health_degraded', 'media.provider.capacity_warning'];
+    for (const id of placement) {
+        const c = contracts.catalog.find(x => x.id === id);
+        ok(c && c.owner === 'media' && c.status === 'active', `${id} is an active Media payload contract`);
+        ok(services.get('media').eventsProduced.includes(id), `the media manifest produces ${id}`);
+    }
+    for (const t of services.get('media').eventsProduced) ok(t.startsWith('media.'), `media produces ${t} inside media.*`);
+    const warn = contracts.schema('media.provider.capacity_warning');
+    ok(JSON.stringify(warn.properties.classes.items.enum) === JSON.stringify(warn.properties.previous_classes.items.enum), 'capacity_warning names the same class set before and after the loss');
+    const replica = contracts.schema('media.replica.ready');
+    ok(replica.properties.bytes.type === 'integer' && replica.required.includes('key'), 'replica.ready carries the verified copy and its size');
+}
+
 // ── Mod manifest 1.1.0 (v0.34.0, ADR-013 amendment) ──────────────────────
 // Read/write grants, billing hooks and dependencies are optional, so every 1.0.0 manifest stays
 // valid; the split uses exactly the namespace patterns of the older lists; money goes only through

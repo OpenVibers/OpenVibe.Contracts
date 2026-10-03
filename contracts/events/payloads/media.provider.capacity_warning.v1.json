@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.provider.capacity_warning.v1.json",
+  "title": "MediaProviderCapacityWarningPayload",
+  "description": "media.provider.capacity_warning v1 (OpenVibe.Media server/placement/providers.js setCapabilities(), the announceProviderEvent when a completed probe leaves the provider in fewer classes; PR #18). A provider that was passing lost one or more classes: the probe now fails a capability the class needs (for example R2 no longer serving a 206 range, so it stops being online-hot), and the router removes it from those classes until a later probe passes again. Emitted once per class loss, not once per probe. The event lives in the media namespace because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name; the original provider.* type could never be published by source media (403 events.type_not_allowed). Envelope: subject { type: provider, id: <provider> }, visibility internal, priority low, actor service:media, source media.",
+  "type": "object",
+  "required": [
+    "app_id",
+    "provider",
+    "classes",
+    "previous_classes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "app_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Always null: a provider serves every tenant, so the signal belongs to no one app."
+    },
+    "provider": {
+      "enum": [
+        "local",
+        "b2",
+        "r2"
+      ],
+      "description": "The provider that lost classes."
+    },
+    "classes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "online-canonical",
+          "online-hot",
+          "regional-cache"
+        ]
+      },
+      "uniqueItems": true,
+      "description": "The classes the provider still serves after the probe; a strict subset of previous_classes."
+    },
+    "previous_classes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "online-canonical",
+          "online-hot",
+          "regional-cache"
+        ]
+      },
+      "uniqueItems": true,
+      "description": "The classes the provider served before the probe."
+    }
+  }
+}
