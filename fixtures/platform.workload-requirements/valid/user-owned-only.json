@@ -1,0 +1,9 @@
+{
+  "kind": "ai.run",
+  "mobility": "job",
+  "latency_class": "background",
+  "objective": "private",
+  "trust": [
+    "user-owned"
+  ]
+}

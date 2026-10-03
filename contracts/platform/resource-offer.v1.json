@@ -53,6 +53,7 @@
       "type": "string",
       "enum": [
         "first-party",
+        "user-owned",
         "partner",
         "community",
         "external"
