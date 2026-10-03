@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.replica.evicted.v1.json",
+  "title": "MediaReplicaEvictedPayload",
+  "description": "media.replica.evicted v1 (OpenVibe.Media server/objects/tiering.js demote(), the recordPlacement in the transaction that deletes the media_locations row; PR #18). The replica is gone: the bytes were deleted from the provider and the location row removed, so nothing routes reads there any more. Paired with the media.replica.draining that preceded it; draining without evicted is a delete that failed. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.",
+  "type": "object",
+  "required": [
+    "object_id",
+    "app_id",
+    "class",
+    "action",
+    "provider",
+    "key"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "object_id": {
+      "type": "string",
+      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "app_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant."
+    },
+    "class": {
+      "enum": [
+        "video",
+        "image",
+        "download",
+        "game-asset",
+        "attachment",
+        "backup"
+      ],
+      "description": "The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf)."
+    },
+    "action": {
+      "const": "demote",
+      "description": "Eviction is always the end of a demotion."
+    },
+    "provider": {
+      "enum": [
+        "local",
+        "b2",
+        "r2"
+      ],
+      "description": "The provider the replica was removed from."
+    },
+    "key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "description": "The object key that no longer exists in the provider's bucket."
+    }
+  }
+}

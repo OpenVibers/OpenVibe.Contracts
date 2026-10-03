@@ -82,7 +82,7 @@
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
-      "operations": 30,
+      "operations": 34,
       "capabilities": 4
     },
     {

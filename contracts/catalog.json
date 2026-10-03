@@ -4367,6 +4367,60 @@
       "status": "active"
     },
     {
+      "id": "media.replica.requested",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.replica.ready",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.ready.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.replica.draining",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.draining.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.replica.evicted",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.evicted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.provider.health_degraded",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.provider.health_degraded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.provider.capacity_warning",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.provider.capacity_warning.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.avatar-ingest-request",
       "version": "1.0.0",
       "owner": "media",

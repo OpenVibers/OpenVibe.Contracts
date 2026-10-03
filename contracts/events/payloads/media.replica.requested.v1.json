@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.replica.requested.v1.json",
+  "title": "MediaReplicaRequestedPayload",
+  "description": "media.replica.requested v1 (OpenVibe.Media server/objects/tiering.js promote(), the recordPlacement inside the transaction that starts the copy; PR #18). Media decided to place a replica of a ready object: the canonical copy stays where it is and the bytes are copied to the target provider (R2, the popularity cache). Recorded before the copy, so a request with no following media.replica.ready means the copy never verified and no replica exists. The payload is deliberately narrow: the object id and its tenant, the placement class, the decision and the two providers. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none. The event type is inside media.* because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name.",
+  "type": "object",
+  "required": [
+    "object_id",
+    "app_id",
+    "class",
+    "action",
+    "from",
+    "to",
+    "provider"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "object_id": {
+      "type": "string",
+      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "app_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant."
+    },
+    "class": {
+      "enum": [
+        "video",
+        "image",
+        "download",
+        "game-asset",
+        "attachment",
+        "backup"
+      ],
+      "description": "The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf)."
+    },
+    "action": {
+      "enum": [
+        "promote",
+        "demote"
+      ],
+      "description": "promote copies the object to the target provider, demote removes a replica from it."
+    },
+    "from": {
+      "enum": [
+        "local",
+        "b2",
+        "r2",
+        null
+      ],
+      "description": "The canonical provider the copy is read from; null when the object has no canonical copy at request time."
+    },
+    "to": {
+      "enum": [
+        "local",
+        "b2",
+        "r2"
+      ],
+      "description": "The provider the replica is placed on."
+    },
+    "provider": {
+      "enum": [
+        "local",
+        "b2",
+        "r2"
+      ],
+      "description": "The replica provider, named again so the decision is readable on its own."
+    }
+  }
+}

@@ -4,7 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.87.0 — 2026-10-03
+
+**Host git sources** (plan T12 Stage B): a Host site may name a public Git source — provider, repository URL and branch;
+never a credential — and a site with a source also accepts a CI-built deploy at `/sites/:id/source/deploys` naming the
+ref and full `commit_sha`. That deploy is always a preview and records the commit as immutable provenance.
+- `host.site.manage` gains `GET`, `PUT` and `DELETE /api/v1/sites/:id/source`; `host.deploy.create` gains
+  `POST /api/v1/sites/:id/source/deploys`.
+- `host.deploy@1`: the `source` enum adds `preview` and `git`, and an optional `git` object carries `provider`,
+  `repo_url`, `ref` and a 40-hex `commit_sha`. New valid fixture `git`. Additive: every existing deploy stays valid,
+  and the object is present only on `source: git`.
 
 **The Bot service manifest** (plan T15 step 1; ADR-043; supersedes #8). OpenVibe.Bot has run on openvibe-ovh since
 2026-10-02 (`openvibe-bot.service`, `/opt/openvibe.bot`), and `ovhost validate` found no `bot` manifest to read its
@@ -30,7 +39,23 @@ lifecycle from.
 - Presence policy: `bot.robot.online` and `bot.robot.offline` are robot connectivity (ADR-043), not a person's presence,
   and are allowed. Any other `.online`, `.offline` or presence event type is still refused.
 
-## 0.87.0 — 2026-10-03
+**Media placement events** (follow-up of OpenVibe.Media PR #18, "Record placement decisions for replicas and provider
+transitions"; ADR-026). Media records every replica move and provider transition in its placement outbox, but the two
+provider events used types starting with `provider.`, which OpenVibe.Events can never accept from source `media`: its
+prefix gate (`server/config.js` `sourcePrefixes`, `server/api/publish.js`) requires an `event_type` to start with the
+source key, so both were permanently rejected (`403 events.type_not_allowed`) and piled up in `event_outbox`. The types
+now live in the media namespace (`media.provider.health_degraded`, `media.provider.capacity_warning`), and all six event
+types Media emits today gain active payload contracts owned by `media`, listed in its manifest:
+- `media.replica.requested`, `media.replica.ready`, `media.replica.draining`, `media.replica.evicted` (Media's
+  `server/objects/tiering.js`: the promote/demote decisions, recorded inside the transaction that starts the copy, upserts
+  the verified location, starts the delete and removes it).
+- `media.provider.health_degraded` and `media.provider.capacity_warning` (Media's `server/placement/providers.js`: the
+  healthy→unhealthy flip and the class loss after a completed probe), each emitted once per transition, not per tick.
+
+Each payload is deliberately narrow — the object id and tenant, placement class, action, providers, key/size for a
+replica, the class set before and after a loss — never the object's bytes, title or metadata. `media.replica.*` was
+already inside the streamable namespace; only the provider types changed. Valid and invalid fixtures for each, and
+`test/run.js` asserts every type Media produces starts with `media.`, is owned by `media` and is listed in its manifest.
 
 **User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
 ADR-046, is still to write). A person's own node or machine is now a trust class of its own in Contracts, between
