@@ -1,0 +1,56 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.79.0 <1.0.0"
+  },
+  "id": "bot",
+  "name": "OpenVibe.Bot",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Bot",
+  "domains": [
+    "openvibe.bot"
+  ],
+  "publicOrigin": "https://openvibe.bot",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "exposure": {
+    "state": "repository",
+    "publicSite": "placeholder"
+  },
+  "capabilities": [
+    "bot.robot.read",
+    "bot.robot.manage",
+    "bot.robot.control",
+    "bot.device.connect"
+  ],
+  "eventsProduced": [
+    "bot.robot.online",
+    "bot.robot.offline",
+    "bot.estop.set",
+    "bot.estop.cleared",
+    "bot.command.refused"
+  ],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "not deployed yet; nothing listens on a loopback address"
+    },
+    "shutdown": {
+      "none": "not deployed yet; nothing runs or drains"
+    },
+    "startupRecovery": {
+      "none": "not deployed yet; nothing starts"
+    },
+    "rollback": {
+      "none": "not deployed yet; nothing is released or rolled back"
+    },
+    "contracts": {
+      "range": ">=0.79.0 <1.0.0"
+    },
+    "leases": {
+      "none": "not deployed yet; nothing runs"
+    }
+  },
+  "notes": "Robot and device control service. Not deployed yet: openvibe-ovh runs no bot service until the owner provisions it; exposure becomes live in the release that points openvibe.bot at it."
+}

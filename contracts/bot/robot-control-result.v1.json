@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot-control-result.v1.json",
+  "title": "BotRobotControlResult",
+  "description": "bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop (owner or operator) and POST …/robots/:id/estop/clear (owner only) → { robot } with its e-stop as it now stands.",
+  "type": "object",
+  "required": [
+    "robot"
+  ],
+  "properties": {
+    "robot": {
+      "$ref": "robot.v1.json"
+    }
+  }
+}

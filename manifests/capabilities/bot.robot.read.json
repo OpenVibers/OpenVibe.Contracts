@@ -1,0 +1,25 @@
+{
+  "id": "bot.robot.read",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read robots as the person named in X-OV-Subject (or ?owner= when listing) sees them: a robot and the caller's role, its operators, its devices (never a credential or key hash) and its command audit (owner only, newest first).",
+  "permissions": [
+    "bot:robot:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/robots",
+    "GET /api/v1/robots/:id",
+    "GET /api/v1/robots/:id/operators",
+    "GET /api/v1/robots/:id/devices",
+    "GET /api/v1/robots/:id/audit"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bot.robot-read-result@1"
+}

@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot-read-result.v1.json",
+  "title": "BotRobotReadResult",
+  "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service acts for X-OV-Subject or ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "robots"
+      ],
+      "properties": {
+        "robots": {
+          "type": "array",
+          "items": {
+            "$ref": "robot.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "robot",
+        "role"
+      ],
+      "properties": {
+        "robot": {
+          "$ref": "robot.v1.json"
+        },
+        "role": {
+          "enum": [
+            "owner",
+            "operator",
+            "viewer",
+            "queue",
+            "service"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "operators"
+      ],
+      "properties": {
+        "operators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "role"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "role": {
+                "enum": [
+                  "operator",
+                  "viewer"
+                ]
+              },
+              "added_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "devices"
+      ],
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "device.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "audit",
+        "next_before"
+      ],
+      "properties": {
+        "next_before": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "audit": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "robot_id",
+              "kind",
+              "result",
+              "at"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "robot_id": {
+                "type": "string",
+                "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "device_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operator_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operator_kind": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "role": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "kind": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "value": {},
+              "result": {
+                "enum": [
+                  "ack",
+                  "nack",
+                  "refused",
+                  "expired"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "latency_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

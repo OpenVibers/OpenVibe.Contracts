@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot.v1.json",
+  "title": "BotRobot",
+  "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs, who may drive it (access_policy) and the latched e-stop.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "profile_id",
+    "access_policy",
+    "limits",
+    "estop",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_version": {},
+    "access_policy": {
+      "enum": [
+        "private",
+        "invite",
+        "queue"
+      ]
+    },
+    "limits": {
+      "type": "object"
+    },
+    "estop": {
+      "type": "object",
+      "required": [
+        "latched",
+        "by",
+        "at"
+      ],
+      "properties": {
+        "latched": {
+          "type": "boolean"
+        },
+        "by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

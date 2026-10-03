@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/device.v1.json",
+  "title": "BotDevice",
+  "description": "bot.device@1: a paired device as the API presents it (domain.present.device): never a credential or publish-key hash; online is added when a robot's devices are listed.",
+  "type": "object",
+  "required": [
+    "id",
+    "robot_ids",
+    "kind",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "robot_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+      }
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "type": "string"
+    },
+    "agent_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "drivers": {
+      "type": "array"
+    },
+    "capabilities": {
+      "type": "object"
+    },
+    "last_seen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "online": {
+      "type": "boolean"
+    }
+  }
+}

@@ -61121,6 +61121,629 @@
           }
         }
       }
+    },
+    "bot.robot": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/robot.v1.json",
+        "title": "BotRobot",
+        "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs, who may drive it (access_policy) and the latched e-stop.",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "profile_id",
+          "access_policy",
+          "limits",
+          "estop",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profile_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profile_version": {},
+          "access_policy": {
+            "enum": [
+              "private",
+              "invite",
+              "queue"
+            ]
+          },
+          "limits": {
+            "type": "object"
+          },
+          "estop": {
+            "type": "object",
+            "required": [
+              "latched",
+              "by",
+              "at"
+            ],
+            "properties": {
+              "latched": {
+                "type": "boolean"
+              },
+              "by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bot.device": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/device.v1.json",
+        "title": "BotDevice",
+        "description": "bot.device@1: a paired device as the API presents it (domain.present.device): never a credential or publish-key hash; online is added when a robot's devices are listed.",
+        "type": "object",
+        "required": [
+          "id",
+          "robot_ids",
+          "kind",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "robot_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "type": "string"
+          },
+          "agent_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "drivers": {
+            "type": "array"
+          },
+          "capabilities": {
+            "type": "object"
+          },
+          "last_seen": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "online": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "bot.robot-read-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/robot-read-result.v1.json",
+        "title": "BotRobotReadResult",
+        "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service acts for X-OV-Subject or ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "robots"
+            ],
+            "properties": {
+              "robots": {
+                "type": "array",
+                "items": {
+                  "$ref": "robot.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "robot",
+              "role"
+            ],
+            "properties": {
+              "robot": {
+                "$ref": "robot.v1.json"
+              },
+              "role": {
+                "enum": [
+                  "owner",
+                  "operator",
+                  "viewer",
+                  "queue",
+                  "service"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "operators"
+            ],
+            "properties": {
+              "operators": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "role"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "role": {
+                      "enum": [
+                        "operator",
+                        "viewer"
+                      ]
+                    },
+                    "added_by": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "devices"
+            ],
+            "properties": {
+              "devices": {
+                "type": "array",
+                "items": {
+                  "$ref": "device.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "audit",
+              "next_before"
+            ],
+            "properties": {
+              "next_before": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "audit": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "robot_id",
+                    "kind",
+                    "result",
+                    "at"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "robot_id": {
+                      "type": "string",
+                      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "device_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "operator_subject": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "operator_kind": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "role": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "kind": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "value": {},
+                    "result": {
+                      "enum": [
+                        "ack",
+                        "nack",
+                        "refused",
+                        "expired"
+                      ]
+                    },
+                    "reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "latency_ms": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "bot.robot-manage-request": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/robot-manage-request.v1.json",
+        "title": "BotRobotManageRequest",
+        "description": "bot.robot-manage-request@1: bodies of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → { owner (the person a service acts for), name, profile_id, access_policy?, limits? }; PATCH …/robots/:id → { name?, access_policy?, limits? }; POST …/robots/:id/operators → { subject, role? (operator by default) }. POST …/robots/:id/pairing-code and both DELETE routes take no body.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "name",
+              "profile_id"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "profile_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "access_policy": {
+                "enum": [
+                  "private",
+                  "invite",
+                  "queue"
+                ]
+              },
+              "limits": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "access_policy": {
+                "enum": [
+                  "private",
+                  "invite",
+                  "queue"
+                ]
+              },
+              "limits": {
+                "type": "object"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subject"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "role": {
+                "enum": [
+                  "operator",
+                  "viewer"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "bot.robot-manage-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/robot-manage-result.v1.json",
+        "title": "BotRobotManageResult",
+        "description": "bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "robot",
+              "pairing"
+            ],
+            "properties": {
+              "robot": {
+                "$ref": "robot.v1.json"
+              },
+              "pairing": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "expires_at",
+                  "installer"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "installer": {
+                    "type": "string"
+                  }
+                },
+                "description": "A one-time pairing code (shown once), when it expires and the one-line installer command that uses it."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "robot"
+            ],
+            "properties": {
+              "robot": {
+                "$ref": "robot.v1.json"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "code",
+              "expires_at",
+              "installer"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "installer": {
+                "type": "string"
+              }
+            },
+            "description": "A one-time pairing code (shown once), when it expires and the one-line installer command that uses it."
+          },
+          {
+            "type": "object",
+            "required": [
+              "operators"
+            ],
+            "properties": {
+              "operators": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "role"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "role": {
+                      "enum": [
+                        "operator",
+                        "viewer"
+                      ]
+                    },
+                    "added_by": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "bot.robot-control-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/robot-control-result.v1.json",
+        "title": "BotRobotControlResult",
+        "description": "bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop (owner or operator) and POST …/robots/:id/estop/clear (owner only) → { robot } with its e-stop as it now stands.",
+        "type": "object",
+        "required": [
+          "robot"
+        ],
+        "properties": {
+          "robot": {
+            "$ref": "robot.v1.json"
+          }
+        }
+      }
+    },
+    "bot.device-connect-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/device-connect-result.v1.json",
+        "title": "BotDeviceConnectResult",
+        "description": "bot.device-connect-result@1: answers of bot.device.connect on OpenVibe.Bot (the robot's owner, or a service acting for them). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "device",
+              "credential",
+              "publish_key"
+            ],
+            "properties": {
+              "device": {
+                "$ref": "device.v1.json"
+              },
+              "credential": {
+                "type": "string",
+                "minLength": 1
+              },
+              "publish_key": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "device"
+            ],
+            "properties": {
+              "device": {
+                "$ref": "device.v1.json"
+              }
+            }
+          }
+        ]
+      }
     }
   }
 }
