@@ -64,7 +64,7 @@
         "type": "string",
         "pattern": "^[a-z][a-z0-9-]*:[a-z0-9.-]+$"
       },
-      "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2"
+      "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true"
     },
     "capacity": {
       "type": "object",

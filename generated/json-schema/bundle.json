@@ -57796,7 +57796,7 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9-]*:[a-z0-9.-]+$"
             },
-            "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2"
+            "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true"
           },
           "capacity": {
             "type": "object",
@@ -60063,6 +60063,42 @@
               "max_duration_seconds",
               "max_concurrent_runs"
             ]
+          },
+          "task_capabilities": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "edit",
+                "review",
+                "browse",
+                "run",
+                "test",
+                "plan"
+              ]
+            },
+            "description": "task kinds the harness takes; its resource offer lists the same kinds as task:<kind> capabilities"
+          },
+          "runtime_needs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9.-]*$",
+              "maxLength": 40
+            },
+            "description": "runtimes the harness needs on its host, e.g. git, node, python, docker"
+          },
+          "byo_key": {
+            "type": "boolean",
+            "description": "the caller supplies their own provider key"
+          },
+          "success_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "measured share of routed tasks that finished green"
           }
         },
         "examples": [
@@ -60088,7 +60124,19 @@
               "max_duration_seconds": 7200,
               "max_concurrent_runs": 4,
               "max_context_tokens": 128000
-            }
+            },
+            "task_capabilities": [
+              "edit",
+              "review",
+              "run",
+              "test"
+            ],
+            "runtime_needs": [
+              "git",
+              "node"
+            ],
+            "byo_key": false,
+            "success_rate": 0.92
           }
         ]
       }

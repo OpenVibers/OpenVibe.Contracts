@@ -50737,7 +50737,7 @@ export type ResourceOffer = {
   cell?: string;
   trust: "first-party" | "partner" | "community" | "external";
   /**
-   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true
    */
   capabilities: string[];
   capacity?: {
@@ -51404,6 +51404,22 @@ export interface HarnessOffer {
     max_concurrent_runs: number;
     max_context_tokens?: number;
   };
+  /**
+   * task kinds the harness takes; its resource offer lists the same kinds as task:<kind> capabilities
+   */
+  task_capabilities?: ("edit" | "review" | "browse" | "run" | "test" | "plan")[];
+  /**
+   * runtimes the harness needs on its host, e.g. git, node, python, docker
+   */
+  runtime_needs?: string[];
+  /**
+   * the caller supplies their own provider key
+   */
+  byo_key?: boolean;
+  /**
+   * measured share of routed tasks that finished green
+   */
+  success_rate?: number;
 }
 
 /** platform.runtime-class@1.0.0 (owner: network) */

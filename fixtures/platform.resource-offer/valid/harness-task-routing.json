@@ -1,0 +1,53 @@
+{
+  "offer_id": "off_harness_2",
+  "kind": "harness",
+  "provider": "example",
+  "region": "us-west",
+  "trust": "first-party",
+  "capabilities": [
+    "task:edit",
+    "task:review",
+    "harness:mcp"
+  ],
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "per-operation"
+  },
+  "updated_at": "2026-10-02T00:00:00Z",
+  "detail": {
+    "id": "harness-2",
+    "name": "Example Agent",
+    "provider": "example-ai",
+    "capabilities": {
+      "host_access": false,
+      "mcp": true,
+      "long_autonomy": false,
+      "resume": false
+    },
+    "address": {
+      "kind": "cli",
+      "target": "example-agent"
+    },
+    "price": {
+      "amount_usd": 0.1,
+      "unit": "hour"
+    },
+    "limits": {
+      "max_duration_seconds": 7200,
+      "max_concurrent_runs": 4,
+      "max_context_tokens": 128000
+    },
+    "task_capabilities": [
+      "edit",
+      "review"
+    ],
+    "runtime_needs": [
+      "git",
+      "node"
+    ],
+    "byo_key": false,
+    "success_rate": 0.92
+  }
+}
