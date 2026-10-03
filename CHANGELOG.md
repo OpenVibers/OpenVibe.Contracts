@@ -30,6 +30,24 @@ lifecycle from.
 - Presence policy: `bot.robot.online` and `bot.robot.offline` are robot connectivity (ADR-043), not a person's presence,
   and are allowed. Any other `.online`, `.offline` or presence event type is still refused.
 
+**Media placement events** (follow-up of OpenVibe.Media PR #18, "Record placement decisions for replicas and provider
+transitions"; ADR-026). Media records every replica move and provider transition in its placement outbox, but the two
+provider events used types starting with `provider.`, which OpenVibe.Events can never accept from source `media`: its
+prefix gate (`server/config.js` `sourcePrefixes`, `server/api/publish.js`) requires an `event_type` to start with the
+source key, so both were permanently rejected (`403 events.type_not_allowed`) and piled up in `event_outbox`. The types
+now live in the media namespace (`media.provider.health_degraded`, `media.provider.capacity_warning`), and all six event
+types Media emits today gain active payload contracts owned by `media`, listed in its manifest:
+- `media.replica.requested`, `media.replica.ready`, `media.replica.draining`, `media.replica.evicted` (Media's
+  `server/objects/tiering.js`: the promote/demote decisions, recorded inside the transaction that starts the copy, upserts
+  the verified location, starts the delete and removes it).
+- `media.provider.health_degraded` and `media.provider.capacity_warning` (Media's `server/placement/providers.js`: the
+  healthy→unhealthy flip and the class loss after a completed probe), each emitted once per transition, not per tick.
+
+Each payload is deliberately narrow — the object id and tenant, placement class, action, providers, key/size for a
+replica, the class set before and after a loss — never the object's bytes, title or metadata. `media.replica.*` was
+already inside the streamable namespace; only the provider types changed. Valid and invalid fixtures for each, and
+`test/run.js` asserts every type Media produces starts with `media.`, is owned by `media` and is listed in its manifest.
+
 ## 0.87.0 — 2026-10-03
 
 **User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
