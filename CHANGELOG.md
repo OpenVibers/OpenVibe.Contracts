@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased
+
+- `network.project.read` is active, implemented by OpenVibe.Network `GET /internal/projects/:project_id`.
+
 ## 0.87.0 — 2026-10-03
 
 **Host git sources** (plan T12 Stage B): a Host site may name a public Git source — provider, repository URL and branch;

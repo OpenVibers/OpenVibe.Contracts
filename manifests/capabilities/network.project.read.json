@@ -2,7 +2,7 @@
   "id": "network.project.read",
   "version": "1.0",
   "owner": "network",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
   "description": "Read a developer project as an owning service: its apps and their revocation state, approved grants, environment policy and quotas. Services use it to key tenancy by project_id and to enforce the quotas Network records (ADR-014). Never grantable to apps.",
   "permissions": [
@@ -14,6 +14,6 @@
   "quotaClass": "projects-read",
   "events": [],
   "implementedBy": [
-    "GET /internal/projects/:project_id (planned)"
+    "GET /internal/projects/:project_id"
   ]
 }
