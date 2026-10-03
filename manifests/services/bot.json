@@ -13,7 +13,6 @@
   "publicOrigin": "https://openvibe.bot",
   "health": "/api/health",
   "ready": "/api/ready",
-  "internalOrigin": "http://127.0.0.1:4630",
   "exposure": {
     "state": "repository",
     "publicSite": "placeholder"
@@ -35,55 +34,22 @@
   "namespacesOwned": [],
   "lifecycle": {
     "liveness": {
-      "endpoint": "/api/health",
-      "means": "the process answers HTTP and reports online devices and outbox status; database, Valkey and Network readiness are checked by /api/ready"
+      "none": "not deployed yet; nothing listens on a loopback address"
     },
     "shutdown": {
-      "signal": "SIGTERM",
-      "deadlineSeconds": 5,
-      "drains": [
-        "SIGTERM and SIGINT both run shutdown(), which first arms a 5 s exit timer",
-        "job timers cleared",
-        "Network key refresh stopped",
-        "device and operator WebSockets closed (hub.close)",
-        "outbox relay stopped",
-        "HTTP server closed (server.close)",
-        "PostgreSQL pool closed",
-        "Valkey client closed; the process exits 0"
-      ],
-      "note": "the process forces its own exit after 5 s (a timer in server/index.js, not openvibe-sdk); the unit allows 10 s (TimeoutStopSec)"
+      "none": "not deployed yet; nothing runs or drains"
     },
     "startupRecovery": {
-      "resumes": [
-        {
-          "kind": "schedule",
-          "what": "the one-second turn-queue sweep expires overdue turns and promotes waiting operators; pairing-code and audit-prune timers restart"
-        },
-        {
-          "kind": "sessions",
-          "what": "device and operator WebSockets reconnect; commands are never queued or replayed after a disconnect"
-        },
-        {
-          "kind": "outbox",
-          "what": "unsent bot.* events in bot_event_outbox are published when the relay restarts (at least once)"
-        }
-      ]
+      "none": "not deployed yet; nothing starts"
     },
     "rollback": {
-      "conditions": [
-        "automatic: ovhost deploy restores the previous sha when /api/ready does not return 2xx within the configured readiness timeout",
-        "manual: ovhost rollback bot --to <sha>"
-      ],
-      "window": "automatic while ovhost waits for readiness after restart; manual afterwards while the earlier release remains compatible with the database",
-      "blockers": {
-        "none": "the current migration creates Bot's initial PostgreSQL schema and does not drop or rename existing data"
-      }
+      "none": "not deployed yet; nothing is released or rolled back"
     },
     "contracts": {
       "range": ">=0.79.0 <1.0.0"
     },
     "leases": {
-      "none": "no expiring work claims: PostgreSQL row locks serialize queue changes and an advisory lock serializes boot migrations; WebSocket sessions are in memory"
+      "none": "not deployed yet; nothing runs"
     }
   },
   "notes": "Robot and device control service. Not deployed yet: openvibe-ovh runs no bot service until the owner provisions it; exposure becomes live in the release that points openvibe.bot at it."

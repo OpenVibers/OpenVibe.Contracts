@@ -628,9 +628,8 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 // ── Lifecycle declarations (WS-P task 1): liveness, shutdown, recovery, rollback, contracts, leases ──
 // Every manifest declares all six; a part that does not apply is { none: reason }. A service that runs
 // (it has an internalOrigin) declares a real liveness endpoint (its `health`) and a real shutdown; one
-// that runs nothing (library, retired, or a repository with no internalOrigin) declares none for both; a
-// repository that names an internalOrigin is code ready to run but not deployed yet, so it declares what it
-// will do. contracts.range is the contractRanges entry, so the two cannot drift.
+// that runs nothing (library, repository, retired) declares none for both. contracts.range is the
+// contractRanges entry, so the two cannot drift.
 {
     const PARTS = ['liveness', 'shutdown', 'startupRecovery', 'rollback', 'contracts', 'leases'];
     const isNone = (v) => !!v && typeof v.none === 'string' && Object.keys(v).length === 1;
@@ -643,7 +642,7 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
             ok(!isNone(lc.shutdown) && typeof lc.shutdown.deadlineSeconds === 'number' && lc.shutdown.drains.length > 0, `${m.id} runs: it declares its shutdown signal, deadline and drains`);
             ok(!isNone(lc.startupRecovery) && !isNone(lc.rollback), `${m.id} runs: it declares what it resumes at boot and how it is rolled back`);
         }
-        if (['library', 'retired'].includes(m.exposure.state) || (m.exposure.state === 'repository' && !runs)) ok(isNone(lc.liveness) && isNone(lc.shutdown) && isNone(lc.startupRecovery), `${m.id} runs nothing: liveness, shutdown and recovery are none`);
+        if (['library', 'repository', 'retired'].includes(m.exposure.state)) ok(isNone(lc.liveness) && isNone(lc.shutdown) && isNone(lc.startupRecovery), `${m.id} runs nothing: liveness, shutdown and recovery are none`);
         const range = m.contractRanges && m.contractRanges['openvibe-contracts'];
         if (range) ok(lc.contracts.range === range, `${m.id} lifecycle.contracts.range is its contractRanges entry (${range})`);
         else ok(isNone(lc.contracts), `${m.id} has no contractRanges entry, so its lifecycle.contracts is none`);
