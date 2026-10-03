@@ -50749,7 +50749,7 @@ export type ResourceOffer = {
   cell?: string;
   trust: "first-party" | "user-owned" | "partner" | "community" | "external";
   /**
-   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name.
    */
   capabilities: string[];
   capacity?: {
@@ -51442,7 +51442,7 @@ export interface HarnessOffer {
 
 /** platform.runtime-class@1.0.0 (owner: network) */
 /**
- * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names.
+ * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.
  */
 export type RuntimeClass = ("function" | "code" | "browser" | "linux" | "desktop" | "gpu") & string;
 

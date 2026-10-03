@@ -17,6 +17,15 @@ assert.deepStrictEqual(classes.map(c => c.const), ['function', 'code', 'browser'
 for (const c of classes) ok(c.description && !c.description.includes('\n'), `runtime class ${c.const} has a one-line description`);
 ok(contracts.schema('platform.job').properties.class.$ref === 'runtime-class.v1.json', 'a job names its class from platform.runtime-class@1');
 
+// Each runtime class maps to one reserved Fabric capability name in platform.resource-offer@1: `worker:` + the
+// class. The offer contract lists them in $defs.reservedWorkerCapabilities (Node advertises one per class it runs);
+// this pins the two lists together and holds each name to the offer's capabilities pattern.
+const offerSchema = contracts.schema('platform.resource-offer');
+const reserved = offerSchema.$defs.reservedWorkerCapabilities.enum;
+assert.deepStrictEqual(reserved, classes.map(c => `worker:${c.const}`), 'the reserved worker capability names are one per runtime class');
+checks++;
+for (const name of reserved) ok(new RegExp(offerSchema.properties.capabilities.items.pattern).test(name), `${name} matches the offer capabilities pattern`);
+
 // A frame's job id is a platform.job@1 id.
 const frame = contracts.schema('platform.job-frame');
 assert.strictEqual(frame.$defs.job_id.pattern, contracts.schema('platform.job').properties.id.pattern);
