@@ -6,14 +6,18 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.87.0 — 2026-10-03
 
-**User-owned trust class** (ADR-034 platform fabric; the SDK placement planner's fifth trust class). A person's own
-node or machine is now a trust class of its own, between `first-party` and `partner`.
+**User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the SDK
+placement planner's fifth trust class; the Fabric ADR, ADR-046, is still to write). A person's own node or machine is
+now a trust class of its own, between `first-party` and `partner`.
 - `platform.resource-offer@1` 1.1.0 and `platform.workload-requirements@1` 1.1.0 add `user-owned` to their `trust`
   enum, ordered `first-party`, `user-owned`, `partner`, `community`, `external`. Additive: a producer or consumer that
-  knows only the previous four values is unchanged, and no existing offer or requirement is invalidated.
-- New valid fixtures: `platform.resource-offer/valid/user-owned-node` (an offer with `trust: "user-owned"`) and
-  `platform.workload-requirements/valid/user-owned-only` (requirements whose `trust` is `["user-owned"]`). The existing
-  first-party `owned-node` fixture stays.
+  knows only the previous four values is unchanged, and no existing offer or requirement is invalidated. New valid
+  fixtures `user-owned-node` (an offer with `trust: "user-owned"`) and `user-owned-only` (requirements whose `trust` is
+  `["user-owned"]`); the existing first-party `owned-node` fixture stays.
+- `platform.usage-sample@1`: `route_epoch` and `trace_id` gain descriptions; their types and shape are unchanged.
+- `docs/ESTATE.md`: the plan §1.1 estate table as a data-only document (repository, product, authority, runtime,
+  database, domain, SDK/Contracts pin, deployment, public/private, current track). Step 2 replaces it with the table
+  generated in CI.
 
 **Named object zones for OpenVibe.Zone** (ADR-031 amendment 2026-10-02; plan D37). The amendment maps named Zone buckets
 onto Media's S3 surface. A zone is a Media namespace, and Media keeps the one object catalog and the only deletion
@@ -46,6 +50,12 @@ path.
 - **Contracts:** new `zone.object-zone@1` and its create, update, list, list-query, delete-query and usage contracts,
   all `planned`, with fixtures. `contracts.zones.checkObjectZone` also checks that a zone's OVRN and Media namespace
   name its own project and id. Additive; no active contract changes.
+
+**Reserved worker capability names for OpenVibe.Node** (plan T14 groundwork, additive): a Node advertises its runtimes
+as `worker:` capabilities in `platform.resource-offer@1`. The names `worker:function` and `worker:code` are reserved
+now; both already satisfy the `capabilities` pattern `^[a-z][a-z0-9-]*:[a-z0-9.-]+$`, so no schema change is needed.
+Only `worker:function` is advertised today; `worker:code` follows when the `code` runtime class ships. Four new valid
+fixtures for `platform.runtime-class@1` (`code`, `browser`, `linux`, `desktop`) complete its six `const` classes.
 
 ## 0.86.0 — 2026-10-03
 

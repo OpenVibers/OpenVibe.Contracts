@@ -51126,7 +51126,13 @@ export interface UsageSample {
    * Vibes charged for this reading, as an integer count of vibes-bits (Billing's ledger minor unit, currency `vibes-bits`; balance credit and ledger amounts use the same unit). Never whole Vibes, USD or a fraction: round once, when rating. Covers only `quantity` minus `free_allowance_used`; 0 means rated and nothing charged. Absent means not rated (yet). Records a charge already made in Billing's ledger; it is never a request to charge.
    */
   vibes_charged?: number;
+  /**
+   * Epoch of the signed placement plan that chose where this reading ran (platform.placement-plan@1 `epoch`). A later plan supersedes it; absent when Fabric did not place the work.
+   */
   route_epoch?: number;
+  /**
+   * Opaque trace id tying this reading to the request and route that produced it, the same `trace_id` platform.telemetry-sample@1 carries; absent when the producer had no trace.
+   */
   trace_id?: string;
   source: string;
 }
