@@ -54,10 +54,15 @@ path.
   name its own project and id. Additive; no active contract changes.
 
 **Reserved worker capability names for OpenVibe.Node** (plan T14 groundwork, additive): a Node advertises its runtimes
-as `worker:` capabilities in `platform.resource-offer@1`. The names `worker:function` and `worker:code` are reserved
-now; both already satisfy the `capabilities` pattern `^[a-z][a-z0-9-]*:[a-z0-9.-]+$`, so no schema change is needed.
-Only `worker:function` is advertised today; `worker:code` follows when the `code` runtime class ships. Four new valid
-fixtures for `platform.runtime-class@1` (`code`, `browser`, `linux`, `desktop`) complete its six `const` classes.
+as `worker:` capabilities in `platform.resource-offer@1`. The names are reserved in the contract now, not only by the
+`capabilities` pattern: `platform.resource-offer@1` gains `$defs.reservedWorkerCapabilities`, the six names
+`worker:function`, `worker:code`, `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` — one per
+`platform.runtime-class@1` class (`worker:` + the class) — and both the `capabilities` description and
+`platform.runtime-class@1` say so. A node advertises the name of each class it runs, so `worker:function` today and
+`worker:code` when the `code` class ships. Additive to validation: every existing offer stays valid, and other
+`worker:` names (`worker:ffmpeg`, `worker:ai-gpu`) stay ordinary capability names. New valid fixture `worker-classes`
+(an offer advertising all six reserved names). Four new valid fixtures for `platform.runtime-class@1` (`code`,
+`browser`, `linux`, `desktop`) complete its six `const` classes.
 
 ## 0.86.0 — 2026-10-03
 
