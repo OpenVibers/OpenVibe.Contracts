@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/zone/object-zone-create-request.v1.json",
+  "title": "ObjectZoneCreateRequest",
+  "description": "zone.object-zone-create-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["env", "name"],
+  "properties": {
+    "env": { "enum": ["sandbox", "production"] },
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 63,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "not": { "const": "default" }
+    },
+    "description": { "type": ["string", "null"], "maxLength": 200 },
+    "quota_bytes": { "type": ["integer", "null"], "minimum": 1 }
+  }
+}

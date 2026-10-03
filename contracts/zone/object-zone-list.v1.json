@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/zone/object-zone-list.v1.json",
+  "title": "ObjectZoneList",
+  "description": "zone.object-zone-list@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "zones",
+    "next_cursor"
+  ],
+  "properties": {
+    "zones": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "object-zone.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512,
+      "description": "Pass as cursor for the next page; null on the last page."
+    }
+  }
+}

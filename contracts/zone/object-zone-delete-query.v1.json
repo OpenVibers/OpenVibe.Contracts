@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/zone/object-zone-delete-query.v1.json",
+  "title": "ObjectZoneDeleteQuery",
+  "description": "zone.object-zone-delete-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "recursive": {
+      "enum": [
+        true,
+        false,
+        "true",
+        "false"
+      ],
+      "description": "Delete the zone's objects too. Default false."
+    }
+  }
+}

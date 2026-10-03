@@ -4691,9 +4691,9 @@ export interface ModerationAction {
   details?: {};
 }
 
-/** common.usage-recorded@1.0.0 (owner: network) */
+/** common.usage-recorded@1.1.0 (owner: network) */
 /**
- * common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.
+ * common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, resource, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.
  */
 export interface UsageRecorded {
   /**
@@ -4712,6 +4712,10 @@ export interface UsageRecorded {
    * Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job.
    */
   dimension?: string;
+  /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
   /**
    * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
    */
@@ -29743,6 +29747,10 @@ export interface ToolsUsageRecordedPayload {
    */
   dimension?: string;
   /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
+  /**
    * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
    */
   unit: string;
@@ -30706,6 +30714,10 @@ export interface EventsUsageRecordedPayload {
    * Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job.
    */
   dimension?: string;
+  /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
   /**
    * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
    */
@@ -51740,4 +51752,176 @@ export interface ConfirmationRequest {
   expires_at: string;
   decided_at?: string;
   created_at: string;
+}
+
+/** zone.object-zone@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone@1 (PLANNED; ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.
+ */
+export type ObjectZone = {
+  [k: string]: unknown | undefined;
+} & {
+  id: string;
+  /**
+   * The resource name used in grants, audit, events, usage records and bills (ADR-034 section 2).
+   */
+  ovrn: string;
+  project_id: string;
+  /**
+   * Fixed at creation. A sandbox key never resolves a production zone.
+   */
+  env: "sandbox" | "production";
+  /**
+   * The S3 bucket name. It is unique among all the zones of one project environment, deleted ones included: a deleted zone's name is retired, never given to another zone. It is valid as an S3 bucket name.
+   */
+  name: string;
+  /**
+   * The environment's default zone, named `default`. Its media_namespace is the environment root.
+   */
+  default: boolean;
+  description?: string | null;
+  /**
+   * private: every named zone in v1. Its objects never have a public_url and never enter a public cache. per-object: only the default zone, whose existing objects keep their own visibility (public, unlisted or private), public URLs and cached copies, as media.object@1 allows. The S3 surface never serves an object without a signature, in either kind of zone. Publication of a named zone would add a value in a later minor version.
+   */
+  access: "private" | "per-object";
+  /**
+   * provisioning: Media has not yet acknowledged the zone. active: it serves requests. deleting: requests answer NoSuchBucket while Media tombstones the objects and erases every copy. deleted: no object or copy remains. The record is kept, and its name stays retired.
+   */
+  state: "provisioning" | "active" | "deleting" | "deleted";
+  /**
+   * Where Media keeps the zone's objects. It is the environment root for the default zone, and <root>.<id> for every other zone.
+   */
+  media_namespace: string;
+  /**
+   * An optional byte ceiling for this zone. Media enforces it together with the project environment's byte quota, and a write over either is refused with QuotaExceeded. null means only the environment quota applies.
+   */
+  quota_bytes: number | null;
+  /**
+   * A snapshot of the live objects, as Media reports it. Zone never counts. Billed usage comes from Media's hourly media.usage.recorded rollups, whose dimension is this id in lowercase.
+   */
+  usage?: {
+    stored_bytes: number;
+    objects: number;
+    as_of: string;
+  };
+  /**
+   * Progress of a zone deletion, as Media reports it.
+   */
+  deletion?: {
+    requested_at: string;
+    /**
+     * Objects not yet tombstoned, plus tombstoned objects with a copy not yet confirmed erased.
+     */
+    objects_remaining: number;
+    /**
+     * Objects whose erasure waits for a retention hold (ADR-006). They are already unreadable.
+     */
+    held_objects: number;
+    completed_at: string | null;
+  };
+  /**
+   * Raised by every change. Zone sends it when it provisions the change in Media, and Media applies only a higher revision.
+   */
+  revision: number;
+  created_at: string;
+  updated_at?: string | null;
+};
+
+/** zone.object-zone-create-request@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-create-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.
+ */
+export interface ObjectZoneCreateRequest {
+  env: "sandbox" | "production";
+  name: string;
+  description?: string | null;
+  quota_bytes?: number | null;
+}
+
+/** zone.object-zone-update-request@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-update-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.
+ */
+export interface ObjectZoneUpdateRequest {
+  description?: string | null;
+  /**
+   * null removes the zone's own ceiling, so only the environment quota applies.
+   */
+  quota_bytes?: number | null;
+}
+
+/** zone.object-zone-list-query@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-list-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.
+ */
+export interface ObjectZoneListQuery {
+  env?: "sandbox" | "production";
+  /**
+   * Also list zones in state deleted. Default false.
+   */
+  include_deleted?: true | false | "true" | "false";
+  /**
+   * Items per page, 1 to 200. A query string carries it as a string, which must name the same range.
+   */
+  limit?: number | string;
+  /**
+   * next_cursor of the previous page.
+   */
+  cursor?: string;
+}
+
+/** zone.object-zone-list@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-list@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.
+ */
+export interface ObjectZoneList {
+  /**
+   * @maxItems 200
+   */
+  zones: ObjectZone[];
+  /**
+   * Pass as cursor for the next page; null on the last page.
+   */
+  next_cursor: string | null;
+}
+
+/** zone.object-zone-delete-query@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-delete-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.
+ */
+export interface ObjectZoneDeleteQuery {
+  /**
+   * Delete the zone's objects too. Default false.
+   */
+  recursive?: true | false | "true" | "false";
+}
+
+/** zone.object-zone-usage@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-usage@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Billing rates the same rollups. Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.
+ */
+export interface ObjectZoneUsage {
+  zone_id: string;
+  ovrn: string;
+  current: {
+    stored_bytes: number;
+    objects: number;
+    as_of: string;
+  };
+  /**
+   * The start of the current UTC month.
+   */
+  window_start: string;
+  /**
+   * The end of the last closed hour that Media has reported.
+   */
+  window_end: string;
+  /**
+   * @maxItems 32
+   */
+  series: {
+    capability: string;
+    unit: "byte_hours" | "requests" | "egress_bytes";
+    quantity: number;
+  }[];
 }

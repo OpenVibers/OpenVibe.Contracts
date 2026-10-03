@@ -1,0 +1,20 @@
+{
+  "id": "zone.zone.delete",
+  "version": "1.0",
+  "owner": "zone",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED (ADR-031 amendment 2026-10-02): Delete an object zone: DELETE /api/v1/zones/:zone_id answers 202 with the zone in state deleting. A zone with objects needs recursive=true (else 409 zone.not_empty), a zone with a held object answers 409 zone.held, and the default zone answers 409 zone.default. Media tombstones every object at once, with no restore window, and erases every copy within 24 hours. A hold placed after the request delays only that object's purge. The name is retired, never reused. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "inputSchema": "zone.object-zone-delete-query@1",
+  "outputSchema": "zone.object-zone@1",
+  "permissions": [
+    "zone:write"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "zone-control",
+  "events": [],
+  "implementedBy": []
+}

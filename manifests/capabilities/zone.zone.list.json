@@ -1,0 +1,19 @@
+{
+  "id": "zone.zone.list",
+  "version": "1.0",
+  "owner": "zone",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (ADR-031 amendment 2026-10-02): List a project's object zones: GET /api/v1/projects/:project_id/zones, filtered by env and paged. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "inputSchema": "zone.object-zone-list-query@1",
+  "outputSchema": "zone.object-zone-list@1",
+  "permissions": [
+    "zone:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "zone-control",
+  "events": [],
+  "implementedBy": []
+}

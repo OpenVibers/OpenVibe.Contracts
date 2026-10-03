@@ -1,0 +1,13 @@
+{
+  "project_id": "prj_01JZQ3V8X5N7K2M4P6R8T0W2Y4",
+  "env": "production",
+  "capability": "media.object.upload",
+  "resource": "ovrn:zone:prj_01JZQ3V8X5N7K2M4P6R8T0W2Y4:object-zone/zon_01K2A9C3D5E7F9G1H3J5K7M9N1",
+  "dimension": "zon_01k2a9c3d5e7f9g1h3j5k7m9n1",
+  "unit": "byte_hours",
+  "window": "hour",
+  "window_start": "2026-10-02T09:00:00.000Z",
+  "window_end": "2026-10-02T10:00:00.000Z",
+  "quantity": 3774873600,
+  "errors": 0
+}

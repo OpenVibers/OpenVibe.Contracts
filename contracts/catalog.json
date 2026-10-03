@@ -221,7 +221,7 @@
     },
     {
       "id": "common.usage-recorded",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "common/usage-recorded.v1.json",
       "visibility": "first-party",
@@ -5487,6 +5487,76 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
+    },
+    {
+      "id": "zone.object-zone",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-create-request",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-update-request",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-update-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-list-query",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-list-query.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-list",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-list.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-delete-query",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-delete-query.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-usage",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-usage.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
     }
   ]
 }

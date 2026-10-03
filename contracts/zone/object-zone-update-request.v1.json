@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/zone/object-zone-update-request.v1.json",
+  "title": "ObjectZoneUpdateRequest",
+  "description": "zone.object-zone-update-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.",
+  "type": "object",
+  "additionalProperties": false,
+  "minProperties": 1,
+  "properties": {
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "quota_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "null removes the zone's own ceiling, so only the environment quota applies."
+    }
+  }
+}
