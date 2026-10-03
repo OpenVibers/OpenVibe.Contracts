@@ -6,9 +6,10 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.87.0 — 2026-10-03
 
-**User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the SDK
-placement planner's fifth trust class; the Fabric ADR, ADR-046, is still to write). A person's own node or machine is
-now a trust class of its own, between `first-party` and `partner`.
+**User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
+ADR-046, is still to write). A person's own node or machine is now a trust class of its own in Contracts, between
+`first-party` and `partner`. The SDK placement planner does not support the class yet: it still lists four trust
+values, and it gains `user-owned` when it pins this release.
 - `platform.resource-offer@1` 1.1.0 and `platform.workload-requirements@1` 1.1.0 add `user-owned` to their `trust`
   enum, ordered `first-party`, `user-owned`, `partner`, `community`, `external`. Additive: a producer or consumer that
   knows only the previous four values is unchanged, and no existing offer or requirement is invalidated. New valid
