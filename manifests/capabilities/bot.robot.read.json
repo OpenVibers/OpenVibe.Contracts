@@ -1,0 +1,24 @@
+{
+  "id": "bot.robot.read",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit is not here: Bot gates it with bot.robot.manage. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
+  "permissions": [
+    "bot:robot:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "bot-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/robots",
+    "GET /api/v1/robots/:id",
+    "GET /api/v1/robots/:id/operators",
+    "GET /api/v1/robots/:id/devices"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bot.robot-read-result@1"
+}

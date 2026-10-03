@@ -51931,3 +51931,173 @@ export interface ObjectZoneUsage {
     quantity: number;
   }[];
 }
+
+/** bot.robot@1.0.0 (owner: bot) */
+/**
+ * bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs, who may drive it (access_policy) and the latched e-stop.
+ */
+export interface BotRobot {
+  id: string;
+  name: string;
+  profile_id: string;
+  profile_version?: unknown;
+  access_policy: "private" | "invite" | "queue";
+  limits: {};
+  estop: {
+    latched: boolean;
+    by: string | null;
+    at: string | null;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
+/** bot.device@1.0.0 (owner: bot) */
+/**
+ * bot.device@1: a paired device as the API presents it (domain.present.device): never a credential or publish-key hash; online is added when a robot's devices are listed.
+ */
+export interface BotDevice {
+  id: string;
+  robot_ids: string[];
+  name?: string | null;
+  kind: string;
+  agent_version?: string | null;
+  drivers?: unknown[];
+  capabilities?: {};
+  last_seen?: string | null;
+  revoked_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  online?: boolean;
+}
+
+/** bot.robot-read-result@1.0.0 (owner: bot) */
+/**
+ * bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot. GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role } (role "service" for a service token); GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online).
+ */
+export type BotRobotReadResult =
+  | {
+      robots: BotRobot[];
+    }
+  | {
+      robot: BotRobot;
+      role: "owner" | "operator" | "viewer" | "queue" | "service";
+    }
+  | {
+      operators: {
+        subject: string;
+        role: "operator" | "viewer";
+        added_by?: string | null;
+        created_at?: string;
+      }[];
+    }
+  | {
+      devices: BotDevice[];
+    };
+
+/** bot.robot-manage-request@1.0.0 (owner: bot) */
+/**
+ * bot.robot-manage-request@1: bodies of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → { owner (the person a service acts for), name, profile_id, access_policy?, limits? }; PATCH …/robots/:id → { name?, access_policy?, limits? }; POST …/robots/:id/operators → { subject, role? (operator by default) }. POST …/robots/:id/pairing-code and both DELETE routes take no body.
+ */
+export type BotRobotManageRequest =
+  | {
+      owner?: string;
+      name: string;
+      profile_id: string;
+      access_policy?: "private" | "invite" | "queue";
+      limits?: {};
+    }
+  | {
+      name?: string;
+      access_policy?: "private" | "invite" | "queue";
+      limits?: {};
+    }
+  | {
+      subject: string;
+      role?: "operator" | "viewer";
+    };
+
+/** bot.robot-manage-result@1.0.0 (owner: bot) */
+/**
+ * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first); POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.
+ */
+export type BotRobotManageResult =
+  | {
+      robot: BotRobot;
+      /**
+       * A one-time pairing code (shown once), when it expires and the one-line installer command that uses it.
+       */
+      pairing: {
+        code: string;
+        expires_at: string;
+        installer: string;
+      };
+    }
+  | {
+      robot: BotRobot;
+    }
+  | {
+      code: string;
+      expires_at: string;
+      installer: string;
+    }
+  | {
+      operators: {
+        subject: string;
+        role: "operator" | "viewer";
+        added_by?: string | null;
+        created_at?: string;
+      }[];
+    }
+  | BotDeviceConnectResult
+  | {
+      next_before: number | null;
+      audit: {
+        id: number;
+        robot_id: string;
+        device_id?: string | null;
+        operator_subject?: string | null;
+        operator_kind?: string | null;
+        role?: string | null;
+        kind: string | null;
+        value?: unknown;
+        result: "ack" | "nack" | "refused" | "expired";
+        reason?: string | null;
+        latency_ms?: number | null;
+        at: string;
+      }[];
+    };
+/**
+ * bot.device-connect-result@1: answers of OpenVibe.Bot's device credential routes, which Bot gates with bot.robot.manage (bot.device.connect is reserved, not enforced). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).
+ */
+export type BotDeviceConnectResult =
+  | {
+      device: BotDevice;
+      credential: string;
+      publish_key: string;
+    }
+  | {
+      device: BotDevice;
+    };
+
+/** bot.robot-control-result@1.0.0 (owner: bot) */
+/**
+ * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop → { robot } with its e-stop as it now stands.
+ */
+export interface BotRobotControlResult {
+  robot: BotRobot;
+}
+
+/** bot.device-connect-result@1.0.0 (owner: bot) */
+/**
+ * bot.device-connect-result@1: answers of OpenVibe.Bot's device credential routes, which Bot gates with bot.robot.manage (bot.device.connect is reserved, not enforced). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).
+ */
+export type BotDeviceConnectResult =
+  | {
+      device: BotDevice;
+      credential: string;
+      publish_key: string;
+    }
+  | {
+      device: BotDevice;
+    };

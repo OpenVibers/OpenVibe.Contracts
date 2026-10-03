@@ -5557,6 +5557,69 @@
       "compatibility": "backward",
       "status": "planned",
       "adr": "ADR-031"
+    },
+    {
+      "id": "bot.robot",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.device",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/device.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.robot-read-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.robot-manage-request",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.robot-manage-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.robot-control-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-control-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.device-connect-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/device-connect-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

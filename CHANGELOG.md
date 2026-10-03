@@ -4,6 +4,32 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased
+
+**The Bot service manifest** (plan T15 step 1; ADR-043; supersedes #8). OpenVibe.Bot has run on openvibe-ovh since
+2026-10-02 (`openvibe-bot.service`, `/opt/openvibe.bot`), and `ovhost validate` found no `bot` manifest to read its
+lifecycle from.
+- `manifests/services/bot.json`: status `live` on `openvibe.bot`, internal origin `127.0.0.1:4630`, the five `bot.*`
+  events it produces, and all six lifecycle parts. Shutdown is what Bot's `openvibe-sdk/service` `gracefulStop` does:
+  stop the job timers and Network key refresh, close the device and operator WebSockets and the outbox relay, drain HTTP
+  for up to 4 s, close PostgreSQL and Valkey, exit 0, with a 5 s hard deadline inside the unit's 10 s `TimeoutStopSec`.
+  The contracts range `>=0.85.0 <1.0.0` covers the v0.85.0 Bot installs.
+- Three active capabilities, each bound to the routes whose guard checks it in the deployed Bot (dae7c59), for a
+  Network service token: `bot.robot.read` (list by `?owner=`, a robot, its operators and devices), `bot.robot.manage`
+  (create, update, delete, pairing codes, operators, the command audit, clearing the e-stop, rotating and revoking a
+  device) and `bot.robot.control` (latching the e-stop, which also needs `bot.robot.read`, and the operator WebSocket,
+  which acts for `X-OV-Subject` with that person's role). Their resource constraint is `none`: Bot does not check the
+  acting person against the robot for a service token on the REST routes, and the descriptions say so. All are
+  first-party, none is a staff capability, and each names an input and an output schema: new `bot.robot@1`,
+  `bot.device@1`, `bot.robot-read-result@1`, `bot.robot-manage-request@1`, `bot.robot-manage-result@1` (which includes
+  the audit page and `bot.device-connect-result@1`), `bot.robot-control-result@1` and `bot.device-connect-result@1`,
+  with valid and invalid fixtures.
+- `bot.device.connect` is `planned` (the Bot manifest lists it, as owners list their planned capabilities): Bot
+  declares the name but no route checks it, so it names no routes or schemas until one does.
+- `openvibe.bot` product: names its service `bot` and repository `OpenVibe.Bot` instead of `noRepo`.
+- Presence policy: `bot.robot.online` and `bot.robot.offline` are robot connectivity (ADR-043), not a person's presence,
+  and are allowed. Any other `.online`, `.offline` or presence event type is still refused.
+
 ## 0.87.0 — 2026-10-03
 
 **User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,

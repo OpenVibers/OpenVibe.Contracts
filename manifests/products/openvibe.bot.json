@@ -203,7 +203,8 @@
   },
   "launch": "the Bot service, its device agent and the first robots paired",
   "relationships": {
-    "noRepo": true,
+    "service": "bot",
+    "plannedRepo": "OpenVibe.Bot",
     "meanwhile": [
       {
         "label": "Robots on OpenVibe.Live",
