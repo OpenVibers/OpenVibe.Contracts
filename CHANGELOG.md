@@ -50,6 +50,12 @@ path.
   all `planned`, with fixtures. `contracts.zones.checkObjectZone` also checks that a zone's OVRN and Media namespace
   name its own project and id. Additive; no active contract changes.
 
+**Reserved worker capability names for OpenVibe.Node** (plan T14 groundwork, additive): a Node advertises its runtimes
+as `worker:` capabilities in `platform.resource-offer@1`. The names `worker:function` and `worker:code` are reserved
+now; both already satisfy the `capabilities` pattern `^[a-z][a-z0-9-]*:[a-z0-9.-]+$`, so no schema change is needed.
+Only `worker:function` is advertised today; `worker:code` follows when the `code` runtime class ships. Four new valid
+fixtures for `platform.runtime-class@1` (`code`, `browser`, `linux`, `desktop`) complete its six `const` classes.
+
 ## 0.86.0 — 2026-10-03
 
 **Harness offers for Fabric routing** (plan T16 step S5): OpenVibe.Codes publishes its harness catalog as
