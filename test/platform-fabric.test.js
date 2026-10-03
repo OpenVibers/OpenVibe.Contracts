@@ -12,11 +12,16 @@ for (const name of names) {
     const id = `platform.${name}`;
     const entry = contracts.resolve(`${id}@1`);
     assert.strictEqual(entry.visibility, 'public');
+    checks++;
     assert.strictEqual(entry.version, '1.0.0');
+    checks++;
     assert.strictEqual(entry.adr, 'ADR-034');
+    checks++;
     const schema = contracts.schema(id);
     assert.strictEqual(schema.additionalProperties, false);
+    checks++;
     assert.ok(schema.examples.length > 0, `${id} has examples`);
+    checks++;
     for (const example of schema.examples) {
         assert.strictEqual(contracts.validate(id, example).valid, true, `${id} example validates`);
         checks++;
@@ -79,4 +84,4 @@ checks++;
 assert.strictEqual(contracts.validate('platform.workload-requirements', { ...userRequirement, trust: ['other'] }).valid, false, 'an unknown requirement trust is refused');
 checks++;
 
-console.log(`platform fabric: ${checks} example and required-field checks passed`);
+console.log(`platform fabric: ${checks} assertions passed`);
