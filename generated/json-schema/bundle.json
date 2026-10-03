@@ -60658,6 +60658,46 @@
               },
               "resume": {
                 "type": "boolean"
+              },
+              "edit": {
+                "type": "boolean",
+                "description": "edits files in its working tree"
+              },
+              "review": {
+                "type": "boolean",
+                "description": "reviews a change and reports findings"
+              },
+              "tools": {
+                "type": "boolean",
+                "description": "calls tools such as a shell, search, or file reads on its own"
+              },
+              "vision": {
+                "type": "boolean",
+                "description": "reads images such as screenshots"
+              },
+              "browser": {
+                "type": "boolean",
+                "description": "drives a web browser"
+              },
+              "computer_use": {
+                "type": "boolean",
+                "description": "operates a desktop through its screen, keyboard, and mouse"
+              },
+              "runtimes": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "function",
+                    "code",
+                    "browser",
+                    "linux",
+                    "desktop",
+                    "gpu"
+                  ]
+                },
+                "description": "platform.runtime-class@1 classes the harness runs in"
               }
             },
             "required": [
@@ -61520,7 +61560,7 @@
       }
     },
     "common.resource-summary": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "status": "active",
       "schema": {
@@ -61551,6 +61591,12 @@
           "project_id": {
             "type": "string",
             "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "ovrn": {
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "^ovrn:[a-z][a-z0-9-]{0,31}:prj_[0-9A-HJKMNP-TV-Z]{26}:[a-z][a-z0-9-]{0,39}/[a-z]{3}_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Optional resource name (ADR-034 section 2), the name grants, audit, events, usage records and bills use: ovrn:<service>:<project_id>:<type>/<id>, e.g. ovrn:watch:<project_id>:watch/<wch_id>, with the pattern of common.usage-recorded@1 resource. Its service, project and id are this summary's service, project_id and id. Added in 1.1.0."
           },
           "owner": {
             "$ref": "../identity/subject-ref.v1.json"

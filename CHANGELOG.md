@@ -8,6 +8,23 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 - `network.project.read` is active, implemented by OpenVibe.Network `GET /internal/projects/:project_id`.
 
+**Watch ids** (plan T18, ready now):
+- `lib/ids.js`: `PREFIX.watch = 'wch'`, `PREFIX.observation = 'wco'` and `PREFIX.check = 'ckr'`, so `ids.newId('watch')`
+  gives the `wch_<ULID>` id the `common.resource-summary` fixture `watch` already carries. None is a subject type or a
+  principal.
+
+**Harness capability vocabulary** (plan T17, ready now):
+- `platform.harness-offer@1` `capabilities` gains the optional booleans `edit`, `review`, `tools`, `vision`, `browser`
+  and `computer_use`, and an optional `runtimes` array (unique; `function`, `code`, `browser`, `linux`, `desktop`,
+  `gpu`, the `platform.runtime-class@1` classes). `capabilities` keeps `additionalProperties: false`, and the entry stays
+  1.0.0, as it did when 0.86.0 added optional fields. New fixtures `capability-vocabulary` (valid, every new key) and
+  `unknown-capability` (invalid, a `gpu` key: a runtime class belongs in `runtimes`). Additive.
+
+**Resource names in the resource index** (plan T13, ready now):
+- `common.resource-summary@1` is 1.1.0: an optional `ovrn` (ADR-034 section 2) with the pattern of
+  `common.usage-recorded@1` `resource`, naming the summary's own service, project and id. New fixtures `with-ovrn`
+  (valid) and `ovrn-without-project` (invalid). Additive.
+
 ## 0.87.0 — 2026-10-03
 
 **Host git sources** (plan T12 Stage B): a Host site may name a public Git source — provider, repository URL and branch;

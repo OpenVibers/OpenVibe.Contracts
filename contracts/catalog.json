@@ -5514,7 +5514,7 @@
     },
     {
       "id": "common.resource-summary",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/resource-summary.v1.json",
       "visibility": "public",

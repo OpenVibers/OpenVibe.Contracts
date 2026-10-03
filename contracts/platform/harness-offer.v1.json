@@ -40,6 +40,46 @@
         },
         "resume": {
           "type": "boolean"
+        },
+        "edit": {
+          "type": "boolean",
+          "description": "edits files in its working tree"
+        },
+        "review": {
+          "type": "boolean",
+          "description": "reviews a change and reports findings"
+        },
+        "tools": {
+          "type": "boolean",
+          "description": "calls tools such as a shell, search, or file reads on its own"
+        },
+        "vision": {
+          "type": "boolean",
+          "description": "reads images such as screenshots"
+        },
+        "browser": {
+          "type": "boolean",
+          "description": "drives a web browser"
+        },
+        "computer_use": {
+          "type": "boolean",
+          "description": "operates a desktop through its screen, keyboard, and mouse"
+        },
+        "runtimes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "function",
+              "code",
+              "browser",
+              "linux",
+              "desktop",
+              "gpu"
+            ]
+          },
+          "description": "platform.runtime-class@1 classes the harness runs in"
         }
       },
       "required": [
