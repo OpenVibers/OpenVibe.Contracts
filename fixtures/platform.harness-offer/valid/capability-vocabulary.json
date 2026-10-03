@@ -1,0 +1,34 @@
+{
+  "id": "harness-2",
+  "name": "Example Desktop Agent",
+  "provider": "example-ai",
+  "capabilities": {
+    "host_access": false,
+    "mcp": true,
+    "long_autonomy": true,
+    "resume": true,
+    "edit": true,
+    "review": true,
+    "tools": true,
+    "vision": true,
+    "browser": true,
+    "computer_use": true,
+    "runtimes": [
+      "code",
+      "browser",
+      "desktop"
+    ]
+  },
+  "address": {
+    "kind": "api",
+    "target": "https://agent.example.com/v1"
+  },
+  "price": {
+    "amount_usd": 0.5,
+    "unit": "hour"
+  },
+  "limits": {
+    "max_duration_seconds": 3600,
+    "max_concurrent_runs": 2
+  }
+}

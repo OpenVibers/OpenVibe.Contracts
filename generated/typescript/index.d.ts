@@ -51622,6 +51622,34 @@ export interface HarnessOffer {
     mcp: boolean;
     long_autonomy: boolean;
     resume: boolean;
+    /**
+     * edits files in its working tree
+     */
+    edit?: boolean;
+    /**
+     * reviews a change and reports findings
+     */
+    review?: boolean;
+    /**
+     * calls tools such as a shell, search, or file reads on its own
+     */
+    tools?: boolean;
+    /**
+     * reads images such as screenshots
+     */
+    vision?: boolean;
+    /**
+     * drives a web browser
+     */
+    browser?: boolean;
+    /**
+     * operates a desktop through its screen, keyboard, and mouse
+     */
+    computer_use?: boolean;
+    /**
+     * platform.runtime-class@1 classes the harness runs in
+     */
+    runtimes?: ("function" | "code" | "browser" | "linux" | "desktop" | "gpu")[];
   };
   address: {
     kind: "api" | "cli" | "mcp";
@@ -51895,7 +51923,7 @@ export interface DeliveryPolicy {
   max_payload_bytes?: number;
 }
 
-/** common.resource-summary@1.0.0 (owner: contracts) */
+/** common.resource-summary@1.1.0 (owner: contracts) */
 /**
  * One resource of any service, as the resource index lists it (roadmap WS-Z7): every service answers GET /api/v1/resources with these, so OpenVibe.Services shows any resource without owning its data.
  */
@@ -51907,6 +51935,10 @@ export interface ResourceSummary {
   kind: string;
   service: string;
   project_id?: string;
+  /**
+   * Optional resource name (ADR-034 section 2), the name grants, audit, events, usage records and bills use: ovrn:<service>:<project_id>:<type>/<id>, e.g. ovrn:watch:<project_id>:watch/<wch_id>, with the pattern of common.usage-recorded@1 resource. Its service, project and id are this summary's service, project_id and id. Added in 1.1.0.
+   */
+  ovrn?: string;
   owner?: SubjectRef;
   name?: string;
   state: string;
