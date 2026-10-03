@@ -58431,6 +58431,7 @@
           },
           "trust": {
             "type": "string",
+            "description": "the offer's trust class (ADR-046): first-party (operated by the OpenVibe network), user-owned (a person's own node, eligible only for workloads whose requirements name user-owned), partner, community or external",
             "enum": [
               "first-party",
               "user-owned",
@@ -58888,7 +58889,7 @@
               ]
             },
             "minItems": 1,
-            "description": "trust levels allowed to run it"
+            "description": "trust classes allowed to run it (ADR-046); when absent, first-party, partner, community and external. user-owned is never a default: a user-owned offer is eligible only when this list names it"
           },
           "region": {
             "type": "string",

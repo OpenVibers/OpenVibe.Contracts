@@ -51,6 +51,7 @@
     },
     "trust": {
       "type": "string",
+      "description": "the offer's trust class (ADR-046): first-party (operated by the OpenVibe network), user-owned (a person's own node, eligible only for workloads whose requirements name user-owned), partner, community or external",
       "enum": [
         "first-party",
         "user-owned",
