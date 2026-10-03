@@ -4,7 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.87.0 — 2026-10-03
+
+**Host git sources** (plan T12 Stage B): a Host site may name a public Git source — provider, repository URL and branch;
+never a credential — and a site with a source also accepts a CI-built deploy at `/sites/:id/source/deploys` naming the
+ref and full `commit_sha`. That deploy is always a preview and records the commit as immutable provenance.
+- `host.site.manage` gains `GET`, `PUT` and `DELETE /api/v1/sites/:id/source`; `host.deploy.create` gains
+  `POST /api/v1/sites/:id/source/deploys`.
+- `host.deploy@1`: the `source` enum adds `preview` and `git`, and an optional `git` object carries `provider`,
+  `repo_url`, `ref` and a 40-hex `commit_sha`. New valid fixture `git`. Additive: every existing deploy stays valid,
+  and the object is present only on `source: git`.
 
 **The Bot service manifest** (plan T15 step 1; ADR-043; supersedes #8). OpenVibe.Bot has run on openvibe-ovh since
 2026-10-02 (`openvibe-bot.service`, `/opt/openvibe.bot`), and `ovhost validate` found no `bot` manifest to read its
@@ -47,8 +56,6 @@ Each payload is deliberately narrow — the object id and tenant, placement clas
 replica, the class set before and after a loss — never the object's bytes, title or metadata. `media.replica.*` was
 already inside the streamable namespace; only the provider types changed. Valid and invalid fixtures for each, and
 `test/run.js` asserts every type Media produces starts with `media.`, is owned by `media` and is listed in its manifest.
-
-## 0.87.0 — 2026-10-03
 
 **User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
 ADR-046, is still to write). A person's own node or machine is now a trust class of its own in Contracts, between

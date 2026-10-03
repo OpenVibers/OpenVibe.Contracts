@@ -50329,7 +50329,16 @@ export interface HostDeploy {
   project_id: string;
   state: "ready" | "failed" | "deleted";
   active: boolean;
-  source: "archive" | "files";
+  source: "archive" | "files" | "preview" | "git";
+  /**
+   * Present on source git: the commit this deploy was built from (public provenance, never a credential).
+   */
+  git?: {
+    provider: string;
+    repo_url: string;
+    ref: string;
+    commit_sha: string;
+  };
   file_count: number;
   total_bytes: number;
   /**

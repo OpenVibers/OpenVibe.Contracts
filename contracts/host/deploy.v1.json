@@ -45,8 +45,35 @@
     "source": {
       "enum": [
         "archive",
-        "files"
+        "files",
+        "preview",
+        "git"
       ]
+    },
+    "git": {
+      "type": "object",
+      "required": [
+        "provider",
+        "repo_url",
+        "ref",
+        "commit_sha"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "repo_url": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      },
+      "description": "Present on source git: the commit this deploy was built from (public provenance, never a credential)."
     },
     "file_count": {
       "type": "integer",
