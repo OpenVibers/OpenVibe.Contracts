@@ -11,6 +11,7 @@
         "credential",
         "publish_key"
       ],
+      "additionalProperties": false,
       "properties": {
         "device": {
           "$ref": "device.v1.json"
@@ -30,6 +31,7 @@
       "required": [
         "device"
       ],
+      "additionalProperties": false,
       "properties": {
         "device": {
           "$ref": "device.v1.json"

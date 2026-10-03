@@ -929,6 +929,7 @@
        "credential",
        "publish_key"
       ],
+      "additionalProperties": false,
       "properties": {
        "device": {
         "$ref": "#/components/schemas/bot.device.v1"
@@ -948,6 +949,7 @@
       "required": [
        "device"
       ],
+      "additionalProperties": false,
       "properties": {
        "device": {
         "$ref": "#/components/schemas/bot.device.v1"
@@ -1050,6 +1052,7 @@
        "name",
        "profile_id"
       ],
+      "additionalProperties": false,
       "properties": {
        "owner": {
         "type": "string",
@@ -1126,6 +1129,7 @@
        "robot",
        "pairing"
       ],
+      "additionalProperties": false,
       "properties": {
        "robot": {
         "$ref": "#/components/schemas/bot.robot.v1"
@@ -1160,6 +1164,7 @@
       "required": [
        "robot"
       ],
+      "additionalProperties": false,
       "properties": {
        "robot": {
         "$ref": "#/components/schemas/bot.robot.v1"
@@ -1194,6 +1199,7 @@
       "required": [
        "operators"
       ],
+      "additionalProperties": false,
       "properties": {
        "operators": {
         "type": "array",
@@ -1238,6 +1244,7 @@
        "audit",
        "next_before"
       ],
+      "additionalProperties": false,
       "properties": {
        "next_before": {
         "type": [

@@ -52067,19 +52067,6 @@ export type BotRobotManageResult =
         at: string;
       }[];
     };
-/**
- * bot.device-connect-result@1: answers of OpenVibe.Bot's device credential routes, which Bot gates with bot.robot.manage (bot.device.connect is reserved, not enforced). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).
- */
-export type BotDeviceConnectResult =
-  | {
-      device: BotDevice;
-      credential: string;
-      publish_key: string;
-    }
-  | {
-      device: BotDevice;
-    };
-
 /** bot.robot-control-result@1.0.0 (owner: bot) */
 /**
  * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop → { robot } with its e-stop as it now stands.

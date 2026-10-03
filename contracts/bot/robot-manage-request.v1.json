@@ -10,6 +10,7 @@
         "name",
         "profile_id"
       ],
+      "additionalProperties": false,
       "properties": {
         "owner": {
           "type": "string",

@@ -10,6 +10,7 @@
         "robot",
         "pairing"
       ],
+      "additionalProperties": false,
       "properties": {
         "robot": {
           "$ref": "robot.v1.json"
@@ -44,6 +45,7 @@
       "required": [
         "robot"
       ],
+      "additionalProperties": false,
       "properties": {
         "robot": {
           "$ref": "robot.v1.json"
@@ -78,6 +80,7 @@
       "required": [
         "operators"
       ],
+      "additionalProperties": false,
       "properties": {
         "operators": {
           "type": "array",
@@ -122,6 +125,7 @@
         "audit",
         "next_before"
       ],
+      "additionalProperties": false,
       "properties": {
         "next_before": {
           "type": [

@@ -61986,6 +61986,7 @@
               "name",
               "profile_id"
             ],
+            "additionalProperties": false,
             "properties": {
               "owner": {
                 "type": "string",
@@ -62069,6 +62070,7 @@
               "robot",
               "pairing"
             ],
+            "additionalProperties": false,
             "properties": {
               "robot": {
                 "$ref": "robot.v1.json"
@@ -62103,6 +62105,7 @@
             "required": [
               "robot"
             ],
+            "additionalProperties": false,
             "properties": {
               "robot": {
                 "$ref": "robot.v1.json"
@@ -62137,6 +62140,7 @@
             "required": [
               "operators"
             ],
+            "additionalProperties": false,
             "properties": {
               "operators": {
                 "type": "array",
@@ -62181,6 +62185,7 @@
               "audit",
               "next_before"
             ],
+            "additionalProperties": false,
             "properties": {
               "next_before": {
                 "type": [
@@ -62307,6 +62312,7 @@
               "credential",
               "publish_key"
             ],
+            "additionalProperties": false,
             "properties": {
               "device": {
                 "$ref": "device.v1.json"
@@ -62326,6 +62332,7 @@
             "required": [
               "device"
             ],
+            "additionalProperties": false,
             "properties": {
               "device": {
                 "$ref": "device.v1.json"
