@@ -15,5 +15,7 @@
   "events": [],
   "implementedBy": [
     "GET /internal/projects/:project_id"
-  ]
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.project-read-result@1"
 }
