@@ -33398,7 +33398,7 @@ export interface NetworkRealtimeTicketResult {
 
 /** network.project-read-result@1.0.0 (owner: network) */
 /**
- * network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and approved or revoked grants without credentials or member identities beyond the owner.
+ * network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and each app's grants (requested, approved, denied or revoked) without credentials or member identities beyond the owner.
  */
 export interface NetworkProjectReadResult {
   project: {
@@ -33415,24 +33415,28 @@ export interface NetworkProjectReadResult {
     archived_at: string | null;
     created_at: string;
   };
-  allowance: unknown[];
+  allowance: string[];
   quotas: {
     capability: string;
     limit: number;
     window: string;
     unit: string;
+    enforced_by: string | null;
   }[];
   apps: {
     id: string;
     name: string;
     environment: string;
     status: "active" | "revoked";
+    created_at: string;
+    revoked_at: string | null;
   }[];
   grants: {
     app_id: string;
     capability: string;
     audience: string;
-    status: string;
+    status: "requested" | "approved" | "denied" | "revoked";
+    decided_at: string | null;
   }[];
 }
 

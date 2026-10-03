@@ -28450,7 +28450,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/project-read-result.v1.json",
         "title": "NetworkProjectReadResult",
-        "description": "network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and approved or revoked grants without credentials or member identities beyond the owner.",
+        "description": "network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and each app's grants (requested, approved, denied or revoked) without credentials or member identities beyond the owner.",
         "type": "object",
         "required": [
           "project",
@@ -28533,7 +28533,10 @@
             }
           },
           "allowance": {
-            "type": "array"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "quotas": {
             "type": "array",
@@ -28543,7 +28546,8 @@
                 "capability",
                 "limit",
                 "window",
-                "unit"
+                "unit",
+                "enforced_by"
               ],
               "additionalProperties": false,
               "properties": {
@@ -28559,6 +28563,12 @@
                 },
                 "unit": {
                   "type": "string"
+                },
+                "enforced_by": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               }
             }
@@ -28571,7 +28581,9 @@
                 "id",
                 "name",
                 "environment",
-                "status"
+                "status",
+                "created_at",
+                "revoked_at"
               ],
               "additionalProperties": false,
               "properties": {
@@ -28590,6 +28602,15 @@
                     "active",
                     "revoked"
                   ]
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "revoked_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               }
             }
@@ -28602,7 +28623,8 @@
                 "app_id",
                 "capability",
                 "audience",
-                "status"
+                "status",
+                "decided_at"
               ],
               "additionalProperties": false,
               "properties": {
@@ -28617,7 +28639,18 @@
                   "type": "string"
                 },
                 "status": {
-                  "type": "string"
+                  "enum": [
+                    "requested",
+                    "approved",
+                    "denied",
+                    "revoked"
+                  ]
+                },
+                "decided_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               }
             }
