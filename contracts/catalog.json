@@ -5240,7 +5240,7 @@
     },
     {
       "id": "platform.resource-offer",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/resource-offer.v1.json",
       "visibility": "first-party",
@@ -5250,7 +5250,7 @@
     },
     {
       "id": "platform.workload-requirements",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/workload-requirements.v1.json",
       "visibility": "first-party",

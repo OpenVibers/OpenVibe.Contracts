@@ -57736,7 +57736,7 @@
       }
     },
     "platform.resource-offer": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -57794,6 +57794,7 @@
             "type": "string",
             "enum": [
               "first-party",
+              "user-owned",
               "partner",
               "community",
               "external"
@@ -58144,7 +58145,7 @@
       }
     },
     "platform.workload-requirements": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -58227,6 +58228,7 @@
               "type": "string",
               "enum": [
                 "first-party",
+                "user-owned",
                 "partner",
                 "community",
                 "external"

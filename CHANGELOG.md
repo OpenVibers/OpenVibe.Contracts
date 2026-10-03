@@ -4,7 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.87.0 — 2026-10-03
+
+**User-owned trust class** (ADR-034 platform fabric; the SDK placement planner's fifth trust class). A person's own
+node or machine is now a trust class of its own, between `first-party` and `partner`.
+- `platform.resource-offer@1` 1.1.0 and `platform.workload-requirements@1` 1.1.0 add `user-owned` to their `trust`
+  enum, ordered `first-party`, `user-owned`, `partner`, `community`, `external`. Additive: a producer or consumer that
+  knows only the previous four values is unchanged, and no existing offer or requirement is invalidated.
+- New valid fixtures: `platform.resource-offer/valid/user-owned-node` (an offer with `trust: "user-owned"`) and
+  `platform.workload-requirements/valid/user-owned-only` (requirements whose `trust` is `["user-owned"]`). The existing
+  first-party `owned-node` fixture stays.
 
 **Named object zones for OpenVibe.Zone** (ADR-031 amendment 2026-10-02; plan D37). The amendment maps named Zone buckets
 onto Media's S3 surface. A zone is a Media namespace, and Media keeps the one object catalog and the only deletion
