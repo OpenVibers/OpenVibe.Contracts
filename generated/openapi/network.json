@@ -1900,6 +1900,62 @@
     }
    }
   },
+  "/internal/projects/{project_id}": {
+   "get": {
+    "operationId": "get_internal_projects_project_id",
+    "summary": "Read a developer project as an owning service: its apps and their revocation state, approved grants, environment policy and quotas.",
+    "description": "**network.project.read** (first-party): Read a developer project as an owning service: its apps and their revocation state, approved grants, environment policy and quotas. Services use it to key tenancy by project_id and to enforce the quotas Network records (ADR-014). Never grantable to apps.",
+    "tags": [
+     "network.project"
+    ],
+    "x-openvibe-capabilities": [
+     "network.project.read"
+    ],
+    "x-openvibe-visibility": [
+     "first-party"
+    ],
+    "x-openvibe-quota-class": "projects-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.project.read"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "project_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/network.project-read-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/internal/registry/instances/report": {
    "post": {
     "operationId": "post_internal_registry_instances_report",
@@ -3924,6 +3980,215 @@
      "notified": {
       "type": "integer",
       "minimum": 0
+     }
+    }
+   },
+   "network.project-read-result.v1": {
+    "title": "NetworkProjectReadResult",
+    "description": "network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and each app's grants (requested, approved, denied or revoked) without credentials or member identities beyond the owner.",
+    "type": "object",
+    "required": [
+     "project",
+     "allowance",
+     "quotas",
+     "apps",
+     "grants"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "project": {
+      "type": "object",
+      "required": [
+       "id",
+       "name",
+       "owner",
+       "environment_policy",
+       "home_cell",
+       "residency",
+       "preferred_regions",
+       "archived_at",
+       "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "id": {
+        "type": "string",
+        "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+       },
+       "name": {
+        "type": "string"
+       },
+       "owner": {
+        "type": "object",
+        "required": [
+         "type",
+         "id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "type": {
+          "const": "user"
+         },
+         "id": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+         }
+        }
+       },
+       "environment_policy": {
+        "type": "string"
+       },
+       "home_cell": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "residency": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "preferred_regions": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "archived_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       }
+      }
+     },
+     "allowance": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "quotas": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "capability",
+        "limit",
+        "window",
+        "unit",
+        "enforced_by"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "capability": {
+         "type": "string"
+        },
+        "limit": {
+         "type": "number",
+         "minimum": 0
+        },
+        "window": {
+         "type": "string"
+        },
+        "unit": {
+         "type": "string"
+        },
+        "enforced_by": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       }
+      }
+     },
+     "apps": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "id",
+        "name",
+        "environment",
+        "status",
+        "created_at",
+        "revoked_at"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "id": {
+         "type": "string",
+         "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "name": {
+         "type": "string"
+        },
+        "environment": {
+         "type": "string"
+        },
+        "status": {
+         "enum": [
+          "active",
+          "revoked"
+         ]
+        },
+        "created_at": {
+         "type": "string"
+        },
+        "revoked_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       }
+      }
+     },
+     "grants": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "app_id",
+        "capability",
+        "audience",
+        "status",
+        "decided_at"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "app_id": {
+         "type": "string",
+         "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "capability": {
+         "type": "string"
+        },
+        "audience": {
+         "type": "string"
+        },
+        "status": {
+         "enum": [
+          "requested",
+          "approved",
+          "denied",
+          "revoked"
+         ]
+        },
+        "decided_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       }
+      }
      }
     }
    },

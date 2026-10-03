@@ -33396,6 +33396,50 @@ export interface NetworkRealtimeTicketResult {
   subject: string;
 }
 
+/** network.project-read-result@1.0.0 (owner: network) */
+/**
+ * network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and each app's grants (requested, approved, denied or revoked) without credentials or member identities beyond the owner.
+ */
+export interface NetworkProjectReadResult {
+  project: {
+    id: string;
+    name: string;
+    owner: {
+      type: "user";
+      id: string;
+    };
+    environment_policy: string;
+    home_cell: string | null;
+    residency: string | null;
+    preferred_regions: string[];
+    archived_at: string | null;
+    created_at: string;
+  };
+  allowance: string[];
+  quotas: {
+    capability: string;
+    limit: number;
+    window: string;
+    unit: string;
+    enforced_by: string | null;
+  }[];
+  apps: {
+    id: string;
+    name: string;
+    environment: string;
+    status: "active" | "revoked";
+    created_at: string;
+    revoked_at: string | null;
+  }[];
+  grants: {
+    app_id: string;
+    capability: string;
+    audience: string;
+    status: "requested" | "approved" | "denied" | "revoked";
+    decided_at: string | null;
+  }[];
+}
+
 /** network.project-usage-result@1.0.0 (owner: network) */
 /**
  * network.project-usage-result@1 (roadmap WS-N task 4, ADR-014): what GET /api/v1/projects/:project/usage?days=&env= on OpenVibe.Network answers a project's owner or admin (or staff): the project's usage per day, service, capability and unit, added up from the <service>.usage.recorded rollups (common.usage-recorded@1) the owning services emit after each hour closes; the project's recorded quotas with what the current window has used; and its recent failures with their codes and trace ids. Counts only, never who did what: no subject id, address, input or content.

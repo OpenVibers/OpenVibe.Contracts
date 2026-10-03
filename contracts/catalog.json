@@ -2788,6 +2788,16 @@
       "adr": "ADR-005"
     },
     {
+      "id": "network.project-read-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/project-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
       "id": "network.project-usage-result",
       "version": "1.0.0",
       "owner": "network",
