@@ -57736,7 +57736,7 @@
       }
     },
     "platform.resource-offer": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -57794,6 +57794,7 @@
             "type": "string",
             "enum": [
               "first-party",
+              "user-owned",
               "partner",
               "community",
               "external"
@@ -58144,7 +58145,7 @@
       }
     },
     "platform.workload-requirements": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -58227,6 +58228,7 @@
               "type": "string",
               "enum": [
                 "first-party",
+                "user-owned",
                 "partner",
                 "community",
                 "external"
@@ -58976,10 +58978,12 @@
           },
           "route_epoch": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Epoch of the signed placement plan that chose where this reading ran (platform.placement-plan@1 `epoch`). A later plan supersedes it; absent when Fabric did not place the work."
           },
           "trace_id": {
-            "type": "string"
+            "type": "string",
+            "description": "Opaque trace id tying this reading to the request and route that produced it, the same `trace_id` platform.telemetry-sample@1 carries; absent when the producer had no trace."
           },
           "source": {
             "type": "string"

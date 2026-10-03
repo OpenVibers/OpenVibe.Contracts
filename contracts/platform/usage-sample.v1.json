@@ -80,10 +80,12 @@
     },
     "route_epoch": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Epoch of the signed placement plan that chose where this reading ran (platform.placement-plan@1 `epoch`). A later plan supersedes it; absent when Fabric did not place the work."
     },
     "trace_id": {
-      "type": "string"
+      "type": "string",
+      "description": "Opaque trace id tying this reading to the request and route that produced it, the same `trace_id` platform.telemetry-sample@1 carries; absent when the producer had no trace."
     },
     "source": {
       "type": "string"

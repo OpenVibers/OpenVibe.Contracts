@@ -4,7 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.87.0 — 2026-10-03
+
+**User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
+ADR-046, is still to write).
+- `platform.resource-offer@1` 1.1.0 and `platform.workload-requirements@1` 1.1.0 add the trust class `user-owned`
+  (a user's own node or machine), ordered `first-party`, `user-owned`, `partner`, `community`, `external`. Additive:
+  a producer or consumer that knows only the previous four values is unchanged. New valid fixtures `user-owned-node`
+  (an offer with `trust: "user-owned"`) and `user-owned-only` (requirements whose `trust` is `["user-owned"]`); the
+  existing first-party `owned-node` fixture stays.
+- `platform.usage-sample@1`: `route_epoch` and `trace_id` gain descriptions; their types and shape are unchanged.
+- `docs/ESTATE.md`: the plan §1.1 estate table as a data-only document (repository, product, authority, runtime,
+  database, domain, SDK/Contracts pin, deployment, public/private, current track). Step 2 replaces it with the table
+  generated in CI.
 
 **Named object zones for OpenVibe.Zone** (ADR-031 amendment 2026-10-02; plan D37). The amendment maps named Zone buckets
 onto Media's S3 surface. A zone is a Media namespace, and Media keeps the one object catalog and the only deletion

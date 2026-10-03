@@ -50724,7 +50724,7 @@ export interface NetworkCoinsReadResult {
   };
 }
 
-/** platform.resource-offer@1.0.0 (owner: network) */
+/** platform.resource-offer@1.1.0 (owner: network) */
 /**
  * What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.
  */
@@ -50747,7 +50747,7 @@ export type ResourceOffer = {
   adapter?: string;
   region: string;
   cell?: string;
-  trust: "first-party" | "partner" | "community" | "external";
+  trust: "first-party" | "user-owned" | "partner" | "community" | "external";
   /**
    * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true
    */
@@ -50822,7 +50822,7 @@ export type ResourceOffer = {
   detail?: {};
 };
 
-/** platform.workload-requirements@1.0.0 (owner: network) */
+/** platform.workload-requirements@1.1.0 (owner: network) */
 /**
  * What a workload needs, so the platform can place it (roadmap WS-Z9). Hard constraints are filtered before any objective is scored; a cheaper candidate that misses one is never chosen.
  */
@@ -50856,8 +50856,8 @@ export interface WorkloadRequirements {
    * @minItems 1
    */
   trust?: [
-    "first-party" | "partner" | "community" | "external",
-    ...("first-party" | "partner" | "community" | "external")[]
+    "first-party" | "user-owned" | "partner" | "community" | "external",
+    ...("first-party" | "user-owned" | "partner" | "community" | "external")[]
   ];
   /**
    * a region, or 'nearest'
@@ -51126,7 +51126,13 @@ export interface UsageSample {
    * Vibes charged for this reading, as an integer count of vibes-bits (Billing's ledger minor unit, currency `vibes-bits`; balance credit and ledger amounts use the same unit). Never whole Vibes, USD or a fraction: round once, when rating. Covers only `quantity` minus `free_allowance_used`; 0 means rated and nothing charged. Absent means not rated (yet). Records a charge already made in Billing's ledger; it is never a request to charge.
    */
   vibes_charged?: number;
+  /**
+   * Epoch of the signed placement plan that chose where this reading ran (platform.placement-plan@1 `epoch`). A later plan supersedes it; absent when Fabric did not place the work.
+   */
   route_epoch?: number;
+  /**
+   * Opaque trace id tying this reading to the request and route that produced it, the same `trace_id` platform.telemetry-sample@1 carries; absent when the producer had no trace.
+   */
   trace_id?: string;
   source: string;
 }
