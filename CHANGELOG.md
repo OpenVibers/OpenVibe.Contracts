@@ -4,7 +4,26 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.88.0 — 2026-10-03
+
+**The Fabric ADR and the user-owned trust rule** (plan T1 step 3; T14 S2, the Contracts half). ADR-046 "The universal
+adaptive fabric" (Proposed, for the owner) ties `platform.resource-offer@1`, `workload-requirements@1`,
+`placement-result@1`, `placement-plan@1`, `provider-state@1`, `rate-card@1`, `cost-snapshot@1`, `telemetry-sample@1`
+and `usage-sample@1` to one placer (`openvibe-sdk/placement`), names the five trust classes, the `worker:<class>`
+capabilities a Node advertises (`worker:function`, `worker:code`, …) and the plane rule: the data plane keeps running
+on the last valid signed plan (`signature`, `epoch`, `expires_at`, checked by `placement.verifyPlan`). It records that
+`user-owned` is **not** in the default trust set: a user-owned offer is eligible only for a workload whose requirements
+name `user-owned`, so the SDK's default trust list stays the other four (this replaces the 0.87.0 note that the SDK
+should route to user-owned nodes by default). Whether a user-owned node may run other users' work, and its consent and
+revocation rule, are open questions for the owner.
+- `platform.resource-offer@1` `trust` and `platform.workload-requirements@1` `trust` gain descriptions stating that
+  rule; the enums (1.1.0 since 0.87.0) are unchanged. Consumers are unchanged.
+- Fixtures: `user-owned-node` now also advertises `worker:function`; new invalid `unknown-trust` (an offer with
+  `trust: "stranger"`, refused on `/trust` alone). `owned-node` is unchanged.
+
+**Two product manifests** (plan T11 step 1): `manifests/products/openvibe.zone.json` (served by the planned `zone`
+service) and `manifests/products/openvibe.work.json` (no repository yet), with name, tagline, pillars and launch taken
+from OpenVibe.Sites `sites.json`. The catalog test's Sites snapshot holds 35 domains.
 
 - `network.project.read` is active, implemented by OpenVibe.Network `GET /internal/projects/:project_id`.
 

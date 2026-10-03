@@ -50970,6 +50970,9 @@ export type ResourceOffer = {
   adapter?: string;
   region: string;
   cell?: string;
+  /**
+   * the offer's trust class (ADR-046): first-party (operated by the OpenVibe network), user-owned (a person's own node, eligible only for workloads whose requirements name user-owned), partner, community or external
+   */
   trust: "first-party" | "user-owned" | "partner" | "community" | "external";
   /**
    * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name.
@@ -51074,7 +51077,7 @@ export interface WorkloadRequirements {
    */
   residency?: string;
   /**
-   * trust levels allowed to run it
+   * trust classes allowed to run it (ADR-046); when absent, first-party, partner, community and external. user-owned is never a default: a user-owned offer is eligible only when this list names it
    *
    * @minItems 1
    */
