@@ -69,6 +69,12 @@ path.
   readings. `usage-sample` gains a description sentence, a `function` example and two fixtures; no field changed.
 - `test/platform-run.test.js` checks the derivation. Additive.
 
+**Reserved worker capability names for OpenVibe.Node** (plan T14 groundwork, additive): a Node advertises its runtimes
+as `worker:` capabilities in `platform.resource-offer@1`. The names `worker:function` and `worker:code` are reserved
+now; both already satisfy the `capabilities` pattern `^[a-z][a-z0-9-]*:[a-z0-9.-]+$`, so no schema change is needed.
+Only `worker:function` is advertised today; `worker:code` follows when the `code` runtime class ships. Four new valid
+fixtures for `platform.runtime-class@1` (`code`, `browser`, `linux`, `desktop`) complete its six `const` classes.
+
 ## 0.85.0 — 2026-10-02
 
 **Billing records usage readings** (plan T5 lane F): the capability `billing.usage.record` (active, internal,
