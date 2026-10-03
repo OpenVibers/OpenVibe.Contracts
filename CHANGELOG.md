@@ -4,6 +4,40 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## Unreleased
+
+**Named object zones for OpenVibe.Zone** (ADR-031 amendment 2026-10-02; plan D37). The amendment maps named Zone buckets
+onto Media's S3 surface. A zone is a Media namespace, and Media keeps the one object catalog and the only deletion
+path.
+- **Ownership:** Zone owns the zone record and Media owns objects, bytes and replicas.
+- **Names:** zone `zon_<ULID>`, `ovrn:zone:<project_id>:object-zone/<zone_id>` and Media namespace
+  `<environment root>.<zone_id>`.
+- **Buckets:** the bucket is the zone name, resolved within the signing key's project and environment. The environment
+  root is the zone `default`, so no existing object moves.
+- **Grants and quotas:** grants are scoped to a zone's resource name. A per-zone byte quota sits under the environment
+  quota.
+- **Usage:** Media emits per-zone usage rollups that name the zone's resource name in a new optional `resource` field
+  of `common.usage-recorded@1` 1.1.0 (additive; existing producers are unchanged) and its id as `dimension`.
+  `contracts.usage.checkUsageRecorded` refuses a rollup whose `resource` names another project than `project_id`, and
+  `contracts.zones.checkObjectZoneUsage` a usage answer whose `ovrn` names another zone than `zone_id`.
+- **Deletion:** one lifecycle for every door, the one `media.object.delete` already promises: a held object's deletion
+  is refused, a tombstone is restorable until the retention period ends, and the purge then erases every replica, B2
+  file versions included, within 24 hours. Zone deletion tombstones with no restore window and answers `409 zone.held`
+  while an object is held.
+- **No name reuse:** a `deleting` or `deleted` zone's name is retired in its environment (`409 zone.name_retired`; `provisioning`
+  and `active` answer `409 zone.name_taken`), so a signature,
+  which covers the key and the bucket name, always names one zone id, whatever signing time it carries.
+  `contracts.zones.checkObjectZoneList` refuses a list in which two zones of one environment share a name.
+- **List query:** `limit` is 1 to 200 as an integer or as a query-string value.
+- **Migration:** Media backfills a key derived from each object's namespace and `med_` id, legacy child namespaces
+  included, before S3 accepts writes. The default zone's access is `per-object`, so existing public and unlisted
+  objects keep their URLs and cached copies.
+- **Control API:** a planned Zone service manifest (`manifests/services/zone.json`) with six planned capabilities, one per
+  route. The capabilities enter `generated/openapi` when they turn active.
+- **Contracts:** new `zone.object-zone@1` and its create, update, list, list-query, delete-query and usage contracts,
+  all `planned`, with fixtures. `contracts.zones.checkObjectZone` also checks that a zone's OVRN and Media namespace
+  name its own project and id. Additive; no active contract changes.
+
 ## 0.86.0 — 2026-10-03
 
 **Harness offers for Fabric routing** (plan T16 step S5): OpenVibe.Codes publishes its harness catalog as

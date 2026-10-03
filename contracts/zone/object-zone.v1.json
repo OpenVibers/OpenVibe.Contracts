@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/zone/object-zone.v1.json",
+  "title": "ObjectZone",
+  "description": "zone.object-zone@1 (PLANNED; ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "ovrn", "project_id", "env", "name", "default", "access", "state", "media_namespace", "quota_bytes", "revision", "created_at"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^zon_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "ovrn": { "type": "string", "pattern": "^ovrn:zone:prj_[0-9A-HJKMNP-TV-Z]{26}:object-zone/zon_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The resource name used in grants, audit, events, usage records and bills (ADR-034 section 2)." },
+    "project_id": { "type": "string", "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "env": { "enum": ["sandbox", "production"], "description": "Fixed at creation. A sandbox key never resolves a production zone." },
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 63,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "The S3 bucket name. It is unique among all the zones of one project environment, deleted ones included: a deleted zone's name is retired, never given to another zone. It is valid as an S3 bucket name."
+    },
+    "default": { "type": "boolean", "description": "The environment's default zone, named `default`. Its media_namespace is the environment root." },
+    "description": { "type": ["string", "null"], "maxLength": 200 },
+    "access": { "enum": ["private", "per-object"], "description": "private: every named zone in v1. Its objects never have a public_url and never enter a public cache. per-object: only the default zone, whose existing objects keep their own visibility (public, unlisted or private), public URLs and cached copies, as media.object@1 allows. The S3 surface never serves an object without a signature, in either kind of zone. Publication of a named zone would add a value in a later minor version." },
+    "state": {
+      "enum": ["provisioning", "active", "deleting", "deleted"],
+      "description": "provisioning: Media has not yet acknowledged the zone. active: it serves requests. deleting: requests answer NoSuchBucket while Media tombstones the objects and erases every copy. deleted: no object or copy remains. The record is kept, and its name stays retired."
+    },
+    "media_namespace": {
+      "type": "string",
+      "pattern": "^app\\.prj_[0-9A-HJKMNP-TV-Z]{26}(\\.sandbox)?(\\.zon_[0-9A-HJKMNP-TV-Z]{26})?$",
+      "description": "Where Media keeps the zone's objects. It is the environment root for the default zone, and <root>.<id> for every other zone."
+    },
+    "quota_bytes": { "type": ["integer", "null"], "minimum": 1, "description": "An optional byte ceiling for this zone. Media enforces it together with the project environment's byte quota, and a write over either is refused with QuotaExceeded. null means only the environment quota applies." },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stored_bytes", "objects", "as_of"],
+      "description": "A snapshot of the live objects, as Media reports it. Zone never counts. Billed usage comes from Media's hourly media.usage.recorded rollups, whose dimension is this id in lowercase.",
+      "properties": {
+        "stored_bytes": { "type": "integer", "minimum": 0 },
+        "objects": { "type": "integer", "minimum": 0 },
+        "as_of": { "type": "string", "format": "date-time" }
+      }
+    },
+    "deletion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested_at", "objects_remaining", "held_objects", "completed_at"],
+      "description": "Progress of a zone deletion, as Media reports it.",
+      "properties": {
+        "requested_at": { "type": "string", "format": "date-time" },
+        "objects_remaining": { "type": "integer", "minimum": 0, "description": "Objects not yet tombstoned, plus tombstoned objects with a copy not yet confirmed erased." },
+        "held_objects": { "type": "integer", "minimum": 0, "description": "Objects whose erasure waits for a retention hold (ADR-006). They are already unreadable." },
+        "completed_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "revision": { "type": "integer", "minimum": 1, "description": "Raised by every change. Zone sends it when it provisions the change in Media, and Media applies only a higher revision." },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "default": { "const": true } }, "required": ["default"] },
+      "then": { "properties": { "name": { "const": "default" }, "access": { "const": "per-object" }, "media_namespace": { "type": "string", "pattern": "^app\\.prj_[0-9A-HJKMNP-TV-Z]{26}(\\.sandbox)?$" } } },
+      "else": { "properties": { "name": { "not": { "const": "default" } }, "access": { "const": "private" }, "media_namespace": { "type": "string", "pattern": "\\.zon_[0-9A-HJKMNP-TV-Z]{26}$" } } }
+    },
+    {
+      "if": { "properties": { "env": { "const": "sandbox" } }, "required": ["env"] },
+      "then": { "properties": { "media_namespace": { "type": "string", "pattern": "^app\\.prj_[0-9A-HJKMNP-TV-Z]{26}\\.sandbox(\\.|$)" } } },
+      "else": { "properties": { "media_namespace": { "type": "string", "not": { "pattern": "\\.sandbox(\\.|$)" } } } }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["deleting", "deleted"] } }, "required": ["state"] },
+      "then": { "required": ["deletion"] }
+    },
+    {
+      "if": { "properties": { "state": { "const": "deleted" } }, "required": ["state"] },
+      "then": { "properties": { "deletion": { "type": "object", "properties": { "objects_remaining": { "const": 0 }, "held_objects": { "const": 0 }, "completed_at": { "type": "string" } } } } }
+    }
+  ]
+}

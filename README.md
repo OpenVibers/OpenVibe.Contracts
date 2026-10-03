@@ -189,6 +189,12 @@ and `tools.net.probe` are `planned` until Tools serves them.
 express, such as `run.path` being the tool's own, and check each example's input against an embedded
 input schema. `jobInput(d, input)` builds a job tool's job input.
 
+`contracts.zones.checkObjectZone(z)`, `checkObjectZoneList(list)` and `checkObjectZoneUsage(u)` add the
+cross-field rules of the planned object zones (ADR-031 amendment 2026-10-02): `ovrn` and `media_namespace`
+name the zone's own project and id, a name belongs to one zone of its environment for ever, and a usage
+answer's `ovrn` names its `zone_id`. `contracts.usage.checkUsageRecorded(u)` refuses a usage rollup whose
+`resource` names another project than its `project_id`.
+
 Tools' problem codes are listed with the routes that answer them (`tools.run-request@1`,
 `tools.job-request@1`, `tools.tool-list@1`, `tools.tool@1`). They include `400 tools.query.invalid`,
 `404 tools.tool.not_found`, `413 tools.pdf.too_many_pages`, `422 tools.pdf.wrong_password`,

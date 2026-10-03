@@ -1,0 +1,18 @@
+{
+  "id": "zone.zone.read",
+  "version": "1.0",
+  "owner": "zone",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (ADR-031 amendment 2026-10-02): Read one object zone: GET /api/v1/zones/:zone_id. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "outputSchema": "zone.object-zone@1",
+  "permissions": [
+    "zone:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "zone-control",
+  "events": [],
+  "implementedBy": []
+}

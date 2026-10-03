@@ -56,7 +56,11 @@ for (const d of contracts.catalog.length ? JSON.parse(fs.readFileSync(path.join(
 // ── Fixtures: every contract has examples that pass and counter-examples that fail ──
 // A contract with a helper that holds it to more than its schema is checked with that helper, so
 // its invalid fixtures can break those rules too (a tool example whose input its own schema refuses).
-const FULL_CHECK = { 'tools.tool': (v) => contracts.tools.checkDescriptor(v), 'tools.tool-list': (v) => contracts.tools.checkList(v) };
+const FULL_CHECK = {
+    'tools.tool': (v) => contracts.tools.checkDescriptor(v), 'tools.tool-list': (v) => contracts.tools.checkList(v),
+    'zone.object-zone': (v) => contracts.zones.checkObjectZone(v), 'zone.object-zone-list': (v) => contracts.zones.checkObjectZoneList(v),
+    'zone.object-zone-usage': (v) => contracts.zones.checkObjectZoneUsage(v), 'common.usage-recorded': (v) => contracts.usage.checkUsageRecorded(v),
+};
 for (const c of contracts.catalog) {
     for (const kind of ['valid', 'invalid']) {
         const dir = path.join(ROOT, 'fixtures', c.id, kind);
@@ -868,6 +872,8 @@ sub(path.join(__dirname, 'loyalty-policy.test.js'));
 sub(path.join(__dirname, 'presence-policy.test.js'));
 // Every OpenVibe.Sites catalog domain has one home in Contracts (plan T11 lane D).
 sub(path.join(__dirname, 'product-catalog.test.js'));
+// Named object zones: identity, retired names, list limits and per-zone usage (ADR-031 amendment 2026-10-02).
+sub(path.join(__dirname, 'zones.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));

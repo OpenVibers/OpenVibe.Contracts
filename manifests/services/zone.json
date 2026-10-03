@@ -1,0 +1,52 @@
+{
+  "version": "0.0.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.87.0 <1.0.0"
+  },
+  "id": "zone",
+  "name": "OpenVibe.Zone",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Zone",
+  "domains": [
+    "openvibe.zone",
+    "api.openvibe.zone"
+  ],
+  "publicOrigin": "https://api.openvibe.zone",
+  "exposure": {
+    "state": "placeholder",
+    "publicSite": null,
+    "note": "planned (ADR-031 amendment 2026-10-02); nothing is built or deployed, and no OpenVibe service serves openvibe.zone yet"
+  },
+  "capabilities": [
+    "zone.zone.create",
+    "zone.zone.list",
+    "zone.zone.read",
+    "zone.zone.manage",
+    "zone.zone.delete",
+    "zone.usage.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "not built yet; nothing listens on a loopback address"
+    },
+    "shutdown": {
+      "none": "not built yet; nothing runs or drains"
+    },
+    "startupRecovery": {
+      "none": "not built yet; nothing starts"
+    },
+    "rollback": {
+      "none": "not built yet; nothing is released or rolled back"
+    },
+    "contracts": {
+      "range": ">=0.87.0 <1.0.0"
+    },
+    "leases": {
+      "none": "not built yet; nothing runs"
+    }
+  },
+  "notes": "Named object zones per project environment (ADR-031 amendment 2026-10-02). Zone owns the zone record and its control API in its own PostgreSQL database (ADR-035). OpenVibe.Media owns the objects, bytes, replicas, S3 and native data APIs, quota enforcement, usage counting and the one deletion path. Planned: nothing is built."
+}
