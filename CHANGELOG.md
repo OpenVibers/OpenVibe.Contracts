@@ -4,7 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.86.0 — 2026-10-03
+
+**Harness offers for Fabric routing** (plan T16 step S5): OpenVibe.Codes publishes its harness catalog as
+`platform.resource-offer@1` offers of kind `harness` whose `detail` is a `platform.harness-offer@1`; the envelope keeps
+`trust`, `health`, `latency_ms`, `pricing` and `capabilities`.
+- `platform.harness-offer@1` gains four optional fields: `task_capabilities` (unique; `edit`, `review`, `browse`,
+  `run`, `test`, `plan`), `runtime_needs` (unique runtime names such as `git`, `node`, `python`, `docker`; pattern
+  `^[a-z][a-z0-9.-]*$`, at most 40 characters), `byo_key` (the caller supplies their own provider key) and
+  `success_rate` (0 to 1, the measured share of routed tasks that finished green). The example carries them; fixtures
+  `fabric-routing` (valid), `unknown-task-capability` and `success-rate-over-1` (invalid).
+- `platform.resource-offer@1`: no schema change. The `capabilities` description names the harness convention:
+  `task:edit`, `task:review`, `task:browse`, `task:run`, `task:test`, `task:plan`, `harness:mcp`, `harness:resume`,
+  `harness:host-access`, `harness:long-autonomy`. New valid fixture `harness-task-routing`. Additive.
+
 
 **Run jobs and their metering** (plan T14 lane G, follow-up 1 of the Node gap audit):
 - New `platform.runtime-class@1`: the classes `function`, `code`, `browser`, `linux`, `desktop` and `gpu`, names
