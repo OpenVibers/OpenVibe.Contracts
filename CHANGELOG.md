@@ -8,9 +8,9 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 **User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
 ADR-046, is still to write). A person's own node or machine is now a trust class of its own in Contracts, between
-`first-party` and `partner`. The SDK placement planner does not support the class yet: it hard-codes four trust values
-in `TRUST_ORDER` and `Offer.trust`, so consuming `user-owned` there needs code and type changes as well as a pin to
-this release.
+`first-party` and `partner`. The SDK placement planner's runtime already honours an explicit `trust: ["user-owned"]`
+requirement, but its default trust list and its TypeScript `Offer` type omit the value, so the SDK needs code and type
+changes as well as a pin to this release to route to user-owned nodes by default.
 - `platform.resource-offer@1` 1.1.0 and `platform.workload-requirements@1` 1.1.0 add `user-owned` to their `trust`
   enum, ordered `first-party`, `user-owned`, `partner`, `community`, `external`. Additive: a producer or consumer that
   knows only the previous four values is unchanged, and no existing offer or requirement is invalidated. New valid
