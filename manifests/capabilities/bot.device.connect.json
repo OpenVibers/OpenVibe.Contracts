@@ -1,0 +1,17 @@
+{
+  "id": "bot.device.connect",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "planned",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Reserved for managing a paired device's credentials (rotate, revoke) apart from robot management. Bot declares this name but checks it nowhere: today POST /api/v1/devices/:id/rotate and /revoke are gated by bot.robot.manage. It becomes active when Bot's routes enforce it.",
+  "permissions": [
+    "bot:device:connect"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-device",
+  "events": []
+}

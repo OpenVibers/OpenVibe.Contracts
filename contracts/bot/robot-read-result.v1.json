@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot-read-result.v1.json",
+  "title": "BotRobotReadResult",
+  "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot. GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role } (role \"service\" for a service token); GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "robots"
+      ],
+      "properties": {
+        "robots": {
+          "type": "array",
+          "items": {
+            "$ref": "robot.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "robot",
+        "role"
+      ],
+      "properties": {
+        "robot": {
+          "$ref": "robot.v1.json"
+        },
+        "role": {
+          "enum": [
+            "owner",
+            "operator",
+            "viewer",
+            "queue",
+            "service"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "operators"
+      ],
+      "properties": {
+        "operators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "role"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "role": {
+                "enum": [
+                  "operator",
+                  "viewer"
+                ]
+              },
+              "added_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "devices"
+      ],
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "device.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}

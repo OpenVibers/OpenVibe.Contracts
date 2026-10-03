@@ -1,0 +1,86 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.85.0 <1.0.0"
+  },
+  "id": "bot",
+  "name": "OpenVibe.Bot",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Bot",
+  "domains": [
+    "openvibe.bot"
+  ],
+  "publicOrigin": "https://openvibe.bot",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4630",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [
+    "bot.robot.read",
+    "bot.robot.manage",
+    "bot.robot.control",
+    "bot.device.connect"
+  ],
+  "eventsProduced": [
+    "bot.robot.online",
+    "bot.robot.offline",
+    "bot.estop.set",
+    "bot.estop.cleared",
+    "bot.command.refused"
+  ],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process answers HTTP and reports online devices and outbox status; database, Valkey and Network readiness are checked by /api/ready"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "job timers cleared and the Network key refresh stopped",
+        "device and operator WebSockets closed (1001) and the outbox relay stopped",
+        "HTTP server closed: requests in flight get Connection: close and up to 4 s to finish, idle connections close at once, whatever is open after 4 s is cut",
+        "PostgreSQL pool and Valkey client closed, then exit 0"
+      ],
+      "note": "openvibe-sdk/service gracefulStop (drainMs 4000, deadlineMs 5000, deadlineExitCode 0) runs these steps on SIGTERM or SIGINT and exits 0 after 5 s whatever is still open; the unit sends SIGTERM and allows 10 s (TimeoutStopSec)"
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "schedule",
+          "what": "the one-second turn-queue sweep expires overdue turns and promotes waiting operators; pairing-code and audit-prune timers restart"
+        },
+        {
+          "kind": "sessions",
+          "what": "device and operator WebSockets reconnect; commands are never queued or replayed after a disconnect"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent bot.* events in bot_event_outbox are published when the relay restarts (at least once)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy restores the previous sha when /api/ready does not return 2xx within the configured readiness timeout",
+        "manual: ovhost rollback bot --to <sha>"
+      ],
+      "window": "automatic while ovhost waits for readiness after restart; manual afterwards while the earlier release remains compatible with the database",
+      "blockers": {
+        "none": "the current migration creates Bot's initial PostgreSQL schema and does not drop or rename existing data"
+      }
+    },
+    "contracts": {
+      "range": ">=0.85.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no expiring work claims: PostgreSQL row locks serialize queue changes and an advisory lock serializes boot migrations; WebSocket sessions are in memory"
+    }
+  },
+  "notes": "Robot and device control service on openvibe-ovh since 2026-10-02; the public site uses HTTPS while health and readiness are loopback-only."
+}

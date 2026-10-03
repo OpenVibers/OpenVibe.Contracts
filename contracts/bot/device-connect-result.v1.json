@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/device-connect-result.v1.json",
+  "title": "BotDeviceConnectResult",
+  "description": "bot.device-connect-result@1: answers of OpenVibe.Bot's device credential routes, which Bot gates with bot.robot.manage (bot.device.connect is reserved, not enforced). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "device",
+        "credential",
+        "publish_key"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "$ref": "device.v1.json"
+        },
+        "credential": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publish_key": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "device"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "$ref": "device.v1.json"
+        }
+      }
+    }
+  ]
+}

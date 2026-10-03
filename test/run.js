@@ -885,6 +885,9 @@ sub(path.join(ROOT, 'scripts/compat.js'));
     // json-schema-to-typescript emit a type name it never declares; every name used as a type must be declared.
     const dts = fs.readFileSync(path.join(ROOT, 'generated/typescript/index.d.ts'), 'utf8');
     const declared = new Set([...dts.matchAll(/^export (?:interface|type) (\w+)/gm)].map(m => m[1]));
+    const names = [...dts.matchAll(/^export (?:interface|type) (\w+)/gm)].map(m => m[1]);
+    const twice = [...new Set(names.filter((n, i) => names.indexOf(n) !== i))];
+    ok(twice.length === 0, `generated types declare a name more than once: ${twice.join(', ')}`);
     const code = dts.replace(/\/\*[\s\S]*?\*\//g, '').replace(/"(?:[^"\\]|\\.)*"/g, '""');
     const used = [...code.matchAll(/(?:[:|&=<(]|\bextends)\s*([A-Z]\w*)\b(?!\s*\??:)/g)].map(m => m[1]);
     const dangling = [...new Set(used)].filter(n => !declared.has(n));
