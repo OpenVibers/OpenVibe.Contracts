@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/resource-control-request.v1.json",
+  "title": "ResourceControlRequest",
+  "description": "common.resource-control-request@1: one control operation OpenVibe.Services (or Actor's Console) sends to the authority that owns a resource (ADR-048, plan T13). Services never mutates another service's database; every create, update, start, stop, delete, resize, rotate, pair, grant or revoke is this request to the owning authority's control API, which decides and answers with a common.resource-control-result@1. A request names exactly one of resource (every action but create) or resource_kind (create, before the name exists). project_id is the tenancy boundary and equals the project segment of resource. idempotency_key makes a retry safe: the authority answers a repeated key with the first result. A sensitive action (money, publishing, deleting, physical control) is refused with confirmation_required until its owner approves; the retry carries that confirmation_id (roadmap WS-Z2). The cross-field rules are checked by contracts.resources.checkControlRequest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "project_id", "idempotency_key"],
+  "oneOf": [{ "required": ["resource"] }, { "required": ["resource_kind"] }],
+  "properties": {
+    "action": { "enum": ["create", "update", "delete", "start", "stop", "suspend", "resume", "resize", "rotate", "pair", "grant", "revoke", "archive"] },
+    "resource": { "$ref": "resource-name.v1.json", "description": "The resource acted on; required for every action but create." },
+    "resource_kind": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}\\.[a-z][a-z0-9-]{0,39}$", "description": "service.type (a common.resource-summary@1 kind), for create, before the resource name exists." },
+    "project_id": { "type": "string", "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "params": { "type": "object", "description": "Action-specific input, shaped by the authority's own contract (never redefined here)." },
+    "idempotency_key": { "type": "string", "minLength": 8, "maxLength": 200 },
+    "on_behalf_of": { "$ref": "../identity/subject-ref.v1.json", "description": "The subject whose grant the authority checks; the caller's own token says who sent it." },
+    "confirmation_id": { "type": ["string", "null"], "maxLength": 80, "description": "The approved confirmation from an earlier confirmation_required answer." },
+    "dry_run": { "type": "boolean", "default": false, "description": "Decide and explain without applying." },
+    "trace_id": { "type": "string", "pattern": "^[0-9a-f]{32}$" }
+  }
+}

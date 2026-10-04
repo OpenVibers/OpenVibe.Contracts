@@ -60,6 +60,8 @@ const FULL_CHECK = {
     'tools.tool': (v) => contracts.tools.checkDescriptor(v), 'tools.tool-list': (v) => contracts.tools.checkList(v),
     'zone.object-zone': (v) => contracts.zones.checkObjectZone(v), 'zone.object-zone-list': (v) => contracts.zones.checkObjectZoneList(v),
     'zone.object-zone-usage': (v) => contracts.zones.checkObjectZoneUsage(v), 'common.usage-recorded': (v) => contracts.usage.checkUsageRecorded(v),
+    'common.resource-name': (v) => contracts.resources.checkName(v), 'common.resource-control-request': (v) => contracts.resources.checkControlRequest(v),
+    'common.resource-control-result': (v) => contracts.resources.checkControlResult(v),
 };
 for (const c of contracts.catalog) {
     for (const kind of ['valid', 'invalid']) {
@@ -908,6 +910,7 @@ sub(path.join(__dirname, 'zones.test.js'));
 // *.usage.recorded rollups are counts: only network, codes and zone may consume one, never billing (T5 step 8).
 sub(path.join(__dirname, 'usage-topics.test.js'));
 sub(path.join(__dirname, 'billing-grace.test.js'));
+sub(path.join(__dirname, 'resources.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));

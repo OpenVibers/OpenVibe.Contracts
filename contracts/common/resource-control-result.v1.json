@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/resource-control-result.v1.json",
+  "title": "ResourceControlResult",
+  "description": "common.resource-control-result@1: the authority's answer to a common.resource-control-request@1 (ADR-048, plan T13). state is the outcome, not the resource's own state: done (applied), pending (accepted and asynchronous; the authority reports completion later on its events), refused (a policy or confirmation gate said no) or failed (an error). State rules: refused carries problem or confirmation_required; failed carries problem; done and pending carry neither; confirmation_required appears only on refused. result carries the authority's own response document and never another service's rows. The state rules are checked by contracts.resources.checkControlResult.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "state", "at"],
+  "properties": {
+    "action": { "type": "string" },
+    "resource": { "$ref": "resource-name.v1.json" },
+    "state": { "enum": ["done", "pending", "refused", "failed"] },
+    "result": { "type": "object" },
+    "confirmation_required": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmation_id", "reason"],
+      "properties": { "confirmation_id": { "type": "string", "maxLength": 80 }, "reason": { "type": "string" } },
+      "description": "The action needs its owner's approval; retry the same request with this confirmation_id once approved."
+    },
+    "problem": { "$ref": "../errors/problem.v1.json", "description": "RFC 9457 body when refused or failed." },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

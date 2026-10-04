@@ -8,6 +8,7 @@
  *   contracts.http.problem(403, 'capability.denied');  // RFC 9457 body
  *   contracts.capabilities.check(tokenClaims, 'media.object.read', { namespace: 'live' });
  *   contracts.staff.can(userTokenClaims, 'staff.moderation.chat');  // staff roles → staff capabilities
+ *   contracts.resources.parse('ovrn:media:prj_…:object/med_…');       // { service, project_id, type, id }
  */
 const registry = require('./lib/registry');
 
@@ -27,6 +28,7 @@ module.exports = {
     tools: require('./lib/tools'),
     zones: require('./lib/zones'),
     usage: require('./lib/usage'),
+    resources: require('./lib/resources'),
     staff: require('./lib/staff'),
     openapi: require('./lib/openapi'),
 };

@@ -53976,3 +53976,73 @@ export interface RunJobExpiredPayload {
     detail: string | null;
   };
 }
+
+/** common.resource-name@1.0.0 (owner: contracts) */
+/**
+ * common.resource-name@1: the one stable, cross-service name of an OpenVibe resource (OVRN; ADR-034 section 2, ADR-048, plan T13): ovrn:<service>:<project_id>:<type>/<id>, for example ovrn:media:prj_01J0000000000000000000000A:object/med_01K0000000000000000000000B. The service segment is the authority that owns the resource; the project segment is its tenancy boundary; type is the second half of a common.resource-summary@1 kind and id is that summary's id, so the name composes from any resource summary. It is used in grant scopes, audit rows, event subjects, usage records, bill lines and console URLs. It never names a person, an app, a request, a session or an event. The pattern is the one common.usage-recorded@1 resource and common.resource-summary@1 ovrn already use.
+ */
+export type ResourceName = string;
+
+/** common.resource-control-request@1.0.0 (owner: contracts) */
+/**
+ * common.resource-control-request@1: one control operation OpenVibe.Services (or Actor's Console) sends to the authority that owns a resource (ADR-048, plan T13). Services never mutates another service's database; every create, update, start, stop, delete, resize, rotate, pair, grant or revoke is this request to the owning authority's control API, which decides and answers with a common.resource-control-result@1. A request names exactly one of resource (every action but create) or resource_kind (create, before the name exists). project_id is the tenancy boundary and equals the project segment of resource. idempotency_key makes a retry safe: the authority answers a repeated key with the first result. A sensitive action (money, publishing, deleting, physical control) is refused with confirmation_required until its owner approves; the retry carries that confirmation_id (roadmap WS-Z2). The cross-field rules are checked by contracts.resources.checkControlRequest.
+ */
+export type ResourceControlRequest = {
+  action:
+    | "create"
+    | "update"
+    | "delete"
+    | "start"
+    | "stop"
+    | "suspend"
+    | "resume"
+    | "resize"
+    | "rotate"
+    | "pair"
+    | "grant"
+    | "revoke"
+    | "archive";
+  resource?: ResourceName;
+  /**
+   * service.type (a common.resource-summary@1 kind), for create, before the resource name exists.
+   */
+  resource_kind?: string;
+  project_id: string;
+  /**
+   * Action-specific input, shaped by the authority's own contract (never redefined here).
+   */
+  params?: {};
+  idempotency_key: string;
+  on_behalf_of?: SubjectRef;
+  /**
+   * The approved confirmation from an earlier confirmation_required answer.
+   */
+  confirmation_id?: string | null;
+  /**
+   * Decide and explain without applying.
+   */
+  dry_run?: boolean;
+  trace_id?: string;
+} & {
+  [k: string]: unknown | undefined;
+};
+
+/** common.resource-control-result@1.0.0 (owner: contracts) */
+/**
+ * common.resource-control-result@1: the authority's answer to a common.resource-control-request@1 (ADR-048, plan T13). state is the outcome, not the resource's own state: done (applied), pending (accepted and asynchronous; the authority reports completion later on its events), refused (a policy or confirmation gate said no) or failed (an error). State rules: refused carries problem or confirmation_required; failed carries problem; done and pending carry neither; confirmation_required appears only on refused. result carries the authority's own response document and never another service's rows. The state rules are checked by contracts.resources.checkControlResult.
+ */
+export interface ResourceControlResult {
+  action: string;
+  resource?: ResourceName;
+  state: "done" | "pending" | "refused" | "failed";
+  result?: {};
+  /**
+   * The action needs its owner's approval; retry the same request with this confirmation_id once approved.
+   */
+  confirmation_required?: {
+    confirmation_id: string;
+    reason: string;
+  };
+  problem?: Problem;
+  at: string;
+}

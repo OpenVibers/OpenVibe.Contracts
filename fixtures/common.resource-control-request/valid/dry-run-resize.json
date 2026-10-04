@@ -1,0 +1,10 @@
+{
+  "action": "resize",
+  "resource": "ovrn:media:prj_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4:object/med_01K6R3A1B2C3D4E5F6G7H8J9KB",
+  "project_id": "prj_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "params": {
+    "bytes": 1073741824
+  },
+  "idempotency_key": "ctl-01K6R3-resize",
+  "dry_run": true
+}

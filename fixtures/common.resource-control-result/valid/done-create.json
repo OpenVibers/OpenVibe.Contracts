@@ -1,0 +1,10 @@
+{
+  "action": "create",
+  "resource": "ovrn:events:prj_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4:queue/evq_01K6R3A1B2C3D4E5F6G7H8J9KD",
+  "state": "done",
+  "result": {
+    "id": "evq_01K6R3A1B2C3D4E5F6G7H8J9KD",
+    "name": "orders"
+  },
+  "at": "2026-10-04T12:00:01Z"
+}
