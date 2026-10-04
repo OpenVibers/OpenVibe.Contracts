@@ -22,10 +22,11 @@
     },
     "idempotency_key": {
       "type": "string",
-      "description": "Stable across retries"
+      "description": "Stable across retries. The only dedupe key, and it encodes work identity only (examples: tools:job:<id>, ai:<run>:tokens, run:<job>:<n>), never route_epoch, node, region or trace_id."
     },
     "service": {
-      "type": "string"
+      "type": "string",
+      "description": "The Contracts manifest id of the producing service (tools, ai, run)."
     },
     "project": {
       "type": "string",

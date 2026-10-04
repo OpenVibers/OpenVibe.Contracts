@@ -905,6 +905,8 @@ sub(path.join(__dirname, 'bot-manifest.test.js'));
 sub(path.join(__dirname, 'product-catalog.test.js'));
 // Named object zones: identity, retired names, list limits and per-zone usage (ADR-031 amendment 2026-10-02).
 sub(path.join(__dirname, 'zones.test.js'));
+// *.usage.recorded rollups are counts: only network, codes and zone may consume one, never billing (T5 step 8).
+sub(path.join(__dirname, 'usage-topics.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));
