@@ -97,11 +97,14 @@ Mods, bots, functions and integrations are all **extensions**. One `extension-ma
 
 ### 9. Metering is a primitive, and affordable is a design target
 
-- Every billable action emits `common.usage-recorded` with the resource name, project and quantity. Billing rates it against a public price list.
+- Every billable action posts a `platform.usage-sample@1` reading (`billing.usage.record`) with the resource name, project and quantity. Billing rates the readings against a public price list.
+- `common.usage-recorded` rollups are counts for dashboards and quotas. Billing never consumes them.
 - Budgets and alerts are per project, as AI quotas already work.
 - Prices are cost plus a stated margin: storage from B2, egress from R2, compute seconds.
 - Free tiers fit on cheap hardware.
 - Internal traffic between a project's own resources is never charged.
+
+Amended 2026-10-04: Billing rates `platform.usage-sample@1` readings only. Earlier this section said Billing rated `common.usage-recorded` rollups.
 
 ### 10. Efficiency is measured, not assumed
 

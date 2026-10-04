@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.93.1 — 2026-10-04
+
+**Usage rollups are counts, readings are money** (plan T5 step 8, C1; ADR-031 Counting). Description-only: no schema shape
+change. `common.usage-recorded@1` says rollups are counts for dashboards and quotas and Billing never consumes a
+`*.usage.recorded` topic; `platform.usage-sample@1` says `idempotency_key` is the only dedupe key and encodes work identity
+only, and `service` is the producing service's manifest id; `billing.usage.record` is the only money input to Billing. New
+test `test/usage-topics.test.js`: only network, codes and zone may list a `*.usage.recorded` topic as consumed.
+
 ## 0.93.0 — 2026-10-04
 
 **OpenVibe.Bot's profiles, device protocol, operator commands, pairing and events** (plan T15 R7; ADR-043). The Bot
