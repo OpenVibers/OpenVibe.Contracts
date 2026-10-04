@@ -52231,7 +52231,7 @@ export interface BotDevice {
 
 /** bot.robot-read-result@1.0.0 (owner: bot) */
 /**
- * bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service acts for X-OV-Subject or ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).
+ * bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service token needs no acting subject: only GET …/robots needs ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).
  */
 export type BotRobotReadResult =
   | {

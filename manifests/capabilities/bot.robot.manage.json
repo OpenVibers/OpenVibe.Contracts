@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "first-party",
   "sensitive": true,
-  "description": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+  "description": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
   "permissions": [
     "bot:robot:manage"
   ],
@@ -23,7 +23,6 @@
     "POST /api/v1/robots/:id/pairing-code",
     "POST /api/v1/robots/:id/operators",
     "DELETE /api/v1/robots/:id/operators/:subject",
-    "GET /api/v1/robots/:id/audit",
     "POST /api/v1/robots/:id/estop/clear",
     "POST /api/v1/devices/:id/rotate",
     "POST /api/v1/devices/:id/revoke"

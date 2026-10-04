@@ -20,7 +20,7 @@
    "post": {
     "operationId": "post_api_v1_devices_id_revoke",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -86,7 +86,7 @@
    "post": {
     "operationId": "post_api_v1_devices_id_rotate",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -152,7 +152,7 @@
    "get": {
     "operationId": "get_api_v1_robots",
     "summary": "Read robots with a Network service token.",
-    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit is not here: Bot gates it with bot.robot.manage. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
+    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit (GET /robots/:id/audit, newest first, paged) is read too, for any robot id. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
     "tags": [
      "bot.robot"
     ],
@@ -196,7 +196,7 @@
    "post": {
     "operationId": "post_api_v1_robots",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -252,7 +252,7 @@
    "delete": {
     "operationId": "delete_api_v1_robots_id",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -309,7 +309,7 @@
    "get": {
     "operationId": "get_api_v1_robots_id",
     "summary": "Read robots with a Network service token.",
-    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit is not here: Bot gates it with bot.robot.manage. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
+    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit (GET /robots/:id/audit, newest first, paged) is read too, for any robot id. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
     "tags": [
      "bot.robot"
     ],
@@ -363,7 +363,7 @@
    "patch": {
     "operationId": "patch_api_v1_robots_id",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -428,28 +428,25 @@
   "/api/v1/robots/{id}/audit": {
    "get": {
     "operationId": "get_api_v1_robots_id_audit",
-    "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "summary": "Read robots with a Network service token.",
+    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit (GET /robots/:id/audit, newest first, paged) is read too, for any robot id. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
     "tags": [
      "bot.robot"
     ],
     "x-openvibe-capabilities": [
-     "bot.robot.manage"
+     "bot.robot.read"
     ],
     "x-openvibe-visibility": [
      "first-party"
     ],
-    "x-openvibe-quota-class": "bot-manage",
+    "x-openvibe-quota-class": "bot-read",
     "security": [
      {
       "openvibeToken": [
-       "bot.robot.manage"
+       "bot.robot.read"
       ]
      }
     ],
-    "x-openvibe-input": {
-     "$ref": "#/components/schemas/bot.robot-manage-request.v1"
-    },
     "parameters": [
      {
       "name": "id",
@@ -466,7 +463,7 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/bot.robot-manage-result.v1"
+         "$ref": "#/components/schemas/bot.robot-read-result.v1"
         }
        }
       }
@@ -488,7 +485,7 @@
    "get": {
     "operationId": "get_api_v1_robots_id_devices",
     "summary": "Read robots with a Network service token.",
-    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit is not here: Bot gates it with bot.robot.manage. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
+    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit (GET /robots/:id/audit, newest first, paged) is read too, for any robot id. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
     "tags": [
      "bot.robot"
     ],
@@ -600,7 +597,7 @@
    "post": {
     "operationId": "post_api_v1_robots_id_estop_clear",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -666,7 +663,7 @@
    "get": {
     "operationId": "get_api_v1_robots_id_operators",
     "summary": "Read robots with a Network service token.",
-    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit is not here: Bot gates it with bot.robot.manage. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
+    "description": "**bot.robot.read** (first-party): Read robots with a Network service token. GET /robots needs ?owner= and lists that person's robots; the robot routes answer for any robot id with role \"service\": Bot does not check X-OV-Subject or any person's membership for a service token (a person's own token is held to owner, operator or viewer). Devices never carry a credential or key hash. The command audit (GET /robots/:id/audit, newest first, paged) is read too, for any robot id. Bot also requires this capability, beside bot.robot.control, to latch the e-stop.",
     "tags": [
      "bot.robot"
     ],
@@ -720,7 +717,7 @@
    "post": {
     "operationId": "post_api_v1_robots_id_operators",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -786,7 +783,7 @@
    "delete": {
     "operationId": "delete_api_v1_robots_id_operators_subject",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -853,7 +850,7 @@
    "post": {
     "operationId": "post_api_v1_robots_id_pairing_code",
     "summary": "Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it",
-    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, read its command audit (newest first), clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
+    "description": "**bot.robot.manage** (first-party): Manage robots with a Network service token: create one for the person the body's owner or X-OV-Subject names (a new robot and its pairing code), and, for any robot id, rename, reconfigure or delete it (irreversible), issue a one-time pairing code, add or remove operators, clear its e-stop, and rotate a paired device's credentials (the new credential and publish key are shown once) or revoke the device, which closes its socket at once. Bot does not check the acting person against the robot's owner for a service token (a person's own token must be the owner's).",
     "tags": [
      "bot.robot"
     ],
@@ -1335,7 +1332,7 @@
    },
    "bot.robot-read-result.v1": {
     "title": "BotRobotReadResult",
-    "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service acts for X-OV-Subject or ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).",
+    "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service token needs no acting subject: only GET …/robots needs ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).",
     "anyOf": [
      {
       "type": "object",
