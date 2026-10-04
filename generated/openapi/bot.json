@@ -1118,7 +1118,7 @@
    },
    "bot.robot-manage-result.v1": {
     "title": "BotRobotManageResult",
-    "description": "bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first); POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.",
+    "description": "bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.",
     "anyOf": [
      {
       "type": "object",
@@ -1234,99 +1234,6 @@
      },
      {
       "$ref": "#/components/schemas/bot.device-connect-result.v1"
-     },
-     {
-      "type": "object",
-      "required": [
-       "audit",
-       "next_before"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "next_before": {
-        "type": [
-         "integer",
-         "null"
-        ]
-       },
-       "audit": {
-        "type": "array",
-        "items": {
-         "type": "object",
-         "required": [
-          "id",
-          "robot_id",
-          "kind",
-          "result",
-          "at"
-         ],
-         "properties": {
-          "id": {
-           "type": "integer"
-          },
-          "robot_id": {
-           "type": "string",
-           "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
-          },
-          "device_id": {
-           "type": [
-            "string",
-            "null"
-           ]
-          },
-          "operator_subject": {
-           "type": [
-            "string",
-            "null"
-           ]
-          },
-          "operator_kind": {
-           "type": [
-            "string",
-            "null"
-           ]
-          },
-          "role": {
-           "type": [
-            "string",
-            "null"
-           ]
-          },
-          "kind": {
-           "type": [
-            "string",
-            "null"
-           ]
-          },
-          "value": {},
-          "result": {
-           "enum": [
-            "ack",
-            "nack",
-            "refused",
-            "expired"
-           ]
-          },
-          "reason": {
-           "type": [
-            "string",
-            "null"
-           ]
-          },
-          "latency_ms": {
-           "type": [
-            "integer",
-            "null"
-           ]
-          },
-          "at": {
-           "type": "string",
-           "format": "date-time"
-          }
-         }
-        }
-       }
-      }
      }
     ]
    },

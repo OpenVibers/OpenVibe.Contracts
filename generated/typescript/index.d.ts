@@ -52294,7 +52294,7 @@ export type BotRobotManageRequest =
 
 /** bot.robot-manage-result@1.0.0 (owner: bot) */
 /**
- * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first); POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.
+ * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.
  */
 export type BotRobotManageResult =
   | {
@@ -52324,24 +52324,7 @@ export type BotRobotManageResult =
         created_at?: string;
       }[];
     }
-  | BotDeviceConnectResult
-  | {
-      next_before: number | null;
-      audit: {
-        id: number;
-        robot_id: string;
-        device_id?: string | null;
-        operator_subject?: string | null;
-        operator_kind?: string | null;
-        role?: string | null;
-        kind: string | null;
-        value?: unknown;
-        result: "ack" | "nack" | "refused" | "expired";
-        reason?: string | null;
-        latency_ms?: number | null;
-        at: string;
-      }[];
-    };
+  | BotDeviceConnectResult;
 /** bot.robot-control-result@1.0.0 (owner: bot) */
 /**
  * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop → { robot } with its e-stop as it now stands.
