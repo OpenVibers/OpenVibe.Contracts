@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.96.0 — 2026-10-04
+
+**OpenVibe.Bot's job dispatch for OpenVibe.Run** (plan T14 step 6, R1c): Run hands a job to a paired Node through Bot.
+Additive, no breaking changes. One new internal, sensitive capability owned by bot, added to
+`manifests/services/bot.json`: `bot.job.dispatch` (permission `bot:jobs`, resource constraint `project`, input
+`platform.job@1`, events `run.job.*`). Service-to-service only (Run's service token); never granted to an app or mod and
+never delegated to people. It names three routes, so `generated/openapi/bot.json` carries them:
+  - `POST /api/v1/jobs` `{node_id, job, project_id, subject, provider}` dispatches a job (idempotent by job id;
+    `project_id` is required).
+  - `POST /api/v1/jobs/:id/cancel` cancels it.
+  - `GET /api/v1/jobs/:id` returns its state, stdout included.
+
+Its `outputSchema` is a recorded gap in `compatibility/capability-schema-gaps.json` until Bot's answer shapes land.
+
 ## 0.95.0 — 2026-10-04
 
 **OpenVibe.Chat's internal read API** (plan T3, J4b): OpenVibe.Live stops reading its mirrored copy of Chat's tables.
