@@ -1,0 +1,25 @@
+{
+  "id": "network.confirmation.manage",
+  "version": "1.0",
+  "owner": "network",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "As the owning service of a sensitive capability, ask an agent's owner to confirm one action and spend the approval: create a network.confirmation-request@1 (Network derives the owner from the agent, never from the body), read it, consume it once with the digest of the action, or cancel it. Each service sees only the confirmations it created. The owner reads, approves and denies in their inbox (/api/v1/confirmations) with their own session; no token holds that. Never grantable to apps, never delegated to agents (roadmap WS-Z2).",
+  "permissions": [
+    "confirmations:write",
+    "confirmations:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [
+    "network.confirmation.changed"
+  ],
+  "implementedBy": [
+    "POST /internal/confirmations",
+    "GET /internal/confirmations/:id",
+    "POST /internal/confirmations/:id/consume",
+    "POST /internal/confirmations/:id/cancel"
+  ]
+}

@@ -4,6 +4,35 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.89.0 — 2026-10-03
+
+**Agent tokens and confirmations** (plan T2 step 9; OpenVibe.Network `docs/t2-projects-and-grants.md` §2 gaps 1–3,
+§4 and §5). These are the contracts that Network WS-Z2 slices 7–9 wait on. All of it is additive.
+- `identity.service-token-claims` 1.3.0: `sub` also accepts `agent:agt_<ULID>` (`ids.principalSub({ type: 'agent' })`)
+  and `actor_type` gains `agent`. An agent token must carry `project_id`, `env` and `on_behalf_of` (the owner, `usr_`).
+  It may carry `cap_confirm` (capabilities held in confirm mode: each use needs an approved
+  `network.confirmation-request@1`, and they never appear in `cap`, so a receiver that does not know agents refuses
+  them) and `act` (RFC 8693 actor claim: `{ sub: 'svc:<slug>' | 'app:app_<ULID>' }`, the host, nothing else).
+  `if`/`then` rules tie an `agent:` sub to `actor_type: agent` in both directions. Service, app, mod and node
+  tokens validate as before.
+  Fixtures: valid `agent-service-host` and `agent-app-host-auto-only`; invalid `agent-without-owner`,
+  `agent-sub-as-service`, `agent-actor-with-service-sub` and `agent-bad-actor-claim`.
+- New capability `network.confirmation.manage` (planned, first-party, listed by `manifests/services/network.json`). It is
+  the owning service's side of a confirmation: create one (`POST /internal/confirmations`), read it, consume it once
+  with the action's digest, or cancel it. The owner's inbox (`/api/v1/confirmations`: list, approve, deny) runs on the
+  owner's own session, and no token holds it. The request and response bodies are Network-local until the routes are
+  built.
+- New event `network.confirmation.changed@1` (planned, produced by Network), the shape of Network's proposal
+  (`docs/contracts-proposal/network.confirmation.changed.v1.json`). Payload: `confirmation_id` (`cnf_`), `agent_id`
+  (`agt_`), `project_id`, `capability`, `audience` (the owning service), `state` (`pending | approved | denied | expired
+  | cancelled`, the names of `network.confirmation-request@1`) and `change` (`created | approved | denied | expired |
+  cancelled | used`), and optional `standing_rule`, `rule_id`, `cancel_reason`, `expires_at` and `changed_at`. `created`
+  leaves the state pending, or approved when a standing rule covers it; `used` leaves it approved; every other change
+  names its state. `cancel_reason` is required on cancelled and absent otherwise. The event never carries `summary` or
+  `details`. Fixtures: valid `requested`, `approved-by-owner`, `approved-by-standing-rule`, `used`, `cancelled` and
+  `expired`; invalid `requested-state`, `cancelled-without-reason`, `used-not-approved`, `missing-audience` and
+  `with-summary`.
+
 ## 0.88.0 — 2026-10-03
 
 **The Fabric ADR and the user-owned trust rule** (plan T1 step 3; T14 S2, the Contracts half). ADR-046 "The universal

@@ -1,0 +1,24 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "agent:agt_01J0000000000000000000000Z",
+  "actor_type": "agent",
+  "aud": [
+    "openvibe.media"
+  ],
+  "cap": [
+    "media.object.read"
+  ],
+  "ns": [
+    "prj_01J0000000000000000000000Z",
+    "app.prj_01J0000000000000000000000Z.*"
+  ],
+  "iat": 1790000000,
+  "exp": 1790000300,
+  "jti": "tok_agent002",
+  "project_id": "prj_01J0000000000000000000000Z",
+  "env": "sandbox",
+  "on_behalf_of": "usr_01J0000000000000000000000Z",
+  "act": {
+    "sub": "app:app_01J0000000000000000000000Z"
+  }
+}

@@ -180,14 +180,14 @@
       }
     },
     "identity.service-token-claims": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/identity/service-token-claims.v1.json",
         "title": "ServiceTokenClaims",
-        "description": "Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service, app, mod or node principal. Replaces X-Internal-Key. App tokens (actor_type app) also carry project_id and env; receivers refuse env=sandbox unless they opted in.",
+        "description": "Claims of a short-lived RS256 client-credentials token issued by OpenVibe.Network to a service, app, mod, node or agent principal. Replaces X-Internal-Key. App tokens (actor_type app) also carry project_id and env; receivers refuse env=sandbox unless they opted in. Agent tokens (actor_type agent, sub agent:agt_<ULID>) are minted for the agent's host and also carry project_id, env and on_behalf_of (the owner), and optionally cap_confirm and act.",
         "type": "object",
         "required": [
           "iss",
@@ -208,14 +208,15 @@
           },
           "sub": {
             "type": "string",
-            "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26}|mod:mod_[0-9A-HJKMNP-TV-Z]{26}|node:nod_[0-9A-HJKMNP-TV-Z]{26})$"
+            "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26}|mod:mod_[0-9A-HJKMNP-TV-Z]{26}|node:nod_[0-9A-HJKMNP-TV-Z]{26}|agent:agt_[0-9A-HJKMNP-TV-Z]{26})$"
           },
           "actor_type": {
             "enum": [
               "service",
               "app",
               "mod",
-              "node"
+              "node",
+              "agent"
             ]
           },
           "aud": {
@@ -233,6 +234,14 @@
               "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_*]+)+$"
             },
             "description": "Granted capability ids; a trailing .* grants a family."
+          },
+          "cap_confirm": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$"
+            },
+            "description": "Agent tokens: capabilities the agent holds in confirm mode. Each use needs an approved network.confirmation-request@1, presented as OpenVibe-Confirmation: cnf_<ULID> and consumed by the owning service. Never also in cap, so a receiver that does not know agents refuses those actions."
           },
           "ns": {
             "type": "array",
@@ -254,19 +263,33 @@
           "project_id": {
             "type": "string",
             "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "Developer project of an app principal (ADR-014). Services key tenancy by it. Absent on first-party service tokens."
+            "description": "Developer project of an app or agent principal (ADR-014). Services key tenancy by it. Absent on first-party service tokens."
           },
           "env": {
             "enum": [
               "sandbox",
               "production"
             ],
-            "description": "Environment of an app principal. A receiver MUST refuse env=sandbox (401 token.sandbox_refused) unless it opted in to sandbox tokens. Absent on first-party service tokens, which are production."
+            "description": "Environment of an app or agent principal. A receiver MUST refuse env=sandbox (401 token.sandbox_refused) unless it opted in to sandbox tokens. Absent on first-party service tokens, which are production."
           },
           "on_behalf_of": {
             "type": "string",
             "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "The person who authorized an app through the authorization-code flow. Absent on client_credentials tokens."
+            "description": "The person who authorized an app through the authorization-code flow, or the owner an agent acts for (always present on agent tokens). Absent on client_credentials tokens."
+          },
+          "act": {
+            "type": "object",
+            "required": [
+              "sub"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "sub": {
+                "type": "string",
+                "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26})$"
+              }
+            },
+            "description": "Agent tokens: the host that runs the agent and the token was minted for (RFC 8693 actor claim), a service or an app."
           }
         },
         "allOf": [
@@ -286,6 +309,54 @@
                 "project_id",
                 "env"
               ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "actor_type": {
+                  "const": "agent"
+                }
+              },
+              "required": [
+                "actor_type"
+              ]
+            },
+            "then": {
+              "required": [
+                "project_id",
+                "env",
+                "on_behalf_of"
+              ],
+              "properties": {
+                "sub": {
+                  "type": "string",
+                  "pattern": "^agent:agt_[0-9A-HJKMNP-TV-Z]{26}$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "sub": {
+                  "type": "string",
+                  "pattern": "^agent:"
+                }
+              },
+              "required": [
+                "sub"
+              ]
+            },
+            "then": {
+              "required": [
+                "actor_type"
+              ],
+              "properties": {
+                "actor_type": {
+                  "const": "agent"
+                }
+              }
             }
           }
         ]
@@ -61833,6 +61904,257 @@
             "format": "date-time"
           }
         }
+      }
+    },
+    "network.confirmation.changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.confirmation.changed.v1.json",
+        "title": "NetworkConfirmationChangedPayload",
+        "description": "network.confirmation.changed v1 (OpenVibe.Network; roadmap WS-Z2, docs/t2-projects-and-grants.md section 5; shape from OpenVibe.Network docs/contracts-proposal/network.confirmation.changed.v1.json). A confirmation request (network.confirmation-request@1) an agent raised for a sensitive capability was created, approved, denied, expired, cancelled or used. state is the state after the change, named as in network.confirmation-request@1: created leaves it pending (or approved when a standing rule covers it, with rule_id), used leaves it approved, and every other change names its state. A cancelled change says why in cancel_reason. Written to Network's outbox in the transaction that changes it, beside an audit row. Never carries the summary or details, which may hold message text: a reader that needs them asks Network with its own authority. Envelope: subject { type: confirmation, id: cnf_… }, visibility internal, on_behalf_of the owner, actor the owner who decided (or the system for an expiry, a cascade or a standing rule).",
+        "type": "object",
+        "required": [
+          "confirmation_id",
+          "agent_id",
+          "project_id",
+          "capability",
+          "audience",
+          "state",
+          "change"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "confirmation_id": {
+            "type": "string",
+            "pattern": "^cnf_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "agent_id": {
+            "type": "string",
+            "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The agent that asked."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The agent's developer project."
+          },
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$"
+          },
+          "audience": {
+            "type": "string",
+            "pattern": "^openvibe\\.[a-z][a-z0-9-]{0,63}$",
+            "description": "The owning service of the capability: the only one that may consume or cancel the confirmation."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "denied",
+              "expired",
+              "cancelled"
+            ],
+            "description": "The state after the change. A use leaves it approved and sets used_at."
+          },
+          "change": {
+            "type": "string",
+            "enum": [
+              "created",
+              "approved",
+              "denied",
+              "expired",
+              "cancelled",
+              "used"
+            ]
+          },
+          "standing_rule": {
+            "type": "string",
+            "enum": [
+              "once",
+              "session",
+              "until",
+              "always"
+            ],
+            "description": "On approved: the rule the owner chose (once creates none)."
+          },
+          "rule_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "On created through a standing rule, or on approved with a session, until or always rule: that rule."
+          },
+          "cancel_reason": {
+            "type": "string",
+            "enum": [
+              "service",
+              "agent_paused",
+              "agent_revoked",
+              "grant_revoked",
+              "grant_expired",
+              "beyond_host",
+              "member_removed",
+              "account_erased",
+              "app_revoked",
+              "project_archived"
+            ],
+            "description": "On cancelled: what took the authority away."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "change": {
+                  "const": "created"
+                }
+              },
+              "required": [
+                "change"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "pending",
+                    "approved"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "change": {
+                  "const": "used"
+                }
+              },
+              "required": [
+                "change"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "const": "approved"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "change": {
+                  "const": "approved"
+                }
+              },
+              "required": [
+                "change"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "const": "approved"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "change": {
+                  "const": "denied"
+                }
+              },
+              "required": [
+                "change"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "const": "denied"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "change": {
+                  "const": "expired"
+                }
+              },
+              "required": [
+                "change"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "const": "expired"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "change": {
+                  "const": "cancelled"
+                }
+              },
+              "required": [
+                "change"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "const": "cancelled"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "cancelled"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "cancel_reason"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "cancel_reason"
+                ]
+              }
+            }
+          }
+        ]
       }
     },
     "zone.object-zone": {

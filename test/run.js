@@ -595,6 +595,14 @@ ok(contracts.ids.newId('project').startsWith('prj_'), 'project ids use the prj p
 const nodeClaims = { ...claims, sub: 'node:nod_01J0000000000000000000000Z', actor_type: 'node' };
 ok(V(serviceAuth.signServiceToken(nodeClaims, kp.privateKey)).ok, 'node token accepted');
 ok(V(serviceAuth.signServiceToken({ ...nodeClaims, sub: 'node:nod_42' }, kp.privateKey)).code === 'token.invalid_claims', 'a malformed node id is rejected');
+const agentId = contracts.ids.newId('agent');
+const agentClaims = { ...claims, sub: contracts.ids.principalSub({ type: 'agent', id: agentId }), actor_type: 'agent', cap: ['chat.presence.read'], cap_confirm: ['chat.message.send'], project_id: 'prj_01J0000000000000000000000Z', env: 'production', on_behalf_of: 'usr_01J0000000000000000000000Z', act: { sub: 'svc:actor' } };
+const agentTok = V(serviceAuth.signServiceToken(agentClaims, kp.privateKey));
+ok(agentTok.ok, 'agent token accepted');
+ok(!contracts.capabilities.check(agentTok.claims, 'chat.message.send').allowed, 'a cap_confirm capability is not granted by the token alone');
+ok(V(serviceAuth.signServiceToken((({ on_behalf_of, ...rest }) => rest)(agentClaims), kp.privateKey)).code === 'token.invalid_claims', 'an agent token needs on_behalf_of');
+ok(V(serviceAuth.signServiceToken({ ...agentClaims, actor_type: 'service' }, kp.privateKey)).code === 'token.invalid_claims', 'an agent sub needs actor_type agent');
+ok(V(serviceAuth.signServiceToken({ ...agentClaims, sub: 'agent:agt_42' }, kp.privateKey)).code === 'token.invalid_claims', 'a malformed agent id is rejected');
 
 const run = (guard, headers) => new Promise((resolve) => {
     const req = { headers, body: {} };
