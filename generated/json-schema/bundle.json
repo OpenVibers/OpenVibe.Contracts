@@ -53206,7 +53206,7 @@
       }
     },
     "community.moderation.action": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "community",
       "status": "active",
       "schema": {
