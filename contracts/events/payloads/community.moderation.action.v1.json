@@ -2,18 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/community.moderation.action.v1.json",
   "title": "CommunityModerationActionPayload",
-  "description": "community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+  "description": "community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread, adding or removing a space's moderator (target type space, id the space slug, owner_subject the moderator). OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
   "type": "object",
   "required": ["action", "target", "actor_subject"],
   "additionalProperties": false,
   "properties": {
-    "action": { "enum": ["paste.edited", "paste.deleted", "paste.visibility_changed", "paste.censored", "pastes.bulk", "forks.deleted", "comment.deleted", "thread.deleted", "thread.locked", "thread.unlocked", "post.deleted"] },
+    "action": { "enum": ["paste.edited", "paste.deleted", "paste.visibility_changed", "paste.censored", "pastes.bulk", "forks.deleted", "comment.deleted", "thread.deleted", "thread.locked", "thread.unlocked", "post.deleted", "space.moderator_added", "space.moderator_removed"] },
     "target": {
       "type": "object",
       "required": ["type", "id"],
       "additionalProperties": false,
       "properties": {
-        "type": { "enum": ["paste", "paste_comment", "comment", "thread", "post", "pastes"] },
+        "type": { "enum": ["paste", "paste_comment", "comment", "thread", "post", "pastes", "space"] },
         "id": { "type": "string", "minLength": 1, "maxLength": 200 },
         "owner_subject": { "type": ["string", "null"], "description": "Whose content it was, when known." }
       }

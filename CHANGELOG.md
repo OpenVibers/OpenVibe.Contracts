@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.94.0 — 2026-10-04
+
+`community.moderation.action@1` accepts the audit events of per-space moderators (OpenVibe.Community PR 15): the
+`action` values `space.moderator_added` and `space.moderator_removed`, and the target type `space` (`id` the space
+slug, `owner_subject` the moderator). Additive; fixtures for both actions.
+
 ## 0.93.1 — 2026-10-04
 
 **Usage rollups are counts, readings are money** (plan T5 step 8, C1; ADR-031 Counting). Description-only: no schema shape
