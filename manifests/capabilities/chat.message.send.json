@@ -18,7 +18,8 @@
   ],
   "implementedBy": [
     "WS /ws/chat {type:\"chat\"}",
-    "POST /internal/live/calls"
+    "POST /internal/live/calls",
+    "POST /internal/chat/messages"
   ],
   "inputSchema": "chat.send-request@1",
   "outputSchema": "chat.send-result@1"

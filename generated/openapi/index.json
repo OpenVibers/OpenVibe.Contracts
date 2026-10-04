@@ -33,8 +33,8 @@
       "service": "chat",
       "name": "OpenVibe.Chat",
       "origin": "https://openvibe.chat",
-      "operations": 4,
-      "capabilities": 2
+      "operations": 8,
+      "capabilities": 5
     },
     {
       "service": "codes",

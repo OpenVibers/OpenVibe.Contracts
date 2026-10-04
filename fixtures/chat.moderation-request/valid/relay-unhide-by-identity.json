@@ -1,0 +1,7 @@
+{
+  "key": "live:mod:unhide:1",
+  "action": "relay-unhide",
+  "channel_id": 77,
+  "platform": "twitch",
+  "external_username": "someone"
+}

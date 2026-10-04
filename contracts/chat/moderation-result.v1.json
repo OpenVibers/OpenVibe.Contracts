@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/moderation-result.v1.json",
+  "title": "ChatModerationResult",
+  "description": "chat.moderation-result@1: what POST /internal/chat/moderation (chat.moderation.write) answers. 200 with the ids a delete action removed (empty when nothing matched), or with the rows another action changed and the id it inserted. A refusal is chat.ingress-ack@1's error: 400 a body Chat refuses, 409 a key reused with another body, 503 Chat or its delivery unavailable (retry with the same key).",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "ids"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "The deleted message ids."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "changes",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "changes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The inserted row (a log entry, a hidden relay identity), else null."
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ]
+}

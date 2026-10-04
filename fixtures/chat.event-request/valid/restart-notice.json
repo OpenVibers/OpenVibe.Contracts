@@ -1,0 +1,11 @@
+{
+  "key": "live:restart:1759600000",
+  "target": {
+    "kind": "all",
+    "id": null
+  },
+  "frame": {
+    "type": "server_restart",
+    "message": "Live restarts in a moment."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "key": "live:call:inv:9f2c",
+  "target": {
+    "kind": "user",
+    "id": 15
+  },
+  "frame": {
+    "type": "vc-call-invite",
+    "channelId": "vc-abc",
+    "channelName": "Lounge",
+    "fromUserId": 3,
+    "fromUsername": "host",
+    "fromDisplayName": null,
+    "fromAvatarUrl": null,
+    "createdAt": 1759600000000
+  }
+}

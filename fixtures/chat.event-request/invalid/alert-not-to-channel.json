@@ -1,0 +1,12 @@
+{
+  "key": "k2",
+  "target": {
+    "kind": "stream",
+    "id": 42
+  },
+  "frame": {
+    "type": "alert",
+    "streamerId": 77,
+    "kind": "donation"
+  }
+}

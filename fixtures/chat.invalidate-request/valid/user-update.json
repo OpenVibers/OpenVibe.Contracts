@@ -1,0 +1,12 @@
+{
+  "key": "live:user:12:1759600000",
+  "user": 12,
+  "user_data": {
+    "id": 12,
+    "username": "viewer1",
+    "display_name": "Viewer One",
+    "role": "user",
+    "avatar_url": null,
+    "profile_color": "#33aaff"
+  }
+}

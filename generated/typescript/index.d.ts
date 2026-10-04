@@ -47380,9 +47380,9 @@ export interface ChatModerationActionPayload {
   details?: {};
 }
 
-/** chat.send-request@1.0.0 (owner: chat) */
+/** chat.send-request@1.1.0 (owner: chat) */
 /**
- * chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused.
+ * chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused. From a first-party service, POST /internal/chat/messages: one line (or one DM) that Chat stores, broadcasts to the room (with mirror, also to global chat and the streamer rooms), reads aloud (tts) and answers with the real id; applied once per (caller, key), the same key with another body gets 409.
  */
 export type ChatSendRequest =
   | {
@@ -47431,11 +47431,14 @@ export type ChatSendRequest =
          */
         key?: string;
       }[];
+    }
+  | {
+      [k: string]: unknown | undefined;
     };
 
-/** chat.send-result@1.0.0 (owner: chat) */
+/** chat.send-result@1.1.0 (owner: chat) */
 /**
- * chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }.
+ * chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).
  */
 export type ChatSendResult =
   | {
@@ -47530,6 +47533,334 @@ export type ChatSendResult =
         code?: string;
         error?: string;
       }[];
+    }
+  | {
+      ok: true;
+      /**
+       * The stored message id.
+       */
+      id: number;
+      stream_id?: number | null;
+      channel_user_id?: number | null;
+      /**
+       * DM only.
+       */
+      conversation_id?: number;
+      /**
+       * DM only.
+       */
+      to_user_id?: number;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.event-request@1.0.0 (owner: chat) */
+/**
+ * chat.event-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/events (chat.event.publish) to push a transient frame to chat sockets: cards, alerts, sounds, media queue state, call invites. Nothing is stored; Chat broadcasts the frame to the target. Applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. Chat also refuses a frame whose JSON is longer than 16384 characters or that has a __proto__, constructor or prototype key; a news card's timestamp must parse as a date.
+ */
+export type ChatEventRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * Idempotency key, scoped to the caller and to this route.
+   */
+  key: string;
+  target: {
+    [k: string]: unknown | undefined;
+  };
+  frame: {
+    [k: string]: unknown | undefined;
+  };
+};
+
+/** chat.moderation-request@1.0.0 (owner: chat) */
+/**
+ * chat.moderation-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/moderation (chat.moderation.write) to change chat rows Chat owns and act on its sockets: delete messages (Chat deletes the rows and broadcasts the delete notices to the room and its mirrors), review messages held for IP approval, hide, unhide or record relay identities, set or clear a TTS voice override, disconnect a person or an address, and log a moderation action. One action per request, applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. The fields an action does not list are refused.
+ */
+export type ChatModerationRequest =
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "delete-message";
+      id: number;
+      /**
+       * The moderator: a user id or a username (chat_messages.deleted_by is text).
+       */
+      deleted_by?: number | string | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "delete-user-messages";
+      user_id: number;
+      stream_id?: number | null;
+      /**
+       * The moderator: a user id or a username (chat_messages.deleted_by is text).
+       */
+      deleted_by?: number | string | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "delete-anon-messages";
+      anon_id: string;
+      stream_id?: number | null;
+      /**
+       * The moderator: a user id or a username (chat_messages.deleted_by is text).
+       */
+      deleted_by?: number | string | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "delete-relay-messages";
+      username: string;
+      stream_id?: number | null;
+      /**
+       * The moderator: a user id or a username (chat_messages.deleted_by is text).
+       */
+      deleted_by?: number | string | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "delete-by-range";
+      stream_id?: number | null;
+      /**
+       * A date Chat parses (Date.parse); compared with the stored message timestamp.
+       */
+      from: string;
+      /**
+       * A date Chat parses (Date.parse); compared with the stored message timestamp.
+       */
+      to: string;
+      /**
+       * The moderator: a user id or a username (chat_messages.deleted_by is text).
+       */
+      deleted_by?: number | string | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "review-pending-ip";
+      id: number;
+      status: "approved" | "denied";
+      reviewed_by?: number | null;
+      channel_id?: number | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "approve-ip-messages";
+      channel_id: number;
+      ip: {
+        [k: string]: unknown | undefined;
+      } & string;
+      reviewed_by?: number | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "deny-ip-messages";
+      channel_id: number;
+      ip: {
+        [k: string]: unknown | undefined;
+      } & string;
+      reviewed_by?: number | null;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "relay-hide";
+      channel_id?: number | null;
+      platform: string;
+      external_username: string;
+      reason?: string | null;
+      created_by?: number | null;
+      /**
+       * Default hide.
+       */
+      mode?: "hide" | "ban" | null;
+    }
+  | (
+      | {
+          id: number;
+        }
+      | {}
+    )
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "relay-record";
+      platform: string;
+      username: string;
+    }
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "tts-voice-override";
+      identity_key: string;
+      set_by?: number | null;
+      /**
+       * Absent or null: the override is cleared.
+       */
+      params?: {
+        voice: string;
+        pitch?: number | null;
+        speed?: number | null;
+        gap?: number | null;
+      } | null;
+    }
+  | (
+      | {
+          user_id: number;
+        }
+      | {
+          ip: {
+            [k: string]: unknown | undefined;
+          } & string;
+        }
+    )
+  | {
+      /**
+       * Idempotency key, scoped to the caller and to this route.
+       */
+      key: string;
+      action: "log";
+      scope_type?: "site" | "channel" | "stream" | "room" | null;
+      /**
+       * A string for scope_type room, otherwise an id.
+       */
+      scope_id?: number | string | null;
+      actor_user_id?: number | null;
+      target_user_id?: number | null;
+      action_type: string;
+      /**
+       * At most 8192 characters as JSON.
+       */
+      details?: {} | null;
+    };
+
+/** chat.moderation-result@1.0.0 (owner: chat) */
+/**
+ * chat.moderation-result@1: what POST /internal/chat/moderation (chat.moderation.write) answers. 200 with the ids a delete action removed (empty when nothing matched), or with the rows another action changed and the id it inserted. A refusal is chat.ingress-ack@1's error: 400 a body Chat refuses, 409 a key reused with another body, 503 Chat or its delivery unavailable (retry with the same key).
+ */
+export type ChatModerationResult =
+  | {
+      ok: true;
+      /**
+       * The deleted message ids.
+       */
+      ids: number[];
+    }
+  | {
+      ok: true;
+      changes: number;
+      /**
+       * The inserted row (a log entry, a hidden relay identity), else null.
+       */
+      id: number | null;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.invalidate-request@1.0.0 (owner: chat) */
+/**
+ * chat.invalidate-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/invalidate (chat.cache.invalidate) after it changed something Chat caches (a person, a channel, IP approvals, bans). A cache hint only: Chat drops and reloads the entry (with user_data, it also pushes the person's new name and look to their sockets). At least one hint is required. Applied once per (caller, key).
+ */
+export type ChatInvalidateRequest = (
+  | {
+      user: number;
+    }
+  | {
+      approvals: number;
+    }
+  | {
+      channel: number;
+    }
+  | {
+      bans: true;
+    }
+) & {
+  /**
+   * Idempotency key, scoped to the caller and to this route.
+   */
+  key: string;
+  /**
+   * A person whose cached row is stale.
+   */
+  user?: number | null;
+  /**
+   * The person's new public fields, pushed to their sockets; id must equal user.
+   */
+  user_data?: {
+    id: number;
+    username: string;
+    display_name?: string | null;
+    role?: string;
+    avatar_url?: string | null;
+    profile_color?: string | null;
+  };
+  /**
+   * A channel whose IP approvals changed.
+   */
+  approvals?: number | null;
+  /**
+   * true: bans changed.
+   */
+  bans?: boolean | null;
+  /**
+   * A channel whose cached settings changed.
+   */
+  channel?: number | null;
+};
+
+/** chat.ingress-ack@1.0.0 (owner: chat) */
+/**
+ * chat.ingress-ack@1: what OpenVibe.Chat's service ingress answers when there is nothing to return (POST /internal/chat/events, chat.event.publish; POST /internal/chat/invalidate, chat.cache.invalidate), and the error every /internal/chat route answers: 400 a body Chat refuses, 401/403 no service token or no grant for the capability, 403/404 a refused or unknown DM participant or stream, 409 an idempotency key reused with another body, 503 Chat unavailable or a delivery in progress (retry with the same key).
+ */
+export type ChatIngressAck =
+  | {
+      ok: true;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
     };
 
 /** chat.channel-moderation-result@1.0.0 (owner: chat) */

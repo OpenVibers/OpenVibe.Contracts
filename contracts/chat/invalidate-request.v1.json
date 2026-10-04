@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/invalidate-request.v1.json",
+  "title": "ChatInvalidateRequest",
+  "description": "chat.invalidate-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/invalidate (chat.cache.invalidate) after it changed something Chat caches (a person, a channel, IP approvals, bans). A cache hint only: Chat drops and reloads the entry (with user_data, it also pushes the person's new name and look to their sockets). At least one hint is required. Applied once per (caller, key).",
+  "type": "object",
+  "required": [
+    "key"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9:._-]+$",
+      "description": "Idempotency key, scoped to the caller and to this route."
+    },
+    "user": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "A person whose cached row is stale."
+    },
+    "user_data": {
+      "type": "object",
+      "required": [
+        "id",
+        "username"
+      ],
+      "additionalProperties": false,
+      "description": "The person's new public fields, pushed to their sockets; id must equal user.",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string"
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "approvals": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "A channel whose IP approvals changed."
+    },
+    "bans": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "true: bans changed."
+    },
+    "channel": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "A channel whose cached settings changed."
+    }
+  },
+  "dependentSchemas": {
+    "user_data": {
+      "type": "object",
+      "required": [
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "approvals"
+      ],
+      "properties": {
+        "approvals": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "channel"
+      ],
+      "properties": {
+        "channel": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "bans"
+      ],
+      "properties": {
+        "bans": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

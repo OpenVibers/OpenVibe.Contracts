@@ -1,0 +1,11 @@
+{
+  "key": "k3",
+  "target": {
+    "kind": "global",
+    "id": 5
+  },
+  "frame": {
+    "type": "system",
+    "message": "hi"
+  }
+}

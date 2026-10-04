@@ -1,0 +1,9 @@
+{
+  "key": "live:call-dm:15:9f2c",
+  "user_id": 3,
+  "username": "host",
+  "message": "Join my call",
+  "dm": {
+    "to_user_id": 15
+  }
+}

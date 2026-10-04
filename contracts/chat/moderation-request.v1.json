@@ -1,0 +1,748 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/moderation-request.v1.json",
+  "title": "ChatModerationRequest",
+  "description": "chat.moderation-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/moderation (chat.moderation.write) to change chat rows Chat owns and act on its sockets: delete messages (Chat deletes the rows and broadcasts the delete notices to the room and its mirrors), review messages held for IP approval, hide, unhide or record relay identities, set or clear a TTS voice override, disconnect a person or an address, and log a moderation action. One action per request, applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. The fields an action does not list are refused.",
+  "$defs": {
+    "key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9:._-]+$",
+      "description": "Idempotency key, scoped to the caller and to this route."
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "delete-message"
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "deleted_by": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "user_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "delete-user-messages"
+        },
+        "user_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "deleted_by": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+        }
+      },
+      "description": "Every visible message of a signed-in person, in one stream or everywhere."
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "anon_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "delete-anon-messages"
+        },
+        "anon_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "deleted_by": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "username"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "delete-relay-messages"
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "deleted_by": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+        }
+      },
+      "description": "Every visible message stored under a relay username."
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "delete-by-range"
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "from": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "A date Chat parses (Date.parse); compared with the stored message timestamp."
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "A date Chat parses (Date.parse); compared with the stored message timestamp."
+        },
+        "deleted_by": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+        }
+      },
+      "description": "Every visible message between from and to, in one stream or (without stream_id) in global chat."
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "id",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "review-pending-ip"
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "approved",
+            "denied"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "channel_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "channel_id",
+        "ip"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "approve-ip-messages"
+        },
+        "channel_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ip": {
+          "type": "string",
+          "anyOf": [
+            {
+              "format": "ipv4"
+            },
+            {
+              "format": "ipv6"
+            }
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "channel_id",
+        "ip"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "deny-ip-messages"
+        },
+        "channel_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ip": {
+          "type": "string",
+          "anyOf": [
+            {
+              "format": "ipv4"
+            },
+            {
+              "format": "ipv6"
+            }
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "platform",
+        "external_username"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "relay-hide"
+        },
+        "channel_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "external_username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "created_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "mode": {
+          "enum": [
+            "hide",
+            "ban",
+            null
+          ],
+          "description": "Default hide."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "relay-unhide"
+        },
+        "id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "channel_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "platform": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "external_username": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 120
+        }
+      },
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "platform",
+            "external_username"
+          ]
+        }
+      ],
+      "description": "By the hidden row's id, or by channel, platform and external username."
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "platform",
+        "username"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "relay-record"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "identity_key"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "tts-voice-override"
+        },
+        "identity_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "set_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "params": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "voice"
+          ],
+          "additionalProperties": false,
+          "description": "Absent or null: the override is cleared.",
+          "properties": {
+            "voice": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "pitch": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 10
+            },
+            "speed": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 10
+            },
+            "gap": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 10
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "disconnect"
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "ip": {
+          "anyOf": [
+            {
+              "type": "string",
+              "anyOf": [
+                {
+                  "format": "ipv4"
+                },
+                {
+                  "format": "ipv6"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "user_id"
+          ],
+          "properties": {
+            "user_id": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "ip"
+          ],
+          "properties": {
+            "ip": {
+              "type": "string",
+              "anyOf": [
+                {
+                  "format": "ipv4"
+                },
+                {
+                  "format": "ipv6"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Chat refreshes its ban cache and closes the matching sockets (in one stream, or everywhere)."
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "action",
+        "action_type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/key"
+        },
+        "action": {
+          "const": "log"
+        },
+        "scope_type": {
+          "enum": [
+            "site",
+            "channel",
+            "stream",
+            "room",
+            null
+          ]
+        },
+        "scope_id": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "A string for scope_type room, otherwise an id."
+        },
+        "actor_user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "target_user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "action_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "details": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "At most 8192 characters as JSON."
+        }
+      },
+      "description": "Append a row to Chat's moderation log."
+    }
+  ]
+}

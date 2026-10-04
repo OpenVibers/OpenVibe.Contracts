@@ -1,0 +1,12 @@
+{
+  "key": "live:mod:log:5512",
+  "action": "log",
+  "scope_type": "channel",
+  "scope_id": 77,
+  "actor_user_id": 3,
+  "target_user_id": 12,
+  "action_type": "ban",
+  "details": {
+    "reason": "spam"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "key": "k4",
+  "target": {
+    "kind": "user",
+    "id": 5
+  },
+  "frame": {
+    "type": "system",
+    "message": "hi"
+  }
+}

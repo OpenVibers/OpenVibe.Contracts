@@ -1,0 +1,10 @@
+{
+  "key": "k1",
+  "target": {
+    "kind": "global"
+  },
+  "frame": {
+    "type": "eval",
+    "code": "x"
+  }
+}

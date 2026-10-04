@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/chat/send-result.v1.json",
   "title": "ChatSendResult",
-  "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }.",
+  "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).",
   "anyOf": [
     {
       "type": "object",
@@ -195,6 +195,46 @@
           }
         }
       }
+    },
+    {
+      "type": "object",
+      "required": [
+        "ok",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "id": {
+          "type": "integer",
+          "description": "The stored message id."
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "channel_user_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "conversation_id": {
+          "type": "integer",
+          "description": "DM only."
+        },
+        "to_user_id": {
+          "type": "integer",
+          "description": "DM only."
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
     }
   ]
 }
