@@ -1,0 +1,20 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "agent:agt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "actor_type": "agent",
+  "aud": [
+    "openvibe.chat"
+  ],
+  "cap": [
+    "chat.presence.read"
+  ],
+  "iat": 1790000000,
+  "exp": 1790000300,
+  "jti": "tok_agent006",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "env": "production",
+  "on_behalf_of": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "act": {
+    "sub": "agent:agt_01J0000000000000000000000Z"
+  }
+}

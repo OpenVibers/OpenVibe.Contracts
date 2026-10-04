@@ -1,0 +1,14 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "agent:agt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "actor_type": "service",
+  "aud": [
+    "openvibe.chat"
+  ],
+  "cap": [
+    "chat.message.send"
+  ],
+  "iat": 1790000000,
+  "exp": 1790000300,
+  "jti": "tok_agent004"
+}
