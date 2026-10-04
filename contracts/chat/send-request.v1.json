@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/chat/send-request.v1.json",
   "title": "ChatSendRequest",
-  "description": "chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused.",
+  "description": "chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused. From a first-party service, POST /internal/chat/messages: one line (or one DM) that Chat stores, broadcasts to the room (with mirror, also to global chat and the streamer rooms), reads aloud (tts) and answers with the real id; applied once per (caller, key), the same key with another body gets 409.",
   "anyOf": [
     {
       "type": "object",
@@ -84,6 +84,300 @@
           }
         }
       }
+    },
+    {
+      "type": "object",
+      "required": [
+        "key",
+        "username",
+        "message"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Za-z0-9:._-]+$",
+          "description": "Idempotency key, scoped to the caller and to this route."
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "channel_user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "anon_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S",
+          "description": "The text; not blank."
+        },
+        "message_type": {
+          "enum": [
+            "chat",
+            "system",
+            "donation",
+            "command",
+            "tts",
+            "channel-sound",
+            "soundboard",
+            "clip",
+            null
+          ]
+        },
+        "is_global": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Default: true when there is no stream and no channel."
+        },
+        "reply_to_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "source_platform": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "auto_delete_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "When Chat deletes the line (a date Chat parses)."
+        },
+        "metadata": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "At most 8192 characters as JSON."
+        },
+        "mirror": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Also send the line to global chat and the streamer rooms."
+        },
+        "dm": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "to_user_id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "to_user_id": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "description": "Send a direct message from user_id instead (no room, mirror, tts or frame; 403 if either blocks the other, 404 if either is unknown)."
+        },
+        "tts": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "description": "Read the line aloud in its room (needs stream_id or channel_user_id).",
+          "properties": {
+            "voice": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "identity_key": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "key": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 160,
+              "description": "Audio key; default m<id>."
+            }
+          }
+        },
+        "frame": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "description": "How the broadcast shows the sender.",
+          "properties": {
+            "role": {
+              "enum": [
+                "admin",
+                "global_mod",
+                "streamer",
+                "user",
+                "anon",
+                "external",
+                null
+              ]
+            },
+            "profile_color": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^#[0-9a-fA-F]{3,8}$"
+            },
+            "avatar_url": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "is_ai": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "is_bot": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "filtered": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "core_username": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "display_name": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 120
+            }
+          }
+        },
+        "first_chat_key": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^(?:user|anon|ext):.",
+          "description": "Whose first chat in the channel this is (user:, anon: or ext:); default from user_id or anon_id."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "required": [
+              "dm"
+            ],
+            "properties": {
+              "dm": {
+                "type": "object"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "user_id"
+            ],
+            "properties": {
+              "user_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "stream_id": {
+                "type": "null"
+              },
+              "channel_user_id": {
+                "type": "null"
+              },
+              "mirror": {
+                "enum": [
+                  false,
+                  null
+                ]
+              },
+              "tts": {
+                "type": "null"
+              },
+              "frame": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }

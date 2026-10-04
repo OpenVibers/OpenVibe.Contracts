@@ -1,0 +1,18 @@
+{
+  "key": "live:relay:twitch:abc123",
+  "stream_id": 42,
+  "username": "tw:someone",
+  "message": "hello from twitch",
+  "message_type": "chat",
+  "source_platform": "twitch",
+  "mirror": true,
+  "tts": {
+    "voice": null,
+    "identity_key": "ext:twitch:someone"
+  },
+  "frame": {
+    "role": "external",
+    "is_bot": false
+  },
+  "first_chat_key": "ext:tw:someone"
+}

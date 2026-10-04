@@ -1,0 +1,9 @@
+{
+  "target": {
+    "kind": "global"
+  },
+  "frame": {
+    "type": "system",
+    "message": "hi"
+  }
+}

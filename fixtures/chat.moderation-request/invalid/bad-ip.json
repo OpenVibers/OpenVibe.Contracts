@@ -1,0 +1,6 @@
+{
+  "key": "k4",
+  "action": "approve-ip-messages",
+  "channel_id": 77,
+  "ip": "not-an-ip"
+}

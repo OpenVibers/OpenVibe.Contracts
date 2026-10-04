@@ -1,0 +1,10 @@
+{
+  "key": "k1",
+  "user_id": 3,
+  "username": "host",
+  "message": "hi",
+  "stream_id": 42,
+  "dm": {
+    "to_user_id": 15
+  }
+}

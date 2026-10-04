@@ -1,0 +1,22 @@
+{
+  "id": "chat.event.publish",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Push a transient frame to chat sockets through OpenVibe.Chat: news cards, donation and goal cards, alerts and channel sounds, media queue state, redemptions, vibe-coding events, voice channel lists, system and restart notices, and call invites to one person. Nothing is stored; Chat validates the frame and its target (a stream, a channel, an owner's streams, global chat, everyone or one person) and broadcasts it once per idempotency key. Loopback only, first-party service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/events"
+  ],
+  "inputSchema": "chat.event-request@1",
+  "outputSchema": "chat.ingress-ack@1"
+}

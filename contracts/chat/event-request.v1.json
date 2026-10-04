@@ -1,0 +1,734 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/event-request.v1.json",
+  "title": "ChatEventRequest",
+  "description": "chat.event-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/events (chat.event.publish) to push a transient frame to chat sockets: cards, alerts, sounds, media queue state, call invites. Nothing is stored; Chat broadcasts the frame to the target. Applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. Chat also refuses a frame whose JSON is longer than 16384 characters or that has a __proto__, constructor or prototype key; a news card's timestamp must parse as a date.",
+  "type": "object",
+  "required": [
+    "key",
+    "target",
+    "frame"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9:._-]+$",
+      "description": "Idempotency key, scoped to the caller and to this route."
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "stream",
+            "channel",
+            "owner-streams",
+            "global",
+            "all",
+            "user"
+          ],
+          "description": "stream: one stream's room; channel: a channel owner's room; owner-streams: every stream of that owner; global: the homepage global chat; all: every socket; user: one person's sockets (call frames only)."
+        },
+        "id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "The stream, channel owner or user id; required for stream, channel, owner-streams and user, absent or null for global and all."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "stream",
+                  "channel",
+                  "owner-streams",
+                  "user"
+                ]
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            }
+          },
+          "else": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "chat",
+            "system",
+            "donation",
+            "goal-update",
+            "goal-reached",
+            "update",
+            "voice-channels",
+            "alert",
+            "channel-sound",
+            "server_restart",
+            "media_queue_update",
+            "media_now_playing",
+            "redemption",
+            "vibe-coding",
+            "vc-call-invite",
+            "vc-call-response"
+          ],
+          "description": "The client frame type. chat is only the transient news card (never saved); a stored line goes through chat.message.send."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "system",
+                  "server_restart"
+                ]
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "chat"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "message_type",
+              "username",
+              "message",
+              "timestamp"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {},
+              "message_type": {
+                "const": "news"
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "news_source": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "timestamp": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "source_platform": {
+                "enum": [
+                  "news",
+                  null
+                ]
+              },
+              "system": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "alert"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "streamerId",
+              "kind"
+            ],
+            "properties": {
+              "streamerId": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The channel owner; must equal target.id with target.kind channel."
+              },
+              "streamId": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "kind": {
+                "enum": [
+                  "goal",
+                  "donation"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "voice-channels"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "channels"
+            ],
+            "properties": {
+              "channels": {
+                "type": "array",
+                "maxItems": 128
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "channel-sound"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "streamId",
+              "command"
+            ],
+            "properties": {
+              "streamId": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Must equal target.id with target.kind stream."
+              },
+              "command": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "userId": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "anonId": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "args": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              },
+              "relay": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "username"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "media_queue_update"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "state"
+            ],
+            "properties": {
+              "state": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "media_now_playing"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "request"
+            ],
+            "properties": {
+              "request": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "redemption"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "username",
+              "reward_title",
+              "cost"
+            ],
+            "properties": {
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "reward_title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "cost": {
+                "type": "number"
+              },
+              "user_input": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "vibe-coding"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "managed_stream_id",
+              "event"
+            ],
+            "properties": {
+              "managed_stream_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "event": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "vc-call-invite",
+                  "vc-call-response"
+                ]
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "channelId",
+              "fromUserId",
+              "fromUsername",
+              "createdAt"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {},
+              "channelId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "channelName": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "fromUserId": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "fromUsername": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "fromDisplayName": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "fromAvatarUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "createdAt": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Milliseconds since the epoch."
+              },
+              "status": {
+                "enum": [
+                  "accepted",
+                  "declined",
+                  "busy",
+                  "no-answer",
+                  "canceled"
+                ],
+                "description": "vc-call-response only, and required there."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "vc-call-response"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "status"
+            ]
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "vc-call-invite"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "type": "object",
+              "required": [
+                "status"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "frame": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "vc-call-invite",
+                  "vc-call-response"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "user"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "not": {
+                  "const": "user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "frame": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "chat",
+                  "channel-sound",
+                  "redemption",
+                  "vibe-coding"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "stream"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "frame": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "alert"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "channel"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "frame": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "voice-channels"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "all"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "frame": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "media_queue_update",
+                  "media_now_playing"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "owner-streams"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

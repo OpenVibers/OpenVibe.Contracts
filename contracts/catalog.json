@@ -4550,7 +4550,7 @@
     },
     {
       "id": "chat.send-request",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "chat",
       "schema": "chat/send-request.v1.json",
       "visibility": "first-party",
@@ -4559,9 +4559,54 @@
     },
     {
       "id": "chat.send-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "chat",
       "schema": "chat/send-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.event-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/event-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.moderation-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/moderation-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.moderation-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/moderation-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.invalidate-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/invalidate-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.ingress-ack",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/ingress-ack.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

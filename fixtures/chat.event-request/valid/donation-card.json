@@ -1,0 +1,13 @@
+{
+  "key": "live:donation:4812",
+  "target": {
+    "kind": "stream",
+    "id": 42
+  },
+  "frame": {
+    "type": "donation",
+    "username": "viewer1",
+    "amount": 5,
+    "message": "gg"
+  }
+}

@@ -4,6 +4,34 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.91.0 — 2026-10-04
+
+**Chat's service-token ingress** (plan T3 J2, OpenVibe.Chat PR #16). These are the capabilities and request contracts of
+`/internal/chat/*`, the typed Chat endpoints that replace Live's generic bridge (`POST /internal/live/calls`). All of it is
+additive.
+- New active capabilities, owner `chat`, `first-party`, quota class `internal-write`, each with an input and an output
+  schema. They are loopback only and need a service token. They are never granted to an app or delegated to an agent.
+  - `chat.event.publish` (`POST /internal/chat/events`, sensitive): transient frames to a stream, a channel, an owner's
+    streams, global chat, everyone or one person.
+  - `chat.moderation.write` (`POST /internal/chat/moderation`, sensitive): one typed action per request (deletes,
+    IP-approval reviews, relay identities, TTS voice overrides, disconnect, log). It emits `chat.message.deleted` and
+    `chat.moderation.action`.
+  - `chat.cache.invalidate` (`POST /internal/chat/invalidate`): cache hints for a person, a channel, IP approvals and bans.
+  Chat's manifest lists all three.
+- `chat.message.send` also names `POST /internal/chat/messages`, and `chat.presence.read` names
+  `GET /internal/chat/presence`. Both keep their existing routes.
+- New contracts under `contracts/chat/`, which follow Chat's validators:
+  - `chat.event-request@1`: target kinds, the 16 frame types, the per-frame fields and the target each frame needs.
+  - `chat.moderation-request@1`: one `oneOf` branch per action, each with its own fields only.
+  - `chat.invalidate-request@1`: at least one hint, and `user_data` needs `user`.
+  - `chat.moderation-result@1`: deleted `ids`, or `changes` and `id`.
+  - `chat.ingress-ack@1`: `{ ok: true }`, or the `{ ok: false, error }` refusal every `/internal/chat` route answers.
+  Every request needs an idempotency `key` of 1–160 characters `[A-Za-z0-9:._-]`. Chat applies it once per caller and
+  route; a reused key with another body gets 409.
+- `chat.send-request` 1.1.0 adds the `/internal/chat/messages` body (room line or DM, `mirror`, `tts`, `frame`,
+  `first_chat_key`). `chat.send-result` 1.1.0 adds its `{ ok, id, … }` answer and the ingress error.
+- Fixtures: valid and invalid fixtures for every new contract and for the new branches.
+
 ## 0.90.0 — 2026-10-04
 
 **OpenVibe.Run service and job API** (plan T14 R1, ADR-034). The contract OpenVibe.Run is built against; everything is

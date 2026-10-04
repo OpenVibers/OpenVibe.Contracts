@@ -12,9 +12,12 @@
   ],
   "publicOrigin": "https://openvibe.chat",
   "capabilities": [
+    "chat.cache.invalidate",
+    "chat.event.publish",
     "chat.live_bridge.write",
     "chat.message.send",
     "chat.moderation.read",
+    "chat.moderation.write",
     "chat.presence.read"
   ],
   "eventsProduced": [

@@ -1,0 +1,13 @@
+{
+  "key": "live:alert:goal:77:3",
+  "target": {
+    "kind": "channel",
+    "id": 77
+  },
+  "frame": {
+    "type": "alert",
+    "streamerId": 77,
+    "streamId": null,
+    "kind": "goal"
+  }
+}

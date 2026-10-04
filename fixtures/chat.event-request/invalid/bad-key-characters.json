@@ -1,0 +1,10 @@
+{
+  "key": "has spaces",
+  "target": {
+    "kind": "global"
+  },
+  "frame": {
+    "type": "system",
+    "message": "hi"
+  }
+}

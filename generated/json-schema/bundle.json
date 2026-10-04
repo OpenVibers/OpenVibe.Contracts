@@ -48902,14 +48902,14 @@
       }
     },
     "chat.send-request": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "chat",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/chat/send-request.v1.json",
         "title": "ChatSendRequest",
-        "description": "chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused.",
+        "description": "chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused. From a first-party service, POST /internal/chat/messages: one line (or one DM) that Chat stores, broadcasts to the room (with mirror, also to global chat and the streamer rooms), reads aloud (tts) and answers with the real id; applied once per (caller, key), the same key with another body gets 409.",
         "anyOf": [
           {
             "type": "object",
@@ -48991,19 +48991,313 @@
                 }
               }
             }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "username",
+              "message"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9:._-]+$",
+                "description": "Idempotency key, scoped to the caller and to this route."
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "channel_user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "anon_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "pattern": "\\S",
+                "description": "The text; not blank."
+              },
+              "message_type": {
+                "enum": [
+                  "chat",
+                  "system",
+                  "donation",
+                  "command",
+                  "tts",
+                  "channel-sound",
+                  "soundboard",
+                  "clip",
+                  null
+                ]
+              },
+              "is_global": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "description": "Default: true when there is no stream and no channel."
+              },
+              "reply_to_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "source_platform": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "auto_delete_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "When Chat deletes the line (a date Chat parses)."
+              },
+              "metadata": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "At most 8192 characters as JSON."
+              },
+              "mirror": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "description": "Also send the line to global chat and the streamer rooms."
+              },
+              "dm": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "to_user_id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "to_user_id": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "description": "Send a direct message from user_id instead (no room, mirror, tts or frame; 403 if either blocks the other, 404 if either is unknown)."
+              },
+              "tts": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "description": "Read the line aloud in its room (needs stream_id or channel_user_id).",
+                "properties": {
+                  "voice": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "identity_key": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "key": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 160,
+                    "description": "Audio key; default m<id>."
+                  }
+                }
+              },
+              "frame": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "description": "How the broadcast shows the sender.",
+                "properties": {
+                  "role": {
+                    "enum": [
+                      "admin",
+                      "global_mod",
+                      "streamer",
+                      "user",
+                      "anon",
+                      "external",
+                      null
+                    ]
+                  },
+                  "profile_color": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^#[0-9a-fA-F]{3,8}$"
+                  },
+                  "avatar_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 500
+                  },
+                  "is_ai": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "is_bot": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "filtered": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "core_username": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "display_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              },
+              "first_chat_key": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^(?:user|anon|ext):.",
+                "description": "Whose first chat in the channel this is (user:, anon: or ext:); default from user_id or anon_id."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "required": [
+                    "dm"
+                  ],
+                  "properties": {
+                    "dm": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "user_id"
+                  ],
+                  "properties": {
+                    "user_id": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "stream_id": {
+                      "type": "null"
+                    },
+                    "channel_user_id": {
+                      "type": "null"
+                    },
+                    "mirror": {
+                      "enum": [
+                        false,
+                        null
+                      ]
+                    },
+                    "tts": {
+                      "type": "null"
+                    },
+                    "frame": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
           }
         ]
       }
     },
     "chat.send-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "chat",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/chat/send-result.v1.json",
         "title": "ChatSendResult",
-        "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }.",
+        "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).",
         "anyOf": [
           {
             "type": "object",
@@ -49196,6 +49490,1807 @@
                 }
               }
             }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "id": {
+                "type": "integer",
+                "description": "The stored message id."
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "channel_user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "conversation_id": {
+                "type": "integer",
+                "description": "DM only."
+              },
+              "to_user_id": {
+                "type": "integer",
+                "description": "DM only."
+              }
+            }
+          },
+          {
+            "$ref": "ingress-ack.v1.json#/$defs/error"
+          }
+        ]
+      }
+    },
+    "chat.event-request": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/event-request.v1.json",
+        "title": "ChatEventRequest",
+        "description": "chat.event-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/events (chat.event.publish) to push a transient frame to chat sockets: cards, alerts, sounds, media queue state, call invites. Nothing is stored; Chat broadcasts the frame to the target. Applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. Chat also refuses a frame whose JSON is longer than 16384 characters or that has a __proto__, constructor or prototype key; a news card's timestamp must parse as a date.",
+        "type": "object",
+        "required": [
+          "key",
+          "target",
+          "frame"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9:._-]+$",
+            "description": "Idempotency key, scoped to the caller and to this route."
+          },
+          "target": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "stream",
+                  "channel",
+                  "owner-streams",
+                  "global",
+                  "all",
+                  "user"
+                ],
+                "description": "stream: one stream's room; channel: a channel owner's room; owner-streams: every stream of that owner; global: the homepage global chat; all: every socket; user: one person's sockets (call frames only)."
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "description": "The stream, channel owner or user id; required for stream, channel, owner-streams and user, absent or null for global and all."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "stream",
+                        "channel",
+                        "owner-streams",
+                        "user"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "else": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "frame": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "chat",
+                  "system",
+                  "donation",
+                  "goal-update",
+                  "goal-reached",
+                  "update",
+                  "voice-channels",
+                  "alert",
+                  "channel-sound",
+                  "server_restart",
+                  "media_queue_update",
+                  "media_now_playing",
+                  "redemption",
+                  "vibe-coding",
+                  "vc-call-invite",
+                  "vc-call-response"
+                ],
+                "description": "The client frame type. chat is only the transient news card (never saved); a stored line goes through chat.message.send."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "system",
+                        "server_restart"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4000
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "chat"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "message_type",
+                    "username",
+                    "message",
+                    "timestamp"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {},
+                    "message_type": {
+                      "const": "news"
+                    },
+                    "username": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4000
+                    },
+                    "url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "news_source": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "source_platform": {
+                      "enum": [
+                        "news",
+                        null
+                      ]
+                    },
+                    "system": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "alert"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "streamerId",
+                    "kind"
+                  ],
+                  "properties": {
+                    "streamerId": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "The channel owner; must equal target.id with target.kind channel."
+                    },
+                    "streamId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1
+                    },
+                    "kind": {
+                      "enum": [
+                        "goal",
+                        "donation"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "voice-channels"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "channels"
+                  ],
+                  "properties": {
+                    "channels": {
+                      "type": "array",
+                      "maxItems": 128
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "channel-sound"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "streamId",
+                    "command"
+                  ],
+                  "properties": {
+                    "streamId": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Must equal target.id with target.kind stream."
+                    },
+                    "command": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "userId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1
+                    },
+                    "anonId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
+                    "args": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "maxItems": 20,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      }
+                    },
+                    "relay": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "required": [
+                        "username"
+                      ],
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "media_queue_update"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "media_now_playing"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "request"
+                  ],
+                  "properties": {
+                    "request": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "redemption"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "username",
+                    "reward_title",
+                    "cost"
+                  ],
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "reward_title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "cost": {
+                      "type": "number"
+                    },
+                    "user_input": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "vibe-coding"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "managed_stream_id",
+                    "event"
+                  ],
+                  "properties": {
+                    "managed_stream_id": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "event": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "vc-call-invite",
+                        "vc-call-response"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "channelId",
+                    "fromUserId",
+                    "fromUsername",
+                    "createdAt"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {},
+                    "channelId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "channelName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "fromUserId": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "fromUsername": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "fromDisplayName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "fromAvatarUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "createdAt": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Milliseconds since the epoch."
+                    },
+                    "status": {
+                      "enum": [
+                        "accepted",
+                        "declined",
+                        "busy",
+                        "no-answer",
+                        "canceled"
+                      ],
+                      "description": "vc-call-response only, and required there."
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "vc-call-response"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "vc-call-invite"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "type": "object",
+                    "required": [
+                      "status"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "type": "object",
+              "properties": {
+                "frame": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "vc-call-invite",
+                        "vc-call-response"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "user"
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "not": {
+                        "const": "user"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "type": "object",
+              "properties": {
+                "frame": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "chat",
+                        "channel-sound",
+                        "redemption",
+                        "vibe-coding"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "stream"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "type": "object",
+              "properties": {
+                "frame": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "alert"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "channel"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "type": "object",
+              "properties": {
+                "frame": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "voice-channels"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "all"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "type": "object",
+              "properties": {
+                "frame": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "media_queue_update",
+                        "media_now_playing"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "owner-streams"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "chat.moderation-request": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/moderation-request.v1.json",
+        "title": "ChatModerationRequest",
+        "description": "chat.moderation-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/moderation (chat.moderation.write) to change chat rows Chat owns and act on its sockets: delete messages (Chat deletes the rows and broadcasts the delete notices to the room and its mirrors), review messages held for IP approval, hide, unhide or record relay identities, set or clear a TTS voice override, disconnect a person or an address, and log a moderation action. One action per request, applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. The fields an action does not list are refused.",
+        "$defs": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9:._-]+$",
+            "description": "Idempotency key, scoped to the caller and to this route."
+          }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "delete-message"
+              },
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "deleted_by": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "user_id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "delete-user-messages"
+              },
+              "user_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "deleted_by": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+              }
+            },
+            "description": "Every visible message of a signed-in person, in one stream or everywhere."
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "anon_id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "delete-anon-messages"
+              },
+              "anon_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "deleted_by": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "username"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "delete-relay-messages"
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "deleted_by": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+              }
+            },
+            "description": "Every visible message stored under a relay username."
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "from",
+              "to"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "delete-by-range"
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "from": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "A date Chat parses (Date.parse); compared with the stored message timestamp."
+              },
+              "to": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "A date Chat parses (Date.parse); compared with the stored message timestamp."
+              },
+              "deleted_by": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The moderator: a user id or a username (chat_messages.deleted_by is text)."
+              }
+            },
+            "description": "Every visible message between from and to, in one stream or (without stream_id) in global chat."
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "id",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "review-pending-ip"
+              },
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "status": {
+                "enum": [
+                  "approved",
+                  "denied"
+                ]
+              },
+              "reviewed_by": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "channel_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "channel_id",
+              "ip"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "approve-ip-messages"
+              },
+              "channel_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "ip": {
+                "type": "string",
+                "anyOf": [
+                  {
+                    "format": "ipv4"
+                  },
+                  {
+                    "format": "ipv6"
+                  }
+                ]
+              },
+              "reviewed_by": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "channel_id",
+              "ip"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "deny-ip-messages"
+              },
+              "channel_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "ip": {
+                "type": "string",
+                "anyOf": [
+                  {
+                    "format": "ipv4"
+                  },
+                  {
+                    "format": "ipv6"
+                  }
+                ]
+              },
+              "reviewed_by": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "platform",
+              "external_username"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "relay-hide"
+              },
+              "channel_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "platform": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "external_username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "created_by": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "mode": {
+                "enum": [
+                  "hide",
+                  "ban",
+                  null
+                ],
+                "description": "Default hide."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "relay-unhide"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "channel_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "platform": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "external_username": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "platform",
+                  "external_username"
+                ]
+              }
+            ],
+            "description": "By the hidden row's id, or by channel, platform and external username."
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "platform",
+              "username"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "relay-record"
+              },
+              "platform": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "identity_key"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "tts-voice-override"
+              },
+              "identity_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "set_by": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "params": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "voice"
+                ],
+                "additionalProperties": false,
+                "description": "Absent or null: the override is cleared.",
+                "properties": {
+                  "voice": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "pitch": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 10
+                  },
+                  "speed": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 10
+                  },
+                  "gap": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 10
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "disconnect"
+              },
+              "user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "ip": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "anyOf": [
+                      {
+                        "format": "ipv4"
+                      },
+                      {
+                        "format": "ipv6"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "stream_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              }
+            },
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "user_id"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "ip"
+                ],
+                "properties": {
+                  "ip": {
+                    "type": "string",
+                    "anyOf": [
+                      {
+                        "format": "ipv4"
+                      },
+                      {
+                        "format": "ipv6"
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "description": "Chat refreshes its ban cache and closes the matching sockets (in one stream, or everywhere)."
+          },
+          {
+            "type": "object",
+            "required": [
+              "key",
+              "action",
+              "action_type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "action": {
+                "const": "log"
+              },
+              "scope_type": {
+                "enum": [
+                  "site",
+                  "channel",
+                  "stream",
+                  "room",
+                  null
+                ]
+              },
+              "scope_id": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "A string for scope_type room, otherwise an id."
+              },
+              "actor_user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "target_user_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "action_type": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "details": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "At most 8192 characters as JSON."
+              }
+            },
+            "description": "Append a row to Chat's moderation log."
+          }
+        ]
+      }
+    },
+    "chat.moderation-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/moderation-result.v1.json",
+        "title": "ChatModerationResult",
+        "description": "chat.moderation-result@1: what POST /internal/chat/moderation (chat.moderation.write) answers. 200 with the ids a delete action removed (empty when nothing matched), or with the rows another action changed and the id it inserted. A refusal is chat.ingress-ack@1's error: 400 a body Chat refuses, 409 a key reused with another body, 503 Chat or its delivery unavailable (retry with the same key).",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "ids"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "ids": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "description": "The deleted message ids."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "changes",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "changes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "The inserted row (a log entry, a hidden relay identity), else null."
+              }
+            }
+          },
+          {
+            "$ref": "ingress-ack.v1.json#/$defs/error"
+          }
+        ]
+      }
+    },
+    "chat.invalidate-request": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/invalidate-request.v1.json",
+        "title": "ChatInvalidateRequest",
+        "description": "chat.invalidate-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/invalidate (chat.cache.invalidate) after it changed something Chat caches (a person, a channel, IP approvals, bans). A cache hint only: Chat drops and reloads the entry (with user_data, it also pushes the person's new name and look to their sockets). At least one hint is required. Applied once per (caller, key).",
+        "type": "object",
+        "required": [
+          "key"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[A-Za-z0-9:._-]+$",
+            "description": "Idempotency key, scoped to the caller and to this route."
+          },
+          "user": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "A person whose cached row is stale."
+          },
+          "user_data": {
+            "type": "object",
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false,
+            "description": "The person's new public fields, pushed to their sockets; id must equal user.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "role": {
+                "type": "string"
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profile_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "approvals": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "A channel whose IP approvals changed."
+          },
+          "bans": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "true: bans changed."
+          },
+          "channel": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "A channel whose cached settings changed."
+          }
+        },
+        "dependentSchemas": {
+          "user_data": {
+            "type": "object",
+            "required": [
+              "user"
+            ],
+            "properties": {
+              "user": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "user"
+            ],
+            "properties": {
+              "user": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "approvals"
+            ],
+            "properties": {
+              "approvals": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "channel"
+            ],
+            "properties": {
+              "channel": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "bans"
+            ],
+            "properties": {
+              "bans": {
+                "const": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "chat.ingress-ack": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/ingress-ack.v1.json",
+        "title": "ChatIngressAck",
+        "description": "chat.ingress-ack@1: what OpenVibe.Chat's service ingress answers when there is nothing to return (POST /internal/chat/events, chat.event.publish; POST /internal/chat/invalidate, chat.cache.invalidate), and the error every /internal/chat route answers: 400 a body Chat refuses, 401/403 no service token or no grant for the capability, 403/404 a refused or unknown DM participant or stream, 409 an idempotency key reused with another body, 503 Chat unavailable or a delivery in progress (retry with the same key).",
+        "$defs": {
+          "error": {
+            "type": "object",
+            "required": [
+              "ok",
+              "error"
+            ],
+            "properties": {
+              "ok": {
+                "const": false
+              },
+              "error": {
+                "type": "string",
+                "description": "A human-readable reason."
+              }
+            }
+          }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "ok"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              }
+            }
+          },
+          {
+            "$ref": "#/$defs/error"
           }
         ]
       }

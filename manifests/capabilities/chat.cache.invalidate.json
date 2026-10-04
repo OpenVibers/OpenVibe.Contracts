@@ -1,0 +1,21 @@
+{
+  "id": "chat.cache.invalidate",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Tell OpenVibe.Chat that something it caches changed elsewhere: a person (optionally with their new public fields, pushed to their sockets), a channel's settings, a channel's IP approvals, or bans. A cache hint only; Chat reloads the entry. Loopback only, first-party service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/invalidate"
+  ],
+  "inputSchema": "chat.invalidate-request@1",
+  "outputSchema": "chat.ingress-ack@1"
+}

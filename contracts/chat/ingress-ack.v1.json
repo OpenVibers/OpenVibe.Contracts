@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/ingress-ack.v1.json",
+  "title": "ChatIngressAck",
+  "description": "chat.ingress-ack@1: what OpenVibe.Chat's service ingress answers when there is nothing to return (POST /internal/chat/events, chat.event.publish; POST /internal/chat/invalidate, chat.cache.invalidate), and the error every /internal/chat route answers: 400 a body Chat refuses, 401/403 no service token or no grant for the capability, 403/404 a refused or unknown DM participant or stream, 409 an idempotency key reused with another body, 503 Chat unavailable or a delivery in progress (retry with the same key).",
+  "$defs": {
+    "error": {
+      "type": "object",
+      "required": [
+        "ok",
+        "error"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "type": "string",
+          "description": "A human-readable reason."
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "ok"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        }
+      }
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ]
+}
