@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.92.0 — 2026-10-04
+
+`platform.job@1` gains `inputs` (Media objects pinned by sha256) and the `net` values `none`, `public`, `openvibe-only`.
+Additive; a v1 worker still refuses an unknown `net` with `nack`.
+
 ## 0.91.0 — 2026-10-04
 
 **Chat's service-token ingress** (plan T3 J2, OpenVibe.Chat PR #16). These are the capabilities and request contracts of

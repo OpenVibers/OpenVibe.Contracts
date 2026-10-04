@@ -63144,10 +63144,45 @@
           "net": {
             "type": "string",
             "enum": [
-              "deny"
+              "deny",
+              "none",
+              "public",
+              "openvibe-only"
             ],
             "default": "deny",
-            "description": "Network policy; absent means `deny` (no network at all). Further policies are added to v1 additively, and a worker refuses (`nack`) a policy it does not know."
+            "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+          },
+          "inputs": {
+            "type": "array",
+            "maxItems": 32,
+            "description": "Files placed in the job's working directory before the process starts. Each is an OpenVibe.Media object pinned by digest: a size or digest mismatch ends the job failed before the process ever runs (run.job.input_digest_mismatch). Never a caller-chosen URL and never a credential; the worker holds its own token. Names are unique and carry no path separator.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "media_id",
+                "sha256"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "media_id": {
+                  "type": "string",
+                  "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "size_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
           }
         },
         "allOf": [
@@ -63187,6 +63222,32 @@
               "mem_bytes": 268435456
             },
             "net": "deny"
+          },
+          {
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPR",
+            "class": "code",
+            "artifact": {
+              "name": "transcode",
+              "version": "0.4.1"
+            },
+            "args": {
+              "format": "webm"
+            },
+            "ttl_ms": 120000,
+            "limits": {
+              "wall_ms": 90000,
+              "cpu_ms": 90000,
+              "mem_bytes": 536870912
+            },
+            "net": "public",
+            "inputs": [
+              {
+                "name": "clip.mp4",
+                "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+                "sha256": "9f86d081884c7d659a2feb15b0b4f8f1c0e6ad1d7e6fd2e1b0b6fd1c4f1d2a3b",
+                "size_bytes": 1048576
+              }
+            ]
           }
         ]
       }
@@ -65467,7 +65528,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/run/job-create-request.v1.json",
         "title": "RunJobCreateRequest",
-        "description": "run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress: none (default; any node, sent as net deny), public or openvibe-only (only a node whose worker.egress is exactly that policy, until platform.job@1 net carries it per job). REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.",
+        "description": "run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.",
         "type": "object",
         "additionalProperties": false,
         "required": [
