@@ -1336,6 +1336,7 @@
        "audit",
        "next_before"
       ],
+      "additionalProperties": false,
       "properties": {
        "next_before": {
         "type": [
