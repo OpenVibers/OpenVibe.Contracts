@@ -21095,7 +21095,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/billing.transaction.reversed.v1.json",
         "title": "BillingTransactionReversedPayload",
-        "description": "billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out. Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.",
+        "description": "billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out, a refund of a credit-paid subscription period (type refund, reverses_txn names the subscription transaction, from_subject and to_subject swapped, provider null; the entitlement then changes with reason credit_refund). Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.",
         "type": "object",
         "required": [
           "transaction_id",
@@ -21239,9 +21239,11 @@
               "status": {
                 "enum": [
                   "active",
+                  "past_due",
                   "canceled",
                   "expired"
-                ]
+                ],
+                "description": "past_due: a renewal charge failed and Billing retries it until grace_until; the entitlement is not active while past_due."
               },
               "auto_renew": {
                 "type": "boolean"
@@ -21256,12 +21258,25 @@
           },
           "reason": {
             "type": "string",
-            "description": "granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback."
+            "description": "granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback, renewal_failed (a renewal charge failed: status past_due, grace_until set), grace_ended (the grace window passed without a paid renewal), credit_refund (a credit-paid period was refunded)."
           },
           "transaction_id": {
             "type": "string",
             "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "granted/renewed: the transaction that paid the period."
+          },
+          "grace_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "renewal_failed: when Billing stops retrying the renewal and ends the subscription; null or absent otherwise."
+          },
+          "renewal_period_end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "renewal_failed, grace_ended: the end of the period the failed renewal charge was for."
           },
           "revoked_period": {
             "type": "object",
@@ -21280,7 +21295,7 @@
                 "format": "date-time"
               }
             },
-            "description": "refund/chargeback: the period the reversed payment had granted."
+            "description": "refund/chargeback/credit_refund: the period the reversed payment had granted."
           }
         }
       }
@@ -23421,7 +23436,7 @@
           },
           "status": {
             "type": "string",
-            "description": "active, canceled, expired, …"
+            "description": "active, past_due (a failed renewal, retried until grace_until), canceled, expired, …"
           },
           "auto_renew": {
             "type": "boolean"

@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.94.2 — 2026-10-04
+
+**`past_due` renewal grace on the billing events** (plan T5 step 11, s1). Additive: no field is required or removed.
+`billing.entitlement.changed@1` `subscription.status` gains `past_due` (a failed renewal, retried until `grace_until`);
+new optional `grace_until` (date-time or null) and `renewal_period_end`; `reason` adds `renewal_failed`, `grace_ended`
+and `credit_refund`. `billing.subscription@1` status lists `past_due`. `billing.transaction.reversed@1` already carried a
+refund of a credit-paid subscription period (type `refund`, from/to swapped); its description now says so, and a fixture
+pins it. New test `test/billing-grace.test.js`. Billing and VIP pin this tag.
+
 ## 0.94.1 — 2026-10-04
 
 `community.moderation.action@1` catalog version is `1.1.0` (the additive space-moderator actions of 0.94.0).

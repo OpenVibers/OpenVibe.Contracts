@@ -18,7 +18,7 @@
       "additionalProperties": false,
       "properties": {
         "id": { "type": "string", "pattern": "^sub_[0-9A-HJKMNP-TV-Z]{26}$" },
-        "status": { "enum": ["active", "canceled", "expired"] },
+        "status": { "enum": ["active", "past_due", "canceled", "expired"], "description": "past_due: a renewal charge failed and Billing retries it until grace_until; the entitlement is not active while past_due." },
         "auto_renew": { "type": "boolean" },
         "cancel_at_period_end": { "type": "boolean" },
         "provider": { "type": "string" }
@@ -26,15 +26,17 @@
     },
     "reason": {
       "type": "string",
-      "description": "granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback."
+      "description": "granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback, renewal_failed (a renewal charge failed: status past_due, grace_until set), grace_ended (the grace window passed without a paid renewal), credit_refund (a credit-paid period was refunded)."
     },
     "transaction_id": { "type": "string", "pattern": "^txn_[0-9A-HJKMNP-TV-Z]{26}$", "description": "granted/renewed: the transaction that paid the period." },
+    "grace_until": { "type": ["string", "null"], "format": "date-time", "description": "renewal_failed: when Billing stops retrying the renewal and ends the subscription; null or absent otherwise." },
+    "renewal_period_end": { "type": "string", "format": "date-time", "description": "renewal_failed, grace_ended: the end of the period the failed renewal charge was for." },
     "revoked_period": {
       "type": "object",
       "required": ["starts_at", "ends_at"],
       "additionalProperties": false,
       "properties": { "starts_at": { "type": "string", "format": "date-time" }, "ends_at": { "type": "string", "format": "date-time" } },
-      "description": "refund/chargeback: the period the reversed payment had granted."
+      "description": "refund/chargeback/credit_refund: the period the reversed payment had granted."
     }
   }
 }
