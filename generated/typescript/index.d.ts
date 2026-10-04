@@ -48516,9 +48516,9 @@ export interface LiveTipsDeliveryResult {
   };
 }
 
-/** community.moderation.action@1.0.0 (owner: community) */
+/** community.moderation.action@1.1.0 (owner: community) */
 /**
- * community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ * community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread, adding or removing a space's moderator (target type space, id the space slug, owner_subject the moderator). OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
  */
 export interface CommunityModerationActionPayload {
   action:
@@ -48532,9 +48532,11 @@ export interface CommunityModerationActionPayload {
     | "thread.deleted"
     | "thread.locked"
     | "thread.unlocked"
-    | "post.deleted";
+    | "post.deleted"
+    | "space.moderator_added"
+    | "space.moderator_removed";
   target: {
-    type: "paste" | "paste_comment" | "comment" | "thread" | "post" | "pastes";
+    type: "paste" | "paste_comment" | "comment" | "thread" | "post" | "pastes" | "space";
     id: string;
     /**
      * Whose content it was, when known.

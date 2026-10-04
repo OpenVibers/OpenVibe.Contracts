@@ -53221,14 +53221,14 @@
       }
     },
     "community.moderation.action": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "community",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/community.moderation.action.v1.json",
         "title": "CommunityModerationActionPayload",
-        "description": "community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread. OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
+        "description": "community.moderation.action v1 (OpenVibe.Community server/events.js moderationAction). A staff action on someone else's content in Community: editing or deleting another person's paste, changing its visibility, censoring a screenshot, bulk actions, deleting forks, removing a comment, deleting or locking a thread, adding or removing a space's moderator (target type space, id the space slug, owner_subject the moderator). OpenVibe.Network keeps it in the moderation audit log (ADR-022). Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.",
         "type": "object",
         "required": [
           "action",
@@ -53249,7 +53249,9 @@
               "thread.deleted",
               "thread.locked",
               "thread.unlocked",
-              "post.deleted"
+              "post.deleted",
+              "space.moderator_added",
+              "space.moderator_removed"
             ]
           },
           "target": {
@@ -53267,7 +53269,8 @@
                   "comment",
                   "thread",
                   "post",
-                  "pastes"
+                  "pastes",
+                  "space"
                 ]
               },
               "id": {

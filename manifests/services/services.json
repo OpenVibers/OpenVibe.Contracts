@@ -1,0 +1,44 @@
+{
+  "version": "0.0.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.94.0 <1.0.0"
+  },
+  "id": "services",
+  "name": "OpenVibe.Services",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Services",
+  "domains": [
+    "openvibe.services"
+  ],
+  "publicOrigin": "https://openvibe.services",
+  "exposure": {
+    "state": "placeholder",
+    "publicSite": "placeholder",
+    "note": "planned (plan T13); the OpenVibe.Services repository does not exist yet, and openvibe.services serves the OpenVibe.Sites placeholder page"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "not built yet; nothing listens on a loopback address"
+    },
+    "shutdown": {
+      "none": "not built yet; nothing runs or drains"
+    },
+    "startupRecovery": {
+      "none": "not built yet; nothing starts"
+    },
+    "rollback": {
+      "none": "not built yet; nothing is released or rolled back"
+    },
+    "contracts": {
+      "range": ">=0.94.0 <1.0.0"
+    },
+    "leases": {
+      "none": "not built yet; nothing runs"
+    }
+  },
+  "notes": "Reserved placeholder (plan T13): the developer platform of the network, where projects, apps, keys, grants, capabilities, usage, quotas, runs, events, deploys and health over every service are looked up, with each service keeping its own data. Reserves the service id and the openvibe.services domain; no repository, route, capability or event exists yet."
+}
