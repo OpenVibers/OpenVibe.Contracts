@@ -1,0 +1,19 @@
+{
+  "id": "run.job.list",
+  "version": "1.0",
+  "owner": "run",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (plan T14 R1; OpenVibe.Run is not built yet): List the token project's jobs, newest first and cursor-paged: GET /api/v1/jobs?state=&limit=&cursor=. It becomes active, and enters generated/openapi/run.json, when OpenVibe.Run implements the routes.",
+  "inputSchema": "run.job-list-query@1",
+  "outputSchema": "run.job-list-result@1",
+  "permissions": [
+    "run:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "run-read",
+  "events": [],
+  "implementedBy": []
+}

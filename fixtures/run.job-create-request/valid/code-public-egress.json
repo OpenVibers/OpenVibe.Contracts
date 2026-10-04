@@ -1,0 +1,26 @@
+{
+  "class": "code",
+  "artifact": {
+    "name": "py-runner",
+    "version": "3.12.1"
+  },
+  "args": {
+    "entry": "main.py"
+  },
+  "limits": {
+    "wall_ms": 600000,
+    "cpu_ms": 600000,
+    "mem_bytes": 1073741824
+  },
+  "egress": "public",
+  "requirements": {
+    "kind": "run.code",
+    "mobility": "job",
+    "latency_class": "background",
+    "objective": "cheapest",
+    "trust": [
+      "first-party",
+      "user-owned"
+    ]
+  }
+}

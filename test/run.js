@@ -529,7 +529,7 @@ ok(nodeId.startsWith('nod_') && ids.principalSub({ type: 'node', id: nodeId }) =
 assert.throws(() => ids.principalSub({ type: 'node', id: 'nod_42' }), /principals/);
 ok(!ids.SUBJECT_TYPES.includes('node') && ids.parseSubject(`node:${nodeId}`) === null, 'a node is a principal, never a subject');
 assert.throws(() => ids.principalSub({ type: 'user', id: ids.newId('user') }), /principals/);
-for (const [kind, prefix] of [['watch', 'wch'], ['observation', 'wco'], ['check', 'ckr']]) ok(ids.newId(kind).startsWith(`${prefix}_`), `newId(${kind}) is ${prefix}_<ULID>`);
+for (const [kind, prefix] of [['watch', 'wch'], ['observation', 'wco'], ['check', 'ckr'], ['job', 'job']]) ok(ids.newId(kind).startsWith(`${prefix}_`), `newId(${kind}) is ${prefix}_<ULID>`);
 ok(contracts.validate('media.media-ref', { media_id: ids.legacyMediaId('live', 'vod', 42) }).valid, 'legacyMediaId is a valid MediaRef');
 ok(contracts.validate('events.event-envelope', { event_id: ids.newId('event'), event_type: 'network.user.created', version: 1, source: 'network', actor: { type: 'system', id: 'network' }, timestamp: new Date().toISOString(), subject: { type: 'user', id: ids.newId('user') }, payload: {} }).valid, 'newId(event) builds a valid envelope');
 

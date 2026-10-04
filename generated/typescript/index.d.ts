@@ -52408,3 +52408,700 @@ export type BotDeviceConnectResult =
   | {
       device: BotDevice;
     };
+
+/** run.job-create-request@1.0.0 (owner: run) */
+/**
+ * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress: none (default; any node, sent as net deny), public or openvibe-only (only a node whose worker.egress is exactly that policy, until platform.job@1 net carries it per job). REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.
+ */
+export type RunJobCreateRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  class: RuntimeClass;
+  /**
+   * The pre-registered artifact to run (platform.job@1 artifact).
+   */
+  artifact?: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  };
+  /**
+   * The artifact's declared input as JSON; default {}.
+   */
+  args?: {};
+  /**
+   * Files placed in the job directory before the process starts; names are unique (else 422).
+   *
+   * @maxItems 32
+   */
+  inputs?: {
+    /**
+     * File name in the job directory; no path separators.
+     */
+    name: string;
+    media_id: string;
+    /**
+     * Lowercase hex SHA-256 of the object's bytes.
+     */
+    sha256: string;
+    size_bytes?: number;
+  }[];
+  /**
+   * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+   */
+  limits: {
+    /**
+     * Running time from `job_started`
+     */
+    wall_ms: number;
+    /**
+     * CPU time, user plus system
+     */
+    cpu_ms: number;
+    /**
+     * Peak resident memory
+     */
+    mem_bytes: number;
+  };
+  /**
+   * Lifetime from creation, covering the wait for a node and the run (platform.job@1 ttl_ms); when it runs out the job ends expired. Default: limits.wall_ms plus 600000.
+   */
+  ttl_ms?: number;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress?: "none" | "public" | "openvibe-only";
+  requirements?: WorkloadRequirements;
+  idempotency_key?: string;
+};
+
+/** run.job-create-result@1.0.0 (owner: run) */
+/**
+ * run.job-create-result@1 (PLANNED; plan T14 R1, ADR-034): the answer of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). 201 with created true and the new job, queued; 200 with created false and the job first created under the same idempotency_key (in whatever state it has reached). Refusals are application/problem+json: 400 (body invalid), 413 (args over 512 KiB), 422 run.limits.exceeded or a duplicate input name, 409 run.idempotency.conflict, 429 (quota).
+ */
+export interface RunJobCreateResult {
+  /**
+   * false when the idempotency_key matched an earlier job.
+   */
+  created: boolean;
+  job: RunJobReadResult;
+}
+
+/** run.job-read-result@1.0.0 (owner: run) */
+/**
+ * run.job-read-result@1 (PLANNED; plan T14 R1, ADR-034): one job on OpenVibe.Run, as GET /api/v1/jobs/{id} answers it (capability run.job.read), POST /api/v1/jobs/{id}/cancel answers it after the cancel (run.job.cancel), and run.job-create-result@1 and run.job-list-result@1 carry it. STATES: queued (stored, waiting for a node) -> placed (sent to a node as platform.job@1, not yet started) -> running (the node sent job_started) -> one end state: succeeded (job_exit reason exited with code 0), failed (exited with another code, or reason limit, stopped or failed), cancelled (POST /api/v1/jobs/{id}/cancel, or job_exit reason cancelled), expired (ttl_ms ran out: before placement, before start, or while running, job_exit reason ttl). An end state never changes. Run mints the id (job_<ULID>) and sends it unchanged as platform.job@1 `id`, so every metering reading of the job is `run:<id>:<n>` (platform.job-frame@1 job_usage). usage.seconds is wall_ms / 1000: the sum of the job's readings (service run, operation function.invoke, unit s). Never carries the job's stdout (GET /api/v1/jobs/{id}/stream) or a credential. More fields may be added.
+ */
+export type RunJobReadResult = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * Minted by Run; the platform.job@1 id and the stem of every usage reading key (run:<id>:<n>).
+   */
+  id: string;
+  /**
+   * The project the caller's token names; usage is billed to it.
+   */
+  project_id: string;
+  requester: SubjectRef;
+  state: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * @maxItems 32
+   */
+  inputs: {
+    /**
+     * File name in the job directory; no path separators.
+     */
+    name: string;
+    media_id: string;
+    /**
+     * Lowercase hex SHA-256 of the object's bytes.
+     */
+    sha256: string;
+    size_bytes?: number;
+  }[];
+  /**
+   * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+   */
+  limits: {
+    /**
+     * Running time from `job_started`
+     */
+    wall_ms: number;
+    /**
+     * CPU time, user plus system
+     */
+    cpu_ms: number;
+    /**
+     * Peak resident memory
+     */
+    mem_bytes: number;
+  };
+  /**
+   * The job's lifetime from created_at, the default filled in.
+   */
+  ttl_ms: number;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  requirements: WorkloadRequirements;
+  idempotency_key: string | null;
+  /**
+   * Where the job was sent; null while queued, and for a job cancelled or expired before placement.
+   */
+  placement: {
+    /**
+     * The worker's device id (the usage reading's `node`).
+     */
+    node: string;
+    /**
+     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     */
+    provider: string | null;
+    region: string | null;
+  } | null;
+  timings: {
+    created_at: string;
+    placed_at: string | null;
+    /**
+     * From job_started started_ms; null until the process started.
+     */
+    started_at: string | null;
+    /**
+     * When the job reached its end state; null before.
+     */
+    finished_at: string | null;
+  };
+  /**
+   * The node's job_exit; null until it arrived, and for a job that ended before a node ran it.
+   */
+  exit: {
+    /**
+     * platform.job-frame@1 job_exit reason.
+     */
+    reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
+    /**
+     * The process's exit status; null when it was killed or never ran.
+     */
+    code: number | null;
+  } | null;
+  /**
+   * The artifact's declared output (job_exit result, any JSON); null unless state is succeeded.
+   */
+  result: {
+    [k: string]: unknown | undefined;
+  };
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  /**
+   * Why the job failed or expired; null in every other state.
+   */
+  error: {
+    /**
+     * run.job.exit_nonzero, run.job.limit, run.job.stopped, run.job.worker_failed, run.job.input_digest_mismatch, run.job.unplaceable (expired: no node offered the class, egress and requirements), run.job.ttl.
+     */
+    code: string;
+    detail: string | null;
+  } | null;
+};
+
+/** run.job-list-query@1.0.0 (owner: run) */
+/**
+ * run.job-list-query@1 (PLANNED; plan T14 R1): the query string of GET /api/v1/jobs on OpenVibe.Run (capability run.job.list) and of GET /api/v1/admin/jobs (run.job.admin, which alone may pass project_id). Without project_id it lists the caller's token project.
+ */
+export interface RunJobListQuery {
+  state?: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+  /**
+   * Admin only (run.job.admin): list this project's jobs; with run.job.list it is refused 403.
+   */
+  project_id?: string;
+  /**
+   * Items per page, 1 to 200 (default 50). A query string carries it as a string, which must name the same range.
+   */
+  limit?: number | string;
+  /**
+   * next_cursor of the previous page.
+   */
+  cursor?: string;
+}
+
+/** run.job-list-result@1.0.0 (owner: run) */
+/**
+ * run.job-list-result@1 (PLANNED; plan T14 R1): the answer of GET /api/v1/jobs on OpenVibe.Run (capability run.job.list) and GET /api/v1/admin/jobs (run.job.admin), filtered by run.job-list-query@1. Jobs come newest first (by id). More fields may be added.
+ */
+export interface RunJobListResult {
+  /**
+   * @maxItems 200
+   */
+  jobs: RunJobReadResult[];
+  /**
+   * Pass as cursor for the next page; null on the last page.
+   */
+  next_cursor: string | null;
+}
+
+/** run.job-stream-ticket-result@1.0.0 (owner: run) */
+/**
+ * run.job-stream-ticket-result@1 (PLANNED; plan T14 R1): the answer of POST /api/v1/jobs/{id}/stream/ticket on OpenVibe.Run (capability run.job.stream), modelled on Events' realtime ticket (network.realtime-ticket-result@1). A browser cannot put a header on an EventSource, so it opens `${stream_url}?ticket=${ticket}` (plus Last-Event-ID when it resumes) at once. The ticket is a two-minute RS256 JWT that Run signs: audience openvibe.run, typ run-stream (so it is never a session token), it names this one job, and Run refuses a jti it has already seen while the ticket is valid, so a ticket opens one stream; ask for a fresh one for every reconnect. Never logged, never stored. A server caller may instead send its Bearer token to GET /api/v1/jobs/{id}/stream. The stream is text/event-stream of run.job-stream-event@1.
+ */
+export interface RunJobStreamTicketResult {
+  /**
+   * The signed ticket (a compact JWS).
+   */
+  ticket: string;
+  expires_at: string;
+  /**
+   * Seconds until the ticket expires (120).
+   */
+  expires_in: number;
+  stream_url: string;
+  job_id: string;
+}
+
+/** run.job-stream-event@1.0.0 (owner: run) */
+/**
+ * run.job-stream-event@1 (PLANNED; plan T14 R1): the JSON `data` of one server-sent event on GET /api/v1/jobs/{id}/stream (capability run.job.stream). The SSE `event` field is the type and the SSE `id` is `seq`, so a reconnect with Last-Event-ID resumes after it. output: a chunk of the job's stdout (platform.job-frame@1 job_stdout, best effort: a chunk lost on the node's link is never resent, and Run keeps at most the last 1 MiB to replay). state: the job moved to a new state. end: the job reached its end state; the server closes the stream after it. A stream opened on an ended job replays what is kept, then end. Output is never metered and never in an event.
+ */
+export type RunJobStreamEvent = {
+  [k: string]: unknown | undefined;
+} & {
+  type: "output" | "state" | "end";
+  job_id: string;
+  /**
+   * The job's own stream counter from 1; the SSE id.
+   */
+  seq: number;
+  at: string;
+  /**
+   * output only: UTF-8 text.
+   */
+  chunk?: string;
+  /**
+   * state and end: the job's state.
+   */
+  state?: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+};
+
+/** run.job.queued@1.0.0 (owner: run) */
+/**
+ * run.job.queued v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). A job was stored queued (POST /api/v1/jobs created it; not published for an idempotent repeat). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:run.
+ */
+export interface RunJobQueuedPayload {
+  job_id: string;
+  project_id: string;
+  requester: SubjectRef;
+  /**
+   * The job state (run.job-read-result@1 state).
+   */
+  state: "queued";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  placement: null;
+  timings: {
+    created_at: string;
+    placed_at: null;
+    started_at: null;
+    finished_at: null;
+  };
+  exit: null;
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  error: null;
+}
+
+/** run.job.started@1.0.0 (owner: run) */
+/**
+ * run.job.started v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The node sent job_started: the process runs. Usage seconds count from started_at. A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:run.
+ */
+export interface RunJobStartedPayload {
+  job_id: string;
+  project_id: string;
+  requester: SubjectRef;
+  /**
+   * The job state (run.job-read-result@1 state).
+   */
+  state: "running";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  placement: {
+    /**
+     * The worker's device id (the usage reading's `node`).
+     */
+    node: string;
+    /**
+     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     */
+    provider: string | null;
+    region: string | null;
+  };
+  timings: {
+    created_at: string;
+    placed_at: string;
+    started_at: string;
+    finished_at: null;
+  };
+  exit: null;
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  error: null;
+}
+
+/** run.job.succeeded@1.0.0 (owner: run) */
+/**
+ * run.job.succeeded v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended succeeded: job_exit reason exited with code 0. Carries no result (read it with GET /api/v1/jobs/{id}). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority normal, actor service:run.
+ */
+export interface RunJobSucceededPayload {
+  job_id: string;
+  project_id: string;
+  requester: SubjectRef;
+  /**
+   * The job state (run.job-read-result@1 state).
+   */
+  state: "succeeded";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  placement: {
+    /**
+     * The worker's device id (the usage reading's `node`).
+     */
+    node: string;
+    /**
+     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     */
+    provider: string | null;
+    region: string | null;
+  };
+  timings: {
+    created_at: string;
+    placed_at: string;
+    started_at: string;
+    finished_at: string;
+  };
+  exit: {
+    /**
+     * platform.job-frame@1 job_exit reason.
+     */
+    reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
+    /**
+     * The process's exit status; null when it was killed or never ran.
+     */
+    code: number | null;
+  } & {
+    reason?: "exited";
+    code?: 0;
+  };
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  error: null;
+}
+
+/** run.job.failed@1.0.0 (owner: run) */
+/**
+ * run.job.failed v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended failed: job_exit with a non-zero code or reason limit, stopped or failed, or an input digest mismatch before the process started. A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:run.
+ */
+export interface RunJobFailedPayload {
+  job_id: string;
+  project_id: string;
+  requester: SubjectRef;
+  /**
+   * The job state (run.job-read-result@1 state).
+   */
+  state: "failed";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  placement: {
+    /**
+     * The worker's device id (the usage reading's `node`).
+     */
+    node: string;
+    /**
+     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     */
+    provider: string | null;
+    region: string | null;
+  } | null;
+  timings: {
+    created_at: string;
+    placed_at: string | null;
+    started_at: string | null;
+    finished_at: string;
+  };
+  exit: {
+    /**
+     * platform.job-frame@1 job_exit reason.
+     */
+    reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
+    /**
+     * The process's exit status; null when it was killed or never ran.
+     */
+    code: number | null;
+  } | null;
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  error: {
+    /**
+     * run.job.exit_nonzero, run.job.limit, run.job.stopped, run.job.worker_failed, run.job.input_digest_mismatch, run.job.unplaceable (expired: no node offered the class, egress and requirements), run.job.ttl.
+     */
+    code: string;
+    detail: string | null;
+  };
+}
+
+/** run.job.cancelled@1.0.0 (owner: run) */
+/**
+ * run.job.cancelled v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended cancelled (POST /api/v1/jobs/{id}/cancel by its project or run.job.admin, or job_exit reason cancelled). A job cancelled before placement has no placement and no exit. A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority normal, actor service:run.
+ */
+export interface RunJobCancelledPayload {
+  job_id: string;
+  project_id: string;
+  requester: SubjectRef;
+  /**
+   * The job state (run.job-read-result@1 state).
+   */
+  state: "cancelled";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  placement: {
+    /**
+     * The worker's device id (the usage reading's `node`).
+     */
+    node: string;
+    /**
+     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     */
+    provider: string | null;
+    region: string | null;
+  } | null;
+  timings: {
+    created_at: string;
+    placed_at: string | null;
+    started_at: string | null;
+    finished_at: string;
+  };
+  exit: {
+    /**
+     * platform.job-frame@1 job_exit reason.
+     */
+    reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
+    /**
+     * The process's exit status; null when it was killed or never ran.
+     */
+    code: number | null;
+  } | null;
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  error: null;
+}
+
+/** run.job.expired@1.0.0 (owner: run) */
+/**
+ * run.job.expired v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended expired: its ttl_ms ran out before a node took it (run.job.unplaceable), before it started, or while it ran (job_exit reason ttl, run.job.ttl). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority normal, actor service:run.
+ */
+export interface RunJobExpiredPayload {
+  job_id: string;
+  project_id: string;
+  requester: SubjectRef;
+  /**
+   * The job state (run.job-read-result@1 state).
+   */
+  state: "expired";
+  class: RuntimeClass;
+  artifact: {
+    name: string;
+    /**
+     * One exact version, never a range
+     */
+    version: string;
+  } | null;
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+  placement: {
+    /**
+     * The worker's device id (the usage reading's `node`).
+     */
+    node: string;
+    /**
+     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     */
+    provider: string | null;
+    region: string | null;
+  } | null;
+  timings: {
+    created_at: string;
+    placed_at: string | null;
+    started_at: string | null;
+    finished_at: string;
+  };
+  exit: {
+    /**
+     * platform.job-frame@1 job_exit reason.
+     */
+    reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
+    /**
+     * The process's exit status; null when it was killed or never ran.
+     */
+    code: number | null;
+  } | null;
+  usage: {
+    /**
+     * Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started.
+     */
+    seconds: number;
+    wall_ms: number;
+    /**
+     * Informational, never billed.
+     */
+    cpu_ms: number | null;
+    /**
+     * Informational, never billed.
+     */
+    mem_peak_bytes: number | null;
+  };
+  error: {
+    /**
+     * run.job.exit_nonzero, run.job.limit, run.job.stopped, run.job.worker_failed, run.job.input_digest_mismatch, run.job.unplaceable (expired: no node offered the class, egress and requirements), run.job.ttl.
+     */
+    code: string;
+    detail: string | null;
+  };
+}
