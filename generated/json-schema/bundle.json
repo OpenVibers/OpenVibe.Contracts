@@ -63088,7 +63088,7 @@
           "artifact": {
             "type": "object",
             "additionalProperties": false,
-            "description": "The pre-registered artifact to run; required for class `function`.",
+            "description": "The pre-registered artifact to run; required for classes `function` and `code`.",
             "required": [
               "name",
               "version"
@@ -63144,10 +63144,45 @@
           "net": {
             "type": "string",
             "enum": [
-              "deny"
+              "deny",
+              "none",
+              "public",
+              "openvibe-only"
             ],
             "default": "deny",
-            "description": "Network policy; absent means `deny` (no network at all). Further policies are added to v1 additively, and a worker refuses (`nack`) a policy it does not know."
+            "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+          },
+          "inputs": {
+            "type": "array",
+            "maxItems": 32,
+            "description": "Files placed in the job's working directory before the process starts. Each is an OpenVibe.Media object pinned by digest: a size or digest mismatch ends the job failed before the process ever runs (run.job.input_digest_mismatch). Never a caller-chosen URL and never a credential; the worker holds its own token. Names are unique and carry no path separator.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "media_id",
+                "sha256"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "media_id": {
+                  "type": "string",
+                  "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "size_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
           }
         },
         "allOf": [
@@ -63158,7 +63193,10 @@
               ],
               "properties": {
                 "class": {
-                  "const": "function"
+                  "enum": [
+                    "function",
+                    "code"
+                  ]
                 }
               }
             },
@@ -63187,6 +63225,32 @@
               "mem_bytes": 268435456
             },
             "net": "deny"
+          },
+          {
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPR",
+            "class": "code",
+            "artifact": {
+              "name": "transcode",
+              "version": "0.4.1"
+            },
+            "args": {
+              "format": "webm"
+            },
+            "ttl_ms": 120000,
+            "limits": {
+              "wall_ms": 90000,
+              "cpu_ms": 90000,
+              "mem_bytes": 536870912
+            },
+            "net": "public",
+            "inputs": [
+              {
+                "name": "clip.mp4",
+                "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+                "sha256": "9f86d081884c7d659a2feb15b0b4f8f1c0e6ad1d7e6fd2e1b0b6fd1c4f1d2a3b",
+                "size_bytes": 1048576
+              }
+            ]
           }
         ]
       }

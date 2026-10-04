@@ -52054,7 +52054,7 @@ export type Job = {
   id: string;
   class: RuntimeClass;
   /**
-   * The pre-registered artifact to run; required for class `function`.
+   * The pre-registered artifact to run; required for classes `function` and `code`.
    */
   artifact?: {
     name: string;
@@ -52089,9 +52089,20 @@ export type Job = {
     mem_bytes: number;
   };
   /**
-   * Network policy; absent means `deny` (no network at all). Further policies are added to v1 additively, and a worker refuses (`nack`) a policy it does not know.
+   * Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker.
    */
-  net?: "deny";
+  net?: "deny" | "none" | "public" | "openvibe-only";
+  /**
+   * Files placed in the job's working directory before the process starts. Each is an OpenVibe.Media object pinned by digest: a size or digest mismatch ends the job failed before the process ever runs (run.job.input_digest_mismatch). Never a caller-chosen URL and never a credential; the worker holds its own token. Names are unique and carry no path separator.
+   *
+   * @maxItems 32
+   */
+  inputs?: {
+    name: string;
+    media_id: string;
+    sha256: string;
+    size_bytes?: number;
+  }[];
 };
 
 /** platform.job-frame@1.0.0 (owner: network) */
