@@ -15,6 +15,7 @@ assert.strictEqual(parts.service, 'media');
 assert.strictEqual(c.resources.format(parts), name, 'format is the inverse of parse');
 assert.strictEqual(c.resources.parse(fx('common.resource-name', 'invalid', 'not-an-ovrn.json')), null, 'a non-name parses to null');
 assert.strictEqual(c.resources.parse(42), null);
+assert.strictEqual(c.resources.parse(fx('common.resource-name', 'invalid', 'user-id.json')), null, 'a name whose id is a person parses to null');
 assert.throws(() => c.resources.format({ ...parts, project_id: 'usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4' }), TypeError, 'format refuses segments that make no name');
 for (const f of ['media-object.json', 'zone-object-zone.json', 'run-sandbox.json']) {
     const n = fx('common.resource-name', 'valid', f);
