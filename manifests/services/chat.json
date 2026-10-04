@@ -16,9 +16,15 @@
     "chat.event.publish",
     "chat.live_bridge.write",
     "chat.message.send",
+    "chat.analysis.read",
+    "chat.messages.read",
+    "chat.moderation.queue.read",
     "chat.moderation.read",
     "chat.moderation.write",
-    "chat.presence.read"
+    "chat.presence.read",
+    "chat.sounds.read",
+    "chat.sounds.write",
+    "chat.stats.read"
   ],
   "eventsProduced": [
     "chat.message.created",

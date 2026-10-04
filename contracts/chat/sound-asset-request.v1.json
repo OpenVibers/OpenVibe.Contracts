@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/sound-asset-request.v1.json",
+  "title": "ChatSoundAssetRequest",
+  "description": "chat.sound-asset-request@1: the body of POST /internal/chat/sounds/asset on OpenVibe.Chat (capability chat.sounds.write): after OpenVibe.Live's asset sync uploaded a channel sound to OpenVibe.Media, the asset is written back onto Chat's channel_sounds row id. Writing the same asset again is a no-op; an unknown id is 404. Answers chat.ingress-ack@1.",
+  "type": "object",
+  "required": [
+    "id",
+    "media_url",
+    "media_asset_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "channel_sounds.id"
+    },
+    "media_url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "description": "The asset's OpenVibe.Media URL."
+    },
+    "media_asset_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The OpenVibe.Media asset id."
+    }
+  }
+}

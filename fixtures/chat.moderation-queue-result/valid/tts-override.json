@@ -1,0 +1,11 @@
+{
+  "tts_override": {
+    "identity_key": "user:512",
+    "voice": "en-US-Wavenet-D",
+    "pitch": 2,
+    "speed": 110,
+    "gap": 0,
+    "set_by": 77,
+    "updated_at": "2026-10-01 09:12:55"
+  }
+}

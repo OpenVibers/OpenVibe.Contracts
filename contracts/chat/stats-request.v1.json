@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/stats-request.v1.json",
+  "title": "ChatStatsRequest",
+  "description": "chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.",
+  "type": "object",
+  "required": [
+    "kind"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "site",
+        "user",
+        "stream",
+        "channel-top"
+      ]
+    },
+    "user_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Live user id; required for kind user."
+    },
+    "stream_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Live stream id; required for kind stream."
+    },
+    "channel_user_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The broadcaster whose channel room it is (chat_messages.channel_user_id)."
+    },
+    "since": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count messages at or after this instant (epoch ms)."
+    },
+    "until": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count messages before this instant (epoch ms)."
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "description": "How many top chatters (channel-top); Chat's default is 10."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "user_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "stream"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "stream_id"
+        ]
+      }
+    }
+  ]
+}

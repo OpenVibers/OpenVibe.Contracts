@@ -1,0 +1,21 @@
+{
+  "id": "chat.stats.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Count OpenVibe.Chat's stored messages: all of chat, one person's, one stream's (messages, chatters, soundboard plays) or the top chatters of a stream, a channel or all chat, in an optional time window — the stats OpenVibe.Live shows (home, SEO, admin, star of the day, VOD and recap cards, stream analytics, AI slogans) without reading its own copy of Chat's tables (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/stats"
+  ],
+  "inputSchema": "chat.stats-request@1",
+  "outputSchema": "chat.stats-result@1"
+}
