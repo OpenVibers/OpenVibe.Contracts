@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "seq": 6,
+  "ts": 1759600000006,
+  "type": "telemetry",
+  "battery": {
+    "volts": 7.6,
+    "percent": 81
+  },
+  "sensors": {
+    "distance_cm": 42
+  },
+  "events": [
+    {
+      "name": "low_battery",
+      "ts": 1759600000006
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "seq": 3,
+  "ts": 1759600000003,
+  "type": "command",
+  "id": "cmd_01J8Z4Q9V5X1Z3BD6P9S2T5W7Y",
+  "ref": "op-7",
+  "kind": "drive",
+  "value": {
+    "throttle": 0.5,
+    "steer": 0
+  },
+  "deadline_ms": 1759600000300,
+  "operator": {
+    "subject": "usr_01J8Z4P7T3W9Y1AC5N8R0S4V6X",
+    "role": "owner"
+  },
+  "robot_id": "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X"
+}

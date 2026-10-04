@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/pair-request.v1.json",
+  "title": "BotPairRequest",
+  "description": "bot.pair-request@1: the body of POST /api/v1/pair on OpenVibe.Bot (and the fields of the pair frame on /device): a one-time pairing code (8 Crockford base32 characters, XXXX-XXXX) is its own credential and idempotency. robot narrows the code to one robot (wrong tries are then counted and lock the code); the rest is what the agent declares. With BOT_PAIRING_AUTHORITY=network the codes are Network's and this route answers 410 bot.pairing_moved.",
+  "type": "object",
+  "required": [
+    "code"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "type": "string",
+      "pattern": "^[0-9A-Za-z]{4}-?[0-9A-Za-z]{4}$"
+    },
+    "robot": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "agent_version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 40
+    },
+    "device_kind": {
+      "enum": [
+        "onboard",
+        "bridge",
+        "server"
+      ]
+    },
+    "drivers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilities": {
+      "type": "object"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    }
+  }
+}

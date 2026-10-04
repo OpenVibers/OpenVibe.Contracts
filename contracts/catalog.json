@@ -5741,6 +5741,126 @@
       "status": "active"
     },
     {
+      "id": "bot.robot-profile",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-profile.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.device-message",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/device-message.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.command",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/command.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.command-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/command-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.robot-read-request",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-read-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.pair-request",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/pair-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.pair-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/pair-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.robot.online",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.robot.online.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.robot.offline",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.robot.offline.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.estop.set",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.estop.set.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.estop.cleared",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.estop.cleared.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.command.refused",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "events/payloads/bot.command.refused.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
       "id": "run.job-create-request",
       "version": "1.0.0",
       "owner": "run",

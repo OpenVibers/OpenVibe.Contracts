@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bot.command.refused.v1.json",
+  "title": "BotCommandRefusedPayload",
+  "description": "bot.command.refused v1 (OpenVibe.Bot server/domain/index.js auditCommand). The gate refused a command (role, allowlist, limits, policy, e-stop, cooldown, turn, device offline) or a device reported an e-stop for a robot it is not attached to (kind estop_state). reason is Bot's refusal code; ids, kinds and codes only, never the value. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.",
+  "type": "object",
+  "required": [
+    "robot_id",
+    "kind",
+    "reason",
+    "role"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^bot\\.[a-z_]+$"
+    },
+    "role": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

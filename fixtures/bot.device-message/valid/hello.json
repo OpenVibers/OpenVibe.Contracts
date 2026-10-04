@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 1,
+  "ts": 1759600000001,
+  "type": "hello",
+  "session_id": "ses_1",
+  "device_id": "dev_01J8Z4N5S2V8X0ZB4M7Q9R3T5W",
+  "robot_ids": [
+    "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X"
+  ],
+  "server_time": "2026-10-04T12:00:00.000Z"
+}

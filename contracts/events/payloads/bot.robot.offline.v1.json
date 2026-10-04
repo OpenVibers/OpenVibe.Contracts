@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bot.robot.offline.v1.json",
+  "title": "BotRobotOfflinePayload",
+  "description": "bot.robot.offline v1 (OpenVibe.Bot server/domain/index.js setOnline). The device missed two heartbeats plus the grace window, or its socket closed; one event per robot it is attached to. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.",
+  "type": "object",
+  "required": [
+    "robot_id",
+    "device_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+    }
+  }
+}

@@ -82,5 +82,5 @@
       "none": "no expiring work claims: PostgreSQL row locks serialize queue changes and an advisory lock serializes boot migrations; WebSocket sessions are in memory"
     }
   },
-  "notes": "Robot and device control service on openvibe-ovh since 2026-10-02; the public site uses HTTPS while health and readiness are loopback-only."
+  "notes": "Robot and device control service on openvibe-ovh since 2026-10-02; the public site uses HTTPS while health and readiness are loopback-only. Non-HTTP bindings: the device WebSocket /device carries bot.device-message@1 frames (and platform.job-frame@1 jobs); the operator WebSocket /control carries bot.command@1, answered by bot.command-result@1."
 }

@@ -4,6 +4,32 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.93.0 — 2026-10-04
+
+**OpenVibe.Bot's profiles, device protocol, operator commands, pairing and events** (plan T15 R7; ADR-043). The Bot
+manifest and its capabilities came in 0.85.0; this adds the contracts Bot's code already speaks, taken from Bot
+`155accc` and OpenVibe.Node `1ebf1a7`. Additive: every contract id is new.
+- `bot.robot-profile@1` (public): a profile as `server/profiles/*.json` ships it and `GET /api/v1/profiles` serves it
+  (null vendor, kind, description, variants and camera; defaulted limits; `halt` always in `commands`). The per-kind
+  `commands` schema is Bot's (`drive`/`ptz` axes, `actuator` number, rgb, tone and bool, `say`, `display`); capability
+  and widget names stay open strings.
+- `bot.device-message@1`: one frame on the `/device` WebSocket, `v`, `seq`, `ts` on every frame. Server to device:
+  `hello`, `config`, `command`, `estop`, `heartbeat_ack`, `error`, `paired`, `rotate`; device to server: `pair`,
+  `status`, `telemetry`, `ack`, `nack`, `heartbeat`, `reauth`, `estop_state`. Job frames stay `platform.job-frame@1`.
+  The description names both implementations (Bot `server/realtime.js`, Node `internal/protocol/protocol.go`).
+- `bot.command@1` and `bot.command-result@1`: the `/control` command frame and its `command_result` answer (`ack`,
+  `nack`, `refused` with Bot's refusal code, `expired`, `pending`; `cached` for a repeated id).
+- `bot.robot-read-request@1`: the query of `bot.robot.read` (`owner`, and `limit`/`before` for the audit page); it is
+  now that capability's input, so its OpenAPI routes list the query parameters.
+- `bot.pair-request@1` and `bot.pair-result@1`: `POST /api/v1/pair` and `POST /api/v1/devices/bind`. The credential,
+  the publish key and the WHIP URL are shown once; without OpenRe the answer says `video: not_configured`.
+- Event payloads for the five events Bot produces: `bot.robot.online` and `bot.robot.offline` (`robot_id`,
+  `device_id`), `bot.estop.set` and `bot.estop.cleared` (`robot_id`, `by`, `principal_kind`), `bot.command.refused`
+  (`robot_id`, `kind`, `reason`, `role`; never the value).
+- `bot.robot.control` lists its `/control` WebSocket bindings (`command`, `estop`, `estop_clear`) as notes, and the
+  events they emit (`bot.estop.cleared`, `bot.command.refused`); the Bot manifest's notes name both WebSockets' contracts.
+- New `test/bot-manifest.test.js`: the manifest's capabilities and events equal Bot's `STATUS.json` lists.
+
 ## 0.92.0 — 2026-10-04
 
 `platform.job@1` gains `inputs` (Media objects pinned by sha256) and the `net` values `none`, `public`, `openvibe-only`.

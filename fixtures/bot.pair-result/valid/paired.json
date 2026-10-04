@@ -1,0 +1,137 @@
+{
+  "device_id": "dev_01J8Z4N5S2V8X0ZB4M7Q9R3T5W",
+  "credential": "example-credential-shown-once",
+  "publish_key": "example-publish-key-shown-once",
+  "whip_url": "https://ingest.openre.stream/whip/example-publish-key-shown-once",
+  "robot_id": "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+  "profile": {
+    "id": "adeept.adr036",
+    "version": 1,
+    "name": "Adeept ADR036 4WD Smart Car",
+    "vendor": "Adeept",
+    "kind": "onboard",
+    "capabilities": [
+      "drive.differential",
+      "servo.pan_tilt",
+      "lights.rgb",
+      "speaker.horn",
+      "sensor.ultrasonic",
+      "battery"
+    ],
+    "mapping": {
+      "driver": "pca9685",
+      "plugin": "adeept_adr036",
+      "wheels": "ordinary",
+      "i2c_bus": 1,
+      "address": "0x5f",
+      "motor_channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "servo_channels": {
+        "pan": 0,
+        "tilt": 1
+      },
+      "battery": {
+        "driver": "ads7830",
+        "address": "0x48"
+      },
+      "lights": "ws2812",
+      "horn": "buzzer"
+    },
+    "commands": {
+      "drive": {
+        "axes": {
+          "throttle": [
+            -1,
+            1
+          ],
+          "steer": [
+            -1,
+            1
+          ]
+        }
+      },
+      "actuator": {
+        "names": {
+          "pan": {
+            "type": "number",
+            "range": [
+              -1,
+              1
+            ]
+          },
+          "tilt": {
+            "type": "number",
+            "range": [
+              -1,
+              1
+            ]
+          },
+          "buzzer": {
+            "type": "tone",
+            "hz": [
+              220,
+              880
+            ]
+          },
+          "lights": {
+            "type": "rgb",
+            "count": 8
+          }
+        }
+      }
+    },
+    "widgets": [
+      {
+        "type": "drive",
+        "capability": "drive.differential",
+        "label": "Drive",
+        "order": 1,
+        "command": {
+          "kind": "drive"
+        }
+      },
+      {
+        "type": "pan-tilt",
+        "capability": "servo.pan_tilt",
+        "label": "Pan / tilt",
+        "order": 2,
+        "command": {
+          "kind": "actuator",
+          "names": [
+            "pan",
+            "tilt"
+          ]
+        }
+      },
+      {
+        "type": "battery",
+        "capability": "battery",
+        "label": "Battery",
+        "order": 3
+      },
+      {
+        "type": "latency",
+        "label": "Latency",
+        "order": 4
+      }
+    ],
+    "camera": {
+      "transport": "whip",
+      "resolution": "640x480"
+    },
+    "limits": {
+      "max_speed": 1,
+      "max_turn": 1,
+      "max_command_ms": 300,
+      "heartbeat_ms": 1000
+    }
+  }
+}

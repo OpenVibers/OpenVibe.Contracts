@@ -1,0 +1,889 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/device-message.v1.json",
+  "title": "BotDeviceMessage",
+  "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state. The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).",
+  "oneOf": [
+    {
+      "description": "Server to device, once authenticated.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "session_id",
+        "device_id",
+        "robot_ids",
+        "server_time"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "hello"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string",
+          "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "robot_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        },
+        "server_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    {
+      "description": "Server to device: the effective limits (the owner's clamped by the profile's), the kinds the profile takes and the latch; sent again when any of them changes.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "heartbeat_ms",
+        "limits",
+        "allowed_commands",
+        "estop_latched"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "config"
+        },
+        "heartbeat_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "limits": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "max_speed": {
+              "type": "number"
+            },
+            "max_turn": {
+              "type": "number"
+            },
+            "max_command_ms": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "heartbeat_ms": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "allowed_commands": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "drive",
+              "actuator",
+              "ptz",
+              "say",
+              "display",
+              "halt"
+            ]
+          }
+        },
+        "estop_latched": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "description": "Server to device: id is minted by Bot (the device's idempotency key), ref is the operator's own id. Never queued for an offline device, never replayed.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "command"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "drive",
+            "actuator",
+            "ptz",
+            "say",
+            "display",
+            "halt"
+          ]
+        },
+        "value": {
+          "type": "object"
+        },
+        "deadline_ms": {
+          "type": "integer",
+          "description": "Absolute deadline, epoch milliseconds; the device stops the motion at it."
+        },
+        "operator": {
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "subject": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "role": {
+              "type": "string"
+            }
+          }
+        },
+        "robot_id": {
+          "type": "string",
+          "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "target": {
+          "type": "string",
+          "description": "OpenVibe.Node only: the driver to send it to."
+        }
+      }
+    },
+    {
+      "description": "Server to device: the latch moved (true sets it, false is the owner clearing it).",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "latched"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "estop"
+        },
+        "latched": {
+          "type": "boolean"
+        },
+        "by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    {
+      "description": "Server to device: echo and t carry the device's t back.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "heartbeat_ack"
+        },
+        "t": {
+          "type": "integer"
+        },
+        "echo": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "server_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    {
+      "description": "Server to device: a refused frame (bot.not_paired, bot.bad_frame, …).",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "code"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "error"
+        },
+        "code": {
+          "type": "string"
+        },
+        "detail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Server to device: the answer to pair; the same fields as POST /api/v1/pair (bot.pair-result@1).",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "device_id",
+        "credential",
+        "robot_ids"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "paired"
+        },
+        "device_id": {
+          "type": "string",
+          "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "credential": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Shown once."
+        },
+        "publish_key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Shown once."
+        },
+        "whip_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Carries the publish key: shown once."
+        },
+        "video": {
+          "const": "not_configured"
+        },
+        "robot_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        },
+        "profile_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "robot-profile.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Server to device: a Network-paired machine rotates its credential with Network.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "rotate"
+        }
+      }
+    },
+    {
+      "description": "Device to server: redeem a one-time code (bot.pair-request@1).",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "code"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "pair"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "robot": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "agent_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "device_kind": {
+          "enum": [
+            "onboard",
+            "bridge",
+            "server"
+          ]
+        },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capabilities": {
+          "type": "object"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Device to server: what the agent runs; OpenVibe.Node sends drivers as objects, older agents as names.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "status"
+        },
+        "firmware": {
+          "type": "string"
+        },
+        "capabilities": {
+          "type": "object"
+        },
+        "agent_version": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "device_kind": {
+          "enum": [
+            "onboard",
+            "bridge",
+            "server"
+          ]
+        },
+        "os": {
+          "type": "string"
+        },
+        "arch": {
+          "type": "string"
+        },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "name",
+                  "state"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "driver": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "capabilities": {
+                    "type": "object"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "faults": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "driver": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "estop_latched": {
+          "type": "boolean"
+        },
+        "local_stop": {
+          "type": "boolean"
+        },
+        "video": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Device to server: samples at most 2 Hz; a frame with events is never dropped.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "telemetry"
+        },
+        "battery": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "object",
+              "required": [],
+              "additionalProperties": false,
+              "properties": {
+                "volts": {
+                  "type": "number"
+                },
+                "percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          ]
+        },
+        "voltage": {
+          "type": "number"
+        },
+        "rssi": {
+          "type": "integer"
+        },
+        "sensors": {
+          "type": "object"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "ts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "driver": {
+                "type": "string"
+              },
+              "ts": {
+                "type": "integer"
+              },
+              "fields": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Device to server: the command ran.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "ack"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "description": "Device to server: the command was refused, with OpenVibe.Node's fault code (bad_value, estopped, local_stop, expired, …).",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "fault_code"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "nack"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fault_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Device to server, every heartbeat_ms.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "heartbeat"
+        },
+        "t": {
+          "type": "integer"
+        },
+        "rtt_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "description": "Device to server: a Network-paired machine's fresh node token, before the last one expires.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "token"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "reauth"
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    {
+      "description": "Device to server: the device's own latch; a device may set the e-stop, never clear the owner's.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "latched"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "estop_state"
+        },
+        "latched": {
+          "type": "boolean"
+        },
+        "by": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "robot_id": {
+          "type": "string",
+          "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "local_stop": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

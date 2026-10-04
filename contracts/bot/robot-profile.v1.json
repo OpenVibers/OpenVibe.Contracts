@@ -1,0 +1,424 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot-profile.v1.json",
+  "title": "BotRobotProfile",
+  "description": "bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver.",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "name",
+    "capabilities",
+    "mapping",
+    "widgets"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{1,63}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vendor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "onboard",
+        "bridge",
+        "server",
+        null
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$"
+      }
+    },
+    "variants": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "required": [
+        "driver"
+      ],
+      "properties": {
+        "driver": {
+          "enum": [
+            "pca9685",
+            "ads7830",
+            "cozmo",
+            "onvif",
+            "sim"
+          ]
+        },
+        "plugin": {
+          "type": "string"
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "drive": {
+          "type": "object",
+          "required": [
+            "axes"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "axes": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": false,
+              "properties": {
+                "throttle": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "steer": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "x": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "y": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "rotation": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ptz": {
+          "type": "object",
+          "required": [
+            "axes"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "axes": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": false,
+              "properties": {
+                "pan": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "tilt": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "zoom": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "actuator": {
+          "type": "object",
+          "required": [
+            "names"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "names": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "pattern": "^[a-z][a-z0-9_]{0,23}$"
+              },
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "range"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": {
+                        "const": "number"
+                      },
+                      "range": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": {
+                        "const": "rgb"
+                      },
+                      "count": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "hz"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": {
+                        "const": "tone"
+                      },
+                      "hz": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": {
+                        "const": "bool"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "say": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "max_chars": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "display": {
+          "type": "object",
+          "required": [
+            "modes"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "modes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "enum": [
+                  "text",
+                  "face",
+                  "image_png_b64"
+                ]
+              }
+            },
+            "faces": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,23}$"
+              }
+            },
+            "max_chars": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "halt": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {}
+        }
+      }
+    },
+    "widgets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "capability": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "order": {
+            "type": "integer"
+          },
+          "command": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "drive",
+                  "actuator",
+                  "ptz",
+                  "say",
+                  "display",
+                  "halt"
+                ]
+              },
+              "names": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,23}$"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "camera": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "transport": {
+          "enum": [
+            "whip",
+            "onvif",
+            "rtsp"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "pattern": "^[0-9]+x[0-9]+$"
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "max_speed": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_turn": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_command_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "heartbeat_ms": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

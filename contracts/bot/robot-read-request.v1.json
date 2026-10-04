@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/robot-read-request.v1.json",
+  "title": "BotRobotReadRequest",
+  "description": "bot.robot-read-request@1: the query of bot.robot.read on OpenVibe.Bot (server/api/v1.js); the routes take no body. owner names whose robots GET /api/v1/robots lists (a service must give it; a person may give only their own subject). limit (1 to 200, default 50) and before (the last audit id seen) page GET …/robots/:id/audit.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200
+    },
+    "before": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

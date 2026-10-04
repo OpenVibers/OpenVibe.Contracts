@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bot.estop.cleared.v1.json",
+  "title": "BotEstopClearedPayload",
+  "description": "bot.estop.cleared v1 (OpenVibe.Bot server/domain/index.js writeEstop via clearEstop). The owner cleared the latched e-stop (only the owner can); principal_kind is user, and Bot sends by as null. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.",
+  "type": "object",
+  "required": [
+    "robot_id",
+    "by",
+    "principal_kind"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "principal_kind": {
+      "enum": [
+        "user",
+        "service",
+        "device"
+      ]
+    }
+  }
+}

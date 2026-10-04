@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/pair-result.v1.json",
+  "title": "BotPairResult",
+  "description": "bot.pair-result@1: the 201 answers of OpenVibe.Bot's pairing routes (server/api/v1.js). POST /api/v1/pair → { device_id, credential, publish_key, whip_url?, robot_id, profile }; POST /api/v1/devices/bind (a Network node token) → the same without credential. The credential, the publish key and the WHIP URL are shown once and never again. Without OpenRe configured there is no key: video is not_configured instead.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "device_id",
+        "publish_key",
+        "robot_id",
+        "profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "type": "string",
+          "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "robot_id": {
+          "type": "string",
+          "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "robot-profile.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "credential": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The device credential: shown once (Bot keeps only its hash)."
+        },
+        "publish_key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The WHIP publish key, an ingest key OpenRe issued for the robot's stream: shown once."
+        },
+        "whip_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Where the device publishes its camera (BOT_WHIP_BASE/<publish key>); it carries the key, so it is shown once too. Absent when BOT_WHIP_BASE is unset."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "device_id",
+        "video",
+        "robot_id",
+        "profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "type": "string",
+          "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "robot_id": {
+          "type": "string",
+          "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "robot-profile.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "credential": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The device credential: shown once (Bot keeps only its hash)."
+        },
+        "video": {
+          "const": "not_configured"
+        }
+      }
+    }
+  ]
+}

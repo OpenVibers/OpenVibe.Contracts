@@ -52751,6 +52751,519 @@ export type BotDeviceConnectResult =
       device: BotDevice;
     };
 
+/** bot.robot-profile@1.0.0 (owner: bot) */
+/**
+ * bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver.
+ */
+export interface BotRobotProfile {
+  id: string;
+  version: number;
+  name: string;
+  vendor?: string | null;
+  kind?: "onboard" | "bridge" | "server" | null;
+  description?: string | null;
+  /**
+   * @minItems 1
+   */
+  capabilities: [string, ...string[]];
+  variants?: {
+    [k: string]: {} | undefined;
+  } | null;
+  mapping: {
+    driver: "pca9685" | "ads7830" | "cozmo" | "onvif" | "sim";
+    plugin?: string;
+  };
+  commands?: {
+    drive?: {
+      axes: {
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        throttle?: [number, number];
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        steer?: [number, number];
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        x?: [number, number];
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        y?: [number, number];
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        rotation?: [number, number];
+      };
+    };
+    ptz?: {
+      axes: {
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        pan?: [number, number];
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        tilt?: [number, number];
+        /**
+         * @minItems 2
+         * @maxItems 2
+         */
+        zoom?: [number, number];
+      };
+    };
+    actuator?: {
+      names: {
+        [k: string]:
+          | (
+              | {
+                  type: "number";
+                  /**
+                   * @minItems 2
+                   * @maxItems 2
+                   */
+                  range: [number, number];
+                }
+              | {
+                  type: "rgb";
+                  count?: number;
+                }
+              | {
+                  type: "tone";
+                  /**
+                   * @minItems 2
+                   * @maxItems 2
+                   */
+                  hz: [number, number];
+                }
+              | {
+                  type: "bool";
+                }
+            )
+          | undefined;
+      };
+    };
+    say?: {
+      max_chars?: number;
+    };
+    display?: {
+      /**
+       * @minItems 1
+       */
+      modes: ["text" | "face" | "image_png_b64", ...("text" | "face" | "image_png_b64")[]];
+      faces?: string[];
+      max_chars?: number;
+    };
+    halt?: {};
+  };
+  /**
+   * @minItems 1
+   */
+  widgets: [
+    {
+      type: string;
+      capability?: string;
+      label?: string;
+      order?: number;
+      command?: {
+        kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+        /**
+         * @minItems 1
+         */
+        names?: [string, ...string[]];
+      };
+    },
+    ...{
+      type: string;
+      capability?: string;
+      label?: string;
+      order?: number;
+      command?: {
+        kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+        /**
+         * @minItems 1
+         */
+        names?: [string, ...string[]];
+      };
+    }[]
+  ];
+  camera?: {
+    transport?: "whip" | "onvif" | "rtsp";
+    resolution?: string;
+  } | null;
+  limits?: {
+    max_speed?: number;
+    max_turn?: number;
+    max_command_ms?: number;
+    heartbeat_ms?: number;
+  };
+}
+
+/** bot.device-message@1.0.0 (owner: bot) */
+/**
+ * bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state. The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).
+ */
+export type BotDeviceMessage =
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "hello";
+      session_id: string;
+      device_id: string;
+      robot_ids: string[];
+      server_time: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "config";
+      heartbeat_ms: number;
+      limits: {
+        max_speed?: number;
+        max_turn?: number;
+        max_command_ms?: number;
+        heartbeat_ms?: number;
+      };
+      allowed_commands: ("drive" | "actuator" | "ptz" | "say" | "display" | "halt")[];
+      estop_latched: boolean;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "command";
+      id: string;
+      ref?: string;
+      kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+      value?: {};
+      /**
+       * Absolute deadline, epoch milliseconds; the device stops the motion at it.
+       */
+      deadline_ms?: number;
+      operator?: {
+        subject?: string | null;
+        role: string;
+      };
+      robot_id?: string;
+      /**
+       * OpenVibe.Node only: the driver to send it to.
+       */
+      target?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "estop";
+      latched: boolean;
+      by?: string | null;
+      at?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "heartbeat_ack";
+      t?: number;
+      echo?: number | null;
+      server_time?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "error";
+      code: string;
+      detail?: string | null;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "paired";
+      device_id: string;
+      /**
+       * Shown once.
+       */
+      credential: string;
+      /**
+       * Shown once.
+       */
+      publish_key?: string;
+      /**
+       * Carries the publish key: shown once.
+       */
+      whip_url?: string;
+      video?: "not_configured";
+      robot_ids: string[];
+      profile_id?: string | null;
+      profile?: BotRobotProfile | null;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "rotate";
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "pair";
+      code: string;
+      robot?: string | null;
+      agent_version?: string | null;
+      device_kind?: "onboard" | "bridge" | "server";
+      drivers?: string[];
+      capabilities?: {};
+      name?: string | null;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "status";
+      firmware?: string;
+      capabilities?: {};
+      agent_version?: string;
+      device_kind?: "onboard" | "bridge" | "server";
+      os?: string;
+      arch?: string;
+      drivers?: (
+        | string
+        | {
+            name: string;
+            driver?: string;
+            version?: string;
+            state: string;
+            capabilities?: {};
+          }
+      )[];
+      faults?: {
+        code: string;
+        driver?: string;
+        message?: string;
+      }[];
+      estop_latched?: boolean;
+      local_stop?: boolean;
+      video?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "telemetry";
+      battery?:
+        | number
+        | {
+            volts?: number;
+            percent?: number;
+          };
+      voltage?: number;
+      rssi?: number;
+      sensors?: {};
+      events?: {
+        name: string;
+        driver?: string;
+        ts: number;
+        fields?: {};
+      }[];
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "ack";
+      id: string;
+      latency_ms?: number;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "nack";
+      id: string;
+      fault_code: string;
+      message?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "heartbeat";
+      t?: number;
+      rtt_ms?: number;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "reauth";
+      token: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "estop_state";
+      latched: boolean;
+      by?: string;
+      at?: string;
+      robot_id?: string;
+      local_stop?: boolean;
+      reason?: string;
+    };
+
+/** bot.command@1.0.0 (owner: bot) */
+/**
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1).
+ */
+export interface BotCommand {
+  v?: 1;
+  seq?: number;
+  ts?: number;
+  type: "command";
+  id?: string;
+  kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+  value?: {};
+  ms?: number;
+}
+
+/** bot.command-result@1.0.0 (owner: bot) */
+/**
+ * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result.
+ */
+export interface BotCommandResult {
+  v: 1;
+  seq: number;
+  ts: number;
+  type: "command_result";
+  id: string;
+  result: "ack" | "nack" | "refused" | "expired" | "pending";
+  reason?: string | null;
+  code?: string;
+  latency_ms?: number;
+  cached?: boolean;
+}
+
+/** bot.robot-read-request@1.0.0 (owner: bot) */
+/**
+ * bot.robot-read-request@1: the query of bot.robot.read on OpenVibe.Bot (server/api/v1.js); the routes take no body. owner names whose robots GET /api/v1/robots lists (a service must give it; a person may give only their own subject). limit (1 to 200, default 50) and before (the last audit id seen) page GET …/robots/:id/audit.
+ */
+export interface BotRobotReadRequest {
+  owner?: string;
+  limit?: number;
+  before?: number;
+}
+
+/** bot.pair-request@1.0.0 (owner: bot) */
+/**
+ * bot.pair-request@1: the body of POST /api/v1/pair on OpenVibe.Bot (and the fields of the pair frame on /device): a one-time pairing code (8 Crockford base32 characters, XXXX-XXXX) is its own credential and idempotency. robot narrows the code to one robot (wrong tries are then counted and lock the code); the rest is what the agent declares. With BOT_PAIRING_AUTHORITY=network the codes are Network's and this route answers 410 bot.pairing_moved.
+ */
+export interface BotPairRequest {
+  code: string;
+  robot?: string | null;
+  agent_version?: string | null;
+  device_kind?: "onboard" | "bridge" | "server";
+  drivers?: string[];
+  capabilities?: {};
+  name?: string | null;
+}
+
+/** bot.pair-result@1.0.0 (owner: bot) */
+/**
+ * bot.pair-result@1: the 201 answers of OpenVibe.Bot's pairing routes (server/api/v1.js). POST /api/v1/pair → { device_id, credential, publish_key, whip_url?, robot_id, profile }; POST /api/v1/devices/bind (a Network node token) → the same without credential. The credential, the publish key and the WHIP URL are shown once and never again. Without OpenRe configured there is no key: video is not_configured instead.
+ */
+export type BotPairResult =
+  | {
+      device_id: string;
+      robot_id: string;
+      profile: BotRobotProfile | null;
+      /**
+       * The device credential: shown once (Bot keeps only its hash).
+       */
+      credential?: string;
+      /**
+       * The WHIP publish key, an ingest key OpenRe issued for the robot's stream: shown once.
+       */
+      publish_key: string;
+      /**
+       * Where the device publishes its camera (BOT_WHIP_BASE/<publish key>); it carries the key, so it is shown once too. Absent when BOT_WHIP_BASE is unset.
+       */
+      whip_url?: string;
+    }
+  | {
+      device_id: string;
+      robot_id: string;
+      profile: BotRobotProfile | null;
+      /**
+       * The device credential: shown once (Bot keeps only its hash).
+       */
+      credential?: string;
+      video: "not_configured";
+    };
+
+/** bot.robot.online@1.0.0 (owner: bot) */
+/**
+ * bot.robot.online v1 (OpenVibe.Bot server/domain/index.js setOnline). A device authenticated on /device and serves the robot; one event per robot it is attached to. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ */
+export interface BotRobotOnlinePayload {
+  robot_id: string;
+  device_id: string;
+}
+
+/** bot.robot.offline@1.0.0 (owner: bot) */
+/**
+ * bot.robot.offline v1 (OpenVibe.Bot server/domain/index.js setOnline). The device missed two heartbeats plus the grace window, or its socket closed; one event per robot it is attached to. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ */
+export interface BotRobotOfflinePayload {
+  robot_id: string;
+  device_id: string;
+}
+
+/** bot.estop.set@1.0.0 (owner: bot) */
+/**
+ * bot.estop.set v1 (OpenVibe.Bot server/domain/index.js writeEstop). The e-stop latched. by is the user subject, the service token's sub or the device id that set it; principal_kind says which. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ */
+export interface BotEstopSetPayload {
+  robot_id: string;
+  by: string | null;
+  principal_kind: "user" | "service" | "device";
+}
+
+/** bot.estop.cleared@1.0.0 (owner: bot) */
+/**
+ * bot.estop.cleared v1 (OpenVibe.Bot server/domain/index.js writeEstop via clearEstop). The owner cleared the latched e-stop (only the owner can); principal_kind is user, and Bot sends by as null. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ */
+export interface BotEstopClearedPayload {
+  robot_id: string;
+  by: string | null;
+  principal_kind: "user" | "service" | "device";
+}
+
+/** bot.command.refused@1.0.0 (owner: bot) */
+/**
+ * bot.command.refused v1 (OpenVibe.Bot server/domain/index.js auditCommand). The gate refused a command (role, allowlist, limits, policy, e-stop, cooldown, turn, device offline) or a device reported an e-stop for a robot it is not attached to (kind estop_state). reason is Bot's refusal code; ids, kinds and codes only, never the value. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ */
+export interface BotCommandRefusedPayload {
+  robot_id: string;
+  kind: string | null;
+  reason: string | null;
+  role: string | null;
+}
+
 /** run.job-create-request@1.0.0 (owner: run) */
 /**
  * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.

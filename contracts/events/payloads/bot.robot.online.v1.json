@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bot.robot.online.v1.json",
+  "title": "BotRobotOnlinePayload",
+  "description": "bot.robot.online v1 (OpenVibe.Bot server/domain/index.js setOnline). A device authenticated on /device and serves the robot; one event per robot it is attached to. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.",
+  "type": "object",
+  "required": [
+    "robot_id",
+    "device_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "robot_id": {
+      "type": "string",
+      "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+    }
+  }
+}

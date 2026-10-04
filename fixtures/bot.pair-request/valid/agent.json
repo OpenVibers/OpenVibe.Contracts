@@ -1,0 +1,16 @@
+{
+  "code": "K7QM-3XRT",
+  "robot": "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+  "agent_version": "0.1.2",
+  "device_kind": "onboard",
+  "drivers": [
+    "pca9685",
+    "ads7830"
+  ],
+  "capabilities": {
+    "pca9685": {
+      "channels": 16
+    }
+  },
+  "name": "garage pi"
+}

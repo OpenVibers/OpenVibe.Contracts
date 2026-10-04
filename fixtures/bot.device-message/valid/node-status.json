@@ -1,0 +1,28 @@
+{
+  "v": 1,
+  "seq": 4,
+  "ts": 1759600000004,
+  "type": "status",
+  "firmware": "0.1.2",
+  "capabilities": {
+    "adeept_adr036": {
+      "drive": true
+    }
+  },
+  "agent_version": "0.1.2",
+  "device_kind": "onboard",
+  "os": "linux",
+  "arch": "arm64",
+  "drivers": [
+    {
+      "name": "adeept_adr036",
+      "driver": "pca9685",
+      "version": "0.1.2",
+      "state": "running"
+    }
+  ],
+  "faults": [],
+  "estop_latched": false,
+  "local_stop": false,
+  "video": "whip"
+}
