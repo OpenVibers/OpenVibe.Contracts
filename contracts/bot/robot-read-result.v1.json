@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/robot-read-result.v1.json",
   "title": "BotRobotReadResult",
-  "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot. GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role } (role \"service\" for a service token); GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online).",
+  "description": "bot.robot-read-result@1: answers of bot.robot.read on OpenVibe.Bot (a service token needs no acting subject: only GET …/robots needs ?owner=). GET /api/v1/robots?owner= → { robots }; GET …/robots/:id → { robot, role }; GET …/robots/:id/operators → { operators }; GET …/robots/:id/devices → { devices } (no hashes, with online); GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first).",
   "anyOf": [
     {
       "type": "object",
@@ -89,6 +89,99 @@
           "type": "array",
           "items": {
             "$ref": "device.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "audit",
+        "next_before"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "next_before": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "audit": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "robot_id",
+              "kind",
+              "result",
+              "at"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "robot_id": {
+                "type": "string",
+                "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "device_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operator_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operator_kind": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "role": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "kind": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "value": {},
+              "result": {
+                "enum": [
+                  "ack",
+                  "nack",
+                  "refused",
+                  "expired"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "latency_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
           }
         }
       }
