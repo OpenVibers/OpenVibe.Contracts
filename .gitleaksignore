@@ -1,0 +1,13 @@
+# Findings in history that are proven sample values, ignored by exact fingerprint (commit:file:rule:line). The full-history
+# scan on main (OpenVibe.Shared's security workflow) re-reads old commits, where a path+value allowlist added later does not
+# reach. Each line here is a test fixture, never a credential.
+#
+# run.job-stream-ticket-result fixtures: sample stream-ticket JWTs whose payload is {"job":"job_01"} (c47fddc, fdd45a4).
+c47fddcc457c732cd29b35fcaa472859cd9ed3e0:fixtures/run.job-stream-ticket-result/invalid/long-lived.json:jwt:2
+c47fddcc457c732cd29b35fcaa472859cd9ed3e0:fixtures/run.job-stream-ticket-result/invalid/other-stream-url.json:jwt:2
+c47fddcc457c732cd29b35fcaa472859cd9ed3e0:fixtures/run.job-stream-ticket-result/valid/ticket.json:jwt:2
+fdd45a4a99dfe704f1713d19d1a3a505b7583f9c:fixtures/run.job-stream-ticket-result/invalid/long-lived.json:jwt:2
+fdd45a4a99dfe704f1713d19d1a3a505b7583f9c:fixtures/run.job-stream-ticket-result/invalid/other-stream-url.json:jwt:2
+fdd45a4a99dfe704f1713d19d1a3a505b7583f9c:fixtures/run.job-stream-ticket-result/valid/ticket.json:jwt:2
+# common.resource-control-request: a sample idempotency key (a caller-chosen dedupe token, not a secret) in e22c068.
+e22c068e746959669bea29e81042d47234776c04:fixtures/common.resource-control-request/valid/dry-run-resize.json:generic-api-key:8
