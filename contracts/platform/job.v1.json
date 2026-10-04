@@ -25,7 +25,7 @@
     "artifact": {
       "type": "object",
       "additionalProperties": false,
-      "description": "The pre-registered artifact to run; required for classes `function` and `code`.",
+      "description": "The pre-registered artifact to run; required for class `function`.",
       "required": [
         "name",
         "version"
@@ -130,10 +130,7 @@
         ],
         "properties": {
           "class": {
-            "enum": [
-              "function",
-              "code"
-            ]
+            "const": "function"
           }
         }
       },

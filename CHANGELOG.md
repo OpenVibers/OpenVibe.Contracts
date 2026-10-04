@@ -6,8 +6,8 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.92.0 — 2026-10-04
 
-`platform.job@1` gains `inputs` (Media objects pinned by sha256) and the `net` values `none`, `public`, `openvibe-only`;
-`code` now requires an artifact. Additive; a v1 worker still refuses an unknown `net` with `nack`.
+`platform.job@1` gains `inputs` (Media objects pinned by sha256) and the `net` values `none`, `public`, `openvibe-only`.
+Additive; a v1 worker still refuses an unknown `net` with `nack`.
 
 ## 0.91.0 — 2026-10-04
 
