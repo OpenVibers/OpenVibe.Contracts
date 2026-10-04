@@ -4559,7 +4559,7 @@
     },
     {
       "id": "chat.send-result",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "chat",
       "schema": "chat/send-result.v1.json",
       "visibility": "first-party",
@@ -4634,6 +4634,69 @@
       "version": "1.0.0",
       "owner": "chat",
       "schema": "chat/emote-count-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.stats-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/stats-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.stats-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/stats-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.messages-page",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/messages-page.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.timeline-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/timeline-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.moderation-queue-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/moderation-queue-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.sounds-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/sounds-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.sound-asset-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/sound-asset-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

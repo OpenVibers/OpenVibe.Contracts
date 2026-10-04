@@ -129,6 +129,50 @@
    }
   },
   "/internal/chat/messages": {
+   "get": {
+    "operationId": "get_internal_chat_messages",
+    "summary": "Page OpenVibe.Chat's stored messages of one channel, stream, person, anonymous id or name, or read one by id, with a cursor on the message id and the latest id: for OpenVibe.Live's AI context, clip an",
+    "description": "**chat.messages.read** (internal): Page OpenVibe.Chat's stored messages of one channel, stream, person, anonymous id or name, or read one by id, with a cursor on the message id and the latest id: for OpenVibe.Live's AI context, clip and viewer jobs and its moderator search and history (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.messages"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.messages.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.messages.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.messages-page.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   },
    "post": {
     "operationId": "post_internal_chat_messages",
     "summary": "Send a chat message to a room the actor is a member of (browsers over the chat socket; first-party services over Chat's service API).",
@@ -223,6 +267,404 @@
        "application/json": {
         "schema": {
          "$ref": "#/components/schemas/chat.moderation-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/moderation/pending-ip": {
+   "get": {
+    "operationId": "get_internal_chat_moderation_pending_ip",
+    "summary": "Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's ",
+    "description": "**chat.moderation.queue.read** (internal): Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's TTS voice override (plan T3, J4b). Internal: rows carry IP addresses. chat.moderation.read stays the channel settings and moderators read. Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.moderation"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.moderation.queue.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.moderation.queue.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.moderation-queue-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/moderation/relay-users": {
+   "get": {
+    "operationId": "get_internal_chat_moderation_relay_users",
+    "summary": "Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's ",
+    "description": "**chat.moderation.queue.read** (internal): Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's TTS voice override (plan T3, J4b). Internal: rows carry IP addresses. chat.moderation.read stays the channel settings and moderators read. Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.moderation"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.moderation.queue.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.moderation.queue.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.moderation-queue-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/moderation/relay-users/{id}": {
+   "get": {
+    "operationId": "get_internal_chat_moderation_relay_users_id",
+    "summary": "Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's ",
+    "description": "**chat.moderation.queue.read** (internal): Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's TTS voice override (plan T3, J4b). Internal: rows carry IP addresses. chat.moderation.read stays the channel settings and moderators read. Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.moderation"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.moderation.queue.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.moderation.queue.read"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.moderation-queue-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/moderation/tts-override": {
+   "get": {
+    "operationId": "get_internal_chat_moderation_tts_override",
+    "summary": "Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's ",
+    "description": "**chat.moderation.queue.read** (internal): Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's TTS voice override (plan T3, J4b). Internal: rows carry IP addresses. chat.moderation.read stays the channel settings and moderators read. Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.moderation"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.moderation.queue.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.moderation.queue.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.moderation-queue-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/sounds": {
+   "get": {
+    "operationId": "get_internal_chat_sounds",
+    "summary": "Count a channel's custom sounds, or list the sounds not yet uploaded to OpenVibe.Media, from OpenVibe.Chat's channel_sounds: for OpenVibe.Live's channel readiness and its Media asset sync (plan T3, J4",
+    "description": "**chat.sounds.read** (internal): Count a channel's custom sounds, or list the sounds not yet uploaded to OpenVibe.Media, from OpenVibe.Chat's channel_sounds: for OpenVibe.Live's channel readiness and its Media asset sync (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.sounds"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.sounds.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.sounds.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.sounds-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/sounds/asset": {
+   "post": {
+    "operationId": "post_internal_chat_sounds_asset",
+    "summary": "Write a channel sound's OpenVibe.Media asset (URL and asset id) back onto OpenVibe.Chat's channel_sounds row after OpenVibe.Live's asset sync uploaded the file (plan T3, J4b).",
+    "description": "**chat.sounds.write** (internal): Write a channel sound's OpenVibe.Media asset (URL and asset id) back onto OpenVibe.Chat's channel_sounds row after OpenVibe.Live's asset sync uploaded the file (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.sounds"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.sounds.write"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-write",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.sounds.write"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/chat.sound-asset-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.ingress-ack.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/stats": {
+   "post": {
+    "operationId": "post_internal_chat_stats",
+    "summary": "Count OpenVibe.Chat's stored messages: all of chat, one person's, one stream's (messages, chatters, soundboard plays) or the top chatters of a stream, a channel or all chat, in an optional time window",
+    "description": "**chat.stats.read** (internal): Count OpenVibe.Chat's stored messages: all of chat, one person's, one stream's (messages, chatters, soundboard plays) or the top chatters of a stream, a channel or all chat, in an optional time window — the stats OpenVibe.Live shows (home, SEO, admin, star of the day, VOD and recap cards, stream analytics, AI slogans) without reading its own copy of Chat's tables (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.stats"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.stats.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.stats.read"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/chat.stats-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.stats-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/chat/timeline": {
+   "get": {
+    "operationId": "get_internal_chat_timeline",
+    "summary": "Count a channel's or a stream's chat messages per time bucket, with the latest message id: the chat timeline behind OpenVibe.Live's AI moments, chat spikes and activity reads (plan T3, J4b).",
+    "description": "**chat.analysis.read** (internal): Count a channel's or a stream's chat messages per time bucket, with the latest message id: the chat timeline behind OpenVibe.Live's AI moments, chat spikes and activity reads (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.analysis"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.analysis.read"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "internal-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.analysis.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.timeline-result.v1"
         }
        }
       }
@@ -1671,6 +2113,445 @@
      }
     ]
    },
+   "chat.messages-page.v1": {
+    "title": "ChatMessagesPage",
+    "description": "chat.messages-page@1: the answer of GET /internal/chat/messages on OpenVibe.Chat (capability chat.messages.read), which pages non-deleted chat_messages for OpenVibe.Live's AI context, clip and viewer jobs and its moderator search and history. Query: one filter of channel_user_id, stream_id, user_id, anon_id, username or id (one message), a cursor on id (after_id ascending, before_id descending), limit, and tail=1 (no rows, only max_id). max_id is the highest id matching the filter, null when none, so a caller can resume after it. A failure is chat.ingress-ack@1's error.",
+    "anyOf": [
+     {
+      "type": "object",
+      "required": [
+       "messages",
+       "max_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "messages": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/chat.messages-page.v1/$defs/message"
+        }
+       },
+       "max_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       }
+      }
+     },
+     {
+      "$ref": "#/components/schemas/chat.ingress-ack.v1/$defs/error"
+     }
+    ],
+    "$defs": {
+     "message": {
+      "type": "object",
+      "required": [
+       "id",
+       "user_id",
+       "anon_id",
+       "username",
+       "message",
+       "message_type",
+       "is_global",
+       "stream_id",
+       "channel_user_id",
+       "source_platform",
+       "reply_to_id",
+       "timestamp"
+      ],
+      "description": "One chat_messages row (Chat's columns, as stored).",
+      "properties": {
+       "id": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "user_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1,
+        "description": "Live user id; null for an anonymous or relayed sender."
+       },
+       "anon_id": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "'anon12345' for an anonymous sender."
+       },
+       "username": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "message": {
+        "type": "string"
+       },
+       "message_type": {
+        "type": "string",
+        "enum": [
+         "chat",
+         "system",
+         "donation",
+         "command",
+         "tts",
+         "channel-sound",
+         "soundboard",
+         "clip"
+        ]
+       },
+       "is_global": {
+        "type": "integer",
+        "enum": [
+         0,
+         1
+        ],
+        "description": "1 for homepage global chat."
+       },
+       "stream_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "channel_user_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1,
+        "description": "The broadcaster whose channel room it is."
+       },
+       "source_platform": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "The relay platform of a relayed line; null for OpenVibe chat."
+       },
+       "reply_to_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "timestamp": {
+        "type": "string",
+        "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it (ov_now())."
+       }
+      }
+     }
+    }
+   },
+   "chat.moderation-queue-result.v1": {
+    "title": "ChatModerationQueueResult",
+    "description": "chat.moderation-queue-result@1: what OpenVibe.Chat's moderation queue reads answer (capability chat.moderation.queue.read), one shape per route, for OpenVibe.Live's moderator pages: GET /internal/chat/moderation/pending-ip?channel_id → { pending_ip } (a channel's messages held for IP approval, status pending, oldest first); GET /internal/chat/moderation/relay-users?channel_id → { relay_users } (relay names hidden or banned on the channel or everywhere, newest first); GET /internal/chat/moderation/relay-users/:id → { relay_user } (one, null when unknown); GET /internal/chat/moderation/tts-override?identity_key → { tts_override } (null when none). Internal: rows carry IP addresses. A failure is chat.ingress-ack@1's error.",
+    "oneOf": [
+     {
+      "type": "object",
+      "required": [
+       "pending_ip"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "pending_ip": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/chat.moderation-queue-result.v1/$defs/pending_ip_message"
+        }
+       }
+      }
+     },
+     {
+      "type": "object",
+      "required": [
+       "relay_users"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "relay_users": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/chat.moderation-queue-result.v1/$defs/hidden_relay_user"
+        }
+       }
+      }
+     },
+     {
+      "type": "object",
+      "required": [
+       "relay_user"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "relay_user": {
+        "anyOf": [
+         {
+          "$ref": "#/components/schemas/chat.moderation-queue-result.v1/$defs/hidden_relay_user"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "type": "object",
+      "required": [
+       "tts_override"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "tts_override": {
+        "anyOf": [
+         {
+          "$ref": "#/components/schemas/chat.moderation-queue-result.v1/$defs/tts_voice_override"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "$ref": "#/components/schemas/chat.ingress-ack.v1/$defs/error"
+     }
+    ],
+    "$defs": {
+     "pending_ip_message": {
+      "type": "object",
+      "description": "One pending_ip_messages row.",
+      "required": [
+       "id",
+       "channel_id",
+       "stream_id",
+       "ip_address",
+       "user_id",
+       "anon_id",
+       "username",
+       "message",
+       "status",
+       "reviewed_by",
+       "created_at"
+      ],
+      "properties": {
+       "id": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "channel_id": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "stream_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "ip_address": {
+        "type": "string",
+        "description": "The sender's address: internal, never shown outside moderation."
+       },
+       "user_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "anon_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "username": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "message": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "pending",
+         "approved",
+         "denied"
+        ]
+       },
+       "reviewed_by": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "created_at": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it."
+       }
+      }
+     },
+     "hidden_relay_user": {
+      "type": "object",
+      "description": "One hidden_relay_users row.",
+      "required": [
+       "id",
+       "channel_id",
+       "platform",
+       "external_username",
+       "action",
+       "reason",
+       "created_by",
+       "created_at"
+      ],
+      "properties": {
+       "id": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "channel_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1,
+        "description": "null hides the name on every channel."
+       },
+       "platform": {
+        "type": "string"
+       },
+       "external_username": {
+        "type": "string"
+       },
+       "action": {
+        "type": "string",
+        "enum": [
+         "hide",
+         "ban"
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_by": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "created_by_username": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "The moderator's name from Chat's copy of the user, when known."
+       },
+       "created_at": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it."
+       }
+      }
+     },
+     "tts_voice_override": {
+      "type": "object",
+      "description": "One tts_voice_overrides row.",
+      "required": [
+       "identity_key",
+       "voice",
+       "pitch",
+       "speed",
+       "gap",
+       "set_by",
+       "updated_at"
+      ],
+      "properties": {
+       "identity_key": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Lowercased identity the override applies to."
+       },
+       "voice": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "pitch": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       },
+       "speed": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       },
+       "gap": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 0
+       },
+       "set_by": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "updated_at": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it."
+       }
+      }
+     }
+    }
+   },
    "chat.moderation-request.v1": {
     "title": "ChatModerationRequest",
     "description": "chat.moderation-request@1: what a first-party service hands OpenVibe.Chat's POST /internal/chat/moderation (chat.moderation.write) to change chat rows Chat owns and act on its sockets: delete messages (Chat deletes the rows and broadcasts the delete notices to the room and its mirrors), review messages held for IP approval, hide, unhide or record relay identities, set or clear a TTS voice override, disconnect a person or an address, and log a moderation action. One action per request, applied once per (caller, key): a retry with the same key and body answers the first result, the same key with another body gets 409. The fields an action does not list are refused.",
@@ -2854,7 +3735,7 @@
    },
    "chat.send-result.v1": {
     "title": "ChatSendResult",
-    "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).",
+    "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id, first_chat) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).",
     "anyOf": [
      {
       "type": "object",
@@ -3082,6 +3963,365 @@
        "to_user_id": {
         "type": "integer",
         "description": "DM only."
+       },
+       "first_chat": {
+        "type": "boolean",
+        "description": "Room only, since 1.2.0: true when this is the sender's first message in this channel's stream (Chat's stream_first_chats), so Live can welcome them without reading its own copy; absent on a DM and from an older Chat."
+       }
+      }
+     },
+     {
+      "$ref": "#/components/schemas/chat.ingress-ack.v1/$defs/error"
+     }
+    ]
+   },
+   "chat.sound-asset-request.v1": {
+    "title": "ChatSoundAssetRequest",
+    "description": "chat.sound-asset-request@1: the body of POST /internal/chat/sounds/asset on OpenVibe.Chat (capability chat.sounds.write): after OpenVibe.Live's asset sync uploaded a channel sound to OpenVibe.Media, the asset is written back onto Chat's channel_sounds row id. Writing the same asset again is a no-op; an unknown id is 404. Answers chat.ingress-ack@1.",
+    "type": "object",
+    "required": [
+     "id",
+     "media_url",
+     "media_asset_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "channel_sounds.id"
+     },
+     "media_url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "description": "The asset's OpenVibe.Media URL."
+     },
+     "media_asset_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The OpenVibe.Media asset id."
+     }
+    }
+   },
+   "chat.sounds-result.v1": {
+    "title": "ChatSoundsResult",
+    "description": "chat.sounds-result@1: the answer of GET /internal/chat/sounds on OpenVibe.Chat (capability chat.sounds.read). ?channel_owner_id answers { count } (a channel's custom sounds, for Live's channel readiness); ?pending_asset=1 answers { sounds } (rows with no media_asset_id yet, which Live's asset sync uploads to OpenVibe.Media and writes back with POST /internal/chat/sounds/asset). A failure is chat.ingress-ack@1's error.",
+    "anyOf": [
+     {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "count": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "sounds": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/chat.sounds-result.v1/$defs/sound"
+        }
+       }
+      }
+     },
+     {
+      "$ref": "#/components/schemas/chat.ingress-ack.v1/$defs/error"
+     }
+    ],
+    "$defs": {
+     "sound": {
+      "type": "object",
+      "description": "One channel_sounds row.",
+      "required": [
+       "id",
+       "channel_owner_id",
+       "command",
+       "url",
+       "media_url",
+       "media_asset_id"
+      ],
+      "properties": {
+       "id": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "channel_owner_id": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "command": {
+        "type": "string",
+        "description": "The trigger word (no leading '!'), lowercased: the sound's name."
+       },
+       "url": {
+        "type": "string",
+        "description": "Where Chat keeps the audio file (its on-disk path)."
+       },
+       "mime": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "duration_seconds": {
+        "type": [
+         "number",
+         "null"
+        ],
+        "minimum": 0
+       },
+       "created_by": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1,
+        "description": "The uploader's Live user id."
+       },
+       "created_by_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "media_url": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "The file's OpenVibe.Media URL; null until Live's asset sync uploaded it."
+       },
+       "media_asset_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1,
+        "description": "The OpenVibe.Media asset id; null until uploaded."
+       }
+      }
+     }
+    }
+   },
+   "chat.stats-request.v1": {
+    "title": "ChatStatsRequest",
+    "description": "chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.",
+    "type": "object",
+    "required": [
+     "kind"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "kind": {
+      "type": "string",
+      "enum": [
+       "site",
+       "user",
+       "stream",
+       "channel-top"
+      ]
+     },
+     "user_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Live user id; required for kind user."
+     },
+     "stream_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Live stream id; required for kind stream."
+     },
+     "channel_user_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The broadcaster whose channel room it is (chat_messages.channel_user_id)."
+     },
+     "since": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count messages at or after this instant (epoch ms)."
+     },
+     "until": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count messages before this instant (epoch ms)."
+     },
+     "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "description": "How many top chatters (channel-top); Chat's default is 10."
+     }
+    },
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "kind": {
+         "const": "user"
+        }
+       },
+       "required": [
+        "kind"
+       ]
+      },
+      "then": {
+       "required": [
+        "user_id"
+       ]
+      }
+     },
+     {
+      "if": {
+       "properties": {
+        "kind": {
+         "const": "stream"
+        }
+       },
+       "required": [
+        "kind"
+       ]
+      },
+      "then": {
+       "required": [
+        "stream_id"
+       ]
+      }
+     }
+    ]
+   },
+   "chat.stats-result.v1": {
+    "title": "ChatStatsResult",
+    "description": "chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first. A failure is chat.ingress-ack@1's error ({ ok: false, error }).",
+    "anyOf": [
+     {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "messages": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "chatters": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "sounds": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Soundboard plays (message_type soundboard)."
+       },
+       "top_chatters": {
+        "type": "array",
+        "maxItems": 50,
+        "items": {
+         "$ref": "#/components/schemas/chat.stats-result.v1/$defs/chatter"
+        }
+       }
+      }
+     },
+     {
+      "$ref": "#/components/schemas/chat.ingress-ack.v1/$defs/error"
+     }
+    ],
+    "$defs": {
+     "chatter": {
+      "type": "object",
+      "required": [
+       "user_id",
+       "username",
+       "display_name",
+       "count"
+      ],
+      "properties": {
+       "user_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1,
+        "description": "Live user id; null for an anonymous or relayed chatter, counted by name."
+       },
+       "username": {
+        "type": "string"
+       },
+       "display_name": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "From Chat's copy of the user (ctx_users); null when unknown."
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "profile_color": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "count": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Messages in the window."
+       }
+      }
+     }
+    }
+   },
+   "chat.timeline-result.v1": {
+    "title": "ChatTimelineResult",
+    "description": "chat.timeline-result@1: the answer of GET /internal/chat/timeline on OpenVibe.Chat (capability chat.analysis.read): non-deleted chat_messages of one channel (channel_user_id) or stream (stream_id) counted per bucket between since and until (epoch ms), bucket_ms wide, for OpenVibe.Live's AI moments, chat spikes and activity. Empty buckets are left out; buckets are oldest first. max_id is the highest message id in the window, null when none. A failure is chat.ingress-ack@1's error.",
+    "anyOf": [
+     {
+      "type": "object",
+      "required": [
+       "buckets",
+       "max_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "ok": {
+        "const": true
+       },
+       "buckets": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "t",
+          "count"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "t": {
+           "type": "integer",
+           "minimum": 0,
+           "description": "Bucket start, epoch ms."
+          },
+          "count": {
+           "type": "integer",
+           "minimum": 1
+          }
+         }
+        }
+       },
+       "max_id": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
        }
       }
      },

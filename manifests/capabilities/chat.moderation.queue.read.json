@@ -1,0 +1,24 @@
+{
+  "id": "chat.moderation.queue.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read OpenVibe.Chat's moderation queues for OpenVibe.Live's moderator pages: a channel's messages held for IP approval, the relay names hidden or banned on a channel (or one by id), and one identity's TTS voice override (plan T3, J4b). Internal: rows carry IP addresses. chat.moderation.read stays the channel settings and moderators read. Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/chat/moderation/pending-ip",
+    "GET /internal/chat/moderation/relay-users",
+    "GET /internal/chat/moderation/relay-users/:id",
+    "GET /internal/chat/moderation/tts-override"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.moderation-queue-result@1"
+}

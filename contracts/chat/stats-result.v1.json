@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/stats-result.v1.json",
+  "title": "ChatStatsResult",
+  "description": "chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first. A failure is chat.ingress-ack@1's error ({ ok: false, error }).",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "messages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "chatters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sounds": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Soundboard plays (message_type soundboard)."
+        },
+        "top_chatters": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/chatter"
+          }
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "chatter": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "username",
+        "display_name",
+        "count"
+      ],
+      "properties": {
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "Live user id; null for an anonymous or relayed chatter, counted by name."
+        },
+        "username": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "From Chat's copy of the user (ctx_users); null when unknown."
+        },
+        "avatar_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Messages in the window."
+        }
+      }
+    }
+  }
+}

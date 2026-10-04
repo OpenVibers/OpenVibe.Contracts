@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/chat/send-result.v1.json",
   "title": "ChatSendResult",
-  "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).",
+  "description": "chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id, first_chat) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).",
   "anyOf": [
     {
       "type": "object",
@@ -230,6 +230,10 @@
         "to_user_id": {
           "type": "integer",
           "description": "DM only."
+        },
+        "first_chat": {
+          "type": "boolean",
+          "description": "Room only, since 1.2.0: true when this is the sender's first message in this channel's stream (Chat's stream_first_chats), so Live can welcome them without reading its own copy; absent on a DM and from an older Chat."
         }
       }
     },

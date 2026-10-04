@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/messages-page.v1.json",
+  "title": "ChatMessagesPage",
+  "description": "chat.messages-page@1: the answer of GET /internal/chat/messages on OpenVibe.Chat (capability chat.messages.read), which pages non-deleted chat_messages for OpenVibe.Live's AI context, clip and viewer jobs and its moderator search and history. Query: one filter of channel_user_id, stream_id, user_id, anon_id, username or id (one message), a cursor on id (after_id ascending, before_id descending), limit, and tail=1 (no rows, only max_id). max_id is the highest id matching the filter, null when none, so a caller can resume after it. A failure is chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "messages",
+        "max_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/message"
+          }
+        },
+        "max_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "message": {
+      "type": "object",
+      "required": [
+        "id",
+        "user_id",
+        "anon_id",
+        "username",
+        "message",
+        "message_type",
+        "is_global",
+        "stream_id",
+        "channel_user_id",
+        "source_platform",
+        "reply_to_id",
+        "timestamp"
+      ],
+      "description": "One chat_messages row (Chat's columns, as stored).",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "Live user id; null for an anonymous or relayed sender."
+        },
+        "anon_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "'anon12345' for an anonymous sender."
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "chat",
+            "system",
+            "donation",
+            "command",
+            "tts",
+            "channel-sound",
+            "soundboard",
+            "clip"
+          ]
+        },
+        "is_global": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ],
+          "description": "1 for homepage global chat."
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "channel_user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "The broadcaster whose channel room it is."
+        },
+        "source_platform": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The relay platform of a relayed line; null for OpenVibe chat."
+        },
+        "reply_to_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it (ov_now())."
+        }
+      }
+    }
+  }
+}

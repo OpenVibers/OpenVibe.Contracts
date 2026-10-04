@@ -47447,9 +47447,9 @@ export type ChatSendRequest =
       [k: string]: unknown | undefined;
     };
 
-/** chat.send-result@1.1.0 (owner: chat) */
+/** chat.send-result@1.2.0 (owner: chat) */
 /**
- * chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).
+ * chat.send-result@1: what chat.message.send answers. On WS /ws/chat nothing is acknowledged directly: the stored line is broadcast as a chat frame to the room (the sender included; channel lines also reach the homepage global feed), and a refusal (banned, slow mode, held for IP approval, a channel rule, not saved) is a system or error frame to the sender alone. On POST /internal/live/calls, the batch result: one entry per op, in order, where a message op without chat.message.send is { ok: false, code: capability.denied }. On POST /internal/chat/messages: { ok: true, id } with the room (stream_id, channel_user_id, first_chat) or the DM (conversation_id, to_user_id), or chat.ingress-ack@1's error ({ ok: false, error }).
  */
 export type ChatSendResult =
   | {
@@ -47561,6 +47561,10 @@ export type ChatSendResult =
        * DM only.
        */
       to_user_id?: number;
+      /**
+       * Room only, since 1.2.0: true when this is the sender's first message in this channel's stream (Chat's stream_first_chats), so Live can welcome them without reading its own copy; absent on a DM and from an older Chat.
+       */
+      first_chat?: boolean;
     }
   | {
       ok: false;
@@ -48065,6 +48069,317 @@ export type ChatEmoteCountResult =
       ok: false;
       error: string;
     };
+
+/** chat.stats-request@1.0.0 (owner: chat) */
+/**
+ * chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.
+ */
+export type ChatStatsRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  kind: "site" | "user" | "stream" | "channel-top";
+  /**
+   * Live user id; required for kind user.
+   */
+  user_id?: number;
+  /**
+   * Live stream id; required for kind stream.
+   */
+  stream_id?: number;
+  /**
+   * The broadcaster whose channel room it is (chat_messages.channel_user_id).
+   */
+  channel_user_id?: number;
+  /**
+   * Count messages at or after this instant (epoch ms).
+   */
+  since?: number;
+  /**
+   * Count messages before this instant (epoch ms).
+   */
+  until?: number;
+  /**
+   * How many top chatters (channel-top); Chat's default is 10.
+   */
+  limit?: number;
+};
+
+/** chat.stats-result@1.0.0 (owner: chat) */
+/**
+ * chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first. A failure is chat.ingress-ack@1's error ({ ok: false, error }).
+ */
+export type ChatStatsResult =
+  | {
+      ok?: true;
+      messages?: number;
+      chatters?: number;
+      /**
+       * Soundboard plays (message_type soundboard).
+       */
+      sounds?: number;
+      /**
+       * @maxItems 50
+       */
+      top_chatters?: {
+        /**
+         * Live user id; null for an anonymous or relayed chatter, counted by name.
+         */
+        user_id: number | null;
+        username: string;
+        /**
+         * From Chat's copy of the user (ctx_users); null when unknown.
+         */
+        display_name: string | null;
+        avatar_url?: string | null;
+        profile_color?: string | null;
+        /**
+         * Messages in the window.
+         */
+        count: number;
+      }[];
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.messages-page@1.0.0 (owner: chat) */
+/**
+ * chat.messages-page@1: the answer of GET /internal/chat/messages on OpenVibe.Chat (capability chat.messages.read), which pages non-deleted chat_messages for OpenVibe.Live's AI context, clip and viewer jobs and its moderator search and history. Query: one filter of channel_user_id, stream_id, user_id, anon_id, username or id (one message), a cursor on id (after_id ascending, before_id descending), limit, and tail=1 (no rows, only max_id). max_id is the highest id matching the filter, null when none, so a caller can resume after it. A failure is chat.ingress-ack@1's error.
+ */
+export type ChatMessagesPage =
+  | {
+      ok?: true;
+      messages: {
+        id: number;
+        /**
+         * Live user id; null for an anonymous or relayed sender.
+         */
+        user_id: number | null;
+        /**
+         * 'anon12345' for an anonymous sender.
+         */
+        anon_id: string | null;
+        username: string | null;
+        message: string;
+        message_type: "chat" | "system" | "donation" | "command" | "tts" | "channel-sound" | "soundboard" | "clip";
+        /**
+         * 1 for homepage global chat.
+         */
+        is_global: 0 | 1;
+        stream_id: number | null;
+        /**
+         * The broadcaster whose channel room it is.
+         */
+        channel_user_id: number | null;
+        /**
+         * The relay platform of a relayed line; null for OpenVibe chat.
+         */
+        source_platform: string | null;
+        reply_to_id: number | null;
+        /**
+         * UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it (ov_now()).
+         */
+        timestamp: string;
+      }[];
+      max_id: number | null;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.timeline-result@1.0.0 (owner: chat) */
+/**
+ * chat.timeline-result@1: the answer of GET /internal/chat/timeline on OpenVibe.Chat (capability chat.analysis.read): non-deleted chat_messages of one channel (channel_user_id) or stream (stream_id) counted per bucket between since and until (epoch ms), bucket_ms wide, for OpenVibe.Live's AI moments, chat spikes and activity. Empty buckets are left out; buckets are oldest first. max_id is the highest message id in the window, null when none. A failure is chat.ingress-ack@1's error.
+ */
+export type ChatTimelineResult =
+  | {
+      ok?: true;
+      buckets: {
+        /**
+         * Bucket start, epoch ms.
+         */
+        t: number;
+        count: number;
+      }[];
+      max_id: number | null;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.moderation-queue-result@1.0.0 (owner: chat) */
+/**
+ * chat.moderation-queue-result@1: what OpenVibe.Chat's moderation queue reads answer (capability chat.moderation.queue.read), one shape per route, for OpenVibe.Live's moderator pages: GET /internal/chat/moderation/pending-ip?channel_id → { pending_ip } (a channel's messages held for IP approval, status pending, oldest first); GET /internal/chat/moderation/relay-users?channel_id → { relay_users } (relay names hidden or banned on the channel or everywhere, newest first); GET /internal/chat/moderation/relay-users/:id → { relay_user } (one, null when unknown); GET /internal/chat/moderation/tts-override?identity_key → { tts_override } (null when none). Internal: rows carry IP addresses. A failure is chat.ingress-ack@1's error.
+ */
+export type ChatModerationQueueResult =
+  | {
+      ok?: true;
+      pending_ip: {
+        id: number;
+        channel_id: number;
+        stream_id: number | null;
+        /**
+         * The sender's address: internal, never shown outside moderation.
+         */
+        ip_address: string;
+        user_id: number | null;
+        anon_id: string | null;
+        username: string | null;
+        message: string;
+        status: "pending" | "approved" | "denied";
+        reviewed_by: number | null;
+        /**
+         * UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it.
+         */
+        created_at: string | null;
+      }[];
+    }
+  | {
+      ok?: true;
+      relay_users: {
+        id: number;
+        /**
+         * null hides the name on every channel.
+         */
+        channel_id: number | null;
+        platform: string;
+        external_username: string;
+        action: "hide" | "ban";
+        reason: string | null;
+        created_by: number | null;
+        /**
+         * The moderator's name from Chat's copy of the user, when known.
+         */
+        created_by_username?: string | null;
+        /**
+         * UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it.
+         */
+        created_at: string | null;
+      }[];
+    }
+  | {
+      ok?: true;
+      relay_user: {
+        id: number;
+        /**
+         * null hides the name on every channel.
+         */
+        channel_id: number | null;
+        platform: string;
+        external_username: string;
+        action: "hide" | "ban";
+        reason: string | null;
+        created_by: number | null;
+        /**
+         * The moderator's name from Chat's copy of the user, when known.
+         */
+        created_by_username?: string | null;
+        /**
+         * UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it.
+         */
+        created_at: string | null;
+      } | null;
+    }
+  | {
+      ok?: true;
+      tts_override: {
+        /**
+         * Lowercased identity the override applies to.
+         */
+        identity_key: string;
+        voice: string | null;
+        pitch: number | null;
+        speed: number | null;
+        gap: number | null;
+        set_by: number | null;
+        /**
+         * UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it.
+         */
+        updated_at: string | null;
+      } | null;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.sounds-result@1.0.0 (owner: chat) */
+/**
+ * chat.sounds-result@1: the answer of GET /internal/chat/sounds on OpenVibe.Chat (capability chat.sounds.read). ?channel_owner_id answers { count } (a channel's custom sounds, for Live's channel readiness); ?pending_asset=1 answers { sounds } (rows with no media_asset_id yet, which Live's asset sync uploads to OpenVibe.Media and writes back with POST /internal/chat/sounds/asset). A failure is chat.ingress-ack@1's error.
+ */
+export type ChatSoundsResult =
+  | {
+      ok?: true;
+      count?: number;
+      sounds?: {
+        id: number;
+        channel_owner_id: number;
+        /**
+         * The trigger word (no leading '!'), lowercased: the sound's name.
+         */
+        command: string;
+        /**
+         * Where Chat keeps the audio file (its on-disk path).
+         */
+        url: string;
+        mime?: string | null;
+        duration_seconds?: number | null;
+        /**
+         * The uploader's Live user id.
+         */
+        created_by?: number | null;
+        created_by_name?: string | null;
+        /**
+         * The file's OpenVibe.Media URL; null until Live's asset sync uploaded it.
+         */
+        media_url: string | null;
+        /**
+         * The OpenVibe.Media asset id; null until uploaded.
+         */
+        media_asset_id: number | null;
+      }[];
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.sound-asset-request@1.0.0 (owner: chat) */
+/**
+ * chat.sound-asset-request@1: the body of POST /internal/chat/sounds/asset on OpenVibe.Chat (capability chat.sounds.write): after OpenVibe.Live's asset sync uploaded a channel sound to OpenVibe.Media, the asset is written back onto Chat's channel_sounds row id. Writing the same asset again is a no-op; an unknown id is 404. Answers chat.ingress-ack@1.
+ */
+export interface ChatSoundAssetRequest {
+  /**
+   * channel_sounds.id
+   */
+  id: number;
+  /**
+   * The asset's OpenVibe.Media URL.
+   */
+  media_url: string;
+  /**
+   * The OpenVibe.Media asset id.
+   */
+  media_asset_id: number;
+}
 
 /** live.moderation.action@1.0.0 (owner: live) */
 /**

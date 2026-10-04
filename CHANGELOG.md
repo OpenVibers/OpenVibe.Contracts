@@ -16,6 +16,22 @@ sends to the authority that owns a resource (`action`, `resource` or, for `creat
 `checkControlRequest` (the resource's project is `project_id`; `create` names a kind, every other action a resource) and
 `checkControlResult` (`problem` and `confirmation_required` fit `state`). New test `test/resources.test.js`.
 
+**OpenVibe.Chat's internal read API** (plan T3, J4b): OpenVibe.Live stops reading its mirrored copy of Chat's tables.
+Additive. Six new internal capabilities owned by chat (loopback, Chat service token, Live's principal today; never
+granted to an app or delegated), added to `manifests/services/chat.json`:
+  - `chat.stats.read` (`POST /internal/chat/stats`): `chat.stats-request@1` (`kind` site, user, stream or channel-top,
+    an optional epoch-ms window, `limit` 1-50) → `chat.stats-result@1` (`messages`, `chatters`, `sounds`, `top_chatters`).
+  - `chat.messages.read` (`GET /internal/chat/messages`) → `chat.messages-page@1` (`chat_messages` rows, `max_id`).
+  - `chat.analysis.read` (`GET /internal/chat/timeline`) → `chat.timeline-result@1` (`buckets` of `{t, count}`, `max_id`).
+  - `chat.moderation.queue.read` (`GET /internal/chat/moderation/pending-ip`, `…/relay-users`, `…/relay-users/:id`,
+    `…/tts-override`) → `chat.moderation-queue-result@1`, one shape per route with Chat's `pending_ip_messages`,
+    `hidden_relay_users` and `tts_voice_overrides` rows. `chat.moderation.read` is unchanged.
+  - `chat.sounds.read` (`GET /internal/chat/sounds`) → `chat.sounds-result@1` (`count`, or the `channel_sounds` rows
+    still without a Media asset).
+  - `chat.sounds.write` (`POST /internal/chat/sounds/asset`): `chat.sound-asset-request@1` → `chat.ingress-ack@1`.
+
+`chat.send-result@1` 1.2.0: the `POST /internal/chat/messages` answer gains optional `first_chat` (boolean).
+
 ## 0.94.2 — 2026-10-04
 
 **`past_due` renewal grace on the billing events** (plan T5 step 11, s1). Additive: no field is required or removed.
