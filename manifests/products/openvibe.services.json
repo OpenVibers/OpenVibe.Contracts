@@ -27,6 +27,7 @@
   "keywords": "openvibe services, developer platform, open source backend, api platform, event bus api, ai gateway, website monitoring api, developer console",
   "launch": "the catalog and console over the services that already run (AI, Events, Media, Search, Sources, Host, Tools)",
   "relationships": {
+    "service": "services",
     "noRepo": true,
     "meanwhile": [
       {
