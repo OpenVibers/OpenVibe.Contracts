@@ -1,0 +1,21 @@
+{
+  "id": "chat.messages.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Page OpenVibe.Chat's stored messages of one channel, stream, person, anonymous id or name, or read one by id, with a cursor on the message id and the latest id: for OpenVibe.Live's AI context, clip and viewer jobs and its moderator search and history (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/chat/messages"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.messages-page@1"
+}

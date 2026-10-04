@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "top_chatters": [
+    {
+      "user_id": 512,
+      "username": "pixelfox",
+      "display_name": "PixelFox",
+      "count": 214
+    },
+    {
+      "user_id": null,
+      "username": "kick_viewer",
+      "display_name": null,
+      "count": 37
+    }
+  ]
+}

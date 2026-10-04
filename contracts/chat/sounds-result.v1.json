@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/sounds-result.v1.json",
+  "title": "ChatSoundsResult",
+  "description": "chat.sounds-result@1: the answer of GET /internal/chat/sounds on OpenVibe.Chat (capability chat.sounds.read). ?channel_owner_id answers { count } (a channel's custom sounds, for Live's channel readiness); ?pending_asset=1 answers { sounds } (rows with no media_asset_id yet, which Live's asset sync uploads to OpenVibe.Media and writes back with POST /internal/chat/sounds/asset). A failure is chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sounds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sound"
+          }
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "sound": {
+      "type": "object",
+      "description": "One channel_sounds row.",
+      "required": [
+        "id",
+        "channel_owner_id",
+        "command",
+        "url",
+        "media_url",
+        "media_asset_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "channel_owner_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "command": {
+          "type": "string",
+          "description": "The trigger word (no leading '!'), lowercased: the sound's name."
+        },
+        "url": {
+          "type": "string",
+          "description": "Where Chat keeps the audio file (its on-disk path)."
+        },
+        "mime": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "duration_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "created_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "The uploader's Live user id."
+        },
+        "created_by_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "media_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The file's OpenVibe.Media URL; null until Live's asset sync uploaded it."
+        },
+        "media_asset_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "The OpenVibe.Media asset id; null until uploaded."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/timeline-result.v1.json",
+  "title": "ChatTimelineResult",
+  "description": "chat.timeline-result@1: the answer of GET /internal/chat/timeline on OpenVibe.Chat (capability chat.analysis.read): non-deleted chat_messages of one channel (channel_user_id) or stream (stream_id) counted per bucket between since and until (epoch ms), bucket_ms wide, for OpenVibe.Live's AI moments, chat spikes and activity. Empty buckets are left out; buckets are oldest first. max_id is the highest message id in the window, null when none. A failure is chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "buckets",
+        "max_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "buckets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "t",
+              "count"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "t": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Bucket start, epoch ms."
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "max_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ]
+}

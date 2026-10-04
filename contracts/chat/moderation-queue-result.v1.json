@@ -1,0 +1,302 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/moderation-queue-result.v1.json",
+  "title": "ChatModerationQueueResult",
+  "description": "chat.moderation-queue-result@1: what OpenVibe.Chat's moderation queue reads answer (capability chat.moderation.queue.read), one shape per route, for OpenVibe.Live's moderator pages: GET /internal/chat/moderation/pending-ip?channel_id → { pending_ip } (a channel's messages held for IP approval, status pending, oldest first); GET /internal/chat/moderation/relay-users?channel_id → { relay_users } (relay names hidden or banned on the channel or everywhere, newest first); GET /internal/chat/moderation/relay-users/:id → { relay_user } (one, null when unknown); GET /internal/chat/moderation/tts-override?identity_key → { tts_override } (null when none). Internal: rows carry IP addresses. A failure is chat.ingress-ack@1's error.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "pending_ip"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "pending_ip": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pending_ip_message"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "relay_users"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "relay_users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hidden_relay_user"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "relay_user"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "relay_user": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/hidden_relay_user"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "tts_override"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "tts_override": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/tts_voice_override"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "pending_ip_message": {
+      "type": "object",
+      "description": "One pending_ip_messages row.",
+      "required": [
+        "id",
+        "channel_id",
+        "stream_id",
+        "ip_address",
+        "user_id",
+        "anon_id",
+        "username",
+        "message",
+        "status",
+        "reviewed_by",
+        "created_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "channel_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stream_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "ip_address": {
+          "type": "string",
+          "description": "The sender's address: internal, never shown outside moderation."
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "anon_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "approved",
+            "denied"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "created_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it."
+        }
+      }
+    },
+    "hidden_relay_user": {
+      "type": "object",
+      "description": "One hidden_relay_users row.",
+      "required": [
+        "id",
+        "channel_id",
+        "platform",
+        "external_username",
+        "action",
+        "reason",
+        "created_by",
+        "created_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "channel_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "null hides the name on every channel."
+        },
+        "platform": {
+          "type": "string"
+        },
+        "external_username": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "hide",
+            "ban"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "created_by_username": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The moderator's name from Chat's copy of the user, when known."
+        },
+        "created_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it."
+        }
+      }
+    },
+    "tts_voice_override": {
+      "type": "object",
+      "description": "One tts_voice_overrides row.",
+      "required": [
+        "identity_key",
+        "voice",
+        "pitch",
+        "speed",
+        "gap",
+        "set_by",
+        "updated_at"
+      ],
+      "properties": {
+        "identity_key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Lowercased identity the override applies to."
+        },
+        "voice": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pitch": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "speed": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "gap": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "set_by": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "updated_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "UTC 'YYYY-MM-DD HH:MM:SS', as Chat stores it."
+        }
+      }
+    }
+  }
+}

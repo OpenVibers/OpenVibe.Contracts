@@ -1,0 +1,21 @@
+{
+  "id": "chat.sounds.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Count a channel's custom sounds, or list the sounds not yet uploaded to OpenVibe.Media, from OpenVibe.Chat's channel_sounds: for OpenVibe.Live's channel readiness and its Media asset sync (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/chat/sounds"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.sounds-result@1"
+}

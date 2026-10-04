@@ -1,0 +1,21 @@
+{
+  "id": "chat.analysis.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Count a channel's or a stream's chat messages per time bucket, with the latest message id: the chat timeline behind OpenVibe.Live's AI moments, chat spikes and activity reads (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/chat/timeline"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.timeline-result@1"
+}
