@@ -13,7 +13,7 @@
     "provider": { "type": "string", "description": "credit, or the provider that takes the payments." },
     "provider_ref": { "type": ["string", "null"] },
     "route": { "type": ["string", "null"], "description": "site or direct (paid to the streamer's own provider account)." },
-    "status": { "type": "string", "description": "active, canceled, expired, …" },
+    "status": { "type": "string", "description": "active, past_due (a failed renewal, retried until grace_until), canceled, expired, …" },
     "auto_renew": { "type": "boolean" },
     "cancel_at_period_end": { "type": "boolean" },
     "price_cents": { "type": ["integer", "null"] },

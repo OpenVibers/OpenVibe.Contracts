@@ -1,0 +1,23 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "streamer": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "kind": "channel_subscription",
+  "active": false,
+  "expires_at": "2026-10-23T10:00:00.000Z",
+  "subscription": {
+    "id": "sub_01JAB3C4D5E6F7G8H9J0K1MNQ0",
+    "status": "past_due",
+    "auto_renew": true,
+    "cancel_at_period_end": false,
+    "provider": "credit"
+  },
+  "reason": "renewal_failed",
+  "grace_until": "2026-10-26T10:00:00.000Z",
+  "renewal_period_end": "2026-11-23T10:00:00.000Z"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "sub_01JAB3C4D5E6F7G8H9J0K1MNQ0",
+  "subscriber": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" },
+  "streamer": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "provider": "credit",
+  "status": "past_due",
+  "auto_renew": true,
+  "cancel_at_period_end": false,
+  "current_period_end": "2026-10-23T10:00:00.000Z"
+}

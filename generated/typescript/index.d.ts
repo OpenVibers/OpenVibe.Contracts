@@ -28461,7 +28461,7 @@ export interface BillingTransactionSettledPayload {
 
 /** billing.transaction.reversed@1.0.0 (owner: billing) */
 /**
- * billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out. Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.
+ * billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out, a refund of a credit-paid subscription period (type refund, reverses_txn names the subscription transaction, from_subject and to_subject swapped, provider null; the entitlement then changes with reason credit_refund). Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.
  */
 export interface BillingTransactionReversedPayload {
   transaction_id: string;
@@ -28524,13 +28524,16 @@ export interface BillingEntitlementChangedPayload {
   expires_at: string | null;
   subscription: {
     id: string;
-    status: "active" | "canceled" | "expired";
+    /**
+     * past_due: a renewal charge failed and Billing retries it until grace_until; the entitlement is not active while past_due.
+     */
+    status: "active" | "past_due" | "canceled" | "expired";
     auto_renew: boolean;
     cancel_at_period_end: boolean;
     provider: string;
   } | null;
   /**
-   * granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback.
+   * granted, renewed, canceled, expired, stripe_not_renewed, stripe_deleted, renewal_insufficient_credit, refund, chargeback, renewal_failed (a renewal charge failed: status past_due, grace_until set), grace_ended (the grace window passed without a paid renewal), credit_refund (a credit-paid period was refunded).
    */
   reason: string;
   /**
@@ -28538,7 +28541,15 @@ export interface BillingEntitlementChangedPayload {
    */
   transaction_id?: string;
   /**
-   * refund/chargeback: the period the reversed payment had granted.
+   * renewal_failed: when Billing stops retrying the renewal and ends the subscription; null or absent otherwise.
+   */
+  grace_until?: string | null;
+  /**
+   * renewal_failed, grace_ended: the end of the period the failed renewal charge was for.
+   */
+  renewal_period_end?: string;
+  /**
+   * refund/chargeback/credit_refund: the period the reversed payment had granted.
    */
   revoked_period?: {
     starts_at: string;
@@ -29211,7 +29222,7 @@ export interface BillingSubscription {
    */
   route?: string | null;
   /**
-   * active, canceled, expired, …
+   * active, past_due (a failed renewal, retried until grace_until), canceled, expired, …
    */
   status: string;
   auto_renew: boolean;

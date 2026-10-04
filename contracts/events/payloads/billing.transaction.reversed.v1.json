@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/billing.transaction.reversed.v1.json",
   "title": "BillingTransactionReversedPayload",
-  "description": "billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out. Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.",
+  "description": "billing.transaction.reversed v1 (OpenVibe.Billing server/ops/reversals.js reverseReceipt, transfers.js refund, cashouts.js deny). A transaction reversing an earlier one was posted: a provider refund or chargeback, a donation refund, a denied cash-out, a refund of a credit-paid subscription period (type refund, reverses_txn names the subscription transaction, from_subject and to_subject swapped, provider null; the entitlement then changes with reason credit_refund). Envelope: subject { type: transaction, id: txn_… (the reversing transaction) }, visibility internal, priority important, actor service:billing.",
   "type": "object",
   "required": ["transaction_id", "type", "test", "from_subject", "to_subject", "provider", "metadata", "reverses_txn"],
   "additionalProperties": false,
