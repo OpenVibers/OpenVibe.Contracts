@@ -216,6 +216,27 @@ Each service manifest has a `lifecycle` block, filled from the service's code an
 
 `ovhost validate <service>` (OpenVibe.Host) reads the block from the inventory or from this package's manifest. It fails when a field is missing, when `deadlineSeconds` exceeds the unit's TimeoutStopSec or the unit's KillSignal is a different signal, and when the checkout's installed openvibe-contracts is outside `contracts.range`.
 
+## Run job API (v0.90, planned)
+
+OpenVibe.Run (`manifests/services/run.json`, a placeholder until the repository exists; plan T14 R1) takes jobs,
+places each on a node that advertises `worker:<class>` and sends it as `platform.job@1`. Its routes, all planned:
+
+| Route | Capability | Body | Answer |
+| --- | --- | --- | --- |
+| `POST /api/v1/jobs` | `run.job.submit` | `run.job-create-request@1` | `run.job-create-result@1` (201, or 200 for an idempotent repeat) |
+| `GET /api/v1/jobs` | `run.job.list` | `run.job-list-query@1` (query string) | `run.job-list-result@1` (cursor pages) |
+| `GET /api/v1/jobs/:id` | `run.job.read` | — | `run.job-read-result@1` |
+| `POST /api/v1/jobs/:id/cancel` | `run.job.cancel` | — | `run.job-read-result@1` |
+| `POST /api/v1/jobs/:id/stream/ticket` | `run.job.stream` | — | `run.job-stream-ticket-result@1` (one-use, 120 s) |
+| `GET /api/v1/jobs/:id/stream?ticket=` | `run.job.stream` | — | SSE of `run.job-stream-event@1` (`output`, `state`, `end`; Last-Event-ID resumes) |
+| `GET /api/v1/admin/jobs` | `run.job.admin` (internal) | `run.job-list-query@1` with `project_id` | `run.job-list-result@1` |
+
+A job moves `queued → placed → running` and ends `succeeded`, `failed`, `cancelled` or `expired`; Run publishes
+`run.job.queued|started|succeeded|failed|cancelled|expired`. Run mints the job id (`job_<ULID>`, `ids.newId('job')`)
+and passes it unchanged as the `platform.job@1` id, so every metering reading is `run:<job id>:<n>` (service `run`,
+operation `function.invoke`, unit `s`) and `usage.seconds` is their sum. Inputs are Media objects pinned by sha256
+(never a URL); `egress` takes Node's `worker.egress` values (`none` by default, `public`, `openvibe-only`).
+
 ## Versioning and compatibility
 
 - A contract id is permanent. Minor versions only add optional fields.

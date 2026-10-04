@@ -1,0 +1,22 @@
+{
+  "id": "run.job.admin",
+  "version": "1.0",
+  "owner": "run",
+  "status": "planned",
+  "visibility": "internal",
+  "sensitive": true,
+  "description": "PLANNED (plan T14 R1; OpenVibe.Run is not built yet): Operator access to every project's jobs: GET /api/v1/admin/jobs (run.job-list-query@1 with project_id), and the read and cancel routes for any job. Never delegated and never in an app or mod token. It becomes active, and enters generated/openapi/run.json, when OpenVibe.Run implements the routes.",
+  "inputSchema": "run.job-list-query@1",
+  "outputSchema": "run.job-list-result@1",
+  "permissions": [
+    "run:admin"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "run-admin",
+  "events": [
+    "run.job.cancelled"
+  ],
+  "implementedBy": []
+}

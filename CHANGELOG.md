@@ -4,6 +4,32 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.90.0 — 2026-10-04
+
+**OpenVibe.Run service and job API** (plan T14 R1, ADR-034). The contract OpenVibe.Run is built against; everything is
+planned (Run's repository does not exist yet) and additive.
+- New service manifest `manifests/services/run.json`: `run`, status and exposure `placeholder`, domain `openvibe.run`,
+  lifecycle all `none` (not built). `manifests/products/openvibe.run.json` gains `relationships.service: run` and keeps
+  `noRepo: true`.
+- New planned capabilities, owner `run`, each with an input and an output schema: `run.job.submit` (sensitive: it bills
+  the project), `run.job.read`, `run.job.list`, `run.job.cancel`, `run.job.stream` (public, project-scoped) and
+  `run.job.admin` (internal operator access to every project's jobs). `run.admin` is spelled `run.job.admin` because a
+  capability id has three segments.
+- New contracts under `contracts/run/`: `run.job-create-request@1` (class from `platform.runtime-class@1`, artifact
+  required for `function` and `code`, `inputs` as Media objects pinned by sha256, `limits` wall/cpu/mem as
+  `platform.job@1`, `ttl_ms`, `egress` `none | public | openvibe-only` as Node's `worker.egress`,
+  `requirements` as `platform.workload-requirements@1`, `idempotency_key`), `run.job-create-result@1`,
+  `run.job-read-result@1` (states `queued | placed | running | succeeded | failed | cancelled | expired`, placement node,
+  timings, exit, `usage.seconds`, result, error, with per-state rules), `run.job-list-query@1`, `run.job-list-result@1`
+  (`next_cursor` pages), `run.job-stream-ticket-result@1` (one-use, two-minute ticket, as Events' realtime ticket) and
+  `run.job-stream-event@1` (SSE `output | state | end`).
+- New planned events produced by Run: `run.job.queued`, `run.job.started`, `run.job.succeeded`, `run.job.failed`,
+  `run.job.cancelled` and `run.job.expired`, projections of the job without args, inputs, result or output.
+- `ids.newId('job')` mints `job_<ULID>`, the `platform.job@1` id Run passes to the node, so the metering key stays
+  `run:<job id>:<n>`.
+- Fixtures: valid and invalid for every new contract; `test/platform-run.test.js` pins the Run job id, artifact,
+  limits and egress to `platform.job@1` and Node, and `usage.seconds` to the sum of the job's readings.
+
 ## 0.89.0 — 2026-10-03
 
 **Agent tokens and confirmations** (plan T2 step 9; OpenVibe.Network `docs/t2-projects-and-grants.md` §2 gaps 1–3,

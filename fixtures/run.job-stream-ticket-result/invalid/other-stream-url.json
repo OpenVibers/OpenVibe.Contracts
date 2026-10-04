@@ -1,0 +1,7 @@
+{
+  "ticket": "sample-ticket.not-a-jwt.placeholder",
+  "expires_at": "2026-10-04T10:02:00.000Z",
+  "expires_in": 120,
+  "stream_url": "https://openvibe.run/api/v1/jobs",
+  "job_id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+}

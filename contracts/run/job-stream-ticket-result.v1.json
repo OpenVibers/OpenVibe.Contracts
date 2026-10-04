@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/job-stream-ticket-result.v1.json",
+  "title": "RunJobStreamTicketResult",
+  "description": "run.job-stream-ticket-result@1 (PLANNED; plan T14 R1): the answer of POST /api/v1/jobs/{id}/stream/ticket on OpenVibe.Run (capability run.job.stream), modelled on Events' realtime ticket (network.realtime-ticket-result@1). A browser cannot put a header on an EventSource, so it opens `${stream_url}?ticket=${ticket}` (plus Last-Event-ID when it resumes) at once. The ticket is a two-minute RS256 JWT that Run signs: audience openvibe.run, typ run-stream (so it is never a session token), it names this one job, and Run refuses a jti it has already seen while the ticket is valid, so a ticket opens one stream; ask for a fresh one for every reconnect. Never logged, never stored. A server caller may instead send its Bearer token to GET /api/v1/jobs/{id}/stream. The stream is text/event-stream of run.job-stream-event@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ticket",
+    "expires_at",
+    "expires_in",
+    "stream_url",
+    "job_id"
+  ],
+  "properties": {
+    "ticket": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+      "maxLength": 4096,
+      "description": "The signed ticket (a compact JWS)."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_in": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 300,
+      "description": "Seconds until the ticket expires (120)."
+    },
+    "stream_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://[^?#]+/api/v1/jobs/job_[0-9A-HJKMNP-TV-Z]{26}/stream$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+    }
+  }
+}

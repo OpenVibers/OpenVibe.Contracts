@@ -5694,6 +5694,136 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "run.job-create-request",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job-create-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-create-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job-read-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-read-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job-list-query",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-list-query.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job-list-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job-stream-ticket-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-stream-ticket-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job-stream-event",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/job-stream-event.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job.queued",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.job.queued.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job.started",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.job.started.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job.succeeded",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.job.succeeded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job.failed",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.job.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job.cancelled",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.job.cancelled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "run.job.expired",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.job.expired.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
     }
   ]
 }

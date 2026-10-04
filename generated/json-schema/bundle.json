@@ -63363,6 +63363,1701 @@
           }
         ]
       }
+    },
+    "run.job-create-request": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-create-request.v1.json",
+        "title": "RunJobCreateRequest",
+        "description": "run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress: none (default; any node, sent as net deny), public or openvibe-only (only a node whose worker.egress is exactly that policy, until platform.job@1 net carries it per job). REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "class",
+          "limits"
+        ],
+        "properties": {
+          "class": {
+            "$ref": "../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "$ref": "#/$defs/artifact"
+          },
+          "args": {
+            "type": "object",
+            "description": "The artifact's declared input as JSON; default {}."
+          },
+          "inputs": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/$defs/input"
+            },
+            "description": "Files placed in the job directory before the process starts; names are unique (else 422)."
+          },
+          "limits": {
+            "$ref": "#/$defs/limits"
+          },
+          "ttl_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 86400000,
+            "description": "Lifetime from creation, covering the wait for a node and the run (platform.job@1 ttl_ms); when it runs out the job ends expired. Default: limits.wall_ms plus 600000."
+          },
+          "egress": {
+            "$ref": "#/$defs/egress"
+          },
+          "requirements": {
+            "$ref": "../platform/workload-requirements.v1.json"
+          },
+          "idempotency_key": {
+            "$ref": "#/$defs/idempotency_key"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "class"
+              ],
+              "properties": {
+                "class": {
+                  "enum": [
+                    "function",
+                    "code"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "artifact"
+              ]
+            }
+          }
+        ],
+        "$defs": {
+          "artifact": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The pre-registered artifact to run (platform.job@1 artifact).",
+            "required": [
+              "name",
+              "version"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]{0,63}$",
+                "description": "One exact version, never a range"
+              }
+            }
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "One input file: an OpenVibe.Media object the caller's project can read, pinned by digest.",
+            "required": [
+              "name",
+              "media_id",
+              "sha256"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+                "description": "File name in the job directory; no path separators."
+              },
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "description": "Lowercase hex SHA-256 of the object's bytes."
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.",
+            "required": [
+              "wall_ms",
+              "cpu_ms",
+              "mem_bytes"
+            ],
+            "properties": {
+              "wall_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Running time from `job_started`"
+              },
+              "cpu_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "CPU time, user plus system"
+              },
+              "mem_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Peak resident memory"
+              }
+            }
+          },
+          "egress": {
+            "type": "string",
+            "enum": [
+              "none",
+              "public",
+              "openvibe-only"
+            ],
+            "default": "none",
+            "description": "OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only)."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+          }
+        },
+        "examples": [
+          {
+            "class": "function",
+            "artifact": {
+              "name": "thumbnail",
+              "version": "1.2.0"
+            },
+            "args": {
+              "width": 320
+            },
+            "inputs": [
+              {
+                "name": "photo.jpg",
+                "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+                "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+                "size_bytes": 482113
+              }
+            ],
+            "limits": {
+              "wall_ms": 30000,
+              "cpu_ms": 30000,
+              "mem_bytes": 268435456
+            },
+            "egress": "none",
+            "idempotency_key": "thumb:photo-7"
+          }
+        ]
+      }
+    },
+    "run.job-create-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-create-result.v1.json",
+        "title": "RunJobCreateResult",
+        "description": "run.job-create-result@1 (PLANNED; plan T14 R1, ADR-034): the answer of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). 201 with created true and the new job, queued; 200 with created false and the job first created under the same idempotency_key (in whatever state it has reached). Refusals are application/problem+json: 400 (body invalid), 413 (args over 512 KiB), 422 run.limits.exceeded or a duplicate input name, 409 run.idempotency.conflict, 429 (quota).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "created",
+          "job"
+        ],
+        "properties": {
+          "created": {
+            "type": "boolean",
+            "description": "false when the idempotency_key matched an earlier job."
+          },
+          "job": {
+            "$ref": "job-read-result.v1.json"
+          }
+        }
+      }
+    },
+    "run.job-read-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-read-result.v1.json",
+        "title": "RunJobReadResult",
+        "description": "run.job-read-result@1 (PLANNED; plan T14 R1, ADR-034): one job on OpenVibe.Run, as GET /api/v1/jobs/{id} answers it (capability run.job.read), POST /api/v1/jobs/{id}/cancel answers it after the cancel (run.job.cancel), and run.job-create-result@1 and run.job-list-result@1 carry it. STATES: queued (stored, waiting for a node) -> placed (sent to a node as platform.job@1, not yet started) -> running (the node sent job_started) -> one end state: succeeded (job_exit reason exited with code 0), failed (exited with another code, or reason limit, stopped or failed), cancelled (POST /api/v1/jobs/{id}/cancel, or job_exit reason cancelled), expired (ttl_ms ran out: before placement, before start, or while running, job_exit reason ttl). An end state never changes. Run mints the id (job_<ULID>) and sends it unchanged as platform.job@1 `id`, so every metering reading of the job is `run:<id>:<n>` (platform.job-frame@1 job_usage). usage.seconds is wall_ms / 1000: the sum of the job's readings (service run, operation function.invoke, unit s). Never carries the job's stdout (GET /api/v1/jobs/{id}/stream) or a credential. More fields may be added.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "inputs",
+          "limits",
+          "ttl_ms",
+          "egress",
+          "requirements",
+          "idempotency_key",
+          "placement",
+          "timings",
+          "exit",
+          "result",
+          "usage",
+          "error"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Minted by Run; the platform.job@1 id and the stem of every usage reading key (run:<id>:<n>)."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project the caller's token names; usage is billed to it."
+          },
+          "requester": {
+            "$ref": "../identity/subject-ref.v1.json",
+            "description": "The token principal that submitted the job."
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "placed",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "expired"
+            ]
+          },
+          "class": {
+            "$ref": "../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "inputs": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "$ref": "job-create-request.v1.json#/$defs/input"
+            }
+          },
+          "limits": {
+            "$ref": "job-create-request.v1.json#/$defs/limits"
+          },
+          "ttl_ms": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The job's lifetime from created_at, the default filled in."
+          },
+          "egress": {
+            "$ref": "job-create-request.v1.json#/$defs/egress"
+          },
+          "requirements": {
+            "$ref": "../platform/workload-requirements.v1.json",
+            "description": "What the job was placed against, the default filled in."
+          },
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "$ref": "job-create-request.v1.json#/$defs/idempotency_key"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/placement"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Where the job was sent; null while queued, and for a job cancelled or expired before placement."
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "From job_started started_ms; null until the process started."
+              },
+              "finished_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "When the job reached its end state; null before."
+              }
+            }
+          },
+          "exit": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/exit"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The node's job_exit; null until it arrived, and for a job that ended before a node ran it."
+          },
+          "result": {
+            "description": "The artifact's declared output (job_exit result, any JSON); null unless state is succeeded."
+          },
+          "usage": {
+            "$ref": "#/$defs/usage"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/error"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why the job failed or expired; null in every other state."
+          }
+        },
+        "$defs": {
+          "placement": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "node",
+              "provider",
+              "region"
+            ],
+            "properties": {
+              "node": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "The worker's device id (the usage reading's `node`)."
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 128,
+                "description": "The offer's provider (the usage reading's `provider`); null for a first-party node."
+              },
+              "region": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 64
+              }
+            }
+          },
+          "exit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "code"
+            ],
+            "properties": {
+              "reason": {
+                "enum": [
+                  "exited",
+                  "cancelled",
+                  "ttl",
+                  "limit",
+                  "stopped",
+                  "failed"
+                ],
+                "description": "platform.job-frame@1 job_exit reason."
+              },
+              "code": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "The process's exit status; null when it was killed or never ran."
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "seconds",
+              "wall_ms",
+              "cpu_ms",
+              "mem_peak_bytes"
+            ],
+            "properties": {
+              "seconds": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Metered wall-clock seconds, wall_ms / 1000 (unit s); 0 when the job never started."
+              },
+              "wall_ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cpu_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Informational, never billed."
+              },
+              "mem_peak_bytes": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Informational, never billed."
+              }
+            }
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "detail"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^run\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$",
+                "description": "run.job.exit_nonzero, run.job.limit, run.job.stopped, run.job.worker_failed, run.job.input_digest_mismatch, run.job.unplaceable (expired: no node offered the class, egress and requirements), run.job.ttl."
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 1024
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "queued"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "placement": {
+                  "type": "null"
+                },
+                "exit": {
+                  "type": "null"
+                },
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "placed_at": {
+                      "type": "null"
+                    },
+                    "started_at": {
+                      "type": "null"
+                    },
+                    "finished_at": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "placed",
+                    "running"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "placement": {
+                  "type": "object"
+                },
+                "exit": {
+                  "type": "null"
+                },
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "placed_at": {
+                      "type": "string"
+                    },
+                    "finished_at": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "running"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "started_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "succeeded",
+                    "failed",
+                    "cancelled",
+                    "expired"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "finished_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "succeeded"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "placement": {
+                  "type": "object"
+                },
+                "exit": {
+                  "type": "object",
+                  "properties": {
+                    "reason": {
+                      "const": "exited"
+                    },
+                    "code": {
+                      "const": 0
+                    }
+                  }
+                },
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "started_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "failed",
+                    "expired"
+                  ]
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "error": {
+                  "type": "object"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "error": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "succeeded"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "else": {
+              "properties": {
+                "result": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "class": {
+                  "enum": [
+                    "function",
+                    "code"
+                  ]
+                }
+              },
+              "required": [
+                "class"
+              ]
+            },
+            "then": {
+              "properties": {
+                "artifact": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "run.job-list-query": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-list-query.v1.json",
+        "title": "RunJobListQuery",
+        "description": "run.job-list-query@1 (PLANNED; plan T14 R1): the query string of GET /api/v1/jobs on OpenVibe.Run (capability run.job.list) and of GET /api/v1/admin/jobs (run.job.admin, which alone may pass project_id). Without project_id it lists the caller's token project.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "enum": [
+              "queued",
+              "placed",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "expired"
+            ]
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Admin only (run.job.admin): list this project's jobs; with run.job.list it is refused 403."
+          },
+          "limit": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 200
+              },
+              {
+                "type": "string",
+                "pattern": "^(?:[1-9][0-9]?|1[0-9]{2}|200)$"
+              }
+            ],
+            "description": "Items per page, 1 to 200 (default 50). A query string carries it as a string, which must name the same range."
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "next_cursor of the previous page."
+          }
+        }
+      }
+    },
+    "run.job-list-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-list-result.v1.json",
+        "title": "RunJobListResult",
+        "description": "run.job-list-result@1 (PLANNED; plan T14 R1): the answer of GET /api/v1/jobs on OpenVibe.Run (capability run.job.list) and GET /api/v1/admin/jobs (run.job.admin), filtered by run.job-list-query@1. Jobs come newest first (by id). More fields may be added.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "jobs",
+          "next_cursor"
+        ],
+        "properties": {
+          "jobs": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "$ref": "job-read-result.v1.json"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512,
+            "description": "Pass as cursor for the next page; null on the last page."
+          }
+        }
+      }
+    },
+    "run.job-stream-ticket-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-stream-ticket-result.v1.json",
+        "title": "RunJobStreamTicketResult",
+        "description": "run.job-stream-ticket-result@1 (PLANNED; plan T14 R1): the answer of POST /api/v1/jobs/{id}/stream/ticket on OpenVibe.Run (capability run.job.stream), modelled on Events' realtime ticket (network.realtime-ticket-result@1). A browser cannot put a header on an EventSource, so it opens `${stream_url}?ticket=${ticket}` (plus Last-Event-ID when it resumes) at once. The ticket is a two-minute RS256 JWT that Run signs: audience openvibe.run, typ run-stream (so it is never a session token), it names this one job, and Run refuses a jti it has already seen while the ticket is valid, so a ticket opens one stream; ask for a fresh one for every reconnect. Never logged, never stored. A server caller may instead send its Bearer token to GET /api/v1/jobs/{id}/stream. The stream is text/event-stream of run.job-stream-event@1.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticket",
+          "expires_at",
+          "expires_in",
+          "stream_url",
+          "job_id"
+        ],
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+            "maxLength": 4096,
+            "description": "The signed ticket (a compact JWS)."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_in": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 300,
+            "description": "Seconds until the ticket expires (120)."
+          },
+          "stream_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://[^?#]+/api/v1/jobs/job_[0-9A-HJKMNP-TV-Z]{26}/stream$"
+          },
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    "run.job-stream-event": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/job-stream-event.v1.json",
+        "title": "RunJobStreamEvent",
+        "description": "run.job-stream-event@1 (PLANNED; plan T14 R1): the JSON `data` of one server-sent event on GET /api/v1/jobs/{id}/stream (capability run.job.stream). The SSE `event` field is the type and the SSE `id` is `seq`, so a reconnect with Last-Event-ID resumes after it. output: a chunk of the job's stdout (platform.job-frame@1 job_stdout, best effort: a chunk lost on the node's link is never resent, and Run keeps at most the last 1 MiB to replay). state: the job moved to a new state. end: the job reached its end state; the server closes the stream after it. A stream opened on an ended job replays what is kept, then end. Output is never metered and never in an event.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "job_id",
+          "seq",
+          "at"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "output",
+              "state",
+              "end"
+            ]
+          },
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The job's own stream counter from 1; the SSE id."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "chunk": {
+            "type": "string",
+            "maxLength": 65536,
+            "description": "output only: UTF-8 text."
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "placed",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "expired"
+            ],
+            "description": "state and end: the job's state."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "output"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "required": [
+                "chunk"
+              ],
+              "not": {
+                "required": [
+                  "state"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "state",
+                    "end"
+                  ]
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "required": [
+                "state"
+              ],
+              "not": {
+                "required": [
+                  "chunk"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "end"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "succeeded",
+                    "failed",
+                    "cancelled",
+                    "expired"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "run.job.queued": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.job.queued.v1.json",
+        "title": "RunJobQueuedPayload",
+        "description": "run.job.queued v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). A job was stored queued (POST /api/v1/jobs created it; not published for an idempotent repeat). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:run.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "egress",
+          "placement",
+          "timings",
+          "exit",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "state": {
+            "const": "queued",
+            "description": "The job state (run.job-read-result@1 state)."
+          },
+          "class": {
+            "$ref": "../../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "egress": {
+            "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+          },
+          "placement": {
+            "type": "null"
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": "null"
+              },
+              "started_at": {
+                "type": "null"
+              },
+              "finished_at": {
+                "type": "null"
+              }
+            }
+          },
+          "exit": {
+            "type": "null"
+          },
+          "usage": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "run.job.started": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.job.started.v1.json",
+        "title": "RunJobStartedPayload",
+        "description": "run.job.started v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The node sent job_started: the process runs. Usage seconds count from started_at. A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:run.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "egress",
+          "placement",
+          "timings",
+          "exit",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "state": {
+            "const": "running",
+            "description": "The job state (run.job-read-result@1 state)."
+          },
+          "class": {
+            "$ref": "../../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "egress": {
+            "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+          },
+          "placement": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/placement"
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": "null"
+              }
+            }
+          },
+          "exit": {
+            "type": "null"
+          },
+          "usage": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "run.job.succeeded": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.job.succeeded.v1.json",
+        "title": "RunJobSucceededPayload",
+        "description": "run.job.succeeded v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended succeeded: job_exit reason exited with code 0. Carries no result (read it with GET /api/v1/jobs/{id}). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority normal, actor service:run.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "egress",
+          "placement",
+          "timings",
+          "exit",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "state": {
+            "const": "succeeded",
+            "description": "The job state (run.job-read-result@1 state)."
+          },
+          "class": {
+            "$ref": "../../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "egress": {
+            "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+          },
+          "placement": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/placement"
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "exit": {
+            "allOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/exit"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "const": "exited"
+                  },
+                  "code": {
+                    "const": 0
+                  }
+                }
+              }
+            ]
+          },
+          "usage": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "run.job.failed": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.job.failed.v1.json",
+        "title": "RunJobFailedPayload",
+        "description": "run.job.failed v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended failed: job_exit with a non-zero code or reason limit, stopped or failed, or an input digest mismatch before the process started. A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority important, actor service:run.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "egress",
+          "placement",
+          "timings",
+          "exit",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "state": {
+            "const": "failed",
+            "description": "The job state (run.job-read-result@1 state)."
+          },
+          "class": {
+            "$ref": "../../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "egress": {
+            "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/placement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "exit": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/exit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+          },
+          "error": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/error"
+          }
+        }
+      }
+    },
+    "run.job.cancelled": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.job.cancelled.v1.json",
+        "title": "RunJobCancelledPayload",
+        "description": "run.job.cancelled v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended cancelled (POST /api/v1/jobs/{id}/cancel by its project or run.job.admin, or job_exit reason cancelled). A job cancelled before placement has no placement and no exit. A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority normal, actor service:run.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "egress",
+          "placement",
+          "timings",
+          "exit",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "state": {
+            "const": "cancelled",
+            "description": "The job state (run.job-read-result@1 state)."
+          },
+          "class": {
+            "$ref": "../../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "egress": {
+            "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/placement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "exit": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/exit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "run.job.expired": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.job.expired.v1.json",
+        "title": "RunJobExpiredPayload",
+        "description": "run.job.expired v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). The job ended expired: its ttl_ms ran out before a node took it (run.job.unplaceable), before it started, or while it ran (job_exit reason ttl, run.job.ttl). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority normal, actor service:run.",
+        "type": "object",
+        "required": [
+          "job_id",
+          "project_id",
+          "requester",
+          "state",
+          "class",
+          "artifact",
+          "egress",
+          "placement",
+          "timings",
+          "exit",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "state": {
+            "const": "expired",
+            "description": "The job state (run.job-read-result@1 state)."
+          },
+          "class": {
+            "$ref": "../../platform/runtime-class.v1.json"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "egress": {
+            "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/placement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "placed_at",
+              "started_at",
+              "finished_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "placed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "exit": {
+            "anyOf": [
+              {
+                "$ref": "../../run/job-read-result.v1.json#/$defs/exit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+          },
+          "error": {
+            "$ref": "../../run/job-read-result.v1.json#/$defs/error"
+          }
+        }
+      }
     }
   }
 }

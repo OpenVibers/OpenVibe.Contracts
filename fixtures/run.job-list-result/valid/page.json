@@ -1,0 +1,118 @@
+{
+  "jobs": [
+    {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+      "requester": {
+        "type": "app",
+        "id": "app_01JAB2C3D4E5F6G7H8J9K0MNPV"
+      },
+      "class": "function",
+      "artifact": {
+        "name": "thumbnail",
+        "version": "1.2.0"
+      },
+      "inputs": [
+        {
+          "name": "photo.jpg",
+          "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPS",
+          "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+          "size_bytes": 482113
+        }
+      ],
+      "limits": {
+        "wall_ms": 30000,
+        "cpu_ms": 30000,
+        "mem_bytes": 268435456
+      },
+      "ttl_ms": 630000,
+      "egress": "none",
+      "requirements": {
+        "kind": "run.function",
+        "mobility": "job",
+        "latency_class": "background",
+        "objective": "balanced"
+      },
+      "idempotency_key": "thumb:photo-7",
+      "state": "succeeded",
+      "placement": {
+        "node": "dev_01JAB2C3D4E5F6G7H8J9K0MNPT",
+        "provider": null,
+        "region": "us-west"
+      },
+      "timings": {
+        "created_at": "2026-10-04T10:00:00.000Z",
+        "placed_at": "2026-10-04T10:00:00.400Z",
+        "started_at": "2026-10-04T10:00:00.650Z",
+        "finished_at": "2026-10-04T10:00:03.000Z"
+      },
+      "exit": {
+        "reason": "exited",
+        "code": 0
+      },
+      "result": {
+        "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPW"
+      },
+      "usage": {
+        "seconds": 2.35,
+        "wall_ms": 2350,
+        "cpu_ms": 1800,
+        "mem_peak_bytes": 41943040
+      },
+      "error": null
+    },
+    {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+      "requester": {
+        "type": "app",
+        "id": "app_01JAB2C3D4E5F6G7H8J9K0MNPV"
+      },
+      "class": "function",
+      "artifact": {
+        "name": "thumbnail",
+        "version": "1.2.0"
+      },
+      "inputs": [
+        {
+          "name": "photo.jpg",
+          "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPS",
+          "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+          "size_bytes": 482113
+        }
+      ],
+      "limits": {
+        "wall_ms": 30000,
+        "cpu_ms": 30000,
+        "mem_bytes": 268435456
+      },
+      "ttl_ms": 630000,
+      "egress": "none",
+      "requirements": {
+        "kind": "run.function",
+        "mobility": "job",
+        "latency_class": "background",
+        "objective": "balanced"
+      },
+      "idempotency_key": "thumb:photo-7",
+      "state": "queued",
+      "placement": null,
+      "timings": {
+        "created_at": "2026-10-04T10:00:00.000Z",
+        "placed_at": null,
+        "started_at": null,
+        "finished_at": null
+      },
+      "exit": null,
+      "result": null,
+      "usage": {
+        "seconds": 0,
+        "wall_ms": 0,
+        "cpu_ms": null,
+        "mem_peak_bytes": null
+      },
+      "error": null
+    }
+  ],
+  "next_cursor": "eyJpZCI6ImpvYl8wMSJ9"
+}
