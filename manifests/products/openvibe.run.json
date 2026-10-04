@@ -27,6 +27,7 @@
   "keywords": "openvibe run, code sandbox, run code online, serverless functions, ai agent tasks",
   "launch": "the sandbox runtime",
   "relationships": {
+    "service": "run",
     "noRepo": true,
     "meanwhile": [
       {

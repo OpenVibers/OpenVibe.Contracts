@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/job-stream-event.v1.json",
+  "title": "RunJobStreamEvent",
+  "description": "run.job-stream-event@1 (PLANNED; plan T14 R1): the JSON `data` of one server-sent event on GET /api/v1/jobs/{id}/stream (capability run.job.stream). The SSE `event` field is the type and the SSE `id` is `seq`, so a reconnect with Last-Event-ID resumes after it. output: a chunk of the job's stdout (platform.job-frame@1 job_stdout, best effort: a chunk lost on the node's link is never resent, and Run keeps at most the last 1 MiB to replay). state: the job moved to a new state. end: the job reached its end state; the server closes the stream after it. A stream opened on an ended job replays what is kept, then end. Output is never metered and never in an event.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "job_id",
+    "seq",
+    "at"
+  ],
+  "properties": {
+    "type": {
+      "enum": ["output", "state", "end"]
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The job's own stream counter from 1; the SSE id."
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "chunk": {
+      "type": "string",
+      "maxLength": 65536,
+      "description": "output only: UTF-8 text."
+    },
+    "state": {
+      "enum": ["queued", "placed", "running", "succeeded", "failed", "cancelled", "expired"],
+      "description": "state and end: the job's state."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "output" } }, "required": ["type"] },
+      "then": { "required": ["chunk"], "not": { "required": ["state"] } }
+    },
+    {
+      "if": { "properties": { "type": { "enum": ["state", "end"] } }, "required": ["type"] },
+      "then": { "required": ["state"], "not": { "required": ["chunk"] } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "end" } }, "required": ["type"] },
+      "then": { "properties": { "state": { "enum": ["succeeded", "failed", "cancelled", "expired"] } } }
+    }
+  ]
+}

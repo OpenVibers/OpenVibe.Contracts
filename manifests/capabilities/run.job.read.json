@@ -1,0 +1,19 @@
+{
+  "id": "run.job.read",
+  "version": "1.0",
+  "owner": "run",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (plan T14 R1; OpenVibe.Run is not built yet): Read one of the token project's jobs: GET /api/v1/jobs/:id (state, placement, timings, exit, usage seconds, result). It becomes active, and enters generated/openapi/run.json, when OpenVibe.Run implements the routes.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "run.job-read-result@1",
+  "permissions": [
+    "run:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "run-read",
+  "events": [],
+  "implementedBy": []
+}

@@ -1,0 +1,24 @@
+{
+  "class": "function",
+  "artifact": {
+    "name": "thumbnail",
+    "version": "1.2.0"
+  },
+  "args": {
+    "width": 320
+  },
+  "inputs": [
+    {
+      "name": "photo.jpg",
+      "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPS"
+    }
+  ],
+  "limits": {
+    "wall_ms": 30000,
+    "cpu_ms": 30000,
+    "mem_bytes": 268435456
+  },
+  "ttl_ms": 630000,
+  "egress": "none",
+  "idempotency_key": "thumb:photo-7"
+}
