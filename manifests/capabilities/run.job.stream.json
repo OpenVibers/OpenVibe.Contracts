@@ -1,0 +1,19 @@
+{
+  "id": "run.job.stream",
+  "version": "1.0",
+  "owner": "run",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (plan T14 R1; OpenVibe.Run is not built yet): Watch a job's live output: POST /api/v1/jobs/:id/stream/ticket mints a one-use, two-minute stream ticket (run.job-stream-ticket-result@1) and GET /api/v1/jobs/:id/stream?ticket= (or with a Bearer token) is text/event-stream of run.job-stream-event@1, resumable with Last-Event-ID. It becomes active, and enters generated/openapi/run.json, when OpenVibe.Run implements the routes.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "run.job-stream-ticket-result@1",
+  "permissions": [
+    "run:stream"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "run-stream",
+  "events": [],
+  "implementedBy": []
+}

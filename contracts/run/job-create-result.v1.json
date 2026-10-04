@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/job-create-result.v1.json",
+  "title": "RunJobCreateResult",
+  "description": "run.job-create-result@1 (PLANNED; plan T14 R1, ADR-034): the answer of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). 201 with created true and the new job, queued; 200 with created false and the job first created under the same idempotency_key (in whatever state it has reached). Refusals are application/problem+json: 400 (body invalid), 413 (args over 512 KiB), 422 run.limits.exceeded or a duplicate input name, 409 run.idempotency.conflict, 429 (quota).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "created",
+    "job"
+  ],
+  "properties": {
+    "created": {
+      "type": "boolean",
+      "description": "false when the idempotency_key matched an earlier job."
+    },
+    "job": {
+      "$ref": "job-read-result.v1.json"
+    }
+  }
+}

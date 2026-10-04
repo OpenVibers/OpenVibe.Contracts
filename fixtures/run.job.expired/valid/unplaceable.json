@@ -1,0 +1,33 @@
+{
+  "job_id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "requester": {
+    "type": "app",
+    "id": "app_01JAB2C3D4E5F6G7H8J9K0MNPV"
+  },
+  "state": "expired",
+  "class": "function",
+  "artifact": {
+    "name": "thumbnail",
+    "version": "1.2.0"
+  },
+  "egress": "none",
+  "placement": null,
+  "timings": {
+    "created_at": "2026-10-04T10:00:00.000Z",
+    "placed_at": null,
+    "started_at": null,
+    "finished_at": "2026-10-04T10:10:30.000Z"
+  },
+  "exit": null,
+  "usage": {
+    "seconds": 0,
+    "wall_ms": 0,
+    "cpu_ms": null,
+    "mem_peak_bytes": null
+  },
+  "error": {
+    "code": "run.job.unplaceable",
+    "detail": "no node offers worker:function with egress none"
+  }
+}

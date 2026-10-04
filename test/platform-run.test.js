@@ -74,4 +74,25 @@ checks += 3;
 // job_usage only ever stands for a full second: it has no quantity of its own.
 ok(!contracts.validate('platform.job-frame', { ...usage, quantity: 0.5 }).valid, 'a job_usage frame cannot carry a partial quantity');
 
+// OpenVibe.Run's job API (T14 R1): Run mints the platform.job@1 id, so its job ids, artifacts and limits are the
+// job's own; a job's usage seconds are the sum of its readings; every run.* capability and event is Run's.
+const create = contracts.schema('run.job-create-request');
+const job = contracts.schema('platform.job');
+ok(contracts.schema('run.job-read-result').properties.id.pattern === job.properties.id.pattern, 'a Run job id is a platform.job@1 id');
+assert.deepStrictEqual(create.$defs.artifact.properties, job.properties.artifact.properties);
+assert.deepStrictEqual(create.$defs.limits.properties, job.properties.limits.properties);
+assert.deepStrictEqual(create.$defs.egress.enum, ['none', 'public', 'openvibe-only']);
+checks += 3;
+ok(contracts.ids.newId('job').match(job.properties.id.pattern), 'newId(job) mints a platform.job@1 id');
+const succeeded = fixture('run.job-read-result', 'valid', 'succeeded');
+ok(succeeded.usage.seconds === fromExit(exit).reduce((s, r) => s + r.quantity, 0) && succeeded.usage.wall_ms === exit.usage.wall_ms, 'usage.seconds is the sum of the job\'s readings');
+const run = contracts.services.get('run');
+ok(run && run.status === 'placeholder' && contracts.products.get('openvibe.run').relationships.noRepo === true, 'run is a placeholder service and openvibe.run still has no repository');
+for (const id of ['run.job.submit', 'run.job.read', 'run.job.list', 'run.job.cancel', 'run.job.stream', 'run.job.admin']) {
+    const c = contracts.capabilities.get(id);
+    ok(c && c.owner === 'run' && c.status === 'planned' && c.description.startsWith('PLANNED') && run.capabilities.includes(id), `${id} is a planned capability Run serves`);
+}
+ok(contracts.capabilities.get('run.job.admin').visibility === 'internal', 'run.job.admin is internal');
+for (const s of ['queued', 'started', 'succeeded', 'failed', 'cancelled', 'expired']) ok(run.eventsProduced.includes(`run.job.${s}`), `run produces run.job.${s}`);
+
 console.log(`platform run: ${checks} job, frame and metering checks passed`);

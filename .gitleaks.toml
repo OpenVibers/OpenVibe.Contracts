@@ -57,3 +57,21 @@ description = "Sample realtime tickets in network.realtime-ticket-result fixture
 condition = "AND"
 paths = ['''^fixtures/network\.realtime\-ticket\-result/(valid|invalid)/[a-z-]+\.json$''']
 regexes = ['''^eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9\.eyJ0eXAiOiJyZWFsdGltZSJ9\.c2lnbmF0dXJl$''']
+
+[[allowlists]]
+description = "Made-up run.job stream ticket in the valid fixture"
+condition = "AND"
+paths = ['''^fixtures/run\.job-stream-ticket-result/valid/ticket\.json$''']
+regexes = ['''^eyJhbGciOiJSUzI1NiJ9\.eyJqb2IiOiJqb2JfMDEifQ\.c2lnbmF0dXJl$''']
+
+[[allowlists]]
+description = "Made-up run.job stream ticket in the long-lived invalid fixture"
+condition = "AND"
+paths = ['''^fixtures/run\.job-stream-ticket-result/invalid/long-lived\.json$''']
+regexes = ['''^eyJhbGciOiJSUzI1NiJ9\.eyJqb2IiOiJqb2JfMDEifQ\.c2lnbmF0dXJl$''']
+
+[[allowlists]]
+description = "Made-up run.job stream ticket in the other-stream-url invalid fixture"
+condition = "AND"
+paths = ['''^fixtures/run\.job-stream-ticket-result/invalid/other-stream-url\.json$''']
+regexes = ['''^eyJhbGciOiJSUzI1NiJ9\.eyJqb2IiOiJqb2JfMDEifQ\.c2lnbmF0dXJl$''']

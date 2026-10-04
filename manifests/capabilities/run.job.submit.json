@@ -1,0 +1,26 @@
+{
+  "id": "run.job.submit",
+  "version": "1.0",
+  "owner": "run",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED (plan T14 R1; OpenVibe.Run is not built yet): Submit a job to OpenVibe.Run: POST /api/v1/jobs. The job belongs to the token's project, which is billed per wall-clock second it runs (service run, operation function.invoke, unit s). An idempotency_key makes a retry return the first job. It becomes active, and enters generated/openapi/run.json, when OpenVibe.Run implements the routes.",
+  "inputSchema": "run.job-create-request@1",
+  "outputSchema": "run.job-create-result@1",
+  "permissions": [
+    "run:submit"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "run-submit",
+  "events": [
+    "run.job.queued",
+    "run.job.started",
+    "run.job.succeeded",
+    "run.job.failed",
+    "run.job.expired"
+  ],
+  "implementedBy": []
+}

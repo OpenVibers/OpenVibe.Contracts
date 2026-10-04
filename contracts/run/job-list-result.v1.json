@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/job-list-result.v1.json",
+  "title": "RunJobListResult",
+  "description": "run.job-list-result@1 (PLANNED; plan T14 R1): the answer of GET /api/v1/jobs on OpenVibe.Run (capability run.job.list) and GET /api/v1/admin/jobs (run.job.admin), filtered by run.job-list-query@1. Jobs come newest first (by id). More fields may be added.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "jobs",
+    "next_cursor"
+  ],
+  "properties": {
+    "jobs": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "job-read-result.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": ["string", "null"],
+      "maxLength": 512,
+      "description": "Pass as cursor for the next page; null on the last page."
+    }
+  }
+}

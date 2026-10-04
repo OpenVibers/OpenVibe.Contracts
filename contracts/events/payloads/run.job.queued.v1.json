@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/run.job.queued.v1.json",
+  "title": "RunJobQueuedPayload",
+  "description": "run.job.queued v1 (OpenVibe.Run; PLANNED: the Run service does not exist yet, plan T14 R1). A job was stored queued (POST /api/v1/jobs created it; not published for an idempotent repeat). A projection of run.job-read-result@1 without args, inputs, result or output. Envelope: subject { type: job, id: <job_id> }, visibility internal, priority low, actor service:run.",
+  "type": "object",
+  "required": [
+    "job_id",
+    "project_id",
+    "requester",
+    "state",
+    "class",
+    "artifact",
+    "egress",
+    "placement",
+    "timings",
+    "exit",
+    "usage",
+    "error"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "requester": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "state": {
+      "const": "queued",
+      "description": "The job state (run.job-read-result@1 state)."
+    },
+    "class": {
+      "$ref": "../../platform/runtime-class.v1.json"
+    },
+    "artifact": {
+      "anyOf": [
+        {
+          "$ref": "../../run/job-create-request.v1.json#/$defs/artifact"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "egress": {
+      "$ref": "../../run/job-create-request.v1.json#/$defs/egress"
+    },
+    "placement": {
+      "type": "null"
+    },
+    "timings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "placed_at",
+        "started_at",
+        "finished_at"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "placed_at": {
+          "type": "null"
+        },
+        "started_at": {
+          "type": "null"
+        },
+        "finished_at": {
+          "type": "null"
+        }
+      }
+    },
+    "exit": {
+      "type": "null"
+    },
+    "usage": {
+      "$ref": "../../run/job-read-result.v1.json#/$defs/usage"
+    },
+    "error": {
+      "type": "null"
+    }
+  }
+}

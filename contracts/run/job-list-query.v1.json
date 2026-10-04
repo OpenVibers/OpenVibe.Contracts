@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/job-list-query.v1.json",
+  "title": "RunJobListQuery",
+  "description": "run.job-list-query@1 (PLANNED; plan T14 R1): the query string of GET /api/v1/jobs on OpenVibe.Run (capability run.job.list) and of GET /api/v1/admin/jobs (run.job.admin, which alone may pass project_id). Without project_id it lists the caller's token project.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "state": {
+      "enum": ["queued", "placed", "running", "succeeded", "failed", "cancelled", "expired"]
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Admin only (run.job.admin): list this project's jobs; with run.job.list it is refused 403."
+    },
+    "limit": {
+      "oneOf": [
+        { "type": "integer", "minimum": 1, "maximum": 200 },
+        { "type": "string", "pattern": "^(?:[1-9][0-9]?|1[0-9]{2}|200)$" }
+      ],
+      "description": "Items per page, 1 to 200 (default 50). A query string carries it as a string, which must name the same range."
+    },
+    "cursor": {
+      "type": "string",
+      "maxLength": 512,
+      "description": "next_cursor of the previous page."
+    }
+  }
+}
