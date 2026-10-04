@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "seq": 13,
+  "ts": 1759600000013,
+  "type": "command_result",
+  "id": "op-7",
+  "result": "ack",
+  "reason": null,
+  "latency_ms": 42
+}

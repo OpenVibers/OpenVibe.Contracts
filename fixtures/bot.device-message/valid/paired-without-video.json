@@ -1,0 +1,70 @@
+{
+  "v": 1,
+  "seq": 1,
+  "ts": 1759600000001,
+  "type": "paired",
+  "device_id": "dev_01J8Z4N5S2V8X0ZB4M7Q9R3T5W",
+  "credential": "example-credential-shown-once",
+  "video": "not_configured",
+  "robot_ids": [
+    "rob_01J8Z4M2Q0R7T9YV3K6N8P1W2X"
+  ],
+  "profile_id": "sim.rover",
+  "profile": {
+    "id": "sim.rover",
+    "version": 1,
+    "name": "Simulated rover",
+    "vendor": null,
+    "kind": "server",
+    "description": null,
+    "capabilities": [
+      "drive.differential",
+      "camera"
+    ],
+    "variants": null,
+    "mapping": {
+      "driver": "sim"
+    },
+    "commands": {
+      "drive": {
+        "axes": {
+          "throttle": [
+            -1,
+            1
+          ],
+          "steer": [
+            -1,
+            1
+          ]
+        }
+      },
+      "say": {
+        "max_chars": 200
+      },
+      "halt": {}
+    },
+    "widgets": [
+      {
+        "type": "drive",
+        "capability": "drive.differential",
+        "label": "Drive",
+        "order": 1,
+        "command": {
+          "kind": "drive"
+        }
+      },
+      {
+        "type": "camera",
+        "capability": "camera",
+        "order": 2
+      }
+    ],
+    "camera": null,
+    "limits": {
+      "max_speed": 1,
+      "max_turn": 1,
+      "max_command_ms": 300,
+      "heartbeat_ms": 1000
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 12,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-7",
+  "kind": "drive",
+  "value": {
+    "throttle": 0.5,
+    "steer": -0.2
+  },
+  "ms": 300
+}

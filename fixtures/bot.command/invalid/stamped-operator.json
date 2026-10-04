@@ -1,0 +1,9 @@
+{
+  "type": "command",
+  "kind": "drive",
+  "value": {},
+  "operator": {
+    "subject": "usr_01J8Z4P7T3W9Y1AC5N8R0S4V6X",
+    "role": "owner"
+  }
+}

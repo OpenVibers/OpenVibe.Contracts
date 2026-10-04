@@ -1,0 +1,106 @@
+{
+  "id": "adeept.adr036",
+  "version": 1,
+  "name": "Adeept ADR036 4WD Smart Car",
+  "vendor": "Adeept",
+  "kind": "onboard",
+  "capabilities": [
+    "drive.differential",
+    "servo.pan_tilt",
+    "lights.rgb",
+    "speaker.horn",
+    "sensor.ultrasonic",
+    "battery"
+  ],
+  "mapping": {
+    "driver": "arduino"
+  },
+  "commands": {
+    "drive": {
+      "axes": {
+        "throttle": [
+          -1,
+          1
+        ],
+        "steer": [
+          -1,
+          1
+        ]
+      }
+    },
+    "actuator": {
+      "names": {
+        "pan": {
+          "type": "number",
+          "range": [
+            -1,
+            1
+          ]
+        },
+        "tilt": {
+          "type": "number",
+          "range": [
+            -1,
+            1
+          ]
+        },
+        "buzzer": {
+          "type": "tone",
+          "hz": [
+            220,
+            880
+          ]
+        },
+        "lights": {
+          "type": "rgb",
+          "count": 8
+        }
+      }
+    }
+  },
+  "widgets": [
+    {
+      "type": "drive",
+      "capability": "drive.differential",
+      "label": "Drive",
+      "order": 1,
+      "command": {
+        "kind": "drive"
+      }
+    },
+    {
+      "type": "pan-tilt",
+      "capability": "servo.pan_tilt",
+      "label": "Pan / tilt",
+      "order": 2,
+      "command": {
+        "kind": "actuator",
+        "names": [
+          "pan",
+          "tilt"
+        ]
+      }
+    },
+    {
+      "type": "battery",
+      "capability": "battery",
+      "label": "Battery",
+      "order": 3
+    },
+    {
+      "type": "latency",
+      "label": "Latency",
+      "order": 4
+    }
+  ],
+  "camera": {
+    "transport": "whip",
+    "resolution": "640x480"
+  },
+  "limits": {
+    "max_speed": 1,
+    "max_turn": 1,
+    "max_command_ms": 300,
+    "heartbeat_ms": 1000
+  }
+}

@@ -899,6 +899,8 @@ sub(path.join(__dirname, 'openapi.test.js'));
 sub(path.join(__dirname, 'loyalty-policy.test.js'));
 // Presence is ephemeral, in Chat's delivery plane; no Events topic (ADR-005 amendment 1).
 sub(path.join(__dirname, 'presence-policy.test.js'));
+// OpenVibe.Bot's manifest matches the capabilities and events Bot declares (ADR-043).
+sub(path.join(__dirname, 'bot-manifest.test.js'));
 // Every OpenVibe.Sites catalog domain has one home in Contracts (plan T11 lane D).
 sub(path.join(__dirname, 'product-catalog.test.js'));
 // Named object zones: identity, retired names, list limits and per-zone usage (ADR-031 amendment 2026-10-02).

@@ -1,0 +1,9 @@
+{
+  "v": 1,
+  "seq": 5,
+  "ts": 1759600000005,
+  "type": "nack",
+  "id": "cmd_01J8Z4Q9V5X1Z3BD6P9S2T5W7Y",
+  "fault_code": "estopped",
+  "message": "the remote e-stop is latched"
+}

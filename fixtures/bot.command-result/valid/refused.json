@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "seq": 14,
+  "ts": 1759600000014,
+  "type": "command_result",
+  "id": "op-8",
+  "result": "refused",
+  "code": "bot.estop_latched",
+  "reason": "the e-stop is latched; only the owner can clear it"
+}

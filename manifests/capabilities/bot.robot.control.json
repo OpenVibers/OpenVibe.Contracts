@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "first-party",
   "sensitive": true,
-  "description": "Physically control a robot with a Network service token. POST /robots/:id/estop latches the e-stop for any robot id and needs bot.robot.read as well; Bot records the service as the actor and does not check X-OV-Subject. On the operator WebSocket (/control) a token with this capability must name a person in X-OV-Subject, and Bot applies that person's role (owner, operator or queue), allowlist and limits. Clearing the e-stop is bot.robot.manage.",
+  "description": "Physically control a robot with a Network service token. POST /robots/:id/estop latches the e-stop for any robot id and needs bot.robot.read as well; Bot records the service as the actor and does not check X-OV-Subject. On the operator WebSocket (/control) a token with this capability must name a person in X-OV-Subject, and Bot applies that person's role (owner, operator or queue), allowlist and limits. Clearing the e-stop is bot.robot.manage. The operator WebSocket frames are bot.command@1, answered by bot.command-result@1; a refused command is audited and emits bot.command.refused.",
   "permissions": [
     "bot:robot:control"
   ],
@@ -14,10 +14,15 @@
   ],
   "quotaClass": "bot-control",
   "events": [
-    "bot.estop.set"
+    "bot.estop.set",
+    "bot.estop.cleared",
+    "bot.command.refused"
   ],
   "implementedBy": [
-    "POST /api/v1/robots/:id/estop"
+    "POST /api/v1/robots/:id/estop",
+    "WS /control {type:\"command\"} (bot.command@1, answered by a command_result frame, bot.command-result@1)",
+    "WS /control {type:\"estop\"} (an owner or operator)",
+    "WS /control {type:\"estop_clear\"} (the owner only)"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "bot.robot-control-result@1"

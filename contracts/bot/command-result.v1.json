@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/command-result.v1.json",
+  "title": "BotCommandResult",
+  "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result.",
+  "type": "object",
+  "required": [
+    "v",
+    "seq",
+    "ts",
+    "type",
+    "id",
+    "result"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "v": {
+      "const": 1
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "type": {
+      "const": "command_result"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "result": {
+      "enum": [
+        "ack",
+        "nack",
+        "refused",
+        "expired",
+        "pending"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^bot\\.[a-z_]+$"
+    },
+    "latency_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cached": {
+      "type": "boolean"
+    }
+  }
+}

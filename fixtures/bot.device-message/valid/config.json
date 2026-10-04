@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "seq": 2,
+  "ts": 1759600000002,
+  "type": "config",
+  "heartbeat_ms": 1000,
+  "limits": {
+    "max_speed": 0.6,
+    "max_turn": 1,
+    "max_command_ms": 300,
+    "heartbeat_ms": 1000
+  },
+  "allowed_commands": [
+    "drive",
+    "actuator",
+    "halt"
+  ],
+  "estop_latched": false
+}

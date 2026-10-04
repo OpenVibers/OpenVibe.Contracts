@@ -1,0 +1,57 @@
+{
+  "id": "sim.rover",
+  "version": 1,
+  "name": "Simulated rover",
+  "vendor": null,
+  "kind": "server",
+  "description": null,
+  "capabilities": [
+    "drive.differential",
+    "camera"
+  ],
+  "variants": null,
+  "mapping": {
+    "driver": "sim"
+  },
+  "commands": {
+    "drive": {
+      "axes": {
+        "throttle": [
+          -1,
+          1
+        ],
+        "steer": [
+          -1,
+          1
+        ]
+      }
+    },
+    "say": {
+      "max_chars": 200
+    },
+    "halt": {}
+  },
+  "widgets": [
+    {
+      "type": "drive",
+      "capability": "drive.differential",
+      "label": "Drive",
+      "order": 1,
+      "command": {
+        "kind": "drive"
+      }
+    },
+    {
+      "type": "camera",
+      "capability": "camera",
+      "order": 2
+    }
+  ],
+  "camera": null,
+  "limits": {
+    "max_speed": 1,
+    "max_turn": 1,
+    "max_command_ms": 300,
+    "heartbeat_ms": 1000
+  }
+}

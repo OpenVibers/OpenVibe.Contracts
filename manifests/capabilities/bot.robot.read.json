@@ -20,6 +20,6 @@
     "GET /api/v1/robots/:id/devices",
     "GET /api/v1/robots/:id/audit"
   ],
-  "inputSchema": "common.no-body@1",
+  "inputSchema": "bot.robot-read-request@1",
   "outputSchema": "bot.robot-read-result@1"
 }
