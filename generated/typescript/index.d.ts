@@ -4703,7 +4703,7 @@ export interface ModerationAction {
 
 /** common.usage-recorded@1.1.0 (owner: network) */
 /**
- * common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, resource, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.
+ * common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, resource, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name. Rollups are counts for dashboards and quotas, never money: Billing never consumes any *.usage.recorded topic, and a service that bills posts platform.usage-sample readings (billing.usage.record).
  */
 export interface UsageRecorded {
   /**
@@ -4723,7 +4723,7 @@ export interface UsageRecorded {
    */
   dimension?: string;
   /**
-   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so a dashboard or quota can group a count by resource (rollups are counts, never money; Billing never consumes them and rates only platform.usage-sample readings): ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
    */
   resource?: string;
   /**
@@ -29757,7 +29757,7 @@ export interface ToolsUsageRecordedPayload {
    */
   dimension?: string;
   /**
-   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so a dashboard or quota can group a count by resource (rollups are counts, never money; Billing never consumes them and rates only platform.usage-sample readings): ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
    */
   resource?: string;
   /**
@@ -30725,7 +30725,7 @@ export interface EventsUsageRecordedPayload {
    */
   dimension?: string;
   /**
-   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so a dashboard or quota can group a count by resource (rollups are counts, never money; Billing never consumes them and rates only platform.usage-sample readings): ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
    */
   resource?: string;
   /**
@@ -51666,9 +51666,12 @@ export interface CapacitySnapshot {
 export interface UsageSample {
   id: string;
   /**
-   * Stable across retries
+   * Stable across retries. The only dedupe key, and it encodes work identity only (examples: tools:job:<id>, ai:<run>:tokens, run:<job>:<n>), never route_epoch, node, region or trace_id.
    */
   idempotency_key: string;
+  /**
+   * The Contracts manifest id of the producing service (tools, ai, run).
+   */
   service: string;
   project?: string;
   subject?: string;

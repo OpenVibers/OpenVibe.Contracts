@@ -171,7 +171,7 @@ Zone provisions each change in Media **synchronously**:
   - Only live objects count. An object counts as soon as it completes and stops counting at its tombstone, even before its copies are erased.
 - **Zone count:** the project's `zones` quota is enforced by Zone.
 - **Counting:** **Media is the only counter.** Per zone and per closed hour it emits `media.usage.recorded` (`common.usage-recorded@1`, planned for Media). Every rollup names the zone twice:
-  - `resource` is the zone's resource name, `ovrn:zone:<project_id>:object-zone/<zone_id>`, as ADR-034 section 9 requires of billable usage. Billing rates by it and the console links it.
+  - `resource` is the zone's resource name, `ovrn:zone:<project_id>:object-zone/<zone_id>`, as ADR-034 section 9 requires of billable usage. The console links it. Rollups are counts; Billing rates readings only; Media posts readings for what it bills.
   - `dimension` is the zone id in lowercase (`zon_01k…`), for consumers that only group by dimension.
   - Rollups for the default zone carry the default zone's resource name too. A rollup without `resource` is never Media's.
 - The series are:
