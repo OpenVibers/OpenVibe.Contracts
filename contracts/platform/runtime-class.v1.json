@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/platform/runtime-class.v1.json",
   "title": "RuntimeClass",
-  "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names.",
+  "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.",
   "$comment": "Additive: a class may be added to v1; none is removed, renamed or reordered.",
   "type": "string",
   "oneOf": [

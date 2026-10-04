@@ -4,7 +4,7 @@
   "project_id": "prj_01JAD1P2R3J4K5M6N7P8Q9R0S1",
   "state": "ready",
   "active": true,
-  "source": "git",
+  "source": "tarball",
   "file_count": 37,
   "total_bytes": 482113,
   "new_bytes": 20411,

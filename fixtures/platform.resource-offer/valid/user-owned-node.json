@@ -1,0 +1,37 @@
+{
+  "offer_id": "off_user_node_1",
+  "kind": "node",
+  "node_id": "usr-node-1",
+  "provider": "self",
+  "region": "home",
+  "trust": "user-owned",
+  "capabilities": [
+    "node:http",
+    "worker:function",
+    "worker:ai-gpu"
+  ],
+  "capacity": {
+    "cpu": {
+      "utilization": 0.1,
+      "available_cores": 8
+    },
+    "memory": {
+      "available_mb": 32000
+    },
+    "gpu": {
+      "type": "rtx-4090",
+      "vram_free_mb": 20000,
+      "utilization": 0
+    }
+  },
+  "latency_ms": {
+    "publish_p95": 20
+  },
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "free-allowance"
+  },
+  "updated_at": "2026-10-03T00:00:00Z"
+}

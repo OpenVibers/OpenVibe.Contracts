@@ -1,0 +1,19 @@
+{
+  "offer_id": "off_stranger_1",
+  "kind": "node",
+  "node_id": "stranger-node-1",
+  "provider": "self",
+  "region": "home",
+  "trust": "stranger",
+  "capabilities": [
+    "node:http",
+    "worker:function"
+  ],
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "free-allowance"
+  },
+  "updated_at": "2026-10-03T00:00:00Z"
+}

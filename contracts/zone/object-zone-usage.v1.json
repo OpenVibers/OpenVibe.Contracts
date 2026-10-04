@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/zone/object-zone-usage.v1.json",
+  "title": "ObjectZoneUsage",
+  "description": "zone.object-zone-usage@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Billing rates the same rollups. Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "zone_id",
+    "ovrn",
+    "current",
+    "window_start",
+    "window_end",
+    "series"
+  ],
+  "properties": {
+    "zone_id": {
+      "type": "string",
+      "pattern": "^zon_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "ovrn": {
+      "type": "string",
+      "pattern": "^ovrn:zone:prj_[0-9A-HJKMNP-TV-Z]{26}:object-zone/zon_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "current": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stored_bytes",
+        "objects",
+        "as_of"
+      ],
+      "properties": {
+        "stored_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "objects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "window_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The start of the current UTC month."
+    },
+    "window_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The end of the last closed hour that Media has reported."
+    },
+    "series": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capability",
+          "unit",
+          "quantity"
+        ],
+        "properties": {
+          "capability": {
+            "type": "string",
+            "pattern": "^media\\.object\\.[a-z0-9_]+$"
+          },
+          "unit": {
+            "enum": [
+              "byte_hours",
+              "requests",
+              "egress_bytes"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

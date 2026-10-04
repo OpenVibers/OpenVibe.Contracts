@@ -4,7 +4,171 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## Unreleased
+## 0.88.0 — 2026-10-03
+
+**The Fabric ADR and the user-owned trust rule** (plan T1 step 3; T14 S2, the Contracts half). ADR-046 "The universal
+adaptive fabric" (Proposed, for the owner) ties `platform.resource-offer@1`, `workload-requirements@1`,
+`placement-result@1`, `placement-plan@1`, `provider-state@1`, `rate-card@1`, `cost-snapshot@1`, `telemetry-sample@1`
+and `usage-sample@1` to one placer (`openvibe-sdk/placement`), names the five trust classes, the `worker:<class>`
+capabilities a Node advertises (`worker:function`, `worker:code`, …) and the plane rule: the data plane keeps running
+on the last valid signed plan (`signature`, `epoch`, `expires_at`, checked by `placement.verifyPlan`). It records that
+`user-owned` is **not** in the default trust set: a user-owned offer is eligible only for a workload whose requirements
+name `user-owned`, so the SDK's default trust list stays the other four (this replaces the 0.87.0 note that the SDK
+should route to user-owned nodes by default). Whether a user-owned node may run other users' work, and its consent and
+revocation rule, are open questions for the owner.
+- `platform.resource-offer@1` `trust` and `platform.workload-requirements@1` `trust` gain descriptions stating that
+  rule; the enums (1.1.0 since 0.87.0) are unchanged. Consumers are unchanged.
+- Fixtures: `user-owned-node` now also advertises `worker:function`; new invalid `unknown-trust` (an offer with
+  `trust: "stranger"`, refused on `/trust` alone). `owned-node` is unchanged.
+
+**Two product manifests** (plan T11 step 1): `manifests/products/openvibe.zone.json` (served by the planned `zone`
+service) and `manifests/products/openvibe.work.json` (no repository yet), with name, tagline, pillars and launch taken
+from OpenVibe.Sites `sites.json`. The catalog test's Sites snapshot holds 35 domains.
+
+- `network.project.read` is active, implemented by OpenVibe.Network `GET /internal/projects/:project_id`.
+
+**Watch ids** (plan T18, ready now):
+- `lib/ids.js`: `PREFIX.watch = 'wch'`, `PREFIX.observation = 'wco'` and `PREFIX.check = 'ckr'`, so `ids.newId('watch')`
+  gives the `wch_<ULID>` id the `common.resource-summary` fixture `watch` already carries. None is a subject type or a
+  principal.
+
+**Harness capability vocabulary** (plan T17, ready now):
+- `platform.harness-offer@1` `capabilities` gains the optional booleans `edit`, `review`, `tools`, `vision`, `browser`
+  and `computer_use`, and an optional `runtimes` array (unique; `function`, `code`, `browser`, `linux`, `desktop`,
+  `gpu`, the `platform.runtime-class@1` classes). `capabilities` keeps `additionalProperties: false`, and the entry stays
+  1.0.0, as it did when 0.86.0 added optional fields. New fixtures `capability-vocabulary` (valid, every new key) and
+  `unknown-capability` (invalid, a `gpu` key: a runtime class belongs in `runtimes`). Additive.
+
+**Resource names in the resource index** (plan T13, ready now):
+- `common.resource-summary@1` is 1.1.0: an optional `ovrn` (ADR-034 section 2) with the pattern of
+  `common.usage-recorded@1` `resource`, naming the summary's own service, project and id. New fixtures `with-ovrn`
+  (valid) and `ovrn-without-project` (invalid). Additive.
+
+## 0.87.0 — 2026-10-03
+
+**Host git sources** (plan T12 Stage B): a Host site may name a public Git source — provider, repository URL and branch;
+never a credential — and a site with a source also accepts a CI-built deploy at `/sites/:id/source/deploys` naming the
+ref and full `commit_sha`. That deploy is always a preview and records the commit as immutable provenance.
+- `host.site.manage` gains `GET`, `PUT` and `DELETE /api/v1/sites/:id/source`; `host.deploy.create` gains
+  `POST /api/v1/sites/:id/source/deploys`.
+- `host.deploy@1`: the `source` enum adds `preview` and `git`, and an optional `git` object carries `provider`,
+  `repo_url`, `ref` and a 40-hex `commit_sha`. New valid fixture `git`. Additive: every existing deploy stays valid,
+  and the object is present only on `source: git`.
+
+**The Bot service manifest** (plan T15 step 1; ADR-043; supersedes #8). OpenVibe.Bot has run on openvibe-ovh since
+2026-10-02 (`openvibe-bot.service`, `/opt/openvibe.bot`), and `ovhost validate` found no `bot` manifest to read its
+lifecycle from.
+- `manifests/services/bot.json`: status `live` on `openvibe.bot`, internal origin `127.0.0.1:4630`, the five `bot.*`
+  events it produces, and all six lifecycle parts. Shutdown is what Bot's `openvibe-sdk/service` `gracefulStop` does:
+  stop the job timers and Network key refresh, close the device and operator WebSockets and the outbox relay, drain HTTP
+  for up to 4 s, close PostgreSQL and Valkey, exit 0, with a 5 s hard deadline inside the unit's 10 s `TimeoutStopSec`.
+  The contracts range `>=0.85.0 <1.0.0` covers the v0.85.0 Bot installs.
+- Three active capabilities, each bound to the routes whose guard checks it in the deployed Bot (dae7c59), for a
+  Network service token: `bot.robot.read` (list by `?owner=`, a robot, its operators and devices), `bot.robot.manage`
+  (create, update, delete, pairing codes, operators, the command audit, clearing the e-stop, rotating and revoking a
+  device) and `bot.robot.control` (latching the e-stop, which also needs `bot.robot.read`, and the operator WebSocket,
+  which acts for `X-OV-Subject` with that person's role). Their resource constraint is `none`: Bot does not check the
+  acting person against the robot for a service token on the REST routes, and the descriptions say so. All are
+  first-party, none is a staff capability, and each names an input and an output schema: new `bot.robot@1`,
+  `bot.device@1`, `bot.robot-read-result@1`, `bot.robot-manage-request@1`, `bot.robot-manage-result@1` (which includes
+  the audit page and `bot.device-connect-result@1`), `bot.robot-control-result@1` and `bot.device-connect-result@1`,
+  with valid and invalid fixtures.
+- `bot.device.connect` is `planned` (the Bot manifest lists it, as owners list their planned capabilities): Bot
+  declares the name but no route checks it, so it names no routes or schemas until one does.
+- `openvibe.bot` product: names its service `bot` and repository `OpenVibe.Bot` instead of `noRepo`.
+- Presence policy: `bot.robot.online` and `bot.robot.offline` are robot connectivity (ADR-043), not a person's presence,
+  and are allowed. Any other `.online`, `.offline` or presence event type is still refused.
+
+**Media placement events** (follow-up of OpenVibe.Media PR #18, "Record placement decisions for replicas and provider
+transitions"; ADR-026). Media records every replica move and provider transition in its placement outbox, but the two
+provider events used types starting with `provider.`, which OpenVibe.Events can never accept from source `media`: its
+prefix gate (`server/config.js` `sourcePrefixes`, `server/api/publish.js`) requires an `event_type` to start with the
+source key, so both were permanently rejected (`403 events.type_not_allowed`) and piled up in `event_outbox`. The types
+now live in the media namespace (`media.provider.health_degraded`, `media.provider.capacity_warning`), and all six event
+types Media emits today gain active payload contracts owned by `media`, listed in its manifest:
+- `media.replica.requested`, `media.replica.ready`, `media.replica.draining`, `media.replica.evicted` (Media's
+  `server/objects/tiering.js`: the promote/demote decisions, recorded inside the transaction that starts the copy, upserts
+  the verified location, starts the delete and removes it).
+- `media.provider.health_degraded` and `media.provider.capacity_warning` (Media's `server/placement/providers.js`: the
+  healthy→unhealthy flip and the class loss after a completed probe), each emitted once per transition, not per tick.
+
+Each payload is deliberately narrow — the object id and tenant, placement class, action, providers, key/size for a
+replica, the class set before and after a loss — never the object's bytes, title or metadata. `media.replica.*` was
+already inside the streamable namespace; only the provider types changed. Valid and invalid fixtures for each, and
+`test/run.js` asserts every type Media produces starts with `media.`, is owned by `media` and is listed in its manifest.
+
+**User-owned trust class and the estate table** (plan T1 step 3; ADR-034 §5 control plane/data plane; the Fabric ADR,
+ADR-046, is still to write). A person's own node or machine is now a trust class of its own in Contracts, between
+`first-party` and `partner`. The SDK placement planner's runtime already honours an explicit `trust: ["user-owned"]`
+requirement, but its default trust list and its TypeScript `Offer` type omit the value, so the SDK needs code and type
+changes as well as a pin to this release to route to user-owned nodes by default.
+- `platform.resource-offer@1` 1.1.0 and `platform.workload-requirements@1` 1.1.0 add `user-owned` to their `trust`
+  enum, ordered `first-party`, `user-owned`, `partner`, `community`, `external`. Additive: a producer or consumer that
+  knows only the previous four values is unchanged, and no existing offer or requirement is invalidated. New valid
+  fixtures `user-owned-node` (an offer with `trust: "user-owned"`) and `user-owned-only` (requirements whose `trust` is
+  `["user-owned"]`); the existing first-party `owned-node` fixture stays.
+- `platform.usage-sample@1`: `route_epoch` and `trace_id` gain descriptions; their types and shape are unchanged.
+- `docs/ESTATE.md`: the plan §1.1 estate table as a data-only document (repository, product, authority, runtime,
+  database, domain, SDK/Contracts pin, deployment, public/private, current track). Step 2 replaces it with the table
+  generated in CI.
+
+**Named object zones for OpenVibe.Zone** (ADR-031 amendment 2026-10-02; plan D37). The amendment maps named Zone buckets
+onto Media's S3 surface. A zone is a Media namespace, and Media keeps the one object catalog and the only deletion
+path.
+- **Ownership:** Zone owns the zone record and Media owns objects, bytes and replicas.
+- **Names:** zone `zon_<ULID>`, `ovrn:zone:<project_id>:object-zone/<zone_id>` and Media namespace
+  `<environment root>.<zone_id>`.
+- **Buckets:** the bucket is the zone name, resolved within the signing key's project and environment. The environment
+  root is the zone `default`, so no existing object moves.
+- **Grants and quotas:** grants are scoped to a zone's resource name. A per-zone byte quota sits under the environment
+  quota.
+- **Usage:** Media emits per-zone usage rollups that name the zone's resource name in a new optional `resource` field
+  of `common.usage-recorded@1` 1.1.0 (additive; existing producers are unchanged) and its id as `dimension`.
+  `contracts.usage.checkUsageRecorded` refuses a rollup whose `resource` names another project than `project_id`, and
+  `contracts.zones.checkObjectZoneUsage` a usage answer whose `ovrn` names another zone than `zone_id`.
+- **Deletion:** one lifecycle for every door, the one `media.object.delete` already promises: a held object's deletion
+  is refused, a tombstone is restorable until the retention period ends, and the purge then erases every replica, B2
+  file versions included, within 24 hours. Zone deletion tombstones with no restore window and answers `409 zone.held`
+  while an object is held.
+- **No name reuse:** a `deleting` or `deleted` zone's name is retired in its environment (`409 zone.name_retired`; `provisioning`
+  and `active` answer `409 zone.name_taken`), so a signature,
+  which covers the key and the bucket name, always names one zone id, whatever signing time it carries.
+  `contracts.zones.checkObjectZoneList` refuses a list in which two zones of one environment share a name.
+- **List query:** `limit` is 1 to 200 as an integer or as a query-string value.
+- **Migration:** Media backfills a key derived from each object's namespace and `med_` id, legacy child namespaces
+  included, before S3 accepts writes. The default zone's access is `per-object`, so existing public and unlisted
+  objects keep their URLs and cached copies.
+- **Control API:** a planned Zone service manifest (`manifests/services/zone.json`) with six planned capabilities, one per
+  route. The capabilities enter `generated/openapi` when they turn active.
+- **Contracts:** new `zone.object-zone@1` and its create, update, list, list-query, delete-query and usage contracts,
+  all `planned`, with fixtures. `contracts.zones.checkObjectZone` also checks that a zone's OVRN and Media namespace
+  name its own project and id. Additive; no active contract changes.
+
+**Reserved worker capability names for OpenVibe.Node** (plan T14 groundwork, additive): a Node advertises its runtimes
+as `worker:` capabilities in `platform.resource-offer@1`. The names are reserved in the contract now, not only by the
+`capabilities` pattern: `platform.resource-offer@1` gains `$defs.reservedWorkerCapabilities`, the six names
+`worker:function`, `worker:code`, `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` — one per
+`platform.runtime-class@1` class (`worker:` + the class) — and both the `capabilities` description and
+`platform.runtime-class@1` say so. A node advertises the name of each class it runs, so `worker:function` today and
+`worker:code` when the `code` class ships. Additive to validation: every existing offer stays valid, and other
+`worker:` names (`worker:ffmpeg`, `worker:ai-gpu`) stay ordinary capability names. New valid fixture `worker-classes`
+(an offer advertising all six reserved names). Four new valid fixtures for `platform.runtime-class@1` (`code`,
+`browser`, `linux`, `desktop`) complete its six `const` classes.
+
+## 0.86.0 — 2026-10-03
+
+**Harness offers for Fabric routing** (plan T16 step S5): OpenVibe.Codes publishes its harness catalog as
+`platform.resource-offer@1` offers of kind `harness` whose `detail` is a `platform.harness-offer@1`; the envelope keeps
+`trust`, `health`, `latency_ms`, `pricing` and `capabilities`.
+- `platform.harness-offer@1` gains four optional fields: `task_capabilities` (unique; `edit`, `review`, `browse`,
+  `run`, `test`, `plan`), `runtime_needs` (unique runtime names such as `git`, `node`, `python`, `docker`; pattern
+  `^[a-z][a-z0-9.-]*$`, at most 40 characters), `byo_key` (the caller supplies their own provider key) and
+  `success_rate` (0 to 1, the measured share of routed tasks that finished green). The example carries them; fixtures
+  `fabric-routing` (valid), `unknown-task-capability` and `success-rate-over-1` (invalid).
+- `platform.resource-offer@1`: no schema change. The `capabilities` description names the harness convention:
+  `task:edit`, `task:review`, `task:browse`, `task:run`, `task:test`, `task:plan`, `harness:mcp`, `harness:resume`,
+  `harness:host-access`, `harness:long-autonomy`. New valid fixture `harness-task-routing`. Additive.
+
 
 **Run jobs and their metering** (plan T14 lane G, follow-up 1 of the Node gap audit):
 - New `platform.runtime-class@1`: the classes `function`, `code`, `browser`, `linux`, `desktop` and `gpu`, names

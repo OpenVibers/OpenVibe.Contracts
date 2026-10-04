@@ -25,6 +25,8 @@ module.exports = {
     serviceAuth: require('./lib/service-auth'),
     modules: require('./lib/modules'),
     tools: require('./lib/tools'),
+    zones: require('./lib/zones'),
+    usage: require('./lib/usage'),
     staff: require('./lib/staff'),
     openapi: require('./lib/openapi'),
 };

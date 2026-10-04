@@ -1,0 +1,36 @@
+{
+  "offer_id": "off_worker_node_1",
+  "kind": "node",
+  "node_id": "worker-node-1",
+  "provider": "self",
+  "region": "home",
+  "trust": "user-owned",
+  "capabilities": [
+    "node:http",
+    "worker:function",
+    "worker:code",
+    "worker:browser",
+    "worker:linux",
+    "worker:desktop",
+    "worker:gpu"
+  ],
+  "capacity": {
+    "workers": {
+      "function": 2,
+      "code": 1,
+      "browser": 1,
+      "linux": 1,
+      "desktop": 1,
+      "gpu": 1
+    }
+  },
+  "health": {
+    "status": "up"
+  },
+  "pricing": {
+    "model": "per-second",
+    "marginal_usd_per_unit": 0.0001,
+    "unit": "s"
+  },
+  "updated_at": "2026-10-03T00:00:00Z"
+}

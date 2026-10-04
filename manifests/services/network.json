@@ -122,7 +122,7 @@
         "the developer, profile and grant event relay's send in progress awaited (unsent rows stay in the outbox)",
         "analytics flushed and closed; network.db closed; exit 0"
       ],
-      "note": "server/graceful.js; a stop that passes 10 s exits 1. Only the Discord link's in-memory state sweep ends with the process; the email queue and the outboxes resume from the database on the next start"
+      "note": "openvibe-sdk/service; a stop that passes 10 s exits 1. Only the Discord link's in-memory state sweep ends with the process; the email queue and the outboxes resume from the database on the next start"
     },
     "startupRecovery": {
       "resumes": [

@@ -78,13 +78,14 @@
         "type": "string",
         "enum": [
           "first-party",
+          "user-owned",
           "partner",
           "community",
           "external"
         ]
       },
       "minItems": 1,
-      "description": "trust levels allowed to run it"
+      "description": "trust classes allowed to run it (ADR-046); when absent, first-party, partner, community and external. user-owned is never a default: a user-owned offer is eligible only when this list names it"
     },
     "region": {
       "type": "string",

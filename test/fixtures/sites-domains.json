@@ -1,5 +1,5 @@
 {
-  "_about": "The 33 domains of OpenVibe.Sites sites.json (origin/main c2fda6c, 2026-09-29), snapshotted for the catalog home test (plan T11 lane D). Each has exactly one home: a service manifest site with a tld, or manifests/products/<domain>.json.",
+  "_about": "The 35 catalog domains of OpenVibe.Sites sites.json: the 33 of origin/main c2fda6c (2026-09-29), snapshotted for the catalog home test (plan T11 lane D), plus openvibe.work and openvibe.zone (plan T11 step 1). Each has exactly one home: a service manifest site with a tld, or manifests/products/<domain>.json.",
   "source": "OpenVibers/OpenVibe.Sites@c2fda6c:sites.json",
   "domains": [
     "openvibe.news",
@@ -34,6 +34,8 @@
     "openvibe.bot",
     "openvibe.watch",
     "openvibe.actor",
-    "openvibe.events"
+    "openvibe.events",
+    "openvibe.work",
+    "openvibe.zone"
   ]
 }

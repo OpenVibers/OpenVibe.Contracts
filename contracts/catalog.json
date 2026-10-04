@@ -221,7 +221,7 @@
     },
     {
       "id": "common.usage-recorded",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "common/usage-recorded.v1.json",
       "visibility": "first-party",
@@ -2788,6 +2788,16 @@
       "adr": "ADR-005"
     },
     {
+      "id": "network.project-read-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/project-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
       "id": "network.project-usage-result",
       "version": "1.0.0",
       "owner": "network",
@@ -4367,6 +4377,60 @@
       "status": "active"
     },
     {
+      "id": "media.replica.requested",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.replica.ready",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.ready.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.replica.draining",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.draining.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.replica.evicted",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.replica.evicted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.provider.health_degraded",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.provider.health_degraded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.provider.capacity_warning",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.provider.capacity_warning.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.avatar-ingest-request",
       "version": "1.0.0",
       "owner": "media",
@@ -5240,7 +5304,7 @@
     },
     {
       "id": "platform.resource-offer",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/resource-offer.v1.json",
       "visibility": "first-party",
@@ -5250,7 +5314,7 @@
     },
     {
       "id": "platform.workload-requirements",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/workload-requirements.v1.json",
       "visibility": "first-party",
@@ -5450,7 +5514,7 @@
     },
     {
       "id": "common.resource-summary",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/resource-summary.v1.json",
       "visibility": "public",
@@ -5487,6 +5551,76 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
+    },
+    {
+      "id": "zone.object-zone",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-create-request",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-update-request",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-update-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-list-query",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-list-query.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-list",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-list.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-delete-query",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-delete-query.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "zone.object-zone-usage",
+      "version": "1.0.0",
+      "owner": "zone",
+      "schema": "zone/object-zone-usage.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-031"
     },
     {
       "id": "bot.robot",

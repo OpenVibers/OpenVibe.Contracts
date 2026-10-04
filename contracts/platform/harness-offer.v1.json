@@ -40,6 +40,46 @@
         },
         "resume": {
           "type": "boolean"
+        },
+        "edit": {
+          "type": "boolean",
+          "description": "edits files in its working tree"
+        },
+        "review": {
+          "type": "boolean",
+          "description": "reviews a change and reports findings"
+        },
+        "tools": {
+          "type": "boolean",
+          "description": "calls tools such as a shell, search, or file reads on its own"
+        },
+        "vision": {
+          "type": "boolean",
+          "description": "reads images such as screenshots"
+        },
+        "browser": {
+          "type": "boolean",
+          "description": "drives a web browser"
+        },
+        "computer_use": {
+          "type": "boolean",
+          "description": "operates a desktop through its screen, keyboard, and mouse"
+        },
+        "runtimes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "function",
+              "code",
+              "browser",
+              "linux",
+              "desktop",
+              "gpu"
+            ]
+          },
+          "description": "platform.runtime-class@1 classes the harness runs in"
         }
       },
       "required": [
@@ -111,6 +151,42 @@
         "max_duration_seconds",
         "max_concurrent_runs"
       ]
+    },
+    "task_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "edit",
+          "review",
+          "browse",
+          "run",
+          "test",
+          "plan"
+        ]
+      },
+      "description": "task kinds the harness takes; its resource offer lists the same kinds as task:<kind> capabilities"
+    },
+    "runtime_needs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9.-]*$",
+        "maxLength": 40
+      },
+      "description": "runtimes the harness needs on its host, e.g. git, node, python, docker"
+    },
+    "byo_key": {
+      "type": "boolean",
+      "description": "the caller supplies their own provider key"
+    },
+    "success_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "measured share of routed tasks that finished green"
     }
   },
   "examples": [
@@ -136,7 +212,19 @@
         "max_duration_seconds": 7200,
         "max_concurrent_runs": 4,
         "max_context_tokens": 128000
-      }
+      },
+      "task_capabilities": [
+        "edit",
+        "review",
+        "run",
+        "test"
+      ],
+      "runtime_needs": [
+        "git",
+        "node"
+      ],
+      "byo_key": false,
+      "success_rate": 0.92
     }
   ]
 }

@@ -56,7 +56,11 @@ for (const d of contracts.catalog.length ? JSON.parse(fs.readFileSync(path.join(
 // ── Fixtures: every contract has examples that pass and counter-examples that fail ──
 // A contract with a helper that holds it to more than its schema is checked with that helper, so
 // its invalid fixtures can break those rules too (a tool example whose input its own schema refuses).
-const FULL_CHECK = { 'tools.tool': (v) => contracts.tools.checkDescriptor(v), 'tools.tool-list': (v) => contracts.tools.checkList(v) };
+const FULL_CHECK = {
+    'tools.tool': (v) => contracts.tools.checkDescriptor(v), 'tools.tool-list': (v) => contracts.tools.checkList(v),
+    'zone.object-zone': (v) => contracts.zones.checkObjectZone(v), 'zone.object-zone-list': (v) => contracts.zones.checkObjectZoneList(v),
+    'zone.object-zone-usage': (v) => contracts.zones.checkObjectZoneUsage(v), 'common.usage-recorded': (v) => contracts.usage.checkUsageRecorded(v),
+};
 for (const c of contracts.catalog) {
     for (const kind of ['valid', 'invalid']) {
         const dir = path.join(ROOT, 'fixtures', c.id, kind);
@@ -353,6 +357,26 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     ok(services.get('media').eventsProduced.includes('media.object.deleted') && services.get('media').eventsProduced.includes('media.object.visibility_changed'), 'the media manifest lists its object events');
 }
 
+// ── Media placement events (PR #18 follow-up): replicas and provider transitions ──
+// OpenVibe.Events gates a service's event_type to a prefix that starts with its source key
+// (OpenVibe.Events server/config.js sourcePrefixes), so a provider.* type can never be published by
+// source media: both provider events are media.provider.*. Every type here is emitted by Media's
+// placement outbox today, and each carries only the decision, never the object's bytes or metadata.
+{
+    const placement = ['media.replica.requested', 'media.replica.ready', 'media.replica.draining', 'media.replica.evicted',
+        'media.provider.health_degraded', 'media.provider.capacity_warning'];
+    for (const id of placement) {
+        const c = contracts.catalog.find(x => x.id === id);
+        ok(c && c.owner === 'media' && c.status === 'active', `${id} is an active Media payload contract`);
+        ok(services.get('media').eventsProduced.includes(id), `the media manifest produces ${id}`);
+    }
+    for (const t of services.get('media').eventsProduced) ok(t.startsWith('media.'), `media produces ${t} inside media.*`);
+    const warn = contracts.schema('media.provider.capacity_warning');
+    ok(JSON.stringify(warn.properties.classes.items.enum) === JSON.stringify(warn.properties.previous_classes.items.enum), 'capacity_warning names the same class set before and after the loss');
+    const replica = contracts.schema('media.replica.ready');
+    ok(replica.properties.bytes.type === 'integer' && replica.required.includes('key'), 'replica.ready carries the verified copy and its size');
+}
+
 // ── Mod manifest 1.1.0 (v0.34.0, ADR-013 amendment) ──────────────────────
 // Read/write grants, billing hooks and dependencies are optional, so every 1.0.0 manifest stays
 // valid; the split uses exactly the namespace patterns of the older lists; money goes only through
@@ -505,6 +529,7 @@ ok(nodeId.startsWith('nod_') && ids.principalSub({ type: 'node', id: nodeId }) =
 assert.throws(() => ids.principalSub({ type: 'node', id: 'nod_42' }), /principals/);
 ok(!ids.SUBJECT_TYPES.includes('node') && ids.parseSubject(`node:${nodeId}`) === null, 'a node is a principal, never a subject');
 assert.throws(() => ids.principalSub({ type: 'user', id: ids.newId('user') }), /principals/);
+for (const [kind, prefix] of [['watch', 'wch'], ['observation', 'wco'], ['check', 'ckr']]) ok(ids.newId(kind).startsWith(`${prefix}_`), `newId(${kind}) is ${prefix}_<ULID>`);
 ok(contracts.validate('media.media-ref', { media_id: ids.legacyMediaId('live', 'vod', 42) }).valid, 'legacyMediaId is a valid MediaRef');
 ok(contracts.validate('events.event-envelope', { event_id: ids.newId('event'), event_type: 'network.user.created', version: 1, source: 'network', actor: { type: 'system', id: 'network' }, timestamp: new Date().toISOString(), subject: { type: 'user', id: ids.newId('user') }, payload: {} }).valid, 'newId(event) builds a valid envelope');
 
@@ -868,6 +893,8 @@ sub(path.join(__dirname, 'loyalty-policy.test.js'));
 sub(path.join(__dirname, 'presence-policy.test.js'));
 // Every OpenVibe.Sites catalog domain has one home in Contracts (plan T11 lane D).
 sub(path.join(__dirname, 'product-catalog.test.js'));
+// Named object zones: identity, retired names, list limits and per-zone usage (ADR-031 amendment 2026-10-02).
+sub(path.join(__dirname, 'zones.test.js'));
 
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));
@@ -879,6 +906,9 @@ sub(path.join(ROOT, 'scripts/compat.js'));
     // json-schema-to-typescript emit a type name it never declares; every name used as a type must be declared.
     const dts = fs.readFileSync(path.join(ROOT, 'generated/typescript/index.d.ts'), 'utf8');
     const declared = new Set([...dts.matchAll(/^export (?:interface|type) (\w+)/gm)].map(m => m[1]));
+    const names = [...dts.matchAll(/^export (?:interface|type) (\w+)/gm)].map(m => m[1]);
+    const twice = [...new Set(names.filter((n, i) => names.indexOf(n) !== i))];
+    ok(twice.length === 0, `generated types declare a name more than once: ${twice.join(', ')}`);
     const code = dts.replace(/\/\*[\s\S]*?\*\//g, '').replace(/"(?:[^"\\]|\\.)*"/g, '""');
     const used = [...code.matchAll(/(?:[:|&=<(]|\bextends)\s*([A-Z]\w*)\b(?!\s*\??:)/g)].map(m => m[1]);
     const dangling = [...new Set(used)].filter(n => !declared.has(n));

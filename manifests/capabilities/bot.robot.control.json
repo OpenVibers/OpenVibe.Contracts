@@ -5,21 +5,19 @@
   "status": "active",
   "visibility": "first-party",
   "sensitive": true,
-  "description": "Physically control a robot for the person named in X-OV-Subject, with that person's role: latch the e-stop (owner or operator), clear it (owner only), and drive it on the operator WebSocket (/control), where a service token with this capability is admitted on the same gate.",
+  "description": "Physically control a robot with a Network service token. POST /robots/:id/estop latches the e-stop for any robot id and needs bot.robot.read as well; Bot records the service as the actor and does not check X-OV-Subject. On the operator WebSocket (/control) a token with this capability must name a person in X-OV-Subject, and Bot applies that person's role (owner, operator or queue), allowlist and limits. Clearing the e-stop is bot.robot.manage.",
   "permissions": [
     "bot:robot:control"
   ],
   "resourceConstraints": [
-    "owner"
+    "none"
   ],
   "quotaClass": "bot-control",
   "events": [
-    "bot.estop.set",
-    "bot.estop.cleared"
+    "bot.estop.set"
   ],
   "implementedBy": [
-    "POST /api/v1/robots/:id/estop",
-    "POST /api/v1/robots/:id/estop/clear"
+    "POST /api/v1/robots/:id/estop"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "bot.robot-control-result@1"

@@ -1,0 +1,17 @@
+{
+  "project": {
+    "id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "name": "Example",
+    "owner": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+    "environment_policy": "production",
+    "home_cell": null,
+    "residency": null,
+    "preferred_regions": [],
+    "archived_at": null,
+    "created_at": "2026-10-03T00:00:00Z"
+  },
+  "allowance": [],
+  "quotas": [],
+  "apps": [],
+  "grants": []
+}

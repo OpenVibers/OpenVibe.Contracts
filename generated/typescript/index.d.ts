@@ -4691,9 +4691,9 @@ export interface ModerationAction {
   details?: {};
 }
 
-/** common.usage-recorded@1.0.0 (owner: network) */
+/** common.usage-recorded@1.1.0 (owner: network) */
 /**
- * common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.
+ * common.usage-recorded@1 (roadmap WS-N task 4, ADR-014): one rollup of a developer project's use of one capability in one environment over one closed window (an hour or a day), as the service that owns the capability counted it. The payload of every <service>.usage.recorded event; OpenVibe.Network adds them up per project and day for the project's dashboard on OpenVibe.Codes. The producer counts in the transaction that does its own accounting (a job's end, a stored event, a delivery attempt) and writes the rollup to its outbox after the window has closed: never one event per request. Totals, not deltas: a later event with the same key (source, project_id, env, capability, resource, dimension, unit, window_start) replaces the earlier one, and a lower revision never replaces a higher one. Envelope: subject { type: project, id: <project_id> }, visibility internal, priority low, actor the producing service. Never carries a subject id, an address, a session, a request's input or content, or a file name.
  */
 export interface UsageRecorded {
   /**
@@ -4712,6 +4712,10 @@ export interface UsageRecorded {
    * Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job.
    */
   dimension?: string;
+  /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
   /**
    * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
    */
@@ -29743,6 +29747,10 @@ export interface ToolsUsageRecordedPayload {
    */
   dimension?: string;
   /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
+  /**
    * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
    */
   unit: string;
@@ -30706,6 +30714,10 @@ export interface EventsUsageRecordedPayload {
    * Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job.
    */
   dimension?: string;
+  /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so Billing can rate billable usage by resource: ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
   /**
    * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
    */
@@ -33382,6 +33394,50 @@ export interface NetworkRealtimeTicketResult {
    * Whose ticket it is; a client ignores any event whose subject is someone else.
    */
   subject: string;
+}
+
+/** network.project-read-result@1.0.0 (owner: network) */
+/**
+ * network.project-read-result@1: the service-facing answer from OpenVibe.Network GET /internal/projects/:project_id (network.project.read). It carries project tenancy, allowances, quotas, apps and each app's grants (requested, approved, denied or revoked) without credentials or member identities beyond the owner.
+ */
+export interface NetworkProjectReadResult {
+  project: {
+    id: string;
+    name: string;
+    owner: {
+      type: "user";
+      id: string;
+    };
+    environment_policy: string;
+    home_cell: string | null;
+    residency: string | null;
+    preferred_regions: string[];
+    archived_at: string | null;
+    created_at: string;
+  };
+  allowance: string[];
+  quotas: {
+    capability: string;
+    limit: number;
+    window: string;
+    unit: string;
+    enforced_by: string | null;
+  }[];
+  apps: {
+    id: string;
+    name: string;
+    environment: string;
+    status: "active" | "revoked";
+    created_at: string;
+    revoked_at: string | null;
+  }[];
+  grants: {
+    app_id: string;
+    capability: string;
+    audience: string;
+    status: "requested" | "approved" | "denied" | "revoked";
+    decided_at: string | null;
+  }[];
 }
 
 /** network.project-usage-result@1.0.0 (owner: network) */
@@ -46889,6 +46945,176 @@ export interface MediaObjectVisibilityChangedPayload {
   changed_at: string;
 }
 
+/** media.replica.requested@1.0.0 (owner: media) */
+/**
+ * media.replica.requested v1 (OpenVibe.Media server/objects/tiering.js promote(), the recordPlacement inside the transaction that starts the copy; PR #18). Media decided to place a replica of a ready object: the canonical copy stays where it is and the bytes are copied to the target provider (R2, the popularity cache). Recorded before the copy, so a request with no following media.replica.ready means the copy never verified and no replica exists. The payload is deliberately narrow: the object id and its tenant, the placement class, the decision and the two providers. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none. The event type is inside media.* because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name.
+ */
+export interface MediaReplicaRequestedPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * promote copies the object to the target provider, demote removes a replica from it.
+   */
+  action: "promote" | "demote";
+  /**
+   * The canonical provider the copy is read from; null when the object has no canonical copy at request time.
+   */
+  from: "local" | "b2" | "r2" | null;
+  /**
+   * The provider the replica is placed on.
+   */
+  to: "local" | "b2" | "r2";
+  /**
+   * The replica provider, named again so the decision is readable on its own.
+   */
+  provider: "local" | "b2" | "r2";
+}
+
+/** media.replica.ready@1.0.0 (owner: media) */
+/**
+ * media.replica.ready v1 (OpenVibe.Media server/objects/tiering.js promote(), the recordPlacement in the transaction that upserts the verified media_locations row; PR #18). A replica finished copying and verified: the bytes read back from the target provider hash to the object's recorded content_hash before this is recorded. The payload carries where the copy lives and how big it is, so consumers and the placement view can act without reading the object API. A media.replica.requested with no ready for the same object is a copy that never verified (the bytes are removed, nothing was recorded). Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.
+ */
+export interface MediaReplicaReadyPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * promote placed a copy on the provider, demote removed one.
+   */
+  action: "promote" | "demote";
+  /**
+   * The provider that now holds the verified replica.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The object key of the replica in the provider's bucket.
+   */
+  key: string;
+  /**
+   * The size in bytes that was copied and verified.
+   */
+  bytes: number;
+  /**
+   * When the verified replica was recorded, ISO 8601 UTC; a fresh row restarts the demotion residency clock.
+   */
+  replica_since: string;
+}
+
+/** media.replica.draining@1.0.0 (owner: media) */
+/**
+ * media.replica.draining v1 (OpenVibe.Media server/objects/tiering.js demote(), the recordPlacement before the replica is deleted; PR #18). Media decided to drain a replica: the canonical copy has been confirmed good, the replica is about to be removed, and reads should stop being routed to it. Recorded before the delete, so a draining with no following media.replica.evicted means the delete failed and the replica is still there. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.
+ */
+export interface MediaReplicaDrainingPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * Draining is always part of a demotion.
+   */
+  action: "demote";
+  /**
+   * The provider whose replica is being drained.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The object key of the replica being removed.
+   */
+  key: string;
+}
+
+/** media.replica.evicted@1.0.0 (owner: media) */
+/**
+ * media.replica.evicted v1 (OpenVibe.Media server/objects/tiering.js demote(), the recordPlacement in the transaction that deletes the media_locations row; PR #18). The replica is gone: the bytes were deleted from the provider and the location row removed, so nothing routes reads there any more. Paired with the media.replica.draining that preceded it; draining without evicted is a delete that failed. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority low, actor service:media, source media. Sandbox tenants produce none.
+ */
+export interface MediaReplicaEvictedPayload {
+  object_id: string;
+  /**
+   * The tenant that owns the object: an app (live, tools…) or a developer project's production tenant (prj_…); null when the object has no tenant.
+   */
+  app_id: string | null;
+  /**
+   * The placement class the move was budgeted against (media.storage_policy classes; tiering.classOf).
+   */
+  class: "video" | "image" | "download" | "game-asset" | "attachment" | "backup";
+  /**
+   * Eviction is always the end of a demotion.
+   */
+  action: "demote";
+  /**
+   * The provider the replica was removed from.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The object key that no longer exists in the provider's bucket.
+   */
+  key: string;
+}
+
+/** media.provider.health_degraded@1.0.0 (owner: media) */
+/**
+ * media.provider.health_degraded v1 (OpenVibe.Media server/placement/providers.js liveHealth(), the announceProviderEvent on a healthy→unhealthy flip; PR #18). A storage provider that was healthy failed its per-minute HeadBucket, so the fabric stops routing to it until it answers again. Emitted once per flip, not once per tick: another failing HEAD while it is already unhealthy records nothing, and a recovery is a media.storage.recovered style state change, not another degradation. The event lives in the media namespace because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name; the original provider.* type could never be published by source media (403 events.type_not_allowed). Envelope: subject { type: provider, id: <provider> }, visibility internal, priority low, actor service:media, source media.
+ */
+export interface MediaProviderHealthDegradedPayload {
+  /**
+   * Always null: a provider serves every tenant, so the signal belongs to no one app.
+   */
+  app_id: string | null;
+  /**
+   * The provider that failed its health check.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * This event exists only for the healthy→unhealthy flip, so it is always false.
+   */
+  healthy: false;
+  /**
+   * The error the failed health check recorded.
+   */
+  last_error: string;
+}
+
+/** media.provider.capacity_warning@1.0.0 (owner: media) */
+/**
+ * media.provider.capacity_warning v1 (OpenVibe.Media server/placement/providers.js setCapabilities(), the announceProviderEvent when a completed probe leaves the provider in fewer classes; PR #18). A provider that was passing lost one or more classes: the probe now fails a capability the class needs (for example R2 no longer serving a 206 range, so it stops being online-hot), and the router removes it from those classes until a later probe passes again. Emitted once per class loss, not once per probe. The event lives in the media namespace because OpenVibe.Events gates a service's event_type to a prefix that starts with its source name; the original provider.* type could never be published by source media (403 events.type_not_allowed). Envelope: subject { type: provider, id: <provider> }, visibility internal, priority low, actor service:media, source media.
+ */
+export interface MediaProviderCapacityWarningPayload {
+  /**
+   * Always null: a provider serves every tenant, so the signal belongs to no one app.
+   */
+  app_id: string | null;
+  /**
+   * The provider that lost classes.
+   */
+  provider: "local" | "b2" | "r2";
+  /**
+   * The classes the provider still serves after the probe; a strict subset of previous_classes.
+   */
+  classes: ("online-canonical" | "online-hot" | "regional-cache")[];
+  /**
+   * The classes the provider served before the probe.
+   */
+  previous_classes: ("online-canonical" | "online-hot" | "regional-cache")[];
+}
+
 /** media.avatar-ingest-request@1.0.0 (owner: media) */
 /**
  * media.avatar-ingest-request@1: the body of POST /internal/avatar-ingest on OpenVibe.Media (capability media.avatar.ingest; Network calls it while adopting an avatar a person pointed at somewhere else on the web). Media fetches the URL once through its egress guard (https only, public addresses only, at most 8 MB and 10 s), re-encodes it to a 512×512 WebP and stores it as an unlisted screenshot paste owned by user_id, so no OpenVibe site ever serves or stores a third-party address. Refusals are { ok: false, error } (400 without url or user_id, 422 when the link is not a usable picture).
@@ -50147,7 +50373,16 @@ export interface HostDeploy {
   project_id: string;
   state: "ready" | "failed" | "deleted";
   active: boolean;
-  source: "archive" | "files";
+  source: "archive" | "files" | "preview" | "git";
+  /**
+   * Present on source git: the commit this deploy was built from (public provenance, never a credential).
+   */
+  git?: {
+    provider: string;
+    repo_url: string;
+    ref: string;
+    commit_sha: string;
+  };
   file_count: number;
   total_bytes: number;
   /**
@@ -50712,7 +50947,7 @@ export interface NetworkCoinsReadResult {
   };
 }
 
-/** platform.resource-offer@1.0.0 (owner: network) */
+/** platform.resource-offer@1.1.0 (owner: network) */
 /**
  * What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.
  */
@@ -50735,9 +50970,12 @@ export type ResourceOffer = {
   adapter?: string;
   region: string;
   cell?: string;
-  trust: "first-party" | "partner" | "community" | "external";
   /**
-   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2
+   * the offer's trust class (ADR-046): first-party (operated by the OpenVibe network), user-owned (a person's own node, eligible only for workloads whose requirements name user-owned), partner, community or external
+   */
+  trust: "first-party" | "user-owned" | "partner" | "community" | "external";
+  /**
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name.
    */
   capabilities: string[];
   capacity?: {
@@ -50810,7 +51048,7 @@ export type ResourceOffer = {
   detail?: {};
 };
 
-/** platform.workload-requirements@1.0.0 (owner: network) */
+/** platform.workload-requirements@1.1.0 (owner: network) */
 /**
  * What a workload needs, so the platform can place it (roadmap WS-Z9). Hard constraints are filtered before any objective is scored; a cheaper candidate that misses one is never chosen.
  */
@@ -50839,13 +51077,13 @@ export interface WorkloadRequirements {
    */
   residency?: string;
   /**
-   * trust levels allowed to run it
+   * trust classes allowed to run it (ADR-046); when absent, first-party, partner, community and external. user-owned is never a default: a user-owned offer is eligible only when this list names it
    *
    * @minItems 1
    */
   trust?: [
-    "first-party" | "partner" | "community" | "external",
-    ...("first-party" | "partner" | "community" | "external")[]
+    "first-party" | "user-owned" | "partner" | "community" | "external",
+    ...("first-party" | "user-owned" | "partner" | "community" | "external")[]
   ];
   /**
    * a region, or 'nearest'
@@ -51114,7 +51352,13 @@ export interface UsageSample {
    * Vibes charged for this reading, as an integer count of vibes-bits (Billing's ledger minor unit, currency `vibes-bits`; balance credit and ledger amounts use the same unit). Never whole Vibes, USD or a fraction: round once, when rating. Covers only `quantity` minus `free_allowance_used`; 0 means rated and nothing charged. Absent means not rated (yet). Records a charge already made in Billing's ledger; it is never a request to charge.
    */
   vibes_charged?: number;
+  /**
+   * Epoch of the signed placement plan that chose where this reading ran (platform.placement-plan@1 `epoch`). A later plan supersedes it; absent when Fabric did not place the work.
+   */
   route_epoch?: number;
+  /**
+   * Opaque trace id tying this reading to the request and route that produced it, the same `trace_id` platform.telemetry-sample@1 carries; absent when the producer had no trace.
+   */
   trace_id?: string;
   source: string;
 }
@@ -51381,6 +51625,34 @@ export interface HarnessOffer {
     mcp: boolean;
     long_autonomy: boolean;
     resume: boolean;
+    /**
+     * edits files in its working tree
+     */
+    edit?: boolean;
+    /**
+     * reviews a change and reports findings
+     */
+    review?: boolean;
+    /**
+     * calls tools such as a shell, search, or file reads on its own
+     */
+    tools?: boolean;
+    /**
+     * reads images such as screenshots
+     */
+    vision?: boolean;
+    /**
+     * drives a web browser
+     */
+    browser?: boolean;
+    /**
+     * operates a desktop through its screen, keyboard, and mouse
+     */
+    computer_use?: boolean;
+    /**
+     * platform.runtime-class@1 classes the harness runs in
+     */
+    runtimes?: ("function" | "code" | "browser" | "linux" | "desktop" | "gpu")[];
   };
   address: {
     kind: "api" | "cli" | "mcp";
@@ -51404,11 +51676,27 @@ export interface HarnessOffer {
     max_concurrent_runs: number;
     max_context_tokens?: number;
   };
+  /**
+   * task kinds the harness takes; its resource offer lists the same kinds as task:<kind> capabilities
+   */
+  task_capabilities?: ("edit" | "review" | "browse" | "run" | "test" | "plan")[];
+  /**
+   * runtimes the harness needs on its host, e.g. git, node, python, docker
+   */
+  runtime_needs?: string[];
+  /**
+   * the caller supplies their own provider key
+   */
+  byo_key?: boolean;
+  /**
+   * measured share of routed tasks that finished green
+   */
+  success_rate?: number;
 }
 
 /** platform.runtime-class@1.0.0 (owner: network) */
 /**
- * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names.
+ * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.
  */
 export type RuntimeClass = ("function" | "code" | "browser" | "linux" | "desktop" | "gpu") & string;
 
@@ -51638,7 +51926,7 @@ export interface DeliveryPolicy {
   max_payload_bytes?: number;
 }
 
-/** common.resource-summary@1.0.0 (owner: contracts) */
+/** common.resource-summary@1.1.0 (owner: contracts) */
 /**
  * One resource of any service, as the resource index lists it (roadmap WS-Z7): every service answers GET /api/v1/resources with these, so OpenVibe.Services shows any resource without owning its data.
  */
@@ -51650,6 +51938,10 @@ export interface ResourceSummary {
   kind: string;
   service: string;
   project_id?: string;
+  /**
+   * Optional resource name (ADR-034 section 2), the name grants, audit, events, usage records and bills use: ovrn:<service>:<project_id>:<type>/<id>, e.g. ovrn:watch:<project_id>:watch/<wch_id>, with the pattern of common.usage-recorded@1 resource. Its service, project and id are this summary's service, project_id and id. Added in 1.1.0.
+   */
+  ovrn?: string;
   owner?: SubjectRef;
   name?: string;
   state: string;
@@ -51724,6 +52016,178 @@ export interface ConfirmationRequest {
   expires_at: string;
   decided_at?: string;
   created_at: string;
+}
+
+/** zone.object-zone@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone@1 (PLANNED; ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.
+ */
+export type ObjectZone = {
+  [k: string]: unknown | undefined;
+} & {
+  id: string;
+  /**
+   * The resource name used in grants, audit, events, usage records and bills (ADR-034 section 2).
+   */
+  ovrn: string;
+  project_id: string;
+  /**
+   * Fixed at creation. A sandbox key never resolves a production zone.
+   */
+  env: "sandbox" | "production";
+  /**
+   * The S3 bucket name. It is unique among all the zones of one project environment, deleted ones included: a deleted zone's name is retired, never given to another zone. It is valid as an S3 bucket name.
+   */
+  name: string;
+  /**
+   * The environment's default zone, named `default`. Its media_namespace is the environment root.
+   */
+  default: boolean;
+  description?: string | null;
+  /**
+   * private: every named zone in v1. Its objects never have a public_url and never enter a public cache. per-object: only the default zone, whose existing objects keep their own visibility (public, unlisted or private), public URLs and cached copies, as media.object@1 allows. The S3 surface never serves an object without a signature, in either kind of zone. Publication of a named zone would add a value in a later minor version.
+   */
+  access: "private" | "per-object";
+  /**
+   * provisioning: Media has not yet acknowledged the zone. active: it serves requests. deleting: requests answer NoSuchBucket while Media tombstones the objects and erases every copy. deleted: no object or copy remains. The record is kept, and its name stays retired.
+   */
+  state: "provisioning" | "active" | "deleting" | "deleted";
+  /**
+   * Where Media keeps the zone's objects. It is the environment root for the default zone, and <root>.<id> for every other zone.
+   */
+  media_namespace: string;
+  /**
+   * An optional byte ceiling for this zone. Media enforces it together with the project environment's byte quota, and a write over either is refused with QuotaExceeded. null means only the environment quota applies.
+   */
+  quota_bytes: number | null;
+  /**
+   * A snapshot of the live objects, as Media reports it. Zone never counts. Billed usage comes from Media's hourly media.usage.recorded rollups, whose dimension is this id in lowercase.
+   */
+  usage?: {
+    stored_bytes: number;
+    objects: number;
+    as_of: string;
+  };
+  /**
+   * Progress of a zone deletion, as Media reports it.
+   */
+  deletion?: {
+    requested_at: string;
+    /**
+     * Objects not yet tombstoned, plus tombstoned objects with a copy not yet confirmed erased.
+     */
+    objects_remaining: number;
+    /**
+     * Objects whose erasure waits for a retention hold (ADR-006). They are already unreadable.
+     */
+    held_objects: number;
+    completed_at: string | null;
+  };
+  /**
+   * Raised by every change. Zone sends it when it provisions the change in Media, and Media applies only a higher revision.
+   */
+  revision: number;
+  created_at: string;
+  updated_at?: string | null;
+};
+
+/** zone.object-zone-create-request@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-create-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.
+ */
+export interface ObjectZoneCreateRequest {
+  env: "sandbox" | "production";
+  name: string;
+  description?: string | null;
+  quota_bytes?: number | null;
+}
+
+/** zone.object-zone-update-request@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-update-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.
+ */
+export interface ObjectZoneUpdateRequest {
+  description?: string | null;
+  /**
+   * null removes the zone's own ceiling, so only the environment quota applies.
+   */
+  quota_bytes?: number | null;
+}
+
+/** zone.object-zone-list-query@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-list-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.
+ */
+export interface ObjectZoneListQuery {
+  env?: "sandbox" | "production";
+  /**
+   * Also list zones in state deleted. Default false.
+   */
+  include_deleted?: true | false | "true" | "false";
+  /**
+   * Items per page, 1 to 200. A query string carries it as a string, which must name the same range.
+   */
+  limit?: number | string;
+  /**
+   * next_cursor of the previous page.
+   */
+  cursor?: string;
+}
+
+/** zone.object-zone-list@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-list@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.
+ */
+export interface ObjectZoneList {
+  /**
+   * @maxItems 200
+   */
+  zones: ObjectZone[];
+  /**
+   * Pass as cursor for the next page; null on the last page.
+   */
+  next_cursor: string | null;
+}
+
+/** zone.object-zone-delete-query@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-delete-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.
+ */
+export interface ObjectZoneDeleteQuery {
+  /**
+   * Delete the zone's objects too. Default false.
+   */
+  recursive?: true | false | "true" | "false";
+}
+
+/** zone.object-zone-usage@1.0.0 (owner: zone) */
+/**
+ * zone.object-zone-usage@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Billing rates the same rollups. Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.
+ */
+export interface ObjectZoneUsage {
+  zone_id: string;
+  ovrn: string;
+  current: {
+    stored_bytes: number;
+    objects: number;
+    as_of: string;
+  };
+  /**
+   * The start of the current UTC month.
+   */
+  window_start: string;
+  /**
+   * The end of the last closed hour that Media has reported.
+   */
+  window_end: string;
+  /**
+   * @maxItems 32
+   */
+  series: {
+    capability: string;
+    unit: "byte_hours" | "requests" | "egress_bytes";
+    quantity: number;
+  }[];
 }
 
 /** bot.robot@1.0.0 (owner: bot) */
@@ -51830,7 +52294,7 @@ export type BotRobotManageRequest =
 
 /** bot.robot-manage-result@1.0.0 (owner: bot) */
 /**
- * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }.
+ * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; GET …/robots/:id/audit?limit=&before= → { audit, next_before } (newest first); POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.
  */
 export type BotRobotManageResult =
   | {
@@ -51859,11 +52323,28 @@ export type BotRobotManageResult =
         added_by?: string | null;
         created_at?: string;
       }[];
+    }
+  | BotDeviceConnectResult
+  | {
+      next_before: number | null;
+      audit: {
+        id: number;
+        robot_id: string;
+        device_id?: string | null;
+        operator_subject?: string | null;
+        operator_kind?: string | null;
+        role?: string | null;
+        kind: string | null;
+        value?: unknown;
+        result: "ack" | "nack" | "refused" | "expired";
+        reason?: string | null;
+        latency_ms?: number | null;
+        at: string;
+      }[];
     };
-
 /** bot.robot-control-result@1.0.0 (owner: bot) */
 /**
- * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop (owner or operator) and POST …/robots/:id/estop/clear (owner only) → { robot } with its e-stop as it now stands.
+ * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop → { robot } with its e-stop as it now stands.
  */
 export interface BotRobotControlResult {
   robot: BotRobot;
@@ -51871,7 +52352,7 @@ export interface BotRobotControlResult {
 
 /** bot.device-connect-result@1.0.0 (owner: bot) */
 /**
- * bot.device-connect-result@1: answers of bot.device.connect on OpenVibe.Bot (the robot's owner, or a service acting for them). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).
+ * bot.device-connect-result@1: answers of OpenVibe.Bot's device credential routes, which Bot gates with bot.robot.manage (bot.device.connect is reserved, not enforced). POST /api/v1/devices/:id/rotate → { device, credential, publish_key } (both secrets shown once); POST …/devices/:id/revoke → { device } (its socket closes at once).
  */
 export type BotDeviceConnectResult =
   | {

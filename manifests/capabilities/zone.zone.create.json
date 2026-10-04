@@ -1,0 +1,19 @@
+{
+  "id": "zone.zone.create",
+  "version": "1.0",
+  "owner": "zone",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (ADR-031 amendment 2026-10-02): Create a named object zone in one environment of a project. POST /api/v1/projects/:project_id/zones with an Idempotency-Key header answers 201 with the zone. A name held by a provisioning or active zone of that environment answers 409 zone.name_taken, a name held by a deleting or deleted one answers 409 zone.name_retired, and going over the project's zones quota answers 403 zone.quota_exceeded. Zone provisions the zone in Media before it becomes active. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "inputSchema": "zone.object-zone-create-request@1",
+  "outputSchema": "zone.object-zone@1",
+  "permissions": [
+    "zone:write"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "zone-control",
+  "events": [],
+  "implementedBy": []
+}

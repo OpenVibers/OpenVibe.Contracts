@@ -1,0 +1,25 @@
+{
+  "project": {
+    "id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "name": "Tenancy",
+    "owner": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+    "environment_policy": "sandbox",
+    "home_cell": "cel_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "residency": "eu-west",
+    "preferred_regions": [],
+    "created_at": "2026-10-03T00:00:00Z",
+    "archived_at": null
+  },
+  "allowance": ["media.object.read", "media.object.upload"],
+  "quotas": [
+    { "capability": "media.object.upload", "limit": 1073741824, "window": "total", "unit": "bytes", "enforced_by": "openvibe.media" }
+  ],
+  "apps": [
+    { "id": "app_01JAB2C3D4E5F6G7H8J9K0MNPQ", "name": "Uploader", "environment": "sandbox", "status": "active", "created_at": "2026-10-03T00:00:00Z", "revoked_at": null },
+    { "id": "app_01JAB2C3D4E5F6G7H8J9K0MPRQ", "name": "Reader", "environment": "sandbox", "status": "revoked", "created_at": "2026-10-03T00:00:00Z", "revoked_at": "2026-10-03T01:00:00Z" }
+  ],
+  "grants": [
+    { "app_id": "app_01JAB2C3D4E5F6G7H8J9K0MNPQ", "capability": "media.object.upload", "audience": "openvibe.media", "status": "approved", "decided_at": "2026-10-03T00:30:00Z" },
+    { "app_id": "app_01JAB2C3D4E5F6G7H8J9K0MPRQ", "capability": "media.object.read", "audience": "openvibe.media", "status": "revoked", "decided_at": "2026-10-03T01:00:00Z" }
+  ]
+}

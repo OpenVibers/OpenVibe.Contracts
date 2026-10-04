@@ -2,10 +2,10 @@
   "id": "bot.device.connect",
   "version": "1.0",
   "owner": "bot",
-  "status": "active",
+  "status": "planned",
   "visibility": "first-party",
   "sensitive": true,
-  "description": "Manage a paired device's credentials for the robot's owner: rotate them (the new credential and publish key are shown once) or revoke the device, which closes its socket at once.",
+  "description": "Reserved for managing a paired device's credentials (rotate, revoke) apart from robot management. Bot declares this name but checks it nowhere: today POST /api/v1/devices/:id/rotate and /revoke are gated by bot.robot.manage. It becomes active when Bot's routes enforce it.",
   "permissions": [
     "bot:device:connect"
   ],
@@ -13,11 +13,5 @@
     "owner"
   ],
   "quotaClass": "bot-device",
-  "events": [],
-  "implementedBy": [
-    "POST /api/v1/devices/:id/rotate",
-    "POST /api/v1/devices/:id/revoke"
-  ],
-  "inputSchema": "common.no-body@1",
-  "outputSchema": "bot.device-connect-result@1"
+  "events": []
 }

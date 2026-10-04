@@ -1,0 +1,18 @@
+{
+  "id": "zone.usage.read",
+  "version": "1.0",
+  "owner": "zone",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (ADR-031 amendment 2026-10-02): Read an object zone's usage: GET /api/v1/zones/:zone_id/usage. It answers Media's live-object snapshot and the month's hourly rollups. Zone never counts. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "outputSchema": "zone.object-zone-usage@1",
+  "permissions": [
+    "zone:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "zone-control",
+  "events": [],
+  "implementedBy": []
+}
