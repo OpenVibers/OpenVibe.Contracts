@@ -6,6 +6,16 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.95.0 — 2026-10-04
 
+**The Services control plane** (ADR-048, plan T13 step 1). Additive: three new catalog ids at 1.0.0, owner `contracts`.
+`common.resource-name@1` is the OVRN `ovrn:<service>:<project_id>:<type>/<id>`, with the pattern `common.usage-recorded@1`
+and `common.resource-summary@1` already use. `common.resource-control-request@1` is one control operation OpenVibe.Services
+sends to the authority that owns a resource (`action`, `resource` or, for `create`, `resource_kind`, `project_id`,
+`idempotency_key`, optional `params`, `on_behalf_of`, `confirmation_id`, `dry_run`, `trace_id`), and
+`common.resource-control-result@1` the authority's answer (`state` done, pending, refused or failed, with `result`,
+`confirmation_required` or an `errors.problem@1`). New `contracts.resources`: `parse`, `format`, `nameOf`, `checkName`,
+`checkControlRequest` (the resource's project is `project_id`; `create` names a kind, every other action a resource) and
+`checkControlResult` (`problem` and `confirmation_required` fit `state`). New test `test/resources.test.js`.
+
 **OpenVibe.Chat's internal read API** (plan T3, J4b): OpenVibe.Live stops reading its mirrored copy of Chat's tables.
 Additive. Six new internal capabilities owned by chat (loopback, Chat service token, Live's principal today; never
 granted to an app or delegated), added to `manifests/services/chat.json`:

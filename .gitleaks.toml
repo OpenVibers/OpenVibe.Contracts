@@ -57,3 +57,9 @@ description = "Sample realtime tickets in network.realtime-ticket-result fixture
 condition = "AND"
 paths = ['''^fixtures/network\.realtime\-ticket\-result/(valid|invalid)/[a-z-]+\.json$''']
 regexes = ['''^eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9\.eyJ0eXAiOiJyZWFsdGltZSJ9\.c2lnbmF0dXJl$''']
+
+[[allowlists]]
+description = "Sample Idempotency-Key value in a common.resource-control-request@1 fixture; a caller-chosen dedupe token, not a secret"
+condition = "AND"
+paths = ['''^fixtures/common\.resource-control-request/valid/dry-run-resize\.json$''']
+regexes = ['''^ctl-01K6R3-resize$''']

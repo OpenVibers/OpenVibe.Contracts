@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/resource-name.v1.json",
+  "title": "ResourceName",
+  "description": "common.resource-name@1: the one stable, cross-service name of an OpenVibe resource (OVRN; ADR-034 section 2, ADR-048, plan T13): ovrn:<service>:<project_id>:<type>/<id>, for example ovrn:media:prj_01J0000000000000000000000A:object/med_01K0000000000000000000000B. The service segment is the authority that owns the resource; the project segment is its tenancy boundary; type is the second half of a common.resource-summary@1 kind and id is that summary's id, so the name composes from any resource summary. It is used in grant scopes, audit rows, event subjects, usage records, bill lines and console URLs. It never names a person, an app, a request, a session or an event. The pattern is the one common.usage-recorded@1 resource and common.resource-summary@1 ovrn already use.",
+  "type": "string",
+  "maxLength": 200,
+  "pattern": "^ovrn:[a-z][a-z0-9-]{0,31}:prj_[0-9A-HJKMNP-TV-Z]{26}:[a-z][a-z0-9-]{0,39}/[a-z]{3}_[0-9A-HJKMNP-TV-Z]{26}$",
+  "not": { "pattern": "/(usr|gst|app|mod|svc|job|evt|req)_" }
+}
