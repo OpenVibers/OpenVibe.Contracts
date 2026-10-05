@@ -1,9 +1,9 @@
-# ADR-049: The Website/Host boundary — OpenVibe.Website authors, OpenVibe.Host serves
+# ADR-053: The Website/Host boundary — OpenVibe.Website authors, OpenVibe.Host serves
 
-**Status:** Proposed 2026-10-05 (plan track T19, step 1), for the owner's review. Builds on ADR-014 (developer
+**Status:** Proposed 2026-10-05 (plan track T19), for the owner's review. Builds on ADR-014 (developer
 projects and tenancy), ADR-006 (Media object, location and namespace model), ADR-036 (Run is an execution authority,
 not a Host detail) and ADR-048 (one authority per resource; a control operation is a call to the owning authority).
-Records the boundary T19 step 1 needs; the plan lists no Website ADR.
+Records the boundary T19 needs; the plan lists no Website ADR.
 
 ## Evidence
 
@@ -19,7 +19,7 @@ Records the boundary T19 step 1 needs; the plan lists no Website ADR.
   `:136`; deploys `GET /sites/:id/deploys` `:139`, `POST /sites/:id/deploys` `:197`, `GET /deploys/:id` `:199`,
   `GET /deploys/:id/log` `:203`, `POST /deploys/:id/activate` `:207`, `POST /sites/:id/rollback` `:212`,
   `DELETE /deploys/:id` `:217`, `POST /sites/:id/source/deploys` `:265`; domains `:220`, `:224`, `:228`, `:233`;
-  config `:237`, `:241`, `:245`; source `:253`, `:257`, `:261`; takedowns `:105-:120`. The step-1 read that named
+  config `:237`, `:241`, `:245`; source `:253`, `:257`, `:261`; takedowns `:105-:120`. The initial read that named
   `:123`, `:127`, `:197`, `:207`, `:224` and `:237-:245` **matched `origin/main` on re-read**; the surface is larger
   than that list (takedowns, rollback, source, `GET /deploys/:id/log`), and this ADR uses the full surface.
 - **Host owns the rows.** `OpenVibe.Host` `origin/main` `migrations/0001_initial.sql` creates `host_sites` (`:43`),
@@ -60,8 +60,7 @@ Records the boundary T19 step 1 needs; the plan lists no Website ADR.
   (openvibe.website) | Host + Codes + Actor + Run + Media". D36 (line 972): "Website on Host (D36, composed in T19)".
   T12's Stage B finish line (lines 526-529) is Host's: "tenant vhosts, TLS via ACME for custom domains, objects on
   Media with replication and backup, per-site headers/redirects/SPA fallback, preview deploys, Git deploys,
-  sitemap/robots". The plan lists **no Website ADR** and gives T19 compositions, not steps; the step-1 framing is the
-  implementation dossier's, not the plan's.
+  sitemap/robots". The plan lists **no Website ADR** and gives T19 compositions, not steps.
 
 ## Decision
 
@@ -76,8 +75,9 @@ Records the boundary T19 step 1 needs; the plan lists no Website ADR.
    delete, domain and config operation is the Host route named in Evidence: `GET/POST /projects/:id/sites`
    (`server/http/api.js:123`, `:127`), `POST /sites/:id/deploys` (`:197`), `POST /deploys/:id/activate` (`:207`),
    `POST /sites/:id/domains` (`:224`), `GET/PUT/DELETE /sites/:id/config` (`:237`/`:241`/`:245`) among them. Website
-   calls them under its own principal and grants, exactly as ADR-048 requires of any control operation; it does not
-   reach into Host's tables.
+   calls Host's own API under its own principal and grants; it does not reach into Host's tables. Whether Host also
+   exposes the common control contract (`common.resource-control-request@1`, ADR-048) and what its OVRN resource names
+   (`ovrn:host:<prj>:site/<id>`) are is open (below).
 3. **Website keeps no duplicate `host_sites` / `host_deploys` rows.** It may hold at most a rebuildable read model of
    what it shows (a site id, an active deploy id), never the row of record, and never a second `active_deploy_id`
    pointer: the one serving pointer stays `host_sites.active_deploy_id`, exposed as `host.site@1.active_deploy_id`
@@ -132,6 +132,13 @@ Records the boundary T19 step 1 needs; the plan lists no Website ADR.
    this may be Media, not Website.
 5. **A Website service manifest.** Whether Website registers as a service (a `manifests/services/website.json` with a
    capability and namespace) before its authoring contracts, or ships as a product that only calls Host, is open.
+6. **Host's control contract and OVRNs.** ADR-048 never mentions Host; this ADR records the call as Host's own API
+   under Website's principal and grants. Whether Host also exposes the common control contract
+   (`common.resource-control-request@1`, ADR-048), and what its OVRN resource names look like
+   (`ovrn:host:<prj>:site/<id>`), is open.
+7. **The serving zone and TLS.** The Website product manifest promises `yourname.openvibe.website`
+   (`manifests/products/openvibe.website.json`), but Host's manifest owns only `openvibe.host`. Which zone serves
+   Website tenant sites and who issues their TLS certificates is open.
 
 ## What this ADR does not claim
 
