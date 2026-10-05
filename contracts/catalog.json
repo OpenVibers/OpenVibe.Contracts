@@ -5844,6 +5844,16 @@
       "adr": "ADR-043"
     },
     {
+      "id": "bot.job-dispatch-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/job-dispatch-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
+    },
+    {
       "id": "bot.robot-read-request",
       "version": "1.0.0",
       "owner": "bot",

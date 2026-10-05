@@ -1,0 +1,22 @@
+{
+  "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "class": "code",
+  "args": {
+    "format": "webm"
+  },
+  "ttl_ms": 120000,
+  "limits": {
+    "wall_ms": 90000,
+    "cpu_ms": 90000,
+    "mem_bytes": 536870912
+  },
+  "net": "public",
+  "inputs": [
+    {
+      "name": "clip.mp4",
+      "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "sha256": "9f86d081884c7d659a2feb15b0b4f8f1c0e6ad1d7e6fd2e1b0b6fd1c4f1d2a3b",
+      "size_bytes": 1048576
+    }
+  ]
+}

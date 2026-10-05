@@ -1,0 +1,42 @@
+{
+  "job": {
+    "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "node_id": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+    "class": "code",
+    "state": "cancelled",
+    "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+    "subject": null,
+    "provider": null,
+    "cancel_requested": true,
+    "fault_code": null,
+    "sent_at": 1759500000000,
+    "started_ms": null,
+    "finished_at": null,
+    "exit_reason": null,
+    "exit_code": null,
+    "wall_ms": null,
+    "usage_read": 0,
+    "result": null,
+    "job": {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPS",
+      "class": "code",
+      "artifact": {
+        "name": "transcode",
+        "version": "0.4.1"
+      },
+      "args": {
+        "format": "webm"
+      },
+      "ttl_ms": 120000,
+      "limits": {
+        "wall_ms": 90000,
+        "cpu_ms": 90000,
+        "mem_bytes": 536870912
+      },
+      "net": "public"
+    },
+    "created_at": 1759500000000,
+    "updated_at": 1759500000900
+  },
+  "stdout": null
+}

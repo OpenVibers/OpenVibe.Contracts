@@ -1,0 +1,42 @@
+{
+  "job": {
+    "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "node_id": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+    "class": "function",
+    "state": "queued",
+    "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+    "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "provider": null,
+    "cancel_requested": false,
+    "fault_code": null,
+    "sent_at": 1759500000000,
+    "started_ms": null,
+    "finished_at": null,
+    "exit_reason": null,
+    "exit_code": null,
+    "wall_ms": null,
+    "usage_read": 0,
+    "result": null,
+    "job": {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "class": "function",
+      "artifact": {
+        "name": "thumbnail",
+        "version": "1.2.0"
+      },
+      "args": {
+        "width": 320
+      },
+      "ttl_ms": 60000,
+      "limits": {
+        "wall_ms": 30000,
+        "cpu_ms": 30000,
+        "mem_bytes": 268435456
+      },
+      "net": "deny"
+    },
+    "created_at": 1759500000000,
+    "updated_at": 1759500000000
+  },
+  "sent": true
+}

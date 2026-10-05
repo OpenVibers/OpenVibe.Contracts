@@ -1,0 +1,39 @@
+{
+  "job": {
+    "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "node_id": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+    "class": "function",
+    "state": "done",
+    "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+    "subject": null,
+    "provider": null,
+    "cancel_requested": false,
+    "fault_code": null,
+    "sent_at": 1759500000000,
+    "started_ms": 1759500001200,
+    "finished_at": 1759500004700,
+    "exit_reason": "exited",
+    "exit_code": 0,
+    "wall_ms": 3500,
+    "usage_read": 4,
+    "result": null,
+    "job": {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "class": "function",
+      "artifact": {
+        "name": "thumbnail",
+        "version": "1.2.0"
+      },
+      "args": {},
+      "ttl_ms": 60000,
+      "limits": {
+        "wall_ms": 30000,
+        "cpu_ms": 30000,
+        "mem_bytes": 268435456
+      }
+    },
+    "created_at": 1759500000000,
+    "updated_at": 1759500004700
+  },
+  "sent": true
+}

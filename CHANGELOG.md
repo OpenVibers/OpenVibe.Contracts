@@ -4,6 +4,22 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.97.0 — 2026-10-04
+
+**The job contract matches the Node again, and Bot's dispatch answer has a contract** (plan T14 step 6 follow-up).
+- `platform.job@1`: `artifact` is required for class `code` as well as `function` again — the allOf `if` names both
+  classes and the `artifact` description says so — and the invalid fixture `code-without-artifact` is back.
+  OpenVibe.Node already refuses a code job without an exact-version artifact (its `internal/protocol/protocol.go`
+  `JobNoArtifact`), and `run.job-create-request@1` already required it; b88849c had dropped the `code` case from
+  this contract alone. A correction to match the implementations, not a new rule.
+- `bot.job-dispatch-result@1` (new, owner bot, ADR-034): what OpenVibe.Bot answers OpenVibe.Run's `bot.job.dispatch`
+  calls (Bot `server/api/v1.js`, `server/jobs/index.js`). `POST /api/v1/jobs` (201) and `POST /api/v1/jobs/:id/cancel`
+  answer `{ job, sent }`; `GET /api/v1/jobs/:id` answers `{ job, stdout }`. `$defs.job` is the `run_jobs` row
+  (`state` queued … expired, device, payer project, timing, exit, `usage_read` and the original `platform.job@1`
+  body); `$defs.stdout` is the held stdout (the last 1 MiB, or null). `bot.job.dispatch` names it as its
+  `outputSchema`, so that capability is complete and its row leaves `compatibility/capability-schema-gaps.json`;
+  `generated/openapi/bot.json` now carries the responses. Additive.
+
 ## 0.96.0 — 2026-10-04
 
 **OpenVibe.Bot's job dispatch for OpenVibe.Run** (plan T14 step 6, R1c): Run hands a job to a paired Node through Bot.
