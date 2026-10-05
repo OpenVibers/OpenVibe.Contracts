@@ -1,6 +1,10 @@
 # ADR-048: The Services control plane — authority aggregation, OVRN and one control-operation contract
 
-**Status:** Accepted 2026-10-04 (plan track T13, step 1). Builds on ADR-034 §2 (one resource name) and §5 (control plane
+**Status:** Accepted 2026-10-04 (plan track T13, step 1). Amended 2026-10-05: the resource index owns
+`GET /api/v1/resources` and OpenVibe.Network's T2 Fabric offer registry, whose public routes are currently at
+`/api/v1/resources`, moves them to `/api/v1/offers` in Network's release; the resource-kind catalog below records the
+id prefixes Events and Codes still owe, plus the prefixes not yet in `lib/ids.js`. No contract schema changes.
+Builds on ADR-034 §2 (one resource name) and §5 (control plane
 and data plane) and on ADR-046 §6 (the data plane keeps running without the control plane). Contracts:
 `common.resource-name@1`, `common.resource-control-request@1`, `common.resource-control-result@1`; helpers in
 `contracts.resources` (`lib/resources.js`).
@@ -47,11 +51,51 @@ and data plane) and on ADR-046 §6 (the data plane keeps running without the con
 | Grants and policy | checks the caller's capability and the `on_behalf_of` subject's grant on every control call | asks; never decides for an authority |
 | Sensitive-action gate | decides which actions need confirmation and refuses until one is approved | shows the confirmation, collects the owner's approval, retries |
 | Events and audit | emits the resource's events and audit rows | consumes them for its index and activity views |
-| Resource index | answers `GET /api/v1/resources` with `common.resource-summary@1` | fans out, merges and paginates |
+| Resource index | owns `GET /api/v1/resources`, answering `common.resource-summary@1` for every resource it holds; no other public catalog is to mount that path once Network's offers move to `/api/v1/offers` (today they still share `/api/v1/resources`) | fans out, merges and paginates |
+| Resource offers (T2 Fabric) | OpenVibe.Network's offer registry (`server/registry/offers.js`), currently public at `GET /api/v1/resources` and moving to `GET /api/v1/offers` (`/:offer_id` for detail, `/:offer_id/beacon` for the probe) in Network's release; reported at `POST /internal/resources/report` | shows and calls Network's control API like any other authority |
 | Projects, apps, keys, nodes | OpenVibe.Network | shows and calls Network's control API like any other authority |
 
 The project segment of every OVRN is the tenancy boundary: a control request's `resource` must be a resource of its
 `project_id`, and `contracts.resources.checkControlRequest` refuses one that is not.
+
+**The index owns `/api/v1/resources`; the offers move to `/api/v1/offers` in Network's release.** That path belongs
+to the resource index above, so OpenVibe.Network's T2 Fabric offer registry (`server/registry/offers.js`, mounted in
+`server/index.js:484-485`, designed in `docs/t2-resource-registry.md`) **currently serves its public routes at**
+`GET /api/v1/resources`, `GET /api/v1/resources/:offer_id` and `GET /api/v1/resources/:offer_id/beacon`, and **moves
+them in a Network release** to `GET /api/v1/offers`, `GET /api/v1/offers/:offer_id` and
+`GET /api/v1/offers/:offer_id/beacon`. Until that release lands, the claim that no other public catalog mounts
+`/api/v1/resources` is not yet true — Network's offers still share the path. The machine report keeps
+`POST /internal/resources/report`, and the internal reads keep their `/internal/resources` paths and the
+`network.resource.report` guard. Moving a public route is a release-note change: OpenVibe.Network's release must name
+the old and new paths.
+
+The move has consumers outside `server/registry/offers.js` itself, which the Network release note must update with it:
+
+- the **discovery index key** `resources: '/api/v1/resources'` in `server/registry/ecosystem.js:329` (documented at
+  `:31`);
+- the **public read API tables and worked examples** in `docs/t2-resource-registry.md:136-138,254`; and
+- the **cutover runbook probe** in `docs/cutover-t14-user-owned-trust.md:158`.
+
+**Resource kinds and three-letter id prefixes.** Every summary's `kind` is `<service>.<type>` and its id carries the
+same three-letter prefix its OVRN uses (`lib/ids.js`). The catalog the step-8 index sweep starts from; only `med` and
+`wch` are in `lib/ids.js` today, the rest are proposed and not yet chosen there:
+
+| Service | Kind | Id prefix |
+|---|---|---|
+| Actor | `actor.actor` | `act` (proposed, not in `lib/ids.js`) |
+| Codes | `codes.repo` | **unchosen** |
+| Events | `events.queue` | **unchosen** |
+| Events | `events.subscription` | **unchosen** |
+| Media | `media.object` | `med` |
+| Run | `run.sandbox` | `run` (proposed, not in `lib/ids.js`; collides with the existing `run_` AI run ids, `contracts/ai/run.v1.json`) |
+| Watch | `watch.watch` | `wch` |
+| Zone | `zone.object-zone` | `zon` (proposed, not in `lib/ids.js`; today only a usage-recorded description field `<zon_id>`) |
+
+Events' `queue` and `subscription` and Codes' `repo` have no three-letter prefix at all; `act`, `run` and `zon` are
+proposed but are not in `lib/ids.js` either. `run` cannot simply be added: `run_` is already OpenVibe.AI's run-id
+pattern (`contracts/ai/run.v1.json`), so a `run.sandbox` id would collide with an AI run id. The step-8 sweep chooses
+every missing prefix, resolves the `run_` collision and adds them to `lib/ids.js` before those services answer
+`GET /api/v1/resources`. No contract schema carries this catalog: it is prose, and recording it changes no schema.
 
 ## Idempotency and confirmations
 
@@ -82,7 +126,9 @@ The project segment of every OVRN is the tenancy boundary: a control request's `
   redefined here.
 - How a confirmation is approved (WS-Z2), billing of control calls, and moving `common.usage-recorded@1` `resource` to
   a `$ref` of `common.resource-name@1`.
-- Three-letter id prefixes still to be chosen before the step-8 sweep (Events queues, Codes repositories).
+- The three-letter id prefixes of `events.queue`, `events.subscription` and `codes.repo` (unchosen) and the
+  proposed-but-not-in-`lib/ids.js` prefixes `act`, `run` and `zon`, including the `run_` collision with AI run ids, all
+  still to be settled before the step-8 sweep (the resource-kind catalog under Authority boundaries).
 
 ## Consequences
 
