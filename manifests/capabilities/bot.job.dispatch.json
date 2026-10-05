@@ -21,5 +21,6 @@
     "POST /api/v1/jobs/:id/cancel",
     "GET /api/v1/jobs/:id"
   ],
-  "inputSchema": "platform.job@1"
+  "inputSchema": "platform.job@1",
+  "outputSchema": "bot.job-dispatch-result@1"
 }

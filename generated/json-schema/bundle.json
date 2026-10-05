@@ -63954,7 +63954,7 @@
           "artifact": {
             "type": "object",
             "additionalProperties": false,
-            "description": "The pre-registered artifact to run; required for class `function`.",
+            "description": "The pre-registered artifact to run; required for classes `function` and `code`.",
             "required": [
               "name",
               "version"
@@ -64059,7 +64059,10 @@
               ],
               "properties": {
                 "class": {
-                  "const": "function"
+                  "enum": [
+                    "function",
+                    "code"
+                  ]
                 }
               }
             },
@@ -67828,6 +67831,274 @@
           },
           "cached": {
             "type": "boolean"
+          }
+        }
+      }
+    },
+    "bot.job-dispatch-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/job-dispatch-result.v1.json",
+        "title": "BotJobDispatchResult",
+        "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Node is away; it is resent on every reconnect until the Node acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Node sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Node acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
+        "oneOf": [
+          {
+            "$ref": "#/$defs/dispatched"
+          },
+          {
+            "$ref": "#/$defs/state"
+          }
+        ],
+        "$defs": {
+          "job": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "One run_jobs row as presentJob renders it: what Run dispatched, to which device, and how far the job and its metering have come.",
+            "required": [
+              "id",
+              "node_id",
+              "class",
+              "state",
+              "project_id",
+              "subject",
+              "provider",
+              "cancel_requested",
+              "fault_code",
+              "sent_at",
+              "started_ms",
+              "finished_at",
+              "exit_reason",
+              "exit_code",
+              "wall_ms",
+              "usage_read",
+              "result",
+              "job",
+              "created_at",
+              "updated_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The platform.job@1 id Run minted and the stem of every usage reading key (run:<id>:<n>)."
+              },
+              "node_id": {
+                "type": "string",
+                "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The paired device the job was sent to; a Node never reads another device's job."
+              },
+              "class": {
+                "$ref": "../platform/runtime-class.v1.json"
+              },
+              "state": {
+                "enum": [
+                  "queued",
+                  "placed",
+                  "running",
+                  "succeeded",
+                  "failed",
+                  "cancelled",
+                  "expired"
+                ],
+                "description": "queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
+              },
+              "project_id": {
+                "type": "string",
+                "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The payer project Run named; required on every dispatch (422 without it)."
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 128,
+                "description": "The subject the readings are for (user:usr_…), as Run sent it; null when Run sent none."
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 128,
+                "description": "The offer's provider, as Run sent it; null for a first-party node."
+              },
+              "cancel_requested": {
+                "type": "boolean",
+                "description": "A cancel was asked for this job; a job not yet started is cancelled at once, a running one ends with its job_exit."
+              },
+              "fault_code": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 64,
+                "description": "The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
+              },
+              "sent_at": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "First time the `job` frame went out (epoch ms); null while queued and never sent."
+              },
+              "started_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "The Node's job_started started_ms: the anchor of every usage second; null until it started."
+              },
+              "finished_at": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "When the first job_exit settled the job (epoch ms); null until then, and for a job cancelled before it started that no job_exit ever settled."
+              },
+              "exit_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "exited",
+                  "cancelled",
+                  "ttl",
+                  "limit",
+                  "stopped",
+                  "failed",
+                  null
+                ],
+                "description": "The first job_exit's reason (platform.job-frame@1); null until it arrived."
+              },
+              "exit_code": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "The process's exit status; null when it was killed or never ran."
+              },
+              "wall_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "job_exit.usage.wall_ms as billed, capped at the job's limits.wall_ms; null until job_exit."
+              },
+              "usage_read": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Wall-clock seconds of the job already queued for Billing; only moves forward."
+              },
+              "result": {
+                "description": "The job_exit result (any JSON); null unless a job_exit carried one."
+              },
+              "job": {
+                "anyOf": [
+                  {
+                    "$ref": "../platform/job.v1.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The platform.job@1 body Run dispatched, stored and resent verbatim; present on every stored job."
+              },
+              "created_at": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Epoch ms Bot first stored the job."
+              },
+              "updated_at": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Epoch ms of the last change to the row."
+              }
+            }
+          },
+          "stdout": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The last 1 MiB of a job's captured stdout, held in memory by Bot (job_stdout chunks; a chunk_seq already held is dropped, and older chunks fall off once the ring is full).",
+            "required": [
+              "text",
+              "first_seq",
+              "last_seq",
+              "truncated"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The held chunks joined in order."
+              },
+              "first_seq": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "description": "The chunk_seq of the first held chunk; null when none is held."
+              },
+              "last_seq": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The highest chunk_seq seen for the job; 0 when none."
+              },
+              "truncated": {
+                "type": "boolean",
+                "description": "True when an earlier chunk fell off the 1 MiB ring."
+              }
+            }
+          },
+          "dispatched": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The answer of POST /api/v1/jobs (201) and POST /api/v1/jobs/:id/cancel (200): the row and whether the frame went out on the link now.",
+            "required": [
+              "job",
+              "sent"
+            ],
+            "properties": {
+              "job": {
+                "$ref": "#/$defs/job"
+              },
+              "sent": {
+                "type": "boolean",
+                "description": "True when the `job` (dispatch) or `job_cancel` (cancel) frame was written to the device's link; false when the device is away (a job is resent on reconnect until acked)."
+              }
+            }
+          },
+          "state": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Node sent none).",
+            "required": [
+              "job",
+              "stdout"
+            ],
+            "properties": {
+              "job": {
+                "$ref": "#/$defs/job"
+              },
+              "stdout": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/stdout"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
           }
         }
       }

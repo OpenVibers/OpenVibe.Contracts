@@ -52385,7 +52385,7 @@ export type Job = {
   id: string;
   class: RuntimeClass;
   /**
-   * The pre-registered artifact to run; required for class `function`.
+   * The pre-registered artifact to run; required for classes `function` and `code`.
    */
   artifact?: {
     name: string;
@@ -53488,6 +53488,206 @@ export interface BotCommandResult {
   latency_ms?: number;
   cached?: boolean;
 }
+
+/** bot.job-dispatch-result@1.0.0 (owner: bot) */
+/**
+ * bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Node is away; it is resent on every reconnect until the Node acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Node sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Node acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.
+ */
+export type BotJobDispatchResult =
+  | {
+      /**
+       * One run_jobs row as presentJob renders it: what Run dispatched, to which device, and how far the job and its metering have come.
+       */
+      job: {
+        /**
+         * The platform.job@1 id Run minted and the stem of every usage reading key (run:<id>:<n>).
+         */
+        id: string;
+        /**
+         * The paired device the job was sent to; a Node never reads another device's job.
+         */
+        node_id: string;
+        class: RuntimeClass;
+        /**
+         * queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl).
+         */
+        state: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+        /**
+         * The payer project Run named; required on every dispatch (422 without it).
+         */
+        project_id: string;
+        /**
+         * The subject the readings are for (user:usr_…), as Run sent it; null when Run sent none.
+         */
+        subject: string | null;
+        /**
+         * The offer's provider, as Run sent it; null for a first-party node.
+         */
+        provider: string | null;
+        /**
+         * A cancel was asked for this job; a job not yet started is cancelled at once, a running one ends with its job_exit.
+         */
+        cancel_requested: boolean;
+        /**
+         * The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
+         */
+        fault_code: string | null;
+        /**
+         * First time the `job` frame went out (epoch ms); null while queued and never sent.
+         */
+        sent_at: number | null;
+        /**
+         * The Node's job_started started_ms: the anchor of every usage second; null until it started.
+         */
+        started_ms: number | null;
+        /**
+         * When the first job_exit settled the job (epoch ms); null until then, and for a job cancelled before it started that no job_exit ever settled.
+         */
+        finished_at: number | null;
+        /**
+         * The first job_exit's reason (platform.job-frame@1); null until it arrived.
+         */
+        exit_reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed" | null;
+        /**
+         * The process's exit status; null when it was killed or never ran.
+         */
+        exit_code: number | null;
+        /**
+         * job_exit.usage.wall_ms as billed, capped at the job's limits.wall_ms; null until job_exit.
+         */
+        wall_ms: number | null;
+        /**
+         * Wall-clock seconds of the job already queued for Billing; only moves forward.
+         */
+        usage_read: number;
+        /**
+         * The job_exit result (any JSON); null unless a job_exit carried one.
+         */
+        result: {
+          [k: string]: unknown | undefined;
+        };
+        /**
+         * The platform.job@1 body Run dispatched, stored and resent verbatim; present on every stored job.
+         */
+        job: Job | null;
+        /**
+         * Epoch ms Bot first stored the job.
+         */
+        created_at: number;
+        /**
+         * Epoch ms of the last change to the row.
+         */
+        updated_at: number;
+      };
+      /**
+       * True when the `job` (dispatch) or `job_cancel` (cancel) frame was written to the device's link; false when the device is away (a job is resent on reconnect until acked).
+       */
+      sent: boolean;
+    }
+  | {
+      /**
+       * One run_jobs row as presentJob renders it: what Run dispatched, to which device, and how far the job and its metering have come.
+       */
+      job: {
+        /**
+         * The platform.job@1 id Run minted and the stem of every usage reading key (run:<id>:<n>).
+         */
+        id: string;
+        /**
+         * The paired device the job was sent to; a Node never reads another device's job.
+         */
+        node_id: string;
+        class: RuntimeClass;
+        /**
+         * queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl).
+         */
+        state: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+        /**
+         * The payer project Run named; required on every dispatch (422 without it).
+         */
+        project_id: string;
+        /**
+         * The subject the readings are for (user:usr_…), as Run sent it; null when Run sent none.
+         */
+        subject: string | null;
+        /**
+         * The offer's provider, as Run sent it; null for a first-party node.
+         */
+        provider: string | null;
+        /**
+         * A cancel was asked for this job; a job not yet started is cancelled at once, a running one ends with its job_exit.
+         */
+        cancel_requested: boolean;
+        /**
+         * The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
+         */
+        fault_code: string | null;
+        /**
+         * First time the `job` frame went out (epoch ms); null while queued and never sent.
+         */
+        sent_at: number | null;
+        /**
+         * The Node's job_started started_ms: the anchor of every usage second; null until it started.
+         */
+        started_ms: number | null;
+        /**
+         * When the first job_exit settled the job (epoch ms); null until then, and for a job cancelled before it started that no job_exit ever settled.
+         */
+        finished_at: number | null;
+        /**
+         * The first job_exit's reason (platform.job-frame@1); null until it arrived.
+         */
+        exit_reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed" | null;
+        /**
+         * The process's exit status; null when it was killed or never ran.
+         */
+        exit_code: number | null;
+        /**
+         * job_exit.usage.wall_ms as billed, capped at the job's limits.wall_ms; null until job_exit.
+         */
+        wall_ms: number | null;
+        /**
+         * Wall-clock seconds of the job already queued for Billing; only moves forward.
+         */
+        usage_read: number;
+        /**
+         * The job_exit result (any JSON); null unless a job_exit carried one.
+         */
+        result: {
+          [k: string]: unknown | undefined;
+        };
+        /**
+         * The platform.job@1 body Run dispatched, stored and resent verbatim; present on every stored job.
+         */
+        job: Job | null;
+        /**
+         * Epoch ms Bot first stored the job.
+         */
+        created_at: number;
+        /**
+         * Epoch ms of the last change to the row.
+         */
+        updated_at: number;
+      };
+      stdout: {
+        /**
+         * The held chunks joined in order.
+         */
+        text: string;
+        /**
+         * The chunk_seq of the first held chunk; null when none is held.
+         */
+        first_seq: number | null;
+        /**
+         * The highest chunk_seq seen for the job; 0 when none.
+         */
+        last_seq: number;
+        /**
+         * True when an earlier chunk fell off the 1 MiB ring.
+         */
+        truncated: boolean;
+      } | null;
+    };
 
 /** bot.robot-read-request@1.0.0 (owner: bot) */
 /**
