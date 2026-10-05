@@ -4,6 +4,25 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.105.0 — 2026-10-05
+
+**Chat's ticket conversation and DM block-state reads are live** (Chat #26 and #27). `chat.ticket.write` is active
+and `chat.messages.read` gains Chat's DM block-state route. Additive: one new chat result contract, one capability
+activated with the routes it names, one route list extended; no existing schema changed.
+- `chat.ticket.write` (owner `chat`, first-party, **active**): OpenVibe.Chat serves the per-ticket conversation it
+  names (`server/chat/internal-tickets.js`) — `POST /internal/chat/tickets/:ticket_id/messages` creates the
+  (ticket id, calling service) conversation on first use and appends one message, and
+  `GET /internal/chat/tickets/:ticket_id` reads that service's own conversation, paged; both guarded by the
+  capability, so an app, node or agent token is refused.
+- `chat.dm-block-state-result@1` (new, owner `chat`, first-party): the answer of
+  `GET /internal/chat/dm/block-state?a&b` — `{ blocked }`, true when either user blocked the other, in Chat's
+  `dm_blocks` or as a Network platform block — added to `chat.messages.read`'s route list. It follows the other
+  `chat.*` internal-read schemas: an `anyOf` of the ok shape and `chat.ingress-ack@1`'s error, with valid and
+  invalid fixtures.
+- `chat.ticket-conversation@1` moves from planned to active in the catalog. `generated/openapi/chat.json` gains both
+  ticket operations (the generator emits an active capability's `implementedBy` routes), and the generated docs move
+  to 0.105.0.
+
 ## 0.104.0 — 2026-10-05
 
 **Network's resource index is live** (Network PR #62; ADR-048). `network.resource.read` is active: OpenVibe.Network

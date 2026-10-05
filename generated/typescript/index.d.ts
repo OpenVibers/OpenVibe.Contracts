@@ -51320,6 +51320,23 @@ export type ChatMessagesPage =
       error: string;
     };
 
+/** chat.dm-block-state-result@1.0.0 (owner: chat) */
+/**
+ * chat.dm-block-state-result@1: the answer of GET /internal/chat/dm/block-state?a&b on OpenVibe.Chat (capability chat.messages.read): blocked is true when either user has blocked the other, in Chat's dm_blocks or as a Network platform block (dm.js isBlockedEither, the check the DM and call routes use). a and b are positive Live user ids and must differ; OpenVibe.Live asks this before sending a call invite. A failure is chat.ingress-ack@1's error.
+ */
+export type ChatDmBlockStateResult =
+  | {
+      ok?: true;
+      blocked: boolean;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
 /** chat.timeline-result@1.0.0 (owner: chat) */
 /**
  * chat.timeline-result@1: the answer of GET /internal/chat/timeline on OpenVibe.Chat (capability chat.analysis.read): non-deleted chat_messages of one channel (channel_user_id) or stream (stream_id) counted per bucket between since and until (epoch ms), bucket_ms wide, for OpenVibe.Live's AI moments, chat spikes and activity. Empty buckets are left out; buckets are oldest first. max_id is the highest message id in the window, null when none. A failure is chat.ingress-ack@1's error.

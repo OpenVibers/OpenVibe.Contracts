@@ -4747,6 +4747,15 @@
       "status": "active"
     },
     {
+      "id": "chat.dm-block-state-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/dm-block-state-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.timeline-result",
       "version": "1.0.0",
       "owner": "chat",
@@ -4807,7 +4816,7 @@
       "schema": "chat/ticket-conversation.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "live.moderation.action",
