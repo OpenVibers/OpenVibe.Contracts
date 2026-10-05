@@ -3,7 +3,9 @@
 **Status:** Proposed 2026-10-05 (plan §8: *"ADR-045 (Node; **revise: Node is the universal runtime, not a
 Bot/Actor helper**)"*; plan T14, lines 575–579). For the owner's review. Builds on ADR-043 (Bot — devices, pairing,
 control and safety), ADR-046 §5 (the `worker:<class>` capability names) and ADR-048 (OVRN and authority boundaries).
-ADR-043 stays the robot/device half of the same Node; this record is the runtime half.
+ADR-043 stays the robot/device half of the same Node; this record is the runtime half, and amends ADR-043's credential
+paragraph: Network owns the node/device principal and the pairing credential, Bot keeps the robot binding and control
+link.
 
 ## Context and current evidence
 
@@ -47,15 +49,19 @@ ADR-043 stays the robot/device half of the same Node; this record is the runtime
 
 The Node is OpenVibe's universal runtime — one agent for a person's computers, servers, Raspberry Pis, phones and
 robots. It is **not** a Bot helper or an Actor helper: Bot, Actor, Run and Media are all clients of the same Node,
-and each binds the capabilities it needs. ADR-043 remains the robot/device half (robots, pairing, device credentials,
-operator safety); this ADR is the runtime half.
+and each binds the capabilities it needs. ADR-043 remains the robot/device half (robots, robot profiles, operators,
+command leases and physical safety); this ADR is the runtime half. The one split this record draws inside ADR-043 is
+the credential: **Network owns the node/device principal and issues the pairing credential; Bot keeps the robot
+binding and the control link.** That amends ADR-043's credential paragraph (its decisions 1-2); the rest of ADR-043
+stands.
 
-### 2. One signed binary, one pairing, one control link, one local policy
+### 2. One release binary, one pairing, one control link, one local policy
 
-- The core is one signed, updatable static binary per platform with one pairing path and one outbound control link.
+- The core is one checksummed release binary per platform with one pairing path and one outbound control link.
   A role is **a capability the Node advertises plus local configuration**, never a second agent or a second install.
-- The Node is a Network principal (its node/device principal and pairing credentials are Network's), and its resource
-  is named by OVRN (ADR-048). Network owns identity; Node presents capabilities.
+- The Node is a Network principal (its node/device principal and pairing credential are Network's), and its resource
+  is named by OVRN (ADR-048). Network owns identity and pairing; Bot keeps the robot binding and the control link
+  (amending ADR-043's credential paragraph); Node presents capabilities.
 
 ### 3. Execution worker (Run's need)
 
@@ -131,6 +137,7 @@ operator safety); this ADR is the runtime half.
 
 - Computer control, recording, cache/storage/delivery and the `browser`/`linux`/`desktop`/`gpu` classes are **not
   built**; only the job worker's `function`/`code` classes exist.
+- The release binary is not code-signed and has no self-update: releases publish `SHA256SUMS` only.
 - The four control-level names and the local indicator are plan wording; the code today has a local stop latch, not
   the four levels.
 - No Actor, Run or Media consumer binds these Node capabilities on `origin/main`; Run is a placeholder service

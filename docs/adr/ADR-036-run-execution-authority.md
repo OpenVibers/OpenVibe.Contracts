@@ -49,6 +49,8 @@ isolation belongs to Stage C) and ADR-046 (offers, requirements, placement, sign
 - The two are separate authorities: separate service principals, capabilities, contracts, events and data. They **may
   share machines** — a cell's host can run both — but sharing a machine is not sharing authority. A Run outage does
   not stop Host deploys and a Host deploy does not create, own or bill a Run job.
+- Run's jobs and sandboxes are the authority's resources: each is named by OVRN and every change goes through a
+  `common.resource-control-request@1` call to Run, which appears to Services as an authority like any other (ADR-048).
 
 ### 2. Runtime classes
 
