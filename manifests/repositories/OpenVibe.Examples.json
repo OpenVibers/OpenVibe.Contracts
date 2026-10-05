@@ -1,0 +1,22 @@
+{
+  "name": "OpenVibe.Examples",
+  "repository": "OpenVibers/OpenVibe.Examples",
+  "service": "examples",
+  "product": "OpenVibe.Examples",
+  "stage": "alpha",
+  "version": "0.3.0",
+  "runtime": "node >=22",
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "examples"
+  ],
+  "domains": [],
+  "pins": {
+    "openvibe-sdk": "v0.11.0",
+    "openvibe-contracts": "v0.49.0"
+  },
+  "deployed": false,
+  "exposure": "repository",
+  "track": "W20"
+}

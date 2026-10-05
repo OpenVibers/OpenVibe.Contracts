@@ -1,0 +1,29 @@
+{
+  "name": "OpenVibe.Chat",
+  "repository": "OpenVibers/OpenVibe.Chat",
+  "service": "chat",
+  "product": "Chat",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 1,
+  "authority": [
+    "chat.preferences",
+    "chat.tts_defaults",
+    "chat.dm_settings",
+    "chat.presence_prefs"
+  ],
+  "domains": [
+    "openvibe.chat",
+    "openvibe.live"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.80.0",
+    "openvibe-sdk": "v0.25.2",
+    "openvibe-shared": "v2.0.0"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W6"
+}

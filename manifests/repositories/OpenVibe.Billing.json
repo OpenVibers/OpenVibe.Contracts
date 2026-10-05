@@ -1,0 +1,25 @@
+{
+  "name": "OpenVibe.Billing",
+  "repository": "OpenVibers/OpenVibe.Billing",
+  "service": "billing",
+  "product": "OpenVibe.Billing",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node >=22.0.0",
+  "database": "PostgreSQL",
+  "migrations": 1,
+  "authority": [
+    "billing.*"
+  ],
+  "domains": [
+    "billing.openvibe.network"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.76.0",
+    "openvibe-sdk": "v0.21.2",
+    "openvibe-shared": "v2.3.1"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W8"
+}

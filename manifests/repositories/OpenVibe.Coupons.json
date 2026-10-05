@@ -1,0 +1,26 @@
+{
+  "name": "OpenVibe.Coupons",
+  "repository": "OpenVibers/OpenVibe.Coupons",
+  "service": "coupons",
+  "product": "Coupons",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 2,
+  "authority": [
+    "coupons.*"
+  ],
+  "domains": [
+    "openvibe.coupons"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.79.0",
+    "openvibe-sdk": "v0.25.1",
+    "openvibe-shared": "v2.2.0",
+    "openvibe-publishing": "v1.1.0"
+  },
+  "deployed": true,
+  "exposure": "internal",
+  "track": "W18"
+}

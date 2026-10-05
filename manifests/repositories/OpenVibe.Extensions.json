@@ -1,0 +1,17 @@
+{
+  "name": "OpenVibe.Extensions",
+  "repository": "OpenVibers/OpenVibe.Extensions",
+  "service": null,
+  "product": null,
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node >=22.0.0",
+  "database": null,
+  "migrations": 0,
+  "authority": [],
+  "domains": [],
+  "pins": {},
+  "deployed": false,
+  "exposure": null,
+  "track": "W18"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "OpenVibe.Realtime",
+  "repository": "OpenVibers/OpenVibe.Realtime",
+  "service": null,
+  "product": null,
+  "stage": "closed",
+  "version": null,
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [],
+  "domains": [],
+  "pins": {},
+  "deployed": false,
+  "exposure": null,
+  "track": null
+}

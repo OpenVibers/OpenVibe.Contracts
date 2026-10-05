@@ -1,0 +1,21 @@
+{
+  "name": "OpenVibe.Sites",
+  "repository": "OpenVibers/OpenVibe.Sites",
+  "service": "sites",
+  "product": "OpenVibe.Sites",
+  "stage": "stable",
+  "version": null,
+  "runtime": "node >=20",
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "sites"
+  ],
+  "domains": [],
+  "pins": {
+    "openvibe-shared": "v1.29.2"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": null
+}

@@ -1,0 +1,17 @@
+{
+  "name": "openvibe-agents",
+  "repository": null,
+  "service": null,
+  "product": null,
+  "stage": null,
+  "version": null,
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [],
+  "domains": [],
+  "pins": {},
+  "deployed": null,
+  "exposure": null,
+  "track": null
+}

@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.75.0 (first released in Wave 1). 589 schemas in `contracts/catalog.json`, 31 service manifests, 205 capability manifests, 13 namespace manifests and the staff capability map. Service repositories run `openvibe-contracts-check` and the pin-drift check in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Consumers pin release tags (each repository's `STATUS.json` names its pin; `node scripts/docs-currency.js <root>` checks that it matches `package.json`).
+**Status:** alpha, v0.75.0 (first released in Wave 1). 589 schemas in `contracts/catalog.json`, 31 service manifests, 205 capability manifests, 13 namespace manifests and the staff capability map. Service repositories run `openvibe-contracts-check` and the pin-drift check in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Consumers pin release tags (each repository's `STATUS.json` names its pin; `node scripts/docs-currency.js <root>` checks that it matches `package.json`). `node scripts/estate.js` generates `docs/ESTATE.md` and `manifests/repositories/` from the estate checkouts, and `--check` fails on drift (plan T1 step 3).
 
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).

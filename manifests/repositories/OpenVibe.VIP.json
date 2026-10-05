@@ -1,0 +1,25 @@
+{
+  "name": "OpenVibe.VIP",
+  "repository": "OpenVibers/OpenVibe.VIP",
+  "service": "vip",
+  "product": "VIP",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node >=22.0.0",
+  "database": "PostgreSQL",
+  "migrations": 1,
+  "authority": [
+    "vip.*"
+  ],
+  "domains": [
+    "openvibe.vip"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.79.0",
+    "openvibe-sdk": "v0.25.0",
+    "openvibe-shared": "v2.2.0"
+  },
+  "deployed": true,
+  "exposure": "internal",
+  "track": null
+}

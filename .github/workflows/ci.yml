@@ -11,6 +11,9 @@ jobs:
       fetch-depth: 0                  # compat.js diffs against the previous release tag
       syntax-dirs: lib scripts bin
       pin-drift: false                # the library the pins point at
+      # docs-currency (estate): docs/ESTATE.md and manifests/repositories/*.json are generated. CI has no
+      # checkout tree, so estate.js checks the document against the checked-in manifests and skips the rest.
+      extra: node scripts/estate.js --check
   # Secret scan (gitleaks) and dependency audit, shared by every OpenVibers repo.
   security:
     uses: OpenVibers/OpenVibe.Shared/.github/workflows/security.yml@66b76f868ea8228aad7811309eafef3726b036f3

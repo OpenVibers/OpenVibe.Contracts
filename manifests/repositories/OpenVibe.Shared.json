@@ -1,0 +1,22 @@
+{
+  "name": "OpenVibe.Shared",
+  "repository": "OpenVibers/OpenVibe.Shared",
+  "service": "shared",
+  "product": "OpenVibe.Shared",
+  "stage": "alpha",
+  "version": "2.3.1",
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "shared"
+  ],
+  "domains": [],
+  "pins": {
+    "openvibe-contracts": "v0.61.0",
+    "openvibe-sdk": "v0.20.4"
+  },
+  "deployed": false,
+  "exposure": "library",
+  "track": "W2"
+}

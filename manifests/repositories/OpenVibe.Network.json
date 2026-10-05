@@ -1,0 +1,33 @@
+{
+  "name": "OpenVibe.Network",
+  "repository": "OpenVibers/OpenVibe.Network",
+  "service": "network",
+  "product": "Network",
+  "stage": "stable",
+  "version": "1.0.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 6,
+  "authority": [
+    "identity.*",
+    "network.*",
+    "theme.*",
+    "notification.*"
+  ],
+  "domains": [
+    "openvibe.network",
+    "auth.openvibe.network",
+    "api.openvibe.network",
+    "admin.openvibe.network",
+    "my.openvibe.network",
+    "themes.openvibe.network"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.83.0",
+    "openvibe-sdk": "v0.25.2",
+    "openvibe-shared": "v2.3.1"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": null
+}
