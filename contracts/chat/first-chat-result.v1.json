@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/first-chat-result.v1.json",
+  "title": "ChatFirstChatResult",
+  "description": "chat.first-chat-result@1: the answer of GET /internal/chat/first-chat?channel_id&identity on OpenVibe.Chat (capability chat.analysis.read), OpenVibe.Live's welcome check (isFirstChatInChannel): first is true when identity (user:<user_id>, anon:<anonId> or ext:<prefixed username>) has never chatted in the channel, from stream_first_chats, and false when it has. channel_id is the channel owner's Live user id (stream_first_chats.channel_user_id), not Chat's ctx_channels.id. A failure is chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "first"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "first": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/sound-result.v1.json",
+  "title": "ChatSoundResult",
+  "description": "chat.sound-result@1: the answer of GET /internal/chat/sounds/by-command?channel_id&command on OpenVibe.Chat (capability chat.sounds.read): the approved channel sound a !command plays, one at random when several match (OpenVibe.Live's getChannelSoundByCommand), projected exactly as chat.sounds-result@1's sound. channel_id is the channel owner's Live user id (channel_sounds.channel_owner_id). An unknown command or channel is a 404, answered as chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "sound"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "sound": {
+          "$ref": "sounds-result.v1.json#/$defs/sound"
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ]
+}

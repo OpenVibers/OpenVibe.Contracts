@@ -4,7 +4,7 @@
   "owner": "chat",
   "status": "active",
   "visibility": "internal",
-  "description": "Count a channel's or a stream's chat messages per time bucket, with the latest message id: the chat timeline behind OpenVibe.Live's AI moments, chat spikes and activity reads (plan T3, J4b). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
+  "description": "Count a channel's or a stream's chat messages per time bucket, with the latest message id: the chat timeline behind OpenVibe.Live's AI moments, chat spikes and activity reads (plan T3, J4b), and the channel welcome check (GET /internal/chat/first-chat: whether an identity has chatted in the channel before). Loopback only, Chat service token (Live's principal today); never granted to an app or delegated to an agent.",
   "permissions": [
     "chat:read"
   ],
@@ -14,7 +14,8 @@
   "quotaClass": "internal-read",
   "events": [],
   "implementedBy": [
-    "GET /internal/chat/timeline"
+    "GET /internal/chat/timeline",
+    "GET /internal/chat/first-chat"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "chat.timeline-result@1"

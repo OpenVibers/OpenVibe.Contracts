@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "days": [
+    {
+      "day": "2026-10-03",
+      "messages": 1834,
+      "chatters": 96
+    },
+    {
+      "day": "2026-10-04",
+      "messages": 0,
+      "chatters": 0
+    }
+  ]
+}

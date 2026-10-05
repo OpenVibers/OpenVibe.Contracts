@@ -4729,6 +4729,15 @@
       "status": "active"
     },
     {
+      "id": "chat.site-daily-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/site-daily-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.messages-page",
       "version": "1.0.0",
       "owner": "chat",
@@ -4747,6 +4756,15 @@
       "status": "active"
     },
     {
+      "id": "chat.first-chat-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/first-chat-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.moderation-queue-result",
       "version": "1.0.0",
       "owner": "chat",
@@ -4760,6 +4778,15 @@
       "version": "1.0.0",
       "owner": "chat",
       "schema": "chat/sounds-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.sound-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/sound-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

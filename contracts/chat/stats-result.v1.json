@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/chat/stats-result.v1.json",
   "title": "ChatStatsResult",
-  "description": "chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first. A failure is chat.ingress-ack@1's error ({ ok: false, error }).",
+  "description": "chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first; the kind site-daily is answered by chat.site-daily-result@1, not here. A failure is chat.ingress-ack@1's error ({ ok: false, error }).",
   "anyOf": [
     {
       "type": "object",

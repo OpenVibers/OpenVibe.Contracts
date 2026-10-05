@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/chat/stats-request.v1.json",
   "title": "ChatStatsRequest",
-  "description": "chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.",
+  "description": "chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given; site-daily one row per UTC day in [since, until), zero-filled, a kind that takes only since and until. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.",
   "type": "object",
   "required": [
     "kind"
@@ -15,7 +15,8 @@
         "site",
         "user",
         "stream",
-        "channel-top"
+        "channel-top",
+        "site-daily"
       ]
     },
     "user_id": {
@@ -82,6 +83,24 @@
       "then": {
         "required": [
           "stream_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "site-daily"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "since",
+          "until"
         ]
       }
     }
