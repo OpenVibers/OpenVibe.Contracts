@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/dm-block-state-result.v1.json",
+  "title": "ChatDmBlockStateResult",
+  "description": "chat.dm-block-state-result@1: the answer of GET /internal/chat/dm/block-state?a&b on OpenVibe.Chat (capability chat.messages.read): blocked is true when either user has blocked the other, in Chat's dm_blocks or as a Network platform block (dm.js isBlockedEither, the check the DM and call routes use). a and b are positive Live user ids and must differ; OpenVibe.Live asks this before sending a call invite. A failure is chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "blocked"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "blocked": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ]
+}

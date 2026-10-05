@@ -14,7 +14,8 @@
   "quotaClass": "internal-read",
   "events": [],
   "implementedBy": [
-    "GET /internal/chat/messages"
+    "GET /internal/chat/messages",
+    "GET /internal/chat/dm/block-state"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "chat.messages-page@1"

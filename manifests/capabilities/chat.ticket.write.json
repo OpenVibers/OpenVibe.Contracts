@@ -2,10 +2,10 @@
   "id": "chat.ticket.write",
   "version": "1.0",
   "owner": "chat",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
   "sensitive": true,
-  "description": "PLANNED (OpenVibe.Help is not built yet; Help's per-ticket conversation has no service-token path into Chat today): create or continue one conversation per (ticket id, calling service) and post a message into it, with author_kind person, agent or staff and the author's subject, so a service (Help's agent worker, staff tooling) can answer a ticket without the person send route POST /api/chat/send, which needs a person's session. Loopback only, first-party service token; never granted to an app or delegated to an agent. It becomes active, and enters generated/openapi/chat.json, when OpenVibe.Chat implements the route.",
+  "description": "Create or continue one conversation per (ticket id, calling service) and post a message into it, or read that service's own conversation, paged: with author_kind person, agent or staff and the author's subject, so a service (Help's agent worker, staff tooling) can answer a ticket without the person send route POST /api/chat/send, which needs a person's session. Loopback only, first-party service token; never granted to an app or delegated to an agent.",
   "permissions": [
     "chat:write"
   ],
@@ -14,7 +14,10 @@
   ],
   "quotaClass": "internal-write",
   "events": [],
-  "implementedBy": [],
+  "implementedBy": [
+    "POST /internal/chat/tickets/:ticket_id/messages",
+    "GET /internal/chat/tickets/:ticket_id"
+  ],
   "inputSchema": "chat.ticket-conversation@1",
   "outputSchema": "chat.ticket-conversation@1"
 }
