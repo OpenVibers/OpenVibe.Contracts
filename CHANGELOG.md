@@ -4,6 +4,26 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.100.0 — 2026-10-05
+
+**Three small contract fixes** (plan follow-ups). Additive and widening, no contract removed.
+- `platform.usage-sample@1` now says what `resource` is: the producing service's `platform.rate-card@1` `metric` for
+  the reading's `provider` (e.g. `tokens`), never a run, job or object id, with a `unit` that is that metric's unit —
+  which is exactly what Billing looks the card up by (`provider` + `resource`, then a unit that fits the metric).
+  Without the description AI shipped `resource` as a run id and no card matched. A valid AI reading,
+  `fixtures/platform.usage-sample/valid/ai-per-metric.json` (service `ai`, provider `openai`, resource/unit `tokens`),
+  and a matching `fixtures/platform.rate-card/valid/ai-tokens.json` ground it.
+- `platform.placement-result@1`: `selected` is now `type: [string, null]` and says null means no eligible candidate.
+  openvibe-sdk/placement `plan()` already answers `{ selected: null, … }` when nothing qualifies; the string-only
+  schema refused the only shape that is sent, so this is recorded in `compatibility/corrections.json` against
+  v0.99.0. Valid fixture `fixtures/platform.placement-result/valid/none.json`.
+- `chat.ticket-conversation@1` (new, owner `chat`, first-party, **planned**) and the planned `chat.ticket.write`
+  capability on Chat's manifest: one conversation per (ticket id, calling service), with a posted message whose
+  `author_kind` is `person`, `agent` or `staff`, `author` is the author's subject, `body` the text and `created_at`
+  when it was written. It gives Help's service tokens a path into Chat without the person-only `POST /api/chat/send`;
+  until Chat implements the route the capability stays out of `generated/openapi/chat.json`. Valid and invalid
+  fixtures are in `fixtures/chat.ticket-conversation/`.
+
 ## 0.99.0 — 2026-10-04
 
 **The estate, generated** (plan T1 step 3). `scripts/estate.js` reads every checkout under the estate root (default

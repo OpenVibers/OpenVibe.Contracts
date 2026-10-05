@@ -1,0 +1,9 @@
+{
+  "ticket_id": "tkt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "service": "help",
+  "message": {
+    "author_kind": "person",
+    "author": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "created_at": "2026-10-05T09:03:00Z"
+  }
+}

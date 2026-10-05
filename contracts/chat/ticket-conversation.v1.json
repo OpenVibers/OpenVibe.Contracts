@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/ticket-conversation.v1.json",
+  "title": "ChatTicketConversation",
+  "description": "chat.ticket-conversation@1: one conversation between an OpenVibe.Help ticket and one calling service, keyed by the ticket id and the service, carrying one posted message. The person side reads and answers it through Chat's person APIs (POST /api/chat/send needs a person's session); a service-side author (Help's agent worker, staff tooling) posts here with a service token, which is why the write needs the chat.ticket.write capability rather than the person send route. author_kind says who wrote the message (`person`, `agent` or `staff`), author is that author's subject, body is the text, and created_at is when the message was written.",
+  "$comment": "Additive optional fields may extend this v1 contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ticket_id",
+    "service",
+    "message"
+  ],
+  "properties": {
+    "ticket_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The OpenVibe.Help ticket this conversation belongs to. Together with `service` it keys the conversation: one conversation per (ticket id, calling service)."
+    },
+    "service": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "The Contracts manifest id of the calling service (e.g. `help`, `ai`), the service token's principal. Together with `ticket_id` it keys the conversation, so two services on one ticket get two conversations."
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author_kind",
+        "author",
+        "body",
+        "created_at"
+      ],
+      "properties": {
+        "author_kind": {
+          "enum": [
+            "person",
+            "agent",
+            "staff"
+          ],
+          "description": "Who wrote the message: the ticket's `person`, an `agent` (a service acting for one, e.g. Help's AI worker), or `staff` (a human on the service's team)."
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The author's subject: `user:<id>` for a person, or the service/agent subject that posted on its behalf. Never a display name."
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 6000,
+          "description": "The message text; not blank."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the message was written (the author's clock; Chat keeps its own ordering)."
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "ticket_id": "tkt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "service": "help",
+      "message": {
+        "author_kind": "person",
+        "author": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "body": "My export from yesterday is missing the last day of records.",
+        "created_at": "2026-10-05T09:00:00Z"
+      }
+    }
+  ]
+}

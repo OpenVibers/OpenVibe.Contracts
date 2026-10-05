@@ -13,7 +13,11 @@
   ],
   "properties": {
     "selected": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The id of the chosen candidate, or null when none qualified — every candidate was ineligible or none was offered — in which case `reasons` says why. openvibe-sdk/placement plan() returns null on the same condition."
     },
     "objective": {
       "type": "string",

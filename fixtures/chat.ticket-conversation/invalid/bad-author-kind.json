@@ -1,0 +1,10 @@
+{
+  "ticket_id": "tkt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "service": "help",
+  "message": {
+    "author_kind": "bot",
+    "author": "agent:agent_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "body": "This author kind is not one of person, agent or staff.",
+    "created_at": "2026-10-05T09:02:00Z"
+  }
+}

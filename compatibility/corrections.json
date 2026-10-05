@@ -6,6 +6,12 @@
       "base": "v0.47.0",
       "fixedIn": "0.48.0",
       "reason": "0.47.0 gave network.grant.changed a service-principal payload, but Network's developer relay already sent it for developer-app grants ({ project_id, capability, audience, from, to }) and OpenVibe.Events acts on that shape. Nothing produced or consumed the 0.47.0 shape; it moved to network.principal_grant.changed."
+    },
+    {
+      "id": "platform.placement-result",
+      "base": "v0.99.0",
+      "fixedIn": "0.100.0",
+      "reason": "0.99.0 required `selected` to be a string, but the only producer of this shape, openvibe-sdk/placement plan(), already answers `selected: null` when nothing qualifies (and the POST /api/v1/placement/explain route it describes is roadmap WS-Z9, not built). The schema never matched what is actually sent, so `selected` widens to [string, null]; nothing consumed the string-only shape."
     }
   ]
 }

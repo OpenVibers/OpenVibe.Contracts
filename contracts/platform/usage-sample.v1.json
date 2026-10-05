@@ -36,7 +36,8 @@
       "type": "string"
     },
     "resource": {
-      "type": "string"
+      "type": "string",
+      "description": "The producing service's billing resource: the platform.rate-card@1 `metric` for this reading's `provider` (e.g. `tokens`, `queue-operation-64kb`), and never a run, job, object or other work id. The reading's `unit` must be that metric's unit, so Billing rates it against the card found by (provider, resource): a resource that names no card, or a unit the card's metric does not fit, is left unrated (`billing.no_card` / `billing.unit_mismatch`)."
     },
     "provider": {
       "type": "string"

@@ -24,7 +24,8 @@
     "chat.presence.read",
     "chat.sounds.read",
     "chat.sounds.write",
-    "chat.stats.read"
+    "chat.stats.read",
+    "chat.ticket.write"
   ],
   "eventsProduced": [
     "chat.message.created",

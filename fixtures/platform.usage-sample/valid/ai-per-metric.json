@@ -1,0 +1,15 @@
+{
+  "id": "use-ai-1",
+  "idempotency_key": "ai:run_01JAB2C3D4E5F6G7H8J9K0MNPQ:tokens",
+  "service": "ai",
+  "subject": "user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "provider": "openai",
+  "resource": "tokens",
+  "operation": "chat.completion",
+  "quantity": 1500,
+  "unit": "tokens",
+  "at": "2026-10-02T10:00:00Z",
+  "cost_estimate": 0.000225,
+  "free_allowance_used": 0,
+  "source": "ai.provider-router"
+}
