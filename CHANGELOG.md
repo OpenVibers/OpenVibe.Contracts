@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.98.0 — 2026-10-05
+
+**The node-revoked event contract** (plan T2 follow-up; the deferred item in OpenVibe.Network's
+`docs/t2-cells-and-node-principal.md` section 10, "Revocation latency outside Bot"). Adds
+`network.node.revoked@1` (owner `network`, first-party, active): a node principal (`nod_…`), a person's paired
+machine, was revoked through `POST /internal/node-principals/:id/revoke` (`network.node.manage`, the service that
+paired it) or `POST /api/v1/me/nodes/:id/revoke` (the owner's session), or with the owner's account. The payload is
+`{ node_id, principal_id, owner, reason?, at }` (`extra` fields refused): `owner` is the person, project or platform
+the machine belongs to, `reason` the caller's text when one was given, and the credential and its hash are never
+carried. Until now a connected machine learned of a revoke only at its next reauth (≤ 330 s); a consumer can stop it
+at once. Registered in the catalog, in Network's `eventsProduced`, and on `network.node.manage`'s `events`, with valid
+and invalid fixtures. Network emitting it inside `server/registry/node-principals.js` is a separate follow-up PR and
+depends on this one; there is no consumer yet. Additive.
+
 ## 0.97.0 — 2026-10-04
 
 **The job contract matches the Node again, and Bot's dispatch answer has a contract** (plan T14 step 6 follow-up).

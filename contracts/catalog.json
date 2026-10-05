@@ -6092,6 +6092,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-048"
+    },
+    {
+      "id": "network.node.revoked",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.node.revoked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-034"
     }
   ]
 }

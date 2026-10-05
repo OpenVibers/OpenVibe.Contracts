@@ -75,6 +75,7 @@
     "network.grant.changed",
     "network.mod.grants_changed",
     "network.module.updated",
+    "network.node.revoked",
     "network.notification.created",
     "network.principal_grant.changed",
     "network.subject.merged",
