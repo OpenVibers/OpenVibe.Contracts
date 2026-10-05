@@ -4,6 +4,8 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.98.0 — 2026-10-05
+
 **The node-revoked event contract** (plan T2 follow-up; the deferred item in OpenVibe.Network's
 `docs/t2-cells-and-node-principal.md` section 10, "Revocation latency outside Bot"). Adds
 `network.node.revoked@1` (owner `network`, first-party, active): a node principal (`nod_…`), a person's paired
