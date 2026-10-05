@@ -1,0 +1,24 @@
+{
+  "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "requester": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS" },
+  "task": "Fix the failing thumbnail test in OpenVibe.Media and open a PR.",
+  "mode": "best",
+  "budget": { "per_task_usd": 5, "per_day_usd": 50 },
+  "state": "running",
+  "created_at": "2026-10-05T09:00:00.000Z",
+  "progress": {
+    "stream_url": "https://openvibe.actor/v1/tasks/tsk_01JAB2C3D4E5F6G7H8J9K0MNPR/events",
+    "last_seq": 12,
+    "events": ["output", "state", "end"]
+  },
+  "explanation": [
+    {
+      "selected": "openvibe-runtime",
+      "objective": "correctness",
+      "reasons": ["the task is code; the Codes adapter exposes a code harness"],
+      "candidates": [{ "id": "openvibe-runtime", "eligible": true, "estimated_cost_usd": 0.06 }],
+      "decided_at": "2026-10-05T09:00:01.000Z"
+    }
+  ]
+}

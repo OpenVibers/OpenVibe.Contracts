@@ -64599,6 +64599,439 @@
         ]
       }
     },
+    "platform.task": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/task.v1.json",
+        "title": "Task",
+        "description": "platform.task@1 (PLANNED; plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /v1/tasks creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered adapters, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /v1/tasks/{id} reads the same resource. Progress streams as server-sent events from `progress.stream_url` (a task's own counter in `progress.last_seq`, as platform.job-frame@1 counts on a link); `cancel` records that a cancel was requested (POST /v1/tasks/{id}/cancel), and `webhooks` are the registered endpoints the router delivers each state change to. No Actor service exists yet: OpenVibe.Actor is a product page (manifests/products/openvibe.actor.json, noRepo) with no service manifest, so the contract is owned by `network`, like every other platform.* contract, and stays PLANNED until T17 ships. This v1 contract may grow optional fields.",
+        "$comment": "Additive optional fields may extend this v1 contract. It is the task resource, not a device frame: Actor's link is HTTP/SSE where Run's is the Node WebSocket.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "project_id",
+          "requester",
+          "task",
+          "mode",
+          "budget",
+          "state",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Minted by the router (tsk_<ULID>): the idempotency key of the task and the stem of its usage readings, as platform.job@1's id is for a job. Never reused."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's."
+          },
+          "requester": {
+            "description": "The person or agent the task belongs to: a user subject for a person, an agent subject for an agent acting under the grants its owner delegated (roadmap WS-Z2).",
+            "allOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            ]
+          },
+          "task": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000,
+            "description": "The instruction in plain words, exactly as the caller gave it. Not a backend command and not a model prompt: the planner turns it into one."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "cheapest",
+              "balanced",
+              "best",
+              "fastest",
+              "private"
+            ],
+            "default": "balanced",
+            "description": "The plan's five modes, in contract spelling: Cheapest, Balanced (the default), Best, Fastest and Private are `cheapest`, `balanced`, `best`, `fastest` and `private`. A mode is the planner objective, never a fixed backend list (plan T17). `cheapest`: the lowest expected cost that still meets the task class's quality bar. `balanced` (the default): cost, quality and speed weighed together. `best`: the highest chance of a right answer first time. `fastest`: the shortest time to a checked result. `private`: only backends that keep the data on OpenVibe (first-party, and a user-owned node only when the task names it), per ADR-046."
+          },
+          "budget": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Hard limits the router never exceeds (plan T17: 'a hard limit per task and per day'). A task whose cheapest eligible backend would take it over `per_task_usd` ends failed (actor.budget.exceeded) rather than running; `per_day_usd` caps the project's tasks in one UTC day and a new task waits or fails, it never overruns.",
+            "required": [
+              "per_task_usd",
+              "per_day_usd"
+            ],
+            "properties": {
+              "per_task_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "per_day_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "verifying",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "description": "queued: stored, waiting for the planner. running: a backend is working, or a cascade is between attempts. verifying: a result exists and a check (the task's own tests, a citation check, a postcondition) runs before it is delivered. succeeded, failed and cancelled are the end states; an end state never changes."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the task reached its end state; null before."
+          },
+          "result": {
+            "description": "The checked deliverable (any JSON, as a platform.job@1 `result` is): for a code task a diff or branch reference, for research a brief with citations, for an action a postcondition report. Never a credential and never raw sandbox output. Null (or absent) in every state but succeeded, which the allOf below enforces."
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "usd"
+                ],
+                "properties": {
+                  "usd": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "What this task was billed, to the cent, across every attempt it made."
+                  },
+                  "free_allowance_used": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "The part of `usd` covered by the project's free allowance; metered as platform.usage-sample@1."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Present once the task has run an attempt (also when it ends failed or cancelled); null while queued. One key, one bill (plan T17), through Billing (ADR-012)."
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "placement-result.v1.json"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "One platform.placement-result@1 per backend the planner tried, oldest first, an escalation appending a new one: which backend won, why and what else was considered, from openvibe-sdk/placement (ADR-046 §1). Null while queued."
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "stream_url",
+                  "last_seq"
+                ],
+                "properties": {
+                  "stream_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The text/event-stream endpoint that carries this task's progress. Each event mirrors platform.job-frame@1's job_stdout/state shape: a state change, an output chunk, or the end."
+                  },
+                  "last_seq": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The task's own event counter, from 0 before the first event; a reconnecting reader resumes after it, as a job frame's seq counts on one link."
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "output",
+                        "state",
+                        "end"
+                      ]
+                    },
+                    "description": "The event kinds the stream delivers, run.job-stream-event@1's own three."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Streaming progress (plan T17). Null before the router opens a stream and after the end."
+          },
+          "cancel": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "requested_at"
+                ],
+                "properties": {
+                  "requested_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When POST /v1/tasks/{id}/cancel was accepted. The running backend is stopped as its own contract allows; the state becomes cancelled and `finished_at` is set."
+                  },
+                  "requested_by": {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cancellation (plan T17): null until a cancel is requested, then it records who asked and when; the task's outcome is `state`."
+          },
+          "webhooks": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "url",
+                "events"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://",
+                  "description": "The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused."
+                },
+                "events": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "queued",
+                      "running",
+                      "verifying",
+                      "succeeded",
+                      "failed",
+                      "cancelled"
+                    ]
+                  },
+                  "description": "The state changes delivered; the same names as `state`."
+                },
+                "secret_ref": {
+                  "type": "string",
+                  "pattern": "^[A-Z0-9_]+$",
+                  "description": "The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference."
+                }
+              }
+            },
+            "description": "Webhooks (plan T17), registered at creation. A delivery that fails is retried with backoff and never delays the task; the task's own record is the source of truth."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "succeeded"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "result",
+                "cost",
+                "explanation"
+              ],
+              "properties": {
+                "result": {
+                  "not": {
+                    "type": "null"
+                  }
+                },
+                "cost": {
+                  "type": "object"
+                },
+                "explanation": {
+                  "type": "array"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "result": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "cancelled"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "cancel"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+            "requester": {
+              "type": "user",
+              "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS"
+            },
+            "task": "Research five competitors of my shop and write a one-page brief with sources.",
+            "mode": "balanced",
+            "budget": {
+              "per_task_usd": 5,
+              "per_day_usd": 50
+            },
+            "state": "queued",
+            "created_at": "2026-10-05T09:00:00.000Z",
+            "webhooks": [
+              {
+                "url": "https://example.com/hooks/actor",
+                "events": [
+                  "succeeded",
+                  "failed"
+                ],
+                "secret_ref": "ACTOR_WEBHOOK_SECRET"
+              }
+            ]
+          },
+          {
+            "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPR",
+            "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+            "requester": {
+              "type": "user",
+              "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS"
+            },
+            "task": "Fix the failing thumbnail test in OpenVibe.Media and open a PR.",
+            "mode": "best",
+            "budget": {
+              "per_task_usd": 5,
+              "per_day_usd": 50
+            },
+            "state": "running",
+            "created_at": "2026-10-05T09:00:00.000Z",
+            "progress": {
+              "stream_url": "https://openvibe.actor/v1/tasks/tsk_01JAB2C3D4E5F6G7H8J9K0MNPR/events",
+              "last_seq": 12,
+              "events": [
+                "output",
+                "state",
+                "end"
+              ]
+            },
+            "explanation": [
+              {
+                "selected": "openvibe-runtime",
+                "objective": "correctness",
+                "reasons": [
+                  "the task is code; the Codes adapter exposes a code harness"
+                ],
+                "candidates": [
+                  {
+                    "id": "openvibe-runtime",
+                    "eligible": true,
+                    "estimated_cost_usd": 0.06,
+                    "estimated_latency_ms": 180000
+                  }
+                ],
+                "decided_at": "2026-10-05T09:00:01.000Z"
+              }
+            ]
+          },
+          {
+            "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+            "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+            "requester": {
+              "type": "agent",
+              "id": "agt_01JAB2C3D4E5F6G7H8J9K0MNPT"
+            },
+            "task": "Check this week's outage report and summarize the causes.",
+            "mode": "cheapest",
+            "budget": {
+              "per_task_usd": 1,
+              "per_day_usd": 10
+            },
+            "state": "succeeded",
+            "created_at": "2026-10-05T09:00:00.000Z",
+            "finished_at": "2026-10-05T09:06:00.000Z",
+            "result": {
+              "brief": "Two outages; both were a saturated connection pool.",
+              "citations": [
+                "https://openvibe.status/incidents/41"
+              ]
+            },
+            "cost": {
+              "usd": 0.06,
+              "free_allowance_used": 0.06
+            },
+            "explanation": [
+              {
+                "selected": "open-model",
+                "objective": "cheapest",
+                "reasons": [
+                  "research task; the checks are citations, met by the cheapest candidate"
+                ],
+                "candidates": [
+                  {
+                    "id": "open-model",
+                    "eligible": true,
+                    "estimated_cost_usd": 0.06,
+                    "estimated_latency_ms": 420000
+                  }
+                ],
+                "decided_at": "2026-10-05T09:00:01.000Z"
+              }
+            ],
+            "cancel": null,
+            "progress": null
+          }
+        ]
+      }
+    },
     "events.delivery-policy": {
       "version": "1.0.0",
       "owner": "events",
