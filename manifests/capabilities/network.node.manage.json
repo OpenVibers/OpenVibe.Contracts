@@ -14,7 +14,7 @@
     "owner"
   ],
   "quotaClass": "admin",
-  "events": [],
+  "events": ["network.node.revoked"],
   "implementedBy": [
     "POST /internal/node-pairings",
     "GET /internal/node-principals/:id",

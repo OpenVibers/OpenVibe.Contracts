@@ -54561,3 +54561,41 @@ export interface ResourceControlResult {
   problem?: Problem;
   at: string;
 }
+
+/** network.node.revoked@1.0.0 (owner: network) */
+/**
+ * network.node.revoked v1 (OpenVibe.Network; plan T2, docs/t2-cells-and-node-principal.md section 10, migrations/0014_node_pairing.sql). A node principal (nod_…), a person's paired machine, was revoked: through POST /internal/node-principals/:id/revoke (network.node.manage, the service that paired it), through POST /api/v1/me/nodes/:id/revoke (the owner's session), or with the owner's account. Network revokes the row and clears the credential and its grace window; a machine holding a live node token is refused at its next use (≤ 300 s), and until this event only learned of the revoke at its next reauth (≤ 330 s). A consumer stops the machine at once; a second revoke changes nothing and emits nothing. The credential and its hash are never carried. Envelope: subject { type: node_principal, id: <nod_…> }, visibility internal, actor the service (svc:<service>) or the owner ({ type: user }) that revoked.
+ */
+export interface NetworkNodeRevokedPayload {
+  /**
+   * The machine's node id (platform_node_principals.node_id), minted with the principal and unique among principals.
+   */
+  node_id: string;
+  /**
+   * The revoked node principal. Also the envelope subject id.
+   */
+  principal_id: string;
+  /**
+   * Who the machine belongs to, as GET /api/v1/me/nodes and the operator list show it: the person who paired it, the project it is paired into, or the platform for a Host-reported machine.
+   */
+  owner:
+    | {
+        kind: "user";
+        subject: string;
+      }
+    | {
+        kind: "project";
+        project_id: string;
+      }
+    | {
+        kind: "platform";
+      };
+  /**
+   * Why it was revoked, when the caller gave one (the owner's text or the service's); absent otherwise.
+   */
+  reason?: string;
+  /**
+   * When the revoke was applied (platform_node_principals.revoked_at).
+   */
+  at: string;
+}
