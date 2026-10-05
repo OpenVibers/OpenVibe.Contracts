@@ -1,0 +1,8 @@
+{
+  "watch_id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "state": "timeout",
+  "carrier": "api",
+  "http_status": null,
+  "error_code": "deadline_exceeded",
+  "consecutive_failures": 0
+}

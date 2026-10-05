@@ -1,0 +1,29 @@
+{
+  "id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "project_id": null,
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "name": "Steam Deck OLED price",
+  "labels": { "topic": "hardware" },
+  "status": "active",
+  "source": {
+    "kind": "api",
+    "url": "https://openvibe.deals/api/offers/steam-deck-oled",
+    "method": "GET",
+    "format": "json",
+    "items_path": "offers",
+    "fields": { "price": "price", "currency": "currency" },
+    "auth": { "mode": "none" },
+    "headers": {},
+    "conditional": true
+  },
+  "cadence": { "every_sec": 3600, "jitter_sec": 60, "timezone": null },
+  "extraction": { "kind": "jsonpath", "selector": null, "fields": null, "value_path": "$.offers[0].price", "ai": null },
+  "comparison": { "mode": "threshold", "tolerance": 0.01, "percent": null },
+  "condition": { "op": "lt", "value": 199, "for_sec": null },
+  "action": [ { "kind": "notification", "category": "service", "priority": "high" } ],
+  "budget": { "checks_per_day": 100, "usd_per_month": 0, "max_runtime_ms": 20000, "max_bytes": 5242880 },
+  "retention": { "observations_days": 90, "keep_snapshots": false },
+  "health": null,
+  "created_at": "2026-10-05T08:00:00.000Z",
+  "updated_at": "2026-10-05T08:00:00.000Z"
+}

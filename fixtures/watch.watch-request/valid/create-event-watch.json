@@ -1,0 +1,12 @@
+{
+  "name": "Release 0.102.0 published",
+  "source": { "kind": "event", "pattern": "host.release.published", "filter": null },
+  "cadence": null,
+  "extraction": { "kind": "json", "selector": null, "fields": null, "value_path": "$.release", "ai": null },
+  "comparison": { "mode": "changed", "tolerance": null, "percent": null },
+  "condition": { "op": "changed", "value": null, "for_sec": null },
+  "action": [ { "kind": "notification", "category": "service", "priority": "normal" } ],
+  "budget": { "checks_per_day": 100, "usd_per_month": 0, "max_runtime_ms": 5000, "max_bytes": 1048576 },
+  "retention": { "observations_days": 30, "keep_snapshots": false },
+  "status": "active"
+}

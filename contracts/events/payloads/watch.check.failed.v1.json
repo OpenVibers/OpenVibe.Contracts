@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/watch.check.failed.v1.json",
+  "title": "WatchCheckFailedPayload",
+  "description": "watch.check.failed v1 (OpenVibe.Watch, plan T18): a check ended in a failure state. consecutive_failures is how many runs in a row have failed, so a consumer can tell a blip from a watch that is down. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority normal, actor service:watch.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["watch_id", "state", "carrier", "http_status", "error_code", "consecutive_failures"],
+  "properties": {
+    "watch_id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "state": { "enum": ["http_error", "timeout", "parse_error", "rate_limited", "budget_exceeded", "skipped", "disabled"] },
+    "carrier": { "type": ["string", "null"], "enum": ["event", "webhook", "http", "feed", "api", "node", "run", null] },
+    "http_status": { "type": ["integer", "null"] },
+    "error_code": { "type": ["string", "null"] },
+    "consecutive_failures": { "type": "integer", "minimum": 1 }
+  }
+}

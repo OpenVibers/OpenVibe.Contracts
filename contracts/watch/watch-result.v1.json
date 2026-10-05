@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/watch/watch-result.v1.json",
+  "title": "WatchResult",
+  "description": "watch.watch-result@1: answers of the watch routes on OpenVibe.Watch. GET /api/v1/watches → { watches } and POST /api/v1/watches → 201 { watch } (watch.watch.read, watch.watch.manage); PATCH → { watch }; POST /:id/pause and /:id/resume → { id, status }; DELETE /api/v1/watches/:id → { id, deleted: true }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": ["watches"],
+      "additionalProperties": false,
+      "properties": { "watches": { "type": "array", "items": { "$ref": "watch.v1.json" } } }
+    },
+    {
+      "type": "object",
+      "required": ["watch"],
+      "additionalProperties": false,
+      "properties": { "watch": { "$ref": "watch.v1.json" } }
+    },
+    {
+      "type": "object",
+      "required": ["id", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "status": { "enum": ["active", "paused", "disabled", "failed"] }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["id", "deleted"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "deleted": { "const": true }
+      }
+    }
+  ]
+}

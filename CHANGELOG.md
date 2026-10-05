@@ -4,6 +4,28 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.102.0 — 2026-10-05
+
+**The Watch contracts** (plan T18). Additive: eight new planned contracts, four planned capabilities and the Watch placeholder manifest, no existing schema changed.
+- `watch.watch@1` (new, owner `watch`, first-party, **planned**): a user-defined persistent observation — a source (a push event, a
+  webhook, a conditional HTTP URL, a feed or API, a local Node probe, or a Run check), how a value is extracted, how it is compared with
+  the last observation, the condition that fires, the actions it wakes (notification, event, webhook, Actor task, Codes run, Run job),
+  its budget and retention. Valid and invalid fixtures in `fixtures/watch.watch/`.
+- `watch.watch-request@1` (the create/patch body), `watch.watch-result@1` (the list/watch and pause/resume/delete answers),
+  `watch.observation@1` (one recorded value, immutable) and `watch.check-run@1` (one check execution, immutable, with the twelve
+  terminal states the service's `check_runs.state` CHECK allows), each with fixtures. The request reuses `watch.watch@1`'s `$defs`
+  rather than restating the source and condition shapes.
+- Events: `watch.observation.recorded` (subject `watch`, internal, low), `watch.watch.triggered` (internal, important; Network turns
+  it into a `WATCH_TRIGGERED` notification for `payload.recipient`) and `watch.check.failed` (internal, normal, with
+  `consecutive_failures`). **The dossier's `watch.triggered` is named `watch.watch.triggered` here**: the repo's event-type pattern
+  (`test/run.js:123`) requires at least three dot-separated segments, as every existing type has.
+- Capabilities `watch.watch.read`, `watch.watch.manage`, `watch.observation.read` and `watch.check.run` (all planned, first-party),
+  and `manifests/services/watch.json`, a placeholder like Run's: the OpenVibe.Watch repository does not exist yet, so nothing is
+  built. `manifests/products/openvibe.watch.json` now names `watch` as its service, as `openvibe.run` names `run`.
+- `contracts/platform/resource-offer.v1.json`: the `capabilities` description now documents `runtime:<class>` for a kind harness
+  beside the reserved `worker:<class>` names (a docs-only change; Codes already advertises them). `lib/ids.js` already carried
+  `watch`/`observation`/`check`, so it is untouched.
+
 ## 0.101.0 — 2026-10-05
 
 **The task contract** (plan T17, ADR-044). Additive: one new planned contract and its ADR, no existing schema changed.
