@@ -7,7 +7,7 @@
   "plan": "OpenVibe Development Roadmap (combined), Wave 1; implementation plan rev 3 section 3.1",
   "deployed": false,
   "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
-  "contracts": "openvibe-contracts v0.99.0 (this package; the newest tag)",
+  "contracts": "openvibe-contracts v0.100.0 (this package; the newest tag)",
   "features": [
     "589 JSON Schemas with valid and invalid fixtures",
     "31 service manifests with lifecycle declarations",
@@ -18,7 +18,8 @@
     "generated TypeScript types, JSON Schema bundle and per-service OpenAPI 3.1",
     "compatibility check against the previous tag (scripts/compat.js)",
     "documentation-currency check (scripts/docs-currency.js)",
-    "generated estate: docs/ESTATE.md and manifests/repositories/ from the checkouts (scripts/estate.js; --check fails on drift)"
+    "generated estate: docs/ESTATE.md and manifests/repositories/ from the checkouts (scripts/estate.js; --check fails on drift)",
+    "chat.ticket-conversation@1 and the planned chat.ticket.write capability: a per-ticket conversation keyed by ticket id and calling service, with author_kind person|agent|staff"
   ],
-  "updated": "2026-10-04"
+  "updated": "2026-10-05"
 }

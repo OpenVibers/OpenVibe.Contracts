@@ -48381,6 +48381,39 @@ export interface ChatSoundAssetRequest {
   media_asset_id: number;
 }
 
+/** chat.ticket-conversation@1.0.0 (owner: chat) */
+/**
+ * chat.ticket-conversation@1: one conversation between an OpenVibe.Help ticket and one calling service, keyed by the ticket id and the service, carrying one posted message. The person side reads and answers it through Chat's person APIs (POST /api/chat/send needs a person's session); a service-side author (Help's agent worker, staff tooling) posts here with a service token, which is why the write needs the chat.ticket.write capability rather than the person send route. author_kind says who wrote the message (`person`, `agent` or `staff`), author is that author's subject, body is the text, and created_at is when the message was written.
+ */
+export interface ChatTicketConversation {
+  /**
+   * The OpenVibe.Help ticket this conversation belongs to. Together with `service` it keys the conversation: one conversation per (ticket id, calling service).
+   */
+  ticket_id: string;
+  /**
+   * The Contracts manifest id of the calling service (e.g. `help`, `ai`), the service token's principal. Together with `ticket_id` it keys the conversation, so two services on one ticket get two conversations.
+   */
+  service: string;
+  message: {
+    /**
+     * Who wrote the message: the ticket's `person`, an `agent` (a service acting for one, e.g. Help's AI worker), or `staff` (a human on the service's team).
+     */
+    author_kind: "person" | "agent" | "staff";
+    /**
+     * The author's subject: `user:<id>` for a person, or the service/agent subject that posted on its behalf. Never a display name.
+     */
+    author: string;
+    /**
+     * The message text; not blank.
+     */
+    body: string;
+    /**
+     * When the message was written (the author's clock; Chat keeps its own ordering).
+     */
+    created_at: string;
+  };
+}
+
 /** live.moderation.action@1.0.0 (owner: live) */
 /**
  * live.moderation.action v1 (OpenVibe.Live server/db/database.js logModerationAction; ADR-022). A staff or channel moderator action taken on OpenVibe.Live outside chat: site and global bans, IP bans, message deletes and purges from Live's admin panel, a stream force-ended, relay users hidden, channel moderators added or removed. Not a person tidying their own messages or configuring their own channel. Written to Live's outbox in the transaction that records the action. OpenVibe.Network keeps it in the moderation audit log. Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).
@@ -51781,7 +51814,10 @@ export interface WorkloadRequirements {
  * Where a workload was (or would be) placed and why: the chosen candidate, the reasons, and every candidate with its eligibility, estimated cost and latency (POST /api/v1/placement/explain; roadmap WS-Z9).
  */
 export interface PlacementResult {
-  selected: string;
+  /**
+   * The id of the chosen candidate, or null when none qualified — every candidate was ineligible or none was offered — in which case `reasons` says why. openvibe-sdk/placement plan() returns null on the same condition.
+   */
+  selected: string | null;
   objective:
     | "cheapest"
     | "lowest-latency"
@@ -52003,6 +52039,9 @@ export interface UsageSample {
   service: string;
   project?: string;
   subject?: string;
+  /**
+   * The producing service's billing resource: the platform.rate-card@1 `metric` for this reading's `provider` (e.g. `tokens`, `queue-operation-64kb`), and never a run, job, object or other work id. The reading's `unit` must be that metric's unit, so Billing rates it against the card found by (provider, resource): a resource that names no card, or a unit the card's metric does not fit, is left unrated (`billing.no_card` / `billing.unit_mismatch`).
+   */
   resource?: string;
   provider?: string;
   node?: string;
