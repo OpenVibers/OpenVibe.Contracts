@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.104.0 — 2026-10-05
+
+**Network's resource index is live** (Network PR #62; ADR-048). `network.resource.read` is active: OpenVibe.Network
+serves the index it names. No schema changed and no route list changed — the two routes the capability already
+listed are now implemented and guarded.
+- `network.resource.read` (owner `network`, first-party, **active**): `GET /api/v1/resources` answers a page of
+  `common.resource-list-result@1` and `GET /api/v1/resources/:ovrn` answers `common.resource-summary@1`, both
+  guarded by the capability. Network's own resources today are its developer projects, apps, keys and nodes.
+- `generated/openapi/network.json` gains both operations, since the generator emits an active capability's
+  `implementedBy` routes; the OpenAPI version line and the other generated docs move to 0.104.0.
+- The T2 Fabric offer registry's public routes, which shared `/api/v1/resources`, have moved to `/api/v1/offers` in
+  the same Network release; no Contracts manifest listed those public routes, so no route list changed here.
+
 ## 0.103.0 — 2026-10-05
 
 **Chat's three new internal reads and Network's resource index** (Chat PR #24; ADR-048). Additive: three new chat result
