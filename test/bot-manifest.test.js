@@ -5,8 +5,8 @@
 const assert = require('assert');
 const c = require('..');
 
-// OpenVibe.Bot STATUS.json "capabilities" and "events" at origin/main 155accc (2026-10-04).
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.device.connect'];
+// OpenVibe.Bot STATUS.json "capabilities" and "events" at origin/main (2026-10-04, with bot.job.dispatch, plan T14 step 6).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.device.connect', 'bot.job.dispatch'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 
 const bot = c.services.get('bot');

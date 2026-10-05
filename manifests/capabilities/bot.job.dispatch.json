@@ -1,0 +1,25 @@
+{
+  "id": "bot.job.dispatch",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "internal",
+  "sensitive": true,
+  "description": "OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
+  "permissions": [
+    "bot:jobs"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "bot-jobs",
+  "events": [
+    "run.job.*"
+  ],
+  "implementedBy": [
+    "POST /api/v1/jobs",
+    "POST /api/v1/jobs/:id/cancel",
+    "GET /api/v1/jobs/:id"
+  ],
+  "inputSchema": "platform.job@1"
+}

@@ -21,6 +21,12 @@
         "inputSchema",
         "outputSchema"
       ]
+    },
+    {
+      "id": "bot.job.dispatch",
+      "missing": [
+        "outputSchema"
+      ]
     }
   ]
 }
