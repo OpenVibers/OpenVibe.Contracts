@@ -4,6 +4,27 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.103.0 — 2026-10-05
+
+**Chat's three new internal reads and Network's resource index** (Chat PR #24; ADR-048). Additive: three new chat result
+contracts and one planned capability, two capability route lists extended, no existing schema broken.
+- `chat.site-daily-result@1` (new, owner `chat`, first-party): the answer of `POST /internal/chat/stats` with
+  `kind: "site-daily"` — `{ days: [{ day, messages, chatters }] }`, one UTC day per entry in `[since, until)`,
+  zero-filled, at most 400 — Live's home series. `chat.stats-request@1` gained `site-daily` in its kind `enum`, with
+  the per-kind `allOf` rule that both `since` and `until` are required, the way its `user` and `stream` kinds already
+  express their required field.
+- `chat.first-chat-result@1` (`{ first }`, Live's welcome check) and `chat.sound-result@1` (`{ sound }`, reusing
+  `chat.sounds-result@1`'s sound projection) are the answers of the other two reads. All three follow the other
+  `chat.*` internal-read schemas: an `anyOf` of the ok shape and `chat.ingress-ack@1`'s error, with valid and
+  invalid fixtures.
+- Capabilities: `GET /internal/chat/first-chat` joins `chat.analysis.read`'s routes and
+  `GET /internal/chat/sounds/by-command` joins `chat.sounds.read`'s.
+- `network.resource.read` (new, owner `network`, first-party, **planned**): OpenVibe.Network's resource index
+  (ADR-048 section 3) — `GET /api/v1/resources` answers `common.resource-list-result@1` and
+  `GET /api/v1/resources/:ovrn` answers `common.resource-summary@1`; listed in `manifests/services/network.json`.
+  The T2 Fabric offer registry's public routes, today sharing `/api/v1/resources`, move to `/api/v1/offers` in
+  Network's own release; no Contracts manifest listed those public routes, so no route list changed here.
+
 ## 0.102.0 — 2026-10-05
 
 **The Watch contracts** (plan T18). Additive: eight new planned contracts, four planned capabilities and the Watch placeholder manifest, no existing schema changed.

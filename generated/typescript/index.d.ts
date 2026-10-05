@@ -51164,12 +51164,12 @@ export type ChatEmoteCountResult =
 
 /** chat.stats-request@1.0.0 (owner: chat) */
 /**
- * chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.
+ * chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given; site-daily one row per UTC day in [since, until), zero-filled, a kind that takes only since and until. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.
  */
 export type ChatStatsRequest = {
   [k: string]: unknown | undefined;
 } & {
-  kind: "site" | "user" | "stream" | "channel-top";
+  kind: "site" | "user" | "stream" | "channel-top" | "site-daily";
   /**
    * Live user id; required for kind user.
    */
@@ -51198,7 +51198,7 @@ export type ChatStatsRequest = {
 
 /** chat.stats-result@1.0.0 (owner: chat) */
 /**
- * chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first. A failure is chat.ingress-ack@1's error ({ ok: false, error }).
+ * chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first; the kind site-daily is answered by chat.site-daily-result@1, not here. A failure is chat.ingress-ack@1's error ({ ok: false, error }).
  */
 export type ChatStatsResult =
   | {
@@ -51228,6 +51228,39 @@ export type ChatStatsResult =
          * Messages in the window.
          */
         count: number;
+      }[];
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.site-daily-result@1.0.0 (owner: chat) */
+/**
+ * chat.site-daily-result@1: the answer of POST /internal/chat/stats with kind site-daily on OpenVibe.Chat (capability chat.stats.read), for OpenVibe.Live's home series: every non-deleted message across all channels and the distinct chatters (COALESCE(user_id, anon_id, source_platform || username)) per UTC day in [since, until), one entry per day with zero-filled gaps, at most 400 days. A failure is chat.ingress-ack@1's error.
+ */
+export type ChatSiteDailyResult =
+  | {
+      ok?: true;
+      /**
+       * @maxItems 400
+       */
+      days: {
+        /**
+         * UTC calendar day, 'YYYY-MM-DD'.
+         */
+        day: string;
+        /**
+         * Non-deleted messages that day, any message_type.
+         */
+        messages: number;
+        /**
+         * Distinct chatters that day (registered, anonymous or relayed).
+         */
+        chatters: number;
       }[];
     }
   | {
@@ -51302,6 +51335,23 @@ export type ChatTimelineResult =
         count: number;
       }[];
       max_id: number | null;
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.first-chat-result@1.0.0 (owner: chat) */
+/**
+ * chat.first-chat-result@1: the answer of GET /internal/chat/first-chat?channel_id&identity on OpenVibe.Chat (capability chat.analysis.read), OpenVibe.Live's welcome check (isFirstChatInChannel): first is true when identity (user:<user_id>, anon:<anonId> or ext:<prefixed username>) has never chatted in the channel, from stream_first_chats, and false when it has. channel_id is the channel owner's Live user id (stream_first_chats.channel_user_id), not Chat's ctx_channels.id. A failure is chat.ingress-ack@1's error.
+ */
+export type ChatFirstChatResult =
+  | {
+      ok?: true;
+      first: boolean;
     }
   | {
       ok: false;
@@ -51445,6 +51495,52 @@ export type ChatSoundsResult =
          */
         media_asset_id: number | null;
       }[];
+    }
+  | {
+      ok: false;
+      /**
+       * A human-readable reason.
+       */
+      error: string;
+    };
+
+/** chat.sound-result@1.0.0 (owner: chat) */
+/**
+ * chat.sound-result@1: the answer of GET /internal/chat/sounds/by-command?channel_id&command on OpenVibe.Chat (capability chat.sounds.read): the approved channel sound a !command plays, one at random when several match (OpenVibe.Live's getChannelSoundByCommand), projected exactly as chat.sounds-result@1's sound. channel_id is the channel owner's Live user id (channel_sounds.channel_owner_id). An unknown command or channel is a 404, answered as chat.ingress-ack@1's error.
+ */
+export type ChatSoundResult =
+  | {
+      ok?: true;
+      /**
+       * One channel_sounds row.
+       */
+      sound: {
+        id: number;
+        channel_owner_id: number;
+        /**
+         * The trigger word (no leading '!'), lowercased: the sound's name.
+         */
+        command: string;
+        /**
+         * Where Chat keeps the audio file (its on-disk path).
+         */
+        url: string;
+        mime?: string | null;
+        duration_seconds?: number | null;
+        /**
+         * The uploader's Live user id.
+         */
+        created_by?: number | null;
+        created_by_name?: string | null;
+        /**
+         * The file's OpenVibe.Media URL; null until Live's asset sync uploaded it.
+         */
+        media_url: string | null;
+        /**
+         * The OpenVibe.Media asset id; null until uploaded.
+         */
+        media_asset_id: number | null;
+      };
     }
   | {
       ok: false;

@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "sound": {
+    "id": 904,
+    "channel_owner_id": 77,
+    "command": "airhorn",
+    "url": "/sounds/77/airhorn.mp3",
+    "mime": "audio/mpeg",
+    "duration_seconds": 2.4,
+    "created_by": 512,
+    "created_by_name": "pixelfox",
+    "media_url": "https://media.openvibe.network/med_01K6R3A1B2C3D4E5F6G7H8J9KA",
+    "media_asset_id": 4402
+  }
+}

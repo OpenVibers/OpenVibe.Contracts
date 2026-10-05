@@ -1,0 +1,13 @@
+{
+  "sound": {
+    "id": 904,
+    "channel_owner_id": 77,
+    "command": "airhorn",
+    "mime": "audio/mpeg",
+    "duration_seconds": 2.4,
+    "created_by": 512,
+    "created_by_name": "pixelfox",
+    "media_url": null,
+    "media_asset_id": null
+  }
+}

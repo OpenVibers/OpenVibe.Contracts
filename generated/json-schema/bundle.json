@@ -52906,7 +52906,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/chat/stats-request.v1.json",
         "title": "ChatStatsRequest",
-        "description": "chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.",
+        "description": "chat.stats-request@1: the body of POST /internal/chat/stats on OpenVibe.Chat (capability chat.stats.read): one count over chat_messages, for the stats OpenVibe.Live shows without reading its own copy of Chat's tables (home and SEO stats, admin dashboard, star of the day, VOD and recap cards, stream analytics, top chatters, AI slogans). kind site counts all of chat; user one person's messages (user_id); stream one stream's messages, chatters and soundboard plays (stream_id); channel-top the top chatters, of one stream (stream_id) or one channel (channel_user_id), or of all chat when neither is given; site-daily one row per UTC day in [since, until), zero-filled, a kind that takes only since and until. since and until bound chat_messages.timestamp, epoch ms, until exclusive. Deleted messages are never counted. Loopback only, service token.",
         "type": "object",
         "required": [
           "kind"
@@ -52919,7 +52919,8 @@
               "site",
               "user",
               "stream",
-              "channel-top"
+              "channel-top",
+              "site-daily"
             ]
           },
           "user_id": {
@@ -52988,6 +52989,24 @@
                 "stream_id"
               ]
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "site-daily"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "since",
+                "until"
+              ]
+            }
           }
         ]
       }
@@ -53000,7 +53019,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/chat/stats-result.v1.json",
         "title": "ChatStatsResult",
-        "description": "chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first. A failure is chat.ingress-ack@1's error ({ ok: false, error }).",
+        "description": "chat.stats-result@1: the answer of POST /internal/chat/stats (chat.stats.read). site, user and stream answer messages (non-deleted chat_messages rows) and chatters (distinct COALESCE(user_id, anon_id, source_platform || username)); stream also answers sounds (soundboard plays); channel-top answers top_chatters, most messages first; the kind site-daily is answered by chat.site-daily-result@1, not here. A failure is chat.ingress-ack@1's error ({ ok: false, error }).",
         "anyOf": [
           {
             "type": "object",
@@ -53079,6 +53098,69 @@
                 "type": "integer",
                 "minimum": 1,
                 "description": "Messages in the window."
+              }
+            }
+          }
+        }
+      }
+    },
+    "chat.site-daily-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/site-daily-result.v1.json",
+        "title": "ChatSiteDailyResult",
+        "description": "chat.site-daily-result@1: the answer of POST /internal/chat/stats with kind site-daily on OpenVibe.Chat (capability chat.stats.read), for OpenVibe.Live's home series: every non-deleted message across all channels and the distinct chatters (COALESCE(user_id, anon_id, source_platform || username)) per UTC day in [since, until), one entry per day with zero-filled gaps, at most 400 days. A failure is chat.ingress-ack@1's error.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "days"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "days": {
+                "type": "array",
+                "maxItems": 400,
+                "items": {
+                  "$ref": "#/$defs/day"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "ingress-ack.v1.json#/$defs/error"
+          }
+        ],
+        "$defs": {
+          "day": {
+            "type": "object",
+            "required": [
+              "day",
+              "messages",
+              "chatters"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "day": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                "description": "UTC calendar day, 'YYYY-MM-DD'."
+              },
+              "messages": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Non-deleted messages that day, any message_type."
+              },
+              "chatters": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Distinct chatters that day (registered, anonymous or relayed)."
               }
             }
           }
@@ -53280,6 +53362,37 @@
                   "null"
                 ],
                 "minimum": 1
+              }
+            }
+          },
+          {
+            "$ref": "ingress-ack.v1.json#/$defs/error"
+          }
+        ]
+      }
+    },
+    "chat.first-chat-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/first-chat-result.v1.json",
+        "title": "ChatFirstChatResult",
+        "description": "chat.first-chat-result@1: the answer of GET /internal/chat/first-chat?channel_id&identity on OpenVibe.Chat (capability chat.analysis.read), OpenVibe.Live's welcome check (isFirstChatInChannel): first is true when identity (user:<user_id>, anon:<anonId> or ext:<prefixed username>) has never chatted in the channel, from stream_first_chats, and false when it has. channel_id is the channel owner's Live user id (stream_first_chats.channel_user_id), not Chat's ctx_channels.id. A failure is chat.ingress-ack@1's error.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "first"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "first": {
+                "type": "boolean"
               }
             }
           },
@@ -53703,6 +53816,37 @@
             }
           }
         }
+      }
+    },
+    "chat.sound-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/sound-result.v1.json",
+        "title": "ChatSoundResult",
+        "description": "chat.sound-result@1: the answer of GET /internal/chat/sounds/by-command?channel_id&command on OpenVibe.Chat (capability chat.sounds.read): the approved channel sound a !command plays, one at random when several match (OpenVibe.Live's getChannelSoundByCommand), projected exactly as chat.sounds-result@1's sound. channel_id is the channel owner's Live user id (channel_sounds.channel_owner_id). An unknown command or channel is a 404, answered as chat.ingress-ack@1's error.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "sound"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "sound": {
+                "$ref": "sounds-result.v1.json#/$defs/sound"
+              }
+            }
+          },
+          {
+            "$ref": "ingress-ack.v1.json#/$defs/error"
+          }
+        ]
       }
     },
     "chat.sound-asset-request": {

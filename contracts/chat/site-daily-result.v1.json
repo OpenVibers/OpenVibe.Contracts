@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/site-daily-result.v1.json",
+  "title": "ChatSiteDailyResult",
+  "description": "chat.site-daily-result@1: the answer of POST /internal/chat/stats with kind site-daily on OpenVibe.Chat (capability chat.stats.read), for OpenVibe.Live's home series: every non-deleted message across all channels and the distinct chatters (COALESCE(user_id, anon_id, source_platform || username)) per UTC day in [since, until), one entry per day with zero-filled gaps, at most 400 days. A failure is chat.ingress-ack@1's error.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "days"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "days": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {
+            "$ref": "#/$defs/day"
+          }
+        }
+      }
+    },
+    {
+      "$ref": "ingress-ack.v1.json#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "day": {
+      "type": "object",
+      "required": [
+        "day",
+        "messages",
+        "chatters"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "day": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "UTC calendar day, 'YYYY-MM-DD'."
+        },
+        "messages": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Non-deleted messages that day, any message_type."
+        },
+        "chatters": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Distinct chatters that day (registered, anonymous or relayed)."
+        }
+      }
+    }
+  }
+}
