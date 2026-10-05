@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/watch.watch.triggered.v1.json",
+  "title": "WatchTriggeredPayload",
+  "description": "watch.watch.triggered v1 (OpenVibe.Watch, plan T18; the dossier's watch.triggered, named with three segments as every event type is here — the repo's event-type pattern requires at least three): a watch's condition fired. OpenVibe.Network turns it into a WATCH_TRIGGERED notification for payload.recipient (mirrors deals.watch.matched). Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:watch.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["watch_id", "recipient", "project_id", "name", "condition", "observation", "fired_at"],
+  "properties": {
+    "watch_id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "recipient": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The watch owner's user subject id: who is notified." },
+    "project_id": { "type": ["string", "null"], "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "condition": { "$ref": "../../watch/watch.v1.json#/$defs/condition" },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "observed_at", "value", "previous_value"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^wco_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "value": { "description": "The value that fired the condition." },
+        "previous_value": { "description": "The previous observation's value; null when there was none." }
+      }
+    },
+    "fired_at": { "type": "string", "format": "date-time" }
+  }
+}

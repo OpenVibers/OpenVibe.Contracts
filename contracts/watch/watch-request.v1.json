@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/watch/watch-request.v1.json",
+  "title": "WatchRequest",
+  "description": "watch.watch-request@1: the body of POST /api/v1/watches and PATCH /api/v1/watches/:id on OpenVibe.Watch (watch.watch.manage; the acting person). Every field is optional on a patch; a create requires source, extraction, condition and action, which the service enforces in code (422 watch.invalid).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "labels": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 60 } },
+    "source": { "$ref": "watch.v1.json#/$defs/source" },
+    "cadence": { "$ref": "watch.v1.json#/$defs/cadence" },
+    "extraction": { "$ref": "watch.v1.json#/$defs/extraction" },
+    "comparison": { "$ref": "watch.v1.json#/$defs/comparison" },
+    "condition": { "$ref": "watch.v1.json#/$defs/condition" },
+    "action": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "$ref": "watch.v1.json#/$defs/action" } },
+    "budget": { "$ref": "watch.v1.json#/$defs/budget" },
+    "retention": { "$ref": "watch.v1.json#/$defs/retention" },
+    "status": { "enum": ["active", "paused", "disabled", "failed"] }
+  }
+}

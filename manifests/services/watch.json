@@ -1,0 +1,57 @@
+{
+  "version": "0.0.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.102.0 <1.0.0"
+  },
+  "id": "watch",
+  "name": "OpenVibe.Watch",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Watch",
+  "domains": [
+    "openvibe.watch"
+  ],
+  "publicOrigin": "https://openvibe.watch",
+  "exposure": {
+    "state": "placeholder",
+    "publicSite": null,
+    "note": "planned (plan T18); the OpenVibe.Watch repository does not exist yet, and nothing serves openvibe.watch"
+  },
+  "capabilities": [
+    "watch.watch.read",
+    "watch.watch.manage",
+    "watch.observation.read",
+    "watch.check.run"
+  ],
+  "eventsProduced": [
+    "watch.watch.created",
+    "watch.watch.updated",
+    "watch.watch.paused",
+    "watch.watch.removed",
+    "watch.observation.recorded",
+    "watch.watch.triggered",
+    "watch.check.failed"
+  ],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "not built yet; nothing listens on a loopback address"
+    },
+    "shutdown": {
+      "none": "not built yet; nothing runs or drains"
+    },
+    "startupRecovery": {
+      "none": "not built yet; nothing starts"
+    },
+    "rollback": {
+      "none": "not built yet; nothing is released or rolled back"
+    },
+    "contracts": {
+      "range": ">=0.102.0 <1.0.0"
+    },
+    "leases": {
+      "none": "not built yet; nothing runs"
+    }
+  },
+  "notes": "The watch service of the network (plan T18): a user defines persistent observations and conditions over pages, feeds, APIs, events, releases, streams and local devices, and is told when they change or wakes an Actor task, a Codes run, a Run job or a webhook. Sources ingests structured sources, Run runs expensive browser/code checks, Node observes local/LAN things, Events transports the trigger. Planned: nothing is built; the OpenVibe.Watch repository does not exist yet."
+}

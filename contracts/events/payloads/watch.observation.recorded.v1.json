@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/watch.observation.recorded.v1.json",
+  "title": "WatchObservationRecordedPayload",
+  "description": "watch.observation.recorded v1 (OpenVibe.Watch, plan T18): a check recorded an observation for a watch. It carries the extracted value as the source stated it and its hash, never the raw body. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority low, actor service:watch. Watch's own records are the full observation (watch.observation@1); this event is the notification that one exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["watch_id", "owner", "observed_at", "value", "value_hash", "changed", "condition_met"],
+  "properties": {
+    "watch_id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "owner": { "type": "string", "pattern": "^(usr|agt)_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The watch owner's subject id: who this observation is for." },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "value": { "description": "The extracted value as the source stated it; null when it stated none." },
+    "value_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 hex of the canonical value." },
+    "changed": { "type": "boolean" },
+    "condition_met": { "type": "boolean" }
+  }
+}

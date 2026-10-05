@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/watch/check-run.v1.json",
+  "title": "WatchCheckRun",
+  "description": "watch.check-run@1: one execution of a watch's check (plan T18), by schedule, manually, or from a delivered event or webhook. carrier names the mechanism that carried it; state is the terminal state (the same values the service's check_runs.state CHECK allows). observations is how many observations the run recorded and triggers how many conditions it fired; cost_usd is what the run cost. Rows are immutable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "watch_id", "trigger", "carrier", "started_at", "finished_at", "state", "http_status", "observations", "triggers", "cost_usd", "detail"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^ckr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "watch_id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "trigger": { "enum": ["schedule", "manual", "event", "webhook"] },
+    "carrier": { "type": ["string", "null"], "enum": ["event", "webhook", "http", "feed", "api", "node", "run", null] },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "state": { "enum": ["ok", "not_modified", "no_change", "changed", "condition_met", "http_error", "timeout", "parse_error", "rate_limited", "budget_exceeded", "skipped", "disabled"] },
+    "http_status": { "type": ["integer", "null"] },
+    "observations": { "type": "integer", "minimum": 0 },
+    "triggers": { "type": "integer", "minimum": 0 },
+    "cost_usd": { "type": "number", "minimum": 0 },
+    "detail": { "type": ["string", "null"] }
+  }
+}

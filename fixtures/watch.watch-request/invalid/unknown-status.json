@@ -1,0 +1,7 @@
+{
+  "name": "Release 0.102.0 published",
+  "source": { "kind": "event", "pattern": "host.release.published" },
+  "condition": { "op": "changed" },
+  "action": [ { "kind": "notification" } ],
+  "status": "archived"
+}

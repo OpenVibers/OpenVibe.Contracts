@@ -1,0 +1,11 @@
+{
+  "id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "name": "Steam Deck OLED price",
+  "status": "active",
+  "source": { "kind": "api", "url": "https://openvibe.deals/api/offers/steam-deck-oled" },
+  "extraction": { "kind": "jsonpath", "value_path": "$.price" },
+  "condition": { "op": "lt", "value": 199 },
+  "action": [ { "kind": "notification" } ],
+  "created_at": "2026-10-05T08:00:00.000Z",
+  "updated_at": "2026-10-05T08:00:00.000Z"
+}

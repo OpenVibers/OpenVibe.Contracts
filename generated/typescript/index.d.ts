@@ -46238,6 +46238,3098 @@ export interface TradeWatchlist {
   }[];
 }
 
+/** watch.watch@1.0.0 (owner: watch) */
+/**
+ * watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Node probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.
+ */
+export interface Watch {
+  id: string;
+  project_id?: string | null;
+  /**
+   * The acting person or agent the watch belongs to: usr_…, agt_… or svc:….
+   */
+  owner: string;
+  name?: string;
+  labels?: {
+    [k: string]: string | undefined;
+  };
+  status: "active" | "paused" | "disabled" | "failed";
+  source:
+    | {
+        kind: "webhook";
+        endpoint?: string;
+      }
+    | {
+        kind: "event";
+        pattern: string;
+        filter?: {
+          [k: string]: (string | number | boolean | null) | undefined;
+        } | null;
+      }
+    | {
+        kind: "http" | "feed" | "api";
+        url: string;
+        method?: "GET" | "HEAD";
+        format?: "rss" | "atom" | "json" | null;
+        items_path?: string | null;
+        fields?: {
+          [k: string]: string | undefined;
+        } | null;
+        auth?: {
+          mode: "none" | "header" | "bearer" | "query";
+          /**
+           * The name of the environment variable holding the credential; Watch reads it by name at fetch time and never stores the value.
+           */
+          env?: string | null;
+          header?: string | null;
+          param?: string | null;
+        };
+        headers?: {
+          [k: string]: string | undefined;
+        };
+        /**
+         * Send If-None-Match / If-Modified-Since from the stored ETag/Last-Modified when the server gave one.
+         */
+        conditional?: boolean;
+      }
+    | {
+        kind: "node";
+        node_id: string;
+        probe: {
+          [k: string]: unknown | undefined;
+        };
+      }
+    | {
+        kind: "run";
+        runtime: "browser" | "code" | "desktop";
+        url?: string | null;
+        /**
+         * @minItems 1
+         */
+        steps: [
+          {
+            [k: string]: unknown | undefined;
+          },
+          ...{
+            [k: string]: unknown | undefined;
+          }[]
+        ];
+        workload?: WorkloadRequirements;
+      };
+  /**
+   * Required for http/feed/api/node sources; null for event/webhook sources (they never poll).
+   */
+  cadence?: {
+    every_sec?: number;
+    jitter_sec?: number;
+    timezone?: string | null;
+  } | null;
+  extraction: {
+    kind?: "text" | "html" | "json" | "regex" | "css" | "jsonpath" | "ai";
+    selector?: string | null;
+    fields?: {
+      [k: string]: string | undefined;
+    } | null;
+    value_path?: string | null;
+    ai?: {
+      [k: string]: unknown | undefined;
+    } | null;
+  };
+  comparison?: {
+    mode?: "changed" | "threshold" | "none";
+    tolerance?: number | null;
+    percent?: number | null;
+  } | null;
+  condition: {
+    op?: "changed" | "gt" | "gte" | "lt" | "lte" | "eq" | "ne" | "contains" | "matches" | "exists" | "absent";
+    value?: string | number | null;
+    for_sec?: number | null;
+  };
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  action:
+    | [
+        | {
+            kind: "notification";
+            category?: "service" | "social" | "system";
+            priority?: "low" | "normal" | "high" | "critical";
+          }
+        | {
+            kind: "event";
+            event_type: string;
+            payload?: {
+              [k: string]: unknown | undefined;
+            } | null;
+          }
+        | {
+            kind: "webhook";
+            url: string;
+            secret_env: string;
+          }
+        | {
+            kind: "actor-task";
+            brief: string;
+            budget_usd?: number | null;
+          }
+        | {
+            kind: "codes-run";
+            repo: string;
+            brief: string;
+          }
+        | {
+            kind: "run-job";
+            runtime: "function" | "code" | "browser" | "linux";
+            command: string;
+            workload?: {
+              [k: string]: unknown | undefined;
+            } | null;
+          }
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ];
+  budget?: {
+    checks_per_day?: number | null;
+    usd_per_month?: number | null;
+    max_runtime_ms?: number | null;
+    max_bytes?: number | null;
+  };
+  retention?: {
+    observations_days?: number | null;
+    keep_snapshots?: boolean;
+  };
+  health?: {
+    [k: string]: unknown | undefined;
+  } | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** watch.watch-request@1.0.0 (owner: watch) */
+/**
+ * watch.watch-request@1: the body of POST /api/v1/watches and PATCH /api/v1/watches/:id on OpenVibe.Watch (watch.watch.manage; the acting person). Every field is optional on a patch; a create requires source, extraction, condition and action, which the service enforces in code (422 watch.invalid).
+ */
+export interface WatchRequest {
+  name?: string;
+  labels?: {
+    [k: string]: string | undefined;
+  };
+  source?:
+    | {
+        kind: "webhook";
+        endpoint?: string;
+      }
+    | {
+        kind: "event";
+        pattern: string;
+        filter?: {
+          [k: string]: (string | number | boolean | null) | undefined;
+        } | null;
+      }
+    | {
+        kind: "http" | "feed" | "api";
+        url: string;
+        method?: "GET" | "HEAD";
+        format?: "rss" | "atom" | "json" | null;
+        items_path?: string | null;
+        fields?: {
+          [k: string]: string | undefined;
+        } | null;
+        auth?: {
+          mode: "none" | "header" | "bearer" | "query";
+          /**
+           * The name of the environment variable holding the credential; Watch reads it by name at fetch time and never stores the value.
+           */
+          env?: string | null;
+          header?: string | null;
+          param?: string | null;
+        };
+        headers?: {
+          [k: string]: string | undefined;
+        };
+        /**
+         * Send If-None-Match / If-Modified-Since from the stored ETag/Last-Modified when the server gave one.
+         */
+        conditional?: boolean;
+      }
+    | {
+        kind: "node";
+        node_id: string;
+        probe: {
+          [k: string]: unknown | undefined;
+        };
+      }
+    | {
+        kind: "run";
+        runtime: "browser" | "code" | "desktop";
+        url?: string | null;
+        /**
+         * @minItems 1
+         */
+        steps: [
+          {
+            [k: string]: unknown | undefined;
+          },
+          ...{
+            [k: string]: unknown | undefined;
+          }[]
+        ];
+        workload?: WorkloadRequirements;
+      };
+  /**
+   * Required for http/feed/api/node sources; null for event/webhook sources (they never poll).
+   */
+  cadence?: {
+    every_sec?: number;
+    jitter_sec?: number;
+    timezone?: string | null;
+  } | null;
+  extraction?: {
+    kind?: "text" | "html" | "json" | "regex" | "css" | "jsonpath" | "ai";
+    selector?: string | null;
+    fields?: {
+      [k: string]: string | undefined;
+    } | null;
+    value_path?: string | null;
+    ai?: {
+      [k: string]: unknown | undefined;
+    } | null;
+  };
+  comparison?: {
+    mode?: "changed" | "threshold" | "none";
+    tolerance?: number | null;
+    percent?: number | null;
+  } | null;
+  condition?: {
+    op?: "changed" | "gt" | "gte" | "lt" | "lte" | "eq" | "ne" | "contains" | "matches" | "exists" | "absent";
+    value?: string | number | null;
+    for_sec?: number | null;
+  };
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  action?:
+    | [
+        | {
+            kind: "notification";
+            category?: "service" | "social" | "system";
+            priority?: "low" | "normal" | "high" | "critical";
+          }
+        | {
+            kind: "event";
+            event_type: string;
+            payload?: {
+              [k: string]: unknown | undefined;
+            } | null;
+          }
+        | {
+            kind: "webhook";
+            url: string;
+            secret_env: string;
+          }
+        | {
+            kind: "actor-task";
+            brief: string;
+            budget_usd?: number | null;
+          }
+        | {
+            kind: "codes-run";
+            repo: string;
+            brief: string;
+          }
+        | {
+            kind: "run-job";
+            runtime: "function" | "code" | "browser" | "linux";
+            command: string;
+            workload?: {
+              [k: string]: unknown | undefined;
+            } | null;
+          }
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ]
+    | [
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        )
+      ];
+  budget?: {
+    checks_per_day?: number | null;
+    usd_per_month?: number | null;
+    max_runtime_ms?: number | null;
+    max_bytes?: number | null;
+  };
+  retention?: {
+    observations_days?: number | null;
+    keep_snapshots?: boolean;
+  };
+  status?: "active" | "paused" | "disabled" | "failed";
+}
+
+/** watch.watch-result@1.0.0 (owner: watch) */
+/**
+ * watch.watch-result@1: answers of the watch routes on OpenVibe.Watch. GET /api/v1/watches → { watches } and POST /api/v1/watches → 201 { watch } (watch.watch.read, watch.watch.manage); PATCH → { watch }; POST /:id/pause and /:id/resume → { id, status }; DELETE /api/v1/watches/:id → { id, deleted: true }.
+ */
+export type WatchResult =
+  | {
+      watches: Watch[];
+    }
+  | {
+      watch: Watch;
+    }
+  | {
+      id: string;
+      status: "active" | "paused" | "disabled" | "failed";
+    }
+  | {
+      id: string;
+      deleted: true;
+    };
+
+/** watch.observation@1.0.0 (owner: watch) */
+/**
+ * watch.observation@1: one value a check recorded for a watch (plan T18): what was extracted, when, from which check run, and whether it changed or met the condition. value is the extracted value exactly as the source stated it, never inferred; snapshot is a capped copy of the raw body kept according to the watch's retention. Rows are immutable.
+ */
+export interface WatchObservation {
+  id: string;
+  watch_id: string;
+  check_run_id: string;
+  observed_at: string;
+  /**
+   * The extracted value as the source stated it: text, a decimal number, a structured object.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * SHA-256 hex of the canonical value.
+   */
+  value_hash: string;
+  /**
+   * SHA-256 of the previous observation's value; null for the first observation.
+   */
+  previous_hash: string | null;
+  changed: boolean;
+  condition_met: boolean;
+  snapshot: string | null;
+}
+
+/** watch.check-run@1.0.0 (owner: watch) */
+/**
+ * watch.check-run@1: one execution of a watch's check (plan T18), by schedule, manually, or from a delivered event or webhook. carrier names the mechanism that carried it; state is the terminal state (the same values the service's check_runs.state CHECK allows). observations is how many observations the run recorded and triggers how many conditions it fired; cost_usd is what the run cost. Rows are immutable.
+ */
+export interface WatchCheckRun {
+  id: string;
+  watch_id: string;
+  trigger: "schedule" | "manual" | "event" | "webhook";
+  carrier: "event" | "webhook" | "http" | "feed" | "api" | "node" | "run" | null;
+  started_at: string;
+  finished_at: string;
+  state:
+    | "ok"
+    | "not_modified"
+    | "no_change"
+    | "changed"
+    | "condition_met"
+    | "http_error"
+    | "timeout"
+    | "parse_error"
+    | "rate_limited"
+    | "budget_exceeded"
+    | "skipped"
+    | "disabled";
+  http_status: number | null;
+  observations: number;
+  triggers: number;
+  cost_usd: number;
+  detail: string | null;
+}
+
+/** watch.observation.recorded@1.0.0 (owner: watch) */
+/**
+ * watch.observation.recorded v1 (OpenVibe.Watch, plan T18): a check recorded an observation for a watch. It carries the extracted value as the source stated it and its hash, never the raw body. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority low, actor service:watch. Watch's own records are the full observation (watch.observation@1); this event is the notification that one exists.
+ */
+export interface WatchObservationRecordedPayload {
+  watch_id: string;
+  /**
+   * The watch owner's subject id: who this observation is for.
+   */
+  owner: string;
+  observed_at: string;
+  /**
+   * The extracted value as the source stated it; null when it stated none.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * SHA-256 hex of the canonical value.
+   */
+  value_hash: string;
+  changed: boolean;
+  condition_met: boolean;
+}
+
+/** watch.watch.triggered@1.0.0 (owner: watch) */
+/**
+ * watch.watch.triggered v1 (OpenVibe.Watch, plan T18; the dossier's watch.triggered, named with three segments as every event type is here — the repo's event-type pattern requires at least three): a watch's condition fired. OpenVibe.Network turns it into a WATCH_TRIGGERED notification for payload.recipient (mirrors deals.watch.matched). Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority important, actor service:watch.
+ */
+export interface WatchTriggeredPayload {
+  watch_id: string;
+  /**
+   * The watch owner's user subject id: who is notified.
+   */
+  recipient: string;
+  project_id: string | null;
+  name: string;
+  condition: {
+    op?: "changed" | "gt" | "gte" | "lt" | "lte" | "eq" | "ne" | "contains" | "matches" | "exists" | "absent";
+    value?: string | number | null;
+    for_sec?: number | null;
+  };
+  observation: {
+    id: string;
+    observed_at: string;
+    /**
+     * The value that fired the condition.
+     */
+    value: {
+      [k: string]: unknown | undefined;
+    };
+    /**
+     * The previous observation's value; null when there was none.
+     */
+    previous_value: {
+      [k: string]: unknown | undefined;
+    };
+  };
+  fired_at: string;
+}
+
+/** watch.check.failed@1.0.0 (owner: watch) */
+/**
+ * watch.check.failed v1 (OpenVibe.Watch, plan T18): a check ended in a failure state. consecutive_failures is how many runs in a row have failed, so a consumer can tell a blip from a watch that is down. Envelope: subject { type: watch, id: <watch_id> }, visibility internal, priority normal, actor service:watch.
+ */
+export interface WatchCheckFailedPayload {
+  watch_id: string;
+  state: "http_error" | "timeout" | "parse_error" | "rate_limited" | "budget_exceeded" | "skipped" | "disabled";
+  carrier: "event" | "webhook" | "http" | "feed" | "api" | "node" | "run" | null;
+  http_status: number | null;
+  error_code: string | null;
+  consecutive_failures: number;
+}
+
 /** games.player.joined@1.0.0 (owner: games) */
 /**
  * games.player.joined v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts playerJoinedEvent, via GameEventRecorder.recordJoin from game/gameServer.ts handleHello). A character entered the world: written to Games' event_outbox in a transaction of its own once the session exists and the welcome was sent (a new character's row is first written by its next save). restored is true when the character already existed in the database, false for a new one. Only emitted while Events publishing is configured. No position, appearance, inventory, rank or connection data. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.
@@ -51677,7 +54769,7 @@ export type ResourceOffer = {
    */
   trust: "first-party" | "user-owned" | "partner" | "community" | "external";
   /**
-   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name.
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers.
    */
   capabilities: string[];
   capacity?: {

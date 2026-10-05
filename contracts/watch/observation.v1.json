@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/watch/observation.v1.json",
+  "title": "WatchObservation",
+  "description": "watch.observation@1: one value a check recorded for a watch (plan T18): what was extracted, when, from which check run, and whether it changed or met the condition. value is the extracted value exactly as the source stated it, never inferred; snapshot is a capped copy of the raw body kept according to the watch's retention. Rows are immutable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "watch_id", "check_run_id", "observed_at", "value", "value_hash", "previous_hash", "changed", "condition_met", "snapshot"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^wco_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "watch_id": { "type": "string", "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "check_run_id": { "type": "string", "pattern": "^ckr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "value": { "description": "The extracted value as the source stated it: text, a decimal number, a structured object." },
+    "value_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 hex of the canonical value." },
+    "previous_hash": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 of the previous observation's value; null for the first observation." },
+    "changed": { "type": "boolean" },
+    "condition_met": { "type": "boolean" },
+    "snapshot": { "type": ["string", "null"] }
+  }
+}

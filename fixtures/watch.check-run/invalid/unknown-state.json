@@ -1,0 +1,14 @@
+{
+  "id": "ckr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "watch_id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "trigger": "schedule",
+  "carrier": "http",
+  "started_at": "2026-10-05T09:00:00.000Z",
+  "finished_at": "2026-10-05T09:00:01.250Z",
+  "state": "exploded",
+  "http_status": 200,
+  "observations": 1,
+  "triggers": 0,
+  "cost_usd": 0,
+  "detail": null
+}

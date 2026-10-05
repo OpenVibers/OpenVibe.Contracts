@@ -3,11 +3,13 @@
   "stage": "alpha",
   "code": true,
   "wave": "W1",
-  "dependsOn": ["OpenVibe.Network"],
+  "dependsOn": [
+    "OpenVibe.Network"
+  ],
   "plan": "OpenVibe Development Roadmap (combined), Wave 1; implementation plan rev 3 section 3.1",
   "deployed": false,
   "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
-  "contracts": "openvibe-contracts v0.101.0 (this package; the newest tag)",
+  "contracts": "openvibe-contracts v0.102.0 (this package; the newest tag)",
   "features": [
     "589 JSON Schemas with valid and invalid fixtures",
     "31 service manifests with lifecycle declarations",
@@ -20,7 +22,8 @@
     "documentation-currency check (scripts/docs-currency.js)",
     "generated estate: docs/ESTATE.md and manifests/repositories/ from the checkouts (scripts/estate.js; --check fails on drift)",
     "chat.ticket-conversation@1 and the planned chat.ticket.write capability: a per-ticket conversation keyed by ticket id and calling service, with author_kind person|agent|staff",
-    "platform.task@1 (planned, owner network) and ADR-044: one task at OpenVibe.Actor's router with a mode, a per-task and per-day budget, result, cost and explanation, SSE progress, cancel and webhooks"
+    "platform.task@1 (planned, owner network) and ADR-044: one task at OpenVibe.Actor's router with a mode, a per-task and per-day budget, result, cost and explanation, SSE progress, cancel and webhooks",
+    "watch.watch@1 and the other Watch contracts (plan T18, planned), three watch events, four capabilities and the placeholder service manifest: user-defined persistent observations over pages, feeds, APIs, events and devices"
   ],
   "updated": "2026-10-05"
 }

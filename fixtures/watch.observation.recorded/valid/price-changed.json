@@ -1,0 +1,9 @@
+{
+  "watch_id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "observed_at": "2026-10-05T09:00:00.000Z",
+  "value": 189.99,
+  "value_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "changed": true,
+  "condition_met": true
+}

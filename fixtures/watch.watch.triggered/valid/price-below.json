@@ -1,0 +1,14 @@
+{
+  "watch_id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "recipient": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "project_id": null,
+  "name": "Steam Deck OLED price",
+  "condition": { "op": "lt", "value": 199, "for_sec": null },
+  "observation": {
+    "id": "wco_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "observed_at": "2026-10-05T09:00:00.000Z",
+    "value": 189.99,
+    "previous_value": 209.99
+  },
+  "fired_at": "2026-10-05T09:00:01.250Z"
+}

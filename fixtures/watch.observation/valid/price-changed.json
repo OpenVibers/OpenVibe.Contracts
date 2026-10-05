@@ -1,0 +1,12 @@
+{
+  "id": "wco_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "watch_id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "check_run_id": "ckr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "observed_at": "2026-10-05T09:00:00.000Z",
+  "value": 189.99,
+  "value_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "previous_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "changed": true,
+  "condition_met": true,
+  "snapshot": "{\"price\":189.99,\"currency\":\"USD\"}"
+}

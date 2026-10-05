@@ -1,0 +1,8 @@
+{
+  "watch_id": "wch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "state": "http_error",
+  "carrier": "http",
+  "http_status": 503,
+  "error_code": "upstream_unavailable",
+  "consecutive_failures": 2
+}

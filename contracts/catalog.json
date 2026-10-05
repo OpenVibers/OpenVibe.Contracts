@@ -4187,6 +4187,78 @@
       "status": "active"
     },
     {
+      "id": "watch.watch",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "watch/watch.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.watch-request",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "watch/watch-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.watch-result",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "watch/watch-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.observation",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "watch/observation.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.check-run",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "watch/check-run.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.observation.recorded",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "events/payloads/watch.observation.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.watch.triggered",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "events/payloads/watch.watch.triggered.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
+      "id": "watch.check.failed",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "events/payloads/watch.check.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "planned"
+    },
+    {
       "id": "games.player.joined",
       "version": "1.0.0",
       "owner": "games",
