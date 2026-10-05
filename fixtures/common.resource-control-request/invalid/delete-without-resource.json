@@ -1,0 +1,6 @@
+{
+  "action": "delete",
+  "resource_kind": "run.sandbox",
+  "project_id": "prj_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "idempotency_key": "ctl-01K6R3-run-delete"
+}

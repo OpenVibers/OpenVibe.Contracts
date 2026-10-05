@@ -1,0 +1,9 @@
+{
+  "action": "delete",
+  "state": "done",
+  "confirmation_required": {
+    "confirmation_id": "cnf_01K6R3A1B2C3D4E5F6G7H8J9KE",
+    "reason": "x"
+  },
+  "at": "2026-10-04T12:00:02Z"
+}

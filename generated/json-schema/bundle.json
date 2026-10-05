@@ -69886,6 +69886,178 @@
           }
         }
       }
+    },
+    "common.resource-name": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/resource-name.v1.json",
+        "title": "ResourceName",
+        "description": "common.resource-name@1: the one stable, cross-service name of an OpenVibe resource (OVRN; ADR-034 section 2, ADR-048, plan T13): ovrn:<service>:<project_id>:<type>/<id>, for example ovrn:media:prj_01J0000000000000000000000A:object/med_01K0000000000000000000000B. The service segment is the authority that owns the resource; the project segment is its tenancy boundary; type is the second half of a common.resource-summary@1 kind and id is that summary's id, so the name composes from any resource summary. It is used in grant scopes, audit rows, event subjects, usage records, bill lines and console URLs. It never names a person, an app, a request, a session or an event. The pattern is the one common.usage-recorded@1 resource and common.resource-summary@1 ovrn already use.",
+        "type": "string",
+        "maxLength": 200,
+        "pattern": "^ovrn:[a-z][a-z0-9-]{0,31}:prj_[0-9A-HJKMNP-TV-Z]{26}:[a-z][a-z0-9-]{0,39}/[a-z]{3}_[0-9A-HJKMNP-TV-Z]{26}$",
+        "not": {
+          "pattern": "/(usr|gst|app|mod|svc|job|evt|req)_"
+        }
+      }
+    },
+    "common.resource-control-request": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/resource-control-request.v1.json",
+        "title": "ResourceControlRequest",
+        "description": "common.resource-control-request@1: one control operation OpenVibe.Services (or Actor's Console) sends to the authority that owns a resource (ADR-048, plan T13). Services never mutates another service's database; every create, update, start, stop, delete, resize, rotate, pair, grant or revoke is this request to the owning authority's control API, which decides and answers with a common.resource-control-result@1. A request names exactly one of resource (every action but create) or resource_kind (create, before the name exists). project_id is the tenancy boundary and equals the project segment of resource. idempotency_key makes a retry safe: the authority answers a repeated key with the first result. A sensitive action (money, publishing, deleting, physical control) is refused with confirmation_required until its owner approves; the retry carries that confirmation_id (roadmap WS-Z2). The cross-field rules are checked by contracts.resources.checkControlRequest.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "project_id",
+          "idempotency_key"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "resource"
+            ]
+          },
+          {
+            "required": [
+              "resource_kind"
+            ]
+          }
+        ],
+        "properties": {
+          "action": {
+            "enum": [
+              "create",
+              "update",
+              "delete",
+              "start",
+              "stop",
+              "suspend",
+              "resume",
+              "resize",
+              "rotate",
+              "pair",
+              "grant",
+              "revoke",
+              "archive"
+            ]
+          },
+          "resource": {
+            "$ref": "resource-name.v1.json",
+            "description": "The resource acted on; required for every action but create."
+          },
+          "resource_kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,31}\\.[a-z][a-z0-9-]{0,39}$",
+            "description": "service.type (a common.resource-summary@1 kind), for create, before the resource name exists."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "params": {
+            "type": "object",
+            "description": "Action-specific input, shaped by the authority's own contract (never redefined here)."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 200
+          },
+          "on_behalf_of": {
+            "$ref": "../identity/subject-ref.v1.json",
+            "description": "The subject whose grant the authority checks; the caller's own token says who sent it."
+          },
+          "confirmation_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "description": "The approved confirmation from an earlier confirmation_required answer."
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false,
+            "description": "Decide and explain without applying."
+          },
+          "trace_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{32}$"
+          }
+        }
+      }
+    },
+    "common.resource-control-result": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/resource-control-result.v1.json",
+        "title": "ResourceControlResult",
+        "description": "common.resource-control-result@1: the authority's answer to a common.resource-control-request@1 (ADR-048, plan T13). state is the outcome, not the resource's own state: done (applied), pending (accepted and asynchronous; the authority reports completion later on its events), refused (a policy or confirmation gate said no) or failed (an error). State rules: refused carries problem or confirmation_required; failed carries problem; done and pending carry neither; confirmation_required appears only on refused. result carries the authority's own response document and never another service's rows. The state rules are checked by contracts.resources.checkControlResult.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "state",
+          "at"
+        ],
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "resource": {
+            "$ref": "resource-name.v1.json"
+          },
+          "state": {
+            "enum": [
+              "done",
+              "pending",
+              "refused",
+              "failed"
+            ]
+          },
+          "result": {
+            "type": "object"
+          },
+          "confirmation_required": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "confirmation_id",
+              "reason"
+            ],
+            "properties": {
+              "confirmation_id": {
+                "type": "string",
+                "maxLength": 80
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "description": "The action needs its owner's approval; retry the same request with this confirmation_id once approved."
+          },
+          "problem": {
+            "$ref": "../errors/problem.v1.json",
+            "description": "RFC 9457 body when refused or failed."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   }
 }

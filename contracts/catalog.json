@@ -6052,6 +6052,36 @@
       "compatibility": "backward",
       "status": "planned",
       "adr": "ADR-034"
+    },
+    {
+      "id": "common.resource-name",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/resource-name.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-048"
+    },
+    {
+      "id": "common.resource-control-request",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/resource-control-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-048"
+    },
+    {
+      "id": "common.resource-control-result",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/resource-control-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-048"
     }
   ]
 }

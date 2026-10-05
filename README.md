@@ -195,6 +195,12 @@ name the zone's own project and id, a name belongs to one zone of its environmen
 answer's `ovrn` names its `zone_id`. `contracts.usage.checkUsageRecorded(u)` refuses a usage rollup whose
 `resource` names another project than its `project_id`.
 
+`contracts.resources` holds the resource names and the control-operation contract of ADR-048 (plan T13):
+`parse(ovrn)` and `format({ service, project_id, type, id })` are the one OVRN parser and formatter, `nameOf(summary)`
+composes the name of a `common.resource-summary@1`, `checkControlRequest(q)` refuses a request whose `resource`
+names another project than its `project_id` (and `create` names `resource_kind`, every other action a `resource`),
+and `checkControlResult(r)` holds `problem` and `confirmation_required` to the result's `state`.
+
 Tools' problem codes are listed with the routes that answer them (`tools.run-request@1`,
 `tools.job-request@1`, `tools.tool-list@1`, `tools.tool@1`). They include `400 tools.query.invalid`,
 `404 tools.tool.not_found`, `413 tools.pdf.too_many_pages`, `422 tools.pdf.wrong_password`,
