@@ -5620,6 +5620,16 @@
       "adr": "ADR-034"
     },
     {
+      "id": "platform.task",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/task.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-044"
+    },
+    {
       "id": "events.delivery-policy",
       "version": "1.0.0",
       "owner": "events",

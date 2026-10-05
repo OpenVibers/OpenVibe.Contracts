@@ -1,0 +1,20 @@
+{
+  "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "requester": { "type": "agent", "id": "agt_01JAB2C3D4E5F6G7H8J9K0MNPT" },
+  "task": "Check this week's outage report and summarize the causes.",
+  "mode": "cheapest",
+  "budget": { "per_task_usd": 1, "per_day_usd": 10 },
+  "state": "succeeded",
+  "created_at": "2026-10-05T09:00:00.000Z",
+  "finished_at": "2026-10-05T09:06:00.000Z",
+  "cost": { "usd": 0.06 },
+  "explanation": [
+    {
+      "selected": "open-model",
+      "objective": "cheapest",
+      "candidates": [{ "id": "open-model", "eligible": true }],
+      "decided_at": "2026-10-05T09:00:01.000Z"
+    }
+  ]
+}

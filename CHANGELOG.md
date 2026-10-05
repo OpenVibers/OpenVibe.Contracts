@@ -4,6 +4,25 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.101.0 — 2026-10-05
+
+**The task contract** (plan T17, ADR-044). Additive: one new planned contract and its ADR, no existing schema changed.
+- `platform.task@1` (new, owner `network`, public, **planned**): one task at OpenVibe.Actor's router — the resource
+  `POST /v1/tasks` creates and `GET /v1/tasks/{id}` reads, modelled on Run's `platform.job@1`. It carries `id`
+  (`tsk_<ULID>`), `project_id`, `requester` (a person or an `agent` subject), the `task` text, `mode`
+  (`cheapest | balanced | best | fastest | private`), `budget` (`per_task_usd`, `per_day_usd`), `state`
+  (`queued | running | verifying | succeeded | failed | cancelled`), `created_at`/`finished_at`, `result`, `cost`,
+  `explanation` (a chain of `platform.placement-result@1`, an escalation appending one), the SSE `progress`
+  descriptor, the `cancel` record and registered `webhooks` (HTTPS only, secret by reference). Valid and invalid
+  fixtures in `fixtures/platform.task/`.
+- `docs/adr/ADR-044-actor-runtime.md` (new, **Proposed**; plan T17, the build-order item after the engine): the task
+  contract, the adapter interface (capabilities, limits, a reviewed rate card, trust class and BYO keys), modes as
+  `openvibe-sdk/placement` objectives, live signals with hysteresis and immediate failover, a `verifying` state for
+  cheap-first cross-family checks and the task's own tests, and the five ADR-046 trust classes with `private`
+  narrowing to OpenVibe-only. Owner is `network` because no Actor service manifest exists: OpenVibe.Actor is a product
+  page (`manifests/products/openvibe.actor.json`, `noRepo`), and every other `platform.*` contract is Network's too.
+- `lib/ids.js`: the `task` prefix (`tsk`), so `ids.newId('task')` mints the contract's id.
+
 ## 0.100.0 — 2026-10-05
 
 **Three small contract fixes** (plan follow-ups). Additive and widening, no contract removed.

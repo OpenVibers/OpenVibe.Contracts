@@ -52604,6 +52604,808 @@ export type JobFrame =
       };
     };
 
+/** platform.task@1.0.0 (owner: network) */
+/**
+ * platform.task@1 (PLANNED; plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /v1/tasks creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered adapters, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /v1/tasks/{id} reads the same resource. Progress streams as server-sent events from `progress.stream_url` (a task's own counter in `progress.last_seq`, as platform.job-frame@1 counts on a link); `cancel` records that a cancel was requested (POST /v1/tasks/{id}/cancel), and `webhooks` are the registered endpoints the router delivers each state change to. No Actor service exists yet: OpenVibe.Actor is a product page (manifests/products/openvibe.actor.json, noRepo) with no service manifest, so the contract is owned by `network`, like every other platform.* contract, and stays PLANNED until T17 ships. This v1 contract may grow optional fields.
+ */
+export type Task = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * Minted by the router (tsk_<ULID>): the idempotency key of the task and the stem of its usage readings, as platform.job@1's id is for a job. Never reused.
+   */
+  id: string;
+  /**
+   * The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's.
+   */
+  project_id: string;
+  /**
+   * The person or agent the task belongs to: a user subject for a person, an agent subject for an agent acting under the grants its owner delegated (roadmap WS-Z2).
+   */
+  requester: SubjectRef;
+  /**
+   * The instruction in plain words, exactly as the caller gave it. Not a backend command and not a model prompt: the planner turns it into one.
+   */
+  task: string;
+  /**
+   * The plan's five modes, in contract spelling: Cheapest, Balanced (the default), Best, Fastest and Private are `cheapest`, `balanced`, `best`, `fastest` and `private`. A mode is the planner objective, never a fixed backend list (plan T17). `cheapest`: the lowest expected cost that still meets the task class's quality bar. `balanced` (the default): cost, quality and speed weighed together. `best`: the highest chance of a right answer first time. `fastest`: the shortest time to a checked result. `private`: only backends that keep the data on OpenVibe (first-party, and a user-owned node only when the task names it), per ADR-046.
+   */
+  mode: "cheapest" | "balanced" | "best" | "fastest" | "private";
+  /**
+   * Hard limits the router never exceeds (plan T17: 'a hard limit per task and per day'). A task whose cheapest eligible backend would take it over `per_task_usd` ends failed (actor.budget.exceeded) rather than running; `per_day_usd` caps the project's tasks in one UTC day and a new task waits or fails, it never overruns.
+   */
+  budget: {
+    per_task_usd: number;
+    per_day_usd: number;
+  };
+  /**
+   * queued: stored, waiting for the planner. running: a backend is working, or a cascade is between attempts. verifying: a result exists and a check (the task's own tests, a citation check, a postcondition) runs before it is delivered. succeeded, failed and cancelled are the end states; an end state never changes.
+   */
+  state: "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled";
+  created_at: string;
+  /**
+   * When the task reached its end state; null before.
+   */
+  finished_at?: string | null;
+  /**
+   * The checked deliverable (any JSON, as a platform.job@1 `result` is): for a code task a diff or branch reference, for research a brief with citations, for an action a postcondition report. Never a credential and never raw sandbox output. Null (or absent) in every state but succeeded, which the allOf below enforces.
+   */
+  result?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Present once the task has run an attempt (also when it ends failed or cancelled); null while queued. One key, one bill (plan T17), through Billing (ADR-012).
+   */
+  cost?: {
+    /**
+     * What this task was billed, to the cent, across every attempt it made.
+     */
+    usd: number;
+    /**
+     * The part of `usd` covered by the project's free allowance; metered as platform.usage-sample@1.
+     */
+    free_allowance_used?: number;
+  } | null;
+  /**
+   * One platform.placement-result@1 per backend the planner tried, oldest first, an escalation appending a new one: which backend won, why and what else was considered, from openvibe-sdk/placement (ADR-046 §1). Null while queued.
+   */
+  explanation?: [PlacementResult, ...PlacementResult[]] | null;
+  /**
+   * Streaming progress (plan T17). Null before the router opens a stream and after the end.
+   */
+  progress?: {
+    /**
+     * The text/event-stream endpoint that carries this task's progress. Each event mirrors platform.job-frame@1's job_stdout/state shape: a state change, an output chunk, or the end.
+     */
+    stream_url: string;
+    /**
+     * The task's own event counter, from 0 before the first event; a reconnecting reader resumes after it, as a job frame's seq counts on one link.
+     */
+    last_seq: number;
+    /**
+     * The event kinds the stream delivers, run.job-stream-event@1's own three.
+     */
+    events?: ("output" | "state" | "end")[];
+  } | null;
+  /**
+   * Cancellation (plan T17): null until a cancel is requested, then it records who asked and when; the task's outcome is `state`.
+   */
+  cancel?: {
+    /**
+     * When POST /v1/tasks/{id}/cancel was accepted. The running backend is stopped as its own contract allows; the state becomes cancelled and `finished_at` is set.
+     */
+    requested_at: string;
+    requested_by?: SubjectRef;
+  } | null;
+  /**
+   * Webhooks (plan T17), registered at creation. A delivery that fails is retried with backoff and never delays the task; the task's own record is the source of truth.
+   *
+   * @maxItems 8
+   */
+  webhooks?:
+    | []
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        },
+        {
+          /**
+           * The HTTPS endpoint the router POSTs a state change to. A plain-HTTP URL is refused.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the same names as `state`.
+           *
+           * @minItems 1
+           */
+          events: [
+            "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+            ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
+          ];
+          /**
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           */
+          secret_ref?: string;
+        }
+      ];
+};
+
 /** events.delivery-policy@1.0.0 (owner: events) */
 /**
  * How an event type is carried (roadmap WS-Z3 task 2): its delivery class sets the minimum semantics, which a publisher's intent may raise and never lower; ordering is per key; the route planner picks the carrier.

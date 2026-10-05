@@ -1,0 +1,10 @@
+{
+  "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "requester": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS" },
+  "task": "Summarize the release notes.",
+  "mode": "smart",
+  "budget": { "per_task_usd": 5, "per_day_usd": 50 },
+  "state": "queued",
+  "created_at": "2026-10-05T09:00:00.000Z"
+}
