@@ -78,10 +78,13 @@ declare, not the wire shape.
 
 `mode` is one of `cheapest`, `balanced`, `best`, `fastest`, `private`; `balanced` is the default. The plan is
 explicit that "a mode is a planner objective, not a hard-coded list", so a mode is stated to the placer, not
-translated into a backend by hand. The direct mapping onto ADR-046's `platform.placement-result@1` objectives is
-`cheapest → cheapest`, `balanced → balanced`, `best → correctness`, `fastest → lowest-latency`,
-`private → private`; the placer may refine it, and the exact tie-breaks inside a mode are left to
-`openvibe-sdk/placement`.
+translated into a backend by hand. Four modes map onto ADR-046's `platform.placement-result@1` objectives
+directly: `cheapest → cheapest`, `balanced → balanced`, `fastest → lowest-latency`, `private → private`. `best`
+does **not** map to `correctness`: the SDK's `correctness` objective only preserves `req.authority` or the current
+placement, so for a new task with neither it ranks like `balanced`, and `high-reliability` has no branch either —
+`openvibe-sdk/placement` has no quality ranking that expresses "the highest chance of a right answer first time".
+What `best` maps to is therefore left as an open question below; the placer may refine the rest, and the exact
+tie-breaks inside a mode are left to `openvibe-sdk/placement`.
 
 ### 4. Signals and auto-balancing
 
@@ -168,6 +171,9 @@ Actor plans and routes; it does not become an authority. The plan's own list of 
    depends on.
 4. **Webhook delivery guarantees** — retry count, backoff and whether an exhausted webhook surfaces on the task.
 5. **Where an escalated task's partial results live** before it succeeds.
+6. **What `best` maps to.** No objective in `openvibe-sdk/placement` ranks quality: `correctness` only preserves
+   `req.authority` or the current placement and otherwise ranks like `balanced`, and `high-reliability` has no
+   branch. Until the placer grows a real quality ranking, `best → <objective>` is undecided.
 
 ## Consequences
 
