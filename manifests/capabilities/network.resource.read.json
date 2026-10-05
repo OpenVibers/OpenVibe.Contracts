@@ -2,7 +2,7 @@
   "id": "network.resource.read",
   "version": "1.0",
   "owner": "network",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
   "description": "Read OpenVibe.Network's resource index (ADR-048): GET /api/v1/resources lists the resources Network owns as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Every authority serves these for OpenVibe.Services to fan out and merge; Network's own resources today are its projects, apps, keys and nodes. Planned until Network ships the index; the T2 Fabric offer registry's public routes, today sharing /api/v1/resources, move to /api/v1/offers in the same release.",
   "permissions": [
