@@ -1,0 +1,21 @@
+{
+  "name": "OpenVibe.SDK",
+  "repository": "OpenVibers/OpenVibe.SDK",
+  "service": "sdk",
+  "product": "OpenVibe.SDK",
+  "stage": "alpha",
+  "version": "0.26.0",
+  "runtime": "node >=20",
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "sdk"
+  ],
+  "domains": [],
+  "pins": {
+    "openvibe-contracts": "v0.86.0"
+  },
+  "deployed": false,
+  "exposure": "library",
+  "track": "W2"
+}

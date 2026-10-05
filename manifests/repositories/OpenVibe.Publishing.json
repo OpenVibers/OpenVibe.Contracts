@@ -1,0 +1,23 @@
+{
+  "name": "OpenVibe.Publishing",
+  "repository": "OpenVibers/OpenVibe.Publishing",
+  "service": "publishing",
+  "product": "OpenVibe.Publishing",
+  "stage": "alpha",
+  "version": "1.1.0",
+  "runtime": "node >=20",
+  "database": "none",
+  "migrations": 0,
+  "authority": [
+    "publishing"
+  ],
+  "domains": [],
+  "pins": {
+    "openvibe-contracts": "v0.76.0",
+    "openvibe-sdk": "v0.15.0",
+    "openvibe-shared": "v1.25.0"
+  },
+  "deployed": false,
+  "exposure": "library",
+  "track": "W15"
+}

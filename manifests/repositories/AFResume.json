@@ -1,0 +1,17 @@
+{
+  "name": "AFResume",
+  "repository": null,
+  "service": null,
+  "product": null,
+  "stage": null,
+  "version": "2.0.0",
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [],
+  "domains": [],
+  "pins": {},
+  "deployed": null,
+  "exposure": null,
+  "track": null
+}

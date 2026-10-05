@@ -1,0 +1,26 @@
+{
+  "name": "OpenVibe.Reviews",
+  "repository": "OpenVibers/OpenVibe.Reviews",
+  "service": "reviews",
+  "product": "Reviews",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 2,
+  "authority": [
+    "reviews.*"
+  ],
+  "domains": [
+    "openvibe.reviews"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.76.0",
+    "openvibe-sdk": "v0.20.0",
+    "openvibe-shared": "v2.2.0",
+    "openvibe-publishing": "v1.1.0"
+  },
+  "deployed": true,
+  "exposure": "internal",
+  "track": "W17"
+}

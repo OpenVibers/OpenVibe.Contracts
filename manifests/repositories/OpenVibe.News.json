@@ -1,0 +1,26 @@
+{
+  "name": "OpenVibe.News",
+  "repository": "OpenVibers/OpenVibe.News",
+  "service": "news",
+  "product": "News",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 2,
+  "authority": [
+    "news.*"
+  ],
+  "domains": [
+    "openvibe.news"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.79.0",
+    "openvibe-sdk": "v0.25.0",
+    "openvibe-shared": "v2.2.0",
+    "openvibe-publishing": "v1.1.0"
+  },
+  "deployed": true,
+  "exposure": "internal",
+  "track": "W17"
+}

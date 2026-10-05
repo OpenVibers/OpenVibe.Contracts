@@ -912,6 +912,39 @@ sub(path.join(__dirname, 'usage-topics.test.js'));
 sub(path.join(__dirname, 'billing-grace.test.js'));
 sub(path.join(__dirname, 'resources.test.js'));
 
+// ── Estate (plan T1 step 3): docs/ESTATE.md and manifests/repositories are generated ──
+// A checkout tree is read into one repository manifest and the document; --check fails on drift, and with
+// no checkout root (CI) it still checks the document against the committed manifests.
+{
+    const os = require('os');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ovc-estate-'));
+    const root = path.join(tmp, 'estate');
+    const out = path.join(tmp, 'out');
+    const run = (...a) => spawnSync(process.execPath, [path.join(ROOT, 'scripts/estate.js'), ...a], { encoding: 'utf8' });
+    const write = (rel, body) => { fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true }); fs.writeFileSync(path.join(root, rel), body); };
+    const pin = (v) => `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/${v}`;
+    write('OpenVibe.Live/package.json', JSON.stringify({ name: 'openvibe-live', version: '1.2.3', dependencies: { 'openvibe-contracts': pin('v0.9.1') }, engines: { node: '>=22' } }));
+    write('OpenVibe.Live/STATUS.json', JSON.stringify({ repository: 'OpenVibers/OpenVibe.Live', stage: 'beta', deployed: true, runtime: 'node 22, better-sqlite3', domain: 'openvibe.live', wave: 'W1', updated: '2026-10-01' }));
+    write('OpenVibe.Live/migrations/0001_initial.sql', 'CREATE TABLE t (id integer primary key);\n');
+    let r = run(root, '--out', out);
+    ok(r.status === 0, `estate generates from a checkout tree: ${r.stdout}${r.stderr}`);
+    const record = JSON.parse(fs.readFileSync(path.join(out, 'manifests/repositories/OpenVibe.Live.json'), 'utf8'));
+    ok(record.name === 'OpenVibe.Live' && record.service === 'live' && record.product === 'Live' && record.database === 'SQLite', 'the repository manifest is built from the checkout and its service manifest');
+    ok(record.pins['openvibe-contracts'] === 'v0.9.1' && record.migrations === 1 && record.authority.includes('live.*'), 'pins, migrations and authority are read');
+    const doc = fs.readFileSync(path.join(out, 'docs/ESTATE.md'), 'utf8');
+    ok(/\| OpenVibe\.Live \| Live \| live\.\* \|/.test(doc) && /contracts v0\.9\.1/.test(doc), 'docs/ESTATE.md is the records as the plan §1.1 table');
+    r = run(root, '--out', out, '--check');
+    ok(r.status === 0 && /estate: current/.test(r.stdout), `--check is clean after generation: ${r.stdout}${r.stderr}`);
+    write('OpenVibe.Live/package.json', JSON.stringify({ name: 'openvibe-live', version: '1.2.3', dependencies: { 'openvibe-contracts': pin('v0.9.2') }, engines: { node: '>=22' } }));
+    r = run(root, '--out', out, '--check');
+    ok(r.status === 1 && /estate drift: manifests\/repositories\/OpenVibe\.Live\.json/.test(r.stderr), `--check catches a drifted checkout: ${r.stderr}`);
+    r = run(root, '--out', out);
+    fs.appendFileSync(path.join(out, 'docs/ESTATE.md'), '\nstale\n');
+    const noRoot = run(path.join(tmp, 'absent'), '--out', out, '--check');
+    ok(noRoot.status === 1 && /estate drift: docs\/ESTATE\.md/.test(noRoot.stderr), `without a checkout root, --check catches a stale document: ${noRoot.stderr}`);
+    fs.rmSync(tmp, { recursive: true, force: true });
+}
+
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));
 sub(path.join(__dirname, 'platform-run.test.js'));

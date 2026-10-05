@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.99.0 — 2026-10-04
+
+**The estate, generated** (plan T1 step 3). `scripts/estate.js` reads every checkout under the estate root (default
+`~/OpenVibers`) — each one's `package.json` pins, `STATUS.json`, `migrations/`, and this repository's
+`manifests/services/` and `manifests/products/` — and writes one `manifests/repositories/<name>.json` per repository
+plus `docs/ESTATE.md`, the plan §1.1 table (repository, product, authority, runtime, database, domain, SDK/Contracts
+pin, deployment, public/private, current track). `node scripts/estate.js --check` exits 1 when either is stale; with no
+checkout root (CI) it checks `docs/ESTATE.md` against the checked-in manifests and skips the rest. `docs/ESTATE.md`
+was a hand-written 2026-09-30 table and is now a projection of those records, never edited by hand. Additive, no
+contract changes.
+
 ## 0.98.0 — 2026-10-05
 
 **The node-revoked event contract** (plan T2 follow-up; the deferred item in OpenVibe.Network's

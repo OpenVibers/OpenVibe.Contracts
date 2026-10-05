@@ -1,0 +1,25 @@
+{
+  "name": "OpenVibe.Host",
+  "repository": "OpenVibers/OpenVibe.Host",
+  "service": "host",
+  "product": "Host",
+  "stage": "alpha",
+  "version": "0.3.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 3,
+  "authority": [
+    "host.*"
+  ],
+  "domains": [
+    "openvibe.host"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.83.0",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.2.0"
+  },
+  "deployed": "loopback only, not launched",
+  "exposure": "internal",
+  "track": "W21 Stage A + Stage B"
+}

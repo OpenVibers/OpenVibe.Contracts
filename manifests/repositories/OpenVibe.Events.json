@@ -1,0 +1,25 @@
+{
+  "name": "OpenVibe.Events",
+  "repository": "OpenVibers/OpenVibe.Events",
+  "service": "events",
+  "product": "OpenVibe.Events",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 5,
+  "authority": [
+    "events"
+  ],
+  "domains": [
+    "events.openvibe.network"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.81.0",
+    "openvibe-sdk": "v0.25.1",
+    "openvibe-shared": "v2.2.0"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W3"
+}

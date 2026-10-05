@@ -1,0 +1,25 @@
+{
+  "name": "OpenVibe.Media",
+  "repository": "OpenVibers/OpenVibe.Media",
+  "service": "media",
+  "product": "Media",
+  "stage": "beta",
+  "version": "1.0.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 1,
+  "authority": [
+    "media.*"
+  ],
+  "domains": [
+    "openvibe.media"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.79.0",
+    "openvibe-sdk": "v0.21.2",
+    "openvibe-shared": "v1.29.2"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": null
+}

@@ -1,0 +1,26 @@
+{
+  "name": "OpenVibe.Games",
+  "repository": "OpenVibers/OpenVibe.Games",
+  "service": "games",
+  "product": "Games",
+  "stage": "stable",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 0,
+  "authority": [
+    "games.*"
+  ],
+  "domains": [
+    "openvibe.games",
+    "play.openvibe.games"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.71.0",
+    "openvibe-sdk": "v0.22.0",
+    "openvibe-shared": "v1.30.1"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": null
+}

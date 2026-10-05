@@ -1,0 +1,23 @@
+{
+  "name": "OpenVibe.Tools",
+  "repository": "OpenVibers/OpenVibe.Tools",
+  "service": "tools",
+  "product": "Tools",
+  "stage": "stable",
+  "version": "1.0.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 4,
+  "authority": [
+    "tools.*"
+  ],
+  "domains": [
+    "openvibe.tools"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.63.0"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": null
+}
