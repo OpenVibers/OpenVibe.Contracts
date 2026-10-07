@@ -33270,7 +33270,7 @@ export interface NetworkRealtimeTicketResult {
    */
   expires_in: number;
   /**
-   * Events' realtime stream (https://events.openvibe.network/realtime/stream).
+   * Events' realtime stream (https://openvibe.events/realtime/stream; https://events.openvibe.network/realtime/stream until every client has moved).
    */
   stream_url: string;
   /**

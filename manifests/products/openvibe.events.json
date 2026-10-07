@@ -25,7 +25,7 @@
     }
   ],
   "keywords": "event bus api, webhook retry service, sqs alternative, sns alternative, pub sub api, realtime sse api, dead letter queue, webhook replay",
-  "launch": "the developer site and queue and stream primitives; the API runs at events.openvibe.network",
+  "launch": "the developer site, the API and the realtime stream on openvibe.events; queue and stream primitives",
   "relationships": {
     "service": "events",
     "plannedRepo": "OpenVibe.Events",

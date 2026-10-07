@@ -34,7 +34,7 @@
       "type": "string",
       "format": "uri",
       "pattern": "^https?://[^?#]+/realtime/stream$",
-      "description": "Events' realtime stream (https://events.openvibe.network/realtime/stream)."
+      "description": "Events' realtime stream (https://openvibe.events/realtime/stream; https://events.openvibe.network/realtime/stream until every client has moved)."
     },
     "topics": {
       "type": "array",

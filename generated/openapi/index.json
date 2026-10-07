@@ -67,7 +67,7 @@
     {
       "service": "events",
       "name": "OpenVibe.Events",
-      "origin": "https://events.openvibe.network",
+      "origin": "https://openvibe.events",
       "operations": 15,
       "capabilities": 8
     },

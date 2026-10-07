@@ -12,6 +12,7 @@
     "events"
   ],
   "domains": [
+    "openvibe.events",
     "events.openvibe.network"
   ],
   "pins": {
