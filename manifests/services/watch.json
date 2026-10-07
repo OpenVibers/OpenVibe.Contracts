@@ -5,16 +5,16 @@
   },
   "id": "watch",
   "name": "OpenVibe.Watch",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Watch",
   "domains": [
     "openvibe.watch"
   ],
   "publicOrigin": "https://openvibe.watch",
   "exposure": {
-    "state": "placeholder",
-    "publicSite": null,
-    "note": "planned (plan T18); the OpenVibe.Watch repository does not exist yet, and nothing serves openvibe.watch"
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "deployed on loopback :4730 (2026-10-07); openvibe.watch keeps its OpenVibe.Sites placeholder until Watch has a product surface"
   },
   "capabilities": [
     "watch.watch.read",

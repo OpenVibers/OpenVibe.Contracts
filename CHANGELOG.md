@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.108.0 — 2026-10-07
+
+**OpenVibe.Watch runs, and four authorities serve their resource index.** Status changes only; no schema changed.
+- `manifests/services/watch.json`: `status` alpha; `exposure` internal (deployed on loopback :4730 on 2026-10-07, Watch #1);
+  openvibe.watch keeps its OpenVibe.Sites placeholder until Watch has a product surface.
+- `watch.watch.read`, `watch.watch.manage`, `watch.observation.read`, `watch.check.run`: active, with the routes Watch
+  serves (`/api/v1/watches`, `/:id`, pause/resume, `/:id/check`, `/:id/observations`, `/:id/checks`).
+- `host.resource.read`, `events.resource.read`, `codes.resource.read`, `media.resource.read`: active, implemented by
+  `GET /api/v1/resources` and `GET /api/v1/resources/:ovrn` (Host #28, Events #17, Codes #20, Media #47, all deployed).
+
 ## 0.107.0 — 2026-10-07
 
 **OpenVibe.Host is live at openvibe.host** (Stage B launched 2026-10-07; Host#26, Sites#11): `manifests/services/host.json` `exposure` becomes `{ state: live, publicSite: service }`, so Network lists Host as an open site.

@@ -40,8 +40,8 @@
       "service": "codes",
       "name": "OpenVibe.Codes",
       "origin": "https://openvibe.codes",
-      "operations": 7,
-      "capabilities": 2
+      "operations": 9,
+      "capabilities": 3
     },
     {
       "service": "community",
@@ -68,8 +68,8 @@
       "service": "events",
       "name": "OpenVibe.Events",
       "origin": "https://events.openvibe.network",
-      "operations": 13,
-      "capabilities": 7
+      "operations": 15,
+      "capabilities": 8
     },
     {
       "service": "games",
@@ -82,8 +82,8 @@
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
-      "operations": 34,
-      "capabilities": 4
+      "operations": 36,
+      "capabilities": 5
     },
     {
       "service": "live",
@@ -96,8 +96,8 @@
       "service": "media",
       "name": "OpenVibe.Media",
       "origin": "https://openvibe.media",
-      "operations": 7,
-      "capabilities": 5
+      "operations": 9,
+      "capabilities": 6
     },
     {
       "service": "network",
@@ -175,6 +175,13 @@
       "origin": "https://openvibe.vip",
       "operations": 21,
       "capabilities": 14
+    },
+    {
+      "service": "watch",
+      "name": "OpenVibe.Watch",
+      "origin": "https://openvibe.watch",
+      "operations": 10,
+      "capabilities": 4
     },
     {
       "service": "wiki",

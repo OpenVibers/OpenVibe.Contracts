@@ -2,7 +2,7 @@
   "id": "watch.watch.manage",
   "version": "1.0",
   "owner": "watch",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
   "description": "PLANNED (plan T18; OpenVibe.Watch is not built yet): Create, change, pause, resume and delete a watch: POST /api/v1/watches, PATCH /api/v1/watches/:id, POST /api/v1/watches/:id/pause, POST /api/v1/watches/:id/resume and DELETE /api/v1/watches/:id. It becomes active, and enters generated/openapi/watch.json, when OpenVibe.Watch implements the routes.",
   "permissions": [
@@ -18,7 +18,13 @@
     "watch.watch.paused",
     "watch.watch.removed"
   ],
-  "implementedBy": [],
+  "implementedBy": [
+    "POST /api/v1/watches",
+    "PATCH /api/v1/watches/:id",
+    "POST /api/v1/watches/:id/pause",
+    "POST /api/v1/watches/:id/resume",
+    "DELETE /api/v1/watches/:id"
+  ],
   "inputSchema": "watch.watch-request@1",
   "outputSchema": "watch.watch-result@1"
 }
