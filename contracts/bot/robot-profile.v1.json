@@ -75,7 +75,8 @@
             "ads7830",
             "cozmo",
             "onvif",
-            "sim"
+            "sim",
+            "relay"
           ]
         },
         "plugin": {

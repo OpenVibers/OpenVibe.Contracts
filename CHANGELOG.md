@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.112.0 — 2026-10-07
+
+**Robots driven through the relay plugin.** `bot.robot-profile@1` is 1.1.0: `mapping.driver` gains `relay`, the
+OpenVibe.Node plugin that forwards `button` and `point` commands to an owner's own script in OpenVibe.Live's
+hardware-client messages (OpenVibe.Node #33; plan T15 R9 steps 4-5). Bot's catalogue profile `relay.generic` uses it
+for the robots converted from Live's stream controls. Additive: every existing profile stays valid.
+
 ## 0.111.0 — 2026-10-07
 
 **Events' public origin is openvibe.events** (plan T7, ADR-042 item 10). Manifest and example changes only; no schema changed.
