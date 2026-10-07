@@ -57135,7 +57135,7 @@ export type BotDeviceConnectResult =
       device: BotDevice;
     };
 
-/** bot.robot-profile@1.0.0 (owner: bot) */
+/** bot.robot-profile@1.1.0 (owner: bot) */
 /**
  * bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver. commands.button (an owner's buttons: names, each a label with an optional key, cooldown_ms and hold) and commands.point (a video-click layer, with its own cooldown_ms), rendered by the widget types buttons and video_click, were added in 0.109.0 (plan T15 R9).
  */
@@ -57154,7 +57154,7 @@ export interface BotRobotProfile {
     [k: string]: {} | undefined;
   } | null;
   mapping: {
-    driver: "pca9685" | "ads7830" | "cozmo" | "onvif" | "sim";
+    driver: "pca9685" | "ads7830" | "cozmo" | "onvif" | "sim" | "relay";
     plugin?: string;
   };
   commands?: {

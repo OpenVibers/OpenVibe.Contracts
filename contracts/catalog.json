@@ -5932,7 +5932,7 @@
     },
     {
       "id": "bot.robot-profile",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/robot-profile.v1.json",
       "visibility": "public",
