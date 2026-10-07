@@ -2,7 +2,7 @@
   "id": "codes.resource.read",
   "version": "1.0",
   "owner": "codes",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
   "description": "Read OpenVibe.Codes' resource index (ADR-048): GET /api/v1/resources lists the resources Codes owns as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Every authority serves these for OpenVibe.Services to fan out and merge; Codes' own resources are its validated app and mod manifests (kind codes.manifest, id mfs_<ULID>) and its releases (kind codes.release, id rel_<ULID>), each carrying the Network project it was created in as its tenancy boundary. Trust tiers are per-app metadata and playground run logs are audit records, neither a resource; Codes hosts no repositories, so the catalog carries no codes.repo kind. Planned until Codes ships the index.",
   "permissions": [
@@ -13,7 +13,10 @@
   ],
   "quotaClass": "standard",
   "events": [],
-  "implementedBy": [],
+  "implementedBy": [
+    "GET /api/v1/resources",
+    "GET /api/v1/resources/:ovrn"
+  ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "common.resource-list-result@1"
 }
