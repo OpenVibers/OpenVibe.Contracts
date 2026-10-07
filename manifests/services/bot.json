@@ -18,6 +18,14 @@
     "state": "live",
     "publicSite": "service"
   },
+  "site": {
+    "name": "Bot",
+    "icon": "bot",
+    "tagline": "An open control panel for robots",
+    "what": "Pair a robot with one pasted command and drive it from any browser, with roles, limits and an emergency stop on every command.",
+    "legalProfile": "games",
+    "position": 21
+  },
   "capabilities": [
     "bot.robot.read",
     "bot.robot.manage",
