@@ -5,16 +5,16 @@
   },
   "id": "run",
   "name": "OpenVibe.Run",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Run",
   "domains": [
     "openvibe.run"
   ],
   "publicOrigin": "https://openvibe.run",
   "exposure": {
-    "state": "placeholder",
-    "publicSite": null,
-    "note": "planned (plan T14 R1); the OpenVibe.Run repository does not exist yet, and nothing serves openvibe.run"
+    "state": "internal",
+    "publicSite": "placeholder",
+    "note": "deployed on loopback :4920 (2026-10-07); openvibe.run keeps its OpenVibe.Sites placeholder until Run has a product surface"
   },
   "capabilities": [
     "run.job.submit",
@@ -54,5 +54,5 @@
       "none": "not built yet; nothing runs"
     }
   },
-  "notes": "The job service of the network (plan T14, ADR-034): accepts jobs (run.job-create-request@1), places each on a node that advertises worker:<class> (platform.resource-offer@1, platform.runtime-offer@1, platform.workload-requirements@1), sends it as platform.job@1 over the node link and follows its platform.job-frame@1 frames. Consumes billing.usage.record to write one usage reading per wall-clock second (run:<job id>:<n>, service run, operation function.invoke, unit s) and media.object.read to resolve digest-pinned inputs. Planned: nothing is built."
+  "notes": "The job service of the network (plan T14, ADR-034): accepts jobs (run.job-create-request@1), places each on a node that advertises worker:<class> (platform.resource-offer@1, platform.runtime-offer@1, platform.workload-requirements@1), sends it as platform.job@1 over the node link and follows its platform.job-frame@1 frames. Consumes billing.usage.record to write one usage reading per wall-clock second (run:<job id>:<n>, service run, operation function.invoke, unit s) and media.object.read to resolve digest-pinned inputs. Serves its job API on loopback :4920 (Run #1 and #2, 2026-10-07)."
 }

@@ -5,18 +5,20 @@
   },
   "id": "services",
   "name": "OpenVibe.Services",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Services",
   "domains": [
     "openvibe.services"
   ],
   "publicOrigin": "https://openvibe.services",
   "exposure": {
-    "state": "placeholder",
+    "state": "internal",
     "publicSite": "placeholder",
-    "note": "planned (plan T13); the OpenVibe.Services repository does not exist yet, and openvibe.services serves the OpenVibe.Sites placeholder page"
+    "note": "deployed on loopback :4930 (2026-10-07); openvibe.services keeps its OpenVibe.Sites placeholder until Services has a product surface"
   },
-  "capabilities": [],
+  "capabilities": [
+    "services.resource.read"
+  ],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [],
@@ -40,5 +42,5 @@
       "none": "not built yet; nothing runs"
     }
   },
-  "notes": "Reserved placeholder (plan T13): the developer platform of the network, where projects, apps, keys, grants, capabilities, usage, quotas, runs, events, deploys and health over every service are looked up, with each service keeping its own data. Reserves the service id and the openvibe.services domain; no repository, route, capability or event exists yet."
+  "notes": "The developer platform of the network (plan T13, ADR-048): where projects, apps, keys, grants, capabilities, usage, quotas, runs, events, deploys and health over every service are looked up, with each service keeping its own data. Serves its merged resource index on loopback :4930 (plan T13 step 4); services.resource.read is its first capability."
 }

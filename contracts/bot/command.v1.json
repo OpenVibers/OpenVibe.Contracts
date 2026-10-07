@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/command.v1.json",
   "title": "BotCommand",
-  "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1).",
+  "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9).",
   "type": "object",
   "required": [
     "type",
@@ -36,7 +36,9 @@
         "ptz",
         "say",
         "display",
-        "halt"
+        "halt",
+        "button",
+        "point"
       ]
     },
     "value": {
@@ -46,5 +48,86 @@
       "type": "integer",
       "minimum": 1
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "button"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,31}$",
+                "description": "one of the profile's commands.button.names"
+              },
+              "state": {
+                "enum": [
+                  "down",
+                  "up"
+                ],
+                "description": "present only for a hold button: down on press, up on release"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "point"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "object",
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "x": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

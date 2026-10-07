@@ -21,6 +21,28 @@
         "string",
         "null"
       ]
+    },
+    "partial": {
+      "type": "array",
+      "description": "Authorities a merged index (OpenVibe.Services, ADR-048) could not read for this page: a slow or failing authority is omitted, never fails the page. Each entry names the authority and the problem code it answered. Added in 1.1.0; a single authority's own index leaves it out.",
+      "items": {
+        "type": "object",
+        "required": [
+          "service",
+          "code"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$"
+          }
+        }
+      }
     }
   }
 }

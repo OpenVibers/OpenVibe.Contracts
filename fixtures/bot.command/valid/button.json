@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "seq": 20,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-8",
+  "kind": "button",
+  "value": {
+    "name": "lights_on"
+  }
+}

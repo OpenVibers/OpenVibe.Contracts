@@ -73,6 +73,9 @@ them in a Network release** to `GET /api/v1/offers`, `GET /api/v1/offers/:offer_
 `network.resource.report` guard. Moving a public route is a release-note change: OpenVibe.Network's release must name
 the old and new paths.
 
+A merged page never fails for one bad authority: a slow or failing authority is omitted from the page and named, with
+the problem code it answered, in `common.resource-list-result@1`'s `partial` (added 0.109.0).
+
 The move has consumers outside `server/registry/offers.js` itself, which the Network release note must update with it:
 
 - the **discovery index key** `resources: '/api/v1/resources'` in `server/registry/ecosystem.js:329` (documented at

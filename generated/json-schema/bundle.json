@@ -66617,7 +66617,7 @@
       }
     },
     "common.resource-list-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "status": "active",
       "schema": {
@@ -66643,6 +66643,28 @@
               "string",
               "null"
             ]
+          },
+          "partial": {
+            "type": "array",
+            "description": "Authorities a merged index (OpenVibe.Services, ADR-048) could not read for this page: a slow or failing authority is omitted, never fails the page. Each entry names the authority and the problem code it answered. Added in 1.1.0; a single authority's own index leaves it out.",
+            "items": {
+              "type": "object",
+              "required": [
+                "service",
+                "code"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "service": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,39}$"
+                },
+                "code": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$"
+                }
+              }
+            }
           }
         }
       }
@@ -68271,7 +68293,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/robot-profile.v1.json",
         "title": "BotRobotProfile",
-        "description": "bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver.",
+        "description": "bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver. commands.button (an owner's buttons: names, each a label with an optional key, cooldown_ms and hold) and commands.point (a video-click layer, with its own cooldown_ms), rendered by the widget types buttons and video_click, were added in 0.109.0 (plan T15 R9).",
         "type": "object",
         "required": [
           "id",
@@ -68584,6 +68606,56 @@
                   }
                 }
               },
+              "button": {
+                "type": "object",
+                "required": [
+                  "names"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "names": {
+                    "type": "object",
+                    "minProperties": 1,
+                    "propertyNames": {
+                      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                    },
+                    "additionalProperties": {
+                      "type": "object",
+                      "required": [
+                        "label"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "maxLength": 40
+                        },
+                        "key": {
+                          "type": "string",
+                          "maxLength": 16
+                        },
+                        "cooldown_ms": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "hold": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "point": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cooldown_ms": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              },
               "halt": {
                 "type": "object",
                 "required": [],
@@ -68604,7 +68676,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "pattern": "^[a-z][a-z0-9-]*$"
+                  "pattern": "^[a-z][a-z0-9_-]*$"
                 },
                 "capability": {
                   "type": "string"
@@ -68630,7 +68702,9 @@
                         "ptz",
                         "say",
                         "display",
-                        "halt"
+                        "halt",
+                        "button",
+                        "point"
                       ]
                     },
                     "names": {
@@ -69594,7 +69668,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command.v1.json",
         "title": "BotCommand",
-        "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1).",
+        "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9).",
         "type": "object",
         "required": [
           "type",
@@ -69628,7 +69702,9 @@
               "ptz",
               "say",
               "display",
-              "halt"
+              "halt",
+              "button",
+              "point"
             ]
           },
           "value": {
@@ -69638,7 +69714,88 @@
             "type": "integer",
             "minimum": 1
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "button"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,31}$",
+                      "description": "one of the profile's commands.button.names"
+                    },
+                    "state": {
+                      "enum": [
+                        "down",
+                        "up"
+                      ],
+                      "description": "present only for a hold button: down on press, up on release"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "point"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "bot.command-result": {

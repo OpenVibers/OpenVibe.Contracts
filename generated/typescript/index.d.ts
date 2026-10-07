@@ -56689,13 +56689,20 @@ export interface ResourceSummary {
   };
 }
 
-/** common.resource-list-result@1.0.0 (owner: contracts) */
+/** common.resource-list-result@1.1.0 (owner: contracts) */
 /**
  * A page of the resource index (roadmap WS-Z7).
  */
 export interface ResourceListResult {
   resources: ResourceSummary[];
   next_cursor: string | null;
+  /**
+   * Authorities a merged index (OpenVibe.Services, ADR-048) could not read for this page: a slow or failing authority is omitted, never fails the page. Each entry names the authority and the problem code it answered. Added in 1.1.0; a single authority's own index leaves it out.
+   */
+  partial?: {
+    service: string;
+    code: string;
+  }[];
 }
 
 /** common.resource-cost@1.0.0 (owner: contracts) */
@@ -57130,7 +57137,7 @@ export type BotDeviceConnectResult =
 
 /** bot.robot-profile@1.0.0 (owner: bot) */
 /**
- * bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver.
+ * bot.robot-profile@1 (ADR-043 decision 7): a robot profile as OpenVibe.Bot ships it (server/profiles/*.json) and serves it (GET /api/v1/profiles, /profiles/:id; validateProfile in server/profiles/index.js). The panel is a function of the profile. Capability and widget names are open strings that Bot checks against registries in code, so a new one never needs a schema change. As served, vendor, kind, description, variants and camera are null when the file leaves them out, limits carry their defaults (max_speed 1, max_turn 1, max_command_ms 300, heartbeat_ms 1000) and commands always include halt. mapping is the driver's own hardware map, open beyond driver. commands.button (an owner's buttons: names, each a label with an optional key, cooldown_ms and hold) and commands.point (a video-click layer, with its own cooldown_ms), rendered by the widget types buttons and video_click, were added in 0.109.0 (plan T15 R9).
  */
 export interface BotRobotProfile {
   id: string;
@@ -57241,6 +57248,21 @@ export interface BotRobotProfile {
       faces?: string[];
       max_chars?: number;
     };
+    button?: {
+      names: {
+        [k: string]:
+          | {
+              label: string;
+              key?: string;
+              cooldown_ms?: number;
+              hold?: boolean;
+            }
+          | undefined;
+      };
+    };
+    point?: {
+      cooldown_ms?: number;
+    };
     halt?: {};
   };
   /**
@@ -57253,7 +57275,7 @@ export interface BotRobotProfile {
       label?: string;
       order?: number;
       command?: {
-        kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+        kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point";
         /**
          * @minItems 1
          */
@@ -57266,7 +57288,7 @@ export interface BotRobotProfile {
       label?: string;
       order?: number;
       command?: {
-        kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+        kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point";
         /**
          * @minItems 1
          */
@@ -57505,18 +57527,20 @@ export type BotDeviceMessage =
 
 /** bot.command@1.0.0 (owner: bot) */
 /**
- * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1).
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9).
  */
-export interface BotCommand {
+export type BotCommand = {
+  [k: string]: unknown | undefined;
+} & {
   v?: 1;
   seq?: number;
   ts?: number;
   type: "command";
   id?: string;
-  kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+  kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point";
   value?: {};
   ms?: number;
-}
+};
 
 /** bot.command-result@1.0.0 (owner: bot) */
 /**
