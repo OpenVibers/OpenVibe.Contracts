@@ -6,7 +6,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.110.0 — 2026-10-07
 
-**OpenVibe.Space launches** (plan T10 step 3). It serves the forum at `https://openvibe.space` from
+**OpenVibe.Space and OpenVibe.AI's public home launch** (plan T10 step 3, T6). It serves the forum at `https://openvibe.space` from
 loopback :4940. Community keeps pastes, comments, Pulse and submissions; its former `/s/*` forum paths
 redirect permanently to Space.
 - `manifests/services/space.json`: `status` alpha, `exposure` live with `publicSite: service`,
@@ -24,6 +24,9 @@ redirect permanently to Space.
   window through 1.0.0. Historical `community.thread.created` and `community.post.created` payloads
   also remain loadable as retired types; Community no longer claims to produce them. Community's
   planned vote grant now describes its surviving comment route only.
+- `manifests/services/ai.json`: `exposure` live with `publicSite: service`; `publicOrigin` is
+  `https://ai.openvibe.services` (the home, `/stats` and the developer-app API, AI #23), and
+  `ai.openvibe.network`, still listed in `domains`, answers 301 to it.
 - Generated bundles, types, and OpenAPI documents are refreshed for 0.110.0.
 
 ## 0.109.0 — 2026-10-07

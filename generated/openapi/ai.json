@@ -12,7 +12,7 @@
  },
  "servers": [
   {
-   "url": "https://ai.openvibe.network"
+   "url": "https://ai.openvibe.services"
   }
  ],
  "paths": {

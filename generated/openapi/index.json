@@ -4,7 +4,7 @@
     {
       "service": "ai",
       "name": "OpenVibe.AI",
-      "origin": "https://ai.openvibe.network",
+      "origin": "https://ai.openvibe.services",
       "operations": 43,
       "capabilities": 8
     },
