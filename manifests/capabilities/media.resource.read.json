@@ -1,0 +1,19 @@
+{
+  "id": "media.resource.read",
+  "version": "1.0",
+  "owner": "media",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Media's resource index (ADR-048): GET /api/v1/resources lists the resources Media owns as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Every authority serves these for OpenVibe.Services to fan out and merge; Media's own resources are its objects (kind media.object, id med_<ULID>), the canonical blobs its v1 vods, clips and files are projections of (migrations/0001_initial.sql media_objects); vods and clips are projections over objects (bigint ids) and are never listed. An object carries the project of the tenant that owns it when that tenant is a developer project; an object in a first-party app tenant has no project and so no OVRN. Planned until Media ships the index.",
+  "permissions": [
+    "resources:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.resource-list-result@1"
+}

@@ -28,6 +28,10 @@ assert.strictEqual(c.resources.nameOf(summary), 'ovrn:watch:prj_01K6R2Z8C4V7M9Q3
 assert.strictEqual(c.resources.nameOf({ ...summary, service: 'media' }), null, 'a kind of another service names nothing');
 assert.strictEqual(c.resources.nameOf({ ...summary, project_id: undefined }), null, 'a summary without a project names nothing');
 
+// Host renamed its site id prefix from site_ (four letters) to sit_ (three), so host.site now composes an OVRN.
+const site = { ...summary, id: 'sit_01K6R3A1B2C3D4E5F6G7H8J9KA', kind: 'host.site', service: 'host' };
+assert.strictEqual(c.resources.nameOf(site), 'ovrn:host:prj_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4:site/sit_01K6R3A1B2C3D4E5F6G7H8J9KA');
+
 // Control requests: the schema passes these, the cross-field rules refuse them.
 for (const f of ['other-project.json', 'create-with-resource.json']) {
     const q = fx('common.resource-control-request', 'invalid', f);

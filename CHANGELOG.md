@@ -4,6 +4,47 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.107.0 — 2026-10-07
+
+**OpenVibe.Host is live at openvibe.host** (Stage B launched 2026-10-07; Host#26, Sites#11): `manifests/services/host.json` `exposure` becomes `{ state: live, publicSite: service }`, so Network lists Host as an open site.
+
+**The resource index's first authorities** (ADR-048, plan T13 step 8, the Contracts half). OpenVibe.Network has served
+`GET /api/v1/resources` since 0.104.0; this adds the planned, first-party capability each surveyed authority needs to
+serve its own — `media.resource.read`, `events.resource.read`, `host.resource.read` and `codes.resource.read` — and
+names in each the kinds that authority's index will carry. Additive and inert: four new capability manifests, four
+service capability lists extended, six id prefixes recorded in `lib/ids.js`; no schema changed, no route named, nothing
+activated.
+
+- `media.resource.read` (owner `media`, first-party, **planned**, no routes): Media's index carries its objects, kind
+  `media.object` with a `med_<ULID>` id — the canonical blobs its v1 vods, clips and files are projections of
+  (`media_objects`, migrations/0001_initial.sql). Vods and clips are projections over objects (bigint ids) and are
+  never listed. An object in a developer-project tenant carries that project; an object in a first-party app tenant
+  (`live`, `games`, …) has no project and so no OVRN.
+- `events.resource.read` (owner `events`, first-party, **planned**, no routes): Events' index carries its
+  subscriptions, kind `events.subscription` with a `sub_<ULID>` id (`server/api/subscriptions.js`), project-scoped
+  when a developer app created them and project-less when a service did. Events themselves (`evt_`) are what
+  `common.resource-name@1` refuses by design, and a project's queue stays out of the index until Events stores a queue
+  row.
+- `host.resource.read` (owner `host`, first-party, **planned**, no routes): Host's index carries its static sites
+  (kind `host.site`, `sit_<ULID>`), the immutable deploys of those sites (kind `host.deploy`, `dpl_<ULID>`) and their
+  default and custom domains (kind `host.domain`, `dom_<ULID>`), each with its `project_id`. Host renamed its site id
+  prefix from `site_` (four letters) to `sit_` (three) — zero sites exist in production, so nothing converts — so
+  `host.site` now composes an OVRN. Host lists no projects: only Network lists projects.
+- `codes.resource.read` (owner `codes`, first-party, **planned**, no routes): Codes' index carries its validated app
+  and mod manifests (`codes.manifest`, `mfs_<ULID>`) and its releases (`codes.release`, `rel_<ULID>`), each created
+  in a Network project. Trust tiers are per-app metadata and playground run logs are audit records, neither a
+  resource; Codes hosts no repositories, so the ADR-048 catalog's `codes.repo` is gone.
+- **Step 8 phase 2 — the person-owned resources** (Bot robots and devices, Chat rooms, Community spaces,
+  OpenRe.Stream streams and Games characters): served like Network's user-owned node principals, no OVRN and
+  owner = user, in a later phase, so no `*.resource.read` capability yet.
+- **Surveyed and left out** (not even a person-owned resource, so no `*.resource.read` capability): AI (runs and the
+  record groups are keyed to requester principals and attribution subjects, never a project) and Tools (a `job_<ULID>`
+  is exactly what `common.resource-name@1` refuses, and a job expires unless referenced).
+- **`lib/ids.js` records the chosen prefixes** (`subscription: sub`, `deploy: dpl`, `domain: dom`, `manifest: mfs`,
+  `release: rel`, `site: sit`); `lib/resources.js` still formats any `<service>.<type>` kind generically, so `nameOf`
+  needs no new entry, and `common.resource-name@1` is unchanged. `generated/` gains nothing but the release's version
+  stamp — only active capabilities with routes are emitted, and these are planned with none.
+
 ## 0.106.0 — 2026-10-07
 
 **OpenVibe.Bot is a site** (Bot #34). Bot has served openvibe.bot since 2026-10-02 (`exposure` live, `publicSite`

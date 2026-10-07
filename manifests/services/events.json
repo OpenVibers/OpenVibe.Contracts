@@ -21,6 +21,7 @@
   "capabilities": [
     "events.event.publish",
     "events.event.read",
+    "events.resource.read",
     "events.subscription.manage",
     "events.delivery.admin",
     "events.app.publish",
