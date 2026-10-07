@@ -1,0 +1,21 @@
+{
+  "name": "OpenVibe.Watch",
+  "repository": null,
+  "service": "watch",
+  "product": "OpenVibe.Watch",
+  "stage": null,
+  "version": null,
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "watch"
+  ],
+  "domains": [
+    "openvibe.watch"
+  ],
+  "pins": {},
+  "deployed": null,
+  "exposure": "internal",
+  "track": null
+}

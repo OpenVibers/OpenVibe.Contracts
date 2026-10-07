@@ -4,7 +4,7 @@
   "service": "publishing",
   "product": "OpenVibe.Publishing",
   "stage": "alpha",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "runtime": "node >=20",
   "database": "none",
   "migrations": 0,
@@ -15,7 +15,7 @@
   "pins": {
     "openvibe-contracts": "v0.76.0",
     "openvibe-sdk": "v0.15.0",
-    "openvibe-shared": "v1.25.0"
+    "openvibe-shared": "v2.6.0"
   },
   "deployed": false,
   "exposure": "library",

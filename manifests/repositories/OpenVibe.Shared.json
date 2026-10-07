@@ -4,7 +4,7 @@
   "service": "shared",
   "product": "OpenVibe.Shared",
   "stage": "alpha",
-  "version": "2.3.1",
+  "version": "2.11.0",
   "runtime": null,
   "database": null,
   "migrations": 0,

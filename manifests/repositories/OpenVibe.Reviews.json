@@ -15,10 +15,10 @@
     "openvibe.reviews"
   ],
   "pins": {
-    "openvibe-contracts": "v0.76.0",
-    "openvibe-sdk": "v0.20.0",
-    "openvibe-shared": "v2.2.0",
-    "openvibe-publishing": "v1.1.0"
+    "openvibe-contracts": "v0.96.0",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.10.1",
+    "openvibe-publishing": "v1.3.0"
   },
   "deployed": true,
   "exposure": "internal",

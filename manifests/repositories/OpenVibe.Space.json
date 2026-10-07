@@ -1,0 +1,21 @@
+{
+  "name": "OpenVibe.Space",
+  "repository": null,
+  "service": "space",
+  "product": "Space",
+  "stage": null,
+  "version": null,
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "space.*"
+  ],
+  "domains": [
+    "openvibe.space"
+  ],
+  "pins": {},
+  "deployed": null,
+  "exposure": "live",
+  "track": null
+}

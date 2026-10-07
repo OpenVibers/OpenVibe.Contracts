@@ -7,7 +7,7 @@
   "version": "0.1.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 1,
+  "migrations": 7,
   "authority": [
     "chat.preferences",
     "chat.tts_defaults",
@@ -19,9 +19,9 @@
     "openvibe.live"
   ],
   "pins": {
-    "openvibe-contracts": "v0.80.0",
-    "openvibe-sdk": "v0.25.2",
-    "openvibe-shared": "v2.0.0"
+    "openvibe-contracts": "v0.103.0",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.5.0"
   },
   "deployed": true,
   "exposure": "live",
