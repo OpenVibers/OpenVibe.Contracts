@@ -87,10 +87,17 @@ ok(contracts.ids.newId('job').match(job.properties.id.pattern), 'newId(job) mint
 const succeeded = fixture('run.job-read-result', 'valid', 'succeeded');
 ok(succeeded.usage.seconds === fromExit(exit).reduce((s, r) => s + r.quantity, 0) && succeeded.usage.wall_ms === exit.usage.wall_ms, 'usage.seconds is the sum of the job\'s readings');
 const run = contracts.services.get('run');
-ok(run && run.status === 'placeholder' && contracts.products.get('openvibe.run').relationships.noRepo === true, 'run is a placeholder service and openvibe.run still has no repository');
-for (const id of ['run.job.submit', 'run.job.read', 'run.job.list', 'run.job.cancel', 'run.job.stream', 'run.job.admin']) {
+ok(run && run.status === 'alpha' && run.exposure.state === 'internal' && contracts.products.get('openvibe.run').relationships.noRepo === true, 'run is an alpha service (deployed on loopback) and openvibe.run still has no repository');
+for (const [id, routes] of Object.entries({
+    'run.job.submit': ['POST /api/v1/jobs'],
+    'run.job.read': ['GET /api/v1/jobs/:id'],
+    'run.job.list': ['GET /api/v1/jobs'],
+    'run.job.cancel': ['POST /api/v1/jobs/:id/cancel'],
+    'run.job.stream': ['POST /api/v1/jobs/:id/stream/ticket', 'GET /api/v1/jobs/:id/stream'],
+    'run.job.admin': ['GET /api/v1/admin/jobs'],
+})) {
     const c = contracts.capabilities.get(id);
-    ok(c && c.owner === 'run' && c.status === 'planned' && c.description.startsWith('PLANNED') && run.capabilities.includes(id), `${id} is a planned capability Run serves`);
+    ok(c && c.owner === 'run' && c.status === 'active' && JSON.stringify(c.implementedBy) === JSON.stringify(routes) && run.capabilities.includes(id), `${id} is an active capability Run serves`);
 }
 ok(contracts.capabilities.get('run.job.admin').visibility === 'internal', 'run.job.admin is internal');
 for (const s of ['queued', 'started', 'succeeded', 'failed', 'cancelled', 'expired']) ok(run.eventsProduced.includes(`run.job.${s}`), `run produces run.job.${s}`);

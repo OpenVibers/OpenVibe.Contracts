@@ -4,6 +4,34 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.109.0 — 2026-10-07
+
+**OpenVibe.Run runs, OpenVibe.Services registers, and Bot learns buttons and points.** Two schemas gained optional
+shape, Run's job API turned active, and Services registered its first capability and AI its first public one; everything here is
+additive, so every existing fixture and profile stays valid.
+- `manifests/services/run.json`: `status` alpha; `exposure` internal (deployed on loopback :4920 on 2026-10-07,
+  Run #1 and #2); openvibe.run keeps its OpenVibe.Sites placeholder until Run has a product surface.
+- `run.job.submit`, `run.job.read`, `run.job.list`, `run.job.cancel`, `run.job.stream`, `run.job.admin`: active,
+  with the routes Run serves (`POST /api/v1/jobs`, `GET /api/v1/jobs`, `GET /api/v1/jobs/:id`,
+  `POST /api/v1/jobs/:id/cancel`, `POST /api/v1/jobs/:id/stream/ticket` and `GET /api/v1/jobs/:id/stream`,
+  `GET /api/v1/admin/jobs`).
+- `manifests/services/services.json`: `status` alpha; `exposure` internal (deployed on loopback :4930 on 2026-10-07);
+  openvibe.services keeps its placeholder. `services.resource.read` (owner `services`, first-party, active) is
+  Services' merged resource index over every authority that serves one (ADR-048), readable by a first-party service
+  token holding the capability or by a person's user token scoped to one project they own or belong to.
+- `common.resource-list-result@1` is 1.1.0: an optional `partial`, the authorities a merged index could not read for
+  this page (`{ service, code }`). A slow or failing authority is omitted, never fails the page (ADR-048).
+- `bot.command@1` gains the kinds `button` (`name`, and an optional `state` `down|up` for a hold button) and `point`
+  (`x`, `y` in `[0, 1]`). `bot.robot-profile@1` gains `commands.button` (`names`: `label`, optional `key`,
+  `cooldown_ms` and `hold`) and `commands.point` (optional `cooldown_ms`), the widget types `buttons` and
+  `video_click` (the widget type pattern now admits `_`), and `button`/`point` as widget command kinds (plan T15 R9).
+- `ai.app.run` (owner `ai`, public, active; OpenVibe.AI #22): the AI operations as a developer app (ADR-014, plan
+  T6) — `POST /api/v1/chat`, `/generate`, `/summarize`, `/classify`, `/extract`, `/embed` and `GET /api/v1/runs/:id`
+  for the app's own runs. Every run is metered to the app's project; metered capacity is spent only under the
+  project's tier budget, and a sandbox run (or one no tier budget governs) uses only free and local capacity.
+- `generated/` gains `openapi/run.json` and `openapi/services.json` (their first active capabilities) and stamps
+  every document with the release version.
+
 ## 0.108.0 — 2026-10-07
 
 **OpenVibe.Watch runs, and four authorities serve their resource index.** Status changes only; no schema changed.

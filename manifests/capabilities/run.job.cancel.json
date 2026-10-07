@@ -2,9 +2,9 @@
   "id": "run.job.cancel",
   "version": "1.0",
   "owner": "run",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "PLANNED (plan T14 R1; OpenVibe.Run is not built yet): Cancel one of the token project's jobs: POST /api/v1/jobs/:id/cancel. A queued or placed job never starts; a running one is killed (platform.job-frame@1 job_cancel); cancelling an ended job changes nothing and answers it as it is. It becomes active, and enters generated/openapi/run.json, when OpenVibe.Run implements the routes.",
+  "description": "Cancel one of the token project's jobs: POST /api/v1/jobs/:id/cancel. A queued or placed job never starts; a running one is killed (platform.job-frame@1 job_cancel); cancelling an ended job changes nothing and answers it as it is.",
   "inputSchema": "common.no-body@1",
   "outputSchema": "run.job-read-result@1",
   "permissions": [
@@ -17,5 +17,7 @@
   "events": [
     "run.job.cancelled"
   ],
-  "implementedBy": []
+  "implementedBy": [
+    "POST /api/v1/jobs/:id/cancel"
+  ]
 }

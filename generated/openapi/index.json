@@ -6,7 +6,7 @@
       "name": "OpenVibe.AI",
       "origin": "https://ai.openvibe.network",
       "operations": 43,
-      "capabilities": 7
+      "capabilities": 8
     },
     {
       "service": "billing",
@@ -128,11 +128,25 @@
       "capabilities": 8
     },
     {
+      "service": "run",
+      "name": "OpenVibe.Run",
+      "origin": "https://openvibe.run",
+      "operations": 7,
+      "capabilities": 6
+    },
+    {
       "service": "search",
       "name": "OpenVibe.Search",
       "origin": "https://search.openvibe.network",
       "operations": 8,
       "capabilities": 3
+    },
+    {
+      "service": "services",
+      "name": "OpenVibe.Services",
+      "origin": "https://openvibe.services",
+      "operations": 2,
+      "capabilities": 1
     },
     {
       "service": "sources",
