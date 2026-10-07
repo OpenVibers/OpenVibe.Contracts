@@ -14,13 +14,19 @@
     "space_member"
   ],
   "quotaClass": "space-write",
-  "events": [],
+  "events": [
+    "space.thread.created",
+    "space.post.created"
+  ],
   "implementedBy": [
     "POST /api/v1/spaces/:space/threads",
     "POST /api/v1/spaces/:space/threads/:slug/posts",
     "POST /api/v1/spaces/:space/threads/:slug/votes",
     "PUT|DELETE /api/v1/posts/:id",
-    "DELETE /api/v1/spaces/:space/threads/:slug"
+    "DELETE /api/v1/spaces/:space/threads/:slug",
+    "POST /api/v1/spaces/:space/attachments",
+    "POST /api/v1/spaces/:space/threads/:slug/crosspost",
+    "POST /api/v1/posts/:id/reactions"
   ],
   "inputSchema": "space.post-write-request@1"
 }

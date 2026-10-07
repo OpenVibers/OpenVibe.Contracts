@@ -16,13 +16,9 @@
     "community.paste.create",
     "community.paste.write",
     "community.paste.moderate",
-    "community.post.create",
     "community.comment.write",
     "community.comment.moderate",
     "community.pulse.write",
-    "community.space.read",
-    "community.space.manage",
-    "community.thread.read",
     "community.vote.set",
     "community.pulse.read"
   ],
@@ -33,9 +29,7 @@
     "community.moderation.action",
     "community.paste.created",
     "community.paste.deleted",
-    "community.paste.updated",
-    "community.post.created",
-    "community.thread.created"
+    "community.paste.updated"
   ],
   "eventsConsumed": [
     "network.account.deleted",
@@ -71,7 +65,7 @@
       "drains": [
         "Pulse subscription retries, the community.profile scan and the search-document scans stopped",
         "stops taking connections; idle keep-alive connections closed (kept 65 s otherwise); requests in flight answered with Connection: close and allowed to finish (4 s at most, then cut)",
-        "the profile scan in progress (it stops between people), the Discord relay's drain and the events outbox's send awaited; unsent rows stay in their tables",
+        "the profile scan in progress (it stops between people) and the events outbox's send awaited; unsent rows stay in their tables",
         "community.db closed, exit 0"
       ],
       "note": "server/graceful.js; a stop that passes 5 s exits 1. Only the in-memory rate-limit sweeps end with the process. The unit sets no TimeoutStopSec (systemd's 90 s default applies)"
@@ -84,7 +78,7 @@
         },
         {
           "kind": "schedule",
-          "what": "the Roadmap space re-syncs from docs/roadmap/public.json; the community.profile and search-document scans start again from what changed"
+          "what": "the community.profile and search-document scans restart from what changed"
         },
         {
           "kind": "consumer",
@@ -108,5 +102,6 @@
     "leases": {
       "none": "no claims: one process owns community.db (better-sqlite3, single writer)"
     }
-  }
+  },
+  "notes": "Community continues to serve pastes, comments, Pulse and submissions. Its former /s/* forum paths issue 301 redirects to openvibe.space; Space owns forum data and writes."
 }

@@ -4,6 +4,31 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.110.0 — 2026-10-07
+
+**OpenVibe.Space and OpenVibe.AI's public home launch** (plan T10 step 3, T6). It serves the forum at `https://openvibe.space` from
+loopback :4940. Community keeps pastes, comments, Pulse and submissions; its former `/s/*` forum paths
+redirect permanently to Space.
+- `manifests/services/space.json`: `status` alpha, `exposure` live with `publicSite: service`,
+  health and readiness paths, lifecycle, and the events Space produces and consumes.
+- `space.forum.read`, `space.forum.manage`, `space.thread.read`, and `space.post.write` are active with
+  Space's implemented routes. `space.post.write` still guards thread creation; `space.thread.write`
+  remains planned as a separate grant. `space.pulse.read` remains planned because Space serves no Pulse.
+- `space.thread.created`, `space.post.created`, and `space.moderation.action` have payload contracts and
+  valid and invalid fixtures. Space's source is `space`; `space.moderation.action` is
+  `common.moderation-action@1` (ADR-022) and OpenVibe.Network consumes it into the moderation audit log.
+- Space's problem codes, including `403 space.blocked`, are documented in
+  `docs/space-problem-codes.md`; the problem fixture demonstrates the stable URI and code.
+- The four former Community forum capabilities are retired and removed from its service list. The seven
+  Community forum schemas remain loadable but retired, with Space replacements and a compatibility
+  window through 1.0.0. Historical `community.thread.created` and `community.post.created` payloads
+  also remain loadable as retired types; Community no longer claims to produce them. Community's
+  planned vote grant now describes its surviving comment route only.
+- `manifests/services/ai.json`: `exposure` live with `publicSite: service`; `publicOrigin` is
+  `https://ai.openvibe.services` (the home, `/stats` and the developer-app API, AI #23), and
+  `ai.openvibe.network`, still listed in `domains`, answers 301 to it.
+- Generated bundles, types, and OpenAPI documents are refreshed for 0.110.0.
+
 ## 0.109.0 — 2026-10-07
 
 **OpenVibe.Run runs, OpenVibe.Services registers, and Bot learns buttons and points.** Two schemas gained optional

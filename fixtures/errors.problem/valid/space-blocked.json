@@ -1,0 +1,7 @@
+{
+  "type": "https://openvibe.network/problems/space.blocked",
+  "title": "Forbidden",
+  "status": 403,
+  "code": "space.blocked",
+  "detail": "One of you blocked the other"
+}

@@ -4590,7 +4590,7 @@
       "schema": "events/payloads/community.thread.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "community.post.created",
@@ -4599,7 +4599,7 @@
       "schema": "events/payloads/community.post.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "community.comment.created",
@@ -5007,7 +5007,7 @@
       "schema": "community/post-write-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "community.pulse-write-result",
@@ -5025,7 +5025,7 @@
       "schema": "community/forum-post.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "community.forum-thread",
@@ -5034,7 +5034,7 @@
       "schema": "community/forum-thread.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "community.paste-create-result",
@@ -5052,7 +5052,7 @@
       "schema": "community/post-write-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "community.pulse-write-request",
@@ -5106,7 +5106,7 @@
       "schema": "community/forum-space.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "community.pulse-item",
@@ -5133,7 +5133,7 @@
       "schema": "community/space-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "community.thread-read-result",
@@ -5142,7 +5142,7 @@
       "schema": "community/thread-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "deprecated"
+      "status": "retired"
     },
     {
       "id": "space.forum-post",
@@ -6229,6 +6229,34 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
+    },
+    {
+      "id": "space.thread.created",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.thread.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.post.created",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.post.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.moderation.action",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-022"
     }
   ]
 }
