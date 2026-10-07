@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.111.0 — 2026-10-07
+
+**Events' public origin is openvibe.events** (plan T7, ADR-042 item 10). Manifest and example changes only; no schema changed.
+- `manifests/services/events.json`: `publicOrigin` `https://openvibe.events`; `domains` lists `openvibe.events` first and
+  keeps `events.openvibe.network`, which Events still answers until every client has moved (then it answers 308).
+  `manifests/repositories/OpenVibe.Events.json` lists the same two names.
+- `network.realtime-ticket-result@1`: the `stream_url` description and fixtures use
+  `https://openvibe.events/realtime/stream`. The ticket's audience was already `openvibe.events`.
+- Product manifests: openvibe.events's launch line names the API and realtime stream there; the realtime notice links
+  to `https://openvibe.events/`.
+
 ## 0.110.0 — 2026-10-07
 
 **OpenVibe.Space and OpenVibe.AI's public home launch** (plan T10 step 3, T6). It serves the forum at `https://openvibe.space` from

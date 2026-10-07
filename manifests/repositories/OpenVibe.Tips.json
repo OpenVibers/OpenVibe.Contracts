@@ -15,9 +15,9 @@
     "openvibe.tips"
   ],
   "pins": {
-    "openvibe-contracts": "v0.79.0",
-    "openvibe-sdk": "v0.25.0",
-    "openvibe-shared": "v2.2.0"
+    "openvibe-contracts": "v0.92.0",
+    "openvibe-sdk": "v0.28.0",
+    "openvibe-shared": "v2.9.0"
   },
   "deployed": true,
   "exposure": "internal",

@@ -7,17 +7,18 @@
   "version": "0.1.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 5,
+  "migrations": 7,
   "authority": [
     "events"
   ],
   "domains": [
+    "openvibe.events",
     "events.openvibe.network"
   ],
   "pins": {
-    "openvibe-contracts": "v0.81.0",
-    "openvibe-sdk": "v0.25.1",
-    "openvibe-shared": "v2.2.0"
+    "openvibe-contracts": "v0.94.2",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.10.1"
   },
   "deployed": true,
   "exposure": "live",

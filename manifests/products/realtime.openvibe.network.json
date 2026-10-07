@@ -15,7 +15,7 @@
     "links": [
       {
         "label": "OpenVibe.Events",
-        "url": "https://events.openvibe.network/",
+        "url": "https://openvibe.events/",
         "note": "Durable events, subscriptions and signed delivery; browsers subscribe at /realtime/stream."
       },
       {

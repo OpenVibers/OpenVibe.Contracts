@@ -1,0 +1,21 @@
+{
+  "name": "OpenVibe.Services",
+  "repository": null,
+  "service": "services",
+  "product": "OpenVibe.Services",
+  "stage": null,
+  "version": null,
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "services"
+  ],
+  "domains": [
+    "openvibe.services"
+  ],
+  "pins": {},
+  "deployed": null,
+  "exposure": "internal",
+  "track": null
+}

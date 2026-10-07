@@ -15,9 +15,9 @@
     "openvibe.codes"
   ],
   "pins": {
-    "openvibe-contracts": "v0.79.0",
-    "openvibe-sdk": "v0.25.0",
-    "openvibe-shared": "v2.3.1"
+    "openvibe-contracts": "v0.97.0",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.9.0"
   },
   "deployed": true,
   "exposure": "live",

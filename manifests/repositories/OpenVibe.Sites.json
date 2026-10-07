@@ -13,7 +13,8 @@
   ],
   "domains": [],
   "pins": {
-    "openvibe-shared": "v1.29.2"
+    "openvibe-contracts": "v0.84.0",
+    "openvibe-shared": "v2.5.0"
   },
   "deployed": true,
   "exposure": "live",

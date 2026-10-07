@@ -1,0 +1,21 @@
+{
+  "name": "OpenVibe.Run",
+  "repository": null,
+  "service": "run",
+  "product": "OpenVibe.Run",
+  "stage": null,
+  "version": null,
+  "runtime": null,
+  "database": null,
+  "migrations": 0,
+  "authority": [
+    "run"
+  ],
+  "domains": [
+    "openvibe.run"
+  ],
+  "pins": {},
+  "deployed": null,
+  "exposure": "internal",
+  "track": null
+}

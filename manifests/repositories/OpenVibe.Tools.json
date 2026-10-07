@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 4,
+  "migrations": 5,
   "authority": [
     "tools.*"
   ],
@@ -15,7 +15,7 @@
     "openvibe.tools"
   ],
   "pins": {
-    "openvibe-contracts": "v0.63.0"
+    "openvibe-contracts": "v0.92.0"
   },
   "deployed": true,
   "exposure": "live",

@@ -1,13 +1,13 @@
 {
   "name": "OpenVibe.Bot",
-  "repository": "github:OpenVibers/OpenVibe.Bot",
+  "repository": "OpenVibers/OpenVibe.Bot",
   "service": "bot",
-  "product": "OpenVibe.Bot",
-  "stage": null,
+  "product": "Bot",
+  "stage": "alpha",
   "version": "0.1.0",
-  "runtime": "node >=22.0.0",
+  "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 1,
+  "migrations": 5,
   "authority": [
     "bot"
   ],
@@ -15,11 +15,11 @@
     "openvibe.bot"
   ],
   "pins": {
-    "openvibe-contracts": "v0.79.0",
-    "openvibe-sdk": "v0.25.0",
-    "openvibe-shared": "v2.2.0"
+    "openvibe-contracts": "v0.96.0",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.10.1"
   },
-  "deployed": null,
+  "deployed": true,
   "exposure": "live",
   "track": null
 }

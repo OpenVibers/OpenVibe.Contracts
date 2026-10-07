@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 2,
+  "migrations": 5,
   "authority": [
     "community.*"
   ],
@@ -15,9 +15,9 @@
     "openvibe.community"
   ],
   "pins": {
-    "openvibe-contracts": "v0.76.0",
-    "openvibe-sdk": "v0.21.0",
-    "openvibe-shared": "v2.3.1"
+    "openvibe-contracts": "v0.86.0",
+    "openvibe-sdk": "v0.26.0",
+    "openvibe-shared": "v2.9.0"
   },
   "deployed": true,
   "exposure": "live",

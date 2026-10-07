@@ -12,38 +12,42 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | Repository | Product | Authority it owns | Runtime | Database | Domain | SDK/Contracts pin | Deployment | Public/private | Current track |
 |---|---|---|---|---|---|---|---|---|---|
 | AFResume | — | — | — | — | — | — | — | — | — |
-| OpenRe.Stream | OpenRe.Stream | openre.* | node 22 | PostgreSQL | openre.stream, ingest.openre.stream | contracts v0.76.0, sdk v0.21.3, shared v2.3.1 | deployed | internal | W7 |
-| OpenVibe.AI | OpenVibe.AI | ai.usage_summary | node 22 | PostgreSQL | ai.openvibe.network, openvibe.ai | contracts v0.76.0, sdk v0.25.2, shared v1.27.0 | deployed | internal | W13 |
-| OpenVibe.Billing | OpenVibe.Billing | billing.* | node >=22.0.0 | PostgreSQL | billing.openvibe.network | contracts v0.76.0, sdk v0.21.2, shared v2.3.1 | deployed | live | W8 |
-| OpenVibe.Blog | Blog | blog.* | node 22 | PostgreSQL | openvibe.blog | contracts v0.79.0, sdk v0.25.0, shared v2.3.1, publishing v1.0.0 | deployed | live | W16 |
-| OpenVibe.Bot | OpenVibe.Bot | bot | node >=22.0.0 | PostgreSQL | openvibe.bot | contracts v0.79.0, sdk v0.25.0, shared v2.2.0 | — | live | — |
-| OpenVibe.Chat | Chat | chat.preferences, chat.tts_defaults, chat.dm_settings, chat.presence_prefs | node 22 | PostgreSQL | openvibe.chat, openvibe.live | contracts v0.80.0, sdk v0.25.2, shared v2.0.0 | deployed | live | W6 |
-| OpenVibe.Codes | Codes | codes.* | node 22 | PostgreSQL | openvibe.codes | contracts v0.79.0, sdk v0.25.0, shared v2.3.1 | deployed | live | W20 |
-| OpenVibe.Community | Community | community.* | node 22 | PostgreSQL | openvibe.community | contracts v0.76.0, sdk v0.21.0, shared v2.3.1 | deployed | live | W5 |
-| OpenVibe.Contracts | OpenVibe.Contracts | contracts | node >=20 | — | — | contracts v0.75.0 | not deployed | library | W1 |
-| OpenVibe.Coupons | Coupons | coupons.* | node 22 | PostgreSQL | openvibe.coupons | contracts v0.79.0, sdk v0.25.1, shared v2.2.0, publishing v1.1.0 | deployed | internal | W18 |
-| OpenVibe.Deals | Deals | deals.* | node 22 | PostgreSQL | openvibe.deals | contracts v0.79.0, sdk v0.25.1, shared v2.2.0, publishing v1.1.0 | deployed | internal | W18 |
-| OpenVibe.Events | OpenVibe.Events | events | node 22 | PostgreSQL | events.openvibe.network | contracts v0.81.0, sdk v0.25.1, shared v2.2.0 | deployed | live | W3 |
+| OpenRe.Stream | OpenRe.Stream | openre.* | node 22 | PostgreSQL | openre.stream, ingest.openre.stream | contracts v0.76.0, sdk v0.26.0, shared v2.10.1 | deployed | internal | W7 |
+| OpenVibe.AI | OpenVibe.AI | ai.usage_summary | node 22 | PostgreSQL | ai.openvibe.services, ai.openvibe.network, openvibe.ai | contracts v0.86.0, sdk v0.26.0, shared v2.5.0 | deployed | live | W13 |
+| OpenVibe.Billing | OpenVibe.Billing | billing.* | node >=22.0.0 | PostgreSQL | billing.openvibe.network | contracts v0.97.0, sdk v0.28.0, shared v2.9.0 | deployed | live | W8 |
+| OpenVibe.Blog | Blog | blog.* | node 22 | PostgreSQL | openvibe.blog | contracts v0.97.0, sdk v0.26.0, shared v2.9.0, publishing v1.3.0 | deployed | live | W16 |
+| OpenVibe.Bot | Bot | bot | node 22 | PostgreSQL | openvibe.bot | contracts v0.96.0, sdk v0.26.0, shared v2.10.1 | deployed | live | — |
+| OpenVibe.Chat | Chat | chat.preferences, chat.tts_defaults, chat.dm_settings, chat.presence_prefs | node 22 | PostgreSQL | openvibe.chat, openvibe.live | contracts v0.103.0, sdk v0.26.0, shared v2.5.0 | deployed | live | W6 |
+| OpenVibe.Codes | Codes | codes.* | node 22 | PostgreSQL | openvibe.codes | contracts v0.97.0, sdk v0.26.0, shared v2.9.0 | deployed | live | W20 |
+| OpenVibe.Community | Community | community.* | node 22 | PostgreSQL | openvibe.community | contracts v0.86.0, sdk v0.26.0, shared v2.9.0 | deployed | live | W5 |
+| OpenVibe.Contracts | OpenVibe.Contracts | contracts | node >=20 | — | — | contracts v0.106.0 | not deployed | library | W1 |
+| OpenVibe.Coupons | Coupons | coupons.* | node 22 | PostgreSQL | openvibe.coupons | contracts v0.97.0, sdk v0.26.0, shared v2.9.0, publishing v1.3.0 | deployed | internal | W18 |
+| OpenVibe.Deals | Deals | deals.* | node 22 | PostgreSQL | openvibe.deals | contracts v0.97.0, sdk v0.26.0, shared v2.10.1, publishing v1.3.0 | deployed | internal | W18 |
+| OpenVibe.Events | OpenVibe.Events | events | node 22 | PostgreSQL | openvibe.events, events.openvibe.network | contracts v0.94.2, sdk v0.26.0, shared v2.10.1 | deployed | live | W3 |
 | OpenVibe.Examples | OpenVibe.Examples | examples | node >=22 | — | — | contracts v0.49.0, sdk v0.11.0 | not deployed | repository | W20 |
 | OpenVibe.Extensions | — | — | node >=22.0.0 | — | — | — | not deployed | — | W18 |
-| OpenVibe.Games | Games | games.* | node 22 | PostgreSQL | openvibe.games, play.openvibe.games | contracts v0.71.0, sdk v0.22.0, shared v1.30.1 | deployed | live | — |
-| OpenVibe.Host | Host | host.* | node 22 | PostgreSQL | openvibe.host | contracts v0.83.0, sdk v0.26.0, shared v2.2.0 | loopback only, not launched | internal | W21 Stage A + Stage B |
-| OpenVibe.Live | Live | live.* | node 22 | SQLite | openvibe.live, ingest.openvibe.live | contracts v0.71.0, sdk v0.16.0, shared v1.30.1 | deployed | live | — |
-| OpenVibe.Media | Media | media.* | node 22 | PostgreSQL | openvibe.media | contracts v0.79.0, sdk v0.21.2, shared v1.29.2 | deployed | live | — |
-| OpenVibe.Network | Network | identity.*, network.*, theme.*, notification.* | node 22 | PostgreSQL | openvibe.network, auth.openvibe.network, api.openvibe.network, admin.openvibe.network, my.openvibe.network, themes.openvibe.network | contracts v0.83.0, sdk v0.25.2, shared v2.3.1 | deployed | live | — |
-| OpenVibe.News | News | news.* | node 22 | PostgreSQL | openvibe.news | contracts v0.79.0, sdk v0.25.0, shared v2.2.0, publishing v1.1.0 | deployed | internal | W17 |
+| OpenVibe.Games | Games | games.* | node 22 | PostgreSQL | openvibe.games, play.openvibe.games | contracts v0.78.0, sdk v0.23.1, shared v2.6.0 | deployed | live | — |
+| OpenVibe.Host | Host | host.* | node 22 | PostgreSQL | openvibe.host | contracts v0.83.0, sdk v0.26.0, shared v2.10.1 | loopback only, not launched | live | W21 Stage A + Stage B |
+| OpenVibe.Live | Live | live.* | node 22 | SQLite | openvibe.live, ingest.openvibe.live | contracts v0.83.0, sdk v0.26.0, shared v2.5.0 | deployed | live | — |
+| OpenVibe.Media | Media | media.* | node 22 | PostgreSQL | openvibe.media | contracts v0.79.0, sdk v0.32.0, shared v2.10.0 | deployed | live | — |
+| OpenVibe.Network | Network | identity.*, network.*, theme.*, notification.* | node 22 | PostgreSQL | openvibe.network, auth.openvibe.network, api.openvibe.network, admin.openvibe.network, my.openvibe.network, themes.openvibe.network | contracts v0.106.0, sdk v0.28.0, shared v2.10.1 | deployed | live | — |
+| OpenVibe.News | News | news.* | node 22 | PostgreSQL | openvibe.news | contracts v0.97.0, sdk v0.26.0, shared v2.9.0, publishing v1.3.0 | deployed | internal | W17 |
 | OpenVibe.Node | — | — | — | — | — | — | — | — | — |
-| OpenVibe.Publishing | OpenVibe.Publishing | publishing | node >=20 | none | — | contracts v0.76.0, sdk v0.15.0, shared v1.25.0 | not deployed | library | W15 |
+| OpenVibe.Publishing | OpenVibe.Publishing | publishing | node >=20 | none | — | contracts v0.76.0, sdk v0.15.0, shared v2.6.0 | not deployed | library | W15 |
 | OpenVibe.Realtime | — | — | — | — | — | — | not deployed | — | — |
-| OpenVibe.Reviews | Reviews | reviews.* | node 22 | PostgreSQL | openvibe.reviews | contracts v0.76.0, sdk v0.20.0, shared v2.2.0, publishing v1.1.0 | deployed | internal | W17 |
-| OpenVibe.SDK | OpenVibe.SDK | sdk | node >=20 | — | — | contracts v0.86.0 | not deployed | library | W2 |
-| OpenVibe.Search | OpenVibe.Search | search | node 22 | PostgreSQL | search.openvibe.network | contracts v0.76.0, sdk v0.23.1, shared v2.2.0 | deployed | live | W14 |
+| OpenVibe.Reviews | Reviews | reviews.* | node 22 | PostgreSQL | openvibe.reviews | contracts v0.96.0, sdk v0.26.0, shared v2.10.1, publishing v1.3.0 | deployed | internal | W17 |
+| OpenVibe.Run | OpenVibe.Run | run | — | — | openvibe.run | — | — | internal | — |
+| OpenVibe.SDK | OpenVibe.SDK | sdk | node >=20 | — | — | contracts v0.97.0 | not deployed | library | W2 |
+| OpenVibe.Search | OpenVibe.Search | search | node 22 | PostgreSQL | search.openvibe.network | contracts v0.96.0, sdk v0.26.0, shared v2.9.0 | deployed | live | W14 |
+| OpenVibe.Services | OpenVibe.Services | services | — | — | openvibe.services | — | — | internal | — |
 | OpenVibe.Shared | OpenVibe.Shared | shared | — | — | — | contracts v0.61.0, sdk v0.20.4 | not deployed | library | W2 |
-| OpenVibe.Sites | OpenVibe.Sites | sites | node >=20 | — | — | shared v1.29.2 | deployed | live | — |
-| OpenVibe.Sources | OpenVibe.Sources | sources | node 22 | PostgreSQL | sources.openvibe.network | contracts v0.76.0, sdk v0.23.1, shared v1.27.0 | deployed | internal | W14 |
-| OpenVibe.Tips | Tips | tips.* | node >=22.0.0 | PostgreSQL | openvibe.tips | contracts v0.79.0, sdk v0.25.0, shared v2.2.0 | deployed | internal | W9 |
-| OpenVibe.Tools | Tools | tools.* | node 22 | PostgreSQL | openvibe.tools | contracts v0.63.0 | deployed | live | — |
-| OpenVibe.Trade | Trade | trade.* | node 22 | PostgreSQL | openvibe.trade | contracts v0.79.0, sdk v0.25.0, shared v2.2.0, publishing v1.1.0 | deployed | internal | W19 |
-| OpenVibe.VIP | VIP | vip.* | node >=22.0.0 | PostgreSQL | openvibe.vip | contracts v0.79.0, sdk v0.25.0, shared v2.2.0 | deployed | internal | — |
-| OpenVibe.Wiki | Wiki | wiki.* | node 22 | PostgreSQL | openvibe.wiki | contracts v0.76.0, sdk v0.19.0, shared v2.3.1, publishing v1.0.0 | deployed | live | W16 |
+| OpenVibe.Sites | OpenVibe.Sites | sites | node >=20 | — | — | contracts v0.84.0, shared v2.5.0 | deployed | live | — |
+| OpenVibe.Sources | OpenVibe.Sources | sources | node 22 | PostgreSQL | sources.openvibe.network | contracts v0.96.0, sdk v0.26.0, shared v2.5.0 | deployed | internal | W14 |
+| OpenVibe.Space | Space | space.* | — | — | openvibe.space | — | — | live | — |
+| OpenVibe.Tips | Tips | tips.* | node >=22.0.0 | PostgreSQL | openvibe.tips | contracts v0.92.0, sdk v0.28.0, shared v2.9.0 | deployed | internal | W9 |
+| OpenVibe.Tools | Tools | tools.* | node 22 | PostgreSQL | openvibe.tools | contracts v0.92.0 | deployed | live | — |
+| OpenVibe.Trade | Trade | trade.* | node 22 | PostgreSQL | openvibe.trade | contracts v0.97.0, sdk v0.26.0, shared v2.10.1, publishing v1.3.0 | deployed | internal | W19 |
+| OpenVibe.VIP | VIP | vip.* | node >=22.0.0 | PostgreSQL | openvibe.vip | contracts v0.92.0, sdk v0.28.0, shared v2.9.0 | deployed | internal | — |
+| OpenVibe.Watch | OpenVibe.Watch | watch | — | — | openvibe.watch | — | — | internal | — |
+| OpenVibe.Wiki | Wiki | wiki.* | node 22 | PostgreSQL | openvibe.wiki | contracts v0.96.0, sdk v0.26.0, shared v2.9.0, publishing v1.3.0 | deployed | live | W16 |
 | openvibe-agents | — | — | — | — | — | — | — | — | — |
