@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.106.0 — 2026-10-07
+
+**OpenVibe.Bot is a site** (Bot #34). Bot has served openvibe.bot since 2026-10-02 (`exposure` live, `publicSite`
+service) and, since Bot #34, its own front page; without a `site` block the network navigation and the
+openvibe.network home did not list it. Additive: one `site` block, no schema changed.
+- `manifests/services/bot.json` `site`: name `Bot`, icon `bot`, tagline "An open control panel for robots", the
+  front page's one-line description, legal profile `games` (accounts and per-account state: robots, devices and
+  the 30-day command audit), position 21 (after the current entries). The icon id `bot` falls back to the OV
+  mark until openvibe-shared draws a `bot` glyph. `manifests/products/openvibe.bot.json` stays the catalog entry
+  (the block carries no `tld`).
+
 ## 0.105.0 — 2026-10-05
 
 **Chat's ticket conversation and DM block-state reads are live** (Chat #26 and #27). `chat.ticket.write` is active
