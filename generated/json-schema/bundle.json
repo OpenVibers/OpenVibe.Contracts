@@ -49830,7 +49830,7 @@
     "community.thread.created": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/community.thread.created.v1.json",
@@ -49885,7 +49885,7 @@
     "community.post.created": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/community.post.created.v1.json",
@@ -56611,7 +56611,7 @@
     "community.post-write-request": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/post-write-request.v1.json",
@@ -56778,7 +56778,7 @@
     "community.forum-post": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-post.v1.json",
@@ -56973,7 +56973,7 @@
     "community.forum-thread": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-thread.v1.json",
@@ -57258,7 +57258,7 @@
     "community.post-write-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/post-write-result.v1.json",
@@ -57847,7 +57847,7 @@
     "community.forum-space": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-space.v1.json",
@@ -58149,7 +58149,7 @@
     "community.space-read-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/space-read-result.v1.json",
@@ -58224,7 +58224,7 @@
     "community.thread-read-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "deprecated",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/thread-read-result.v1.json",
@@ -59034,7 +59034,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/post-write-request.v1.json",
         "title": "SpacePostWriteRequest",
-        "description": "space.post-write-request@1: bodies of the forum writes on OpenVibe.Space (space.post.write; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).",
+        "description": "space.post-write-request@1: bodies of the forum writes on OpenVibe.Space (space.post.write; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, 403 space.blocked, …); see docs/space-problem-codes.md.",
         "anyOf": [
           {
             "type": "object",
@@ -72452,6 +72452,133 @@
             "description": "When the revoke was applied (platform_node_principals.revoked_at)."
           }
         }
+      }
+    },
+    "space.thread.created": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/space.thread.created.v1.json",
+        "title": "SpaceThreadCreatedPayload",
+        "description": "space.thread.created v1 (OpenVibe.Space server/events.js, queued in the transaction of the change). A forum thread was started in a space. Envelope: subject { type: thread, id }, visibility public when the item is public else internal, priority low, actor the person or service:space.",
+        "type": "object",
+        "required": [
+          "thread_id",
+          "space",
+          "author",
+          "visibility",
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "thread_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+          },
+          "author": {
+            "oneOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "hidden"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "description": "The public page, or null when the item is not public."
+          }
+        }
+      }
+    },
+    "space.post.created": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/space.post.created.v1.json",
+        "title": "SpacePostCreatedPayload",
+        "description": "space.post.created v1 (OpenVibe.Space server/events.js, queued in the transaction of the change). A reply was posted in a forum thread. Never the body. Envelope: subject { type: post, id }, visibility public when the item is public else internal, priority low, actor the person or service:space.",
+        "type": "object",
+        "required": [
+          "post_id",
+          "thread_id",
+          "space",
+          "author",
+          "visibility",
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "post_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "thread_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "space": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+          },
+          "author": {
+            "oneOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "members",
+              "hidden"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "description": "The public page, or null when the item is not public."
+          }
+        }
+      }
+    },
+    "space.moderation.action": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/space.moderation.action.v1.json",
+        "title": "SpaceModerationActionPayload",
+        "description": "space.moderation.action v1 (ADR-022; OpenVibe.Space server/events.js moderationAction). A staff or space moderator action on someone else's forum content, or a space moderator assignment: deleting, locking or unlocking a thread, deleting a post, adding or removing a space moderator. Not a person acting on their own content. Written to Space's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the moderator. Never carries the content itself.",
+        "$ref": "../../common/moderation-action.v1.json"
       }
     }
   }

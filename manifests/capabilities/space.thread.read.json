@@ -4,7 +4,7 @@
   "owner": "space",
   "status": "active",
   "visibility": "public",
-  "description": "Read a space's threads (hot, new or top, paged) and one thread with its posts, plus the RSS feeds (renamed from community.thread.read, plan T10 D3). Space checks space visibility and the VIP gate (403 vip.members_only); writing threads and replies is space.post.write and space.thread.write.",
+  "description": "Read a space's threads (hot, new or top, paged) and one thread with its posts, plus the RSS feeds (renamed from community.thread.read, plan T10 D3). Space checks space visibility and the VIP gate (403 vip.members_only); writing threads and replies is space.post.write.",
   "outputSchema": "space.thread-read-result@1",
   "permissions": [
     "space:read"

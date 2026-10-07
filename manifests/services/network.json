@@ -99,6 +99,7 @@
     "media.moderation.action",
     "news.moderation.action",
     "reviews.moderation.action",
+    "space.moderation.action",
     "tips.interaction.moderated",
     "tools.moderation.action",
     "tools.usage.recorded",

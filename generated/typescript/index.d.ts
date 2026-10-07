@@ -53417,7 +53417,7 @@ export interface SpaceForumThread {
 
 /** space.post-write-request@1.0.0 (owner: space) */
 /**
- * space.post-write-request@1: bodies of the forum writes on OpenVibe.Space (space.post.write; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, …).
+ * space.post-write-request@1: bodies of the forum writes on OpenVibe.Space (space.post.write; a service writes as X-OV-Subject, or as AI with X-OV-Origin: ai). POST /api/v1/spaces/:space/threads: { title, body, members_only?, category?, attachments?, pastes? } (title 3 to 200 characters after whitespace is collapsed; body Markdown, non-blank, at most 40000 characters; body_markdown is accepted for body). POST …/threads/:slug/posts (a reply) and PUT /api/v1/posts/:id (an edit): { body, attachments?, pastes? }. POST …/threads/:slug/votes: { value: 1 | -1 | 0 }. DELETE /api/v1/posts/:id and DELETE /api/v1/spaces/:space/threads/:slug take no body. Unknown fields are ignored; refusals are problem+json (post.empty, post.too_long, thread.invalid_title, vote.invalid, thread.locked, vip.members_only, 403 space.blocked, …); see docs/space-problem-codes.md.
  */
 export type SpacePostWriteRequest =
   | {
@@ -58668,4 +58668,66 @@ export interface NetworkNodeRevokedPayload {
    * When the revoke was applied (platform_node_principals.revoked_at).
    */
   at: string;
+}
+
+/** space.thread.created@1.0.0 (owner: space) */
+/**
+ * space.thread.created v1 (OpenVibe.Space server/events.js, queued in the transaction of the change). A forum thread was started in a space. Envelope: subject { type: thread, id }, visibility public when the item is public else internal, priority low, actor the person or service:space.
+ */
+export interface SpaceThreadCreatedPayload {
+  thread_id: number;
+  space: string;
+  author: SubjectRef | null;
+  visibility: "public" | "members" | "hidden";
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}
+
+/** space.post.created@1.0.0 (owner: space) */
+/**
+ * space.post.created v1 (OpenVibe.Space server/events.js, queued in the transaction of the change). A reply was posted in a forum thread. Never the body. Envelope: subject { type: post, id }, visibility public when the item is public else internal, priority low, actor the person or service:space.
+ */
+export interface SpacePostCreatedPayload {
+  post_id: number;
+  thread_id: number;
+  space: string;
+  author: SubjectRef | null;
+  visibility: "public" | "members" | "hidden";
+  /**
+   * The public page, or null when the item is not public.
+   */
+  url: string | null;
+}
+
+/** space.moderation.action@1.0.0 (owner: space) */
+/**
+ * space.moderation.action v1 (ADR-022; OpenVibe.Space server/events.js moderationAction). A staff or space moderator action on someone else's forum content, or a space moderator assignment: deleting, locking or unlocking a thread, deleting a post, adding or removing a space moderator. Not a person acting on their own content. Written to Space's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the moderator. Never carries the content itself.
+ */
+export interface SpaceModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
 }

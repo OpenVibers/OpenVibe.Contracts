@@ -17,7 +17,10 @@
   "implementedBy": [
     "GET /api/v1/spaces",
     "GET /api/v1/spaces/:space",
-    "GET /s"
+    "GET /s",
+    "GET /api/v1/spaces/:space/categories",
+    "GET /api/v1/spaces/:space/moderators",
+    "GET /api/v1/space-groups"
   ],
   "inputSchema": "common.no-body@1"
 }

@@ -5,16 +5,15 @@
   },
   "id": "space",
   "name": "OpenVibe.Space",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Space",
   "domains": [
     "openvibe.space"
   ],
   "publicOrigin": "https://openvibe.space",
   "exposure": {
-    "state": "placeholder",
-    "publicSite": "placeholder",
-    "note": "planned: no OpenVibe.Space service yet; openvibe.space still serves the OpenVibe.Sites placeholder. T10 item 13 installs its own vhost"
+    "state": "live",
+    "publicSite": "service"
   },
   "site": {
     "name": "Space",
@@ -25,19 +24,19 @@
     "position": 19,
     "tld": "space",
     "accent": "#818cf8",
-    "description": "OpenVibe.Space will be the forums of the OpenVibe network: create a forum for any topic, with the depth of classic boards like XenForo and phpBB, the feel of a modern community, and AI help for topics, research and moderation. The forums on OpenVibe.Community move here when it launches.",
+    "description": "OpenVibe.Space is the network forum: browse public and members-only boards, start threads, reply, vote and moderate spaces with one OpenVibe identity.",
     "pillars": [
       {
         "title": "Any forum",
-        "text": "Anyone can start one, for any topic."
+        "text": "Browse boards for discussions, requests and the roadmap."
       },
       {
         "title": "Classic depth",
-        "text": "Sub-forums, threads, ranks, moderation tools."
+        "text": "Child boards, threads, categories and moderation tools."
       },
       {
-        "title": "AI assist",
-        "text": "Topic ideas, research and summaries, always labelled."
+        "title": "Make it yours",
+        "text": "Moderators can shape boards, categories and visibility."
       },
       {
         "title": "One account",
@@ -45,50 +44,80 @@
       }
     ],
     "keywords": "openvibe space, forums, create a forum, community boards, xenforo alternative, phpbb alternative",
-    "launch": "the forum engine moving over from OpenVibe.Community",
-    "relationships": {
-      "noRepo": true,
-      "meanwhile": [
-        {
-          "label": "OpenVibe.Community",
-          "url": "https://openvibe.community",
-          "note": "Forums, pastes and people live there today."
-        }
-      ]
-    }
+    "launch": "Forums moved from OpenVibe.Community to OpenVibe.Space (plan T10 step 3)."
   },
   "capabilities": [
     "space.forum.read",
     "space.forum.manage",
     "space.thread.read",
-    "space.thread.write",
-    "space.post.write",
-    "space.pulse.read"
+    "space.post.write"
   ],
-  "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsProduced": [
+    "space.thread.created",
+    "space.post.created",
+    "space.moderation.action"
+  ],
+  "eventsConsumed": [
+    "network.user.token_valid_after",
+    "network.block.changed",
+    "network.subject.merged",
+    "network.account.export_requested",
+    "network.account.deleted",
+    "vip.membership.changed"
+  ],
   "namespacesOwned": [
     "space.*"
   ],
   "lifecycle": {
     "liveness": {
-      "none": "planned service: no OpenVibe.Space process runs yet (plan T10 item 3)"
+      "endpoint": "/api/health",
+      "means": "the Space process answers HTTP; /api/ready checks PostgreSQL and reports degraded dependencies"
     },
     "shutdown": {
-      "none": "planned service: nothing to stop yet"
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "subscription retries stop; the HTTP server stops accepting requests and gives in-flight requests up to 4 seconds",
+        "the Discord relay and Events outbox finish their current sends; unsent rows remain for the next start",
+        "the PostgreSQL pool closes and the process exits"
+      ],
+      "note": "server/index.js uses openvibe-sdk/service gracefulStop with a 4-second drain and 5-second deadline"
     },
     "startupRecovery": {
-      "none": "planned service: nothing runs to resume"
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "unsent space.* events in the PostgreSQL outbox relay after restart (at least once)"
+        },
+        {
+          "kind": "consumer",
+          "what": "Events subscriptions are recreated and pending network and VIP deliveries are retried idempotently"
+        },
+        {
+          "kind": "schedule",
+          "what": "the Roadmap space resyncs from docs/roadmap/public.json and Discord relay workers restart"
+        }
+      ]
     },
     "rollback": {
-      "none": "planned service: nothing is deployed to roll back"
+      "conditions": [
+        "automatic: ovhost deploy restores the prior sha if /api/ready fails in its readiness window",
+        "manual: ovhost rollback space --to <sha>"
+      ],
+      "window": "automatic during deploy readiness; manual afterwards while the previous code is database compatible",
+      "blockers": {
+        "none": "the initial PostgreSQL migration creates the Space schema without dropping earlier data"
+      }
     },
     "contracts": {
       "range": ">=0.82.0 <1.0.0"
     },
     "leases": {
-      "none": "planned service: no process, no claims"
+      "none": "PostgreSQL outbox workers coordinate delivery; no separate service-owned lease is exposed"
     }
   },
-  "notes": "Planned. Owns the forum subsystem moved from OpenVibe.Community (spaces, threads, posts, votes, categories, reactions, moderation, chat-room attach, Discord relay) in its own database ov_space; the community.space.*/thread.read/post.create capabilities are renamed space.* and the community.space/thread/post contracts are deprecated with space.forum-*/thread-*/post-* replacements (plan T10, D1-D3). The routes these capabilities name are served by Community today and move at T10 item 4."
+  "notes": "Space owns forum spaces, threads, posts, votes, categories, reactions, moderation and the Discord relay in its PostgreSQL database. OpenVibe.Community retains pastes, comments, Pulse and submissions; legacy /s/* pages redirect permanently to openvibe.space.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4940"
 }

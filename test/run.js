@@ -89,7 +89,8 @@ for (const cap of capabilities.manifests) {
     const r = contracts.validate('capabilities.capability@1', cap);
     ok(r.valid, `capability ${cap.id}: ${JSON.stringify(r.errors)}`);
     ok(serviceIds.has(cap.owner), `${cap.id} owner ${cap.owner} is a registered service`);
-    ok(services.get(cap.owner).capabilities.includes(cap.id), `${cap.owner} manifest lists ${cap.id}`);
+    ok(['planned', 'retired'].includes(cap.status) || services.get(cap.owner).capabilities.includes(cap.id), `${cap.owner} manifest lists served ${cap.id}`);
+    if (cap.status === 'retired') ok(!services.get(cap.owner).capabilities.includes(cap.id), `${cap.owner} no longer offers retired ${cap.id}`);
     for (const k of ['inputSchema', 'outputSchema']) if (cap[k]) ok(contracts.resolve(cap[k]), `${cap.id} ${k} resolves`);
     ok(cap.status !== 'active' || cap.implementedBy.length > 0, `active ${cap.id} names the route that implements it`);
 }
@@ -121,8 +122,9 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
         const major = Number(c.version.split('.')[0]);
         ok(c.schema === `events/payloads/${c.id}.v${major}.json`, `${c.id} lives at events/payloads/<event_type>.v<major>.json`);
         ok(/^[a-z][a-z0-9_]*(\.[a-z0-9_]+){2,}$/.test(c.id), `${c.id} is an event type`);
-        ok(services.get(c.owner) && services.get(c.owner).eventsProduced.includes(c.id), `${c.owner} manifest lists ${c.id} in eventsProduced`);
-        ok(['active', 'planned'].includes(c.status), `${c.id} status ${c.status}`);
+        ok(services.get(c.owner) && (c.status === 'retired' || services.get(c.owner).eventsProduced.includes(c.id)), `${c.owner} manifest lists current ${c.id} in eventsProduced`);
+        ok(['active', 'planned', 'retired'].includes(c.status), `${c.id} status ${c.status}`);
+        if (c.status === 'retired') ok(!services.get(c.owner).eventsProduced.includes(c.id), `${c.owner} no longer produces retired ${c.id}`);
         const s = contracts.schema(c.id);
         ok((s.type === 'object' || s.$ref || s.allOf) && s.title.endsWith('Payload'), `${c.id} is an object payload schema`);
         if (s.properties && s.properties.redacts) ok(s.properties.redacts.$ref === '../redaction-directive.v1.json', `${c.id} redacts uses events.redaction-directive@1`);
@@ -466,7 +468,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     const gaps = {
         'live.channel.read': 'active', 'live.stream.read': 'active', 'live.discovery.read': 'active', 'live.owner.resolve': 'planned',
         'media.upload.create': 'planned', 'media.derivative.create': 'planned', 'media.derivative.read': 'planned', 'media.lifecycle.read': 'planned', 'media.lifecycle.transition': 'planned',
-        'community.vote.set': 'planned', 'community.pulse.read': 'active', 'space.forum.read': 'active', 'space.forum.manage': 'planned', 'space.thread.read': 'active',
+        'community.vote.set': 'planned', 'community.pulse.read': 'active', 'space.forum.read': 'active', 'space.thread.read': 'active',
         'search.query.run': 'active',
     };
     for (const [id, status] of Object.entries(gaps)) {
@@ -475,9 +477,13 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
         if (status === 'planned') ok(c.description.startsWith('PLANNED'), `${id}: a planned capability says so first`);
         if (status === 'active') ok(c.visibility === 'public' && c.implementedBy.every(r => r.startsWith('GET ')), `${id}: an active §30.2 read is a public GET`);
     }
+    ok(capabilities.get('space.forum.manage').status === 'active' && capabilities.get('space.forum.manage').implementedBy.includes('POST /api/v1/spaces'), 'space.forum.manage is served by Space');
+    ok(capabilities.get('space.thread.write').status === 'planned' && !services.get('space').capabilities.includes('space.thread.write'), 'space.thread.write is not a separate grant for the existing create route');
+    ok(capabilities.get('space.pulse.read').status === 'planned' && !services.get('space').capabilities.includes('space.pulse.read'), 'Space does not serve Pulse');
+    for (const id of ['community.space.read', 'community.space.manage', 'community.thread.read', 'community.post.create']) ok(capabilities.get(id).status === 'retired' && !services.get('community').capabilities.includes(id), `${id} retired from Community`);
     for (const id of ['media.upload.create', 'media.derivative.create']) ok(/media\.object\.upload/.test(capabilities.get(id).description) && capabilities.get(id).implementedBy.length > 0, `${id} names its routes and the id that guards them today`);
     ok(/media\.object\.read/.test(capabilities.get('media.lifecycle.read').description), 'media.lifecycle.read says media.object.read guards its routes today');
-    ok(/space\.post\.write/.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/.test(capabilities.get('community.vote.set').description), 'community.vote.set says which grants cover its routes today');
+    ok(/space\.post\.write/i.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/i.test(capabilities.get('community.vote.set').description) && capabilities.get('community.vote.set').implementedBy.length === 1, 'community.vote.set retains only the comment route');
     ok(capabilities.get('live.owner.resolve').implementedBy.length === 0 && capabilities.get('live.owner.resolve').outputSchema === 'lineage.resolution@1', 'live.owner.resolve has no public route yet and answers lineage.resolution@1');
     ok(JSON.stringify(capabilities.get('search.query.run').implementedBy) === JSON.stringify(capabilities.get('search.query.delegate').implementedBy), 'search.query.run and search.query.delegate are the same routes, asked anonymously or for a person');
     const pub = services.get('publishing');
@@ -799,7 +805,7 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 // without an older shape are common.moderation-action@1, and Network consumes every one of them.
 {
     const moderation = contracts.catalog.filter(c => /\.moderation\.action$/.test(c.id));
-    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'codes']) {
+    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'codes', 'space']) {
         const id = `${svc}.moderation.action`;
         const c = moderation.find(x => x.id === id);
         ok(c && c.owner === svc && c.adr === 'ADR-022', `${id} is owned by ${svc}`);

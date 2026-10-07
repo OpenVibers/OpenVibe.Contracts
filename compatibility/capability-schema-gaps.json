@@ -21,6 +21,13 @@
         "inputSchema",
         "outputSchema"
       ]
+    },
+    {
+      "id": "space.forum.manage",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
     }
   ]
 }
