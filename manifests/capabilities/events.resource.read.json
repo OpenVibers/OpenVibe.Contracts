@@ -1,0 +1,19 @@
+{
+  "id": "events.resource.read",
+  "version": "1.0",
+  "owner": "events",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Events' resource index (ADR-048): GET /api/v1/resources lists the resources Events owns as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Every authority serves these for OpenVibe.Services to fan out and merge; Events' own resources are its subscriptions (kind events.subscription, id sub_<ULID>), project-scoped when a developer app created them (project_id, with its environment) and project-less when a service did. An event is not a resource — evt_<ULID> is exactly what common.resource-name@1 refuses by design — and a project's queue is a derived carrier class, not a stored row, so it stays out of the index until Events stores a queue row. Planned until Events ships the index.",
+  "permissions": [
+    "resources:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.resource-list-result@1"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "host.resource.read",
+  "version": "1.0",
+  "owner": "host",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Host's resource index (ADR-048): GET /api/v1/resources lists the resources Host owns as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Every authority serves these for OpenVibe.Services to fan out and merge; Host's own resources are its static sites (kind host.site, id sit_<ULID>), the immutable deploys of those sites (kind host.deploy, id dpl_<ULID>) and their default and custom domains (kind host.domain, id dom_<ULID>), each with the project_id of the Network project that owns it. Host lists no projects; only Network lists projects. Planned until Host ships the index.",
+  "permissions": [
+    "resources:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.resource-list-result@1"
+}

@@ -27,6 +27,7 @@
     "position": 7
   },
   "capabilities": [
+    "codes.resource.read",
     "codes.release.read",
     "codes.release.manage"
   ],

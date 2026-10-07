@@ -3,7 +3,10 @@
 **Status:** Accepted 2026-10-04 (plan track T13, step 1). Amended 2026-10-05: the resource index owns
 `GET /api/v1/resources` and OpenVibe.Network's T2 Fabric offer registry, whose public routes are currently at
 `/api/v1/resources`, moves them to `/api/v1/offers` in Network's release; the resource-kind catalog below records the
-id prefixes Events and Codes still owe, plus the prefixes not yet in `lib/ids.js`. No contract schema changes.
+id prefixes Events and Codes still owe, plus the prefixes not yet in `lib/ids.js`. Amended 2026-10-07 (step 8, the
+Contracts half): only Network lists projects, Media lists objects alone, Events waits for a stored queue row, Codes
+hosts no repositories, the person-owned kinds are step 8 phase 2, and the chosen prefixes joined `lib/ids.js`. No
+contract schema changes.
 Builds on ADR-034 §2 (one resource name) and §5 (control plane
 and data plane) and on ADR-046 §6 (the data plane keeps running without the control plane). Contracts:
 `common.resource-name@1`, `common.resource-control-request@1`, `common.resource-control-result@1`; helpers in
@@ -56,7 +59,8 @@ and data plane) and on ADR-046 §6 (the data plane keeps running without the con
 | Projects, apps, keys, nodes | OpenVibe.Network | shows and calls Network's control API like any other authority |
 
 The project segment of every OVRN is the tenancy boundary: a control request's `resource` must be a resource of its
-`project_id`, and `contracts.resources.checkControlRequest` refuses one that is not.
+`project_id`, and `contracts.resources.checkControlRequest` refuses one that is not. Authorities other than Network
+never list projects; every summary carries `project_id`.
 
 **The index owns `/api/v1/resources`; the offers move to `/api/v1/offers` in Network's release.** That path belongs
 to the resource index above, so OpenVibe.Network's T2 Fabric offer registry (`server/registry/offers.js`, mounted in
@@ -77,22 +81,28 @@ The move has consumers outside `server/registry/offers.js` itself, which the Net
 - the **cutover runbook probe** in `docs/cutover-t14-user-owned-trust.md:158`.
 
 **Resource kinds and three-letter id prefixes.** Every summary's `kind` is `<service>.<type>` and its id carries the
-same three-letter prefix its OVRN uses (`lib/ids.js`). The catalog the step-8 index sweep starts from; only `med` and
-`wch` are in `lib/ids.js` today, the rest are proposed and not yet chosen there:
+same three-letter prefix its OVRN uses (`lib/ids.js`). The catalog the step-8 index sweep starts from; every prefix
+below is in `lib/ids.js` except `act`, `run` and `zon`, which are proposed and not yet chosen there:
 
 | Service | Kind | Id prefix |
 |---|---|---|
 | Actor | `actor.actor` | `act` (proposed, not in `lib/ids.js`) |
-| Codes | `codes.repo` | **unchosen** |
-| Events | `events.queue` | **unchosen** |
-| Events | `events.subscription` | **unchosen** |
+| Codes | `codes.manifest` | `mfs` |
+| Codes | `codes.release` | `rel` |
+| Events | `events.queue` | **future: when Events stores queues** |
+| Events | `events.subscription` | `sub` |
 | Media | `media.object` | `med` |
 | Run | `run.sandbox` | `run` (proposed, not in `lib/ids.js`; collides with the existing `run_` AI run ids, `contracts/ai/run.v1.json`) |
 | Watch | `watch.watch` | `wch` |
 | Zone | `zone.object-zone` | `zon` (proposed, not in `lib/ids.js`; today only a usage-recorded description field `<zon_id>`) |
 
-Events' `queue` and `subscription` and Codes' `repo` have no three-letter prefix at all; `act`, `run` and `zon` are
-proposed but are not in `lib/ids.js` either. `run` cannot simply be added: `run_` is already OpenVibe.AI's run-id
+Codes hosts no repositories, so `codes.repo` is gone. Media's index lists only its objects; its v1 vods and clips are
+projections over objects (bigint ids) and are never listed. The person-owned resources — Bot robots and devices, Chat
+rooms, Community spaces, OpenRe.Stream streams and Games characters — are step 8 phase 2, served like Network's
+user-owned node principals: no OVRN, owner = user.
+
+Events' `queue` is future until Events stores a queue row; `act`, `run` and `zon` are proposed but are not in
+`lib/ids.js` either. `run` cannot simply be added: `run_` is already OpenVibe.AI's run-id
 pattern (`contracts/ai/run.v1.json`), so a `run.sandbox` id would collide with an AI run id. The step-8 sweep chooses
 every missing prefix, resolves the `run_` collision and adds them to `lib/ids.js` before those services answer
 `GET /api/v1/resources`. No contract schema carries this catalog: it is prose, and recording it changes no schema.
@@ -126,7 +136,7 @@ every missing prefix, resolves the `run_` collision and adds them to `lib/ids.js
   redefined here.
 - How a confirmation is approved (WS-Z2), billing of control calls, and moving `common.usage-recorded@1` `resource` to
   a `$ref` of `common.resource-name@1`.
-- The three-letter id prefixes of `events.queue`, `events.subscription` and `codes.repo` (unchosen) and the
+- The three-letter id prefix of `events.queue` (unchosen until Events stores queues) and the
   proposed-but-not-in-`lib/ids.js` prefixes `act`, `run` and `zon`, including the `run_` collision with AI run ids, all
   still to be settled before the step-8 sweep (the resource-kind catalog under Authority boundaries).
 
