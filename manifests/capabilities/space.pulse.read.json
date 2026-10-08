@@ -2,9 +2,9 @@
   "id": "space.pulse.read",
   "version": "1.0",
   "owner": "space",
-  "status": "planned",
+  "status": "retired",
   "visibility": "public",
-  "description": "PLANNED: read the network Pulse activity OpenVibe.Space shows beside its forums (plan T10 D3). Community keeps the Pulse store and its own community.pulse.read/write; Space reads the same public feed for its pages. Not built.",
+  "description": "RETIRED at 0.118.0: OpenVibe.Space keeps no forum. Pulse is read through community.pulse.read on OpenVibe.Community.",
   "permissions": [
     "space:read"
   ],

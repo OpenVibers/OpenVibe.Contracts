@@ -18,53 +18,37 @@
   "site": {
     "name": "Space",
     "icon": "space",
-    "tagline": "Forums, boards and threads",
-    "what": "OpenVibe's forums: public and members-only spaces, threads, posts, votes, categories and the Discord relay, moved off Community (plan T10, D1/D2).",
+    "tagline": "Code hosting and spaces",
+    "what": "OpenVibe's code hosting, and \"spaces\": apps that use your OpenVibe account and the SDK, coming next. The forum returned to OpenVibe.Community.",
     "legalProfile": "ugc",
     "position": 19,
     "tld": "space",
     "accent": "#818cf8",
-    "description": "OpenVibe.Space is the network forum: browse public and members-only boards, start threads, reply, vote and moderate spaces with one OpenVibe identity.",
+    "description": "OpenVibe.Space will host code and \"spaces\" — apps that use your OpenVibe account and the SDK — and both are still being built. Until they land it serves a home, and its former /s/* forum paths redirect permanently to openvibe.community.",
     "pillars": [
       {
-        "title": "Any forum",
-        "text": "Browse boards for discussions, requests and the roadmap."
+        "title": "Code hosting",
+        "text": "The network's code, hosted here."
       },
       {
-        "title": "Classic depth",
-        "text": "Child boards, threads, categories and moderation tools."
+        "title": "Spaces",
+        "text": "Apps that use your OpenVibe account and the SDK."
       },
       {
-        "title": "Make it yours",
-        "text": "Moderators can shape boards, categories and visibility."
+        "title": "Coming next",
+        "text": "Neither is built yet; Space serves a home until they land."
       },
       {
         "title": "One account",
         "text": "Your OpenVibe identity, everywhere on the network."
       }
     ],
-    "keywords": "openvibe space, forums, create a forum, community boards, xenforo alternative, phpbb alternative",
-    "launch": "Forums moved from OpenVibe.Community to OpenVibe.Space (plan T10 step 3)."
+    "keywords": "openvibe space, code hosting, openvibe spaces, openvibe account, openvibe sdk",
+    "launch": "Code hosting and spaces are still to be built; the forum moved back to OpenVibe.Community (2026-10-08)."
   },
-  "capabilities": [
-    "space.forum.read",
-    "space.forum.manage",
-    "space.thread.read",
-    "space.post.write"
-  ],
-  "eventsProduced": [
-    "space.thread.created",
-    "space.post.created",
-    "space.moderation.action"
-  ],
-  "eventsConsumed": [
-    "network.user.token_valid_after",
-    "network.block.changed",
-    "network.subject.merged",
-    "network.account.export_requested",
-    "network.account.deleted",
-    "vip.membership.changed"
-  ],
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
   "namespacesOwned": [
     "space.*"
   ],
@@ -78,7 +62,6 @@
       "deadlineSeconds": 5,
       "drains": [
         "subscription retries stop; the HTTP server stops accepting requests and gives in-flight requests up to 4 seconds",
-        "the Discord relay and Events outbox finish their current sends; unsent rows remain for the next start",
         "the PostgreSQL pool closes and the process exits"
       ],
       "note": "server/index.js uses openvibe-sdk/service gracefulStop with a 4-second drain and 5-second deadline"
@@ -86,16 +69,8 @@
     "startupRecovery": {
       "resumes": [
         {
-          "kind": "outbox",
-          "what": "unsent space.* events in the PostgreSQL outbox relay after restart (at least once)"
-        },
-        {
-          "kind": "consumer",
-          "what": "Events subscriptions are recreated and pending network and VIP deliveries are retried idempotently"
-        },
-        {
-          "kind": "schedule",
-          "what": "the Roadmap space resyncs from docs/roadmap/public.json and Discord relay workers restart"
+          "kind": "state",
+          "what": "OpenVibe.Network's signing keys are fetched again at boot; sign-in lives in the browser's cookies, so nothing else resumes (Space consumes no events since the forum returned to Community)"
         }
       ]
     },
@@ -106,17 +81,17 @@
       ],
       "window": "automatic during deploy readiness; manual afterwards while the previous code is database compatible",
       "blockers": {
-        "none": "the initial PostgreSQL migration creates the Space schema without dropping earlier data"
+        "none": "Space's own PostgreSQL migrations only create its tables, so an earlier release reads nothing it cannot handle"
       }
     },
     "contracts": {
       "range": ">=0.82.0 <1.0.0"
     },
     "leases": {
-      "none": "PostgreSQL outbox workers coordinate delivery; no separate service-owned lease is exposed"
+      "none": "no claims: one Space process runs and owns its database"
     }
   },
-  "notes": "Space owns forum spaces, threads, posts, votes, categories, reactions, moderation and the Discord relay in its PostgreSQL database. OpenVibe.Community retains pastes, comments, Pulse and submissions; legacy /s/* pages redirect permanently to openvibe.space.",
+  "notes": "Space is OpenVibe's code hosting, and \"spaces\" — apps that use your OpenVibe account and the SDK — come next. The forum returned to OpenVibe.Community (owner decision 2026-10-08), so Space serves a home and its former /s/* forum paths redirect permanently to openvibe.community; it keeps no forum capability, contract or event.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4940"

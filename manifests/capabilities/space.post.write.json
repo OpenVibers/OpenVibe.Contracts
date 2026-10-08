@@ -2,10 +2,10 @@
   "id": "space.post.write",
   "version": "1.1",
   "owner": "space",
-  "status": "active",
+  "status": "retired",
   "visibility": "public",
   "sensitive": true,
-  "description": "Forum writes as a service (renamed from community.post.create, plan T10 D3): create threads and replies in a space, vote on threads, and edit or delete one's own posts, as the acting subject (X-OV-Subject) or as origin \"ai\" (no author, labelled as AI). Space visibility (public, members, staff), locks and limits are checked by OpenVibe.Space.",
+  "description": "RETIRED at 0.118.0: OpenVibe.Space no longer serves this forum capability. Use community.post.create on OpenVibe.Community. Space's /s/* paths redirect permanently to openvibe.community.",
   "outputSchema": "space.post-write-result@1",
   "permissions": [
     "space:write"
@@ -14,19 +14,7 @@
     "space_member"
   ],
   "quotaClass": "space-write",
-  "events": [
-    "space.thread.created",
-    "space.post.created"
-  ],
-  "implementedBy": [
-    "POST /api/v1/spaces/:space/threads",
-    "POST /api/v1/spaces/:space/threads/:slug/posts",
-    "POST /api/v1/spaces/:space/threads/:slug/votes",
-    "PUT|DELETE /api/v1/posts/:id",
-    "DELETE /api/v1/spaces/:space/threads/:slug",
-    "POST /api/v1/spaces/:space/attachments",
-    "POST /api/v1/spaces/:space/threads/:slug/crosspost",
-    "POST /api/v1/posts/:id/reactions"
-  ],
+  "events": [],
+  "implementedBy": [],
   "inputSchema": "space.post-write-request@1"
 }

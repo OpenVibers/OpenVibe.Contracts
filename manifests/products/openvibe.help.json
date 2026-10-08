@@ -5,7 +5,7 @@
   "icon": "fa-life-ring",
   "accent": "#4ade80",
   "tagline": "Answers, support and a way to reach people.",
-  "description": "OpenVibe.Help will be the help and support center for every OpenVibe site: search answers drawn from the docs, wiki, blog and service status, follow troubleshooting guides, and open a ticket that stays one conversation on the web and by email. A Report Problem button on every site will attach the safe details staff need (release, request and trace ids) and never secrets.",
+  "description": "OpenVibe.Help is the help centre for every OpenVibe site: what each site does and whether it is live, the common questions each one answers about itself, search across all of them, and a support ticket that stays one conversation with the people who run OpenVibe. Next: answers from the docs, wiki and status pages, and a Report Problem button on every site.",
   "pillars": [
     {
       "title": "Grounded answers",
@@ -24,8 +24,26 @@
       "text": "A support widget and help center for sites built on OpenVibe."
     }
   ],
+  "faq": [
+    {
+      "question": "Where do the answers come from?",
+      "answer": "From each OpenVibe site's own description of itself, kept word for word, with a link to where it was read. Nothing is written by an AI."
+    },
+    {
+      "question": "How do I reach a person?",
+      "answer": "Sign in with your OpenVibe account and open a ticket. Replies stay in one conversation that only you and OpenVibe staff can read."
+    },
+    {
+      "question": "Do I need an account to read the help centre?",
+      "answer": "No. Reading and searching are open to everyone; only tickets need an account."
+    },
+    {
+      "question": "Which sites does it cover?",
+      "answer": "Every OpenVibe product site, live or coming, from OpenVibe.Live to OpenRe.Stream. Each one has its own page with its questions and where it lives."
+    }
+  ],
   "keywords": "openvibe help, openvibe support, help center, support tickets, troubleshooting",
-  "launch": "the ticket service and the Frame's Help button",
+  "launch": "grounded answers and the Report Problem button",
   "relationships": {
     "service": "help"
   }

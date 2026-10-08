@@ -5,7 +5,7 @@
   "icon": "fa-briefcase",
   "accent": "#34d399",
   "tagline": "Find work, with an agent on your side.",
-  "description": "OpenVibe.Work will gather job listings from open sources with their provenance, let you search them and watch for new ones that fit, and let an agent help you prepare and apply — with your approval at every step. Part of the OpenVibe network, with one account for every site.",
+  "description": "OpenVibe.Work gathers job listings from open job boards (Arbeitnow, Remotive and RemoteOK) into one search, shows a short excerpt with the board named and links every listing back to where you apply, and keeps your saved searches with a count of what is new. Next: alerts through OpenVibe.Watch and an agent that helps you prepare and apply, with your approval at every step.",
   "pillars": [
     {
       "title": "Every listing sourced",
@@ -24,8 +24,30 @@
       "text": "Your profile and history stay yours, exportable any time."
     }
   ],
+  "faq": [
+    {
+      "question": "Where do the jobs come from?",
+      "answer": "From the public job-board APIs of Arbeitnow, Remotive and RemoteOK, read every six hours. Each listing names its board and links to the original, where you read the full listing and apply."
+    },
+    {
+      "question": "Do you copy the whole job post?",
+      "answer": "No. OpenVibe.Work keeps a short plain-text excerpt and sends you to the board for the rest, as the boards ask."
+    },
+    {
+      "question": "Is it free?",
+      "answer": "Yes. Searching needs no account; a free OpenVibe account keeps your saved searches."
+    },
+    {
+      "question": "Can it tell me when new jobs match?",
+      "answer": "Saved searches show how many listings are new since you last looked. Notifications come with OpenVibe.Watch."
+    },
+    {
+      "question": "Will an AI apply for me?",
+      "answer": "Not yet, and never without you: the agent that helps you prepare and apply is coming, and it asks before every step."
+    }
+  ],
   "keywords": "openvibe work, job search, job listings, job alerts, ai job application assistant",
-  "launch": "job listings and alerts",
+  "launch": "alerts and the application agent",
   "relationships": {
     "service": "work"
   }

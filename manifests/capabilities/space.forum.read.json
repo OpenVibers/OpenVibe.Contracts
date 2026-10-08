@@ -2,9 +2,9 @@
   "id": "space.forum.read",
   "version": "1.0",
   "owner": "space",
-  "status": "active",
+  "status": "retired",
   "visibility": "public",
-  "description": "List the spaces the caller can open and read one space's metadata (renamed from community.space.read, plan T10 D3: OpenVibe.Space owns the forum). Anonymous callers see public spaces, signed-in people also members spaces, moderators also staff spaces; members-only (VIP) spaces are flagged. Served to anyone; Space checks space visibility itself.",
+  "description": "RETIRED at 0.118.0: OpenVibe.Space no longer serves this forum capability. Use community.space.read on OpenVibe.Community. Space's /s/* paths redirect permanently to openvibe.community.",
   "outputSchema": "space.forum-read-result@1",
   "permissions": [
     "space:read"
@@ -14,13 +14,6 @@
   ],
   "quotaClass": "space-read",
   "events": [],
-  "implementedBy": [
-    "GET /api/v1/spaces",
-    "GET /api/v1/spaces/:space",
-    "GET /s",
-    "GET /api/v1/spaces/:space/categories",
-    "GET /api/v1/spaces/:space/moderators",
-    "GET /api/v1/space-groups"
-  ],
+  "implementedBy": [],
   "inputSchema": "common.no-body@1"
 }

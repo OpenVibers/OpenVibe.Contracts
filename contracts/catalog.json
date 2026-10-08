@@ -4646,7 +4646,7 @@
       "schema": "events/payloads/community.thread.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.post.created",
@@ -4655,7 +4655,7 @@
       "schema": "events/payloads/community.post.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.comment.created",
@@ -5063,7 +5063,7 @@
       "schema": "community/post-write-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.pulse-write-result",
@@ -5081,7 +5081,7 @@
       "schema": "community/forum-post.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.forum-thread",
@@ -5090,7 +5090,7 @@
       "schema": "community/forum-thread.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.paste-create-result",
@@ -5108,7 +5108,7 @@
       "schema": "community/post-write-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.pulse-write-request",
@@ -5162,7 +5162,7 @@
       "schema": "community/forum-space.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.pulse-item",
@@ -5189,7 +5189,7 @@
       "schema": "community/space-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "community.thread-read-result",
@@ -5198,7 +5198,7 @@
       "schema": "community/thread-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "retired"
+      "status": "active"
     },
     {
       "id": "space.forum-post",
@@ -5207,7 +5207,7 @@
       "schema": "space/forum-post.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.forum-read-result",
@@ -5216,7 +5216,7 @@
       "schema": "space/forum-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.forum-space",
@@ -5225,7 +5225,7 @@
       "schema": "space/forum-space.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.forum-thread",
@@ -5234,7 +5234,7 @@
       "schema": "space/forum-thread.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.post-write-request",
@@ -5243,7 +5243,7 @@
       "schema": "space/post-write-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.post-write-result",
@@ -5252,7 +5252,7 @@
       "schema": "space/post-write-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.thread-read-result",
@@ -5261,7 +5261,7 @@
       "schema": "space/thread-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "openre.destination",
@@ -6293,7 +6293,7 @@
       "schema": "events/payloads/space.thread.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.post.created",
@@ -6302,7 +6302,7 @@
       "schema": "events/payloads/space.post.created.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "space.moderation.action",
@@ -6311,7 +6311,7 @@
       "schema": "events/payloads/space.moderation.action.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-022"
     },
     {

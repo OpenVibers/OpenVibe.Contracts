@@ -23,7 +23,7 @@
       ]
     },
     {
-      "id": "space.forum.manage",
+      "id": "community.space.manage",
       "missing": [
         "inputSchema",
         "outputSchema"

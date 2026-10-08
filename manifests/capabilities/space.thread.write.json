@@ -2,10 +2,10 @@
   "id": "space.thread.write",
   "version": "1.0",
   "owner": "space",
-  "status": "planned",
+  "status": "retired",
   "visibility": "public",
   "sensitive": true,
-  "description": "PLANNED: thread lifecycle as its own grant on OpenVibe.Space: create, rename, pin, lock and delete a thread (split out of community.post.create, plan T10 D3; space.post.write keeps replies, edits, votes and deletes until this lands). Account-only.",
+  "description": "RETIRED at 0.118.0: OpenVibe.Space keeps no forum. Thread lifecycle is served by community.post.create on OpenVibe.Community.",
   "permissions": [
     "space:write"
   ],
