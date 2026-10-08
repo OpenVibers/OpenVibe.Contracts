@@ -22,7 +22,10 @@
     "actor.agent.read"
   ],
   "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
   "namespacesOwned": [
     "actor.*"
   ],
@@ -46,6 +49,10 @@
         {
           "kind": "jobs",
           "what": "a task left queued, running or verifying by a stopped process is marked failed with actor.task.interrupted at boot; nothing is re-run without the person asking"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each export and deletion once)"
         }
       ]
     },

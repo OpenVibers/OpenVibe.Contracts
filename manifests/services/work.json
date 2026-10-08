@@ -17,7 +17,10 @@
   },
   "capabilities": [],
   "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
   "namespacesOwned": [
     "work.*"
   ],
@@ -41,6 +44,10 @@
         {
           "kind": "jobs",
           "what": "the ingest starts again on its timer; each source is fetched when its last fetch is older than 6 hours, so a fetch cut short by a restart is simply redone"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each export and deletion once)"
         }
       ]
     },

@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.119.0 — 2026-10-08
+
+**OpenVibe.MediaHub goes live: openvibe.download as a private drive.** Account export and deletion are declared for the
+six services that answer them.
+- `manifests/services/media-hub.json`: status alpha, exposure `live` with `publicSite: service`, its lifecycle, health,
+  ready and internal origin (127.0.0.1:4990). It consumes the two account events. openvibe.pics and openvibe.video
+  answer with coming pages, and the video.*, pics.* and download.* capabilities stay planned.
+- `food`, `help`, `work`, `quest`, `rent` and `actor` consume network.account.export_requested and
+  network.account.deleted (openvibe-sdk/account-data, SDK 0.36.0), and their startup recovery names the redelivery.
+
 ## 0.118.0 — 2026-10-08
 
 **The forum returns to OpenVibe.Community** (owner decision 2026-10-08: Space becomes code hosting and "spaces";

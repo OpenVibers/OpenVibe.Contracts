@@ -17,7 +17,10 @@
   },
   "capabilities": [],
   "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
   "namespacesOwned": [
     "rent.*"
   ],
@@ -45,6 +48,10 @@
         {
           "kind": "schedule",
           "what": "the expiry sweep marks listings whose 30 days passed during the stop (search filters on expires_at anyway)"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each export and deletion once)"
         }
       ]
     },
