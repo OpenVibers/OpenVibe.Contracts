@@ -41,9 +41,9 @@
         "note": "The issuer, token and key endpoints, and where each service answers."
       },
       {
-        "label": "Developer portal",
-        "url": "https://openvibe.codes",
-        "note": "Projects, apps and credentials, contract and SDK docs on OpenVibe.Codes."
+        "label": "Developer platform",
+        "url": "https://openvibe.services",
+        "note": "Projects, apps and credentials, contract and SDK docs on OpenVibe.Services."
       }
     ]
   }

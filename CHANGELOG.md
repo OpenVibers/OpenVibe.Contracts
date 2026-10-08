@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.114.0 — 2026-10-08
+
+**Developer links point at OpenVibe.Services.** Manifest text only; no schema, capability or event changed. The
+developer console moved from openvibe.codes to openvibe.services in 0.113.0, so these links follow:
+- the Host site's "Build on OpenVibe" link;
+- the "meanwhile" links of openvibe.website, api.openvibe.network, openvibe.events (to the Events API reference) and
+  openvibe.actor;
+- the "build on it" cards of openvibe.bot and openvibe.actor.
+
+openvibe.codes now answers those paths with permanent redirects.
+
 ## 0.113.0 — 2026-10-08
 
 **The developer portal moves from OpenVibe.Codes to OpenVibe.Services; Codes becomes the open coding-agent harness**

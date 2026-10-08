@@ -30,9 +30,9 @@
     "noRepo": true,
     "meanwhile": [
       {
-        "label": "OpenVibe.Codes",
-        "url": "https://openvibe.codes",
-        "note": "The developer portal, API and SDK docs work today."
+        "label": "OpenVibe.Services",
+        "url": "https://openvibe.services",
+        "note": "The developer platform, API and SDK docs work today."
       },
       {
         "label": "OpenVibe.Tools",

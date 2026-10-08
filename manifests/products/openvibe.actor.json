@@ -369,7 +369,7 @@
         "fa-plug",
         "From your own apps",
         "An API, webhooks and an MCP server, so other assistants can hand tasks to Actor.",
-        "https://openvibe.codes"
+        "https://openvibe.services"
       ]
     ],
     "building": "OpenVibe.Actor is being built now, on the network's accounts, AI router and event system that already run."
@@ -384,8 +384,8 @@
         "note": "Tools agents will call, usable by people today."
       },
       {
-        "label": "OpenVibe.Codes",
-        "url": "https://openvibe.codes",
+        "label": "OpenVibe.Services",
+        "url": "https://openvibe.services",
         "note": "The API and SDK agents are built on."
       }
     ]
