@@ -468,7 +468,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     const gaps = {
         'live.channel.read': 'active', 'live.stream.read': 'active', 'live.discovery.read': 'active', 'live.owner.resolve': 'planned',
         'media.upload.create': 'planned', 'media.derivative.create': 'planned', 'media.derivative.read': 'planned', 'media.lifecycle.read': 'planned', 'media.lifecycle.transition': 'planned',
-        'community.vote.set': 'planned', 'community.pulse.read': 'active', 'space.forum.read': 'active', 'space.thread.read': 'active',
+        'community.vote.set': 'planned', 'community.pulse.read': 'active', 'community.space.read': 'active', 'community.thread.read': 'active',
         'search.query.run': 'active',
     };
     for (const [id, status] of Object.entries(gaps)) {
@@ -477,13 +477,13 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
         if (status === 'planned') ok(c.description.startsWith('PLANNED'), `${id}: a planned capability says so first`);
         if (status === 'active') ok(c.visibility === 'public' && c.implementedBy.every(r => r.startsWith('GET ')), `${id}: an active §30.2 read is a public GET`);
     }
-    ok(capabilities.get('space.forum.manage').status === 'active' && capabilities.get('space.forum.manage').implementedBy.includes('POST /api/v1/spaces'), 'space.forum.manage is served by Space');
-    ok(capabilities.get('space.thread.write').status === 'planned' && !services.get('space').capabilities.includes('space.thread.write'), 'space.thread.write is not a separate grant for the existing create route');
-    ok(capabilities.get('space.pulse.read').status === 'planned' && !services.get('space').capabilities.includes('space.pulse.read'), 'Space does not serve Pulse');
-    for (const id of ['community.space.read', 'community.space.manage', 'community.thread.read', 'community.post.create']) ok(capabilities.get(id).status === 'retired' && !services.get('community').capabilities.includes(id), `${id} retired from Community`);
+    ok(capabilities.get('community.post.create').status === 'active' && capabilities.get('community.post.create').implementedBy.includes('POST /api/v1/spaces/:space/threads'), 'Community serves the forum writes again');
+    ok(capabilities.get('community.space.manage').status === 'active' && capabilities.get('community.space.manage').implementedBy.includes('PUT /api/v1/spaces/:space/members-only'), 'community.space.manage is served again, and names the one route it has');
+    for (const id of ['community.space.read', 'community.space.manage', 'community.thread.read', 'community.post.create']) ok(capabilities.get(id).status === 'active' && services.get('community').capabilities.includes(id), `${id} is served by Community again`);
+    for (const id of ['space.forum.read', 'space.forum.manage', 'space.thread.read', 'space.post.write', 'space.thread.write', 'space.pulse.read']) ok(capabilities.get(id).status === 'retired' && !services.get('space').capabilities.includes(id), `${id} retired from Space`);
     for (const id of ['media.upload.create', 'media.derivative.create']) ok(/media\.object\.upload/.test(capabilities.get(id).description) && capabilities.get(id).implementedBy.length > 0, `${id} names its routes and the id that guards them today`);
     ok(/media\.object\.read/.test(capabilities.get('media.lifecycle.read').description), 'media.lifecycle.read says media.object.read guards its routes today');
-    ok(/space\.post\.write/i.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/i.test(capabilities.get('community.vote.set').description) && capabilities.get('community.vote.set').implementedBy.length === 1, 'community.vote.set retains only the comment route');
+    ok(/community\.post\.create/i.test(capabilities.get('community.vote.set').description) && /community\.comment\.write/i.test(capabilities.get('community.vote.set').description) && capabilities.get('community.vote.set').implementedBy.length === 3, 'community.vote.set names the thread and comment vote routes and the grants that cover them today');
     ok(capabilities.get('live.owner.resolve').implementedBy.length === 0 && capabilities.get('live.owner.resolve').outputSchema === 'lineage.resolution@1', 'live.owner.resolve has no public route yet and answers lineage.resolution@1');
     ok(JSON.stringify(capabilities.get('search.query.run').implementedBy) === JSON.stringify(capabilities.get('search.query.delegate').implementedBy), 'search.query.run and search.query.delegate are the same routes, asked anonymously or for a person');
     const pub = services.get('publishing');
@@ -805,7 +805,7 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 // without an older shape are common.moderation-action@1, and Network consumes every one of them.
 {
     const moderation = contracts.catalog.filter(c => /\.moderation\.action$/.test(c.id));
-    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'services', 'space']) {
+    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'services']) {
         const id = `${svc}.moderation.action`;
         const c = moderation.find(x => x.id === id);
         ok(c && c.owner === svc && c.adr === 'ADR-022', `${id} is owned by ${svc}`);

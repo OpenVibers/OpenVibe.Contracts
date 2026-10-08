@@ -50351,7 +50351,7 @@
     "community.thread.created": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/community.thread.created.v1.json",
@@ -50406,7 +50406,7 @@
     "community.post.created": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/community.post.created.v1.json",
@@ -57132,7 +57132,7 @@
     "community.post-write-request": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/post-write-request.v1.json",
@@ -57299,7 +57299,7 @@
     "community.forum-post": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-post.v1.json",
@@ -57494,7 +57494,7 @@
     "community.forum-thread": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-thread.v1.json",
@@ -57779,7 +57779,7 @@
     "community.post-write-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/post-write-result.v1.json",
@@ -58368,7 +58368,7 @@
     "community.forum-space": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/forum-space.v1.json",
@@ -58670,7 +58670,7 @@
     "community.space-read-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/space-read-result.v1.json",
@@ -58745,7 +58745,7 @@
     "community.thread-read-result": {
       "version": "1.0.0",
       "owner": "community",
-      "status": "retired",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/thread-read-result.v1.json",
@@ -58884,7 +58884,7 @@
     "space.forum-post": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/forum-post.v1.json",
@@ -59079,7 +59079,7 @@
     "space.forum-read-result": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/forum-read-result.v1.json",
@@ -59154,7 +59154,7 @@
     "space.forum-space": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/forum-space.v1.json",
@@ -59298,7 +59298,7 @@
     "space.forum-thread": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/forum-thread.v1.json",
@@ -59550,7 +59550,7 @@
     "space.post-write-request": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/post-write-request.v1.json",
@@ -59676,7 +59676,7 @@
     "space.post-write-result": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/post-write-result.v1.json",
@@ -59773,7 +59773,7 @@
     "space.thread-read-result": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/space/thread-read-result.v1.json",
@@ -73006,7 +73006,7 @@
     "space.thread.created": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/space.thread.created.v1.json",
@@ -73061,7 +73061,7 @@
     "space.post.created": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/space.post.created.v1.json",
@@ -73121,7 +73121,7 @@
     "space.moderation.action": {
       "version": "1.0.0",
       "owner": "space",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/space.moderation.action.v1.json",

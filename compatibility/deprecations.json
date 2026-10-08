@@ -2,67 +2,74 @@
   "_about": "Deprecated contracts: { id, replacement, since, removeAfter, reason }. A deprecated contract stays loadable until removeAfter.",
   "deprecations": [
     {
-      "id": "community.forum-space",
-      "replacement": "space.forum-space@1",
-      "since": "0.82.0",
+      "id": "space.forum-space",
+      "replacement": "community.forum-space@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "the forum, its spaces/threads/posts and the community.space.*/thread.read/post.create capabilities move to OpenVibe.Space (plan T10, D1/D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.forum-thread",
-      "replacement": "space.forum-thread@1",
-      "since": "0.82.0",
+      "id": "space.forum-thread",
+      "replacement": "community.forum-thread@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "the forum data moves to OpenVibe.Space (plan T10, D1/D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.forum-post",
-      "replacement": "space.forum-post@1",
-      "since": "0.82.0",
+      "id": "space.forum-post",
+      "replacement": "community.forum-post@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "the forum data moves to OpenVibe.Space (plan T10, D1/D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.space-read-result",
-      "replacement": "space.forum-read-result@1",
-      "since": "0.82.0",
+      "id": "space.forum-read-result",
+      "replacement": "community.space-read-result@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "community.space.read is renamed space.forum.read (plan T10, D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.thread-read-result",
-      "replacement": "space.thread-read-result@1",
-      "since": "0.82.0",
+      "id": "space.thread-read-result",
+      "replacement": "community.thread-read-result@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "community.thread.read is renamed space.thread.read (plan T10, D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.post-write-request",
-      "replacement": "space.post-write-request@1",
-      "since": "0.82.0",
+      "id": "space.post-write-request",
+      "replacement": "community.post-write-request@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "community.post.create is renamed space.post.write (plan T10, D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.post-write-result",
-      "replacement": "space.post-write-result@1",
-      "since": "0.82.0",
+      "id": "space.post-write-result",
+      "replacement": "community.post-write-result@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "community.post.create is renamed space.post.write (plan T10, D3); retired in 0.110.0 when Space launched, kept loadable for historical data and compatibility"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.thread.created",
-      "replacement": "space.thread.created@1",
-      "since": "0.110.0",
+      "id": "space.thread.created",
+      "replacement": "community.thread.created@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "Community forum producer retired after the move to OpenVibe.Space; historical payload remains loadable"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
-      "id": "community.post.created",
-      "replacement": "space.post.created@1",
-      "since": "0.110.0",
+      "id": "space.post.created",
+      "replacement": "community.post.created@1",
+      "since": "0.118.0",
       "removeAfter": "1.0.0",
-      "reason": "Community forum producer retired after the move to OpenVibe.Space; historical payload remains loadable"
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
+    },
+    {
+      "id": "space.moderation.action",
+      "replacement": "community.moderation.action@1",
+      "since": "0.118.0",
+      "removeAfter": "1.0.0",
+      "reason": "the forum returned to OpenVibe.Community (2026-10-08)"
     },
     {
       "id": "codes.app-manifest",

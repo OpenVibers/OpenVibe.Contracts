@@ -47,8 +47,8 @@
       "service": "community",
       "name": "OpenVibe.Community",
       "origin": "https://openvibe.community",
-      "operations": 24,
-      "capabilities": 7
+      "operations": 37,
+      "capabilities": 11
     },
     {
       "service": "coupons",
@@ -161,13 +161,6 @@
       "origin": "https://sources.openvibe.network",
       "operations": 13,
       "capabilities": 3
-    },
-    {
-      "service": "space",
-      "name": "OpenVibe.Space",
-      "origin": "https://openvibe.space",
-      "operations": 30,
-      "capabilities": 4
     },
     {
       "service": "tips",

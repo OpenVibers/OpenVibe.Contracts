@@ -4,6 +4,34 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.118.0 — 2026-10-08
+
+**The forum returns to OpenVibe.Community** (owner decision 2026-10-08: Space becomes code hosting and "spaces";
+the vBulletin/phpBB-style forum lives on openvibe.community again, plan T20). The mirror of 0.110.0, which moved it
+the other way.
+- `manifests/services/community.json`: the forum is Community's again — `community.space.read`,
+  `community.space.manage`, `community.thread.read` and `community.post.create` are back in its capability list,
+  `community.thread.created` and `community.post.created` back in its `eventsProduced`, and its notes, its Discord
+  relay drain and its Roadmap-space recovery describe the forum it serves.
+- Those four capabilities are active again with Community's routes (`GET /s`, `GET /s/:space`,
+  `GET /s/:space/t/:slug`, `GET /s/feed.xml`, `GET /api/v1/spaces/:space/threads`, `POST /api/v1/spaces/:space/threads`,
+  `PUT /api/v1/spaces/:space/members-only`, …). `community.vote.set` names its thread and comment vote routes again,
+  guarded by `community.post.create` and `community.comment.write`; `community.space.manage` is the one active grant
+  without schemas, so `compatibility/capability-schema-gaps.json` lists it where `space.forum.manage` used to be.
+- The seven `community.*` forum schemas and the two event payloads are active again with their fixtures. The `space.*`
+  ones (`space.forum-space/thread/post`, `space.forum-read-result`, `space.thread-read-result`,
+  `space.post-write-request/result`, `space.thread.created`, `space.post.created`, `space.moderation.action`) are
+  retired and kept loadable, and `compatibility/deprecations.json` names each Community replacement with a window
+  through 1.0.0. The Community records those replacements had are gone.
+- `manifests/services/space.json`: no forum capability or event, and the site block and notes say Space is code
+  hosting, with "spaces" (apps that use your OpenVibe account and the SDK) coming next, and that its former `/s/*`
+  paths redirect permanently to openvibe.community. Exposure stays live (Space serves a home); its lifecycle drops
+  the forum's work (Discord relay, Roadmap resync, events outbox) and keeps what runs.
+- `manifests/services/quest.json` counts `community.thread.created` and `community.post.created` again;
+  `manifests/services/network.json` consumes `community.moderation.action` and no longer `space.moderation.action`.
+- Space ends with no active capability, so `generated/openapi/space.json` is gone.
+- Generated bundles, types and OpenAPI documents are refreshed for 0.118.0.
+
 ## 0.117.0 — 2026-10-08
 
 **OpenVibe.Quest and OpenVibe.Rent become services; OpenVibe.Watch goes live with its public site** (plan T18 step 8,

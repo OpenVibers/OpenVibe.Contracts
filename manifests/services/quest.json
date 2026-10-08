@@ -20,10 +20,11 @@
   "eventsConsumed": [
     "chat.room.message.created",
     "community.comment.created",
+    "community.post.created",
+    "community.thread.created",
     "games.player.joined",
     "live.stream.started",
     "network.follow.created",
-    "space.thread.created",
     "tools.job.created",
     "wiki.revision.created"
   ],
@@ -78,7 +79,7 @@
       "none": "no claims: one process serves the site"
     }
   },
-  "notes": "Port 4980, unit openvibe-quest.service. The network's shared quest log: first-party quests counted from domain events OpenVibe.Events delivers to POST /internal/events (signature v2 under QUEST_EVENTS_SECRET, loopback only; Quest creates its own subscriptions at boot with events.subscription.manage), the person taken from the field each event's own schema defines. It also counts community.thread.created and community.post.created, which return with the forum to OpenVibe.Community (T20). A completion awards its badge once and, when QUEST_COINS=on, credits OpenCoins through OpenVibe.Network (network.coins.credit, identity.subject.resolve; caps per person and global per day). Rewards are never Vibes. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client quest, JWKS) and OpenVibe.Events. Owns quest_progress, quest_completions, quest_badges, quest_event_inbox.",
+  "notes": "Port 4980, unit openvibe-quest.service. The network's shared quest log: first-party quests counted from domain events OpenVibe.Events delivers to POST /internal/events (signature v2 under QUEST_EVENTS_SECRET, loopback only; Quest creates its own subscriptions at boot with events.subscription.manage), the person taken from the field each event's own schema defines. It also counts community.thread.created and community.post.created, which OpenVibe.Community produces. A completion awards its badge once and, when QUEST_COINS=on, credits OpenCoins through OpenVibe.Network (network.coins.credit, identity.subject.resolve; caps per person and global per day). Rewards are never Vibes. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client quest, JWKS) and OpenVibe.Events. Owns quest_progress, quest_completions, quest_badges, quest_event_inbox.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4980",
