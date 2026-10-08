@@ -1,0 +1,10 @@
+{
+  "task": "Research five competitors of my shop and write a one-page brief with sources.",
+  "mode": "best",
+  "budget": {
+    "per_task_usd": 0.5,
+    "per_day_usd": 2
+  },
+  "agent": "openai-agent",
+  "idempotency_key": "brief-2026-10-08"
+}

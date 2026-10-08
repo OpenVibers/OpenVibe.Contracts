@@ -1,0 +1,19 @@
+{
+  "agents": [
+    {
+      "id": "openvibe-runtime",
+      "name": "OpenVibe runtime",
+      "kind": "openvibe-runtime",
+      "provider": "OpenVibe",
+      "model": "deepseek-chat",
+      "trust": "first-party",
+      "can": [
+        "task:answer",
+        "task:research",
+        "tool:openvibe-search",
+        "tool:openvibe-tools"
+      ],
+      "available": true
+    }
+  ]
+}

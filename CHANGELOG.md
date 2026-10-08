@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.115.0 — 2026-10-08
+
+**OpenVibe.Actor becomes a service** (plan T17, ADR-044; owner direction 2026-10-08: Actor is OpenVibe's own general agent
+and the router for agent work, "like OpenRouter but for agents").
+- `manifests/services/actor.json`: `actor`, port 4950, `openvibe.actor` live with `publicSite: service`; site block
+  "Actor · Your agent for everything" (position 23). The product manifest now points at the service.
+- Capabilities (audience `openvibe.actor`): `actor.task.create` (POST /api/v1/tasks, cancel; sensitive),
+  `actor.task.read` (a task and its live stream), `actor.task.list`, and the public `actor.agent.read` (the agent
+  catalog with rate cards, and a dry-run route that explains which agent a task would go to).
+- Schemas: `actor.task-create-request@1`, `actor.task-event@1` (the SSE stream: state, output, end, resumable by
+  seq), `actor.task-list-result@1`, `actor.agent-list-result@1` (kind, trust, what it can do, rate card, availability).
+- `platform.task@1` is active and Actor implements it. Additive: `project_id` is optional (a person's own task has
+  none), and a new optional `error` { code, detail } says why a task failed.
+
 ## 0.114.0 — 2026-10-08
 
 **Developer links point at OpenVibe.Services.** Manifest text only; no schema, capability or event changed. The

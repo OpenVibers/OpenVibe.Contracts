@@ -1,0 +1,22 @@
+{
+  "id": "actor.agent.read",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "The agent systems Actor routes to, with what each can do, its trust class, its rate card and whether it is available now (GET /api/v1/agents, actor.agent-list-result@1), and which one a task would go to in a mode, with the reason for every candidate (POST /api/v1/route { task, mode }, a platform.placement-result@1; nothing runs). Public; no token needed.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "actor.agent-list-result@1",
+  "permissions": [
+    "actor:agents:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "actor-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/agents",
+    "POST /api/v1/route"
+  ]
+}

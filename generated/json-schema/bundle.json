@@ -66476,18 +66476,17 @@
     "platform.task": {
       "version": "1.0.0",
       "owner": "network",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/platform/task.v1.json",
         "title": "Task",
-        "description": "platform.task@1 (PLANNED; plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /v1/tasks creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered adapters, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /v1/tasks/{id} reads the same resource. Progress streams as server-sent events from `progress.stream_url` (a task's own counter in `progress.last_seq`, as platform.job-frame@1 counts on a link); `cancel` records that a cancel was requested (POST /v1/tasks/{id}/cancel), and `webhooks` are the registered endpoints the router delivers each state change to. No Actor service exists yet: OpenVibe.Actor is a product page (manifests/products/openvibe.actor.json, noRepo) with no service manifest, so the contract is owned by `network`, like every other platform.* contract, and stays PLANNED until T17 ships. This v1 contract may grow optional fields.",
+        "description": "platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to. Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.",
         "$comment": "Additive optional fields may extend this v1 contract. It is the task resource, not a device frame: Actor's link is HTTP/SSE where Run's is the Node WebSocket.",
         "type": "object",
         "additionalProperties": false,
         "required": [
           "id",
-          "project_id",
           "requester",
           "task",
           "mode",
@@ -66504,7 +66503,7 @@
           "project_id": {
             "type": "string",
             "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's."
+            "description": "The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's. Absent for a person's own task (one made signed in, without a project token): the person's free allowance and daily budget apply."
           },
           "requester": {
             "description": "The person or agent the task belongs to: a user subject for a person, an agent subject for an agent acting under the grants its owner delegated (roadmap WS-Z2).",
@@ -66726,6 +66725,34 @@
               }
             },
             "description": "Webhooks (plan T17), registered at creation. A delivery that fails is retried with backoff and never delays the task; the task's own record is the source of truth."
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code",
+                  "detail"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+                    "description": "A stable problem code, e.g. actor.budget.exceeded, actor.no_agent, actor.check.failed, actor.task.interrupted."
+                  },
+                  "detail": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "description": "What happened, for a person."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why the task failed, once it has; null otherwise. Never a credential and never raw provider output."
           }
         },
         "allOf": [
@@ -73101,6 +73128,354 @@
         "title": "SpaceModerationActionPayload",
         "description": "space.moderation.action v1 (ADR-022; OpenVibe.Space server/events.js moderationAction). A staff or space moderator action on someone else's forum content, or a space moderator assignment: deleting, locking or unlocking a thread, deleting a post, adding or removing a space moderator. Not a person acting on their own content. Written to Space's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the moderator. Never carries the content itself.",
         "$ref": "../../common/moderation-action.v1.json"
+      }
+    },
+    "actor.task-create-request": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/task-create-request.v1.json",
+        "title": "ActorTaskCreateRequest",
+        "description": "actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task"
+        ],
+        "properties": {
+          "task": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000,
+            "pattern": "\\S",
+            "description": "The instruction in plain words."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "cheapest",
+              "balanced",
+              "best",
+              "fastest",
+              "private"
+            ],
+            "default": "balanced"
+          },
+          "budget": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "per_task_usd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "per_day_usd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
+              }
+            }
+          },
+          "agent": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$",
+            "description": "An agent system id from GET /api/v1/agents."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          }
+        },
+        "examples": [
+          {
+            "task": "Find out who runs the mail for openvibe.network and whether its SPF and DMARC are set up properly.",
+            "mode": "cheapest",
+            "budget": {
+              "per_task_usd": 0.05
+            }
+          }
+        ]
+      }
+    },
+    "actor.task-event": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/task-event.v1.json",
+        "title": "ActorTaskEvent",
+        "description": "actor.task-event@1: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, or calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). Events are best-effort; the task record (GET /api/v1/tasks/:id) is the source of truth.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "seq",
+          "kind",
+          "at"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "state",
+              "output",
+              "end"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "verifying",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "agent": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$"
+          },
+          "step": {
+            "type": "string",
+            "enum": [
+              "plan",
+              "text",
+              "tool_call",
+              "tool_result",
+              "check",
+              "handoff"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 8000
+          },
+          "tool": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "input": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "is_error": {
+            "type": "boolean"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "output"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "step"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "state",
+                    "end"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "state"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "actor.task-list-result": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/task-list-result.v1.json",
+        "title": "ActorTaskListResult",
+        "description": "actor.task-list-result@1: GET /api/v1/tasks (capability actor.task.list): the caller's latest tasks, newest first, and NEXT, the `before` cursor for the following page (null on the last page).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tasks",
+          "next"
+        ],
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "../platform/task.v1.json"
+            }
+          },
+          "next": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          }
+        }
+      }
+    },
+    "actor.agent-list-result": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/agent-list-result.v1.json",
+        "title": "ActorAgentListResult",
+        "description": "actor.agent-list-result@1: GET /api/v1/agents (capability actor.agent.read): every agent system Actor can route a task to. KIND is the backend class (ADR-044): openvibe-runtime (OpenVibe's own agent, acting through OpenVibe services), agent-platform (another platform's agent, called through its API), open-model (an open model on OpenVibe's own hardware), codes (coding work through OpenVibe.Codes), node and run (a person's machine or OpenVibe.Run). TRUST is ADR-046's class; private mode takes only first-party ones. CAN are the task classes and tools it takes (task:<class>, tool:<name>). RATE_CARD is the published price, revised by review and never written by a model (SOURCE says where it comes from, VERIFIED_AT when a person last checked it). AVAILABLE says whether it can take a task now and REASON why not.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "agents"
+        ],
+        "properties": {
+          "agents": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "name",
+                "kind",
+                "provider",
+                "trust",
+                "can",
+                "rate_card",
+                "available"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,63}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "openvibe-runtime",
+                    "agent-platform",
+                    "open-model",
+                    "codes",
+                    "node",
+                    "run"
+                  ]
+                },
+                "provider": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "model": {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                "trust": {
+                  "type": "string",
+                  "enum": [
+                    "first-party",
+                    "user-owned",
+                    "partner",
+                    "community",
+                    "external"
+                  ]
+                },
+                "can": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(task|tool):[a-z0-9_-]+$"
+                  }
+                },
+                "rate_card": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "input_usd_per_mtok",
+                    "output_usd_per_mtok",
+                    "source",
+                    "verified_at"
+                  ],
+                  "properties": {
+                    "input_usd_per_mtok": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "output_usd_per_mtok": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "per_call_usd": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "A fixed charge per tool call the platform bills (for example a web search)."
+                    },
+                    "source": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "verified_at": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                },
+                "typical_latency_ms": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "available": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string",
+                  "maxLength": 300
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

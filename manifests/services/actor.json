@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.115.0 <1.0.0"
+  },
+  "id": "actor",
+  "name": "OpenVibe.Actor",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Actor",
+  "domains": [
+    "openvibe.actor"
+  ],
+  "publicOrigin": "https://openvibe.actor",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [
+    "actor.task.create",
+    "actor.task.read",
+    "actor.task.list",
+    "actor.agent.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "actor.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and the agent backends are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "running tasks cancelled and recorded as failed (actor.task.interrupted)",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "a task left queued, running or verifying by a stopped process is marked failed with actor.task.interrupted at boot; nothing is re-run without the person asking"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Actor's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.115.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: a task runs in the process that accepted it"
+    }
+  },
+  "notes": "Port 4950, unit openvibe-actor.service. OpenVibe's own general agent and the router for agent work (plan T17, ADR-044): POST /api/v1/tasks takes a task in plain words, a mode and a budget; the planner (openvibe-sdk/placement) picks an agent system, runs it, has a second model family check the result and answers with the result, the cost and the explanation (platform.task@1). Agent systems: the OpenVibe runtime (a tool-using model that acts through OpenVibe services: Search, Tools), other platforms' agents (OpenAI's Responses agent with web search) and an open model on OpenVibe's own hardware for private mode; coding work goes to OpenVibe.Codes. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client actor, JWKS for app and person tokens), OpenVibe.Search (public reads) and OpenVibe.Tools (tools.tool.run). Owns its tasks and their event logs; model provider keys are the operator's (BYO keys through OpenVibe.AI come next).",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4950",
+  "site": {
+    "name": "Actor",
+    "icon": "actor",
+    "tagline": "Your agent for everything",
+    "what": "Give a task in plain words; Actor sends it to the best agent for it, its own or another platform's, checks the result and shows the cost and why.",
+    "legalProfile": "ugc",
+    "position": 23
+  }
+}

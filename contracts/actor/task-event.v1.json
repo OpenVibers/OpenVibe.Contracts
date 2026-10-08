@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/task-event.v1.json",
+  "title": "ActorTaskEvent",
+  "description": "actor.task-event@1: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, or calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). Events are best-effort; the task record (GET /api/v1/tasks/:id) is the source of truth.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "seq",
+    "kind",
+    "at"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "state",
+        "output",
+        "end"
+      ]
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "verifying",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "agent": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$"
+    },
+    "step": {
+      "type": "string",
+      "enum": [
+        "plan",
+        "text",
+        "tool_call",
+        "tool_result",
+        "check",
+        "handoff"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 8000
+    },
+    "tool": {
+      "type": "string",
+      "maxLength": 128
+    },
+    "input": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "is_error": {
+      "type": "boolean"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "output"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "step"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "state",
+              "end"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "state"
+        ]
+      }
+    }
+  ]
+}
