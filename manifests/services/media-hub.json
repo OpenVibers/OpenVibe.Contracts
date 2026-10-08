@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.82.0 <1.0.0"
+    "openvibe-contracts": ">=0.119.0 <1.0.0"
   },
   "id": "media-hub",
   "name": "OpenVibe.MediaHub",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.MediaHub",
   "domains": [
     "openvibe.video",
@@ -14,17 +14,8 @@
   ],
   "publicOrigin": "https://openvibe.video",
   "exposure": {
-    "state": "placeholder",
-    "publicSite": "placeholder",
-    "note": "planned: no media-hub service yet; openvibe.video, openvibe.pics and openvibe.download still serve the OpenVibe.Sites placeholder. One service, three brand surfaces (plan T10, D4)"
-  },
-  "site": {
-    "name": "Media Hub",
-    "icon": "media-hub",
-    "tagline": "Video, pics and downloads",
-    "what": "The media-hub products in one service: video watch pages, chapters, captions and playlists (openvibe.video); image hosting and albums (openvibe.pics); share links, drive and backup (openvibe.download). Bytes stay in OpenVibe.Media.",
-    "legalProfile": "hosting",
-    "position": 20
+    "state": "live",
+    "publicSite": "service"
   },
   "capabilities": [
     "video.vod.read",
@@ -39,7 +30,10 @@
     "download.share.create"
   ],
   "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
   "namespacesOwned": [
     "video.*",
     "pics.*",
@@ -47,23 +41,62 @@
   ],
   "lifecycle": {
     "liveness": {
-      "none": "planned service: no OpenVibe.MediaHub process runs yet (plan T10 items 10-12)"
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
     },
     "shutdown": {
-      "none": "planned service: nothing to stop yet"
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed (an upload in flight is cut; the person resumes it from its parts)",
+        "Events subscription retries stopped",
+        "Network key refresher stopped",
+        "store closed"
+      ]
     },
     "startupRecovery": {
-      "none": "planned service: nothing runs to resume"
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are cookies verified against Network's keys, fetched again at boot"
+        },
+        {
+          "kind": "jobs",
+          "what": "a chunked upload session survives the restart: its parts are in Media, and the page resumes from the missing ones until the session expires (MEDIAHUB_UPLOAD_TTL_SECONDS)"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each once)"
+        }
+      ]
     },
     "rollback": {
-      "none": "planned service: nothing is deployed to roll back"
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0003 only create MediaHub's own tables; an earlier release has none to read"
+      }
     },
     "contracts": {
-      "range": ">=0.82.0 <1.0.0"
+      "range": ">=0.119.0 <1.0.0"
     },
     "leases": {
-      "none": "planned service: no process, no claims"
+      "none": "no claims: one process serves the three domains"
     }
   },
-  "notes": "One planned media-hub service with three brand profiles (plan T10, D4). The three domains are carried in one manifest (domains is a list, as network/live/openre/games already do); the single `site` block presents the hub, and the per-brand nav profiles await the Web platform brand mechanism (ADR-039, T11). Uploads are account-only until T14 (D8). No video.*, pics.* or download.* capability is active, so none has a request/result contract yet."
+  "notes": "Port 4990, unit openvibe-media-hub.service, one process for openvibe.download, openvibe.pics and openvibe.video (plan T10 D4, by Host header). v1: openvibe.download is a private drive — account-only uploads streamed into OpenVibe.Media (app media-hub; a plain form up to 256 MB, resumable multipart beyond), private files and folders with per-person limits, share links that expire, need a signed-in downloader and may name accounts (matched by subject), reports that suspend a share for staff, and sandboxed attachment downloads. openvibe.pics and openvibe.video answer with coming pages: their uploads wait for scanning and abuse intake (the video.*/pics.*/download.* capabilities stay planned until an app may call them). Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client media-hub, JWKS, identity.subject.resolve) and OpenVibe.Media; answers account export and deletion (ADR-033).",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4990",
+  "site": {
+    "name": "Media Hub",
+    "icon": "media-hub",
+    "tagline": "Video, pics and downloads",
+    "what": "The media-hub products in one service: video watch pages, chapters, captions and playlists (openvibe.video); image hosting and albums (openvibe.pics); share links, drive and backup (openvibe.download). Bytes stay in OpenVibe.Media.",
+    "legalProfile": "hosting",
+    "position": 20
+  }
 }
