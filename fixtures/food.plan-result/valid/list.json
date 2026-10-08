@@ -1,0 +1,43 @@
+{
+  "plans": [
+    {
+      "id": "pln_01JZ6Q4X8M2N3P4R5S6T7V8W9X",
+      "title": "Week for two",
+      "people": 2,
+      "days": 7,
+      "budget": 80,
+      "created_at": "2026-10-08T20:00:00.000Z",
+      "plan": {
+        "spec": {
+          "people": 2,
+          "days": 7,
+          "budget": 80
+        },
+        "items": [
+          {
+            "slug": "rice-long-grain-5lb",
+            "name": "Long grain rice, 5 lb",
+            "packs": 1
+          }
+        ],
+        "menu": [
+          {
+            "day": 1,
+            "breakfast": [
+              "Oats"
+            ],
+            "lunch": [],
+            "dinner": [
+              "Rice"
+            ],
+            "snack": []
+          }
+        ],
+        "totals": {
+          "cost": 41.2,
+          "kcal": 28000
+        }
+      }
+    }
+  ]
+}

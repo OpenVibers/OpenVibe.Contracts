@@ -4,6 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.116.0 — 2026-10-08
+
+**OpenVibe.Food, OpenVibe.Help and OpenVibe.Work become services** (plan T19 "flesh the network out"; owner 2026-10-08).
+- `manifests/services/food.json` (port 4970, `openvibe.food` live, site position 24): food banks and budget grocers
+  near you from OpenStreetMap (ODbL attribution on every answer), the budget food list, meal plans and a pantry.
+- `manifests/services/help.json` (port 5020, `openvibe.help` live, position 25): the network's help centre built from
+  this repository's catalog, and support tickets. No capabilities: a ticket is a person's own.
+- `manifests/services/work.json` (port 4960, `openvibe.work` live, position 26): job listings from open job boards with
+  their provenance (excerpt only, original linked), search and saved searches. No capabilities yet.
+- Capabilities (audience `openvibe.food`): `food.plan.write` (sensitive), `food.plan.read`, `food.pantry.write`
+  (sensitive), `food.pantry.read`; the place search and the food list are public reads with no capability.
+- Schemas: `food.plan-create-request@1`, `food.plan@1`, `food.plan-result@1`, `food.pantry-request@1`,
+  `food.pantry-result@1`.
+- The three product manifests point at their services.
+
 ## 0.115.0 — 2026-10-08
 
 **OpenVibe.Actor becomes a service** (plan T17, ADR-044; owner direction 2026-10-08: Actor is OpenVibe's own general agent

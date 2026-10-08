@@ -27,18 +27,6 @@
   "keywords": "openvibe help, openvibe support, help center, support tickets, troubleshooting",
   "launch": "the ticket service and the Frame's Help button",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "Network status",
-        "url": "https://openvibe.network/status",
-        "note": "Service health and incidents today."
-      },
-      {
-        "label": "OpenVibe.Wiki",
-        "url": "https://openvibe.wiki",
-        "note": "Guides and concepts."
-      }
-    ]
+    "service": "help"
   }
 }

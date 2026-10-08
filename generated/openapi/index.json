@@ -72,6 +72,13 @@
       "capabilities": 8
     },
     {
+      "service": "food",
+      "name": "OpenVibe.Food",
+      "origin": "https://openvibe.food",
+      "operations": 5,
+      "capabilities": 4
+    },
+    {
       "service": "games",
       "name": "OpenVibe.Games",
       "origin": "https://openvibe.games",

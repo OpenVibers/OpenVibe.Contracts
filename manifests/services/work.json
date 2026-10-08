@@ -1,0 +1,76 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.116.0 <1.0.0"
+  },
+  "id": "work",
+  "name": "OpenVibe.Work",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Work",
+  "domains": [
+    "openvibe.work"
+  ],
+  "publicOrigin": "https://openvibe.work",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "work.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "ingest timer stopped (a fetch in flight is abandoned; its rows are written per listing)",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "the ingest starts again on its timer; each source is fetched when its last fetch is older than 6 hours, so a fetch cut short by a restart is simply redone"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0002 only create Work's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.116.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 4960, unit openvibe-work.service. Job listings gathered from open job-board APIs (Arbeitnow, Remotive, RemoteOK) with their provenance: a short plain-text excerpt only, the source named and the original listing linked on every list and page, never the full description. Search with remote/type/location filters, JobPosting JSON-LD, and saved searches with a count of what is new since you last looked. The ingest runs every 6 hours per source when WORK_INGEST=on, upserts by (source, source_id) and expires listings not seen for 30 days. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client work, JWKS). Owns work_listings, work_source_fetches and work_saved_searches. No capabilities yet: saved searches are a person's, listings are public.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4960",
+  "site": {
+    "name": "Work",
+    "icon": "work",
+    "tagline": "Find work, with an agent on your side",
+    "what": "Job listings from open job boards in one search, each linked back to where you apply, with saved searches that tell you what is new.",
+    "legalProfile": "info",
+    "position": 26
+  }
+}

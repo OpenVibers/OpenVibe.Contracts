@@ -1,0 +1,75 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.116.0 <1.0.0"
+  },
+  "id": "help",
+  "name": "OpenVibe.Help",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Help",
+  "domains": [
+    "openvibe.help"
+  ],
+  "publicOrigin": "https://openvibe.help",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "help.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are rows in the database, so a person stays signed in across the restart; nothing runs in the background that a restart could leave half done"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0002 only create Help's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.116.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5020, unit openvibe-help.service. The network's help centre: a catalog of every OpenVibe product site built from openvibe-contracts (each site's state, one line, pillars and FAQ), articles generated from it, search across them, and support tickets a signed-in person opens and staff answer (staff judged by the Network role claim). Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client help, JWKS). Owns help_tickets and help_messages. No capabilities yet: tickets are a person's own, not an app's.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5020",
+  "site": {
+    "name": "Help",
+    "icon": "help",
+    "tagline": "Answers for every OpenVibe site",
+    "what": "Every OpenVibe site in one help centre: what each one does, its common questions, and a ticket to a person when the answer is not there.",
+    "legalProfile": "account",
+    "position": 25
+  }
+}

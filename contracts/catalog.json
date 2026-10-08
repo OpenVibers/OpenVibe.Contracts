@@ -6353,6 +6353,51 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-044"
+    },
+    {
+      "id": "food.pantry-request",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/pantry-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.pantry-result",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/pantry-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.plan",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/plan.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.plan-create-request",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/plan-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.plan-result",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/plan-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

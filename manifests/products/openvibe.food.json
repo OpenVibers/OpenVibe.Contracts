@@ -27,18 +27,6 @@
   "keywords": "openvibe food, compare food delivery prices, meal kits, meal planning, recipe ideas, grocery tools",
   "launch": "the food tools moving over from OpenVibe.Tools",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "Food tools",
-        "url": "https://food.openvibe.tools",
-        "note": "The food and grocery tools work today."
-      },
-      {
-        "label": "OpenVibe.Coupons",
-        "url": "https://openvibe.coupons",
-        "note": "Coupons are the sibling room."
-      }
-    ]
+    "service": "food"
   }
 }

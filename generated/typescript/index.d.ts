@@ -58953,3 +58953,94 @@ export interface ActorAgentListResult {
     reason?: string;
   }[];
 }
+
+/** food.pantry-request@1.0.0 (owner: food) */
+/**
+ * food.pantry-request@1: PUT /api/v1/pantry on OpenVibe.Food replaces the pantry with exactly these food slugs.
+ */
+export interface FoodPantryRequest {
+  /**
+   * @maxItems 200
+   */
+  items: string[];
+}
+
+/** food.pantry-result@1.0.0 (owner: food) */
+/**
+ * food.pantry-result@1: GET and PUT /api/v1/pantry on OpenVibe.Food: the slugs, each food as the food list shows it, and the suggestions matched against them (can_make: everything there; almost: one or two items missing, named).
+ */
+export interface FoodPantryResult {
+  items: string[];
+  foods: {
+    slug: string;
+    name: string;
+  }[];
+  suggestions: {
+    can_make: {
+      slug: string;
+      name: string;
+      serves?: number;
+      minutes?: number;
+      missing?: string[];
+    }[];
+    almost: {
+      slug: string;
+      name: string;
+      serves?: number;
+      minutes?: number;
+      missing?: string[];
+    }[];
+  };
+  note?: string;
+}
+
+/** food.plan@1.0.0 (owner: food) */
+/**
+ * food.plan@1: one saved plan on OpenVibe.Food.
+ */
+export interface FoodPlan {
+  id: string;
+  title: string | null;
+  people: number;
+  days: number;
+  budget: number | null;
+  created_at: string;
+  /**
+   * The plan as Food worked it out: spec, items (the shopping list), by_store, menu (one entry a day: breakfast, lunch, dinner, snack), group_coverage and totals (cost, cost_per_person_day, kcal, protein). Food may add fields.
+   */
+  plan: {
+    spec: {
+      people: number;
+      days: number;
+      budget?: number | null;
+    };
+    items: {}[];
+    menu: {
+      day: number;
+    }[];
+    totals: {
+      cost: number;
+    };
+  };
+}
+
+/** food.plan-create-request@1.0.0 (owner: food) */
+/**
+ * food.plan-create-request@1: POST /api/v1/plans on OpenVibe.Food. people 1-12, days 1-14, budget (US dollars for the whole plan) optional, title optional.
+ */
+export interface FoodPlanCreateRequest {
+  people: number;
+  days: number;
+  budget?: number | null;
+  title?: string | null;
+}
+
+/** food.plan-result@1.0.0 (owner: food) */
+/**
+ * food.plan-result@1: answers of the plan routes on OpenVibe.Food: GET /api/v1/plans → { plans }; GET /api/v1/plans/:id and POST /api/v1/plans (201) → the plan itself (food.plan@1).
+ */
+export type FoodPlanResult =
+  | {
+      plans: FoodPlan[];
+    }
+  | FoodPlan;

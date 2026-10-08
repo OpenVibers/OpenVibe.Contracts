@@ -1,0 +1,22 @@
+{
+  "id": "food.pantry.write",
+  "version": "1.0",
+  "owner": "food",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Replace a caller's pantry with exactly this list: PUT /api/v1/pantry with { items: [food slug, …] } (at most 200, each one in the food list; GET /api/v1/foods lists them). Answers like a read.",
+  "inputSchema": "food.pantry-request@1",
+  "outputSchema": "food.pantry-result@1",
+  "permissions": [
+    "food:pantry:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "food-write",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/pantry"
+  ]
+}

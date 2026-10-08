@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/food/plan-result.v1.json",
+  "title": "FoodPlanResult",
+  "description": "food.plan-result@1: answers of the plan routes on OpenVibe.Food: GET /api/v1/plans → { plans }; GET /api/v1/plans/:id and POST /api/v1/plans (201) → the plan itself (food.plan@1).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "plans"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "plans": {
+          "type": "array",
+          "items": {
+            "$ref": "plan.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "$ref": "plan.v1.json"
+    }
+  ]
+}

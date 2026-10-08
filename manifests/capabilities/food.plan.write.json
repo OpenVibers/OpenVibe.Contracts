@@ -1,0 +1,22 @@
+{
+  "id": "food.plan.write",
+  "version": "1.0",
+  "owner": "food",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Plan a shop for a household and a budget and save it: POST /api/v1/plans with { people, days, budget?, title? }. Food picks budget items from its food list to cover each food group for every person and day, splits them by the cheapest store and lays out a menu; the saved plan (201, Location /api/v1/plans/:id) is the caller's own.",
+  "inputSchema": "food.plan-create-request@1",
+  "outputSchema": "food.plan-result@1",
+  "permissions": [
+    "food:plans:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "food-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/plans"
+  ]
+}
