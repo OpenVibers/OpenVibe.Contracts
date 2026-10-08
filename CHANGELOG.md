@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.117.0 — 2026-10-08
+
+**OpenVibe.Quest and OpenVibe.Rent become services; OpenVibe.Watch goes live with its public site** (plan T18 step 8,
+T19).
+- `manifests/services/quest.json` (port 4980, `openvibe.quest` live, site position 27): the shared quest log, counted
+  from the domain event types it consumes through OpenVibe.Events; badges, and OpenCoins through Network when switched
+  on. No capabilities: a quest log is a person's own.
+- `manifests/services/rent.json` (port 5010, `openvibe.rent` live, position 28): listings people post, safety rules,
+  reports and a staff queue. No capabilities yet.
+- `manifests/services/watch.json` 0.2.0: exposure `live` with `publicSite: service` (sign-in and watch management on
+  openvibe.watch), its real lifecycle (25 s shutdown, schedule and outbox recovery), health, ready, internal origin and
+  site block (position 29).
+- The three product manifests point at their services.
+
 ## 0.116.0 — 2026-10-08
 
 **OpenVibe.Food, OpenVibe.Help and OpenVibe.Work become services** (plan T19 "flesh the network out"; owner 2026-10-08).

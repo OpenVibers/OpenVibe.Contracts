@@ -27,19 +27,6 @@
   "keywords": "website change monitoring, uptime monitoring api, price drop alerts, restock alerts, release monitoring, youtube video analysis, security camera alerts",
   "launch": "the watch service on the shared queue and workers",
   "relationships": {
-    "service": "watch",
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "OpenVibe.Sources",
-        "url": "https://github.com/OpenVibers/OpenVibe.Sources",
-        "note": "Permitted-source ingestion that Watch builds on runs today."
-      },
-      {
-        "label": "OpenVibe.Tools",
-        "url": "https://openvibe.tools",
-        "note": "Dozens of tools that run in the browser today."
-      }
-    ]
+    "service": "watch"
   }
 }

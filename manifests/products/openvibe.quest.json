@@ -27,13 +27,6 @@
   "keywords": "openvibe quest, quests, achievements, rewards, gamification, streamer quests",
   "launch": "the shared quest service",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "OpenVibe.Live",
-        "url": "https://openvibe.live",
-        "note": "Streamers' getting-started steps are on OpenVibe.Live today."
-      }
-    ]
+    "service": "quest"
   }
 }

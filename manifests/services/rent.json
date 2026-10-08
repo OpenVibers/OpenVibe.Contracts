@@ -1,0 +1,80 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.117.0 <1.0.0"
+  },
+  "id": "rent",
+  "name": "OpenVibe.Rent",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Rent",
+  "domains": [
+    "openvibe.rent"
+  ],
+  "publicOrigin": "https://openvibe.rent",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "rent.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "expiry timer stopped",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are rows in the database, so a person stays signed in across the restart"
+        },
+        {
+          "kind": "schedule",
+          "what": "the expiry sweep marks listings whose 30 days passed during the stop (search filters on expires_at anyway)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0002 only create Rent's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.117.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5010, unit openvibe-rent.service. Listings people post themselves (apartments, rooms, houses, commercial space, parking and storage, equipment): no scraped or partner sources until their terms are verified, no payments, deposits or messaging. Street addresses are refused; the contact link is shown only to signed-in people; three distinct reports hide a listing until staff (Network role claim) look; listings expire after 30 days and can be renewed. Search with facets and saved searches. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client rent, JWKS). Owns rent_listings, rent_reports, rent_saved_searches.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5010",
+  "site": {
+    "name": "Rent",
+    "icon": "rent",
+    "tagline": "Find a place, or rent yours out",
+    "what": "Apartments, rooms, houses, workspace, parking and equipment for rent, posted by people, with safety rules and no payments taken.",
+    "legalProfile": "ugc",
+    "position": 28
+  }
+}
