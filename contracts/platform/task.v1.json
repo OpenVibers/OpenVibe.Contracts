@@ -2,13 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/platform/task.v1.json",
   "title": "Task",
-  "description": "platform.task@1 (PLANNED; plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /v1/tasks creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered adapters, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /v1/tasks/{id} reads the same resource. Progress streams as server-sent events from `progress.stream_url` (a task's own counter in `progress.last_seq`, as platform.job-frame@1 counts on a link); `cancel` records that a cancel was requested (POST /v1/tasks/{id}/cancel), and `webhooks` are the registered endpoints the router delivers each state change to. No Actor service exists yet: OpenVibe.Actor is a product page (manifests/products/openvibe.actor.json, noRepo) with no service manifest, so the contract is owned by `network`, like every other platform.* contract, and stays PLANNED until T17 ships. This v1 contract may grow optional fields.",
+  "description": "platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to. Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.",
   "$comment": "Additive optional fields may extend this v1 contract. It is the task resource, not a device frame: Actor's link is HTTP/SSE where Run's is the Node WebSocket.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "id",
-    "project_id",
     "requester",
     "task",
     "mode",
@@ -25,7 +24,7 @@
     "project_id": {
       "type": "string",
       "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
-      "description": "The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's."
+      "description": "The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's. Absent for a person's own task (one made signed in, without a project token): the person's free allowance and daily budget apply."
     },
     "requester": {
       "description": "The person or agent the task belongs to: a user subject for a person, an agent subject for an agent acting under the grants its owner delegated (roadmap WS-Z2).",
@@ -247,6 +246,34 @@
         }
       },
       "description": "Webhooks (plan T17), registered at creation. A delivery that fails is retried with backoff and never delays the task; the task's own record is the source of truth."
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "detail"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+              "description": "A stable problem code, e.g. actor.budget.exceeded, actor.no_agent, actor.check.failed, actor.task.interrupted."
+            },
+            "detail": {
+              "type": "string",
+              "maxLength": 2000,
+              "description": "What happened, for a person."
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Why the task failed, once it has; null otherwise. Never a credential and never raw provider output."
     }
   },
   "allOf": [

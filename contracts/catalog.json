@@ -5790,7 +5790,7 @@
       "schema": "platform/task.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-044"
     },
     {
@@ -6313,6 +6313,46 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-022"
+    },
+    {
+      "id": "actor.task-create-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/task-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "actor.task-event",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/task-event.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "actor.task-list-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/task-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "actor.agent-list-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
     }
   ]
 }

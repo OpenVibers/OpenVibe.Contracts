@@ -55935,7 +55935,7 @@ export type JobFrame =
 
 /** platform.task@1.0.0 (owner: network) */
 /**
- * platform.task@1 (PLANNED; plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /v1/tasks creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered adapters, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /v1/tasks/{id} reads the same resource. Progress streams as server-sent events from `progress.stream_url` (a task's own counter in `progress.last_seq`, as platform.job-frame@1 counts on a link); `cancel` records that a cancel was requested (POST /v1/tasks/{id}/cancel), and `webhooks` are the registered endpoints the router delivers each state change to. No Actor service exists yet: OpenVibe.Actor is a product page (manifests/products/openvibe.actor.json, noRepo) with no service manifest, so the contract is owned by `network`, like every other platform.* contract, and stays PLANNED until T17 ships. This v1 contract may grow optional fields.
+ * platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to. Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.
  */
 export type Task = {
   [k: string]: unknown | undefined;
@@ -55945,9 +55945,9 @@ export type Task = {
    */
   id: string;
   /**
-   * The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's.
+   * The project the caller's token names (ADR-034 §5): budgets, usage and the bill are the project's. Absent for a person's own task (one made signed in, without a project token): the person's free allowance and daily budget apply.
    */
-  project_id: string;
+  project_id?: string;
   /**
    * The person or agent the task belongs to: a user subject for a person, an agent subject for an agent acting under the grants its owner delegated (roadmap WS-Z2).
    */
@@ -56733,6 +56733,19 @@ export type Task = {
           secret_ref?: string;
         }
       ];
+  /**
+   * Why the task failed, once it has; null otherwise. Never a credential and never raw provider output.
+   */
+  error?: {
+    /**
+     * A stable problem code, e.g. actor.budget.exceeded, actor.no_agent, actor.check.failed, actor.task.interrupted.
+     */
+    code: string;
+    /**
+     * What happened, for a person.
+     */
+    detail: string;
+  } | null;
 };
 
 /** events.delivery-policy@1.0.0 (owner: events) */
@@ -58854,4 +58867,89 @@ export interface SpaceModerationActionPayload {
    * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
    */
   details?: {};
+}
+
+/** actor.task-create-request@1.0.0 (owner: actor) */
+/**
+ * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict.
+ */
+export interface ActorTaskCreateRequest {
+  /**
+   * The instruction in plain words.
+   */
+  task: string;
+  mode?: "cheapest" | "balanced" | "best" | "fastest" | "private";
+  budget?: {
+    per_task_usd?: number;
+    per_day_usd?: number;
+  };
+  /**
+   * An agent system id from GET /api/v1/agents.
+   */
+  agent?: string;
+  idempotency_key?: string;
+}
+
+/** actor.task-event@1.0.0 (owner: actor) */
+/**
+ * actor.task-event@1: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, or calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). Events are best-effort; the task record (GET /api/v1/tasks/:id) is the source of truth.
+ */
+export type ActorTaskEvent = {
+  [k: string]: unknown | undefined;
+} & {
+  task_id: string;
+  seq: number;
+  kind: "state" | "output" | "end";
+  at: string;
+  state?: "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled";
+  agent?: string;
+  step?: "plan" | "text" | "tool_call" | "tool_result" | "check" | "handoff";
+  text?: string;
+  tool?: string;
+  input?: string;
+  is_error?: boolean;
+};
+
+/** actor.task-list-result@1.0.0 (owner: actor) */
+/**
+ * actor.task-list-result@1: GET /api/v1/tasks (capability actor.task.list): the caller's latest tasks, newest first, and NEXT, the `before` cursor for the following page (null on the last page).
+ */
+export interface ActorTaskListResult {
+  /**
+   * @maxItems 100
+   */
+  tasks: Task[];
+  next: string | null;
+}
+
+/** actor.agent-list-result@1.0.0 (owner: actor) */
+/**
+ * actor.agent-list-result@1: GET /api/v1/agents (capability actor.agent.read): every agent system Actor can route a task to. KIND is the backend class (ADR-044): openvibe-runtime (OpenVibe's own agent, acting through OpenVibe services), agent-platform (another platform's agent, called through its API), open-model (an open model on OpenVibe's own hardware), codes (coding work through OpenVibe.Codes), node and run (a person's machine or OpenVibe.Run). TRUST is ADR-046's class; private mode takes only first-party ones. CAN are the task classes and tools it takes (task:<class>, tool:<name>). RATE_CARD is the published price, revised by review and never written by a model (SOURCE says where it comes from, VERIFIED_AT when a person last checked it). AVAILABLE says whether it can take a task now and REASON why not.
+ */
+export interface ActorAgentListResult {
+  /**
+   * @maxItems 64
+   */
+  agents: {
+    id: string;
+    name: string;
+    kind: "openvibe-runtime" | "agent-platform" | "open-model" | "codes" | "node" | "run";
+    provider: string;
+    model?: string;
+    trust: "first-party" | "user-owned" | "partner" | "community" | "external";
+    can: string[];
+    rate_card: {
+      input_usd_per_mtok: number;
+      output_usd_per_mtok: number;
+      /**
+       * A fixed charge per tool call the platform bills (for example a web search).
+       */
+      per_call_usd?: number;
+      source: string;
+      verified_at: string;
+    };
+    typical_latency_ms?: number;
+    available: boolean;
+    reason?: string;
+  }[];
 }

@@ -1,0 +1,22 @@
+{
+  "id": "actor.task.list",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "List your latest tasks, newest first (GET /api/v1/tasks?limit=&before=): each as platform.task@1, with a cursor for the next page.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "actor.task-list-result@1",
+  "permissions": [
+    "actor:tasks:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "actor-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/tasks"
+  ]
+}

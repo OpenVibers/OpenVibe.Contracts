@@ -1,0 +1,25 @@
+{
+  "agents": [
+    {
+      "id": "openvibe-runtime",
+      "name": "OpenVibe runtime",
+      "kind": "magic",
+      "provider": "OpenVibe",
+      "model": "deepseek-chat",
+      "trust": "first-party",
+      "can": [
+        "task:answer",
+        "task:research",
+        "tool:openvibe-search",
+        "tool:openvibe-tools"
+      ],
+      "rate_card": {
+        "input_usd_per_mtok": 0.27,
+        "output_usd_per_mtok": 1.1,
+        "source": "https://api-docs.deepseek.com/quick_start/pricing",
+        "verified_at": "2026-10-08"
+      },
+      "available": true
+    }
+  ]
+}

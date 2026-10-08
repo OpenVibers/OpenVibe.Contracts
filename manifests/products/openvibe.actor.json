@@ -60,7 +60,7 @@
   ],
   "keywords": "ai agent router, openrouter for agents, ai agent that controls your computer, remote control computer with ai, self-hosted ai agent, computer use agent, ai command console, agent api, cloud ai agent, mcp server",
   "vision": {
-    "badge": "being built",
+    "badge": "alpha",
     "cta": [
       "See the network",
       "https://openvibe.network/#network",
@@ -374,20 +374,8 @@
     ],
     "building": "OpenVibe.Actor is being built now, on the network's accounts, AI router and event system that already run."
   },
-  "launch": "the task router with its first agent adapters, then personal agents on OpenVibe.Network accounts",
+  "launch": "the task router: its own runtime on OpenVibe services, other platforms' agents, a private open model and a cross-family check; then Codes, personal agents and Node control",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "OpenVibe.Tools",
-        "url": "https://openvibe.tools",
-        "note": "Tools agents will call, usable by people today."
-      },
-      {
-        "label": "OpenVibe.Services",
-        "url": "https://openvibe.services",
-        "note": "The API and SDK agents are built on."
-      }
-    ]
+    "service": "actor"
   }
 }

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/agent-list-result.v1.json",
+  "title": "ActorAgentListResult",
+  "description": "actor.agent-list-result@1: GET /api/v1/agents (capability actor.agent.read): every agent system Actor can route a task to. KIND is the backend class (ADR-044): openvibe-runtime (OpenVibe's own agent, acting through OpenVibe services), agent-platform (another platform's agent, called through its API), open-model (an open model on OpenVibe's own hardware), codes (coding work through OpenVibe.Codes), node and run (a person's machine or OpenVibe.Run). TRUST is ADR-046's class; private mode takes only first-party ones. CAN are the task classes and tools it takes (task:<class>, tool:<name>). RATE_CARD is the published price, revised by review and never written by a model (SOURCE says where it comes from, VERIFIED_AT when a person last checked it). AVAILABLE says whether it can take a task now and REASON why not.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "agents"
+  ],
+  "properties": {
+    "agents": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "provider",
+          "trust",
+          "can",
+          "rate_card",
+          "available"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "openvibe-runtime",
+              "agent-platform",
+              "open-model",
+              "codes",
+              "node",
+              "run"
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "trust": {
+            "type": "string",
+            "enum": [
+              "first-party",
+              "user-owned",
+              "partner",
+              "community",
+              "external"
+            ]
+          },
+          "can": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(task|tool):[a-z0-9_-]+$"
+            }
+          },
+          "rate_card": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "input_usd_per_mtok",
+              "output_usd_per_mtok",
+              "source",
+              "verified_at"
+            ],
+            "properties": {
+              "input_usd_per_mtok": {
+                "type": "number",
+                "minimum": 0
+              },
+              "output_usd_per_mtok": {
+                "type": "number",
+                "minimum": 0
+              },
+              "per_call_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "A fixed charge per tool call the platform bills (for example a web search)."
+              },
+              "source": {
+                "type": "string",
+                "format": "uri"
+              },
+              "verified_at": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          },
+          "typical_latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 300
+          }
+        }
+      }
+    }
+  }
+}

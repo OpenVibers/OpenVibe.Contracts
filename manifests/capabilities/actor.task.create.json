@@ -1,0 +1,24 @@
+{
+  "id": "actor.task.create",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Give OpenVibe.Actor a task: POST /api/v1/tasks with the task in plain words, a mode (cheapest, balanced, best, fastest, private) and a budget. Actor picks the agent system for it with openvibe-sdk/placement, runs it, has a second model family check the result, and records the result, the cost to the cent and the explanation on the task (platform.task@1, answered 201 with state queued). POST /api/v1/tasks/:id/cancel stops a task that has not ended. A person's tasks are theirs; a token that names a project puts the task in that project. Each person has a daily free allowance; a task whose cheapest eligible agent would cost more than its budget fails with actor.budget.exceeded instead of running.",
+  "inputSchema": "actor.task-create-request@1",
+  "outputSchema": "platform.task@1",
+  "permissions": [
+    "actor:tasks:create"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "actor-task",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/tasks",
+    "POST /api/v1/tasks/:id/cancel"
+  ]
+}

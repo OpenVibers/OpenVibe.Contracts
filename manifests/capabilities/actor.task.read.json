@@ -1,0 +1,23 @@
+{
+  "id": "actor.task.read",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read one of your tasks (platform.task@1: state, result, cost, explanation) with GET /api/v1/tasks/:id, and watch it live with GET /api/v1/tasks/:id/events: text/event-stream of actor.task-event@1 (state changes, the agent's steps, the end), resumable with Last-Event-ID. Only the task's requester (or its project's tokens) can read it.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "platform.task@1",
+  "permissions": [
+    "actor:tasks:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "actor-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/tasks/:id",
+    "GET /api/v1/tasks/:id/events"
+  ]
+}
