@@ -1,0 +1,84 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.116.0 <1.0.0"
+  },
+  "id": "food",
+  "name": "OpenVibe.Food",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Food",
+  "domains": [
+    "openvibe.food"
+  ],
+  "publicOrigin": "https://openvibe.food",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [
+    "food.plan.read",
+    "food.plan.write",
+    "food.pantry.read",
+    "food.pantry.write"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "food.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are rows in the database, so a person stays signed in across the restart; nothing runs in the background that a restart could leave half done"
+        },
+        {
+          "kind": "state",
+          "what": "the OpenStreetMap answer cache is read from food_geo_cache, so a place searched before the stop is not fetched again"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0002 only create Food's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.116.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 4970, unit openvibe-food.service. Food near you (food banks and budget grocers from OpenStreetMap through Nominatim and Overpass, one request a second per host, cached 7 days, ODbL attribution on every answer), the budget food list carried over from OpenVibe.Tools with chain-by-chain prices, meal plans for a household and a budget (saved per person), and a pantry with deterministic \"what can I make\" suggestions. Public reads need no token; plans and pantries are a signed-in person's (or an app token's with the capability). Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client food, JWKS). Owns food_plans, food_pantry and food_geo_cache.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4970",
+  "site": {
+    "name": "Food",
+    "icon": "food",
+    "tagline": "What should we eat?",
+    "what": "Find food banks and budget grocers near you, plan a week of meals for your household and budget, and see what your cupboard can make.",
+    "legalProfile": "tools",
+    "position": 24
+  }
+}

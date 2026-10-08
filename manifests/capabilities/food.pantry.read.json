@@ -1,0 +1,21 @@
+{
+  "id": "food.pantry.read",
+  "version": "1.0",
+  "owner": "food",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read a caller's pantry with the suggestions matched against it: GET /api/v1/pantry → { items, foods, suggestions: { can_make, almost }, note }. The suggestions are deterministic matches against basic recipes, not dietary advice.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "food.pantry-result@1",
+  "permissions": [
+    "food:pantry:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "food-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/pantry"
+  ]
+}

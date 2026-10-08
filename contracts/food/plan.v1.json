@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/food/plan.v1.json",
+  "title": "FoodPlan",
+  "description": "food.plan@1: one saved plan on OpenVibe.Food.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "people",
+    "days",
+    "budget",
+    "created_at",
+    "plan"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^pln_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "people": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "days": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "budget": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "plan": {
+      "type": "object",
+      "description": "The plan as Food worked it out: spec, items (the shopping list), by_store, menu (one entry a day: breakfast, lunch, dinner, snack), group_coverage and totals (cost, cost_per_person_day, kcal, protein). Food may add fields.",
+      "required": [
+        "spec",
+        "items",
+        "menu",
+        "totals"
+      ],
+      "properties": {
+        "spec": {
+          "type": "object",
+          "required": [
+            "people",
+            "days"
+          ],
+          "properties": {
+            "people": {
+              "type": "integer"
+            },
+            "days": {
+              "type": "integer"
+            },
+            "budget": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "menu": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "day"
+            ],
+            "properties": {
+              "day": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "totals": {
+          "type": "object",
+          "required": [
+            "cost"
+          ],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

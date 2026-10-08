@@ -27,13 +27,6 @@
   "keywords": "openvibe work, job search, job listings, job alerts, ai job application assistant",
   "launch": "job listings and alerts",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "OpenVibe.Network",
-        "url": "https://openvibe.network",
-        "note": "One free account for every OpenVibe site, ready today."
-      }
-    ]
+    "service": "work"
   }
 }

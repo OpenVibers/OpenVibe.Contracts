@@ -73477,6 +73477,343 @@
           }
         }
       }
+    },
+    "food.pantry-request": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/pantry-request.v1.json",
+        "title": "FoodPantryRequest",
+        "description": "food.pantry-request@1: PUT /api/v1/pantry on OpenVibe.Food replaces the pantry with exactly these food slugs.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
+          }
+        }
+      }
+    },
+    "food.pantry-result": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/pantry-result.v1.json",
+        "title": "FoodPantryResult",
+        "description": "food.pantry-result@1: GET and PUT /api/v1/pantry on OpenVibe.Food: the slugs, each food as the food list shows it, and the suggestions matched against them (can_make: everything there; almost: one or two items missing, named).",
+        "type": "object",
+        "required": [
+          "items",
+          "foods",
+          "suggestions"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "foods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "slug",
+                "name"
+              ],
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "suggestions": {
+            "type": "object",
+            "required": [
+              "can_make",
+              "almost"
+            ],
+            "properties": {
+              "can_make": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "slug",
+                    "name"
+                  ],
+                  "properties": {
+                    "slug": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "serves": {
+                      "type": "integer"
+                    },
+                    "minutes": {
+                      "type": "integer"
+                    },
+                    "missing": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "almost": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "slug",
+                    "name"
+                  ],
+                  "properties": {
+                    "slug": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "serves": {
+                      "type": "integer"
+                    },
+                    "minutes": {
+                      "type": "integer"
+                    },
+                    "missing": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "food.plan": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/plan.v1.json",
+        "title": "FoodPlan",
+        "description": "food.plan@1: one saved plan on OpenVibe.Food.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "people",
+          "days",
+          "budget",
+          "created_at",
+          "plan"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pln_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "people": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "days": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "budget": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "plan": {
+            "type": "object",
+            "description": "The plan as Food worked it out: spec, items (the shopping list), by_store, menu (one entry a day: breakfast, lunch, dinner, snack), group_coverage and totals (cost, cost_per_person_day, kcal, protein). Food may add fields.",
+            "required": [
+              "spec",
+              "items",
+              "menu",
+              "totals"
+            ],
+            "properties": {
+              "spec": {
+                "type": "object",
+                "required": [
+                  "people",
+                  "days"
+                ],
+                "properties": {
+                  "people": {
+                    "type": "integer"
+                  },
+                  "days": {
+                    "type": "integer"
+                  },
+                  "budget": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "menu": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "day"
+                  ],
+                  "properties": {
+                    "day": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              },
+              "totals": {
+                "type": "object",
+                "required": [
+                  "cost"
+                ],
+                "properties": {
+                  "cost": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "food.plan-create-request": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/plan-create-request.v1.json",
+        "title": "FoodPlanCreateRequest",
+        "description": "food.plan-create-request@1: POST /api/v1/plans on OpenVibe.Food. people 1-12, days 1-14, budget (US dollars for the whole plan) optional, title optional.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "people",
+          "days"
+        ],
+        "properties": {
+          "people": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 14
+          },
+          "budget": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 5000
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "food.plan-result": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/plan-result.v1.json",
+        "title": "FoodPlanResult",
+        "description": "food.plan-result@1: answers of the plan routes on OpenVibe.Food: GET /api/v1/plans → { plans }; GET /api/v1/plans/:id and POST /api/v1/plans (201) → the plan itself (food.plan@1).",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "plans"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "plans": {
+                "type": "array",
+                "items": {
+                  "$ref": "plan.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "plan.v1.json"
+          }
+        ]
+      }
     }
   }
 }

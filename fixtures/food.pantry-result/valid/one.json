@@ -1,0 +1,26 @@
+{
+  "items": [
+    "eggs-dozen"
+  ],
+  "foods": [
+    {
+      "slug": "eggs-dozen",
+      "name": "Eggs, dozen"
+    }
+  ],
+  "suggestions": {
+    "can_make": [],
+    "almost": [
+      {
+        "slug": "egg-fried-rice",
+        "name": "Egg fried rice",
+        "serves": 2,
+        "minutes": 15,
+        "missing": [
+          "Rice"
+        ]
+      }
+    ]
+  },
+  "note": "Basic suggestions."
+}

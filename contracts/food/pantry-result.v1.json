@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/food/pantry-result.v1.json",
+  "title": "FoodPantryResult",
+  "description": "food.pantry-result@1: GET and PUT /api/v1/pantry on OpenVibe.Food: the slugs, each food as the food list shows it, and the suggestions matched against them (can_make: everything there; almost: one or two items missing, named).",
+  "type": "object",
+  "required": [
+    "items",
+    "foods",
+    "suggestions"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "foods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "slug",
+          "name"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "suggestions": {
+      "type": "object",
+      "required": [
+        "can_make",
+        "almost"
+      ],
+      "properties": {
+        "can_make": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "slug",
+              "name"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "serves": {
+                "type": "integer"
+              },
+              "minutes": {
+                "type": "integer"
+              },
+              "missing": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "almost": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "slug",
+              "name"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "serves": {
+                "type": "integer"
+              },
+              "minutes": {
+                "type": "integer"
+              },
+              "missing": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

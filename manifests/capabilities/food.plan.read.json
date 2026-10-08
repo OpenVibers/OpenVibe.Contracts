@@ -1,0 +1,22 @@
+{
+  "id": "food.plan.read",
+  "version": "1.0",
+  "owner": "food",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read the plans a caller saved: GET /api/v1/plans (newest first, ?limit to 50) → { plans }, and GET /api/v1/plans/:id → one plan. Only the person who saved a plan (or their tokens) can read it.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "food.plan-result@1",
+  "permissions": [
+    "food:plans:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "food-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/plans",
+    "GET /api/v1/plans/:id"
+  ]
+}
