@@ -1,7 +1,7 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.94.0 <1.0.0"
+    "openvibe-contracts": ">=0.113.0 <1.0.0"
   },
   "id": "services",
   "name": "OpenVibe.Services",
@@ -12,35 +12,74 @@
   ],
   "publicOrigin": "https://openvibe.services",
   "exposure": {
-    "state": "internal",
-    "publicSite": "placeholder",
-    "note": "deployed on loopback :4930 (2026-10-07); openvibe.services keeps its OpenVibe.Sites placeholder until Services has a product surface"
+    "state": "live",
+    "publicSite": "service"
   },
   "capabilities": [
-    "services.resource.read"
+    "services.resource.read",
+    "services.release.read",
+    "services.release.manage"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "services.app.published",
+    "services.app.deprecated",
+    "services.app.revoked",
+    "services.moderation.action"
+  ],
   "eventsConsumed": [],
-  "namespacesOwned": [],
+  "namespacesOwned": [
+    "services.*"
+  ],
   "lifecycle": {
     "liveness": {
-      "none": "not built yet; nothing listens on a loopback address"
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
     },
     "shutdown": {
-      "none": "not built yet; nothing runs or drains"
+      "signal": "SIGTERM",
+      "deadlineSeconds": 5,
+      "drains": [
+        "HTTP server closed",
+        "Network key refresher stopped",
+        "outbox relay stopped (awaited)",
+        "store closed"
+      ]
     },
     "startupRecovery": {
-      "none": "not built yet; nothing starts"
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
     },
     "rollback": {
-      "none": "not built yet; nothing is released or rolled back"
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": [
+        "the console tables arrive in migration 0002 (expand only): a release from before it simply never reads them"
+      ]
     },
     "contracts": {
-      "range": ">=0.94.0 <1.0.0"
+      "range": ">=0.113.0 <1.0.0"
     },
     "leases": {
-      "none": "not built yet; nothing runs"
+      "none": "no claims: the outbox relay is the only background work and Events dedupes by event_id"
     }
   },
-  "notes": "The developer platform of the network (plan T13, ADR-048): where projects, apps, keys, grants, capabilities, usage, quotas, runs, events, deploys and health over every service are looked up, with each service keeping its own data. Serves its merged resource index on loopback :4930 (plan T13 step 4); services.resource.read is its first capability."
+  "notes": "Port 4930, unit openvibe-services.service. The developer platform of the network (plan T13, ADR-048; the developer portal moved here from OpenVibe.Codes, ADR-014): projects, members, apps, credentials, grants and quotas are OWNED BY NETWORK and shown through Network's /api/v1/projects API with the signed-in person's own token; Services stores none of them and never a secret. Services owns manifests, releases (+ append-only release_log), trust tiers (metadata) and playground run logs, and serves the merged resource index over every authority (services.resource.read). Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client services, JWKS, the projects API, the registry, client-credentials) and publishes through OpenVibe.Events (events.event.publish). Playgrounds call Events and Media with the APP's own token only. Docs are generated at boot from the pinned openvibe-contracts and openvibe-sdk.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4930",
+  "site": {
+    "name": "Services",
+    "icon": "services",
+    "tagline": "Build on OpenVibe",
+    "what": "The developer platform: projects, apps, keys, grants and usage; API, contract, SDK and event docs; OAuth and webhook tools, playgrounds and app releases.",
+    "legalProfile": "ugc",
+    "position": 7
+  }
 }

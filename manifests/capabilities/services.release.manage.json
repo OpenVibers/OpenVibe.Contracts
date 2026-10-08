@@ -1,0 +1,29 @@
+{
+  "id": "services.release.manage",
+  "version": "1.0",
+  "owner": "services",
+  "status": "active",
+  "visibility": "public",
+  "description": "An app manages release metadata for ITSELF with its own token (audience openvibe.services): create a release from a validated app or mod manifest, publish, deprecate (with a reason and an optional replacement) and revoke it. The token's sub must be app:<the app in the path>; people manage releases in the console at openvibe.services with their project role instead. Trust tiers are not part of this capability (staff metadata only).",
+  "inputSchema": "services.release-manage-request@1",
+  "permissions": [
+    "services:releases:write"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "services-release-write",
+  "events": [
+    "services.app.published",
+    "services.app.deprecated",
+    "services.app.revoked"
+  ],
+  "implementedBy": [
+    "POST /api/v1/apps/:app/releases",
+    "POST /api/v1/releases/:id/publish",
+    "POST /api/v1/releases/:id/deprecate",
+    "POST /api/v1/releases/:id/revoke"
+  ],
+  "outputSchema": "services.release-manage-result@1"
+}

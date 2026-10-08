@@ -5,36 +5,28 @@
   "icon": "fa-server",
   "accent": "#38bdf8",
   "tagline": "Build with the whole network.",
-  "description": "OpenVibe.Services will be the way into everything programmable on OpenVibe. Start from what you want to build (monitor a page and summarise changes, run an AI agent, process uploads, control a robot, add support to a site) and it assembles the services, keys, permissions and working code for you. Then operate it all in one place: projects, grants, usage, quotas, runs, events, deploys and health, with each service keeping its own data.",
+  "description": "OpenVibe.Services is the way into everything programmable on OpenVibe: projects, apps, keys, grants and usage over Network's developer API; generated API, contract, SDK, capability and event docs; OAuth and webhook tools; playgrounds; app and mod releases; and one resource index over every service, with each service keeping its own data. Next: start from what you want to build and it assembles the services, keys, permissions and working code for you.",
   "pillars": [
     {
       "title": "Discover",
-      "text": "A catalog of services, recipes and templates, by what they do."
+      "text": "Every service, capability, contract and event, with generated API references."
     },
     {
       "title": "Build",
-      "text": "Projects, apps, keys, capabilities, playgrounds and starter code."
+      "text": "Projects, apps, keys, grants, playgrounds, OAuth and webhook tools, starter code."
+    },
+    {
+      "title": "Ship",
+      "text": "App and mod manifests, releases and trust tiers, with a public page per app."
     },
     {
       "title": "Operate",
-      "text": "Every resource across the network: runs, events, usage, quotas, health."
-    },
-    {
-      "title": "Learn",
-      "text": "Help, Wiki and Codes docs, linked from every page."
+      "text": "Usage, quotas, exports and one resource index over the whole network."
     }
   ],
   "keywords": "openvibe services, developer platform, open source backend, api platform, event bus api, ai gateway, website monitoring api, developer console",
-  "launch": "the catalog and console over the services that already run (AI, Events, Media, Search, Sources, Host, Tools)",
+  "launch": "the developer console and docs (moved from openvibe.codes) and the merged resource index",
   "relationships": {
-    "service": "services",
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "OpenVibe.Codes",
-        "url": "https://openvibe.codes",
-        "note": "The developer portal and docs work today."
-      }
-    ]
+    "service": "services"
   }
 }

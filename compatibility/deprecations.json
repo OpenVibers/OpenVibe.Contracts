@@ -63,6 +63,48 @@
       "since": "0.110.0",
       "removeAfter": "1.0.0",
       "reason": "Community forum producer retired after the move to OpenVibe.Space; historical payload remains loadable"
+    },
+    {
+      "id": "codes.app-manifest",
+      "replacement": "services.app-manifest@1",
+      "since": "0.113.0",
+      "removeAfter": "1.0.0",
+      "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
+    },
+    {
+      "id": "codes.release-manage-result",
+      "replacement": "services.release-manage-result@1",
+      "since": "0.113.0",
+      "removeAfter": "1.0.0",
+      "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
+    },
+    {
+      "id": "codes.release",
+      "replacement": "services.release@1",
+      "since": "0.113.0",
+      "removeAfter": "1.0.0",
+      "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
+    },
+    {
+      "id": "codes.release-read-result",
+      "replacement": "services.release-read-result@1",
+      "since": "0.113.0",
+      "removeAfter": "1.0.0",
+      "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
+    },
+    {
+      "id": "codes.release-manage-request",
+      "replacement": "services.release-manage-request@1",
+      "since": "0.113.0",
+      "removeAfter": "1.0.0",
+      "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
+    },
+    {
+      "id": "codes.moderation.action",
+      "replacement": "services.moderation.action@1",
+      "since": "0.113.0",
+      "removeAfter": "1.0.0",
+      "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
     }
   ]
 }

@@ -322,7 +322,7 @@
       "schema": "codes/app-manifest.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-014"
     },
     {
@@ -332,7 +332,7 @@
       "schema": "codes/release-manage-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "codes.release",
@@ -341,7 +341,7 @@
       "schema": "codes/release.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "codes.release-read-result",
@@ -350,7 +350,7 @@
       "schema": "codes/release-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "codes.release-manage-request",
@@ -359,13 +359,69 @@
       "schema": "codes/release-manage-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "codes.moderation.action",
       "version": "1.0.0",
       "owner": "codes",
       "schema": "events/payloads/codes.moderation.action.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "retired",
+      "adr": "ADR-022"
+    },
+    {
+      "id": "services.app-manifest",
+      "version": "1.0.0",
+      "owner": "services",
+      "schema": "services/app-manifest.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
+      "id": "services.release-manage-result",
+      "version": "1.0.0",
+      "owner": "services",
+      "schema": "services/release-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "services.release",
+      "version": "1.0.0",
+      "owner": "services",
+      "schema": "services/release.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "services.release-read-result",
+      "version": "1.0.0",
+      "owner": "services",
+      "schema": "services/release-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "services.release-manage-request",
+      "version": "1.0.0",
+      "owner": "services",
+      "schema": "services/release-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "services.moderation.action",
+      "version": "1.0.0",
+      "owner": "services",
+      "schema": "events/payloads/services.moderation.action.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active",

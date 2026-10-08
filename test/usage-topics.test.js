@@ -1,5 +1,5 @@
 'use strict';
-// T5 step 8: *.usage.recorded rollups are counts for dashboards and quotas, never money. Only network, codes and
+// T5 step 8: *.usage.recorded rollups are counts for dashboards and quotas, never money. Only network, services and
 // zone may consume one; Billing never does (it rates platform.usage-sample readings, billing.usage.record).
 const assert = require('assert');
 const fs = require('fs');
@@ -7,7 +7,7 @@ const path = require('path');
 const { capabilities, services, schema } = require('..');
 
 const dir = path.join(__dirname, '..', 'manifests', 'services');
-const MAY_CONSUME = new Set(['network', 'codes', 'zone']);
+const MAY_CONSUME = new Set(['network', 'services', 'zone']);
 const isUsageTopic = (t) => /\.usage\.recorded$/.test(t);
 
 const consumers = [];
@@ -19,7 +19,7 @@ for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json')).sort()) {
 }
 
 for (const c of consumers) {
-  assert.ok(MAY_CONSUME.has(c.id), `${c.id} consumes ${c.topics.join(', ')}: only network, codes and zone may consume a *.usage.recorded topic`);
+  assert.ok(MAY_CONSUME.has(c.id), `${c.id} consumes ${c.topics.join(', ')}: only network, services and zone may consume a *.usage.recorded topic`);
 }
 assert.ok(!consumers.some((c) => c.id === 'billing'), 'billing never consumes a *.usage.recorded topic');
 assert.ok(consumers.some((c) => c.id === 'network'), 'network consumes the usage rollups it adds up per project');
