@@ -805,13 +805,14 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 // without an older shape are common.moderation-action@1, and Network consumes every one of them.
 {
     const moderation = contracts.catalog.filter(c => /\.moderation\.action$/.test(c.id));
-    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'codes', 'space']) {
+    for (const svc of ['media', 'tools', 'games', 'wiki', 'blog', 'news', 'reviews', 'deals', 'coupons', 'trade', 'services', 'space']) {
         const id = `${svc}.moderation.action`;
         const c = moderation.find(x => x.id === id);
         ok(c && c.owner === svc && c.adr === 'ADR-022', `${id} is owned by ${svc}`);
         ok(contracts.schema(id).$ref === '../../common/moderation-action.v1.json', `${id} is a common.moderation-action@1`);
     }
-    for (const c of moderation) ok(services.get('network').eventsConsumed.includes(c.id), `network consumes ${c.id} into the moderation audit log`);
+    // A retired type (codes.moderation.action, 0.113.0) stays loadable for history; nothing produces it any more.
+    for (const c of moderation.filter(x => x.status !== 'retired')) ok(services.get('network').eventsConsumed.includes(c.id), `network consumes ${c.id} into the moderation audit log`);
     const M = (v) => contracts.validate('common.moderation-action@1', v).valid;
     const base = { action: 'post.hidden', target: { type: 'post', id: 'p1', owner_subject: null }, actor_subject: null };
     ok(M(base) && M({ ...base, reason: 'spam', details: { previous: 'published' } }), 'action, target and actor_subject are enough; reason and details are optional');
@@ -913,7 +914,7 @@ sub(path.join(__dirname, 'bot-manifest.test.js'));
 sub(path.join(__dirname, 'product-catalog.test.js'));
 // Named object zones: identity, retired names, list limits and per-zone usage (ADR-031 amendment 2026-10-02).
 sub(path.join(__dirname, 'zones.test.js'));
-// *.usage.recorded rollups are counts: only network, codes and zone may consume one, never billing (T5 step 8).
+// *.usage.recorded rollups are counts: only network, services and zone may consume one, never billing (T5 step 8).
 sub(path.join(__dirname, 'usage-topics.test.js'));
 sub(path.join(__dirname, 'billing-grace.test.js'));
 sub(path.join(__dirname, 'resources.test.js'));

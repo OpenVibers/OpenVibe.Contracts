@@ -1,0 +1,23 @@
+{
+  "id": "services.release.read",
+  "version": "1.0",
+  "owner": "services",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read public release metadata: an app's published, deprecated and revoked releases with their manifests, compatibility ranges and the app's trust tier (metadata only; it never grants anything). Drafts are never returned. Public; no token needed.",
+  "outputSchema": "services.release-read-result@1",
+  "permissions": [
+    "services:releases:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "services-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/apps/:app/releases",
+    "GET /api/v1/apps/:app/trust",
+    "GET /api/v1/releases/:id"
+  ],
+  "inputSchema": "common.no-body@1"
+}

@@ -21,22 +21,13 @@
   "site": {
     "name": "Codes",
     "icon": "codes",
-    "tagline": "Build on OpenVibe",
-    "what": "The developer portal: API and SDK docs, the service and capability registry, event schemas, credentials, playgrounds and mod publishing.",
+    "tagline": "Code with any agent",
+    "what": "The open coding-agent harness: Claude Code, Codex, OpenCode, Command Code, the DeepSeek API and self-hosted models behind one router with hand-offs, sessions and budgets, and the way to improve OpenVibe itself.",
     "legalProfile": "ugc",
-    "position": 7
+    "position": 22
   },
-  "capabilities": [
-    "codes.resource.read",
-    "codes.release.read",
-    "codes.release.manage"
-  ],
-  "eventsProduced": [
-    "codes.app.published",
-    "codes.app.deprecated",
-    "codes.app.revoked",
-    "codes.moderation.action"
-  ],
+  "capabilities": [],
+  "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [
     "codes.*"
@@ -51,15 +42,14 @@
       "deadlineSeconds": 5,
       "drains": [
         "HTTP server closed",
-        "outbox relay stopped (awaited)",
         "store closed"
       ]
     },
     "startupRecovery": {
       "resumes": [
         {
-          "kind": "outbox",
-          "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+          "kind": "sessions",
+          "what": "signed-in visitors keep their session cookies (verified offline against Network's JWKS); nothing else is pending: the harness catalog is read from the release at boot"
         }
       ]
     },
@@ -80,5 +70,5 @@
       "none": "no claims: one process owns codes.db (better-sqlite3, single writer)"
     }
   },
-  "notes": "Port 4900, unit openvibe-codes.service, state /var/lib/openvibe-codes. The developer portal (ADR-014): projects, members, apps, credentials, grants and quotas are OWNED BY NETWORK and shown through Network's /api/v1/projects API with the signed-in person's own token; Codes stores none of them and never a secret. Codes owns only manifests, releases (+ append-only release_log), trust tiers (metadata) and playground run logs in its own SQLite. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client codes, JWKS, the projects API, the registry, client-credentials) and publishes through OpenVibe.Events (events.event.publish). Playgrounds call Events and Media with the APP's own token only. Docs are generated at boot from the pinned openvibe-contracts and openvibe-sdk."
+  "notes": "Port 4900, unit openvibe-codes.service. The open coding-agent harness (owner 2026-10-08): the harness catalog and router (GET /api/v1/harnesses, POST /api/v1/harnesses/route), the way to improve OpenVibe (contributing, code of conduct, the contributor ladder) and permanent redirects from the former developer-portal paths to openvibe.services, where the portal moved (manifests, releases, trust, playgrounds, docs, OAuth and webhook tools)."
 }

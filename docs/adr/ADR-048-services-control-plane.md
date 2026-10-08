@@ -90,11 +90,11 @@ below is in `lib/ids.js` except `act`, `run` and `zon`, which are proposed and n
 | Service | Kind | Id prefix |
 |---|---|---|
 | Actor | `actor.actor` | `act` (proposed, not in `lib/ids.js`) |
-| Codes | `codes.manifest` | `mfs` |
-| Codes | `codes.release` | `rel` |
 | Events | `events.queue` | **future: when Events stores queues** |
 | Events | `events.subscription` | `sub` |
 | Media | `media.object` | `med` |
+| Services | `services.manifest` | `mfs` (was `codes.manifest` until 0.113.0, when the developer portal moved from Codes to Services) |
+| Services | `services.release` | `rel` (was `codes.release` until 0.113.0) |
 | Run | `run.sandbox` | `run` (proposed, not in `lib/ids.js`; collides with the existing `run_` AI run ids, `contracts/ai/run.v1.json`) |
 | Watch | `watch.watch` | `wch` |
 | Zone | `zone.object-zone` | `zon` (proposed, not in `lib/ids.js`; today only a usage-recorded description field `<zon_id>`) |

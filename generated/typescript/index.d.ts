@@ -10933,6 +10933,130 @@ export interface CodesModerationActionPayload {
   details?: {};
 }
 
+/** services.app-manifest@1.0.0 (owner: services) */
+
+/** services.release-manage-result@1.0.0 (owner: services) */
+/**
+ * services.release-manage-result@1: answers of services.release.manage on OpenVibe.Services (an app token managing its own releases). POST /api/v1/apps/:app/releases → 201 { release, warnings } (a draft, or published at once with publish: true; manifest validation warnings); POST /api/v1/releases/:id/publish | deprecate | revoke → { release, event_id } (the codes.release.* event announcing it; null when a revoke announced nothing). Refusals are problem+json: 401 auth.required, 403 release.forbidden (another app's release), 409 release.not_draft, 422 with validation errors.
+ */
+export interface ServicesReleaseManageResult {
+  release: ServicesRelease;
+  warnings?: unknown[];
+  event_id?: string | null;
+}
+
+/** services.release@1.0.0 (owner: services) */
+/**
+ * services.release@1: one release of an app or mod as OpenVibe.Services presents it (server/domain/releases.js view): its lifecycle (draft → published → deprecated or revoked), compatibility ranges and the app's trust tier (metadata only; grants in OpenVibe.Network are the authority). The manifest itself is served separately (services.app-manifest@1).
+ */
+export interface ServicesRelease {
+  id: string;
+  app_id: string;
+  project_id?: string | null;
+  environment?: "production" | "sandbox";
+  kind: "app" | "mod";
+  subject_id?: string | null;
+  name: string;
+  version: string;
+  status: "draft" | "published" | "deprecated" | "revoked";
+  manifest_id: string;
+  compatibility?: {};
+  notes?: string | null;
+  created_at: string;
+  created_by?: string | null;
+  published_at?: string | null;
+  deprecated_at?: string | null;
+  deprecation_reason?: string | null;
+  replacement?: string | null;
+  revoked_at?: string | null;
+  revocation_reason?: string | null;
+  trust: {
+    tier: string;
+    note?: string | null;
+    set_by?: string | null;
+    set_at?: string | null;
+  };
+}
+
+/** services.release-read-result@1.0.0 (owner: services) */
+/**
+ * services.release-read-result@1: answers of services.release.read on OpenVibe.Services (public; no token needed, but a token that is presented must hold the capability; never drafts). GET /api/v1/apps/:app/releases → { app_id, trust, releases } (published, deprecated and revoked releases, newest first); GET /api/v1/apps/:app/trust → { app_id, tier, note, set_by, set_at, note_on_authority } (metadata only: grants in OpenVibe.Network are the authority); GET /api/v1/releases/:id → { release, manifest } (the manifest as published: services.app-manifest@1 for an app, mods.mod-manifest@1 for a mod). An id that is not an app or a release is 404.
+ */
+export type ServicesReleaseReadResult =
+  | {
+      app_id: string;
+      trust: {
+        tier: string;
+        note?: string | null;
+        set_by?: string | null;
+        set_at?: string | null;
+      };
+      releases: ServicesRelease[];
+    }
+  | {
+      app_id: string;
+      tier: string;
+      note?: string | null;
+      set_by?: string | null;
+      set_at?: string | null;
+      note_on_authority: string;
+    }
+  | {
+      release: ServicesRelease;
+      manifest: AppManifest | ModManifest | null;
+    };
+
+/** services.release-manage-request@1.0.0 (owner: services) */
+/**
+ * services.release-manage-request@1: bodies of services.release.manage on OpenVibe.Services (an app token managing its own releases). POST /api/v1/apps/:app/releases: { kind?, manifest, notes?, publish? } — kind mod or app (anything else is app); manifest must validate as services.app-manifest@1 for an app or mods.mod-manifest@1 for a mod (422 manifest.invalid with the validation otherwise; a version that already has a release is 409); notes are cut to 2000 characters; publish true publishes the draft at once. POST /api/v1/releases/:id/deprecate: { reason, replacement? } (a reason is required, cut to 500 characters; replacement must be a published release of the same app). POST /api/v1/releases/:id/revoke: { reason } (required). POST /api/v1/releases/:id/publish takes no body. Unknown fields are ignored.
+ */
+export type ServicesReleaseManageRequest =
+  | {
+      /**
+       * mod, or app (the default).
+       */
+      kind?: string;
+      manifest: AppManifest | ModManifest;
+      notes?: string | null;
+      publish?: boolean;
+    }
+  | {
+      reason: string;
+      replacement?: string | null;
+    }
+  | NoBody;
+
+/** services.moderation.action@1.0.0 (owner: services) */
+/**
+ * services.moderation.action v1 (ADR-022, roadmap WS-D task 1). A staff or moderator action on someone else's content or account in OpenVibe.Services, such as revoking or deprecating someone else's release or app, and withdrawing trust in a publisher or signing key. Not a person acting on their own content. Written to the service's outbox in the transaction that performs the action; OpenVibe.Network keeps it in the moderation audit log. The payload is common.moderation-action@1. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself.
+ */
+export interface ServicesModerationActionPayload {
+  /**
+   * A short verb id, as the service names it: <thing>.<what happened> (post.hidden, user.banned, release.revoked, guard.blocked).
+   */
+  action: string;
+  target: {
+    /**
+     * What was acted on, in the service's own words (post, page, release, user, player, …).
+     */
+    type: string;
+    id: string;
+    /**
+     * Whose content or account it was, when known.
+     */
+    owner_subject?: string | null;
+  };
+  /**
+   * The staff member or moderator (null only for a service acting without a person).
+   */
+  actor_subject: string | null;
+  reason?: string | null;
+  /**
+   * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
+   */
+  details?: {};
+}
+
 /** events.redaction-directive@1.0.0 (owner: events) */
 /**
  * payload.redacts (ADR-026): a producer takes back events it published earlier. Any event may carry it, normally the producer's own *.deleted event. It names event_ids, or subject_type + subject_ids, or both, never an empty list. event_ids names events directly; subject_type + subject_ids names every stored event of the same source (for an app, the same project and environment) about those subjects. OpenVibe.Events rewrites each target into a tombstone (events.tombstone-payload@1) in the transaction that stores the directive. Naming another source's event is 403 events.redaction_not_allowed (the whole batch is refused); a malformed directive is 422 events.invalid_redaction. An event that carries a directive is never redacted itself.

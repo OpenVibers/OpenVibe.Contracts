@@ -4,6 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.113.0 — 2026-10-08
+
+**The developer portal moves from OpenVibe.Codes to OpenVibe.Services; Codes becomes the open coding-agent harness**
+(owner decision 2026-10-08; plan T13 and T16 notes). Codes' portal data in production is empty, so the names move at once.
+- New in Services' namespace: `services.release.read` and `services.release.manage` (audience `openvibe.services`), the
+  schemas `services.app-manifest@1`, `services.release@1`, `services.release-read-result@1`,
+  `services.release-manage-request@1`, `services.release-manage-result@1`, the event payload `services.moderation.action@1`
+  and the events `services.app.published|deprecated|revoked`. They are the `codes.*` ones under the new owner and audience.
+- Retired, kept loadable: `codes.release.read`, `codes.release.manage`, `codes.resource.read` and the six `codes.*` schemas
+  (`compatibility/deprecations.json` names each replacement). Network consumes `services.moderation.action`.
+- `manifests/services/services.json`: live with `publicSite: service`; it owns manifests, releases, trust tiers and
+  playground logs (kinds `services.manifest` `mfs_`, `services.release` `rel_`) besides the merged index; its site
+  block is the developer platform's. `manifests/products/openvibe.services.json` describes the console and docs.
+- `manifests/services/codes.json`: no capability or event; the site block describes the harness (position 22).
+
 ## 0.112.0 — 2026-10-07
 
 **Robots driven through the relay plugin.** `bot.robot-profile@1` is 1.1.0: `mapping.driver` gains `relay`, the
