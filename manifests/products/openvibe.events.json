@@ -31,8 +31,8 @@
     "plannedRepo": "OpenVibe.Events",
     "meanwhile": [
       {
-        "label": "OpenVibe.Codes",
-        "url": "https://openvibe.codes",
+        "label": "OpenVibe.Services",
+        "url": "https://openvibe.services/docs/api/events",
         "note": "Events API and SDK reference."
       }
     ]

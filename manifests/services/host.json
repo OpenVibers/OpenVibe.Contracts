@@ -58,8 +58,8 @@
         },
         {
           "label": "Build on OpenVibe",
-          "url": "https://openvibe.codes",
-          "note": "Projects, apps and credentials on OpenVibe.Codes, the developer portal."
+          "url": "https://openvibe.services",
+          "note": "Projects, apps and credentials on OpenVibe.Services, the developer platform."
         }
       ]
     }
