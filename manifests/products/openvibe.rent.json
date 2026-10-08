@@ -27,13 +27,6 @@
   "keywords": "openvibe rent, rental search, apartments for rent, rooms for rent, commercial rentals, rental alerts",
   "launch": "verified listing sources and the shared discovery system",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
-      {
-        "label": "OpenVibe.Deals",
-        "url": "https://openvibe.deals",
-        "note": "Deal discovery is the sibling room."
-      }
-    ]
+    "service": "rent"
   }
 }

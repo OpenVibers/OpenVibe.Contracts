@@ -1,7 +1,7 @@
 {
-  "version": "0.0.0",
+  "version": "0.2.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.102.0 <1.0.0"
+    "openvibe-contracts": ">=0.117.0 <1.0.0"
   },
   "id": "watch",
   "name": "OpenVibe.Watch",
@@ -12,9 +12,8 @@
   ],
   "publicOrigin": "https://openvibe.watch",
   "exposure": {
-    "state": "internal",
-    "publicSite": "placeholder",
-    "note": "deployed on loopback :4730 (2026-10-07); openvibe.watch keeps its OpenVibe.Sites placeholder until Watch has a product surface"
+    "state": "live",
+    "publicSite": "service"
   },
   "capabilities": [
     "watch.watch.read",
@@ -35,23 +34,64 @@
   "namespacesOwned": [],
   "lifecycle": {
     "liveness": {
-      "none": "not built yet; nothing listens on a loopback address"
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
     },
     "shutdown": {
-      "none": "not built yet; nothing runs or drains"
+      "signal": "SIGTERM",
+      "deadlineSeconds": 25,
+      "drains": [
+        "requests in flight get 15 s",
+        "prune timers and the Network key refresher stopped",
+        "the scheduler stops starting checks and lets those in flight finish (each bounded by the fetch timeout)",
+        "the outbox relay stopped",
+        "HTTP server closed",
+        "database closed"
+      ]
     },
     "startupRecovery": {
-      "none": "not built yet; nothing starts"
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are rows in the database, so a person stays signed in across the restart"
+        },
+        {
+          "kind": "schedule",
+          "what": "watches that fell due during the stop are checked again, oldest first, at most WATCH_MAX_CONCURRENT at a time (next_due_at and not_before are rows)"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent watch.* events in the outbox go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        }
+      ]
     },
     "rollback": {
-      "none": "not built yet; nothing is released or rolled back"
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0002 only create Watch's own tables and the site's sessions; an earlier release ignores the sessions table"
+      }
     },
     "contracts": {
-      "range": ">=0.102.0 <1.0.0"
+      "range": ">=0.117.0 <1.0.0"
     },
     "leases": {
-      "none": "not built yet; nothing runs"
+      "none": "no claims: one process runs the scheduler; check.run() refuses a second check of a watch in that process"
     }
   },
-  "notes": "The watch service of the network (plan T18): a user defines persistent observations and conditions over pages, feeds, APIs, events, releases, streams and local devices, and is told when they change or wakes an Actor task, a Codes run, a Run job or a webhook. Sources ingests structured sources, Run runs expensive browser/code checks, Node observes local/LAN things, Events transports the trigger. Planned: nothing is built; the OpenVibe.Watch repository does not exist yet."
+  "notes": "Port 4730, unit openvibe-watch.service. Persistent, user-defined observations and conditions over pages, feeds and APIs (plan T18): the registry, the check engine with the pull carriers (http, feed, api; conditional GET, per-host spacing, backoff, Retry-After), observations and watch.* events through a transactional outbox, the bearer API (/api/v1, loopback) and, since 0.2.0, the public site at openvibe.watch: sign in with OpenVibe (OAuth client watch, PKCE S256, sessions in Watch's database) and create, edit, pause, check and delete your watches in the browser. Event, webhook, Run and Node carriers, AI extraction and actions come in later T18 steps and are not offered. A fired condition becomes a WATCH_TRIGGERED notification through OpenVibe.Network.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4730",
+  "site": {
+    "name": "Watch",
+    "icon": "watch",
+    "tagline": "Know the moment it changes",
+    "what": "Watch a page, a feed or a JSON API and get told when the value you care about changes or crosses the line you set, checked politely on your cadence.",
+    "legalProfile": "tools",
+    "position": 29
+  }
 }

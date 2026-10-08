@@ -1,0 +1,93 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.117.0 <1.0.0"
+  },
+  "id": "quest",
+  "name": "OpenVibe.Quest",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Quest",
+  "domains": [
+    "openvibe.quest"
+  ],
+  "publicOrigin": "https://openvibe.quest",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [
+    "chat.room.message.created",
+    "community.comment.created",
+    "games.player.joined",
+    "live.stream.started",
+    "network.follow.created",
+    "space.thread.created",
+    "tools.job.created",
+    "wiki.revision.created"
+  ],
+  "namespacesOwned": [
+    "quest.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database is what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "OpenCoins retry timer stopped",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are rows in the database, so a person stays signed in across the restart"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers the counted events that were pending during the stop (at least once; the inbox quest_event_inbox applies each event_id once)"
+        },
+        {
+          "kind": "jobs",
+          "what": "completions whose OpenCoins credit failed are retried by the timer when QUEST_COINS=on (idempotency_key = the completion id, so Network never credits twice)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0002 only create Quest's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.117.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 4980, unit openvibe-quest.service. The network's shared quest log: first-party quests counted from domain events OpenVibe.Events delivers to POST /internal/events (signature v2 under QUEST_EVENTS_SECRET, loopback only; Quest creates its own subscriptions at boot with events.subscription.manage), the person taken from the field each event's own schema defines. It also counts community.thread.created and community.post.created, which return with the forum to OpenVibe.Community (T20). A completion awards its badge once and, when QUEST_COINS=on, credits OpenCoins through OpenVibe.Network (network.coins.credit, identity.subject.resolve; caps per person and global per day). Rewards are never Vibes. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client quest, JWKS) and OpenVibe.Events. Owns quest_progress, quest_completions, quest_badges, quest_event_inbox.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:4980",
+  "site": {
+    "name": "Quest",
+    "icon": "quest",
+    "tagline": "Badges for what you really do",
+    "what": "One quest log across every OpenVibe site: real things you do on the network complete quests that pay badges, and OpenCoins once they are switched on.",
+    "legalProfile": "account",
+    "position": 27
+  }
+}
