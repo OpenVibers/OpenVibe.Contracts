@@ -5,7 +5,7 @@
   "icon": "fa-eye",
   "accent": "#facc15",
   "tagline": "Watch anything. Hear about what matters.",
-  "description": "OpenVibe.Watch will watch web pages, feeds, APIs, prices and stock, Git releases, OpenVibe activity, videos, livestreams and your own cameras, pull out what changed or what matters, and tell you, your apps or your AI agents. Checks respect site terms and robots rules, heavy work runs on shared workers, and cameras are read by a small agent on your own network so nothing is exposed to the internet.",
+  "description": "OpenVibe.Watch checks a web page, an RSS or Atom feed or a JSON API on the cadence you pick, pulls out the value you care about, and tells you when it changes or crosses the line you set — politely: it asks sites whether anything changed before reading them, spaces its requests per site and waits when a site asks. Next: events and webhooks, browser checks, prices and releases, cameras on your own network, and actions for your apps and agents.",
   "pillars": [
     {
       "title": "Any source",
@@ -24,8 +24,30 @@
       "text": "Site terms, robots rules and fair limits on every check."
     }
   ],
+  "faq": [
+    {
+      "question": "What can I watch today?",
+      "answer": "A web page (all of it, or the part a CSS selector or a pattern picks), an RSS or Atom feed (for example a GitHub releases feed), or a JSON API and a path into it."
+    },
+    {
+      "question": "How often does it check?",
+      "answer": "Every 15 minutes, hourly, every 6 hours or daily — your choice. It never checks faster than that, backs off when a site fails, and waits when a site asks it to."
+    },
+    {
+      "question": "How will I hear about a change?",
+      "answer": "When your condition fires, a notification arrives on your OpenVibe account, and the watch page shows every check and the value it found."
+    },
+    {
+      "question": "Does it hammer the sites it watches?",
+      "answer": "No. It sends the site's own validators first, so an unchanged page costs no body, keeps a minimum gap between requests to one site, and records every check."
+    },
+    {
+      "question": "Is it free?",
+      "answer": "Yes, while it is in alpha."
+    }
+  ],
   "keywords": "website change monitoring, uptime monitoring api, price drop alerts, restock alerts, release monitoring, youtube video analysis, security camera alerts",
-  "launch": "the watch service on the shared queue and workers",
+  "launch": "events, webhooks, browser checks and actions",
   "relationships": {
     "service": "watch"
   }

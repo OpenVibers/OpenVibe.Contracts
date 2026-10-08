@@ -48,14 +48,7 @@
   },
   "capabilities": [],
   "eventsProduced": [],
-  "eventsConsumed": [
-    "network.user.token_valid_after",
-    "network.block.changed",
-    "network.subject.merged",
-    "network.account.export_requested",
-    "network.account.deleted",
-    "vip.membership.changed"
-  ],
+  "eventsConsumed": [],
   "namespacesOwned": [
     "space.*"
   ],
@@ -76,8 +69,8 @@
     "startupRecovery": {
       "resumes": [
         {
-          "kind": "consumer",
-          "what": "Events subscriptions are recreated and pending network and VIP deliveries are retried idempotently"
+          "kind": "state",
+          "what": "OpenVibe.Network's signing keys are fetched again at boot; sign-in lives in the browser's cookies, so nothing else resumes (Space consumes no events since the forum returned to Community)"
         }
       ]
     },

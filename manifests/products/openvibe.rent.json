@@ -5,7 +5,7 @@
   "icon": "fa-key",
   "accent": "#22d3ee",
   "tagline": "Every rental, one search.",
-  "description": "OpenVibe.Rent will bring rentals into one place: apartments, rooms, commercial space, equipment and services from many listing sites, with alerts, AI summaries that link their sources, and one OpenVibe account for your searches.",
+  "description": "OpenVibe.Rent is one place to find and offer things to rent — apartments, rooms, houses, workspace, parking and storage, and equipment — posted by people, with no street addresses, contact details only for signed-in people, reports that hide a listing until staff look, and saved searches. Nothing is scraped and no payments are taken. Next: listing sources whose terms are verified, and alerts.",
   "pillars": [
     {
       "title": "One search",
@@ -24,8 +24,30 @@
       "text": "Saved searches and favourites under your OpenVibe account."
     }
   ],
+  "faq": [
+    {
+      "question": "Who posts the listings?",
+      "answer": "People with an OpenVibe account. In this first version nothing is copied from other listing sites; sources whose terms allow it come later, each named and linked."
+    },
+    {
+      "question": "Does OpenVibe take payments or deposits?",
+      "answer": "No. A listing carries a way to contact the person who posted it and nothing more. Never pay or send a deposit before you have seen the place and signed an agreement."
+    },
+    {
+      "question": "Why can't I add my street address?",
+      "answer": "For your safety: a listing names a city and, if you like, a neighbourhood. A street address is refused."
+    },
+    {
+      "question": "How long does a listing stay up?",
+      "answer": "Thirty days. You can renew it, edit it, hide it or delete it at any time."
+    },
+    {
+      "question": "What happens when a listing is reported?",
+      "answer": "Three reports from different people hide it until OpenVibe staff look at it and restore or remove it."
+    }
+  ],
   "keywords": "openvibe rent, rental search, apartments for rent, rooms for rent, commercial rentals, rental alerts",
-  "launch": "verified listing sources and the shared discovery system",
+  "launch": "verified listing sources and alerts",
   "relationships": {
     "service": "rent"
   }

@@ -5,7 +5,7 @@
   "icon": "fa-map",
   "accent": "#fbbf24",
   "tagline": "Quests across the whole network.",
-  "description": "OpenVibe.Quest will be the network's shared quest and rewards system: quests that span every OpenVibe site, from a streamer's getting-started steps on OpenVibe.Live to community challenges, cosmetics and OpenCoins, moddable and open to anyone through the API.",
+  "description": "OpenVibe.Quest is the network's shared quest log: real things you do on OpenVibe sites — going live, following someone, starting a thread, chatting, playing, improving a wiki page — complete quests that pay badges, and OpenCoins once they are switched on. Quest counts only the events the sites already report. Next: OpenCoins rewards, quests streamers and communities write, and quests for OpenVibe.Games.",
   "pillars": [
     {
       "title": "Quests everywhere",
@@ -24,8 +24,26 @@
       "text": "The quest layer for OpenVibe.Games and its creators."
     }
   ],
+  "faq": [
+    {
+      "question": "How does Quest know what I did?",
+      "answer": "The OpenVibe sites already report events such as a stream starting or a thread being posted. Quest counts the ones its quests name, for the person each event names, and nothing else: no page views, no clicks, nothing you wrote."
+    },
+    {
+      "question": "What do quests pay?",
+      "answer": "A badge for each completed quest, shown on your profile across the network. OpenCoins rewards are built and switch on soon."
+    },
+    {
+      "question": "Are OpenCoins money?",
+      "answer": "No. OpenCoins are loyalty points for the OpenVibe network. They are never money, and Quest never pays in Vibes."
+    },
+    {
+      "question": "Can my community make its own quests?",
+      "answer": "Not yet: community quests need moderation tools first. The quest log and its API are already built for them."
+    }
+  ],
   "keywords": "openvibe quest, quests, achievements, rewards, gamification, streamer quests",
-  "launch": "the shared quest service",
+  "launch": "OpenCoins rewards and community quests",
   "relationships": {
     "service": "quest"
   }

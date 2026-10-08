@@ -5,7 +5,7 @@
   "icon": "fa-utensils",
   "accent": "#fb923c",
   "tagline": "What should we eat?",
-  "description": "OpenVibe.Food will bring food together: compare delivery prices across apps, find coupons and budget meal kits, plan meals alone, as a couple or as a group, and turn what is in your cupboard into recipes with the network's AI. The food tools on OpenVibe.Tools will live here too.",
+  "description": "OpenVibe.Food finds food banks, pantries and budget grocers near you from OpenStreetMap, plans meals for one person, a couple or a household for the days ahead with the shopping list and what it costs, and tells you what your cupboard can already make. Next: delivery price comparison, meal kits and planning together.",
   "pillars": [
     {
       "title": "Compare delivery",
@@ -24,8 +24,30 @@
       "text": "Tell it what you have; get ideas that use it."
     }
   ],
+  "faq": [
+    {
+      "question": "Is it free?",
+      "answer": "Yes. Searching for food and reading the food list need no account; a free OpenVibe account keeps your plans and your cupboard."
+    },
+    {
+      "question": "Where do the food banks and stores come from?",
+      "answer": "From OpenStreetMap, the map anyone can edit, under the Open Database License. Every result is credited and links to its OpenStreetMap entry, and answers are cached for a week so OpenStreetMap is asked politely."
+    },
+    {
+      "question": "Are the prices live?",
+      "answer": "No. The food list carries typical prices from budget chains, and every price says so. Live delivery and store prices come with the comparison feature."
+    },
+    {
+      "question": "How does the meal planner work?",
+      "answer": "Tell it how many people, how many days and, if you like, a budget. It picks budget foods that cover each food group, splits the shopping by the cheapest store and lays out a menu for each day."
+    },
+    {
+      "question": "Is the cupboard advice dietary advice?",
+      "answer": "No. It matches what you have against simple recipes written by OpenVibe and says which ones you can make now and which need one or two more things."
+    }
+  ],
   "keywords": "openvibe food, compare food delivery prices, meal kits, meal planning, recipe ideas, grocery tools",
-  "launch": "the food tools moving over from OpenVibe.Tools",
+  "launch": "delivery price comparison and shared plans",
   "relationships": {
     "service": "food"
   }

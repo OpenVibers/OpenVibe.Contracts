@@ -31,6 +31,12 @@ the other way.
   `manifests/services/network.json` consumes `community.moderation.action` and no longer `space.moderation.action`.
 - Space ends with no active capability, so `generated/openapi/space.json` is gone.
 - Generated bundles, types and OpenAPI documents are refreshed for 0.118.0.
+- `manifests/services/space.json` consumes no events: Space's account export and deletion hooks only ever touched the
+  forum tables (the forum's account data is Community's), so Network stops waiting for Space's part.
+- `manifests/services/deals.json`: exposure `live` with `publicSite: service` — OpenVibe.Deals serves openvibe.deals
+  (472 DealNews offers with their links kept verbatim and attributed, community votes and watches).
+- Product copy for the services that launched this week: OpenVibe.Food, Help, Work, Quest, Rent and Watch describe
+  what is live now and what comes next, and each gets the common questions OpenVibe.Help shows.
 
 ## 0.117.0 — 2026-10-08
 
