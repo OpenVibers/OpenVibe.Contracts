@@ -108,6 +108,23 @@ ADR-012 and ADR-025 hold until a later ADR changes them.
 - Review covers safety, art rights and honest rarity before anything is published.
 - A published item credits its creator. A revenue share waits for §5's ADR.
 
+**The Workshop, v1 (amendment, 2026-10-09).** Money stays out (§5); everything below is free.
+
+- **Workshop kinds.** A kind may be marked `workshop`. Any signed-in person may submit a definition of it: the person is
+  its issuer (`user:usr_…`) and its credit, and it starts `in_review`. Nobody else sees it until staff publish it.
+- **The first Workshop kind is `network.badge`:** one small image shown just before a person's name in chat and on
+  their profile (renderer `network.badge.image@1`), one worn at a time. The image is PNG or WebP, square, 64 to 512
+  pixels and at most 200 KB, stored in OpenVibe.Media. The equipped read carries its `media_id`, so a renderer needs
+  no second read.
+- **Review** (`inventory.definition.review`, staff only): safety, art rights (the creator confirms they made the
+  image or may use it) and an honest rarity (common unless staff decide otherwise). Staff publish it or reject it with a
+  reason the creator reads. A rejected item stays visible to its creator; they can submit another.
+- **Giving.** A creator gives their published item, free, to the people they choose: origin `granted`, within the
+  supply cap they set (at most 10 000) and at most 100 gifts a day. Nothing is sold, bought or traded.
+- **Limits.** At most 5 items in review at once and 20 submissions a day per person.
+- **Takedown.** Staff retire an item (it is no longer given; owned instances stay) or revoke every instance when it
+  breaks the rules. Both are recorded in the ledger.
+
 ### 7. Account data and merge
 
 - **Export (ADR-033):** the person's instances, equipped set and ledger rows.

@@ -60521,6 +60521,10 @@ export interface InventoryKind {
    * Who owns the kind's namespace.
    */
   issuer: string;
+  /**
+   * A Workshop kind (ADR-054 §6): any signed-in person may submit a definition of it, issued by and credited to them, published only after staff review.
+   */
+  workshop?: boolean;
 }
 
 /** inventory.definition@1.0.0 (owner: inventory) */
@@ -60654,6 +60658,10 @@ export interface InventoryEquipped {
            * The definition's art token, so a renderer needs no second read.
            */
           token?: string;
+          /**
+           * The definition's art image (an OpenVibe.Media object), so a renderer needs no second read.
+           */
+          media_id?: string;
         }
       | undefined;
   };
@@ -60685,6 +60693,19 @@ export interface InventoryGrantRequest {
    */
   reason?: string;
   attributes?: {};
+}
+
+/** inventory.review-request@1.0.0 (owner: inventory) */
+/**
+ * Staff's decision on a Workshop definition in review (ADR-054 §6): publish it (optionally with an honest rarity other than common) or reject it with a reason the creator sees.
+ */
+export interface InventoryReviewRequest {
+  decision: "publish" | "reject";
+  /**
+   * Required for reject: what the creator reads.
+   */
+  reason?: string;
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
 }
 
 /** inventory.equip-request@1.0.0 (owner: inventory) */

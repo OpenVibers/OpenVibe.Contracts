@@ -96,8 +96,8 @@
       "service": "inventory",
       "name": "OpenVibe.Inventory",
       "origin": "https://inventory.openvibe.network",
-      "operations": 14,
-      "capabilities": 6
+      "operations": 15,
+      "capabilities": 7
     },
     {
       "service": "live",

@@ -73899,6 +73899,10 @@
             "type": "string",
             "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$",
             "description": "Who owns the kind's namespace."
+          },
+          "workshop": {
+            "type": "boolean",
+            "description": "A Workshop kind (ADR-054 §6): any signed-in person may submit a definition of it, issued by and credited to them, published only after staff review."
           }
         }
       }
@@ -74223,6 +74227,11 @@
                   "type": "string",
                   "maxLength": 80,
                   "description": "The definition's art token, so a renderer needs no second read."
+                },
+                "media_id": {
+                  "type": "string",
+                  "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+                  "description": "The definition's art image (an OpenVibe.Media object), so a renderer needs no second read."
                 }
               }
             },
@@ -74305,6 +74314,59 @@
           "attributes": {
             "type": "object"
           }
+        }
+      }
+    },
+    "inventory.review-request": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/review-request.v1.json",
+        "title": "InventoryReviewRequest",
+        "description": "Staff's decision on a Workshop definition in review (ADR-054 §6): publish it (optionally with an honest rarity other than common) or reject it with a reason the creator sees.",
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "publish",
+              "reject"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "Required for reject: what the creator reads."
+          },
+          "rarity": {
+            "type": "string",
+            "enum": [
+              "common",
+              "uncommon",
+              "rare",
+              "epic",
+              "legendary"
+            ]
+          }
+        },
+        "if": {
+          "properties": {
+            "decision": {
+              "const": "reject"
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "reason"
+          ]
         }
       }
     },
