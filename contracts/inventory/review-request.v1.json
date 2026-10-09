@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/review-request.v1.json",
+  "title": "InventoryReviewRequest",
+  "description": "Staff's decision on a Workshop definition in review (ADR-054 §6): publish it (optionally with an honest rarity other than common) or reject it with a reason the creator sees.",
+  "type": "object",
+  "required": [
+    "decision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": [
+        "publish",
+        "reject"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "description": "Required for reject: what the creator reads."
+    },
+    "rarity": {
+      "type": "string",
+      "enum": [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary"
+      ]
+    }
+  },
+  "if": {
+    "properties": {
+      "decision": {
+        "const": "reject"
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "reason"
+    ]
+  }
+}

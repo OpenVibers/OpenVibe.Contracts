@@ -40,6 +40,11 @@
             "type": "string",
             "maxLength": 80,
             "description": "The definition's art token, so a renderer needs no second read."
+          },
+          "media_id": {
+            "type": "string",
+            "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The definition's art image (an OpenVibe.Media object), so a renderer needs no second read."
           }
         }
       },

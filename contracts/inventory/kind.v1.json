@@ -78,6 +78,10 @@
       "type": "string",
       "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$",
       "description": "Who owns the kind's namespace."
+    },
+    "workshop": {
+      "type": "boolean",
+      "description": "A Workshop kind (ADR-054 §6): any signed-in person may submit a definition of it, issued by and credited to them, published only after staff review."
     }
   }
 }

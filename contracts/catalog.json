@@ -6470,6 +6470,16 @@
       "adr": "ADR-054"
     },
     {
+      "id": "inventory.review-request",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/review-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
       "id": "inventory.equip-request",
       "version": "1.0.0",
       "owner": "inventory",

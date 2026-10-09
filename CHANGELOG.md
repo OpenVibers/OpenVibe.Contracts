@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.124.0 — 2026-10-09
+
+- ADR-054 §6 amendment, **the Workshop v1**: Workshop kinds (any person may submit a definition, issued by and
+  credited to them, published only after staff review); the first is `network.badge` (a small reviewed image before a
+  person's name, renderer `network.badge.image@1`). Review, free giving within a cap and a daily limit, submission
+  limits and takedown are all specified there.
+- `inventory/kind@1` gains `workshop`; an `inventory/equipped@1` slot gains `media_id` (the art image, so a renderer
+  needs no second read).
+- New `inventory/review-request@1` (publish, optionally with a rarity, or reject with a reason, with fixtures).
+  `inventory.definition.review` is active: `POST /api/v1/definitions/:id/review`, staff only. Additive.
+
 ## 0.123.0 — 2026-10-09
 
 - ADR-054 amendment, §3 "Grantors": `inventory/definition@1` and `inventory/definition-request@1` gain an optional
