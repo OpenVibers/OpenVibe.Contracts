@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.120.0 — 2026-10-09
+
+**Account export and deletion everywhere a person has rows.** Nine more services declare the two account events.
+- `deals`, `trade`, `tips`, `vip`, `watch`, `services`, `wiki`, `blog` and `bot` consume
+  network.account.export_requested and network.account.deleted (openvibe-sdk/account-data, SDK 0.37.0). Their startup
+  recovery names the redelivery. Codes holds no personal rows since its console moved to Services, so it declares none.
+
 ## 0.119.0 — 2026-10-08
 
 **OpenVibe.MediaHub goes live: openvibe.download as a private drive.** Account export and deletion are declared for the

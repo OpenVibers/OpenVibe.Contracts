@@ -86,7 +86,9 @@
   "eventsConsumed": [
     "sources.item.created",
     "sources.item.updated",
-    "sources.item.removed"
+    "sources.item.removed",
+    "network.account.export_requested",
+    "network.account.deleted"
   ],
   "namespacesOwned": [
     "deals.*"
@@ -119,6 +121,10 @@
         {
           "kind": "outbox",
           "what": "unsent events in the outbox table go to OpenVibe.Events once the relay starts (at least once; Events dedupes by event_id)"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each export and deletion once)"
         }
       ]
     },
