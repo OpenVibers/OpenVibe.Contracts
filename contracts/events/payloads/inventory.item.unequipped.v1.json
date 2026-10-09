@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.unequipped.v1.json",
+  "title": "InventoryItemUnequippedPayload",
+  "description": "inventory.item.unequipped v1 (OpenVibe.Inventory, ADR-054). A person cleared a slot. Envelope: subject { type: user, id: owner }, visibility public.",
+  "type": "object",
+  "required": [
+    "kind",
+    "slot",
+    "owner"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "slot": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    }
+  }
+}

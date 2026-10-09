@@ -1,0 +1,13 @@
+{
+  "equipped": {
+    "subject": "usr_01JZ0000000000000000000AAA",
+    "slots": {
+      "live.name_effect:name_effect": {
+        "instance_id": "inv_01JZ00000000000000000001NV",
+        "definition_id": "itd_01JZ00000000000000000001TD",
+        "token": "name-fx-rainbow"
+      }
+    },
+    "updated_at": "2026-10-09T03:00:00Z"
+  }
+}

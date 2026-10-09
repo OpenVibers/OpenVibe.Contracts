@@ -6398,6 +6398,156 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "inventory.kind",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/kind.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.definition",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/definition.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.instance",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/instance.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.inventory",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/inventory.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.equipped",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/equipped.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.equipped-batch",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/equipped-batch.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.grant-request",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/grant-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.equip-request",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/equip-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.definition-request",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/definition-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.item.granted",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.item.granted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.item.consumed",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.item.consumed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.item.revoked",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.item.revoked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.item.equipped",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.item.equipped.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.item.unequipped",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.item.unequipped.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
+    },
+    {
+      "id": "inventory.definition.published",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.definition.published.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-054"
     }
   ]
 }

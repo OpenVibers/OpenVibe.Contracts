@@ -1,0 +1,19 @@
+{
+  "id": "inventory.item.consume",
+  "version": "1.0",
+  "owner": "inventory",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "PLANNED (ADR-054, plan T21): Consume or revoke an instance of a definition the caller issued (POST /api/v1/instances/:id/consume | /revoke → inventory.instance@1). It becomes active when OpenVibe.Inventory implements the route.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "inventory.instance@1",
+  "permissions": [
+    "inventory:grant"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "inventory-write",
+  "events": [],
+  "implementedBy": []
+}

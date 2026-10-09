@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/equipped.v1.json",
+  "title": "InventoryEquipped",
+  "description": "What a person has equipped (ADR-054 §2), keyed <kind>:<slot>. Surfaces read it in batches (inventory.equipped-batch@1) and cache it briefly.",
+  "type": "object",
+  "required": [
+    "subject",
+    "slots",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "slots": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+:[a-z][a-z0-9_]{0,31}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "instance_id",
+          "definition_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "token": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "The definition's art token, so a renderer needs no second read."
+          }
+        }
+      },
+      "description": "<kind>:<slot> → the instance in use."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

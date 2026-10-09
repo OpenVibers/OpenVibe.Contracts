@@ -1,0 +1,17 @@
+{
+  "id": "inventory.definition.review",
+  "version": "1.0",
+  "owner": "inventory",
+  "status": "planned",
+  "visibility": "internal",
+  "description": "PLANNED (ADR-054, plan T21): Staff publish or reject a submitted definition (POST /api/v1/definitions/:id/review → inventory.definition@1), checking safety, art rights and an honest rarity (ADR-054 §6). It becomes active when OpenVibe.Inventory implements the route.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "inventory.definition@1",
+  "permissions": [
+    "inventory:review"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "inventory-write",
+  "events": [],
+  "implementedBy": []
+}

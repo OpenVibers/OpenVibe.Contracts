@@ -1,0 +1,10 @@
+{
+  "kind": "network.profile_frame",
+  "name": "Aurora frame",
+  "art": {
+    "media_id": "med_01JZ0000000000000000000MED"
+  },
+  "rarity": "rare",
+  "supply_cap": 500,
+  "publish": true
+}

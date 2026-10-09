@@ -4,6 +4,24 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.121.0 — 2026-10-09
+
+**The OpenVibe inventory, decided (ADR-054, plan T21 step 1).** A new authority, OpenVibe.Inventory, will own items
+across the network: kinds, definitions, instances, the equipped set and an append-only ledger.
+- `docs/adr/ADR-054-inventory-authority.md` (accepted):
+  - service `inventory`, `ov_inventory`, loopback 5030, `inventory.openvibe.network`;
+  - issuers grant within their namespace;
+  - nothing is sold, bought, traded or converted until a later money ADR (ADR-012, ADR-025);
+  - Live's cosmetics become the first kinds, migrated convert-verify-delete.
+- `manifests/services/inventory.json` (placeholder), with seven planned capabilities: `inventory.item.read`,
+  `inventory.item.list`, `inventory.equip.manage`, `inventory.item.grant`, `inventory.item.consume`,
+  `inventory.definition.manage` and `inventory.definition.review`.
+- Schemas, with fixtures: `inventory.kind@1`, `inventory.definition@1`, `inventory.instance@1`,
+  `inventory.inventory@1`, `inventory.equipped@1`, `inventory.equipped-batch@1`, `inventory.grant-request@1`,
+  `inventory.equip-request@1` and `inventory.definition-request@1`.
+- Events: `inventory.item.granted`, `inventory.item.consumed`, `inventory.item.revoked`, `inventory.item.equipped`,
+  `inventory.item.unequipped` and `inventory.definition.published`.
+
 ## 0.120.0 — 2026-10-09
 
 **Account export and deletion everywhere a person has rows.** Nine more services declare the two account events.

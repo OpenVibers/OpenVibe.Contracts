@@ -1,0 +1,25 @@
+{
+  "id": "network.badge",
+  "name": "Badge",
+  "description": "How your name looks in chat.",
+  "slots": [],
+  "surfaces": [
+    {
+      "surface": "profile",
+      "renderer": "network.badge.img@1"
+    }
+  ],
+  "attributes": {
+    "type": "object",
+    "required": [
+      "css_class"
+    ],
+    "properties": {
+      "css_class": {
+        "type": "string"
+      }
+    }
+  },
+  "stackable": true,
+  "issuer": "service:network"
+}

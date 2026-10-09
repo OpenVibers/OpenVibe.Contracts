@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.equipped.v1.json",
+  "title": "InventoryItemEquippedPayload",
+  "description": "inventory.item.equipped v1 (OpenVibe.Inventory, ADR-054). A person equipped an instance in a slot; surfaces drop their cached equipped set. Envelope: subject { type: user, id: owner }, visibility public.",
+  "type": "object",
+  "required": [
+    "instance_id",
+    "definition_id",
+    "kind",
+    "slot",
+    "owner"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "instance_id": {
+      "type": "string",
+      "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "definition_id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "slot": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    }
+  }
+}

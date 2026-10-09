@@ -1,0 +1,12 @@
+{
+  "id": "inv_01JZ00000000000000000001N2",
+  "definition_id": "itd_01JZ00000000000000000001T2",
+  "owner": "usr_01JZ0000000000000000000AAA",
+  "origin": "earned",
+  "state": "owned",
+  "acquired_at": "2026-10-09T03:00:00Z",
+  "serial": 12,
+  "attributes": {
+    "wear": 0.1
+  }
+}

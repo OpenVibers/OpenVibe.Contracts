@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.granted.v1.json",
+  "title": "InventoryItemGrantedPayload",
+  "description": "inventory.item.granted v1 (OpenVibe.Inventory, ADR-054). An instance was granted or earned (ADR-054 §4). Envelope: subject { type: user, id: owner }, visibility subject, actor the issuer.",
+  "type": "object",
+  "required": [
+    "instance_id",
+    "definition_id",
+    "kind",
+    "owner",
+    "origin",
+    "issuer"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "instance_id": {
+      "type": "string",
+      "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "definition_id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "origin": {
+      "enum": [
+        "granted",
+        "earned",
+        "migrated"
+      ]
+    },
+    "issuer": {
+      "type": "string",
+      "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$"
+    }
+  }
+}

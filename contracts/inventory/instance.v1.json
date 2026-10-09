@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/instance.v1.json",
+  "title": "InventoryInstance",
+  "description": "One item a person owns (ADR-054 §2): a definition, its origin and state. bought and traded are reserved for the later money ADR (ADR-054 §5) and are refused until it is accepted.",
+  "type": "object",
+  "required": [
+    "id",
+    "definition_id",
+    "owner",
+    "origin",
+    "state",
+    "acquired_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "definition_id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "origin": {
+      "enum": [
+        "granted",
+        "earned",
+        "migrated",
+        "bought",
+        "traded"
+      ]
+    },
+    "state": {
+      "enum": [
+        "owned",
+        "consumed",
+        "revoked"
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Per-instance values (a serial number, a wear value), valid against the kind."
+    },
+    "serial": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The instance's number within a capped supply."
+    },
+    "acquired_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

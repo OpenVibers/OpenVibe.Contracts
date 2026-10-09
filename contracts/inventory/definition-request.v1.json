@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/definition-request.v1.json",
+  "title": "InventoryDefinitionRequest",
+  "description": "Create or edit a definition in the issuer's namespace (inventory.definition.manage). A service's or app's definition is published when it asks; a creator's goes to staff review (in_review) first.",
+  "type": "object",
+  "required": [
+    "kind",
+    "name",
+    "art",
+    "rarity"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 64
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "art": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "media_id": {
+          "type": "string",
+          "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "An OpenVibe.Media object (an image, an animation)."
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "A token the kind's renderers know (a CSS class, a speech preset)."
+        },
+        "emoji": {
+          "type": "string",
+          "maxLength": 16
+        }
+      }
+    },
+    "rarity": {
+      "enum": [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary"
+      ]
+    },
+    "attributes": {
+      "type": "object"
+    },
+    "supply_cap": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "aliases": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"
+      }
+    },
+    "publish": {
+      "type": "boolean",
+      "description": "Ask for publication (a creator's definition goes to review)."
+    }
+  }
+}

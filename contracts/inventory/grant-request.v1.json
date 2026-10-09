@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/grant-request.v1.json",
+  "title": "InventoryGrantRequest",
+  "description": "An issuer grants one instance of a definition it issued to a person (inventory.item.grant). Idempotent per idempotency_key: a repeat answers the instance already granted. A capped definition that is sold out answers 409 inventory.supply_exhausted.",
+  "type": "object",
+  "required": [
+    "definition_id",
+    "subject",
+    "idempotency_key"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "definition_id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128
+    },
+    "origin": {
+      "enum": [
+        "granted",
+        "earned"
+      ],
+      "default": "granted"
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Shown in the ledger: what the person did (a quest, an event, a milestone)."
+    },
+    "attributes": {
+      "type": "object"
+    }
+  }
+}

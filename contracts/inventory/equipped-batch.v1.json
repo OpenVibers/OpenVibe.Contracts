@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/equipped-batch.v1.json",
+  "title": "InventoryEquippedBatch",
+  "description": "The equipped sets of many people at once (GET /api/v1/equipped?subjects=…, up to 100): one query on the authority, one call per chat render batch.",
+  "type": "object",
+  "required": [
+    "equipped"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "equipped": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "equipped.v1.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "subject": "usr_01JZ0000000000000000000AAA",
+  "instances": [],
+  "definitions": {
+    "fx_rainbow": {
+      "id": "itd_01JZ00000000000000000001TD",
+      "kind": "live.name_effect",
+      "name": "Rainbow Name",
+      "description": "Rainbow cycling colors",
+      "art": {
+        "token": "name-fx-rainbow",
+        "emoji": "🌈"
+      },
+      "rarity": "common",
+      "attributes": {
+        "css_class": "name-fx-rainbow"
+      },
+      "issuer": "service:live",
+      "aliases": [
+        "fx_rainbow"
+      ],
+      "supply": {
+        "cap": null,
+        "issued": 4
+      },
+      "status": "published",
+      "created_at": "2026-10-09T03:00:00Z",
+      "updated_at": "2026-10-09T03:00:00Z",
+      "published_at": "2026-10-09T03:00:00Z"
+    }
+  },
+  "next_cursor": null
+}
