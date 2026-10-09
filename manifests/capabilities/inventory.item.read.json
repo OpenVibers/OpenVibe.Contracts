@@ -1,0 +1,17 @@
+{
+  "id": "inventory.item.read",
+  "version": "1.0",
+  "owner": "inventory",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (ADR-054, plan T21): Read a person's public inventory (GET /api/v1/people/:subject/items → inventory.inventory@1: owned instances of published definitions), their equipped set (GET /api/v1/people/:subject/equipped, GET /api/v1/equipped?subjects=… up to 100 → inventory.equipped-batch@1), definitions and kinds. It becomes active when OpenVibe.Inventory implements the route.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "inventory.inventory@1",
+  "permissions": [
+    "inventory:read"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "inventory-read",
+  "events": [],
+  "implementedBy": []
+}

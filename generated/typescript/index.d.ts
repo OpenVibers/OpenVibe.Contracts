@@ -59044,3 +59044,1750 @@ export type FoodPlanResult =
       plans: FoodPlan[];
     }
   | FoodPlan;
+
+/** inventory.kind@1.0.0 (owner: inventory) */
+/**
+ * An item kind (ADR-054 §2): what items of the kind carry (an attribute schema), where they can be equipped (slots) and which surfaces render them. A new kind is a contract plus a renderer, never a new table.
+ */
+export interface InventoryKind {
+  /**
+   * <namespace>.<kind>, e.g. live.name_effect, games.skin, network.badge.
+   */
+  id: string;
+  name: string;
+  description?: string;
+  /**
+   * Where one item of the kind can be equipped; empty: the kind is not equippable (a collectible, a badge shown on the profile).
+   *
+   * @maxItems 16
+   */
+  slots:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * @minItems 1
+   * @maxItems 16
+   */
+  surfaces:
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        },
+        {
+          /**
+           * Where an item of this kind shows.
+           */
+          surface: string;
+          /**
+           * The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1.
+           */
+          renderer: string;
+        }
+      ];
+  /**
+   * A JSON Schema every definition's attributes must satisfy.
+   */
+  attributes: {};
+  /**
+   * True: one person may hold several instances of one definition.
+   */
+  stackable: boolean;
+  /**
+   * Who owns the kind's namespace.
+   */
+  issuer: string;
+}
+
+/** inventory.definition@1.0.0 (owner: inventory) */
+/**
+ * An item definition (ADR-054 §2): one item of a kind, issued by a service, an app or a creator, with an honest rarity, attributes valid against the kind and an optional supply cap. Published definitions can be granted; retired ones cannot, and their instances stay.
+ */
+export interface InventoryDefinition {
+  id: string;
+  kind: string;
+  name: string;
+  description?: string;
+  art: {
+    /**
+     * An OpenVibe.Media object (an image, an animation).
+     */
+    media_id?: string;
+    /**
+     * A token the kind's renderers know (a CSS class, a speech preset).
+     */
+    token?: string;
+    emoji?: string;
+  };
+  /**
+   * Shown as is; any odds that apply are shown with it, never hidden.
+   */
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  attributes: {};
+  issuer: string;
+  /**
+   * Earlier ids of the same item (Live's fx_rainbow, hat_crown, …).
+   *
+   * @maxItems 8
+   */
+  aliases?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  supply: {
+    /**
+     * null: unlimited.
+     */
+    cap: number | null;
+    issued: number;
+  };
+  status: "draft" | "in_review" | "published" | "retired";
+  /**
+   * The creator of a community item (ADR-054 §6).
+   */
+  credit?: {
+    subject?: string;
+    name?: string;
+  };
+  created_at: string;
+  updated_at: string;
+  published_at?: string;
+}
+
+/** inventory.instance@1.0.0 (owner: inventory) */
+/**
+ * One item a person owns (ADR-054 §2): a definition, its origin and state. bought and traded are reserved for the later money ADR (ADR-054 §5) and are refused until it is accepted.
+ */
+export interface InventoryInstance {
+  id: string;
+  definition_id: string;
+  owner: string;
+  origin: "granted" | "earned" | "migrated" | "bought" | "traded";
+  state: "owned" | "consumed" | "revoked";
+  /**
+   * Per-instance values (a serial number, a wear value), valid against the kind.
+   */
+  attributes?: {};
+  /**
+   * The instance's number within a capped supply.
+   */
+  serial?: number;
+  acquired_at: string;
+}
+
+/** inventory.inventory@1.0.0 (owner: inventory) */
+/**
+ * A person's inventory page: their instances, newest first, with the definitions they refer to. The public read shows only owned instances of published definitions; the person's own read (inventory.item.list) also shows consumed and revoked ones.
+ */
+export interface InventoryList {
+  subject: string;
+  /**
+   * @maxItems 500
+   */
+  instances: InventoryInstance[];
+  definitions: {
+    [k: string]: InventoryDefinition | undefined;
+  };
+  next_cursor: string | null;
+}
+
+/** inventory.equipped@1.0.0 (owner: inventory) */
+/**
+ * What a person has equipped (ADR-054 §2), keyed <kind>:<slot>. Surfaces read it in batches (inventory.equipped-batch@1) and cache it briefly.
+ */
+export interface InventoryEquipped {
+  subject: string;
+  /**
+   * <kind>:<slot> → the instance in use.
+   */
+  slots: {
+    [k: string]:
+      | {
+          instance_id: string;
+          definition_id: string;
+          /**
+           * The definition's art token, so a renderer needs no second read.
+           */
+          token?: string;
+        }
+      | undefined;
+  };
+  updated_at: string;
+}
+
+/** inventory.equipped-batch@1.0.0 (owner: inventory) */
+/**
+ * The equipped sets of many people at once (GET /api/v1/equipped?subjects=…, up to 100): one query on the authority, one call per chat render batch.
+ */
+export interface InventoryEquippedBatch {
+  /**
+   * @maxItems 100
+   */
+  equipped: InventoryEquipped[];
+}
+
+/** inventory.grant-request@1.0.0 (owner: inventory) */
+/**
+ * An issuer grants one instance of a definition it issued to a person (inventory.item.grant). Idempotent per idempotency_key: a repeat answers the instance already granted. A capped definition that is sold out answers 409 inventory.supply_exhausted.
+ */
+export interface InventoryGrantRequest {
+  definition_id: string;
+  subject: string;
+  idempotency_key: string;
+  origin?: "granted" | "earned";
+  /**
+   * Shown in the ledger: what the person did (a quest, an event, a milestone).
+   */
+  reason?: string;
+  attributes?: {};
+}
+
+/** inventory.equip-request@1.0.0 (owner: inventory) */
+/**
+ * Equip an instance the person owns in one slot of its kind, or clear the slot (instance_id null). One item per slot; equipping replaces what was there.
+ */
+export interface InventoryEquipRequest {
+  kind: string;
+  slot: string;
+  instance_id: string | null;
+}
+
+/** inventory.definition-request@1.0.0 (owner: inventory) */
+/**
+ * Create or edit a definition in the issuer's namespace (inventory.definition.manage). A service's or app's definition is published when it asks; a creator's goes to staff review (in_review) first.
+ */
+export interface InventoryDefinitionRequest {
+  kind: string;
+  name: string;
+  description?: string;
+  art: {
+    /**
+     * An OpenVibe.Media object (an image, an animation).
+     */
+    media_id?: string;
+    /**
+     * A token the kind's renderers know (a CSS class, a speech preset).
+     */
+    token?: string;
+    emoji?: string;
+  };
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  attributes?: {};
+  supply_cap?: number | null;
+  /**
+   * @maxItems 8
+   */
+  aliases?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  /**
+   * Ask for publication (a creator's definition goes to review).
+   */
+  publish?: boolean;
+}
+
+/** inventory.item.granted@1.0.0 (owner: inventory) */
+/**
+ * inventory.item.granted v1 (OpenVibe.Inventory, ADR-054). An instance was granted or earned (ADR-054 §4). Envelope: subject { type: user, id: owner }, visibility subject, actor the issuer.
+ */
+export interface InventoryItemGrantedPayload {
+  instance_id: string;
+  definition_id: string;
+  kind: string;
+  owner: string;
+  origin: "granted" | "earned" | "migrated";
+  issuer: string;
+}
+
+/** inventory.item.consumed@1.0.0 (owner: inventory) */
+/**
+ * inventory.item.consumed v1 (OpenVibe.Inventory, ADR-054). An issuer consumed an instance (a one-use item used up). Envelope: subject { type: user, id: owner }, visibility subject.
+ */
+export interface InventoryItemConsumedPayload {
+  instance_id: string;
+  definition_id: string;
+  owner: string;
+  issuer: string;
+}
+
+/** inventory.item.revoked@1.0.0 (owner: inventory) */
+/**
+ * inventory.item.revoked v1 (OpenVibe.Inventory, ADR-054). An issuer or staff revoked an instance (granted in error, abuse). Envelope: subject { type: user, id: owner }, visibility subject.
+ */
+export interface InventoryItemRevokedPayload {
+  instance_id: string;
+  definition_id: string;
+  owner: string;
+  reason: string;
+}
+
+/** inventory.item.equipped@1.0.0 (owner: inventory) */
+/**
+ * inventory.item.equipped v1 (OpenVibe.Inventory, ADR-054). A person equipped an instance in a slot; surfaces drop their cached equipped set. Envelope: subject { type: user, id: owner }, visibility public.
+ */
+export interface InventoryItemEquippedPayload {
+  instance_id: string;
+  definition_id: string;
+  kind: string;
+  slot: string;
+  owner: string;
+}
+
+/** inventory.item.unequipped@1.0.0 (owner: inventory) */
+/**
+ * inventory.item.unequipped v1 (OpenVibe.Inventory, ADR-054). A person cleared a slot. Envelope: subject { type: user, id: owner }, visibility public.
+ */
+export interface InventoryItemUnequippedPayload {
+  kind: string;
+  slot: string;
+  owner: string;
+}
+
+/** inventory.definition.published@1.0.0 (owner: inventory) */
+/**
+ * inventory.definition.published v1 (OpenVibe.Inventory, ADR-054). A definition became grantable (a service's on request, a creator's after review). Envelope: subject { type: item_definition, id }, visibility public.
+ */
+export interface InventoryDefinitionPublishedPayload {
+  definition_id: string;
+  kind: string;
+  name: string;
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  issuer: string;
+}

@@ -1,0 +1,27 @@
+{
+  "id": "live.name_effect",
+  "name": "Name effect",
+  "description": "How your name looks in chat.",
+  "slots": [
+    "name_effect"
+  ],
+  "surfaces": [
+    {
+      "surface": "billboard",
+      "renderer": "x"
+    }
+  ],
+  "attributes": {
+    "type": "object",
+    "required": [
+      "css_class"
+    ],
+    "properties": {
+      "css_class": {
+        "type": "string"
+      }
+    }
+  },
+  "stackable": false,
+  "issuer": "service:live"
+}

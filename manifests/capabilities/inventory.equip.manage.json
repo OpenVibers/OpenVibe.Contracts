@@ -1,0 +1,19 @@
+{
+  "id": "inventory.equip.manage",
+  "version": "1.0",
+  "owner": "inventory",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED (ADR-054, plan T21): Equip or clear a slot with an instance the person owns (PUT /api/v1/me/equipped with inventory.equip-request@1 → inventory.equipped@1). One item per slot. Refuses an instance not owned or not in state owned (409 inventory.not_owned). It becomes active when OpenVibe.Inventory implements the route.",
+  "inputSchema": "inventory.equip-request@1",
+  "outputSchema": "inventory.equipped@1",
+  "permissions": [
+    "inventory:own:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "inventory-write",
+  "events": [],
+  "implementedBy": []
+}

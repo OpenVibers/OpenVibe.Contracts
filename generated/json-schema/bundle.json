@@ -73814,6 +73814,861 @@
           }
         ]
       }
+    },
+    "inventory.kind": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/kind.v1.json",
+        "title": "InventoryKind",
+        "description": "An item kind (ADR-054 §2): what items of the kind carry (an attribute schema), where they can be equipped (slots) and which surfaces render them. A new kind is a contract plus a renderer, never a new table.",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slots",
+          "surfaces",
+          "attributes",
+          "stackable",
+          "issuer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+            "maxLength": 64,
+            "description": "<namespace>.<kind>, e.g. live.name_effect, games.skin, network.badge."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "slots": {
+            "type": "array",
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{0,31}$"
+            },
+            "description": "Where one item of the kind can be equipped; empty: the kind is not equippable (a collectible, a badge shown on the profile)."
+          },
+          "surfaces": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {
+              "type": "object",
+              "required": [
+                "surface",
+                "renderer"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "surface": {
+                  "type": "string",
+                  "pattern": "^(chat|overlay|profile|game:[a-z][a-z0-9-]*)$",
+                  "description": "Where an item of this kind shows."
+                },
+                "renderer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80,
+                  "description": "The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1."
+                }
+              }
+            }
+          },
+          "attributes": {
+            "type": "object",
+            "description": "A JSON Schema every definition's attributes must satisfy."
+          },
+          "stackable": {
+            "type": "boolean",
+            "description": "True: one person may hold several instances of one definition."
+          },
+          "issuer": {
+            "type": "string",
+            "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$",
+            "description": "Who owns the kind's namespace."
+          }
+        }
+      }
+    },
+    "inventory.definition": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/definition.v1.json",
+        "title": "InventoryDefinition",
+        "description": "An item definition (ADR-054 §2): one item of a kind, issued by a service, an app or a creator, with an honest rarity, attributes valid against the kind and an optional supply cap. Published definitions can be granted; retired ones cannot, and their instances stay.",
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "art",
+          "rarity",
+          "attributes",
+          "issuer",
+          "supply",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+            "maxLength": 64
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "art": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "An OpenVibe.Media object (an image, an animation)."
+              },
+              "token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80,
+                "description": "A token the kind's renderers know (a CSS class, a speech preset)."
+              },
+              "emoji": {
+                "type": "string",
+                "maxLength": 16
+              }
+            }
+          },
+          "rarity": {
+            "enum": [
+              "common",
+              "uncommon",
+              "rare",
+              "epic",
+              "legendary"
+            ],
+            "description": "Shown as is; any odds that apply are shown with it, never hidden."
+          },
+          "attributes": {
+            "type": "object"
+          },
+          "issuer": {
+            "type": "string",
+            "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$"
+          },
+          "aliases": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"
+            },
+            "description": "Earlier ids of the same item (Live's fx_rainbow, hat_crown, …)."
+          },
+          "supply": {
+            "type": "object",
+            "required": [
+              "cap",
+              "issued"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "cap": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "description": "null: unlimited."
+              },
+              "issued": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "in_review",
+              "published",
+              "retired"
+            ]
+          },
+          "credit": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 80
+              }
+            },
+            "description": "The creator of a community item (ADR-054 §6)."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "inventory.instance": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/instance.v1.json",
+        "title": "InventoryInstance",
+        "description": "One item a person owns (ADR-054 §2): a definition, its origin and state. bought and traded are reserved for the later money ADR (ADR-054 §5) and are refused until it is accepted.",
+        "type": "object",
+        "required": [
+          "id",
+          "definition_id",
+          "owner",
+          "origin",
+          "state",
+          "acquired_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "origin": {
+            "enum": [
+              "granted",
+              "earned",
+              "migrated",
+              "bought",
+              "traded"
+            ]
+          },
+          "state": {
+            "enum": [
+              "owned",
+              "consumed",
+              "revoked"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Per-instance values (a serial number, a wear value), valid against the kind."
+          },
+          "serial": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The instance's number within a capped supply."
+          },
+          "acquired_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "inventory.inventory": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/inventory.v1.json",
+        "title": "InventoryList",
+        "description": "A person's inventory page: their instances, newest first, with the definitions they refer to. The public read shows only owned instances of published definitions; the person's own read (inventory.item.list) also shows consumed and revoked ones.",
+        "type": "object",
+        "required": [
+          "subject",
+          "instances",
+          "definitions",
+          "next_cursor"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "instances": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "$ref": "instance.v1.json"
+            }
+          },
+          "definitions": {
+            "type": "object",
+            "propertyNames": {
+              "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "additionalProperties": {
+              "$ref": "definition.v1.json"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "inventory.equipped": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/equipped.v1.json",
+        "title": "InventoryEquipped",
+        "description": "What a person has equipped (ADR-054 §2), keyed <kind>:<slot>. Surfaces read it in batches (inventory.equipped-batch@1) and cache it briefly.",
+        "type": "object",
+        "required": [
+          "subject",
+          "slots",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "slots": {
+            "type": "object",
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+:[a-z][a-z0-9_]{0,31}$"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "instance_id",
+                "definition_id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "instance_id": {
+                  "type": "string",
+                  "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "definition_id": {
+                  "type": "string",
+                  "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "token": {
+                  "type": "string",
+                  "maxLength": 80,
+                  "description": "The definition's art token, so a renderer needs no second read."
+                }
+              }
+            },
+            "description": "<kind>:<slot> → the instance in use."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "inventory.equipped-batch": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/equipped-batch.v1.json",
+        "title": "InventoryEquippedBatch",
+        "description": "The equipped sets of many people at once (GET /api/v1/equipped?subjects=…, up to 100): one query on the authority, one call per chat render batch.",
+        "type": "object",
+        "required": [
+          "equipped"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "equipped": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "equipped.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "inventory.grant-request": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/grant-request.v1.json",
+        "title": "InventoryGrantRequest",
+        "description": "An issuer grants one instance of a definition it issued to a person (inventory.item.grant). Idempotent per idempotency_key: a repeat answers the instance already granted. A capped definition that is sold out answers 409 inventory.supply_exhausted.",
+        "type": "object",
+        "required": [
+          "definition_id",
+          "subject",
+          "idempotency_key"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128
+          },
+          "origin": {
+            "enum": [
+              "granted",
+              "earned"
+            ],
+            "default": "granted"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Shown in the ledger: what the person did (a quest, an event, a milestone)."
+          },
+          "attributes": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "inventory.equip-request": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/equip-request.v1.json",
+        "title": "InventoryEquipRequest",
+        "description": "Equip an instance the person owns in one slot of its kind, or clear the slot (instance_id null). One item per slot; equipping replaces what was there.",
+        "type": "object",
+        "required": [
+          "kind",
+          "slot",
+          "instance_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+            "maxLength": 64
+          },
+          "slot": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$"
+          },
+          "instance_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    "inventory.definition-request": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/definition-request.v1.json",
+        "title": "InventoryDefinitionRequest",
+        "description": "Create or edit a definition in the issuer's namespace (inventory.definition.manage). A service's or app's definition is published when it asks; a creator's goes to staff review (in_review) first.",
+        "type": "object",
+        "required": [
+          "kind",
+          "name",
+          "art",
+          "rarity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+            "maxLength": 64
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "art": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "An OpenVibe.Media object (an image, an animation)."
+              },
+              "token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80,
+                "description": "A token the kind's renderers know (a CSS class, a speech preset)."
+              },
+              "emoji": {
+                "type": "string",
+                "maxLength": 16
+              }
+            }
+          },
+          "rarity": {
+            "enum": [
+              "common",
+              "uncommon",
+              "rare",
+              "epic",
+              "legendary"
+            ]
+          },
+          "attributes": {
+            "type": "object"
+          },
+          "supply_cap": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "aliases": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"
+            }
+          },
+          "publish": {
+            "type": "boolean",
+            "description": "Ask for publication (a creator's definition goes to review)."
+          }
+        }
+      }
+    },
+    "inventory.item.granted": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.granted.v1.json",
+        "title": "InventoryItemGrantedPayload",
+        "description": "inventory.item.granted v1 (OpenVibe.Inventory, ADR-054). An instance was granted or earned (ADR-054 §4). Envelope: subject { type: user, id: owner }, visibility subject, actor the issuer.",
+        "type": "object",
+        "required": [
+          "instance_id",
+          "definition_id",
+          "kind",
+          "owner",
+          "origin",
+          "issuer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "origin": {
+            "enum": [
+              "granted",
+              "earned",
+              "migrated"
+            ]
+          },
+          "issuer": {
+            "type": "string",
+            "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$"
+          }
+        }
+      }
+    },
+    "inventory.item.consumed": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.consumed.v1.json",
+        "title": "InventoryItemConsumedPayload",
+        "description": "inventory.item.consumed v1 (OpenVibe.Inventory, ADR-054). An issuer consumed an instance (a one-use item used up). Envelope: subject { type: user, id: owner }, visibility subject.",
+        "type": "object",
+        "required": [
+          "instance_id",
+          "definition_id",
+          "owner",
+          "issuer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "issuer": {
+            "type": "string",
+            "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$"
+          }
+        }
+      }
+    },
+    "inventory.item.revoked": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.revoked.v1.json",
+        "title": "InventoryItemRevokedPayload",
+        "description": "inventory.item.revoked v1 (OpenVibe.Inventory, ADR-054). An issuer or staff revoked an instance (granted in error, abuse). Envelope: subject { type: user, id: owner }, visibility subject.",
+        "type": "object",
+        "required": [
+          "instance_id",
+          "definition_id",
+          "owner",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "inventory.item.equipped": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.equipped.v1.json",
+        "title": "InventoryItemEquippedPayload",
+        "description": "inventory.item.equipped v1 (OpenVibe.Inventory, ADR-054). A person equipped an instance in a slot; surfaces drop their cached equipped set. Envelope: subject { type: user, id: owner }, visibility public.",
+        "type": "object",
+        "required": [
+          "instance_id",
+          "definition_id",
+          "kind",
+          "slot",
+          "owner"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+          },
+          "slot": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    "inventory.item.unequipped": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.unequipped.v1.json",
+        "title": "InventoryItemUnequippedPayload",
+        "description": "inventory.item.unequipped v1 (OpenVibe.Inventory, ADR-054). A person cleared a slot. Envelope: subject { type: user, id: owner }, visibility public.",
+        "type": "object",
+        "required": [
+          "kind",
+          "slot",
+          "owner"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+          },
+          "slot": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    "inventory.definition.published": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.definition.published.v1.json",
+        "title": "InventoryDefinitionPublishedPayload",
+        "description": "inventory.definition.published v1 (OpenVibe.Inventory, ADR-054). A definition became grantable (a service's on request, a creator's after review). Envelope: subject { type: item_definition, id }, visibility public.",
+        "type": "object",
+        "required": [
+          "definition_id",
+          "kind",
+          "name",
+          "rarity",
+          "issuer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "rarity": {
+            "enum": [
+              "common",
+              "uncommon",
+              "rare",
+              "epic",
+              "legendary"
+            ]
+          },
+          "issuer": {
+            "type": "string",
+            "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$"
+          }
+        }
+      }
     }
   }
 }

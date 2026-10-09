@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/inventory.v1.json",
+  "title": "InventoryList",
+  "description": "A person's inventory page: their instances, newest first, with the definitions they refer to. The public read shows only owned instances of published definitions; the person's own read (inventory.item.list) also shows consumed and revoked ones.",
+  "type": "object",
+  "required": [
+    "subject",
+    "instances",
+    "definitions",
+    "next_cursor"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "instances": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "instance.v1.json"
+      }
+    },
+    "definitions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "additionalProperties": {
+        "$ref": "definition.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    }
+  }
+}

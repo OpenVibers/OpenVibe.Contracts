@@ -1,0 +1,19 @@
+{
+  "id": "inventory.item.grant",
+  "version": "1.0",
+  "owner": "inventory",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "PLANNED (ADR-054, plan T21): Grant an instance of a definition the caller issued (POST /api/v1/grants with inventory.grant-request@1 → inventory.instance@1; Idempotency by idempotency_key). Outside the issuer's namespace: 403 inventory.not_issuer. Sold out: 409 inventory.supply_exhausted. Never for money (ADR-054 §5). It becomes active when OpenVibe.Inventory implements the route.",
+  "inputSchema": "inventory.grant-request@1",
+  "outputSchema": "inventory.instance@1",
+  "permissions": [
+    "inventory:grant"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "inventory-write",
+  "events": [],
+  "implementedBy": []
+}

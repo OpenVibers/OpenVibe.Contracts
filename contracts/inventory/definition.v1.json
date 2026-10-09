@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/definition.v1.json",
+  "title": "InventoryDefinition",
+  "description": "An item definition (ADR-054 §2): one item of a kind, issued by a service, an app or a creator, with an honest rarity, attributes valid against the kind and an optional supply cap. Published definitions can be granted; retired ones cannot, and their instances stay.",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "name",
+    "art",
+    "rarity",
+    "attributes",
+    "issuer",
+    "supply",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 64
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "art": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "media_id": {
+          "type": "string",
+          "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "An OpenVibe.Media object (an image, an animation)."
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "A token the kind's renderers know (a CSS class, a speech preset)."
+        },
+        "emoji": {
+          "type": "string",
+          "maxLength": 16
+        }
+      }
+    },
+    "rarity": {
+      "enum": [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary"
+      ],
+      "description": "Shown as is; any odds that apply are shown with it, never hidden."
+    },
+    "attributes": {
+      "type": "object"
+    },
+    "issuer": {
+      "type": "string",
+      "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$"
+    },
+    "aliases": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"
+      },
+      "description": "Earlier ids of the same item (Live's fx_rainbow, hat_crown, …)."
+    },
+    "supply": {
+      "type": "object",
+      "required": [
+        "cap",
+        "issued"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "cap": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "null: unlimited."
+        },
+        "issued": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "in_review",
+        "published",
+        "retired"
+      ]
+    },
+    "credit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 80
+        }
+      },
+      "description": "The creator of a community item (ADR-054 §6)."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

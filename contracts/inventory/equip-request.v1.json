@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/equip-request.v1.json",
+  "title": "InventoryEquipRequest",
+  "description": "Equip an instance the person owns in one slot of its kind, or clear the slot (instance_id null). One item per slot; equipping replaces what was there.",
+  "type": "object",
+  "required": [
+    "kind",
+    "slot",
+    "instance_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 64
+    },
+    "slot": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "instance_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+    }
+  }
+}

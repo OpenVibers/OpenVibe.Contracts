@@ -1,0 +1,59 @@
+{
+  "version": "0.0.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.121.0 <1.0.0"
+  },
+  "id": "inventory",
+  "name": "OpenVibe.Inventory",
+  "status": "placeholder",
+  "repository": "OpenVibers/OpenVibe.Inventory",
+  "domains": [
+    "inventory.openvibe.network"
+  ],
+  "publicOrigin": "https://inventory.openvibe.network",
+  "exposure": {
+    "state": "placeholder",
+    "publicSite": null,
+    "note": "planned (ADR-054, plan T21 step 1); nothing is built or deployed yet. Live's cosmetics stay in Live until the migration in ADR-054 §8."
+  },
+  "capabilities": [
+    "inventory.item.read",
+    "inventory.item.list",
+    "inventory.equip.manage",
+    "inventory.item.grant",
+    "inventory.item.consume",
+    "inventory.definition.manage",
+    "inventory.definition.review"
+  ],
+  "eventsProduced": [
+    "inventory.item.granted",
+    "inventory.item.consumed",
+    "inventory.item.revoked",
+    "inventory.item.equipped",
+    "inventory.item.unequipped",
+    "inventory.definition.published"
+  ],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "none": "not built yet; nothing listens on a loopback address"
+    },
+    "shutdown": {
+      "none": "not built yet; nothing runs or drains"
+    },
+    "startupRecovery": {
+      "none": "not built yet; nothing starts"
+    },
+    "rollback": {
+      "none": "not built yet; nothing is released or rolled back"
+    },
+    "contracts": {
+      "range": ">=0.121.0 <1.0.0"
+    },
+    "leases": {
+      "none": "not built yet; nothing runs"
+    }
+  },
+  "notes": "The network-wide inventory (ADR-054): item kinds (a contract plus a renderer per surface), definitions (itd_), instances (inv_), the equipped set and an append-only ledger, in its own PostgreSQL database (ov_inventory, loopback 5030). Issuers (services, apps, creators) grant within their namespace; no selling, buying, trading or conversion until a later money ADR (ADR-012, ADR-025). Live's cosmetics become the first kinds, migrated convert-verify-delete. Profiles are Network's and read the showcase here."
+}

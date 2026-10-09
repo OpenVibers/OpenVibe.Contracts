@@ -1,0 +1,6 @@
+{
+  "definition_id": "itd_01JZ00000000000000000001TD",
+  "subject": "usr_01JZ0000000000000000000AAA",
+  "idempotency_key": "k-12345678",
+  "origin": "bought"
+}

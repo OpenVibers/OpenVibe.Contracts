@@ -1,0 +1,25 @@
+{
+  "id": "itd_01JZ00000000000000000001T2",
+  "kind": "network.profile_frame",
+  "name": "Aurora frame",
+  "description": "Rainbow cycling colors",
+  "art": {
+    "media_id": "med_01JZ0000000000000000000MED"
+  },
+  "rarity": "rare",
+  "attributes": {},
+  "issuer": "user:usr_01JZ0000000000000000000AAA",
+  "aliases": [],
+  "supply": {
+    "cap": 500,
+    "issued": 12
+  },
+  "status": "published",
+  "created_at": "2026-10-09T03:00:00Z",
+  "updated_at": "2026-10-09T03:00:00Z",
+  "published_at": "2026-10-09T03:00:00Z",
+  "credit": {
+    "subject": "usr_01JZ0000000000000000000AAA",
+    "name": "aurora_artist"
+  }
+}

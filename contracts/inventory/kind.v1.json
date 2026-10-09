@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/kind.v1.json",
+  "title": "InventoryKind",
+  "description": "An item kind (ADR-054 §2): what items of the kind carry (an attribute schema), where they can be equipped (slots) and which surfaces render them. A new kind is a contract plus a renderer, never a new table.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "slots",
+    "surfaces",
+    "attributes",
+    "stackable",
+    "issuer"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 64,
+      "description": "<namespace>.<kind>, e.g. live.name_effect, games.skin, network.badge."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "slots": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,31}$"
+      },
+      "description": "Where one item of the kind can be equipped; empty: the kind is not equippable (a collectible, a badge shown on the profile)."
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "required": [
+          "surface",
+          "renderer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "surface": {
+            "type": "string",
+            "pattern": "^(chat|overlay|profile|game:[a-z][a-z0-9-]*)$",
+            "description": "Where an item of this kind shows."
+          },
+          "renderer": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The renderer contract the surface implements for this kind, e.g. live.name_effect.css@1."
+          }
+        }
+      }
+    },
+    "attributes": {
+      "type": "object",
+      "description": "A JSON Schema every definition's attributes must satisfy."
+    },
+    "stackable": {
+      "type": "boolean",
+      "description": "True: one person may hold several instances of one definition."
+    },
+    "issuer": {
+      "type": "string",
+      "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26}|user:usr_[0-9A-HJKMNP-TV-Z]{26})$",
+      "description": "Who owns the kind's namespace."
+    }
+  }
+}

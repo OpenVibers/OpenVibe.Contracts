@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/inventory.item.revoked.v1.json",
+  "title": "InventoryItemRevokedPayload",
+  "description": "inventory.item.revoked v1 (OpenVibe.Inventory, ADR-054). An issuer or staff revoked an instance (granted in error, abuse). Envelope: subject { type: user, id: owner }, visibility subject.",
+  "type": "object",
+  "required": [
+    "instance_id",
+    "definition_id",
+    "owner",
+    "reason"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "instance_id": {
+      "type": "string",
+      "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "definition_id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    }
+  }
+}
