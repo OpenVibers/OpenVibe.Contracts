@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.125.0 — 2026-10-09
+
+- OpenVibe.News, OpenVibe.Reviews, OpenVibe.Trade, OpenVibe.Coupons and OpenRe.Stream are live: each serves its own
+  domain (`exposure.state: live`, `publicSite: service`) after an independent pre-launch security review and its
+  fixes (News#21, Reviews#22, Trade#24, Coupons#22, OpenRe.Stream#25). They replace OpenVibe.Sites placeholder pages
+  (plan T11: Sites is deleted).
+- admin., api., auth. and themes.openvibe.network describe what they are now: redirects to the openvibe.network page
+  that does their job (Network#107). `manifests/services/sites.json` says what Sites still serves.
+
 ## 0.124.0 — 2026-10-09
 
 - ADR-054 §6 amendment, **the Workshop v1**: Workshop kinds (any person may submit a definition, issued by and
