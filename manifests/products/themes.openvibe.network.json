@@ -6,7 +6,7 @@
   "accent": "#a78bfa",
   "tagline": "Your look, on every site.",
   "legalProfile": "info",
-  "description": "themes.openvibe.network will be the theme catalog and API: built-in and community themes, previews, per-site overrides, import/export and the shared design tokens every OpenVibe site renders.",
+  "description": "themes.openvibe.network redirects to openvibe.network/themes, where a person picks the theme every OpenVibe site renders. A theme catalog with community themes, previews, per-site overrides and import/export is planned there.",
   "pillars": [
     {
       "title": "Catalog",

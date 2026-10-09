@@ -16,9 +16,8 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4500",
   "exposure": {
-    "state": "internal",
-    "publicSite": "placeholder",
-    "note": "the domain serves the OpenVibe.Sites placeholder page"
+    "state": "live",
+    "publicSite": "service"
   },
   "site": {
     "name": "OpenRe.Stream",

@@ -6,7 +6,7 @@
   "accent": "#f59e0b",
   "tagline": "One operator console for every service.",
   "legalProfile": "account",
-  "description": "admin.openvibe.network will be the federated operator console: users, roles, bans, registry and policy, event queues, storage, billing, migrations and emergency controls, discovered from each service rather than hard-wired.",
+  "description": "admin.openvibe.network redirects to openvibe.network/admin, the staff console (users, roles, bans, registry and policy). A federated operator console discovered from each service is planned there.",
   "pillars": [
     {
       "title": "Users & roles",

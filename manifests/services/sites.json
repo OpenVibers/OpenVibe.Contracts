@@ -10,7 +10,7 @@
   "exposure": {
     "state": "live",
     "publicSite": "service",
-    "note": "serves the placeholder pages of domains whose service is not public yet"
+    "note": "serves only openvibe.tips and openvibe.vip (frozen pages until plan T5 launches them) and the legal pages of openvibe.bot and openvibe.games; every other domain is served by its product or by OpenVibe.Network (its subdomains, and redirects for parked domains) since 2026-10-09"
   },
   "domains": [],
   "capabilities": [],
@@ -43,5 +43,5 @@
       "none": "static files; nothing runs"
     }
   },
-  "notes": "Static placeholder generator; not a runtime."
+  "notes": "Static files only; not a runtime. Being deleted (plan T11)."
 }
