@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.122.1 — 2026-10-09
+
+- `manifests/services/inventory.json`: the site's icon is `inventory`. A site's id is its icon (Network's Frame builds
+  the site list from it), and `games` collided with OpenVibe.Games.
+
 ## 0.122.0 — 2026-10-09
 
 **OpenVibe.Inventory goes live (ADR-054, plan T21 step 2).**

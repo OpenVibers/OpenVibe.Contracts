@@ -98,7 +98,7 @@
   "internalOrigin": "http://127.0.0.1:5030",
   "site": {
     "name": "Inventory",
-    "icon": "games",
+    "icon": "inventory",
     "tagline": "Your items, on every OpenVibe site.",
     "what": "Keep the items you earn across OpenVibe in one place, and choose what you wear in chat, on stream overlays and on your profile.",
     "legalProfile": "ugc",
