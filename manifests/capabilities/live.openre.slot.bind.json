@@ -1,0 +1,21 @@
+{
+  "id": "live.openre.slot.bind",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "OpenRestream gives a person's stream its own slot on their OpenVibe Live channel, ingested by OpenRestream (ingest_authority openre), so its sessions show live on openvibe.live/@username through Live's mirror. Idempotent per OpenRestream stream: a second call returns the same slot. The person must have an OpenVibe Live account (they signed in to Live once); otherwise 409 live.no_account.",
+  "permissions": [
+    "streams:slot"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/openre/slots"
+  ],
+  "inputSchema": "live.openre-slot-bind-request@1",
+  "outputSchema": "live.openre-slot-bind-result@1"
+}

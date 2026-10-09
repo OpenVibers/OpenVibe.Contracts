@@ -52009,6 +52009,27 @@ export interface LiveAvatarWriteResult {
   changed: boolean;
 }
 
+/** live.openre-slot-bind-request@1.0.0 (owner: live) */
+/**
+ * live.openre-slot-bind-request@1: the body of POST /internal/openre/slots on OpenVibe.Live (capability live.openre.slot.bind). OpenRestream asks Live for a slot on the person's channel bound to one OpenRestream stream (openre_stream_id, std_…); subject is the person who owns that stream. title names the slot on the person's dashboard.
+ */
+export interface LiveOpenreSlotBindRequest {
+  subject: string;
+  openre_stream_id: string;
+  title?: string;
+  protocol?: "rtmp" | "webrtc" | "jsmpeg";
+}
+
+/** live.openre-slot-bind-result@1.0.0 (owner: live) */
+/**
+ * live.openre-slot-bind-result@1: the answer of POST /internal/openre/slots: the Live slot (managed_stream_id) now ingested by OpenRestream for that stream, the channel it shows on, and created false when the slot already existed. Refusals are problem bodies: 400 (bad body), 409 live.no_account (no Live account for that subject yet), 409 live.slot_taken (the stream is bound to another person's slot).
+ */
+export interface LiveOpenreSlotBindResult {
+  managed_stream_id: number;
+  channel_url: string;
+  created: boolean;
+}
+
 /** live.url-registry-refresh-result@1.0.0 (owner: live) */
 /**
  * live.url-registry-refresh-result@1: the answer of POST /internal/url-registry/refresh on OpenVibe.Live (capability live.url_registry.refresh): { ok: true, message } after Live reloaded Network's URL registry now (an operator changed a site's URL), or { ok: false, error } when the reload failed.

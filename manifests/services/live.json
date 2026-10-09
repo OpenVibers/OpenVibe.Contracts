@@ -30,6 +30,7 @@
   "capabilities": [
     "live.analytics.read",
     "live.avatar.write",
+    "live.openre.slot.bind",
     "live.channel.read",
     "live.chat_context.read",
     "live.chat_effects.write",
