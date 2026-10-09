@@ -40,7 +40,10 @@
     "bot.estop.cleared",
     "bot.command.refused"
   ],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
   "namespacesOwned": [],
   "lifecycle": {
     "liveness": {
@@ -71,6 +74,10 @@
         {
           "kind": "outbox",
           "what": "unsent bot.* events in bot_event_outbox are published when the relay restarts (at least once)"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each export and deletion once)"
         }
       ]
     },
