@@ -60582,6 +60582,21 @@ export interface InventoryDefinition {
   created_at: string;
   updated_at: string;
   published_at?: string;
+  /**
+   * Other services or apps the issuer lets grant this one item (ADR-054 §3): Quest giving Live's hats as quest rewards. They grant only (origin earned or granted, idempotent per key); defining, editing, consuming and revoking stay the issuer's.
+   *
+   * @maxItems 8
+   */
+  grantors?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
 }
 
 /** inventory.instance@1.0.0 (owner: inventory) */
@@ -60721,6 +60736,21 @@ export interface InventoryDefinitionRequest {
    * Ask for publication (a creator's definition goes to review).
    */
   publish?: boolean;
+  /**
+   * Other services or apps the issuer lets grant this one item (ADR-054 §3): Quest giving Live's hats as quest rewards. They grant only (origin earned or granted, idempotent per key); defining, editing, consuming and revoking stay the issuer's.
+   *
+   * @maxItems 8
+   */
+  grantors?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
 }
 
 /** inventory.item.granted@1.0.0 (owner: inventory) */

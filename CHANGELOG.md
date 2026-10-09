@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.123.0 — 2026-10-09
+
+- ADR-054 amendment, §3 "Grantors": `inventory/definition@1` and `inventory/definition-request@1` gain an optional
+  `grantors` list (services or apps, at most 8). They may grant that one item (only grant: origin earned or granted,
+  idempotent, within the cap, recorded with the grantor as actor), so an item can be earned on one site while another
+  stays its issuer. This is how OpenVibe.Quest gives some of Live's hats as quest rewards. Additive.
+
 ## 0.122.1 — 2026-10-09
 
 - `manifests/services/inventory.json`: the site's icon is `inventory`. A site's id is its icon (Network's Frame builds
