@@ -103,8 +103,8 @@
       "service": "live",
       "name": "OpenVibe.Live",
       "origin": "https://openvibe.live",
-      "operations": 30,
-      "capabilities": 9
+      "operations": 31,
+      "capabilities": 10
     },
     {
       "service": "media",

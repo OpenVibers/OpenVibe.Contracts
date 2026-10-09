@@ -4930,6 +4930,24 @@
       "status": "active"
     },
     {
+      "id": "live.openre-slot-bind-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/openre-slot-bind-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.openre-slot-bind-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/openre-slot-bind-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.url-registry-refresh-result",
       "version": "1.0.0",
       "owner": "live",

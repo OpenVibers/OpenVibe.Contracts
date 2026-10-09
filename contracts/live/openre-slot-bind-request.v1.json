@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/openre-slot-bind-request.v1.json",
+  "title": "LiveOpenreSlotBindRequest",
+  "description": "live.openre-slot-bind-request@1: the body of POST /internal/openre/slots on OpenVibe.Live (capability live.openre.slot.bind). OpenRestream asks Live for a slot on the person's channel bound to one OpenRestream stream (openre_stream_id, std_\u2026); subject is the person who owns that stream. title names the slot on the person's dashboard.",
+  "type": "object",
+  "required": [
+    "subject",
+    "openre_stream_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "openre_stream_id": {
+      "type": "string",
+      "pattern": "^std_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "protocol": {
+      "enum": [
+        "rtmp",
+        "webrtc",
+        "jsmpeg"
+      ]
+    }
+  }
+}

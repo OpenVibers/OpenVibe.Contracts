@@ -55379,6 +55379,75 @@
         }
       }
     },
+    "live.openre-slot-bind-request": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/openre-slot-bind-request.v1.json",
+        "title": "LiveOpenreSlotBindRequest",
+        "description": "live.openre-slot-bind-request@1: the body of POST /internal/openre/slots on OpenVibe.Live (capability live.openre.slot.bind). OpenRestream asks Live for a slot on the person's channel bound to one OpenRestream stream (openre_stream_id, std_…); subject is the person who owns that stream. title names the slot on the person's dashboard.",
+        "type": "object",
+        "required": [
+          "subject",
+          "openre_stream_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "openre_stream_id": {
+            "type": "string",
+            "pattern": "^std_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "protocol": {
+            "enum": [
+              "rtmp",
+              "webrtc",
+              "jsmpeg"
+            ]
+          }
+        }
+      }
+    },
+    "live.openre-slot-bind-result": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/openre-slot-bind-result.v1.json",
+        "title": "LiveOpenreSlotBindResult",
+        "description": "live.openre-slot-bind-result@1: the answer of POST /internal/openre/slots: the Live slot (managed_stream_id) now ingested by OpenRestream for that stream, the channel it shows on, and created false when the slot already existed. Refusals are problem bodies: 400 (bad body), 409 live.no_account (no Live account for that subject yet), 409 live.slot_taken (the stream is bound to another person's slot).",
+        "type": "object",
+        "required": [
+          "managed_stream_id",
+          "channel_url",
+          "created"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "managed_stream_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "channel_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "created": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
     "live.url-registry-refresh-result": {
       "version": "1.0.0",
       "owner": "live",

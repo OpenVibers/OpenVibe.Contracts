@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.126.0 — 2026-10-09
+
+- **OpenVibe Live on by default for OpenRestream.** New capability `live.openre.slot.bind` (active, internal):
+  `POST /internal/openre/slots` on OpenVibe.Live with `live.openre-slot-bind-request@1` →
+  `live.openre-slot-bind-result@1`. OpenRestream asks Live for a slot on the person's channel bound to one
+  OpenRestream stream, ingested by OpenRestream, so the stream's sessions show live on openvibe.live/@username through
+  Live's mirror. It is idempotent per stream; 409 `live.no_account` when the person has no Live account yet. Additive.
+- `manifests/services/openre.json`: OpenRestream's site copy says what it is: an open restreaming platform (one stream
+  to every platform at once, OpenVibe Live on by default, free and open source).
+
 ## 0.125.1 — 2026-10-09
 
 - The product at openre.stream is **OpenRestream** (owner, 2026-10-09): an open restreaming platform. Every name
