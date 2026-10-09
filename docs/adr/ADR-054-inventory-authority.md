@@ -64,12 +64,18 @@ What exists today is Live's cosmetics, and only Live can see them:
 | `inventory.item.read` | public | a person's public inventory and equipped set, definitions, kinds |
 | `inventory.item.list` | the person, or a service acting for them | their own full inventory, including hidden items |
 | `inventory.equip.manage` | the person, or a service acting for them | equip and unequip their own instances |
-| `inventory.item.grant` | an issuer, for definitions it issued | grant an instance to a subject (idempotent per key) |
+| `inventory.item.grant` | an issuer, for definitions it issued, and the grantors it names on a definition | grant an instance to a subject (idempotent per key) |
 | `inventory.item.consume` | an issuer, for definitions it issued | consume or revoke an instance |
 | `inventory.definition.manage` | an issuer, for its namespace | create, edit, submit, retire definitions |
 | `inventory.definition.review` | staff | publish or reject a submitted definition |
 
 Apps act with grants from Services (ADR-048). A grant to an app names the definition namespace it may issue in.
+
+**Grantors (amendment, 2026-10-09).** A definition may name `grantors`: other services or apps its issuer lets grant
+that one item. A grantor grants only: origin `earned` or `granted`, idempotent per its own key, within the supply cap,
+recorded in the ledger with the grantor as the actor. Defining, editing, consuming and revoking stay the issuer's, and
+the issuer sets and clears the list (`PATCH /definitions/:id`). This is how an item is earned on one site and
+issued by another: Live stays the issuer of its hats while OpenVibe.Quest gives some of them as quest rewards.
 
 ### 4. Events
 

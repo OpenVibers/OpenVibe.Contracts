@@ -74051,6 +74051,16 @@
           "published_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "grantors": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26})$"
+            },
+            "description": "Other services or apps the issuer lets grant this one item (ADR-054 §3): Quest giving Live's hats as quest rewards. They grant only (origin earned or granted, idempotent per key); defining, editing, consuming and revoking stay the issuer's."
           }
         }
       }
@@ -74419,6 +74429,16 @@
           "publish": {
             "type": "boolean",
             "description": "Ask for publication (a creator's definition goes to review)."
+          },
+          "grantors": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(service:[a-z][a-z0-9-]*|app:app_[0-9A-HJKMNP-TV-Z]{26})$"
+            },
+            "description": "Other services or apps the issuer lets grant this one item (ADR-054 §3): Quest giving Live's hats as quest rewards. They grant only (origin earned or granted, idempotent per key); defining, editing, consuming and revoking stay the issuer's."
           }
         }
       }
