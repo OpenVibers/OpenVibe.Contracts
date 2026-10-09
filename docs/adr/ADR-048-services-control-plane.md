@@ -101,7 +101,7 @@ below is in `lib/ids.js` except `act`, `run` and `zon`, which are proposed and n
 
 Codes hosts no repositories, so `codes.repo` is gone. Media's index lists only its objects; its v1 vods and clips are
 projections over objects (bigint ids) and are never listed. The person-owned resources — Bot robots and devices, Chat
-rooms, Community spaces, OpenRe.Stream streams and Games characters — are step 8 phase 2, served like Network's
+rooms, Community spaces, OpenRestream streams and Games characters — are step 8 phase 2, served like Network's
 user-owned node principals: no OVRN, owner = user.
 
 Events' `queue` is future until Events stores a queue row; `act`, `run` and `zon` are proposed but are not in

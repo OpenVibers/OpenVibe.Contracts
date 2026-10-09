@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/openre/stream-read-result.v1.json",
   "title": "OpenreStreamReadResult",
-  "description": "openre.stream-read-result@1: answers of openre.stream.read on OpenRe.Stream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.",
+  "description": "openre.stream-read-result@1: answers of openre.stream.read on OpenRestream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.",
   "anyOf": [
     {
       "type": "object",

@@ -4110,7 +4110,7 @@ export interface LineageResolveRequest {
    */
   stream_id?: string;
   /**
-   * A persistent stream slot (Live: managed_streams.id; OpenRe stream definitions refer to it as live:managed_stream:<id>).
+   * A persistent stream slot (Live: managed_streams.id; OpenRestream stream definitions refer to it as live:managed_stream:<id>).
    */
   slot_id?: string;
   /**
@@ -31808,7 +31808,7 @@ export interface EventsUsageRecordedPayload {
 
 /** live.stream.started@1.0.0 (owner: live) */
 /**
- * live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRe.Stream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
+ * live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRestream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
  */
 export interface LiveStreamStartedPayload {
   /**
@@ -31842,7 +31842,7 @@ export interface LiveStreamStartedPayload {
    */
   category: string | null;
   /**
-   * How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp).
+   * How the stream is ingested (WHIP is webrtc; OpenRestream and RTMP are rtmp).
    */
   protocol: "jsmpeg" | "webrtc" | "rtmp";
   is_nsfw: boolean;
@@ -31888,7 +31888,7 @@ export interface LiveStreamEndedPayload {
    */
   category: string | null;
   /**
-   * How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp).
+   * How the stream is ingested (WHIP is webrtc; OpenRestream and RTMP are rtmp).
    */
   protocol: "jsmpeg" | "webrtc" | "rtmp";
   is_nsfw: boolean;
@@ -53620,7 +53620,7 @@ export type SpaceThreadReadResult =
 
 /** openre.destination@1.0.0 (owner: openre) */
 /**
- * openre.destination@1: one restream destination of a stream on OpenRe.Stream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.
+ * openre.destination@1: one restream destination of a stream on OpenRestream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.
  */
 export interface OpenreDestination {
   id: string;
@@ -53652,7 +53652,7 @@ export interface OpenreDestination {
 
 /** openre.key-rotate-request@1.0.0 (owner: openre) */
 /**
- * openre.key-rotate-request@1: the body of POST /api/v1/streams/:id/keys/rotate on OpenRe.Stream (openre.key.rotate). grace_seconds (0 by default, at most 7 days) keeps the old key working that long; end_sessions true also ends the stream's open sessions. An empty body rotates with no grace.
+ * openre.key-rotate-request@1: the body of POST /api/v1/streams/:id/keys/rotate on OpenRestream (openre.key.rotate). grace_seconds (0 by default, at most 7 days) keeps the old key working that long; end_sessions true also ends the stream's open sessions. An empty body rotates with no grace.
  */
 export interface OpenreKeyRotateRequest {
   /**
@@ -53664,7 +53664,7 @@ export interface OpenreKeyRotateRequest {
 
 /** openre.key-rotate-result@1.0.0 (owner: openre) */
 /**
- * openre.key-rotate-result@1: the answer of POST /api/v1/streams/:id/keys/rotate on OpenRe.Stream: the new key (shown once, Cache-Control no-store), the keys it retired (grace or revoked), when the grace ends, how many sessions were asked to end, and the ingest endpoints. openre.key.rotated is announced.
+ * openre.key-rotate-result@1: the answer of POST /api/v1/streams/:id/keys/rotate on OpenRestream: the new key (shown once, Cache-Control no-store), the keys it retired (grace or revoked), when the grace ends, how many sessions were asked to end, and the ingest endpoints. openre.key.rotated is announced.
  */
 export interface OpenreKeyRotateResult {
   key: {
@@ -53697,7 +53697,7 @@ export interface OpenreKeyRotateResult {
 
 /** openre.output-read-result@1.0.0 (owner: openre) */
 /**
- * openre.output-read-result@1: answers of openre.output.read on OpenRe.Stream. GET /api/v1/streams/:id/destinations → { destinations }; GET /api/v1/sessions/:id/outputs → { outputs } (with health); GET /api/v1/destinations/:id/logs and GET /api/v1/outputs/:id/logs?limit= → { logs } (newest first, at most 500).
+ * openre.output-read-result@1: answers of openre.output.read on OpenRestream. GET /api/v1/streams/:id/destinations → { destinations }; GET /api/v1/sessions/:id/outputs → { outputs } (with health); GET /api/v1/destinations/:id/logs and GET /api/v1/outputs/:id/logs?limit= → { logs } (newest first, at most 500).
  */
 export type OpenreOutputReadResult =
   | {
@@ -53720,7 +53720,7 @@ export type OpenreOutputReadResult =
 
 /** openre.output-write-request@1.0.0 (owner: openre) */
 /**
- * openre.output-write-request@1: the body of POST /api/v1/streams/:id/destinations (platform and server_url required) and PATCH /api/v1/destinations/:id (fields left out keep their value) on OpenRe.Stream (openre.output.write). server_url must pass the destination URL rules (rtmp, rtmps or srt, public hosts); stream_key (at most 512 characters, no spaces) and srt_passphrase (10 to 79 characters) are sealed and never read back — __keep__ leaves them unchanged, empty clears them. Numbers out of range become null: srt_latency_ms 20-8000, custom_video_bitrate 500-50000, custom_audio_bitrate 32-512, custom_fps 15-120; an unknown custom_encoder_preset becomes null. DELETE /api/v1/destinations/:id and POST /api/v1/destinations/:id/test|start|stop take no body.
+ * openre.output-write-request@1: the body of POST /api/v1/streams/:id/destinations (platform and server_url required) and PATCH /api/v1/destinations/:id (fields left out keep their value) on OpenRestream (openre.output.write). server_url must pass the destination URL rules (rtmp, rtmps or srt, public hosts); stream_key (at most 512 characters, no spaces) and srt_passphrase (10 to 79 characters) are sealed and never read back — __keep__ leaves them unchanged, empty clears them. Numbers out of range become null: srt_latency_ms 20-8000, custom_video_bitrate 500-50000, custom_audio_bitrate 32-512, custom_fps 15-120; an unknown custom_encoder_preset becomes null. DELETE /api/v1/destinations/:id and POST /api/v1/destinations/:id/test|start|stop take no body.
  */
 export type OpenreOutputWriteRequest =
   | {
@@ -53742,7 +53742,7 @@ export type OpenreOutputWriteRequest =
 
 /** openre.output-write-result@1.0.0 (owner: openre) */
 /**
- * openre.output-write-result@1: answers of openre.output.write on OpenRe.Stream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).
+ * openre.output-write-result@1: answers of openre.output.write on OpenRestream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).
  */
 export type OpenreOutputWriteResult =
   | {
@@ -53765,7 +53765,7 @@ export type OpenreOutputWriteResult =
 
 /** openre.output@1.0.0 (owner: openre) */
 /**
- * openre.output@1: one restream output (a destination running for a live session) on OpenRe.Stream (server/store/outputs.js publicOutput), with its desired and actual state, restarts and progress.
+ * openre.output@1: one restream output (a destination running for a live session) on OpenRestream (server/store/outputs.js publicOutput), with its desired and actual state, restarts and progress.
  */
 export interface OpenreOutput {
   id: string;
@@ -53789,7 +53789,7 @@ export interface OpenreOutput {
 
 /** openre.session-end-result@1.0.0 (owner: openre) */
 /**
- * openre.session-end-result@1: the answer of POST /api/v1/sessions/:id/end on OpenRe.Stream (openre.session.end): 202 { requested: true, state } when the owning worker was asked to disconnect the encoder, 409 { requested: false, state } when the session could not be ended (already ending or over).
+ * openre.session-end-result@1: the answer of POST /api/v1/sessions/:id/end on OpenRestream (openre.session.end): 202 { requested: true, state } when the owning worker was asked to disconnect the encoder, 409 { requested: false, state } when the session could not be ended (already ending or over).
  */
 export interface OpenreSessionEndResult {
   requested: boolean;
@@ -53798,7 +53798,7 @@ export interface OpenreSessionEndResult {
 
 /** openre.session-read-result@1.0.0 (owner: openre) */
 /**
- * openre.session-read-result@1: answers of openre.session.read on OpenRe.Stream. GET /api/v1/sessions?stream_id=&state=&limit=&before= → { sessions } (the owner's; a service sees those of the subject it acts for); GET /api/v1/sessions/:id → { session } with transitions, outputs, recording and playback; GET /api/v1/sessions/:id/playback → { playback } (where to watch: flv and rtmp URLs, internal loopback and public); GET /api/v1/workers → { workers } (worker generations; staff and services only).
+ * openre.session-read-result@1: answers of openre.session.read on OpenRestream. GET /api/v1/sessions?stream_id=&state=&limit=&before= → { sessions } (the owner's; a service sees those of the subject it acts for); GET /api/v1/sessions/:id → { session } with transitions, outputs, recording and playback; GET /api/v1/sessions/:id/playback → { playback } (where to watch: flv and rtmp URLs, internal loopback and public); GET /api/v1/workers → { workers } (worker generations; staff and services only).
  */
 export type OpenreSessionReadResult =
   | {
@@ -53878,7 +53878,7 @@ export type OpenreSessionReadResult =
 
 /** openre.stream-read-result@1.0.0 (owner: openre) */
 /**
- * openre.stream-read-result@1: answers of openre.stream.read on OpenRe.Stream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.
+ * openre.stream-read-result@1: answers of openre.stream.read on OpenRestream. GET /api/v1/streams[?external_ref=<service>:<type>:<id>&limit=] → { streams } (the owner's, or the one bound to that external reference; staff may ask for all); GET /api/v1/streams/:id → { stream }; GET /api/v1/streams/:id/keys → { keys } (metadata only, never a key). Another owner's or an archived stream is 404 openre.stream_not_found.
  */
 export type OpenreStreamReadResult =
   | {
@@ -53901,7 +53901,7 @@ export type OpenreStreamReadResult =
 
 /** openre.stream-write-request@1.0.0 (owner: openre) */
 /**
- * openre.stream-write-request@1: the body of POST /api/v1/streams and PATCH /api/v1/streams/:id on OpenRe.Stream (openre.stream.write). A person creates streams for themselves; a service names the owner with X-OV-Subject (or owner_subject, which must then match). title is cleaned and cut to 140 characters (Untitled stream when blank), description to 2000; protocols is a non-empty subset of rtmp, whip, webrtc, jsmpeg; external_refs (create only, at most 10, each bound to one stream) link it to another service's record, e.g. { service: live, type: managed_stream, id: 12 }; state (update only) is active or disabled. Fields left out keep their value. DELETE /api/v1/streams/:id (archive; refused while live) takes no body. Refusals are 400 openre.invalid_* and 409 openre.ref_taken / openre.stream_live.
+ * openre.stream-write-request@1: the body of POST /api/v1/streams and PATCH /api/v1/streams/:id on OpenRestream (openre.stream.write). A person creates streams for themselves; a service names the owner with X-OV-Subject (or owner_subject, which must then match). title is cleaned and cut to 140 characters (Untitled stream when blank), description to 2000; protocols is a non-empty subset of rtmp, whip, webrtc, jsmpeg; external_refs (create only, at most 10, each bound to one stream) link it to another service's record, e.g. { service: live, type: managed_stream, id: 12 }; state (update only) is active or disabled. Fields left out keep their value. DELETE /api/v1/streams/:id (archive; refused while live) takes no body. Refusals are 400 openre.invalid_* and 409 openre.ref_taken / openre.stream_live.
  */
 export type OpenreStreamWriteRequest =
   | {
@@ -54278,7 +54278,7 @@ export type OpenreStreamWriteRequest =
 
 /** openre.stream-write-result@1.0.0 (owner: openre) */
 /**
- * openre.stream-write-result@1: answers of openre.stream.write on OpenRe.Stream. POST /api/v1/streams → 201 { stream, key } where key is the first ingest key, shown once (Cache-Control no-store); PATCH /api/v1/streams/:id → { stream }; DELETE /api/v1/streams/:id → 204 with no body.
+ * openre.stream-write-result@1: answers of openre.stream.write on OpenRestream. POST /api/v1/streams → 201 { stream, key } where key is the first ingest key, shown once (Cache-Control no-store); PATCH /api/v1/streams/:id → { stream }; DELETE /api/v1/streams/:id → 204 with no body.
  */
 export interface OpenreStreamWriteResult {
   stream: OpenreStream;
@@ -54295,7 +54295,7 @@ export interface OpenreStreamWriteResult {
 
 /** openre.stream@1.0.0 (owner: openre) */
 /**
- * openre.stream@1: one stream definition as OpenRe.Stream's API shows it (server/api/v1.js publicDefinition): the owner's stream with its protocols, recording and playback settings, ingest endpoints, key metadata (hints only, never a key) and the open session if any.
+ * openre.stream@1: one stream definition as OpenRestream's API shows it (server/api/v1.js publicDefinition): the owner's stream with its protocols, recording and playback settings, ingest endpoints, key metadata (hints only, never a key) and the open session if any.
  */
 export interface OpenreStream {
   id: string;
@@ -54686,7 +54686,7 @@ export interface HostDeployActivatedPayload {
 
 /** host.release.published@1.0.0 (owner: host) */
 /**
- * host.release.published v1 (roadmap WS-P task 9, ADR-016 amendment 1). A network service's release went live. OpenVibe.Host's operator plane (lib/announce.js) publishes it after `ovhost deploy|rollback <service>` went live and for `ovhost announce <service>` (services deployed by their own scripts: Live, Tools, Sites, OpenRe, Games). Envelope: subject { type: release, id: <service>:<release> }, visibility public (signed-out browsers get it over Events realtime), priority low, actor service:host. Open tabs whose /release.json names `service` (openvibe-shared release-watch 1.17.0, topics=host.release.published) check it when `release` is not the one they run. It carries identifiers only, never what changed. At most one per service and release unless an operator forces it; a retry reuses the event_id. Tenant sites' activations are host.deploy.activated, not this.
+ * host.release.published v1 (roadmap WS-P task 9, ADR-016 amendment 1). A network service's release went live. OpenVibe.Host's operator plane (lib/announce.js) publishes it after `ovhost deploy|rollback <service>` went live and for `ovhost announce <service>` (services deployed by their own scripts: Live, Tools, Sites, OpenRestream, Games). Envelope: subject { type: release, id: <service>:<release> }, visibility public (signed-out browsers get it over Events realtime), priority low, actor service:host. Open tabs whose /release.json names `service` (openvibe-shared release-watch 1.17.0, topics=host.release.published) check it when `release` is not the one they run. It carries identifiers only, never what changed. At most one per service and release unless an operator forces it; a retry reuses the event_id. Tenant sites' activations are host.deploy.activated, not this.
  */
 export interface HostReleasePublishedPayload {
   /**
@@ -57922,7 +57922,7 @@ export interface BotPairRequest {
 
 /** bot.pair-result@1.0.0 (owner: bot) */
 /**
- * bot.pair-result@1: the 201 answers of OpenVibe.Bot's pairing routes (server/api/v1.js). POST /api/v1/pair → { device_id, credential, publish_key, whip_url?, robot_id, profile }; POST /api/v1/devices/bind (a Network node token) → the same without credential. The credential, the publish key and the WHIP URL are shown once and never again. Without OpenRe configured there is no key: video is not_configured instead.
+ * bot.pair-result@1: the 201 answers of OpenVibe.Bot's pairing routes (server/api/v1.js). POST /api/v1/pair → { device_id, credential, publish_key, whip_url?, robot_id, profile }; POST /api/v1/devices/bind (a Network node token) → the same without credential. The credential, the publish key and the WHIP URL are shown once and never again. Without OpenRestream configured there is no key: video is not_configured instead.
  */
 export type BotPairResult =
   | {
@@ -57934,7 +57934,7 @@ export type BotPairResult =
        */
       credential?: string;
       /**
-       * The WHIP publish key, an ingest key OpenRe issued for the robot's stream: shown once.
+       * The WHIP publish key, an ingest key OpenRestream issued for the robot's stream: shown once.
        */
       publish_key: string;
       /**

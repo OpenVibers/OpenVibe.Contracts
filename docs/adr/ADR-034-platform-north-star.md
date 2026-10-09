@@ -131,7 +131,7 @@ There are two kinds of location, because most of what "near the user" buys is ch
 **Edge nodes are small, cheap machines in many places.** They run one agent with a few roles and hold no tenant data:
 - **probe**: ping, traceroute, DNS, TCP/UDP and HTTP checks toward a target;
 - **relay**: TURN for WebRTC calls, and game-server query relays;
-- **ingest**: RTMP, SRT and WHIP accepted near the streamer, forwarded over the private network to the home region's OpenRe;
+- **ingest**: RTMP, SRT and WHIP accepted near the streamer, forwarded over the private network to the home region's OpenRestream;
 - **cache**: media and page cache in front of R2 and origin.
 
 Edge nodes are listed in the registry with their location (city, country, coordinates, provider), roles, capacity and health. The same deploy controller (section 7) manages them.

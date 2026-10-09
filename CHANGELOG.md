@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.125.1 — 2026-10-09
+
+- The product at openre.stream is **OpenRestream** (owner, 2026-10-09): an open restreaming platform. Every name
+  people read says so: `manifests/services/openre.json` (`name`, `site.name`, copy), the repository manifest (now
+  `manifests/repositories/OpenRestream.json`, repository `OpenVibers/OpenRestream`, renamed on GitHub the same day),
+  docs and schema descriptions. Ids are unchanged: service `openre`, `openre.*` capabilities and events.
+
 ## 0.125.0 — 2026-10-09
 
 - OpenVibe.News, OpenVibe.Reviews, OpenVibe.Trade, OpenVibe.Coupons and OpenRe.Stream are live: each serves its own

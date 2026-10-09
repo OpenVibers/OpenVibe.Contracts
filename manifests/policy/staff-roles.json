@@ -215,7 +215,7 @@
     {
       "id": "staff.site.view",
       "minRole": "admin",
-      "description": "Read operations data: diagnostics, statistics, all streams, storage, analytics, OpenRe status, money state and AI usage.",
+      "description": "Read operations data: diagnostics, statistics, all streams, storage, analytics, OpenRestream status, money state and AI usage.",
       "gates": {
         "live": [
           "admin/routes.js:52 → 55,67,305,483,522,569,969,1025,1125",

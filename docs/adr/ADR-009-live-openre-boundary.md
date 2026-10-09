@@ -1,6 +1,6 @@
-# ADR-009: Live versus OpenRe boundary
+# ADR-009: Live versus OpenRestream boundary
 
-**Status:** Accepted 2026-09-23. OpenRe.Stream deployed the same day (RTMP ingest + restream; WHIP, SFU and JSMPEG not yet ported). No slot has moved: per-slot cutover waits for the ingest DNS name, the public RTMP port and a broadcaster window.
+**Status:** Accepted 2026-09-23. OpenRestream deployed the same day (RTMP ingest + restream; WHIP, SFU and JSMPEG not yet ported). No slot has moved: per-slot cutover waits for the ingest DNS name, the public RTMP port and a broadcaster window.
 
 ## Context and current evidence
 
@@ -10,10 +10,10 @@
 
 ## Decision
 
-- **OpenRe.Stream owns transport:** stream definitions and keys, ingest sessions (RTMP, WHIP, WebRTC/SFU, JSMPEG), worker generations, restream destinations with health and logs, key rotation (`openre.key.rotate`), recording *requests* to Media, and the segment timeline.
-- **Live owns presentation:** channels, discovery, watch pages, creator UX, chat embedding and moderation surfaces. Live asks OpenRe for sessions and playback descriptors; it never touches an encoder, socket or RTP port.
+- **OpenRestream owns transport:** stream definitions and keys, ingest sessions (RTMP, WHIP, WebRTC/SFU, JSMPEG), worker generations, restream destinations with health and logs, key rotation (`openre.key.rotate`), recording *requests* to Media, and the segment timeline.
+- **Live owns presentation:** channels, discovery, watch pages, creator UX, chat embedding and moderation surfaces. Live asks OpenRestream for sessions and playback descriptors; it never touches an encoder, socket or RTP port.
 - **Media owns recordings:** finalisation, storage and VOD objects stay in Media (ADR-006).
-- Transport runs in worker processes separate from the OpenRe API. An API deploy starts a new worker generation for *new* sessions and lets old workers drain; no deploy of Live or the OpenRe API ends a live transport.
+- Transport runs in worker processes separate from the OpenRestream API. An API deploy starts a new worker generation for *new* sessions and lets old workers drain; no deploy of Live or the OpenRestream API ends a live transport.
 - Lifecycle is published as events (`openre.session.started|ended`, `openre.output.failed`), not internal POSTs.
 
 ## Alternatives considered
@@ -23,15 +23,15 @@
 
 ## Migration consequences
 
-OpenRe runs in parallel with Live's ingest and takes one protocol at a time (RTMP → WHIP → JSMPEG → SFU), each behind a per-channel switch. Each switch waits for a maintenance window agreed with the active broadcasters. Every stream key is rotated at the RTMP cutover.
+OpenRestream runs in parallel with Live's ingest and takes one protocol at a time (RTMP → WHIP → JSMPEG → SFU), each behind a per-channel switch. Each switch waits for a maintenance window agreed with the active broadcasters. Every stream key is rotated at the RTMP cutover.
 
 ## Rollback
 
-Per protocol: flip the channel switch back to Live's in-process ingest. Live's ingest code stays until the last protocol has run on OpenRe for two weeks without a regression.
+Per protocol: flip the channel switch back to Live's in-process ingest. Live's ingest code stays until the last protocol has run on OpenRestream for two weeks without a regression.
 
 ## Acceptance tests
 
 - Deploying Live during a broadcast does not interrupt transport or recording.
-- Deploying the OpenRe API does not end worker-owned transports.
+- Deploying the OpenRestream API does not end worker-owned transports.
 - A failed restream destination never ends the source session.
 - Every stream key that existed before the cutover has been rotated.

@@ -70,7 +70,7 @@ before anyone relies on either.
 | OpenVibe.Trade | AGPL-3.0-only | AGPL-3.0 | consistent |
 | OpenVibe.VIP | AGPL-3.0-only | AGPL-3.0 | consistent |
 | OpenVibe.Wiki | AGPL-3.0-only | AGPL-3.0 | consistent |
-| OpenRe.Stream | AGPL-3.0-only | AGPL-3.0 | consistent |
+| OpenRestream | AGPL-3.0-only | AGPL-3.0 | consistent |
 
 Dependency review: every repository pins its OpenVibe packages to release tags, CI runs the tests and the
 pin-drift check, and gitleaks scans history. A licence review of third-party dependencies is part of WS-R

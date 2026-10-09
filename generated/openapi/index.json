@@ -129,7 +129,7 @@
     },
     {
       "service": "openre",
-      "name": "OpenRe.Stream",
+      "name": "OpenRestream",
       "origin": "https://openre.stream",
       "operations": 22,
       "capabilities": 7
