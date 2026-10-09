@@ -12,7 +12,7 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | Repository | Product | Authority it owns | Runtime | Database | Domain | SDK/Contracts pin | Deployment | Public/private | Current track |
 |---|---|---|---|---|---|---|---|---|---|
 | AFResume | — | — | — | — | — | — | — | — | — |
-| OpenRe.Stream | OpenRe.Stream | openre.* | node 22 | PostgreSQL | openre.stream, ingest.openre.stream | contracts v0.76.0, sdk v0.26.0, shared v2.10.1 | deployed | internal | W7 |
+| OpenRestream | OpenRestream | openre.* | node 22 | PostgreSQL | openre.stream, ingest.openre.stream | contracts v0.76.0, sdk v0.26.0, shared v2.10.1 | deployed | internal | W7 |
 | OpenVibe.AI | OpenVibe.AI | ai.usage_summary | node 22 | PostgreSQL | ai.openvibe.services, ai.openvibe.network, openvibe.ai | contracts v0.86.0, sdk v0.26.0, shared v2.5.0 | deployed | live | W13 |
 | OpenVibe.Billing | OpenVibe.Billing | billing.* | node >=22.0.0 | PostgreSQL | billing.openvibe.network | contracts v0.97.0, sdk v0.28.0, shared v2.9.0 | deployed | live | W8 |
 | OpenVibe.Blog | Blog | blog.* | node 22 | PostgreSQL | openvibe.blog | contracts v0.97.0, sdk v0.26.0, shared v2.9.0, publishing v1.3.0 | deployed | live | W16 |

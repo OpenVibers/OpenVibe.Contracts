@@ -4,9 +4,9 @@
     "openvibe-contracts": ">=0.13.0 <1.0.0"
   },
   "id": "openre",
-  "name": "OpenRe.Stream",
+  "name": "OpenRestream",
   "status": "alpha",
-  "repository": "OpenVibers/OpenRe.Stream",
+  "repository": "OpenVibers/OpenRestream",
   "domains": [
     "openre.stream",
     "ingest.openre.stream"
@@ -20,7 +20,7 @@
     "publicSite": "service"
   },
   "site": {
-    "name": "OpenRe.Stream",
+    "name": "OpenRestream",
     "icon": "stream",
     "tagline": "Restream anywhere",
     "what": "Ingest once and send the stream to every platform at once; keys, destinations and output health in one place.",
@@ -28,7 +28,7 @@
     "position": 18,
     "tld": "stream",
     "accent": "#ef4444",
-    "description": "OpenRe.Stream is OpenVibe's open streaming engine, split out of OpenVibe.Live. Go live from a web browser with no OBS, no downloads and no follower minimum, or send RTMP or WHIP from any encoder, and restream to Twitch, YouTube, Kick and any RTMP, RTMPS or SRT destination. Browser broadcasts start on OpenVibe.Live today, and move to OpenRe.Stream ingest channel by channel.",
+    "description": "OpenRestream is OpenVibe's open streaming engine, split out of OpenVibe.Live. Go live from a web browser with no OBS, no downloads and no follower minimum, or send RTMP or WHIP from any encoder, and restream to Twitch, YouTube, Kick and any RTMP, RTMPS or SRT destination. Browser broadcasts start on OpenVibe.Live today, and move to OpenRestream ingest channel by channel.",
     "pillars": [
       {
         "title": "Browser go-live",
@@ -88,9 +88,9 @@
         "url": "https://openvibe.live/docs/go-live-in-your-browser"
       }
     },
-    "launch": "the stream slots to move from OpenVibe.Live's ingest to OpenRe.Stream, one at a time; no stream uses it yet",
+    "launch": "the stream slots to move from OpenVibe.Live's ingest to OpenRestream, one at a time; no stream uses it yet",
     "relationships": {
-      "plannedRepo": "OpenRe.Stream",
+      "plannedRepo": "OpenRestream",
       "meanwhile": [
         {
           "label": "Go live on OpenVibe.Live",

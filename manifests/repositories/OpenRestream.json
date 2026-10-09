@@ -1,8 +1,8 @@
 {
-  "name": "OpenRe.Stream",
-  "repository": "OpenVibers/OpenRe.Stream",
+  "name": "OpenRestream",
+  "repository": "OpenVibers/OpenRestream",
   "service": "openre",
-  "product": "OpenRe.Stream",
+  "product": "OpenRestream",
   "stage": "alpha",
   "version": "0.1.0",
   "runtime": "node 22",

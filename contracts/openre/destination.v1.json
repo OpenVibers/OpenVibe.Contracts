@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/openre/destination.v1.json",
   "title": "OpenreDestination",
-  "description": "openre.destination@1: one restream destination of a stream on OpenRe.Stream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.",
+  "description": "openre.destination@1: one restream destination of a stream on OpenRestream (server/store/outputs.js publicDest). The stream key and SRT passphrase are write-only: only whether they are set and a hint of the key are shown.",
   "type": "object",
   "required": [
     "id",

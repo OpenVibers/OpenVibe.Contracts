@@ -43,7 +43,7 @@
    3. Switch reads and writes to PostgreSQL, keeping the SQLite file read-only for the N-1 window (ADR-016, 7 days) as the rollback.
    4. Then delete the SQLite file after a final backup.
 
-   Order: Wiki, Blog, News, Reviews, Deals, Coupons, Trade, Tips, VIP, Search, Sources, Codes, Host, AI, Events, Chat, Community, Billing, Media, Tools, Games, OpenRe, Network, Live. Each migration is its own change, with its own rehearsal on a copy of the production data.
+   Order: Wiki, Blog, News, Reviews, Deals, Coupons, Trade, Tips, VIP, Search, Sources, Codes, Host, AI, Events, Chat, Community, Billing, Media, Tools, Games, OpenRestream, Network, Live. Each migration is its own change, with its own rehearsal on a copy of the production data.
 7. **Sizing on the shared host**, until the data role has its own machine:
    - PostgreSQL: `shared_buffers` 1 GB, `effective_cache_size` 4 GB, `work_mem` 16 MB, `max_connections` 120, pooled behind PgBouncer;
    - Valkey: `maxmemory` 768 MB.

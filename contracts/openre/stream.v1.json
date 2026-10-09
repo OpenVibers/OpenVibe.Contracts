@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/openre/stream.v1.json",
   "title": "OpenreStream",
-  "description": "openre.stream@1: one stream definition as OpenRe.Stream's API shows it (server/api/v1.js publicDefinition): the owner's stream with its protocols, recording and playback settings, ingest endpoints, key metadata (hints only, never a key) and the open session if any.",
+  "description": "openre.stream@1: one stream definition as OpenRestream's API shows it (server/api/v1.js publicDefinition): the owner's stream with its protocols, recording and playback settings, ingest endpoints, key metadata (hints only, never a key) and the open session if any.",
   "type": "object",
   "required": [
     "id",

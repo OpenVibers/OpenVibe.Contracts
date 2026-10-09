@@ -83,7 +83,7 @@
         "webrtc",
         "rtmp"
       ],
-      "description": "How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp)."
+      "description": "How the stream is ingested (WHIP is webrtc; OpenRestream and RTMP are rtmp)."
     },
     "is_nsfw": {
       "type": "boolean"

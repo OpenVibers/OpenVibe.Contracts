@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/openre/output-write-result.v1.json",
   "title": "OpenreOutputWriteResult",
-  "description": "openre.output-write-result@1: answers of openre.output.write on OpenRe.Stream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).",
+  "description": "openre.output-write-result@1: answers of openre.output.write on OpenRestream. POST …/destinations → 201 { destination }; PATCH /api/v1/destinations/:id → { destination }; DELETE → 204 with no body (409 openre.destination_running while it still runs); POST …/test → { ok, checks } (URL rules, DNS, TCP reachability; each check { check, ok, detail }); POST …/start → { output } (for the stream's live session; 409 when held, disabled, keyless or not live); POST …/stop → { stopping } (outputs asked to stop).",
   "anyOf": [
     {
       "type": "object",

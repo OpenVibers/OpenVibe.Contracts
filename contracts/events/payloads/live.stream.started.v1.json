@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/live.stream.started.v1.json",
   "title": "LiveStreamStartedPayload",
-  "description": "live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRe.Stream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.",
+  "description": "live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRestream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.",
   "type": "object",
   "required": ["stream_id", "channel", "title", "category", "protocol", "is_nsfw", "started_at"],
   "additionalProperties": false,
@@ -23,7 +23,7 @@
     },
     "title": { "type": "string" },
     "category": { "type": ["string", "null"], "description": "null when the streamer chose none (the AI classifies the stream from what it shows)." },
-    "protocol": { "enum": ["jsmpeg", "webrtc", "rtmp"], "description": "How the stream is ingested (WHIP is webrtc; OpenRe and RTMP are rtmp)." },
+    "protocol": { "enum": ["jsmpeg", "webrtc", "rtmp"], "description": "How the stream is ingested (WHIP is webrtc; OpenRestream and RTMP are rtmp)." },
     "is_nsfw": { "type": "boolean" },
     "started_at": { "type": ["string", "null"], "format": "date-time", "description": "UTC. null only for a row without a start time, which createStream never writes." }
   }

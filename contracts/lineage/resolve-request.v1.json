@@ -25,7 +25,7 @@
     },
     "slot_id": {
       "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
-      "description": "A persistent stream slot (Live: managed_streams.id; OpenRe stream definitions refer to it as live:managed_stream:<id>)."
+      "description": "A persistent stream slot (Live: managed_streams.id; OpenRestream stream definitions refer to it as live:managed_stream:<id>)."
     },
     "vod_id": {
       "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
