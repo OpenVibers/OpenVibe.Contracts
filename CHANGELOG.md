@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.122.0 — 2026-10-09
+
+**OpenVibe.Inventory goes live (ADR-054, plan T21 step 2).**
+- `manifests/services/inventory.json`:
+  - status alpha, exposure `live` with `publicSite: service`, at site position 30 (Inventory);
+  - its lifecycle, health, ready and internal origin (127.0.0.1:5030);
+  - it consumes the two account events and owns `inventory.*`.
+- Six capabilities are active, each naming its routes: `inventory.item.read`, `inventory.item.list`,
+  `inventory.equip.manage`, `inventory.item.grant`, `inventory.item.consume` and `inventory.definition.manage`.
+  `inventory.definition.review` stays planned until creator submissions open.
+
 ## 0.121.0 — 2026-10-09
 
 **The OpenVibe inventory, decided (ADR-054, plan T21 step 1).** A new authority, OpenVibe.Inventory, will own items
