@@ -1,20 +1,19 @@
 {
-  "version": "0.0.0",
+  "version": "0.2.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.121.0 <1.0.0"
+    "openvibe-contracts": ">=0.122.0 <1.0.0"
   },
   "id": "inventory",
   "name": "OpenVibe.Inventory",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Inventory",
   "domains": [
     "inventory.openvibe.network"
   ],
   "publicOrigin": "https://inventory.openvibe.network",
   "exposure": {
-    "state": "placeholder",
-    "publicSite": null,
-    "note": "planned (ADR-054, plan T21 step 1); nothing is built or deployed yet. Live's cosmetics stay in Live until the migration in ADR-054 §8."
+    "state": "live",
+    "publicSite": "service"
   },
   "capabilities": [
     "inventory.item.read",
@@ -33,27 +32,76 @@
     "inventory.item.unequipped",
     "inventory.definition.published"
   ],
-  "eventsConsumed": [],
-  "namespacesOwned": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "inventory.*"
+  ],
   "lifecycle": {
     "liveness": {
-      "none": "not built yet; nothing listens on a loopback address"
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP, with the outbox relay's state; the database is what ready checks"
     },
     "shutdown": {
-      "none": "not built yet; nothing runs or drains"
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "Events subscription retries stopped",
+        "outbox relay stopped",
+        "Network key refresher stopped",
+        "store closed"
+      ]
     },
     "startupRecovery": {
-      "none": "not built yet; nothing starts"
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are cookies verified against Network's keys, fetched again at boot"
+        },
+        {
+          "kind": "state",
+          "what": "kinds and Live's definitions are registered again at boot (idempotent); every grant, equip and ledger row was committed with its event in one transaction"
+        },
+        {
+          "kind": "outbox",
+          "what": "events written before the stop and not yet sent leave event_outbox when the relay starts"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each export and deletion once)"
+        }
+      ]
     },
     "rollback": {
-      "none": "not built yet; nothing is released or rolled back"
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Inventory's own tables; Live keeps its own cosmetics tables until the switch (ADR-054 §8)"
+      }
     },
     "contracts": {
-      "range": ">=0.121.0 <1.0.0"
+      "range": ">=0.122.0 <1.0.0"
     },
     "leases": {
-      "none": "not built yet; nothing runs"
+      "none": "no claims: one process serves the site and the API"
     }
   },
-  "notes": "The network-wide inventory (ADR-054): item kinds (a contract plus a renderer per surface), definitions (itd_), instances (inv_), the equipped set and an append-only ledger, in its own PostgreSQL database (ov_inventory, loopback 5030). Issuers (services, apps, creators) grant within their namespace; no selling, buying, trading or conversion until a later money ADR (ADR-012, ADR-025). Live's cosmetics become the first kinds, migrated convert-verify-delete. Profiles are Network's and read the showcase here."
+  "notes": "Port 5030, unit openvibe-inventory.service, inventory.openvibe.network (the openvibe.network wildcard certificate). The network-wide inventory (ADR-054): item kinds (a contract plus a renderer per surface), definitions (itd_), instances (inv_), the equipped set and an append-only ledger in its own PostgreSQL database (ov_inventory). Issuers (services, apps) grant only within their namespace; people equip what they own; public reads need no token. Nothing is sold, bought, traded or converted until a later money ADR (ADR-012, ADR-025). Live's 70 cosmetics are seeded at boot as definitions issued by service:live (Live's item ids kept as aliases), and scripts/import-live.js moves Live's unlocks and equipped slots here row for row; Live then reads through this API (INVENTORY_AUTHORITY). Answers account export and deletion (ADR-033). inventory.definition.review stays planned until creator submissions open.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5030",
+  "site": {
+    "name": "Inventory",
+    "icon": "games",
+    "tagline": "Your items, on every OpenVibe site.",
+    "what": "Keep the items you earn across OpenVibe in one place, and choose what you wear in chat, on stream overlays and on your profile.",
+    "legalProfile": "ugc",
+    "position": 30
+  }
 }

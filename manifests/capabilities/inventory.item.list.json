@@ -2,9 +2,9 @@
   "id": "inventory.item.list",
   "version": "1.0",
   "owner": "inventory",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "PLANNED (ADR-054, plan T21): The person's own full inventory, consumed and revoked instances included (GET /api/v1/me/items → inventory.inventory@1). A service may read it acting for the person (on_behalf_of). It becomes active when OpenVibe.Inventory implements the route.",
+  "description": "The person's own full inventory, consumed and revoked instances included (GET /api/v1/me/items → inventory.inventory@1). A service may read it acting for the person (on_behalf_of).",
   "inputSchema": "common.no-body@1",
   "outputSchema": "inventory.inventory@1",
   "permissions": [
@@ -15,5 +15,7 @@
   ],
   "quotaClass": "inventory-read",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "GET /api/v1/me/items"
+  ]
 }

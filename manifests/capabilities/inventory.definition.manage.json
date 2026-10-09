@@ -2,9 +2,9 @@
   "id": "inventory.definition.manage",
   "version": "1.0",
   "owner": "inventory",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
-  "description": "PLANNED (ADR-054, plan T21): Create, edit, submit and retire definitions in the caller's namespace (POST /api/v1/definitions, PATCH /api/v1/definitions/:id with inventory.definition-request@1 → inventory.definition@1). A creator's definition goes to review; a service's or app's is published when it asks. It becomes active when OpenVibe.Inventory implements the route.",
+  "description": "Create, edit, submit and retire definitions in the caller's namespace (POST /api/v1/definitions, PATCH /api/v1/definitions/:id with inventory.definition-request@1 → inventory.definition@1). A creator's definition goes to review; a service's or app's is published when it asks.",
   "inputSchema": "inventory.definition-request@1",
   "outputSchema": "inventory.definition@1",
   "permissions": [
@@ -15,5 +15,8 @@
   ],
   "quotaClass": "inventory-write",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "POST /api/v1/definitions",
+    "PATCH /api/v1/definitions/:id"
+  ]
 }
