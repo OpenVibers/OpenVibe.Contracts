@@ -60938,7 +60938,7 @@ export interface HelpIndexDocumentDeletedPayload {
 
 /** inventory.index_document.upserted@1.0.0 (owner: inventory) */
 /**
- * inventory.index_document.upserted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of an item definition page (type definition, /definitions/<id>): name, description, kind, rarity, issuer and supply. Only published definitions are documents; a draft, one in review or a retired one is a tombstone. Sent in the transaction that published or retired it, and by the sweep (server/search-index.js). The sequencer (inventory_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, rarity, issuer. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision: <document revision> }, visibility internal, actor service:inventory.
+ * inventory.index_document.upserted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of an item definition page (type definition, /items/<id>): name, description, kind, rarity, issuer and supply. Only published definitions are documents; a draft, one in review or a retired one is a tombstone. Sent in the transaction that published or retired it, and by the sweep (server/search-index.js). The sequencer (inventory_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, rarity, issuer. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision: <document revision> }, visibility internal, actor service:inventory.
  */
 export type InventoryIndexDocumentUpsertedPayload = IndexDocument & {
   owner: "inventory";
@@ -60949,7 +60949,7 @@ export type InventoryIndexDocumentUpsertedPayload = IndexDocument & {
 
 /** inventory.index_document.deleted@1.0.0 (owner: inventory) */
 /**
- * inventory.index_document.deleted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a definition page (/definitions/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision }, visibility internal, actor service:inventory.
+ * inventory.index_document.deleted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a definition page (/items/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision }, visibility internal, actor service:inventory.
  */
 export interface InventoryIndexDocumentDeletedPayload {
   type: "definition";

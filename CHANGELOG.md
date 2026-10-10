@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.128.1 — 2026-10-10
+
+- **Descriptions only.** `inventory.index_document.*` name Inventory's real item page, `/items/<id>` on
+  inventory.openvibe.network, not `/definitions/<id>` (that path is the JSON API). The fixtures carry the real URL.
+- The `run` manifest's exposure note now says what is there: Run places jobs on people's own Bot nodes, and
+  openvibe.run is parked (a 302 to openvibe.network) rather than an OpenVibe.Sites placeholder.
+
 ## 0.128.0 — 2026-10-10
 
 - **Record products send their pages to OpenVibe.Search.** `<owner>.index_document.upserted` and `.deleted` (v1) are

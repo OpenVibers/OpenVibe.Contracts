@@ -14,7 +14,7 @@
   "exposure": {
     "state": "internal",
     "publicSite": "placeholder",
-    "note": "deployed on loopback :4920 (2026-10-07); openvibe.run keeps its OpenVibe.Sites placeholder until Run has a product surface"
+    "note": "deployed on loopback :4920 (2026-10-07); jobs are placed on people's own Bot nodes. openvibe.run is parked (a 302 to openvibe.network) until Run has a product surface"
   },
   "capabilities": [
     "run.job.submit",
