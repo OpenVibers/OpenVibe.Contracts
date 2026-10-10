@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.135.0 — 2026-10-10
+
+- **Events, AI and Search get `site` blocks** (name, icon, tagline, what, legal profile, position 31-33). All three
+  were already live public products with their own homes (openvibe.events, ai.openvibe.services,
+  search.openvibe.network; `exposure` live/service), but without a site block the network's navigation and front door
+  (Network's frame sites) never listed them. The copy is each product's own description; the icons already exist in
+  openvibe-shared.
+
 ## 0.134.0 — 2026-10-10
 
 - `community.resource.read` (owner `community`, first-party, **active**): OpenVibe.Community's resource index, so a

@@ -83,5 +83,13 @@
       "none": "no claims: one process owns search.db (better-sqlite3, single writer)"
     }
   },
-  "notes": "Canonical index document (search.index-document@1), event-fed and direct indexing with revision ordering and tombstones, permission-aware query over SQLite FTS5 (docs/adr-engine.md). Anonymous queries need no token."
+  "notes": "Canonical index document (search.index-document@1), event-fed and direct indexing with revision ordering and tombstones, permission-aware query over SQLite FTS5 (docs/adr-engine.md). Anonymous queries need no token.",
+  "site": {
+    "name": "Search",
+    "icon": "search",
+    "tagline": "Search the OpenVibe network.",
+    "what": "One search box over what the network's services have published: streams, clips, pastes, wiki pages, news and more, from OpenVibe's own index.",
+    "legalProfile": "info",
+    "position": 33
+  }
 }
