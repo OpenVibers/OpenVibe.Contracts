@@ -918,6 +918,8 @@ sub(path.join(__dirname, 'zones.test.js'));
 sub(path.join(__dirname, 'usage-topics.test.js'));
 sub(path.join(__dirname, 'billing-grace.test.js'));
 sub(path.join(__dirname, 'resources.test.js'));
+// Documentation currency (roadmap WS-U task 3): a placeholder service with no repository yet is skipped, not a gap.
+sub(path.join(__dirname, 'docs-currency.test.js'));
 
 // ── Estate (plan T1 step 3): docs/ESTATE.md and manifests/repositories are generated ──
 // A checkout tree is read into one repository manifest and the document; --check fails on drift, and with
