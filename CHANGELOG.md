@@ -4,6 +4,27 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.129.0 — 2026-10-10
+
+**The resource index's next authorities** (ADR-048, plan T13 step 8 phase 2, the Contracts half). Four planned,
+first-party capabilities, one for each service whose resources belong in OpenVibe.Services' merged index, each naming
+the kind its index will carry. Additive and inert: four capability manifests, four service capability lists extended
+and one id prefix recorded. No schema changed, no route named and nothing activated; Services only reads an authority
+once its capability is active.
+
+- `watch.resource.read` (owner `watch`): watches, kind `watch.watch`, `wch_<ULID>`. One made under a project carries
+  that project and so an OVRN; a person's own watch has neither.
+- `actor.resource.read` (owner `actor`): tasks, kind `actor.task`, `tsk_<ULID>`, with the project the task was asked
+  under, when there was one.
+- `bot.resource.read` (owner `bot`): robots, kind `bot.robot`, `rob_<ULID>`, owner the robot's owner. Person-owned
+  (Bot holds no projects), so no OVRN, like Network's user-owned node principals.
+- `chat.resource.read` (owner `chat`): rooms, kind `chat.room`, id the room's slug, owner its owner. Person-owned, so
+  no OVRN.
+- **Left out, again:** OpenVibe.Space (its `spaces` table is the forum copy that moved back to Community on
+  2026-10-08; code hosting and spaces are still to be built). Also Run jobs and Tools jobs: a `job_<ULID>` is what
+  `common.resource-name@1` refuses. OpenRestream streams and Games characters wait for their own survey.
+- `lib/ids.js` records `robot: 'rob'`.
+
 ## 0.128.2 — 2026-10-10
 
 - `events.read-result@1` documents `latest_cursor` (OpenVibe.Events#45), the head of a pull as an opaque cursor, and

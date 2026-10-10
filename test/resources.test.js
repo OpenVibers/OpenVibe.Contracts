@@ -32,6 +32,12 @@ assert.strictEqual(c.resources.nameOf({ ...summary, project_id: undefined }), nu
 const site = { ...summary, id: 'sit_01K6R3A1B2C3D4E5F6G7H8J9KA', kind: 'host.site', service: 'host' };
 assert.strictEqual(c.resources.nameOf(site), 'ovrn:host:prj_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4:site/sit_01K6R3A1B2C3D4E5F6G7H8J9KA');
 
+// A person-owned robot (Bot holds no projects): listed with its rob_ id, never named.
+assert.match(c.ids.newId('robot'), /^rob_[0-9A-HJKMNP-TV-Z]{26}$/);
+const robot = { id: c.ids.newId('robot'), kind: 'bot.robot', service: 'bot', owner: { type: 'user', id: 'usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4' }, state: 'idle', created_at: '2026-10-10T12:00:00Z' };
+assert.ok(c.validate('common.resource-summary@1', robot).valid, 'a robot summary without a project is valid');
+assert.strictEqual(c.resources.nameOf(robot), null, 'and has no OVRN');
+
 // Control requests: the schema passes these, the cross-field rules refuse them.
 for (const f of ['other-project.json', 'create-with-resource.json']) {
     const q = fx('common.resource-control-request', 'invalid', f);

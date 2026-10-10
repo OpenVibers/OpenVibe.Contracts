@@ -1,0 +1,19 @@
+{
+  "id": "bot.resource.read",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Bot's resource index (ADR-048, plan T13 step 8 phase 2, a person-owned resource): GET /api/v1/resources lists the robots Bot keeps as a page of common.resource-summary@1 (common.resource-list-result@1). Kind bot.robot, id rob_<ULID>, named by the robot's name, owner its owner_subject. Bot holds no projects, so a robot carries no project_id and no OVRN, like Network's user-owned node principals; GET /api/v1/resources/:ovrn answers 404 for every name. Planned until Bot serves the index.",
+  "permissions": [
+    "resources:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.resource-list-result@1"
+}
