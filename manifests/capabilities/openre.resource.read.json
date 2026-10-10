@@ -1,0 +1,22 @@
+{
+  "id": "openre.resource.read",
+  "version": "1.0",
+  "owner": "openre",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read OpenRestream's resource index (ADR-048, plan T13 step 8 phase 2, a person-owned resource): GET /api/v1/resources lists its stream definitions as a page of common.resource-summary@1 (common.resource-list-result@1). Kind openre.stream, id std_<ULID>, named by the stream's title, state its state (active, disabled), owner its owner_subject. Archived definitions are left out. Streams belong to people, not projects, so a stream carries no project_id and no OVRN; GET /api/v1/resources/:ovrn answers 404 for every name.",
+  "permissions": [
+    "resources:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/resources",
+    "GET /api/v1/resources/:ovrn"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.resource-list-result@1"
+}

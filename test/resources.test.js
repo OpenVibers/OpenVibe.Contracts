@@ -37,6 +37,11 @@ assert.match(c.ids.newId('robot'), /^rob_[0-9A-HJKMNP-TV-Z]{26}$/);
 const robot = { id: c.ids.newId('robot'), kind: 'bot.robot', service: 'bot', owner: { type: 'user', id: 'usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4' }, state: 'idle', created_at: '2026-10-10T12:00:00Z' };
 assert.ok(c.validate('common.resource-summary@1', robot).valid, 'a robot summary without a project is valid');
 assert.strictEqual(c.resources.nameOf(robot), null, 'and has no OVRN');
+// OpenRestream's stream definitions: std_ ids, person-owned, so listed and never named either.
+const stream = { ...robot, id: c.ids.newId('stream'), kind: 'openre.stream', service: 'openre', state: 'active' };
+assert.match(stream.id, /^std_[0-9A-HJKMNP-TV-Z]{26}$/);
+assert.ok(c.validate('common.resource-summary@1', stream).valid);
+assert.strictEqual(c.resources.nameOf(stream), null);
 
 // Control requests: the schema passes these, the cross-field rules refuse them.
 for (const f of ['other-project.json', 'create-with-resource.json']) {

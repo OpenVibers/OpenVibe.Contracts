@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.131.0 — 2026-10-10
+
+- `openre.resource.read` (owner `openre`, first-party, **active**): OpenRestream's resource index, its stream
+  definitions as kind `openre.stream`, id `std_<ULID>`, named by the title, owner the stream's owner. Archived
+  definitions are left out. Person-owned, so no OVRN. Implemented by `GET /api/v1/resources` and
+  `GET /api/v1/resources/:ovrn` (OpenRestream ships the index with its pin to this release). OpenVibe.Services reads it
+  once Network grants the `services` principal.
+- `lib/ids.js` records `stream: 'std'`.
+- Games characters stay out for now: their rows carry no creation time, which a resource summary requires.
+
 ## 0.130.0 — 2026-10-10
 
 **Four more authorities serve their resource index.** Status changes only; no schema changed.
