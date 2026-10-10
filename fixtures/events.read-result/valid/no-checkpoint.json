@@ -1,1 +1,7 @@
-{ "consumer": "live", "topic": "media.vod.*", "cursor": 0, "updated_at": null }
+{
+  "consumer": "live",
+  "topic": "media.vod.*",
+  "cursor": null,
+  "carrier": null,
+  "updated_at": null
+}

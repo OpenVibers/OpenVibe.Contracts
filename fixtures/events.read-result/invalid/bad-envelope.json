@@ -1,1 +1,13 @@
-{ "events": [ { "seq": 1, "event": { "event_type": "x" } } ], "next_after_seq": 1, "latest_seq": 1 }
+{
+  "events": [
+    {
+      "seq": 1,
+      "cursor": "c1.0.MQ",
+      "event": {
+        "event_type": "x"
+      }
+    }
+  ],
+  "next_cursor": "c1.0.MQ",
+  "latest_cursor": "c1.0.MQ"
+}
