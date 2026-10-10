@@ -55975,7 +55975,7 @@ export type JobFrame =
 
 /** platform.task@1.0.0 (owner: network) */
 /**
- * platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to. Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.
+ * platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to (actor.task-webhook@1, signed with `webhook_secret`, which only the creating answer carries). Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.
  */
 export type Task = {
   [k: string]: unknown | undefined;
@@ -56786,6 +56786,10 @@ export type Task = {
      */
     detail: string;
   } | null;
+  /**
+   * The secret every webhook delivery of this task is signed with (X-OpenVibe-Signature-V2: t=<unix seconds>,v2=<hex HMAC-SHA256 of "<t>.<raw body>">, verified by openvibe-sdk/events verifyDeliveryV2). Present only in the answer that created the task (and an idempotent repeat of it), never in a read or a list; erased once the task has ended and its deliveries are done.
+   */
+  webhook_secret?: string;
 };
 
 /** events.delivery-policy@1.0.0 (owner: events) */
@@ -58911,7 +58915,7 @@ export interface SpaceModerationActionPayload {
 
 /** actor.task-create-request@1.0.0 (owner: actor) */
 /**
- * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict.
+ * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A project secret named by reference (platform.task@1 `secret_ref`) is not accepted yet.
  */
 export interface ActorTaskCreateRequest {
   /**
@@ -58928,6 +58932,1613 @@ export interface ActorTaskCreateRequest {
    */
   agent?: string;
   idempotency_key?: string;
+  /**
+   * Where Actor tells the caller about this task's state changes (plan T17).
+   *
+   * @minItems 1
+   * @maxItems 8
+   */
+  webhooks?:
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ]
+    | [
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        },
+        {
+          /**
+           * The HTTPS endpoint Actor POSTs to.
+           */
+          url: string;
+          /**
+           * The state changes delivered; the names of platform.task@1 `state`.
+           *
+           * @minItems 1
+           * @maxItems 6
+           */
+          events:
+            | ["queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ]
+            | [
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
+                "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
+              ];
+        }
+      ];
 }
 
 /** actor.task-event@1.0.0 (owner: actor) */
@@ -58960,6 +60571,17 @@ export interface ActorTaskListResult {
    */
   tasks: Task[];
   next: string | null;
+}
+
+/** actor.task-webhook@1.0.0 (owner: actor) */
+/**
+ * actor.task-webhook@1: the body OpenVibe.Actor POSTs to a task's webhook (plan T17) when the task reaches a state the webhook asked for. TYPE is actor.task.state; DELIVERY_ID is stable across retries (dedupe on it); STATE is the state reached; TASK is platform.task@1 as it was at that moment, without webhook_secret. Headers: X-OpenVibe-Delivery-Id, X-OpenVibe-Task-Id, X-OpenVibe-Task-State, X-OpenVibe-Delivery-Attempt, X-OpenVibe-Timestamp and X-OpenVibe-Signature-V2 (HMAC-SHA256 of "<timestamp>.<raw body>" with the task's webhook_secret; openvibe-sdk/events verifyDeliveryV2 checks it and the ±300 s window). A 2xx answer is delivered; 410 Gone, or a URL the egress guard refuses at send time, ends the delivery at once; anything else is retried with backoff for about a day. Deliveries never delay or change the task.
+ */
+export interface ActorTaskWebhook {
+  type: "actor.task.state";
+  delivery_id: string;
+  state: "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled";
+  task: Task;
 }
 
 /** actor.agent-list-result@1.0.0 (owner: actor) */

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/task-webhook.v1.json",
+  "title": "ActorTaskWebhook",
+  "description": "actor.task-webhook@1: the body OpenVibe.Actor POSTs to a task's webhook (plan T17) when the task reaches a state the webhook asked for. TYPE is actor.task.state; DELIVERY_ID is stable across retries (dedupe on it); STATE is the state reached; TASK is platform.task@1 as it was at that moment, without webhook_secret. Headers: X-OpenVibe-Delivery-Id, X-OpenVibe-Task-Id, X-OpenVibe-Task-State, X-OpenVibe-Delivery-Attempt, X-OpenVibe-Timestamp and X-OpenVibe-Signature-V2 (HMAC-SHA256 of \"<timestamp>.<raw body>\" with the task's webhook_secret; openvibe-sdk/events verifyDeliveryV2 checks it and the ±300 s window). A 2xx answer is delivered; 410 Gone, or a URL the egress guard refuses at send time, ends the delivery at once; anything else is retried with backoff for about a day. Deliveries never delay or change the task.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "delivery_id",
+    "state",
+    "task"
+  ],
+  "properties": {
+    "type": {
+      "const": "actor.task.state"
+    },
+    "delivery_id": {
+      "type": "string",
+      "pattern": "^whd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "verifying",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "task": {
+      "$ref": "../platform/task.v1.json"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "task": "x",
+  "webhooks": [
+    {
+      "url": "http://hooks.example.com/x",
+      "events": [
+        "succeeded"
+      ]
+    }
+  ]
+}

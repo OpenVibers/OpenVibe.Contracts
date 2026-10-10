@@ -1,0 +1,13 @@
+{
+  "task": "Summarize today's top three posts on openvibe.news.",
+  "webhooks": [
+    {
+      "url": "https://hooks.example.com/openvibe/actor",
+      "events": [
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    }
+  ]
+}

@@ -6363,6 +6363,16 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.task-webhook",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/task-webhook.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "actor.agent-list-result",
       "version": "1.0.0",
       "owner": "actor",
