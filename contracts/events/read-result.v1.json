@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/read-result.v1.json",
   "title": "EventsReadResult",
-  "description": "events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, cursor, event }], next_cursor, latest_cursor, gap? } (keep next_cursor as the position and read on with after=: it moves past events that did not match; latest_cursor is the head, for a consumer that starts at now; without after= a page starts at the oldest retained event; gap { from_seq, to_seq } says events after the position were already pruned by retention); GET /api/v1/events/:event_id → { seq, cursor, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, carrier, updated_at } (cursor, carrier and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } with the cursor as the SSE id; it resumes from Last-Event-ID (or last_event_id=) when that is a cursor, and a gap message comes first when the cursor is older than retention. A position is only ever an opaque cursor (ADR-042 decision 7): the per-event seq is informational, and nothing accepts it as a position. An app sees only its project's events in its token's environment plus public first-party events.",
+  "description": "events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ cursor, event }], next_cursor, latest_cursor, gap? } (keep next_cursor as the position and read on with after=: it moves past events that did not match; latest_cursor is the head, for a consumer that starts at now; without after= a page starts at the oldest retained event; gap { from_seq, to_seq } says events after the position were already pruned by retention); GET /api/v1/events/:event_id → { cursor, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, carrier, updated_at } (cursor, carrier and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry { event } with the cursor as the SSE id; it resumes from Last-Event-ID (or last_event_id=) when that is a cursor, and a gap message comes first when the cursor is older than retention. A position is only ever an opaque cursor (ADR-042 decision 7): there is no per-event sequence number and no global order; dedupe on event.event_id. An app sees only its project's events in its token's environment plus public first-party events.",
   "anyOf": [
     {
       "type": "object",
@@ -18,16 +18,10 @@
           "items": {
             "type": "object",
             "required": [
-              "seq",
               "cursor",
               "event"
             ],
             "properties": {
-              "seq": {
-                "type": "integer",
-                "minimum": 1,
-                "description": "Informational: the event's number in the hot store. Not a position."
-              },
               "event": {
                 "$ref": "event-envelope.v1.json"
               },
@@ -72,16 +66,10 @@
     {
       "type": "object",
       "required": [
-        "seq",
         "cursor",
         "event"
       ],
       "properties": {
-        "seq": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Informational: the event's number in the hot store. Not a position."
-        },
         "event": {
           "$ref": "event-envelope.v1.json"
         },

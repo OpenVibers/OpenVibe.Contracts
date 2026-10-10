@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.136.0 — 2026-10-10
+
+**No per-event sequence number on the consumer wire** (ADR-042 decision 7, its last step; plan T7). Positions became
+opaque cursors in 0.132.0; the informational `seq` that stayed beside them goes now, with the "global order" promise.
+Every client dedupes by `event_id` (openvibe-sdk 0.42.0 realtime, Shared 3.0.1), and no receiver reads `seq`
+(checked across the estate).
+
+- `events.publish-result@1`: `{ event_id, cursor, duplicate }` (single and batch items); `seq` is gone and `cursor` is
+  required.
+- `events.read-result@1`: page items and single reads are `{ cursor, event }`. SSE messages carry `{ event }`.
+- Unchanged: `gap` ranges (`from_seq`, `to_seq`; informational), and the operator delivery list and replay
+  (`events.delivery-admin-*`), which still page by the hot store's position.
+- Fixtures follow; ADR-042 records the step.
+
 ## 0.135.0 — 2026-10-10
 
 - **Events, AI and Search get `site` blocks** (name, icon, tagline, what, legal profile, position 31-33). All three
