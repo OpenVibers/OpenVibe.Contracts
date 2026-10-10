@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/inventory.index_document.deleted.v1.json",
   "title": "InventoryIndexDocumentDeletedPayload",
-  "description": "inventory.index_document.deleted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a definition page (/definitions/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision }, visibility internal, actor service:inventory.",
+  "description": "inventory.index_document.deleted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a definition page (/items/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision }, visibility internal, actor service:inventory.",
   "type": "object",
   "required": [
     "type",
