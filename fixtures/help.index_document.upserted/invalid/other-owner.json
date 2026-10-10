@@ -1,0 +1,25 @@
+{
+  "owner": "deals",
+  "type": "article",
+  "id": "openvibe.live:how-do-i-go-live-from-my-browser",
+  "revision": 2,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.help/a/openvibe.live/how-do-i-go-live-from-my-browser",
+  "title": "How do I go live from my browser?",
+  "summary": "Open openvibe.live, sign in and press Go live: no OBS and no follower minimum.",
+  "body": "How do I go live from my browser?\nOpen openvibe.live, sign in and press Go live: no OBS and no follower minimum.",
+  "facets": {
+    "site": "openvibe.live",
+    "kind": "product"
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-09T12:00:00.000Z",
+  "updated_at": "2026-10-10T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

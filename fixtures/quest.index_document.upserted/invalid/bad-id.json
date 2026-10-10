@@ -1,0 +1,25 @@
+{
+  "owner": "quest",
+  "type": "quest",
+  "id": "Go_Live!",
+  "revision": 2,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.quest/quests/go-live",
+  "title": "Go live once",
+  "summary": "Start your first stream on OpenVibe.Live and earn the First Broadcast badge.",
+  "body": "Go live once\nStart your first stream on OpenVibe.Live and earn the First Broadcast badge.",
+  "facets": {
+    "service": "live",
+    "badge": "first-broadcast"
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-09T12:00:00.000Z",
+  "updated_at": "2026-10-10T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

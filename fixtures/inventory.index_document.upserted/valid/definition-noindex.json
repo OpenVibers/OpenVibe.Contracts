@@ -1,0 +1,28 @@
+{
+  "owner": "inventory",
+  "type": "definition",
+  "id": "itd_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "revision": 5,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.inventory/definitions/itd_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "title": "Fire Name",
+  "summary": "A name effect for chat: your name burns. Rare, issued by OpenVibe.Live.",
+  "body": "Fire Name\nA name effect for chat: your name burns. Rare, issued by OpenVibe.Live.",
+  "facets": {
+    "kind": "live.name_effect",
+    "rarity": "rare",
+    "issuer": "service:live"
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-09T12:00:00.000Z",
+  "updated_at": "2026-10-10T08:00:00.000Z",
+  "indexability": {
+    "decision": "noindex",
+    "reasons": [
+      "owner_decision"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "owner": "rent",
+  "type": "listing",
+  "id": "rnt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "revision": 5,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.rent/listings/rnt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "title": "Bright room near the park",
+  "summary": "650 GBP a month · Leeds, Headingley · available from 2026-11-01",
+  "body": "Bright room near the park\n650 GBP a month · Leeds, Headingley · available from 2026-11-01",
+  "facets": {
+    "kind": "room",
+    "country": "GB",
+    "city": "Leeds",
+    "currency": "GBP",
+    "period": "month",
+    "bedrooms": "1"
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-09T12:00:00.000Z",
+  "updated_at": "2026-10-10T08:00:00.000Z",
+  "indexability": {
+    "decision": "noindex",
+    "reasons": [
+      "owner_decision"
+    ]
+  }
+}

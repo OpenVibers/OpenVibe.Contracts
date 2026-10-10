@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.128.0 — 2026-10-10
+
+- **Record products send their pages to OpenVibe.Search.** `<owner>.index_document.upserted` and `.deleted` (v1) are
+  declared for Work (`job`, `/jobs/<id>`), Rent (`listing`, `/listings/<id>`), Help (`article`,
+  `/a/<domain>/<slug>`, id `<domain>:<slug>`), Inventory (`definition`, `/definitions/<id>`) and Quest (`quest`,
+  `/quests/<id>`), and each service manifest now produces them. The payloads are `search.index-document@1` with the
+  owner, type and id pattern fixed, plus the usual tombstone. Each product sends them through
+  `openvibe-publishing/search-feed` (1.4.0): on the write's transaction, and from a sweep that re-sends only what
+  changed. Search consumes them as `*.index_document.*` once the owners are in `SEARCH_EVENT_OWNERS`.
+
 ## 0.127.0 — 2026-10-10
 
 - **Retired addresses leave the registry.** `ai.openvibe.network` and `events.openvibe.network` are no longer domains
