@@ -53,6 +53,11 @@ cell-local carrier). Amends ADR-004: its "Kafka/NATS now: rejected" is supersede
    `next_cursor` (opaque: a hot-store position plus a retention epoch); the SSE `id` becomes the cursor. Consumers'
    positions live in `consumer_checkpoints` with `epoch` and `carrier` columns. `seq` is still returned for exactly one
    release after the cursor ships; it and `X-OpenVibe-Seq` are then deleted, with the "global order" promise.
+   *Positions done 2026-10-10 (Contracts 0.132.0, openvibe-sdk 0.42.0, Shared 3.0.1, Events):* every consumer reads by
+   cursor, and nothing accepts a number as a position any more: `after_seq` is a 400, pages carry no `next_after_seq` or
+   `latest_seq`, checkpoints store and return the opaque cursor, and a bare-number `Last-Event-ID` is not a position.
+   The per-event `seq` (pull items, publish results, SSE data, the delivery body and `X-OpenVibe-Seq`) remains as an
+   informational number; deleting it is the last step, and clients already dedupe by `event_id`.
 8. **Three tiers.** hot = `events` (pruned at `retention.hot`); replay = `events_archive` in the same database (no
    delivery rows, compressed payloads, pruned at `retention.replay`); archive = monthly NDJSON objects in object
    storage, restored only by an operator job into `events_archive`. Pulls and scans span hot and replay with one

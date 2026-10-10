@@ -4,6 +4,26 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.132.0 — 2026-10-10
+
+**An Events position is an opaque cursor and nothing else** (ADR-042 decision 7, plan T7). `events.read-result@1` and
+`events.read-request@1` drop the numeric positions their own descriptions kept "only until every consumer reads by
+cursor". Every consumer does now, checked across the estate: Community's relay (Community #56), the SDK's pull,
+iterate, checkpoints and realtime (openvibe-sdk 0.42.0), Shared's bell and release watcher (3.0.1), Examples (#14)
+and Chat's e2e test (#64). Services' project archive already read by cursor.
+
+- **Pages:** `GET /api/v1/events` answers `{ events: [{ seq, cursor, event }], next_cursor, latest_cursor, gap? }`.
+  `next_after_seq` and `latest_seq` are gone, and `next_cursor`, `latest_cursor` and each item's `cursor` are required
+  (Events always sent them). Without `after=`, a page starts at the oldest retained event; `after_seq` is refused.
+- **Single event:** `GET /api/v1/events/:event_id` requires `cursor` beside `seq`.
+- **Checkpoints:** `PUT` takes `{ topic, cursor, carrier? }` with `cursor` an opaque cursor string; a number is refused.
+  `GET`/`PUT` answer `{ consumer, topic, cursor, carrier, updated_at }` with the cursor as stored (null when none is).
+- **Realtime:** the SSE id is the cursor, and `Last-Event-ID` resumes only from a cursor.
+- **Per-event `seq`:** stays, documented as informational (not a position). Deleting it, with `X-OpenVibe-Seq` and the
+  global-order promise, is ADR-042's last step; clients already dedupe by `event_id`.
+- **Fixtures:** pages and checkpoints with cursors only, plus three invalid ones (a numeric page, a numeric checkpoint
+  answer, a numeric checkpoint request). ADR-042 records what decision 7 became.
+
 ## 0.131.0 — 2026-10-10
 
 - `openre.resource.read` (owner `openre`, first-party, **active**): OpenRestream's resource index, its stream

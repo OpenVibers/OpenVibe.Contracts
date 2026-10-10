@@ -24,8 +24,6 @@
       "cursor": "c1.e0.1"
     }
   ],
-  "next_after_seq": 88240,
-  "latest_seq": 88240,
   "next_cursor": "c1.e0.next",
   "latest_cursor": "c1.0.Nw"
 }

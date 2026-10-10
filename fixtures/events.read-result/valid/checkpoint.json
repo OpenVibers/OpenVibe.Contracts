@@ -1,0 +1,7 @@
+{
+  "consumer": "live",
+  "topic": "media.vod.*",
+  "cursor": "c1.0.ODgyMTM",
+  "carrier": "pg-v1",
+  "updated_at": "2026-10-10T12:00:00Z"
+}

@@ -11186,7 +11186,7 @@ export type EventsPublishResult =
 
 /** events.read-request@1.0.0 (owner: events) */
 /**
- * events.read-request@1: request bodies of the pull API on OpenVibe.Events (events.event.read, events.app.read). PUT /api/v1/checkpoints: { topic, cursor } stores the calling consumer's cursor for a topic pattern (an app's patterns must start with a literal segment and app.* must name its own project_key). GET /api/v1/events?topic=&after_seq=&limit=, GET /api/v1/events/:event_id, GET /api/v1/checkpoints?topic= and GET /realtime/stream?topics= take no body.
+ * events.read-request@1: request bodies of the pull API on OpenVibe.Events (events.event.read, events.app.read). PUT /api/v1/checkpoints: { topic, cursor, carrier? } stores the calling consumer's opaque cursor for a topic pattern (an app's patterns must start with a literal segment and app.* must name its own project_key). GET /api/v1/events?topic=&after=&limit=, GET /api/v1/events/:event_id, GET /api/v1/checkpoints?topic= and GET /realtime/stream?topics= take no body. A position is only ever an opaque cursor (ADR-042 decision 7): after_seq is refused (400) and a numeric checkpoint cursor is refused.
  */
 export type EventsReadRequest =
   | {
@@ -11195,15 +11195,19 @@ export type EventsReadRequest =
        */
       topic: string;
       /**
-       * A seq (next_after_seq of the last page handled).
+       * An opaque cursor: a page's next_cursor (or latest_cursor). Never a number, never parsed.
        */
-      cursor: number;
+      cursor: string;
+      /**
+       * The carrier the position is on (ADR-042), recorded with it.
+       */
+      carrier?: string;
     }
   | NoBody;
 
 /** events.read-result@1.0.0 (owner: events) */
 /**
- * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, cursor?, event }], next_after_seq, next_cursor?, latest_seq, latest_cursor?, gap? } (keep next_cursor as the position and read on with after=: it moves past events that did not match; latest_cursor is the head, for a consumer that starts at now; the numeric after_seq, next_after_seq and latest_seq remain only until every consumer reads by cursor (plan T7); gap { from_seq, to_seq } says events after the position were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } (id: the cursor once Events sends one, else the seq; a gap message when the cursor is older than retention). An app sees only its project's events in its token's environment plus public first-party events.
+ * events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, cursor, event }], next_cursor, latest_cursor, gap? } (keep next_cursor as the position and read on with after=: it moves past events that did not match; latest_cursor is the head, for a consumer that starts at now; without after= a page starts at the oldest retained event; gap { from_seq, to_seq } says events after the position were already pruned by retention); GET /api/v1/events/:event_id → { seq, cursor, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, carrier, updated_at } (cursor, carrier and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } with the cursor as the SSE id; it resumes from Last-Event-ID (or last_event_id=) when that is a cursor, and a gap message comes first when the cursor is older than retention. A position is only ever an opaque cursor (ADR-042 decision 7): the per-event seq is informational, and nothing accepts it as a position. An app sees only its project's events in its token's environment plus public first-party events.
  */
 export type EventsReadResult =
   | {
@@ -11211,41 +11215,52 @@ export type EventsReadResult =
        * @maxItems 1000
        */
       events: {
+        /**
+         * Informational: the event's number in the hot store. Not a position.
+         */
         seq: number;
         event: EventEnvelope;
         /**
-         * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+         * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it.
          */
-        cursor?: string;
+        cursor: string;
       }[];
-      next_after_seq: number;
-      latest_seq: number;
       gap?: {
         from_seq: number;
         to_seq: number;
       };
       /**
-       * Opaque position after this page (ADR-042): pass it back as after= for the next page. Returned beside next_after_seq for one release.
+       * Opaque position after this page (ADR-042): pass it back as after= for the next page.
        */
-      next_cursor?: string;
+      next_cursor: string;
       /**
-       * The head as an opaque cursor (ADR-042): a consumer that starts at now stores it and reads on with after=, never needing latest_seq.
+       * The head as an opaque cursor (ADR-042): a consumer that starts at now stores it and reads on with after=.
        */
-      latest_cursor?: string;
+      latest_cursor: string;
     }
   | {
+      /**
+       * Informational: the event's number in the hot store. Not a position.
+       */
       seq: number;
       event: EventEnvelope;
       /**
-       * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it. Returned beside seq for one release; seq then goes.
+       * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it.
        */
-      cursor?: string;
+      cursor: string;
     }
   | {
       consumer: string;
       topic: string;
-      cursor: number;
+      /**
+       * The stored opaque cursor, as it was stored; null when none is.
+       */
+      cursor: string | null;
       updated_at: string | null;
+      /**
+       * The carrier the stored position is on (ADR-042), or null.
+       */
+      carrier?: string | null;
     };
 
 /** events.subscription-request@1.0.0 (owner: events) */
