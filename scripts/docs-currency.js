@@ -9,7 +9,9 @@
  *   node scripts/docs-currency.js <root> --only search,live
  *
  * The services are manifests/services/*.json (their `repository`, e.g. OpenVibers/OpenVibe.Search, is looked up as
- * <root>/OpenVibe.Search). For each checkout:
+ * <root>/OpenVibe.Search). A manifest with status "placeholder" is one the roadmap has named but not built, so an
+ * absent checkout is skipped (not a gap); a placeholder that does have a checkout is checked like any other. For
+ * each checkout:
  *
  *   README.md has a level-2 heading for each of: Purpose, Owns, Does not own, Depends on, Capabilities or Grants,
  *   Acceptance (or Tests), Security, Deploy (or Deployment, Running it in production). "What works" is read from
@@ -60,7 +62,13 @@ function checkRepo(root, manifest) {
     const name = String(manifest.repository || '').split('/').pop();
     const dir = path.join(root, name);
     const gaps = [];
-    if (!name || !fs.existsSync(dir)) return { id: manifest.id, repository: manifest.repository, missing: true, gaps: ['no checkout under the root'] };
+    if (!name || !fs.existsSync(dir)) {
+        // A placeholder service (status "placeholder": named by the roadmap, not built) has no repository to check
+        // yet; report it as skipped rather than a gap. A placeholder that does have a checkout falls through and is
+        // checked normally.
+        if (manifest.status === 'placeholder') return { id: manifest.id, repository: manifest.repository, skipped: 'placeholder', gaps: [] };
+        return { id: manifest.id, repository: manifest.repository, missing: true, gaps: ['no checkout under the root'] };
+    }
     const readmePath = path.join(dir, 'README.md');
     if (!fs.existsSync(readmePath)) gaps.push('README.md missing');
     else {
@@ -86,6 +94,14 @@ function checkRepo(root, manifest) {
     return { id: manifest.id, repository: manifest.repository, gaps };
 }
 
+/** The summary line: skipped placeholders are counted apart from the checkouts that were actually checked. */
+function summarize(results) {
+    const skipped = results.filter((r) => r.skipped).length;
+    const checked = results.length - skipped;
+    const bad = results.filter((r) => r.gaps.length).length;
+    return `${checked - bad}/${checked} current${skipped ? `, ${skipped} placeholder skipped` : ''}`;
+}
+
 function main(argv) {
     const root = argv.find((a) => !a.startsWith('--'));
     if (!root) { console.error('usage: docs-currency.js <root with the checkouts> [--json] [--only id,id]'); process.exit(2); }
@@ -97,12 +113,14 @@ function main(argv) {
     const results = manifests.map((m) => checkRepo(path.resolve(root), m));
     if (argv.includes('--json')) console.log(JSON.stringify(results, null, 2));
     else {
-        for (const r of results) console.log(`${r.gaps.length ? '✗' : '✓'} ${r.id.padEnd(12)} ${r.gaps.length ? r.gaps.join('; ') : 'current'}`);
-        const bad = results.filter((r) => r.gaps.length).length;
-        console.log(`${results.length - bad}/${results.length} current`);
+        for (const r of results) {
+            if (r.skipped) console.log(`– ${r.id.padEnd(12)} placeholder, no repository yet`);
+            else console.log(`${r.gaps.length ? '✗' : '✓'} ${r.id.padEnd(12)} ${r.gaps.length ? r.gaps.join('; ') : 'current'}`);
+        }
+        console.log(summarize(results));
     }
     process.exit(results.some((r) => r.gaps.length) ? 1 : 0);
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { checkRepo, headings, contractsPin, REQUIRED, STATUS_FIELDS };
+module.exports = { checkRepo, headings, contractsPin, summarize, REQUIRED, STATUS_FIELDS };
