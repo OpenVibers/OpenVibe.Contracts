@@ -4,6 +4,27 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.133.0 — 2026-10-10
+
+**Actor task webhooks** (plan T17). Additive; OpenVibe.Actor implements them with its pin to this release.
+
+- **`actor.task-create-request@1`:** gains `webhooks` (1 to 8 items, each an https `url` and the `events` to deliver, which
+  are the names of platform.task@1 `state`).
+- **Signing:** Actor signs each task's deliveries with a secret it mints for that task. `platform.task@1` gains
+  `webhook_secret` (`whsec_` and 43 characters), present only in the answer that created the task (and an idempotent
+  repeat), never in a read or a list. It is erased once the task has ended and its deliveries are done.
+- **New `actor.task-webhook@1`** (the delivery body): `{ type: "actor.task.state", delivery_id: "whd_…", state, task }`.
+  - `delivery_id` is stable across retries.
+  - `task` is platform.task@1 as it was then, without the secret.
+  - Signed exactly like an Events delivery (`X-OpenVibe-Timestamp`, `X-OpenVibe-Signature-V2`), so receivers check
+    it with openvibe-sdk/events `verifyDeliveryV2`.
+  - 2xx is delivered; 410 or a URL the egress guard refuses ends it; anything else is retried for about a day.
+- **Not accepted yet:** a project secret named by reference (`secret_ref`), since project secrets are not built. The
+  request schema leaves it out, so naming one is a 422.
+- `lib/ids.js` records `webhook_delivery: 'whd'`; the `actor.task.create` capability says what it now does.
+- **Fixtures:** a request with webhooks; invalid ones for plain http and `secret_ref`; a delivery; invalid deliveries
+  carrying the secret or with a bad delivery id.
+
 ## 0.132.0 — 2026-10-10
 
 **An Events position is an opaque cursor and nothing else** (ADR-042 decision 7, plan T7). `events.read-result@1` and

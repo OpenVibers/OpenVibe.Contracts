@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/platform/task.v1.json",
   "title": "Task",
-  "description": "platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to. Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.",
+  "description": "platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to (actor.task-webhook@1, signed with `webhook_secret`, which only the creating answer carries). Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.",
   "$comment": "Additive optional fields may extend this v1 contract. It is the task resource, not a device frame: Actor's link is HTTP/SSE where Run's is the Node WebSocket.",
   "type": "object",
   "additionalProperties": false,
@@ -274,6 +274,11 @@
         }
       ],
       "description": "Why the task failed, once it has; null otherwise. Never a credential and never raw provider output."
+    },
+    "webhook_secret": {
+      "type": "string",
+      "pattern": "^whsec_[A-Za-z0-9_-]{43}$",
+      "description": "The secret every webhook delivery of this task is signed with (X-OpenVibe-Signature-V2: t=<unix seconds>,v2=<hex HMAC-SHA256 of \"<t>.<raw body>\">, verified by openvibe-sdk/events verifyDeliveryV2). Present only in the answer that created the task (and an idempotent repeat of it), never in a read or a list; erased once the task has ended and its deliveries are done."
     }
   },
   "allOf": [
