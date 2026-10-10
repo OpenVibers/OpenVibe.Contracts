@@ -86,5 +86,13 @@
       "none": "no claims: one process owns its PostgreSQL database (ov_ai); a run is taken with a compare-and-set on its status (queued → running)"
     }
   },
-  "notes": "Providers, models, routing profiles, versioned prompt templates and workflows, runs, request logs, citations, scoped cache, quotas and audit. Workflow output is a draft/evidence package attributed to workflow + model + run. ai.run.queued|succeeded|failed|cached have payload contracts (v0.30.0, status planned): AI publishes them once its Events client is wired in; it publishes none today. ai.run.create takes ai.run-request@1 and returns ai.run@1."
+  "notes": "Providers, models, routing profiles, versioned prompt templates and workflows, runs, request logs, citations, scoped cache, quotas and audit. Workflow output is a draft/evidence package attributed to workflow + model + run. ai.run.queued|succeeded|failed|cached have payload contracts (v0.30.0, status planned): AI publishes them once its Events client is wired in; it publishes none today. ai.run.create takes ai.run-request@1 and returns ai.run@1.",
+  "site": {
+    "name": "AI",
+    "icon": "ai",
+    "tagline": "Many models, one API. Every answer explained.",
+    "what": "One API for chat, generation, summaries, classification, extraction and embeddings across many models; every run says which model answered, why it was chosen and what it cost.",
+    "legalProfile": "tools",
+    "position": 32
+  }
 }
