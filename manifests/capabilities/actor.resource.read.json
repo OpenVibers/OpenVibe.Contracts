@@ -2,9 +2,9 @@
   "id": "actor.resource.read",
   "version": "1.0",
   "owner": "actor",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
-  "description": "Read OpenVibe.Actor's resource index (ADR-048, plan T13 step 8 phase 2): GET /api/v1/resources lists Actor's tasks as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Kind actor.task, id tsk_<ULID>, named by the start of the task text, state the task's state, owner the requesting person when the requester is a user subject. A task asked under a project carries that project_id and so an OVRN; the rest have neither. Planned until Actor serves the index.",
+  "description": "Read OpenVibe.Actor's resource index (ADR-048, plan T13 step 8 phase 2): GET /api/v1/resources lists Actor's tasks as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Kind actor.task, id tsk_<ULID>, named by the start of the task text, state the task's state, owner the requesting person when the requester is a user subject. A task asked under a project carries that project_id and so an OVRN; the rest have neither.",
   "permissions": [
     "resources:read"
   ],
@@ -13,7 +13,10 @@
   ],
   "quotaClass": "standard",
   "events": [],
-  "implementedBy": [],
+  "implementedBy": [
+    "GET /api/v1/resources",
+    "GET /api/v1/resources/:ovrn"
+  ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "common.resource-list-result@1"
 }

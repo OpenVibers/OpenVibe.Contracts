@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.130.0 — 2026-10-10
+
+**Four more authorities serve their resource index.** Status changes only; no schema changed.
+- `watch.resource.read`, `actor.resource.read`, `bot.resource.read`, `chat.resource.read`: active, implemented by
+  `GET /api/v1/resources` and `GET /api/v1/resources/:ovrn` (Watch #28, Actor #22, Bot #68, Chat #57, all deployed).
+  OpenVibe.Services adds every active `<id>.resource.read` to its authority registry on boot, so a Services on 0.130.0
+  merges watches, Actor tasks, robots and rooms beside Network's, Media's, Events' and Host's resources.
+
 ## 0.129.0 — 2026-10-10
 
 **The resource index's next authorities** (ADR-048, plan T13 step 8 phase 2, the Contracts half). Four planned,

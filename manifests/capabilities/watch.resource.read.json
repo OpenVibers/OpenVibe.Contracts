@@ -2,9 +2,9 @@
   "id": "watch.resource.read",
   "version": "1.0",
   "owner": "watch",
-  "status": "planned",
+  "status": "active",
   "visibility": "first-party",
-  "description": "Read OpenVibe.Watch's resource index (ADR-048, plan T13 step 8 phase 2): GET /api/v1/resources lists the watches it keeps as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Kind watch.watch, id wch_<ULID>, named by the watch's name, state its status (active, paused, disabled, failed), owner the subject that made it. A watch made under a project carries that project_id and so an OVRN; a person's own watch has neither. Planned until Watch serves the index.",
+  "description": "Read OpenVibe.Watch's resource index (ADR-048, plan T13 step 8 phase 2): GET /api/v1/resources lists the watches it keeps as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Kind watch.watch, id wch_<ULID>, named by the watch's name, state its status (active, paused, disabled, failed), owner the subject that made it. A watch made under a project carries that project_id and so an OVRN; a person's own watch has neither.",
   "permissions": [
     "resources:read"
   ],
@@ -13,7 +13,10 @@
   ],
   "quotaClass": "standard",
   "events": [],
-  "implementedBy": [],
+  "implementedBy": [
+    "GET /api/v1/resources",
+    "GET /api/v1/resources/:ovrn"
+  ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "common.resource-list-result@1"
 }
