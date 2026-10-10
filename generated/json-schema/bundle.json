@@ -6095,7 +6095,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/read-result.v1.json",
         "title": "EventsReadResult",
-        "description": "events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, cursor?, event }], next_after_seq, next_cursor?, latest_seq, gap? } (keep next_after_seq as the cursor: it moves past events that did not match; gap { from_seq, to_seq } says events after after_seq were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } (id: the cursor once Events sends one, else the seq; a gap message when the cursor is older than retention). An app sees only its project's events in its token's environment plus public first-party events.",
+        "description": "events.read-result@1: answers of the pull API on OpenVibe.Events. GET /api/v1/events → { events: [{ seq, cursor?, event }], next_after_seq, next_cursor?, latest_seq, latest_cursor?, gap? } (keep next_cursor as the position and read on with after=: it moves past events that did not match; latest_cursor is the head, for a consumer that starts at now; the numeric after_seq, next_after_seq and latest_seq remain only until every consumer reads by cursor (plan T7); gap { from_seq, to_seq } says events after the position were already pruned by retention); GET /api/v1/events/:event_id → { seq, event }; GET|PUT /api/v1/checkpoints → { consumer, topic, cursor, updated_at } (cursor 0 and updated_at null when none is stored). GET /realtime/stream?topics= (events.event.read) is a Server-Sent Events feed whose messages carry the same { seq, event } (id: the cursor once Events sends one, else the seq; a gap message when the cursor is older than retention). An app sees only its project's events in its token's environment plus public first-party events.",
         "anyOf": [
           {
             "type": "object",
@@ -6159,6 +6159,12 @@
                 "minLength": 1,
                 "maxLength": 200,
                 "description": "Opaque position after this page (ADR-042): pass it back as after= for the next page. Returned beside next_after_seq for one release."
+              },
+              "latest_cursor": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "The head as an opaque cursor (ADR-042): a consumer that starts at now stores it and reads on with after=, never needing latest_seq."
               }
             }
           },
