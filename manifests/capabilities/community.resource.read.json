@@ -1,0 +1,22 @@
+{
+  "id": "community.resource.read",
+  "version": "1.0",
+  "owner": "community",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Community's resource index (ADR-048, plan T13 step 8, person-owned resources): GET /api/v1/resources lists a page of common.resource-summary@1 (common.resource-list-result@1) of two kinds. community.paste: id the paste's slug, named by its title, state its visibility (public, unlisted, private), owner its owner_subject; deleted pastes are left out. community.space: id the space's slug, named by its name, state its visibility (public, members, staff), owner the person who created it. Both belong to people, not projects, so they carry no project_id and no OVRN, and GET /api/v1/resources/:ovrn answers 404 for every name. Filters: kind, owner (a usr_/agt_ subject id; what that subject owns), project (always empty here), cursor, limit.",
+  "permissions": [
+    "resources:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/resources",
+    "GET /api/v1/resources/:ovrn"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.resource-list-result@1"
+}

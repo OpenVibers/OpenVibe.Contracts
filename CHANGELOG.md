@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.134.0 — 2026-10-10
+
+- `community.resource.read` (owner `community`, first-party, **active**): OpenVibe.Community's resource index, so a
+  person's pastes and spaces appear in OpenVibe.Services' merged index ("Your resources") beside their robots, rooms,
+  streams, watches and Actor tasks. Kinds `community.paste` (id the slug, named by its title, state its visibility, owner
+  its owner; deleted pastes left out) and `community.space` (id the slug, named by its name, state its visibility, owner
+  its creator). Person-owned, so no project and no OVRN. Implemented by `GET /api/v1/resources` and
+  `GET /api/v1/resources/:ovrn` (Community ships the index with its pin to this release). Services reads it once
+  Network grants the `services` principal.
+
 ## 0.133.0 — 2026-10-10
 
 **Actor task webhooks** (plan T17). Additive; OpenVibe.Actor implements them with its pin to this release.
