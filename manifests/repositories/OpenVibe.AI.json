@@ -12,9 +12,7 @@
     "ai.usage_summary"
   ],
   "domains": [
-    "ai.openvibe.services",
-    "ai.openvibe.network",
-    "openvibe.ai"
+    "ai.openvibe.services"
   ],
   "pins": {
     "openvibe-contracts": "v0.86.0",
