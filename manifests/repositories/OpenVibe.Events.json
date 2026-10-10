@@ -12,8 +12,7 @@
     "events"
   ],
   "domains": [
-    "openvibe.events",
-    "events.openvibe.network"
+    "openvibe.events"
   ],
   "pins": {
     "openvibe-contracts": "v0.94.2",

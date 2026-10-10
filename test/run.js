@@ -618,20 +618,20 @@ const run = (guard, headers) => new Promise((resolve) => {
     guard(req, res, () => resolve({ status: 200, req }));
 });
 const audit = [];
-const opts = { publicKey: kp.publicKey, issuer: 'https://openvibe.network', audience: 'openvibe.network', legacy: (req) => req.headers['x-internal-key'] === 'k', onDecision: (d) => audit.push(d) };
+const opts = { publicKey: kp.publicKey, issuer: 'https://openvibe.network', audience: 'openvibe.network', onDecision: (d) => audit.push(d) };
 let r = await run(serviceAuth.requireCapability('network.coins.credit', opts), { authorization: `Bearer ${tok}` });
 ok(r.status === 200 && r.req.principal.sub === 'svc:live', 'granted capability passes with the principal attached');
 r = await run(serviceAuth.requireCapability('network.coins.debit', opts), { authorization: `Bearer ${tok}` });
 ok(r.status === 403 && r.body.code === 'capability.denied' && contracts.validate('errors.problem', r.body).valid, 'ungranted capability is a 403 problem');
 r = await run(serviceAuth.requireCapability('network.coins.credit', opts), { authorization: 'Bearer garbage', 'x-internal-key': 'k' });
-ok(r.status === 401 && r.body.code === 'token.malformed', 'a bad token is not rescued by a legacy key');
+ok(r.status === 401 && r.body.code === 'token.malformed', 'a bad token is not rescued by an old X-Internal-Key');
 r = await run(serviceAuth.requireCapability('network.coins.credit', opts), { 'x-internal-key': 'k' });
-ok(r.status === 200 && r.req.principal.legacy === true, 'legacy key still works in compatibility mode');
+ok(r.status === 403 && r.body.code === 'capability.denied', 'an X-Internal-Key alone opens nothing (retired, plan T2)');
 r = await run(serviceAuth.requireCapability('network.coins.credit', opts), {});
 ok(r.status === 403, 'no credentials, no access');
 r = await run(serviceAuth.requireCapability('media.object.upload', { ...opts, audience: 'openvibe.network', namespace: () => 'games.maps' }), { authorization: `Bearer ${serviceAuth.signServiceToken({ ...claims, cap: ['media.object.*'], ns: ['live.*'] }, kp.privateKey)}` });
 ok(r.status === 403 && r.body.code === 'capability.namespace_denied', 'namespace constraint enforced');
-ok(audit.length === 6 && audit.filter(a => a.allowed).length === 2, 'every decision reaches the audit hook');
+ok(audit.length === 6 && audit.filter(a => a.allowed).length === 1, 'every decision reaches the audit hook');
 assert.throws(() => serviceAuth.requireCapability('nope.nope.nope'), /unknown capability/);
 
 let calls = 0;

@@ -29,7 +29,7 @@ for (const row of products.catalog()) homes.set(row.domain, [...(homes.get(row.d
 for (const [domain, list] of homes) ok(list.length === 1, `${domain} has one home, not ${list.join(', ')}`);
 
 const snapshot = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/sites-domains.json'), 'utf8')).domains;
-ok(snapshot.length === 35 && new Set(snapshot).size === 35, 'the Sites snapshot holds 35 distinct domains');
+ok(snapshot.length === 34 && new Set(snapshot).size === 34, 'the Sites snapshot holds 34 distinct domains (ai.openvibe.network retired 2026-10-10)');
 for (const d of snapshot) ok((homes.get(d) || []).length === 1, `${d} (OpenVibe.Sites) has exactly one Contracts home: ${(homes.get(d) || ['none']).join(', ')}`);
 
 for (const p of products.manifests) {

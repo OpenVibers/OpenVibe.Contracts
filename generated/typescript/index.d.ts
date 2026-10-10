@@ -106,7 +106,7 @@ export type ServiceTokenClaims = {
 
 /** identity.realtime-ticket-claims@1.0.0 (owner: network) */
 /**
- * Claims of a realtime ticket (ADR-005 amendment 2; roadmap WS-E task 3, WS-F task 1): a two-minute RS256 JWT that OpenVibe.Network signs for the signed-in person (POST /api/v1/realtime/ticket) so a browser on any OpenVibe site can open Events' /realtime/stream?ticket=... as that person. A browser cannot put a header on an EventSource, and the ov_token cookie of events.openvibe.network is third-party on every other site, so the ticket travels in the URL; that is why it is short-lived, single-purpose and single-use. It is never a session token, by three independent rules: its issuer is Network's issuer followed by /realtime (every service checks the issuer of a session token), it carries typ (services refuse a session token that has one, as for FedCM assertions), and its only audience is openvibe.events. Events accepts it only as ?ticket= on /realtime/stream, verifies the signature with Network's key, iss, aud, typ, purpose and expiry (lifetime at most 300 s), refuses a jti it has already seen while the ticket is valid, and never logs it. The connection then sees what the person's session would: public events and subject events addressed to `sub`.
+ * Claims of a realtime ticket (ADR-005 amendment 2; roadmap WS-E task 3, WS-F task 1): a two-minute RS256 JWT that OpenVibe.Network signs for the signed-in person (POST /api/v1/realtime/ticket) so a browser on any OpenVibe site can open Events' /realtime/stream?ticket=... as that person. A browser cannot put a header on an EventSource, and the ov_token cookie of openvibe.events is third-party on every other site, so the ticket travels in the URL; that is why it is short-lived, single-purpose and single-use. It is never a session token, by three independent rules: its issuer is Network's issuer followed by /realtime (every service checks the issuer of a session token), it carries typ (services refuse a session token that has one, as for FedCM assertions), and its only audience is openvibe.events. Events accepts it only as ?ticket= on /realtime/stream, verifies the signature with Network's key, iss, aud, typ, purpose and expiry (lifetime at most 300 s), refuses a jti it has already seen while the ticket is valid, and never logs it. The connection then sees what the person's session would: public events and subject events addressed to `sub`.
  */
 export interface RealtimeTicketClaims {
   /**
@@ -33394,7 +33394,7 @@ export interface NetworkRealtimeTicketResult {
    */
   expires_in: number;
   /**
-   * Events' realtime stream (https://openvibe.events/realtime/stream; https://events.openvibe.network/realtime/stream until every client has moved).
+   * Events' realtime stream (https://openvibe.events/realtime/stream).
    */
   stream_url: string;
   /**

@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.127.0 — 2026-10-10
+
+- **Retired addresses leave the registry.** `ai.openvibe.network` and `events.openvibe.network` are no longer domains
+  of the `ai` and `events` services or of their repositories; their last service callers stopped on 2026-10-02 and
+  2026-09-30, and only crawlers reached them since. The `ai.openvibe.network` "moved" product manifest is deleted, and
+  descriptions now name only `ai.openvibe.services` and `openvibe.events`. The AI repository manifest no longer lists a
+  domain the network does not hold. The AI service manifest no longer describes a SQLite database (AI runs on
+  PostgreSQL, ov_ai).
+- **`lib/service-auth.js`:** `requireCapability` drops the `legacy` option (the X-Internal-Key compatibility hook, plan
+  T2). Only a Bearer service token opens a route; no consumer passed it any more.
+
 ## 0.126.0 — 2026-10-09
 
 - **OpenVibe Live on by default for OpenRestream.** New capability `live.openre.slot.bind` (active, internal):
