@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.128.2 — 2026-10-10
+
+- `events.read-result@1` documents `latest_cursor` (OpenVibe.Events#45), the head of a pull as an opaque cursor, and
+  says to keep `next_cursor` and read on with `after=`. The numeric `after_seq`, `next_after_seq` and `latest_seq`
+  remain only until every consumer reads by cursor (plan T7; Community, Services and the Examples have moved).
+  Additive.
+
 ## 0.128.1 — 2026-10-10
 
 - **Descriptions only.** `inventory.index_document.*` name Inventory's real item page, `/items/<id>` on
