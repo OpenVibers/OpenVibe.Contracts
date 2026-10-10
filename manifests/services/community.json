@@ -24,7 +24,8 @@
     "community.space.manage",
     "community.thread.read",
     "community.vote.set",
-    "community.pulse.read"
+    "community.pulse.read",
+    "community.resource.read"
   ],
   "eventsProduced": [
     "community.comment.created",
