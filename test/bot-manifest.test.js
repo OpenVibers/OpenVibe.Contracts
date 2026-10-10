@@ -6,7 +6,7 @@ const assert = require('assert');
 const c = require('..');
 
 // OpenVibe.Bot STATUS.json "capabilities" and "events" at origin/main (2026-10-04, with bot.job.dispatch, plan T14 step 6).
-// bot.resource.read: planned in 0.129.0 (the robots in OpenVibe.Services' resource index, plan T13 step 8 phase 2).
+// bot.resource.read: the robots in OpenVibe.Services' resource index (planned 0.129.0, active 0.130.0; plan T13 step 8).
 const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 

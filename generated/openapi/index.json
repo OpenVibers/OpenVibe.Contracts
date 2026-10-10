@@ -5,8 +5,8 @@
       "service": "actor",
       "name": "OpenVibe.Actor",
       "origin": "https://openvibe.actor",
-      "operations": 7,
-      "capabilities": 4
+      "operations": 9,
+      "capabilities": 5
     },
     {
       "service": "ai",
@@ -33,15 +33,15 @@
       "service": "bot",
       "name": "OpenVibe.Bot",
       "origin": "https://openvibe.bot",
-      "operations": 18,
-      "capabilities": 4
+      "operations": 20,
+      "capabilities": 5
     },
     {
       "service": "chat",
       "name": "OpenVibe.Chat",
       "origin": "https://openvibe.chat",
-      "operations": 22,
-      "capabilities": 12
+      "operations": 24,
+      "capabilities": 13
     },
     {
       "service": "community",
@@ -201,8 +201,8 @@
       "service": "watch",
       "name": "OpenVibe.Watch",
       "origin": "https://openvibe.watch",
-      "operations": 10,
-      "capabilities": 4
+      "operations": 12,
+      "capabilities": 5
     },
     {
       "service": "wiki",
