@@ -16,7 +16,10 @@
     "publicSite": "service"
   },
   "capabilities": [],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "work.index_document.upserted",
+    "work.index_document.deleted"
+  ],
   "eventsConsumed": [
     "network.account.export_requested",
     "network.account.deleted"

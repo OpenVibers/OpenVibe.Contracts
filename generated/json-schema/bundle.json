@@ -74820,6 +74820,366 @@
           }
         }
       }
+    },
+    "work.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "work",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/work.index_document.upserted.v1.json",
+        "title": "WorkIndexDocumentUpsertedPayload",
+        "description": "work.index_document.upserted v1 (OpenVibe.Work server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a job listing page (type job, /jobs/<id>): the title, company, location, tags, salary text and the short excerpt Work keeps of a listing read from a public board, with the board as provenance (authorship imported). Sent after every ingest run that changed a listing and by the sweep (server/search-index.js); a listing that expired (not seen for the retention window) becomes a tombstone. The sequencer (work_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: source, remote, type, location. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: job, id, revision: <document revision> }, visibility internal, actor service:work.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "work"
+              },
+              "type": {
+                "const": "job"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^job_[0-9abcdefghjkmnpqrstvwxyz]{26}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "work.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "work",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/work.index_document.deleted.v1.json",
+        "title": "WorkIndexDocumentDeletedPayload",
+        "description": "work.index_document.deleted v1 (OpenVibe.Work server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a job page (/jobs/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: job, id, revision }, visibility internal, actor service:work.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "job"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^job_[0-9abcdefghjkmnpqrstvwxyz]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "rent.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "rent",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/rent.index_document.upserted.v1.json",
+        "title": "RentIndexDocumentUpsertedPayload",
+        "description": "rent.index_document.upserted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a rental listing page (type listing, /listings/<id>): title, description, price and period, city, region, country and neighbourhood (never a street address or the contact link). Sent in the transaction that created, edited, renewed, hid or removed the listing, and by the sweep (server/search-index.js); a listing that is hidden, removed or past its expiry becomes a tombstone. The sequencer (rent_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, country, city, currency, period, bedrooms. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision: <document revision> }, visibility internal, actor service:rent.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "rent"
+              },
+              "type": {
+                "const": "listing"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^rnt_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "rent.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "rent",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/rent.index_document.deleted.v1.json",
+        "title": "RentIndexDocumentDeletedPayload",
+        "description": "rent.index_document.deleted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a listing page (/listings/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision }, visibility internal, actor service:rent.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "listing"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^rnt_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "help.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "help",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/help.index_document.upserted.v1.json",
+        "title": "HelpIndexDocumentUpsertedPayload",
+        "description": "help.index_document.upserted v1 (OpenVibe.Help server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a help article page (type article, /a/<domain>/<slug>, id <domain>:<slug>): one question from a product manifest's FAQ with its answer, quoted verbatim from OpenVibe.Contracts. Sent by the sweep at boot and on a timer (server/search-index.js) whenever the catalog Help was built from changed; an article whose FAQ entry left the catalog becomes a tombstone. The sequencer (help_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: site (the product domain), kind. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: article, id, revision: <document revision> }, visibility internal, actor service:help.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "help"
+              },
+              "type": {
+                "const": "article"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9.-]{0,79}:[a-z0-9][a-z0-9-]{0,71}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "help.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "help",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/help.index_document.deleted.v1.json",
+        "title": "HelpIndexDocumentDeletedPayload",
+        "description": "help.index_document.deleted v1 (OpenVibe.Help server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a article page (/a/<domain>/<slug>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: article, id, revision }, visibility internal, actor service:help.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "article"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9.-]{0,79}:[a-z0-9][a-z0-9-]{0,71}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "inventory.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.index_document.upserted.v1.json",
+        "title": "InventoryIndexDocumentUpsertedPayload",
+        "description": "inventory.index_document.upserted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of an item definition page (type definition, /definitions/<id>): name, description, kind, rarity, issuer and supply. Only published definitions are documents; a draft, one in review or a retired one is a tombstone. Sent in the transaction that published or retired it, and by the sweep (server/search-index.js). The sequencer (inventory_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, rarity, issuer. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision: <document revision> }, visibility internal, actor service:inventory.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "inventory"
+              },
+              "type": {
+                "const": "definition"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "inventory.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/inventory.index_document.deleted.v1.json",
+        "title": "InventoryIndexDocumentDeletedPayload",
+        "description": "inventory.index_document.deleted v1 (OpenVibe.Inventory server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a definition page (/definitions/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: definition, id, revision }, visibility internal, actor service:inventory.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "definition"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
+    "quest.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "quest",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/quest.index_document.upserted.v1.json",
+        "title": "QuestIndexDocumentUpsertedPayload",
+        "description": "quest.index_document.upserted v1 (OpenVibe.Quest server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a quest page (type quest, /quests/<id>): its name, what to do and where, and the badge (and item) it rewards. Quests are Quest's own catalog (server/quests/catalog.js), so they are sent by the sweep at boot (server/search-index.js); a quest that left the catalog becomes a tombstone. The sequencer (quest_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: service (where the quest is done), badge. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: quest, id, revision: <document revision> }, visibility internal, actor service:quest.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "quest"
+              },
+              "type": {
+                "const": "quest"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "quest.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "quest",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/quest.index_document.deleted.v1.json",
+        "title": "QuestIndexDocumentDeletedPayload",
+        "description": "quest.index_document.deleted v1 (OpenVibe.Quest server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a quest page (/quests/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: quest, id, revision }, visibility internal, actor service:quest.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "quest"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
     }
   }
 }

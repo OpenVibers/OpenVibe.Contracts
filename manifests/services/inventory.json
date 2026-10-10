@@ -30,7 +30,9 @@
     "inventory.item.revoked",
     "inventory.item.equipped",
     "inventory.item.unequipped",
-    "inventory.definition.published"
+    "inventory.definition.published",
+    "inventory.index_document.upserted",
+    "inventory.index_document.deleted"
   ],
   "eventsConsumed": [
     "network.account.export_requested",

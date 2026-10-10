@@ -1,0 +1,29 @@
+{
+  "owner": "work",
+  "type": "job",
+  "id": "job_0123456789abcdefghjkmnpqrs",
+  "revision": 5,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.work/jobs/job_0123456789abcdefghjkmnpqrs",
+  "title": "Senior backend engineer — Example GmbH",
+  "summary": "Remote (EU) · full time · Node.js, PostgreSQL",
+  "body": "Senior backend engineer — Example GmbH\nRemote (EU) · full time · Node.js, PostgreSQL",
+  "facets": {
+    "source": "arbeitnow",
+    "remote": "true",
+    "type": "full time",
+    "location": "Berlin"
+  },
+  "authorship": "imported",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-09T12:00:00.000Z",
+  "updated_at": "2026-10-10T08:00:00.000Z",
+  "indexability": {
+    "decision": "noindex",
+    "reasons": [
+      "owner_decision"
+    ]
+  }
+}

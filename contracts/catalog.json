@@ -6576,6 +6576,96 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-054"
+    },
+    {
+      "id": "work.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "work",
+      "schema": "events/payloads/work.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "work.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "work",
+      "schema": "events/payloads/work.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "rent.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "rent",
+      "schema": "events/payloads/rent.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "rent.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "rent",
+      "schema": "events/payloads/rent.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "help.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "help",
+      "schema": "events/payloads/help.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "help.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "help",
+      "schema": "events/payloads/help.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "events/payloads/inventory.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "events/payloads/quest.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "events/payloads/quest.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -16,7 +16,10 @@
     "publicSite": "service"
   },
   "capabilities": [],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "quest.index_document.upserted",
+    "quest.index_document.deleted"
+  ],
   "eventsConsumed": [
     "chat.room.message.created",
     "community.comment.created",

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/work.index_document.upserted.v1.json",
+  "title": "WorkIndexDocumentUpsertedPayload",
+  "description": "work.index_document.upserted v1 (OpenVibe.Work server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a job listing page (type job, /jobs/<id>): the title, company, location, tags, salary text and the short excerpt Work keeps of a listing read from a public board, with the board as provenance (authorship imported). Sent after every ingest run that changed a listing and by the sweep (server/search-index.js); a listing that expired (not seen for the retention window) becomes a tombstone. The sequencer (work_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: source, remote, type, location. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: job, id, revision: <document revision> }, visibility internal, actor service:work.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "work"
+        },
+        "type": {
+          "const": "job"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^job_[0-9abcdefghjkmnpqrstvwxyz]{26}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

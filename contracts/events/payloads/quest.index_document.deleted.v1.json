@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/quest.index_document.deleted.v1.json",
+  "title": "QuestIndexDocumentDeletedPayload",
+  "description": "quest.index_document.deleted v1 (OpenVibe.Quest server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a quest page (/quests/<id>) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: quest, id, revision }, visibility internal, actor service:quest.",
+  "type": "object",
+  "required": [
+    "type",
+    "id",
+    "revision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "quest"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}
