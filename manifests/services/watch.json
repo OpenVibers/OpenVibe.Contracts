@@ -19,7 +19,8 @@
     "watch.watch.read",
     "watch.watch.manage",
     "watch.observation.read",
-    "watch.check.run"
+    "watch.check.run",
+    "watch.resource.read"
   ],
   "eventsProduced": [
     "watch.watch.created",

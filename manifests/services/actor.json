@@ -19,7 +19,8 @@
     "actor.task.create",
     "actor.task.read",
     "actor.task.list",
-    "actor.agent.read"
+    "actor.agent.read",
+    "actor.resource.read"
   ],
   "eventsProduced": [],
   "eventsConsumed": [
