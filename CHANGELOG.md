@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.144.0 — 2026-10-11
+
+- `sources.source@1` and `sources.source-write-request@1`: an `api` endpoint may declare `items_shape` (`array`, the
+  default, or `map`: records keyed by id, the key readable as `$key`), matching OpenVibe.Sources' adapter (Sources#37).
+
 ## 0.143.0 — 2026-10-11
 
 - `watch.watch@1` (and the watch write schemas that list actions): an action of kind `actor-agent` runs one of the watch

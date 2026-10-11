@@ -6168,6 +6168,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6182,6 +6186,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6194,44 +6202,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        }
-      ]
-    | [
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6246,6 +6220,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6258,6 +6236,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6270,80 +6252,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        }
-      ]
-    | [
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6358,6 +6270,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6370,6 +6286,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6382,6 +6302,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6394,30 +6318,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6432,6 +6336,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6444,6 +6352,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6456,6 +6368,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6468,6 +6384,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6480,128 +6400,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        }
-      ]
-    | [
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6616,6 +6418,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6628,6 +6434,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6640,6 +6450,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6652,6 +6466,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6664,6 +6482,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6676,42 +6498,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6726,6 +6516,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6738,6 +6532,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6750,6 +6548,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6762,6 +6564,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6774,6 +6580,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6786,6 +6596,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6798,42 +6612,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6848,6 +6630,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6860,6 +6646,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6872,6 +6662,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6884,6 +6678,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6896,6 +6694,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6908,6 +6710,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6920,6 +6726,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -6932,188 +6742,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        }
-      ]
-    | [
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7128,6 +6760,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7140,6 +6776,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7152,6 +6792,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7164,6 +6808,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7176,6 +6824,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7188,6 +6840,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7200,6 +6856,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7212,6 +6872,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7224,54 +6888,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7286,6 +6906,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7298,6 +6922,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7310,6 +6938,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7322,6 +6954,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7334,6 +6970,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7346,6 +6986,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7358,6 +7002,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7370,6 +7018,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7382,6 +7034,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7394,54 +7050,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7456,6 +7068,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7468,6 +7084,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7480,6 +7100,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7492,6 +7116,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7504,6 +7132,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7516,6 +7148,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7528,6 +7164,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7540,6 +7180,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7552,6 +7196,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7564,6 +7212,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7576,248 +7228,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        }
-      ]
-    | [
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7832,6 +7246,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7844,6 +7262,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7856,6 +7278,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7868,6 +7294,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7880,6 +7310,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7892,6 +7326,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7904,6 +7342,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7916,6 +7358,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7928,6 +7374,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7940,6 +7390,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7952,6 +7406,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -7964,66 +7422,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8038,6 +7440,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8050,6 +7456,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8062,6 +7472,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8074,6 +7488,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8086,6 +7504,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8098,6 +7520,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8110,6 +7536,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8122,6 +7552,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8134,6 +7568,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8146,6 +7584,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8158,6 +7600,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8170,6 +7616,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8182,66 +7632,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8256,6 +7650,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8268,6 +7666,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8280,6 +7682,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8292,6 +7698,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8304,6 +7714,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8316,6 +7730,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8328,6 +7746,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8340,6 +7762,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8352,6 +7778,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8364,6 +7794,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8376,6 +7810,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8388,6 +7826,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8400,6 +7842,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8412,66 +7858,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          item_kind?: string;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          extra?: {
-            [k: string]: string | undefined;
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8486,6 +7876,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8498,6 +7892,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8510,6 +7908,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8522,6 +7924,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8534,6 +7940,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8546,6 +7956,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8558,6 +7972,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8570,6 +7988,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8582,6 +8004,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8594,6 +8020,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8606,6 +8036,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8618,6 +8052,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8630,6 +8068,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8642,6 +8084,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8654,6 +8100,28 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8666,6 +8134,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8678,6 +8150,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8690,6 +8166,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8702,6 +8182,10 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -8714,6 +8198,1362 @@ export interface Source {
           url: string;
           format?: "json" | "xml";
           items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          item_kind?: string;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          extra?: {
+            [k: string]: string | undefined;
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
           item_kind?: string;
           fields?: {
             [k: string]: string | undefined;
@@ -11758,6 +12598,10 @@ export type SourcesSourceWriteRequest =
                 url: string;
                 format?: "json" | "xml";
                 items_path?: string;
+                /**
+                 * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                 */
+                items_shape?: "array" | "map";
                 item_kind?: string;
                 fields?: {
                   [k: string]: string | undefined;
@@ -11774,6 +12618,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -11789,53 +12637,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            )
-          ]
-        | [
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -11853,6 +12658,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -11868,6 +12677,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -11883,98 +12696,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            )
-          ]
-        | [
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -11992,6 +12717,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12007,6 +12736,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12022,6 +12755,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12037,36 +12774,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12084,6 +12795,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12099,6 +12814,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12114,6 +12833,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12129,6 +12852,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12144,36 +12871,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12191,6 +12892,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12206,6 +12911,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12221,6 +12930,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12236,6 +12949,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12251,6 +12968,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12266,173 +12987,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            )
-          ]
-        | [
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12450,6 +13008,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12465,6 +13027,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12480,6 +13046,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12495,6 +13065,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12510,6 +13084,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12525,6 +13103,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12540,51 +13122,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12602,6 +13143,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12617,6 +13162,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12632,6 +13181,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12647,6 +13200,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12662,6 +13219,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12677,6 +13238,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12692,6 +13257,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12707,51 +13276,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12769,6 +13297,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12784,6 +13316,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12799,6 +13335,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12814,6 +13354,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12829,6 +13373,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12844,6 +13392,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12859,6 +13411,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12874,6 +13430,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12889,51 +13449,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12951,6 +13470,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12966,6 +13489,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12981,6 +13508,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -12996,6 +13527,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13011,6 +13546,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13026,6 +13565,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13041,6 +13584,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13056,6 +13603,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13071,6 +13622,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13086,263 +13641,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            )
-          ]
-        | [
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13360,6 +13662,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13375,6 +13681,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13390,6 +13700,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13405,6 +13719,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13420,6 +13738,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13435,6 +13757,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13450,6 +13776,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13465,6 +13795,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13480,6 +13814,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13495,6 +13833,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13510,66 +13852,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13587,6 +13873,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13602,6 +13892,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13617,6 +13911,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13632,6 +13930,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13647,6 +13949,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13662,6 +13968,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13677,6 +13987,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13692,6 +14006,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13707,6 +14025,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13722,6 +14044,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13737,6 +14063,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13752,66 +14082,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13829,6 +14103,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13844,6 +14122,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13859,6 +14141,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13874,6 +14160,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13889,6 +14179,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13904,6 +14198,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13919,6 +14217,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13934,6 +14236,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13949,6 +14255,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13964,6 +14274,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13979,6 +14293,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -13994,6 +14312,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14009,338 +14331,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            )
-          ]
-        | [
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14358,6 +14352,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14373,6 +14371,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14388,6 +14390,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14403,6 +14409,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14418,6 +14428,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14433,6 +14447,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14448,6 +14466,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14463,6 +14485,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14478,6 +14504,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14493,6 +14523,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14508,6 +14542,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14523,6 +14561,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14538,6 +14580,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14553,81 +14599,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
-                  item_kind?: string;
-                  fields?: {
-                    [k: string]: string | undefined;
-                  };
-                  extra?: {
-                    [k: string]: string | undefined;
-                  };
-                }
-            ),
-            (
-              | string
-              | {
-                  url: string;
-                  format?: "json" | "xml";
-                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14645,6 +14620,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14660,6 +14639,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14675,6 +14658,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14690,6 +14677,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14705,6 +14696,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14720,6 +14715,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14735,6 +14734,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14750,6 +14753,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14765,6 +14772,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14780,6 +14791,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14795,6 +14810,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14810,6 +14829,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14825,6 +14848,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14840,6 +14867,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14855,6 +14886,31 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14870,6 +14926,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14885,6 +14945,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14900,6 +14964,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14915,6 +14983,10 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;
@@ -14930,6 +15002,1614 @@ export type SourcesSourceWriteRequest =
                   url: string;
                   format?: "json" | "xml";
                   items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            )
+          ]
+        | [
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
+                  item_kind?: string;
+                  fields?: {
+                    [k: string]: string | undefined;
+                  };
+                  extra?: {
+                    [k: string]: string | undefined;
+                  };
+                }
+            ),
+            (
+              | string
+              | {
+                  url: string;
+                  format?: "json" | "xml";
+                  items_path?: string;
+                  /**
+                   * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+                   */
+                  items_shape?: "array" | "map";
                   item_kind?: string;
                   fields?: {
                     [k: string]: string | undefined;

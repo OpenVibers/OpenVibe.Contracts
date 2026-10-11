@@ -76,6 +76,13 @@
                   "items_path": {
                     "type": "string"
                   },
+                  "items_shape": {
+                    "enum": [
+                      "array",
+                      "map"
+                    ],
+                    "description": "array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37)."
+                  },
                   "item_kind": {
                     "type": "string",
                     "pattern": "^[a-z][a-z0-9_]{1,39}$"
