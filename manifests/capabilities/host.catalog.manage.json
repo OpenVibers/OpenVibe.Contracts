@@ -1,0 +1,26 @@
+{
+  "id": "host.catalog.manage",
+  "version": "1.0",
+  "owner": "host",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Keep OpenVibe.Host's hosting catalog (plan T20 step 3: hosting compared): create and edit providers (with their affiliate link and the exact disclosure), staff-entered plans (each with its source URL, currency, monthly price and the date it was confirmed; a plan that came from OpenVibe.Sources takes only a status change) and promotions. Held by Network staff users only. The catalog's reads are public and need no capability.",
+  "permissions": [
+    "host:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "host-manage",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/catalog/providers",
+    "PATCH /api/v1/catalog/providers/:id",
+    "POST /api/v1/catalog/plans",
+    "PATCH /api/v1/catalog/plans/:id",
+    "POST /api/v1/catalog/promos",
+    "PATCH /api/v1/catalog/promos/:id"
+  ],
+  "inputSchema": "host.catalog-manage-request@1",
+  "outputSchema": "host.catalog-manage-result@1"
+}

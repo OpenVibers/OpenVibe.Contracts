@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/catalog-manage-request.v1.json",
+  "title": "HostCatalogManageRequest",
+  "description": "host.catalog-manage-request@1: bodies of host.catalog.manage on OpenVibe.Host (a Network staff user only). POST/PATCH /api/v1/catalog/providers { slug, name, homepage_url, description?, affiliate_url?, affiliate_note?, status? }; POST/PATCH /api/v1/catalog/plans { provider_id, external_id, name, kind, currency, price_monthly, source_url, vcpu?, ram_mb?, disk_gb?, disk_type?, bandwidth_gb?, unmetered?, port_mbps?, ipv4?, locations?, price_hourly?, setup_fee?, checked_at?, status? } (a plan from OpenVibe.Sources takes only status); POST/PATCH /api/v1/catalog/promos { provider_id, title, url, details?, code?, affiliate?, starts_at?, ends_at?, status? }. A PATCH carries any subset. Unknown fields are refused (422 host.catalog.invalid); a missing entry is 404 host.catalog.not_found; anyone but staff is 403 host.catalog.forbidden. A staff plan's checked_at defaults to now: the staff member confirming the price that day.",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 80
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "homepage_url": {
+          "type": "string",
+          "maxLength": 2048,
+          "pattern": "^https?://"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048
+        },
+        "affiliate_url": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "affiliate_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048,
+          "description": "The exact disclosure shown beside the provider's affiliate links."
+        },
+        "status": {
+          "enum": [
+            "active",
+            "hidden"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider_id": {
+          "type": "string"
+        },
+        "external_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "kind": {
+          "enum": [
+            "cloud",
+            "vps",
+            "dedicated",
+            "storage",
+            "domain"
+          ]
+        },
+        "vcpu": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ram_mb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "disk_gb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "disk_type": {
+          "enum": [
+            "ssd",
+            "nvme",
+            "hdd",
+            null
+          ]
+        },
+        "bandwidth_gb": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unmetered": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "port_mbps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ipv4": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "locations": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "description": "ISO 4217."
+        },
+        "price_monthly": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 100000000
+        },
+        "price_hourly": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "setup_fee": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "source_url": {
+          "type": "string",
+          "maxLength": 2048,
+          "pattern": "^https?://"
+        },
+        "checked_at": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Epoch milliseconds the price was confirmed."
+        },
+        "status": {
+          "enum": [
+            "active",
+            "gone",
+            "hidden"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "details": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2048,
+          "pattern": "^https?://"
+        },
+        "affiliate": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "starts_at": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Epoch milliseconds."
+        },
+        "ends_at": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Epoch milliseconds."
+        },
+        "status": {
+          "enum": [
+            "active",
+            "ended",
+            "hidden"
+          ]
+        }
+      }
+    }
+  ]
+}

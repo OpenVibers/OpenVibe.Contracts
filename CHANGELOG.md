@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.139.0 — 2026-10-11
+
+- `host.catalog.manage` (active, staff only) with `host.catalog-manage-request@1` and `host.catalog-manage-result@1`:
+  OpenVibe.Host's hosting catalog (plan T20 step 3), staff entries for providers (affiliate link and its exact
+  disclosure), plans (source URL, currency, monthly price, the date it was confirmed) and promotions. The catalog's
+  reads are public.
+
 ## 0.138.0 — 2026-10-11
 
 - Sources category `hosting` (`sources.source@1`, `sources.item@1`, `sources.source-write-request@1` and the
