@@ -57310,7 +57310,7 @@ export interface BotRobotProfile {
     [k: string]: {} | undefined;
   } | null;
   mapping: {
-    driver: "pca9685" | "ads7830" | "cozmo" | "onvif" | "sim" | "relay";
+    driver: "pca9685" | "ads7830" | "cozmo" | "looi" | "onvif" | "sim" | "relay";
     plugin?: string;
   };
   commands?: {
