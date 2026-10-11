@@ -1,0 +1,12 @@
+{
+  "provider": {
+    "id": "hpv_01M4C49CW34NGX7TR2TNRVFWNW",
+    "slug": "hetzner",
+    "name": "Hetzner",
+    "homepage_url": "https://www.hetzner.com/",
+    "affiliate_url": null,
+    "affiliate_rel": null,
+    "affiliate_disclosure": null,
+    "status": "active"
+  }
+}

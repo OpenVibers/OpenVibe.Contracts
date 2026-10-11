@@ -5527,6 +5527,24 @@
       "status": "active"
     },
     {
+      "id": "host.catalog-manage-request",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/catalog-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.catalog-manage-result",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "host/catalog-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "host.site",
       "version": "1.0.0",
       "owner": "host",

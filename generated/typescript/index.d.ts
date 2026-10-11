@@ -54816,6 +54816,93 @@ export type HostSiteManageResult =
       lifted: true;
     };
 
+/** host.catalog-manage-request@1.0.0 (owner: host) */
+/**
+ * host.catalog-manage-request@1: bodies of host.catalog.manage on OpenVibe.Host (a Network staff user only). POST/PATCH /api/v1/catalog/providers { slug, name, homepage_url, description?, affiliate_url?, affiliate_note?, status? }; POST/PATCH /api/v1/catalog/plans { provider_id, external_id, name, kind, currency, price_monthly, source_url, vcpu?, ram_mb?, disk_gb?, disk_type?, bandwidth_gb?, unmetered?, port_mbps?, ipv4?, locations?, price_hourly?, setup_fee?, checked_at?, status? } (a plan from OpenVibe.Sources takes only status); POST/PATCH /api/v1/catalog/promos { provider_id, title, url, details?, code?, affiliate?, starts_at?, ends_at?, status? }. A PATCH carries any subset. Unknown fields are refused (422 host.catalog.invalid); a missing entry is 404 host.catalog.not_found; anyone but staff is 403 host.catalog.forbidden. A staff plan's checked_at defaults to now: the staff member confirming the price that day.
+ */
+export type HostCatalogManageRequest =
+  | {
+      slug?: string;
+      name?: string;
+      homepage_url?: string;
+      description?: string | null;
+      affiliate_url?: string | null;
+      /**
+       * The exact disclosure shown beside the provider's affiliate links.
+       */
+      affiliate_note?: string | null;
+      status?: "active" | "hidden";
+    }
+  | {
+      provider_id?: string;
+      external_id?: string;
+      name?: string;
+      kind?: "cloud" | "vps" | "dedicated" | "storage" | "domain";
+      vcpu?: number;
+      ram_mb?: number;
+      disk_gb?: number;
+      disk_type?: "ssd" | "nvme" | "hdd" | null;
+      bandwidth_gb?: number;
+      unmetered?: boolean | null;
+      port_mbps?: number;
+      ipv4?: number;
+      locations?: string[] | null;
+      /**
+       * ISO 4217.
+       */
+      currency?: string;
+      price_monthly?: number;
+      price_hourly?: number | null;
+      setup_fee?: number | null;
+      source_url?: string;
+      /**
+       * Epoch milliseconds the price was confirmed.
+       */
+      checked_at?: number;
+      status?: "active" | "gone" | "hidden";
+    }
+  | {
+      provider_id?: string;
+      title?: string;
+      details?: string | null;
+      code?: string | null;
+      url?: string;
+      affiliate?: boolean | null;
+      /**
+       * Epoch milliseconds.
+       */
+      starts_at?: number | null;
+      /**
+       * Epoch milliseconds.
+       */
+      ends_at?: number | null;
+      status?: "active" | "ended" | "hidden";
+    };
+
+/** host.catalog-manage-result@1.0.0 (owner: host) */
+/**
+ * host.catalog-manage-result@1: the saved entry, under its type's name: { provider } (with affiliate_rel and affiliate_disclosure when it has an affiliate link), { plan } or { promo } (an active promo past ends_at reads as ended). 201 on create, 200 on update.
+ */
+export type HostCatalogManageResult =
+  | {
+      provider: {
+        id: string;
+        [k: string]: unknown | undefined;
+      };
+    }
+  | {
+      plan: {
+        id: string;
+        [k: string]: unknown | undefined;
+      };
+    }
+  | {
+      promo: {
+        id: string;
+        [k: string]: unknown | undefined;
+      };
+    };
+
 /** host.site@1.0.0 (owner: host) */
 /**
  * host.site@1: one static site on OpenVibe.Host (server/http/serialize.js site): its name (one DNS label), the default hostname and URL it is served at, the deploy it serves (one pointer; null until a deploy is activated) and any staff takedown.

@@ -1,0 +1,9 @@
+{
+  "provider_id": "hpv_01M4C49CW34NGX7TR2TNRVFWNW",
+  "external_id": "x",
+  "name": "X",
+  "kind": "shared",
+  "currency": "USD",
+  "price_monthly": 1,
+  "source_url": "https://example.com/"
+}

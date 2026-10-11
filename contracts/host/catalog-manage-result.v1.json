@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/host/catalog-manage-result.v1.json",
+  "title": "HostCatalogManageResult",
+  "description": "host.catalog-manage-result@1: the saved entry, under its type's name: { provider } (with affiliate_rel and affiliate_disclosure when it has an affiliate link), { plan } or { promo } (an active promo past ends_at reads as ended). 201 on create, 200 on update.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "provider"
+      ],
+      "properties": {
+        "provider": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan"
+      ],
+      "properties": {
+        "plan": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "promo"
+      ],
+      "properties": {
+        "promo": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  ]
+}

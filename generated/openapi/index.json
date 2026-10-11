@@ -89,8 +89,8 @@
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
-      "operations": 36,
-      "capabilities": 5
+      "operations": 42,
+      "capabilities": 6
     },
     {
       "service": "inventory",

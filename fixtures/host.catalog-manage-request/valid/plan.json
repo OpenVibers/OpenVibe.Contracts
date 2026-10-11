@@ -1,0 +1,20 @@
+{
+  "provider_id": "hpv_01M4C49CW34NGX7TR2TNRVFWNW",
+  "external_id": "cx22",
+  "name": "CX22",
+  "kind": "cloud",
+  "vcpu": 2,
+  "ram_mb": 4096,
+  "disk_gb": 40,
+  "disk_type": "nvme",
+  "bandwidth_gb": 20480,
+  "ipv4": 1,
+  "locations": [
+    "Falkenstein",
+    "Nuremberg",
+    "Helsinki"
+  ],
+  "currency": "EUR",
+  "price_monthly": 4.59,
+  "source_url": "https://www.hetzner.com/cloud/"
+}

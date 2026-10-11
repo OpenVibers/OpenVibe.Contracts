@@ -69,7 +69,8 @@
     "host.deploy.create",
     "host.domain.manage",
     "host.resource.read",
-    "host.site.config"
+    "host.site.config",
+    "host.catalog.manage"
   ],
   "eventsProduced": [
     "host.deploy.created",
