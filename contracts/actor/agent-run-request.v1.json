@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/agent-run-request.v1.json",
+  "title": "ActorAgentRunRequest",
+  "description": "actor.agent-run-request@1: POST /api/v1/me/agents/:id/run { input? } runs the agent now as an ordinary Actor task (its instructions, then its memory, then the input), under the same free tier, budget and daily limits as the person's own tasks, plus the agent's daily_runs_max (429 actor.agent.limit). Answered 201 with the task (platform.task@1). GET /api/v1/me/agents/:id/runs lists its tasks, newest first.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "input": {
+      "type": "string",
+      "maxLength": 8000
+    }
+  }
+}

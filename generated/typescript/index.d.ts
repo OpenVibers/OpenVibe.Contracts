@@ -60603,6 +60603,123 @@ export interface ActorTaskCreateRequest {
       ];
 }
 
+/** actor.agent-manage-request@1.0.0 (owner: actor) */
+/**
+ * actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.
+ */
+export type ActorAgentManageRequest =
+  | {
+      name?: string;
+      instructions?: string;
+      mode?: "balanced" | "cheapest" | "best" | "fastest" | "private";
+      /**
+       * At most the person's per-task allowance.
+       */
+      budget_per_run_usd?: number;
+      daily_runs_max?: number;
+      schedule?: "off" | "hourly" | "daily" | "weekly";
+      /**
+       * HH:MM UTC, for daily and weekly.
+       */
+      schedule_at?: string | null;
+      /**
+       * 0 is Sunday; for weekly.
+       */
+      schedule_dow?: number | null;
+      status?: "active" | "paused";
+    }
+  | {
+      text: string;
+    };
+
+/** actor.agent-manage-result@1.0.0 (owner: actor) */
+/**
+ * actor.agent-manage-result@1: GET /api/v1/me/agents → { agents }; an agent (create 201, read, update); GET …/memory → { memory } (newest first); a note (create 201, update). DELETE answers 204 with no body.
+ */
+export type ActorAgentManageResult =
+  | {
+      agents: {
+        id: string;
+        owner?: string;
+        name: string;
+        instructions: string;
+        mode: "balanced" | "cheapest" | "best" | "fastest" | "private";
+        /**
+         * At most the person's per-task allowance.
+         */
+        budget_per_run_usd?: number;
+        daily_runs_max?: number;
+        schedule: "off" | "hourly" | "daily" | "weekly";
+        /**
+         * HH:MM UTC, for daily and weekly.
+         */
+        schedule_at?: string | null;
+        /**
+         * 0 is Sunday; for weekly.
+         */
+        schedule_dow?: number | null;
+        status: "active" | "paused";
+        next_run_at?: string | null;
+        last_run_at?: string | null;
+        last_skip_reason?: string | null;
+        created_at?: string;
+        updated_at?: string;
+      }[];
+    }
+  | {
+      memory: {
+        id: string;
+        agent_id?: string;
+        text: string;
+        origin: "person" | "agent";
+        created_at?: string;
+        updated_at?: string;
+      }[];
+    }
+  | {
+      id: string;
+      owner?: string;
+      name: string;
+      instructions: string;
+      mode: "balanced" | "cheapest" | "best" | "fastest" | "private";
+      /**
+       * At most the person's per-task allowance.
+       */
+      budget_per_run_usd?: number;
+      daily_runs_max?: number;
+      schedule: "off" | "hourly" | "daily" | "weekly";
+      /**
+       * HH:MM UTC, for daily and weekly.
+       */
+      schedule_at?: string | null;
+      /**
+       * 0 is Sunday; for weekly.
+       */
+      schedule_dow?: number | null;
+      status: "active" | "paused";
+      next_run_at?: string | null;
+      last_run_at?: string | null;
+      last_skip_reason?: string | null;
+      created_at?: string;
+      updated_at?: string;
+    }
+  | {
+      id: string;
+      agent_id?: string;
+      text: string;
+      origin: "person" | "agent";
+      created_at?: string;
+      updated_at?: string;
+    };
+
+/** actor.agent-run-request@1.0.0 (owner: actor) */
+/**
+ * actor.agent-run-request@1: POST /api/v1/me/agents/:id/run { input? } runs the agent now as an ordinary Actor task (its instructions, then its memory, then the input), under the same free tier, budget and daily limits as the person's own tasks, plus the agent's daily_runs_max (429 actor.agent.limit). Answered 201 with the task (platform.task@1). GET /api/v1/me/agents/:id/runs lists its tasks, newest first.
+ */
+export interface ActorAgentRunRequest {
+  input?: string;
+}
+
 /** actor.task-event@1.0.0 (owner: actor) */
 /**
  * actor.task-event@1: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, or calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). Events are best-effort; the task record (GET /api/v1/tasks/:id) is the source of truth.

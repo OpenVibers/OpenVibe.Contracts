@@ -1,0 +1,23 @@
+{
+  "id": "actor.agent.run",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Run one of your personal agents now, and list its runs. A run is an ordinary Actor task (platform.task@1) under the same routing, checking, metering, free tier and budgets as a task you give directly, plus the agent's own daily run cap; scheduled runs use the same path.",
+  "inputSchema": "actor.agent-run-request@1",
+  "outputSchema": "platform.task@1",
+  "permissions": [
+    "actor:agents:run"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "actor-task",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/me/agents/:id/run",
+    "GET /api/v1/me/agents/:id/runs"
+  ]
+}
