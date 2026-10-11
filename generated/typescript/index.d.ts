@@ -6156,7 +6156,7 @@ export interface Source {
   key: string;
   name: string;
   type: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "manual";
-  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
   homepage_url?: string | null;
   /**
    * @maxItems 20
@@ -8777,7 +8777,7 @@ export interface Source {
 export interface SourceItem {
   id: string;
   source_key: string;
-  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
   /**
    * article | url | sitemap | product | offer | review | review_signal | record | coupon …
    */
@@ -11364,7 +11364,7 @@ export interface ChatRoomMessageDeletedPayload {
 export interface SourcesItemCreatedPayload {
   item_id: string;
   source_key: string;
-  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
   /**
    * article | url | sitemap | product | offer | review | record … (sources.item@1 kind).
    */
@@ -11386,7 +11386,7 @@ export interface SourcesItemCreatedPayload {
 export interface SourcesItemUpdatedPayload {
   item_id: string;
   source_key: string;
-  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
   /**
    * article | url | sitemap | product | offer | review | record … (sources.item@1 kind).
    */
@@ -11409,7 +11409,7 @@ export interface SourcesItemUpdatedPayload {
 export interface SourcesItemRemovedPayload {
   item_id: string;
   source_key: string;
-  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
   /**
    * article | url | sitemap | product | offer | review | record … (sources.item@1 kind).
    */
@@ -11431,7 +11431,7 @@ export interface SourcesItemRemovedPayload {
  */
 export interface SourcesFetchFailedPayload {
   source_key: string;
-  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+  category: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
   /**
    * The recorded fetch run (GET /api/v1/sources/:key/runs).
    */
@@ -11745,7 +11745,7 @@ export type SourcesSourceWriteRequest =
       key?: string;
       name?: string;
       type?: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "manual";
-      category?: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade";
+      category?: "news" | "blog" | "reviews" | "deals" | "coupons" | "trade" | "hosting";
       homepage_url?: string | null;
       /**
        * @maxItems 20

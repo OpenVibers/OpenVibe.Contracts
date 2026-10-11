@@ -34,7 +34,8 @@
             "reviews",
             "deals",
             "coupons",
-            "trade"
+            "trade",
+            "hosting"
           ]
         },
         "homepage_url": {
