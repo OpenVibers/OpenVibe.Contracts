@@ -140,8 +140,8 @@
       "range": ">=0.19.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns news.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_news PostgreSQL database; writes are transactions there"
     }
   },
-  "notes": "Port 4820. Owns news_topics, news_source_items, news_story_clusters, news_stories, news_story_revisions, news_story_sources, news_perspectives, news_timeline_entries, news_editorial_flags in its own SQLite (openvibe-publishing packages, prefixes news_story and news). Consumes OpenVibe.Sources (sources.item.read, optionally sources.source.read) through an Events subscription (sources.item.*, sources.fetch.failed; events.subscription.manage) and a cursor pull; OpenVibe.Network (SSO, identity.subject.resolve); optionally OpenVibe.AI (ai.run.create, namespace news) for news.summarize_story and news.compare_perspectives drafts; publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads news.index_document.* from Events."
+  "notes": "Port 4820. Owns news_topics, news_source_items, news_story_clusters, news_stories, news_story_revisions, news_story_sources, news_perspectives, news_timeline_entries, news_editorial_flags in its own PostgreSQL database ov_news (openvibe-publishing packages, prefixes news_story and news). Consumes OpenVibe.Sources (sources.item.read, optionally sources.source.read) through an Events subscription (sources.item.*, sources.fetch.failed; events.subscription.manage) and a cursor pull; OpenVibe.Network (SSO, identity.subject.resolve); optionally OpenVibe.AI (ai.run.create, namespace news) for news.summarize_story and news.compare_perspectives drafts; publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads news.index_document.* from Events."
 }

@@ -127,8 +127,8 @@
       "range": ">=0.19.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns coupons.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_coupons PostgreSQL database; writes are transactions there"
     }
   },
-  "notes": "Port 4850. Owns coupon_merchants, coupon_merchant_domains, coupons, coupon_sources, coupon_restrictions, coupon_validation_reports, coupon_status_history, coupon_application_hints, coupon_watches in its own SQLite, plus extension_installs (cpx_ browser-helper tokens, scopes coupons.lookup and coupons.report, hashed, revocable). Consumes OpenVibe.Network (SSO, JWKS) and OpenVibe.Sources (sources.item.read, category coupons); publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads coupons.index_document.* from Events. The browser helper lives in OpenVibers/OpenVibe.Extensions (ADR-023)."
+  "notes": "Port 4850. Owns coupon_merchants, coupon_merchant_domains, coupons, coupon_sources, coupon_restrictions, coupon_validation_reports, coupon_status_history, coupon_application_hints, coupon_watches in its own PostgreSQL database (ov_coupons), plus extension_installs (cpx_ browser-helper tokens, scopes coupons.lookup and coupons.report, hashed, revocable). Consumes OpenVibe.Network (SSO, JWKS) and OpenVibe.Sources (sources.item.read, category coupons); publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads coupons.index_document.* from Events. The browser helper lives in OpenVibers/OpenVibe.Extensions (ADR-023)."
 }

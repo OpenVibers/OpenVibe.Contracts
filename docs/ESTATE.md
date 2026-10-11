@@ -28,7 +28,7 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | OpenVibe.Extensions | — | — | node >=22.0.0 | — | — | — | not deployed | — | W18 |
 | OpenVibe.Games | Games | games.* | node 22 | PostgreSQL | openvibe.games, play.openvibe.games | contracts v0.78.0, sdk v0.23.1, shared v2.6.0 | deployed | live | — |
 | OpenVibe.Host | Host | host.* | node 22 | PostgreSQL | openvibe.host | contracts v0.83.0, sdk v0.26.0, shared v2.10.1 | loopback only, not launched | live | W21 Stage A + Stage B |
-| OpenVibe.Live | Live | live.* | node 22 | SQLite | openvibe.live, ingest.openvibe.live | contracts v0.83.0, sdk v0.26.0, shared v2.5.0 | deployed | live | — |
+| OpenVibe.Live | Live | live.* | node 22 | PostgreSQL (ov_live) | openvibe.live, ingest.openvibe.live | contracts v0.83.0, sdk v0.26.0, shared v2.5.0 | deployed | live | — |
 | OpenVibe.Media | Media | media.* | node 22 | PostgreSQL | openvibe.media | contracts v0.79.0, sdk v0.32.0, shared v2.10.0 | deployed | live | — |
 | OpenVibe.Network | Network | identity.*, network.*, theme.*, notification.* | node 22 | PostgreSQL | openvibe.network, auth.openvibe.network, api.openvibe.network, admin.openvibe.network, my.openvibe.network, themes.openvibe.network | contracts v0.106.0, sdk v0.28.0, shared v2.10.1 | deployed | live | — |
 | OpenVibe.News | News | news.* | node 22 | PostgreSQL | openvibe.news | contracts v0.97.0, sdk v0.26.0, shared v2.9.0, publishing v1.3.0 | deployed | internal | W17 |

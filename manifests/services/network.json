@@ -124,7 +124,7 @@
         "maintenance timers (notifications, email queue, retired-module sweep, session cleanup), the analytics prune, the ecosystem, deploy-drift and library-tag pollers, the frame refreshes and the profile-event and grant-expiry timers stopped",
         "stops taking connections; idle keep-alive connections closed; requests in flight answered with Connection: close and allowed to finish (8 s at most, then cut)",
         "the developer, profile and grant event relay's send in progress awaited (unsent rows stay in the outbox)",
-        "analytics flushed and closed; network.db closed; exit 0"
+        "analytics flushed and closed; the ov_network PostgreSQL database closed; exit 0"
       ],
       "note": "openvibe-sdk/service; a stop that passes 10 s exits 1. Only the Discord link's in-memory state sweep ends with the process; the email queue and the outboxes resume from the database on the next start"
     },
@@ -163,7 +163,7 @@
       "range": ">=0.2.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns network.db (better-sqlite3, single writer); a stream-live announcement is claimed per streamer with a cooldown and a daily cap in the same database"
+      "none": "no claims: one process owns the ov_network PostgreSQL database; Network's live.stream.started consumer claims a stream-live announcement per streamer with a cooldown and a daily cap in one transaction there"
     }
   }
 }

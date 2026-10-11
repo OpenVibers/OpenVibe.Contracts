@@ -6,7 +6,7 @@
   "stage": "stable",
   "version": "1.0.0",
   "runtime": "node 22",
-  "database": "SQLite",
+  "database": "PostgreSQL (ov_live)",
   "migrations": 1,
   "authority": [
     "live.*"

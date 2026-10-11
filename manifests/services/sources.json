@@ -76,7 +76,7 @@
       "range": ">=0.7.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns sources.db (better-sqlite3, single writer); a second run of a source already in flight is refused in memory"
+      "none": "no claims: one process owns the ov_sources PostgreSQL database; writes are transactions there; a second run of a source already in flight is refused in memory"
     }
   },
   "notes": "Source registry and ingestion workers (RSS/Atom, sitemaps, JSON-LD, mapped official APIs, manual). Every item carries provenance; every fetch is a recorded run with an explicit state; failures never create or modify items."

@@ -93,7 +93,7 @@
       "claims": [
         {
           "what": "a stored provider event (provider_events row) while it is applied",
-          "holder": "the connection that takes the SQLite write lock (IMMEDIATE transaction)",
+          "holder": "the connection that locks the provider_events row in an ov_billing PostgreSQL transaction",
           "expires": "at commit or rollback of that transaction",
           "fencing": "processed_at is re-read inside the transaction, so a second process or connection that waited applies nothing; ledger postings carry idempotency keys"
         }
