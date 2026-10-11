@@ -82,8 +82,8 @@
       "service": "games",
       "name": "OpenVibe.Games",
       "origin": "https://openvibe.games",
-      "operations": 9,
-      "capabilities": 4
+      "operations": 12,
+      "capabilities": 9
     },
     {
       "service": "host",

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/script-call.v1.json",
+  "title": "GamesScriptCall",
+  "description": "games.script-call@1: one hook call into a script mod's QuickJS sandbox (games.script.run): the hook the place fires and its JSON payload. The call runs under the mod's CPU budget; changes come back only as intents the server validates.",
+  "type": "object",
+  "required": [
+    "hook"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "hook": {
+      "type": "string",
+      "pattern": "^[a-z][a-zA-Z0-9]{0,39}$"
+    },
+    "payload": {}
+  }
+}

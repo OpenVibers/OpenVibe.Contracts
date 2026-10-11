@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.142.0 — 2026-10-11
+
+- Games milestone M3 (scripted mods): `games.script.run` and the per-mod script bindings `games.players.read`,
+  `games.player.message`, `games.world.emit` and `games.storage.kv` (active). A binding is absent from a script unless its
+  install was granted it; grants travel in the def-set digest. Their schemas: `games.script-call@1`,
+  `games.script-call-result@1`, `games.script-players@1`, `games.script-message@1`, `games.script-intent@1`,
+  `games.script-storage-request@1` and `games.script-storage-result@1`.
+- `games.mod.manage` adds `POST /api/v1/mods/:id/reload` (hot reload of a script mod, storage kept).
+
 ## 0.141.0 — 2026-10-11
 
 - `run`: a `site` block with `tld: run` (openvibe.run serves its own front page since Run#28) and `exposure` live with

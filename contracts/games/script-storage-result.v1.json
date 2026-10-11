@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/script-storage-result.v1.json",
+  "title": "GamesScriptStorageResult",
+  "description": "games.script-storage-result@1: a stored value (null when absent), the keys under a prefix, or an acknowledgement of a set or delete.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "value": {},
+    "keys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ok": {
+      "type": "boolean"
+    }
+  }
+}

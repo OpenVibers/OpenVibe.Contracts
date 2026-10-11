@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/script-call-result.v1.json",
+  "title": "GamesScriptCallResult",
+  "description": "games.script-call-result@1: what a hook call produced: the number of intents it queued, or the error that made it fail (a mod that keeps throwing or overruns its budget is disabled).",
+  "type": "object",
+  "required": [
+    "ok"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "intents": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "error": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

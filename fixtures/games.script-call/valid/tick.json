@@ -1,0 +1,6 @@
+{
+  "hook": "onTick",
+  "payload": {
+    "dt": 0.05
+  }
+}

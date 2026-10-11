@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/script-message.v1.json",
+  "title": "GamesScriptMessage",
+  "description": "games.script-message@1: game.message(playerId, text), a private announcement to one player in the mod's place, prefixed with the mod's name (games.player.message).",
+  "type": "object",
+  "required": [
+    "playerId",
+    "text"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "playerId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 280
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/script-intent.v1.json",
+  "title": "GamesScriptIntent",
+  "description": "games.script-intent@1: game.emit(intent), a world intent a script queues (games.world.emit). The server validates it like any player's intent before applying it; an invalid one throws inside the script.",
+  "type": "object",
+  "required": [
+    "kind"
+  ],
+  "properties": {
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-zA-Z0-9_.]{0,39}$"
+    }
+  }
+}

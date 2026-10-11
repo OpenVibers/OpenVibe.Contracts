@@ -31,7 +31,12 @@
     "games.mod.manage",
     "games.mod.read",
     "games.world.announce",
-    "games.prop.place"
+    "games.prop.place",
+    "games.script.run",
+    "games.players.read",
+    "games.player.message",
+    "games.world.emit",
+    "games.storage.kv"
   ],
   "eventsProduced": [
     "games.player.joined",
