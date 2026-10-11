@@ -3756,7 +3756,8 @@
               "reviews",
               "deals",
               "coupons",
-              "trade"
+              "trade",
+              "hosting"
             ]
           },
           "homepage_url": {
@@ -4020,7 +4021,8 @@
               "reviews",
               "deals",
               "coupons",
-              "trade"
+              "trade",
+              "hosting"
             ]
           },
           "kind": {
@@ -6654,7 +6656,8 @@
               "reviews",
               "deals",
               "coupons",
-              "trade"
+              "trade",
+              "hosting"
             ]
           },
           "kind": {
@@ -6730,7 +6733,8 @@
               "reviews",
               "deals",
               "coupons",
-              "trade"
+              "trade",
+              "hosting"
             ]
           },
           "kind": {
@@ -6810,7 +6814,8 @@
               "reviews",
               "deals",
               "coupons",
-              "trade"
+              "trade",
+              "hosting"
             ]
           },
           "kind": {
@@ -6885,7 +6890,8 @@
               "reviews",
               "deals",
               "coupons",
-              "trade"
+              "trade",
+              "hosting"
             ]
           },
           "run_id": {
@@ -7159,7 +7165,8 @@
                   "reviews",
                   "deals",
                   "coupons",
-                  "trade"
+                  "trade",
+                  "hosting"
                 ]
               },
               "homepage_url": {

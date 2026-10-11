@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.138.0 — 2026-10-11
+
+- Sources category `hosting` (`sources.source@1`, `sources.item@1`, `sources.source-write-request@1` and the
+  `sources.item.created|updated|removed` and `sources.fetch.failed` payloads): official provider APIs whose items are
+  hosting plans, read by OpenVibe.Host's hosting catalog (plan T20 step 3).
+
 ## 0.137.0 — 2026-10-11
 
 - `bot.robot-profile@1`: `mapping.driver` may be `looi`, the community's Generic LOOI driver (a Bluetooth bridge
