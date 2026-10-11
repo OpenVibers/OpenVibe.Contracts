@@ -11136,19 +11136,11 @@ export type EventsDeliveryAdminResult =
 
 /** events.publish-result@1.0.0 (owner: events) */
 /**
- * events.publish-result@1: the answer of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps). One envelope → { event_id, cursor, duplicate } (201 when stored, 200 when every event was a repeat); a batch { events: [...] } (at most 100, atomic) → { results } in the same order. Refusals are problem+json: 422 events.invalid_envelope / events.invalid_redaction, 403 events.source_mismatch / events.type_not_allowed / events.actor_mismatch, 413 events.payload_too_large / events.batch_too_large, 429 events.quota_exceeded (apps).
+ * events.publish-result@1: the answer of POST /api/v1/events on OpenVibe.Events (events.event.publish for services, events.app.publish for developer apps). One envelope → { event_id, cursor, duplicate } (a repeat whose stored copy retention removed: { event_id, duplicate: true, pruned: true }, no cursor) (201 when stored, 200 when every event was a repeat); a batch { events: [...] } (at most 100, atomic) → { results } in the same order. Refusals are problem+json: 422 events.invalid_envelope / events.invalid_redaction, 403 events.source_mismatch / events.type_not_allowed / events.actor_mismatch, 413 events.payload_too_large / events.batch_too_large, 429 events.quota_exceeded (apps).
  */
 export type EventsPublishResult =
   | {
-      event_id: string;
-      /**
-       * true: this event_id was stored before; its stored position is returned and nothing is stored twice.
-       */
-      duplicate: boolean;
-      /**
-       * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it.
-       */
-      cursor: string;
+      [k: string]: unknown | undefined;
     }
   | {
       /**
@@ -11156,28 +11148,22 @@ export type EventsPublishResult =
        * @maxItems 100
        */
       results: [
-        {
-          event_id: string;
-          /**
-           * true: this event_id was stored before; its stored position is returned and nothing is stored twice.
-           */
-          duplicate: boolean;
-          /**
-           * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it.
-           */
-          cursor: string;
-        },
-        ...{
-          event_id: string;
-          /**
-           * true: this event_id was stored before; its stored position is returned and nothing is stored twice.
-           */
-          duplicate: boolean;
-          /**
-           * Opaque position (ADR-042): hand it back as after= to read on from here, or as Last-Event-ID; never parse it.
-           */
-          cursor: string;
-        }[]
+        (
+          | {
+              [k: string]: unknown | undefined;
+            }
+          | {
+              [k: string]: unknown | undefined;
+            }
+        ),
+        ...(
+          | {
+              [k: string]: unknown | undefined;
+            }
+          | {
+              [k: string]: unknown | undefined;
+            }
+        )[]
       ];
     };
 
