@@ -12,9 +12,9 @@
   ],
   "publicOrigin": "https://openvibe.run",
   "exposure": {
-    "state": "internal",
-    "publicSite": "placeholder",
-    "note": "deployed on loopback :4920 (2026-10-07); jobs are placed on people's own Bot nodes. openvibe.run is parked (a 302 to openvibe.network) until Run has a product surface"
+    "state": "live",
+    "publicSite": "service",
+    "note": "openvibe.run serves its own front page, legal pages and sitemap (Run#28, 2026-10-11); the jobs API answers under /api/v1."
   },
   "capabilities": [
     "run.job.submit",
@@ -54,5 +54,35 @@
       "none": "not built yet; nothing runs"
     }
   },
-  "notes": "The job service of the network (plan T14, ADR-034): accepts jobs (run.job-create-request@1), places each on a node that advertises worker:<class> (platform.resource-offer@1, platform.runtime-offer@1, platform.workload-requirements@1), sends it as platform.job@1 over the node link and follows its platform.job-frame@1 frames. Consumes billing.usage.record to write one usage reading per wall-clock second (run:<job id>:<n>, service run, operation function.invoke, unit s) and media.object.read to resolve digest-pinned inputs. Serves its job API on loopback :4920 (Run #1 and #2, 2026-10-07)."
+  "notes": "The job service of the network (plan T14, ADR-034): accepts jobs (run.job-create-request@1), places each on a node that advertises worker:<class> (platform.resource-offer@1, platform.runtime-offer@1, platform.workload-requirements@1), sends it as platform.job@1 over the node link and follows its platform.job-frame@1 frames. Consumes billing.usage.record to write one usage reading per wall-clock second (run:<job id>:<n>, service run, operation function.invoke, unit s) and media.object.read to resolve digest-pinned inputs. Serves its job API on loopback :4920 (Run #1 and #2, 2026-10-07).",
+  "site": {
+    "name": "Run",
+    "icon": "run",
+    "tagline": "Run a job on a node that can",
+    "what": "Send a job to one API with your project's token: Run places it on a node that offers its runtime, streams its output and meters it per second.",
+    "legalProfile": "hosting",
+    "position": 34,
+    "tld": "run",
+    "accent": "#a78bfa",
+    "description": "OpenVibe.Run executes jobs: a project submits a job (a pre-registered artifact, its input and its limits) to one API, Run chooses a node from the network's offers that its requirements allow, OpenVibe.Bot hands it to the node and meters every wall-clock second, the output streams back, and the job ends succeeded, failed, cancelled or expired. Alpha: jobs run on nodes paired with OpenVibe through the OpenVibe Node.",
+    "pillars": [
+      {
+        "title": "One API",
+        "text": "Submit, read, list, cancel and stream jobs over HTTP, with RFC 9457 problems for every refusal."
+      },
+      {
+        "title": "Placed, not guessed",
+        "text": "Each job goes to a node whose offer meets its requirements; the placement records the node, provider and region."
+      },
+      {
+        "title": "Live output",
+        "text": "A short-lived ticket opens the job's event stream: state changes and the node's output as they happen."
+      },
+      {
+        "title": "Metered per second",
+        "text": "The node link measures each job's wall clock; that reading is what the job is charged against."
+      }
+    ],
+    "keywords": "openvibe run, job runner, run jobs on nodes, sandbox api, per-second metering"
+  }
 }

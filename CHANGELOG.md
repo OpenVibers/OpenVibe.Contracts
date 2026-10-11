@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.141.0 — 2026-10-11
+
+- `run`: a `site` block with `tld: run` (openvibe.run serves its own front page since Run#28) and `exposure` live with
+  its own public site, so the network's navigation, front door and share cards list it; the old
+  `manifests/products/openvibe.run.json` placeholder entry is removed (the site block is the domain's one home).
+- `host`: the `site` block describes the hosting catalog (openvibe.host is "hosting compared" since Host#69); OpenVibe's
+  own static hosting is described as built and opening after review.
+
 ## 0.140.0 — 2026-10-11
 
 - `actor.agent.manage` and `actor.agent.run` (active), with `actor.agent-manage-request@1`, `actor.agent-manage-result@1`
