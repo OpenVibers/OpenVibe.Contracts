@@ -87,7 +87,7 @@ ok(contracts.ids.newId('job').match(job.properties.id.pattern), 'newId(job) mint
 const succeeded = fixture('run.job-read-result', 'valid', 'succeeded');
 ok(succeeded.usage.seconds === fromExit(exit).reduce((s, r) => s + r.quantity, 0) && succeeded.usage.wall_ms === exit.usage.wall_ms, 'usage.seconds is the sum of the job\'s readings');
 const run = contracts.services.get('run');
-ok(run && run.status === 'alpha' && run.exposure.state === 'internal' && contracts.products.get('openvibe.run').relationships.noRepo === true, 'run is an alpha service (deployed on loopback) and openvibe.run still has no repository');
+ok(run && run.status === 'alpha' && run.exposure.state === 'live' && run.exposure.publicSite === 'service' && run.site.tld === 'run' && !contracts.products.get('openvibe.run'), 'run is an alpha service whose own site serves openvibe.run (Run#28); its site block is the domain\'s one home');
 for (const [id, routes] of Object.entries({
     'run.job.submit': ['POST /api/v1/jobs'],
     'run.job.read': ['GET /api/v1/jobs/:id'],
