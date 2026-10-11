@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.140.0 — 2026-10-11
+
+- `actor.agent.manage` and `actor.agent.run` (active), with `actor.agent-manage-request@1`, `actor.agent-manage-result@1`
+  and `actor.agent-run-request@1`: OpenVibe.Actor's personal agents under `/api/v1/me/agents` (standing instructions,
+  a memory the person controls, a schedule; every run an ordinary task, `platform.task@1`). `/api/v1/agents` stays the
+  public catalog of agent systems (`actor.agent.read`).
+
 ## 0.139.0 — 2026-10-11
 
 - `host.catalog.manage` (active, staff only) with `host.catalog-manage-request@1` and `host.catalog-manage-result@1`:

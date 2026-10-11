@@ -6361,6 +6361,33 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.agent-manage-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-manage-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.agent-manage-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-manage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.agent-run-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-run-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "actor.task-event",
       "version": "1.0.0",
       "owner": "actor",

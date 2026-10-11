@@ -1,0 +1,13 @@
+{
+  "agents": [
+    {
+      "id": "agt_01M4C49CW34NGX7TR2TNRVFWNW",
+      "name": "Morning briefing",
+      "instructions": "Summarise.",
+      "mode": "balanced",
+      "schedule": "daily",
+      "schedule_at": "07:30",
+      "status": "active"
+    }
+  ]
+}

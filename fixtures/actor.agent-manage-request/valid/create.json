@@ -1,0 +1,6 @@
+{
+  "name": "Morning briefing",
+  "instructions": "Summarise what shipped on OpenVibe yesterday in five bullets.",
+  "schedule": "daily",
+  "schedule_at": "07:30"
+}
