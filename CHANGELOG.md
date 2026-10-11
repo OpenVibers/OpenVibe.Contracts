@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.136.1 — 2026-10-10
+
+- `events.publish-result@1`: `cursor` is required unless the item says `pruned: true`. That answer is a repeat of an
+  event_id whose stored copy retention already removed, so there is no position to return. Events has answered it this
+  way since redaction and retention; `pruned` is now described. Fixtures: a pruned repeat (valid) and an item with
+  neither (invalid).
+
 ## 0.136.0 — 2026-10-10
 
 **No per-event sequence number on the consumer wire** (ADR-042 decision 7, its last step; plan T7). Positions became
