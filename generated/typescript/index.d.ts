@@ -50126,6 +50126,92 @@ export interface GamesModView {
   updated_at: string;
 }
 
+/** games.script-call@1.0.0 (owner: games) */
+/**
+ * games.script-call@1: one hook call into a script mod's QuickJS sandbox (games.script.run): the hook the place fires and its JSON payload. The call runs under the mod's CPU budget; changes come back only as intents the server validates.
+ */
+export interface GamesScriptCall {
+  hook: string;
+  payload?: unknown;
+}
+
+/** games.script-call-result@1.0.0 (owner: games) */
+/**
+ * games.script-call-result@1: what a hook call produced: the number of intents it queued, or the error that made it fail (a mod that keeps throwing or overruns its budget is disabled).
+ */
+export interface GamesScriptCallResult {
+  ok: boolean;
+  intents?: number;
+  error?: string;
+}
+
+/** games.script-players@1.0.0 (owner: games) */
+/**
+ * games.script-players@1: game.players() (every player in the mod's place) and game.player(id) (one, or null), read-only (games.players.read).
+ */
+export type GamesScriptPlayers =
+  | {
+      players: {
+        id: string;
+        name: string;
+        pos?: {
+          x: number;
+          y: number;
+          z: number;
+        };
+        yaw?: number;
+      }[];
+    }
+  | {
+      id: string;
+      name: string;
+      pos?: {
+        x: number;
+        y: number;
+        z: number;
+      };
+      yaw?: number;
+    }
+  | null;
+
+/** games.script-message@1.0.0 (owner: games) */
+/**
+ * games.script-message@1: game.message(playerId, text), a private announcement to one player in the mod's place, prefixed with the mod's name (games.player.message).
+ */
+export interface GamesScriptMessage {
+  playerId: string;
+  text: string;
+}
+
+/** games.script-intent@1.0.0 (owner: games) */
+/**
+ * games.script-intent@1: game.emit(intent), a world intent a script queues (games.world.emit). The server validates it like any player's intent before applying it; an invalid one throws inside the script.
+ */
+export interface GamesScriptIntent {
+  kind: string;
+}
+
+/** games.script-storage-request@1.0.0 (owner: games) */
+/**
+ * games.script-storage-request@1: game.storage.get(key), set(key, value), delete(key) and keys(prefix?) on the mod's key/value storage for its place (games.storage.kv): keys up to 128 bytes, values up to 8 KB of JSON, at most 1000 keys and 1 MB per mod per place.
+ */
+export interface GamesScriptStorageRequest {
+  op: "get" | "set" | "delete" | "keys";
+  key?: string;
+  value?: unknown;
+  prefix?: string;
+}
+
+/** games.script-storage-result@1.0.0 (owner: games) */
+/**
+ * games.script-storage-result@1: a stored value (null when absent), the keys under a prefix, or an acknowledgement of a set or delete.
+ */
+export interface GamesScriptStorageResult {
+  value?: unknown;
+  keys?: string[];
+  ok?: boolean;
+}
+
 /** media.object.deleted@1.0.0 (owner: media) */
 /**
  * media.object.deleted v1 (OpenVibe.Media server/events.js objectChangeEvent and recordObjectChanges, commit 039dc48, from the media_object_changes rows that the AFTER UPDATE OF lifecycle_status trigger on media_objects writes). An object's lifecycle_status became deleted: a native object soft-deleted through DELETE /api/v2/:app/objects/:id, or an inherited vods/clips/files/pastes row removed, which marks its object deleted. Every write path counts (operator SQL included), and the event exists if and only if the change committed: the trigger row and the outbox envelope are written in the transaction of the change, or by the relay's drain for a change made outside Media's own transactions. Consumers drop any public copy, index entry or cache they hold for the object (roadmap §29.3). Deliberately minimal, identity and state only: never the title, description or metadata, the owner's ids or subject, storage keys, paths or providers, sizes or hashes. Developer-project sandbox tenants produce none. Envelope: subject { type: object, id: <object_id> }, visibility internal, priority important, actor service:media.

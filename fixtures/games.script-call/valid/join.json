@@ -1,0 +1,6 @@
+{
+  "hook": "onPlayerJoin",
+  "payload": {
+    "playerId": "plr_1"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/games/script-storage-request.v1.json",
+  "title": "GamesScriptStorageRequest",
+  "description": "games.script-storage-request@1: game.storage.get(key), set(key, value), delete(key) and keys(prefix?) on the mod's key/value storage for its place (games.storage.kv): keys up to 128 bytes, values up to 8 KB of JSON, at most 1000 keys and 1 MB per mod per place.",
+  "type": "object",
+  "required": [
+    "op"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "op": {
+      "enum": [
+        "get",
+        "set",
+        "delete",
+        "keys"
+      ]
+    },
+    "key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "value": {},
+    "prefix": {
+      "type": "string",
+      "maxLength": 128
+    }
+  }
+}

@@ -4487,6 +4487,69 @@
       "status": "active"
     },
     {
+      "id": "games.script-call",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-call.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.script-call-result",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-call-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.script-players",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-players.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.script-message",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-message.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.script-intent",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-intent.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.script-storage-request",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-storage-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.script-storage-result",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "games/script-storage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.object.deleted",
       "version": "1.0.0",
       "owner": "media",
