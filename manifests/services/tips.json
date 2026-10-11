@@ -153,7 +153,7 @@
       "range": ">=0.11.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns tips.db (better-sqlite3, single writer); an effect moves with a compare-and-set on its state"
+      "none": "no claims: one process owns the ov_tips PostgreSQL database; an effect moves with a compare-and-set on its state in one transaction"
     }
   },
   "notes": "Creator support (roadmap Wave 9): tip interactions whose payment state mirrors OpenVibe.Billing (keyed by Billing transaction id) and whose delivery state is Tips' own; goals derived from settled interactions; paid messages, TTS and media requests created on settlement; scoped revocable overlay tokens with SSE overlays; simulation mode. Tips never moves money (ADR-012). Alpha: deployed internally (loopback only), not launched publicly: openvibe.tips serves the OpenVibe.Sites placeholder until the launch rule in README.md holds."

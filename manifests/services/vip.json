@@ -138,7 +138,7 @@
       "range": ">=0.14.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns vip.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_vip PostgreSQL database; writes are transactions there"
     }
   },
   "notes": "Memberships (ADR-012): plans, immutable versioned plan terms, perks, product bindings, member preferences and gated-resource policy. OpenVibe.Billing holds subscriptions, charges, renewals, refunds and the canonical entitlements; VIP keeps a short-lived projection of them (valid_until, authoritative fallback, 'unknown' never authorizes). Alpha: deployed internally (loopback only), not launched publicly: openvibe.vip serves the OpenVibe.Sites placeholder until the launch rule holds."

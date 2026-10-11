@@ -67,7 +67,7 @@
       "range": ">=0.26.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns codes.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_codes PostgreSQL database; writes are transactions there"
     }
   },
   "notes": "Port 4900, unit openvibe-codes.service. The open coding-agent harness (owner 2026-10-08): the harness catalog and router (GET /api/v1/harnesses, POST /api/v1/harnesses/route), the way to improve OpenVibe (contributing, code of conduct, the contributor ladder) and permanent redirects from the former developer-portal paths to openvibe.services, where the portal moved (manifests, releases, trust, playgrounds, docs, OAuth and webhook tools)."

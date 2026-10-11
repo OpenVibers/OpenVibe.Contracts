@@ -80,10 +80,10 @@
       "range": ">=0.7.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns search.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_search PostgreSQL database; writes are transactions there"
     }
   },
-  "notes": "Canonical index document (search.index-document@1), event-fed and direct indexing with revision ordering and tombstones, permission-aware query over SQLite FTS5 (docs/adr-engine.md). Anonymous queries need no token.",
+  "notes": "Canonical index document (search.index-document@1), event-fed and direct indexing with revision ordering and tombstones, permission-aware query over PostgreSQL full-text search in ov_search (docs/adr-engine.md). Anonymous queries need no token.",
   "site": {
     "name": "Search",
     "icon": "search",

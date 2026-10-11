@@ -142,8 +142,8 @@
       "range": ">=0.19.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns deals.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_deals PostgreSQL database; writes are transactions there"
     }
   },
-  "notes": "Port 4840. Owns deal_products, deal_product_aliases, deal_offers, deal_offer_sources, deal_votes, deal_hotness_snapshots, deal_watches, deal_price_observations, deal_flags (+ deal_stores) in its own SQLite. Consumes OpenVibe.Network (SSO, identity.subject.resolve), OpenVibe.Sources (sources.item.read; sources.item.* events only wake the pull), OpenVibe.Community (community.comment.write, community.comment.moderate) and publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads deals.index_document.* from Events; OpenVibe.Network turns deals.watch.matched into notifications (server/notifications/events-consumer.js)."
+  "notes": "Port 4840. Owns deal_products, deal_product_aliases, deal_offers, deal_offer_sources, deal_votes, deal_hotness_snapshots, deal_watches, deal_price_observations, deal_flags (+ deal_stores) in its own PostgreSQL database (ov_deals). Consumes OpenVibe.Network (SSO, identity.subject.resolve), OpenVibe.Sources (sources.item.read; sources.item.* events only wake the pull), OpenVibe.Community (community.comment.write, community.comment.moderate) and publishes through OpenVibe.Events (events.event.publish); OpenVibe.Search reads deals.index_document.* from Events; OpenVibe.Network turns deals.watch.matched into notifications (server/notifications/events-consumer.js)."
 }

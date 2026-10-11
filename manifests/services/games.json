@@ -58,7 +58,7 @@
   "lifecycle": {
     "liveness": {
       "endpoint": "/healthz",
-      "means": "the process is up and answers HTTP; liveness only (world.db and the simulation tick are what /api/ready checks)"
+      "means": "the process is up and answers HTTP; liveness only (the ov_games PostgreSQL database and the simulation tick are what /api/ready checks)"
     },
     "shutdown": {
       "signal": "SIGTERM",
@@ -71,7 +71,7 @@
         "world saved: every session marked dirty and flushed (game.shutdown)",
         "requests in flight finish (5 s at most, then cut)",
         "the media mirror's pass in progress (2 s at most), the progress-summary writes (1 s) and the outbox's last send (2 s) awaited; unsent rows stay in the outbox",
-        "world.db closed, physics disposed, exit 0"
+        "the ov_games PostgreSQL database closed, physics disposed, exit 0"
       ],
       "note": "clients reconnect on their own after 1012; the whole stop is bounded at 10 s (exit 1 past it), inside the unit's TimeoutStopSec=30"
     },
@@ -79,7 +79,7 @@
       "resumes": [
         {
           "kind": "state",
-          "what": "the world is restored from world.db before the network opens (schema migrated forward first)"
+          "what": "the world is restored from the ov_games PostgreSQL database before the network opens (schema migrated forward first)"
         },
         {
           "kind": "outbox",
@@ -100,16 +100,16 @@
         "automatic: ovhost deploy games (strategy pnpm-build) restores the previous sha, rebuilds and restarts when the ready URL does not answer 2xx after the restart",
         "manual: sudo ovhost rollback games --to <sha> (rebuilds the workspace)"
       ],
-      "window": "as long as world.db has not been migrated past the older build's SCHEMA_VERSION",
+      "window": "as long as the ov_games PostgreSQL database has not been migrated past the older build's SCHEMA_VERSION",
       "blockers": [
-        "a build refuses a world.db whose meta.schema_version is newer than its own (SCHEMA_VERSION 13 today, forward-only migrations): going back past a schema bump fails at boot"
+        "a build refuses the ov_games PostgreSQL database whose meta.schema_version is newer than its own (SCHEMA_VERSION 13 today, forward-only migrations): going back past a schema bump fails at boot"
       ]
     },
     "contracts": {
       "range": ">=0.8.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns world.db (better-sqlite3, single writer)"
+      "none": "no claims: one process owns the ov_games PostgreSQL database; writes are transactions there"
     }
   },
   "notes": "Scraplandia (browser runtime). Players are keyed by canonical Network subjects (ADR-0006 in the repo). Calls Events (events.event.publish), Media (media.object.upload, namespace games: map-editor assets) and Network identity (identity.subject.resolve, batch legacy adoption) with the games client-credentials principal. Mods: games-content@1 declarative packs only; executable mods wait for OpenVibe.Host Stage C. No achievement system exists, so there are no games.achievement.* events."
