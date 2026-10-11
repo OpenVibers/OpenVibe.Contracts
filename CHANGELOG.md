@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.137.0 — 2026-10-11
+
+- `bot.robot-profile@1`: `mapping.driver` may be `looi`, the community's Generic LOOI driver (a Bluetooth bridge
+  plugin for the OpenVibe Node; OpenVibe.Node `docs/hardware-looi.md`). OpenVibe.Bot ships the matching `looi` profile.
+- Service manifests name their PostgreSQL databases (no service declares SQLite any more).
+
 ## 0.136.1 — 2026-10-10
 
 - `events.publish-result@1`: `cursor` is required unless the item says `pruned: true`. That answer is a repeat of an
