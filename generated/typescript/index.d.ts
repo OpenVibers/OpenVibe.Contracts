@@ -46492,6 +46492,11 @@ export interface Watch {
             budget_usd?: number | null;
           }
         | {
+            kind: "actor-agent";
+            agent_id: string;
+            note?: string | null;
+          }
+        | {
             kind: "codes-run";
             repo: string;
             brief: string;
@@ -46530,6 +46535,11 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -46565,6 +46575,11 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -46606,41 +46621,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -46678,6 +46661,53 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -46719,41 +46749,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -46793,6 +46791,11 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -46828,6 +46831,53 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -46869,41 +46919,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -46943,41 +46961,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47015,6 +47001,95 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47056,41 +47131,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47130,41 +47173,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47204,6 +47215,11 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -47239,6 +47255,95 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47280,41 +47385,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47354,41 +47427,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47428,41 +47469,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47500,6 +47509,137 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47541,41 +47681,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47615,41 +47723,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47689,41 +47765,9 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47763,6 +47807,11 @@ export interface Watch {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -47798,6 +47847,137 @@ export interface Watch {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -47960,6 +48140,11 @@ export interface WatchRequest {
             budget_usd?: number | null;
           }
         | {
+            kind: "actor-agent";
+            agent_id: string;
+            note?: string | null;
+          }
+        | {
             kind: "codes-run";
             repo: string;
             brief: string;
@@ -47998,6 +48183,11 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -48033,6 +48223,11 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48074,41 +48269,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48146,6 +48309,53 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48187,41 +48397,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48261,6 +48439,11 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -48296,6 +48479,53 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48337,41 +48567,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48411,41 +48609,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48483,6 +48649,95 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48524,41 +48779,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48598,41 +48821,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48672,6 +48863,11 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -48707,6 +48903,95 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48748,41 +49033,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48822,41 +49075,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48896,41 +49117,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -48968,6 +49157,137 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -49009,41 +49329,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -49083,41 +49371,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -49157,41 +49413,9 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";
@@ -49231,6 +49455,11 @@ export interface WatchRequest {
               budget_usd?: number | null;
             }
           | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
               kind: "codes-run";
               repo: string;
               brief: string;
@@ -49266,6 +49495,137 @@ export interface WatchRequest {
               kind: "actor-task";
               brief: string;
               budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              runtime: "function" | "code" | "browser" | "linux";
+              command: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | {
+              kind: "webhook";
+              url: string;
+              secret_env: string;
+            }
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
             }
           | {
               kind: "codes-run";

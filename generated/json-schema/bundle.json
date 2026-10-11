@@ -47189,6 +47189,31 @@
                 "type": "object",
                 "required": [
                   "kind",
+                  "agent_id"
+                ],
+                "additionalProperties": false,
+                "description": "Run one of the watch owner's personal agents on OpenVibe.Actor (actor.agent.run, Actor 0.140.0 contracts): the firing is the run's input, after the optional note. The agent must belong to the watch's owner; its own budgets and daily cap apply.",
+                "properties": {
+                  "kind": {
+                    "const": "actor-agent"
+                  },
+                  "agent_id": {
+                    "type": "string",
+                    "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  "note": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 2000
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind",
                   "repo",
                   "brief"
                 ],
