@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.148.0 — 2026-10-12
+
+- Catalog text (`site.what`) for rent, food, work and games names what shipped today: Rent's affordable housing from
+  HUD open data, Food's recipe ideas, Work's application tracker with an Actor agent, Games' Salvage Rush and
+  leaderboards. No contract shape changes.
+
 ## 0.147.0 — 2026-10-12
 
 - `work.application.manage` (owner work): a person's tracked job applications on OpenVibe.Work, for apps and agents
