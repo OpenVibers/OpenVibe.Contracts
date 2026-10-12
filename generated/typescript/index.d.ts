@@ -173071,3 +173071,516 @@ export type FoodRecipeResult =
             FoodRecipeSuggestion
           ];
     };
+
+/** space.deploy-create-request@1.0.0 (owner: space) */
+/**
+ * space.deploy-create-request@1: bodies of space.deploy.create on OpenVibe.Space (a deployer or above of the project; an app principal added as deployer can deploy from CI). POST /api/v1/sites/:id/deploys uploads a deploy: the raw body is a tar or tar.gz archive (Content-Type application/gzip, application/x-gzip, application/x-tar or application/octet-stream), or multipart/form-data with archive=<one archive> or files=<file>… (each part's filename is its path); optional fields activate=1, root=<subdirectory to deploy> and strip=folder (removes a shared first segment) also work as query parameters. It is validated (path traversal, links, special and hidden files, server-side code, file types, sizes and quotas) and never executed; a refusal is a problem whose extra carries the failed deploy_id and its log (413 upload.too_large, quota.storage; 422 validation codes; 429 quota.deploys_per_day; 403 site.taken_down; 503 upload.busy; 507 storage.host_full). POST /api/v1/deploys/:id/activate { expected_active? } and POST /api/v1/sites/:id/rollback { deploy_id?, expected_active? } switch the site's pointer in one step (rollback without deploy_id goes to the deploy active before; 409 deploy.not_ready, site.active_changed when expected_active is stale, deploy.no_previous). GET /api/v1/sites/:id/deploys, /deploys/:id and /deploys/:id/log take no body.
+ */
+export type SpaceDeployCreateRequest =
+  | string
+  | {
+      deploy_id?: string | null;
+      /**
+       * The deploy you saw active (null: none); refused with 409 site.active_changed when it moved.
+       */
+      expected_active?: string | null;
+    }
+  | NoBody;
+
+/** space.deploy-create-result@1.0.0 (owner: space) */
+/**
+ * space.deploy-create-result@1: answers of space.deploy.create on OpenVibe.Space. GET /api/v1/sites/:id/deploys?limit= → { active_deploy_id, deploys, activations } (newest first; the last 20 pointer switches). POST /api/v1/sites/:id/deploys → 201 { deploy, activated, url } (the ready deploy with its validation log; activated when activate=1 switched the site to it). GET /api/v1/deploys/:id → { deploy } with its files. GET /api/v1/deploys/:id/log → { deploy_id, state, log }. POST /api/v1/deploys/:id/activate and /sites/:id/rollback → { active_deploy_id, previous_deploy_id, changed } (changed false when it was already active). Emits space.deploy.created|activated|failed.
+ */
+export type SpaceDeployCreateResult =
+  | {
+      active_deploy_id: string | null;
+      deploys: SpaceDeploy[];
+      activations: {
+        deploy_id: string;
+        previous_deploy_id: string | null;
+        kind: "activate" | "rollback";
+        actor: string;
+        at: string;
+      }[];
+    }
+  | {
+      deploy: SpaceDeploy;
+      activated?: boolean;
+      url?: string;
+    }
+  | {
+      deploy_id: string;
+      state: "ready" | "failed" | "deleted";
+      log: {
+        level: "info" | "warn" | "error";
+        message: string;
+        at: string;
+      }[];
+    }
+  | {
+      active_deploy_id: string;
+      previous_deploy_id: string | null;
+      changed: boolean;
+    };
+
+/** space.deploy@1.0.0 (owner: space) */
+/**
+ * space.deploy@1: one immutable static deploy on OpenVibe.Space (server/http/serialize.js deploy): ready (validated and stored, never executed) or failed (refused, with its failure code and log), whether the site serves it, its size and manifest hash. GET /api/v1/deploys/:id adds the files; the upload answer adds the log.
+ */
+export interface SpaceDeploy {
+  id: string;
+  site_id: string;
+  project_id: string;
+  state: "ready" | "failed" | "deleted";
+  active: boolean;
+  source: "archive" | "files" | "preview" | "git";
+  /**
+   * Present on source git: the commit this deploy was built from (public provenance, never a credential).
+   */
+  git?: {
+    provider: string;
+    repo_url: string;
+    ref: string;
+    commit_sha: string;
+  };
+  file_count: number;
+  total_bytes: number;
+  /**
+   * Bytes this deploy added to the project's store.
+   */
+  new_bytes: number;
+  manifest_sha256: string | null;
+  failure_code: string | null;
+  created_by: string;
+  created_at: string;
+  files?: {
+    path: string;
+    sha256: string;
+    size: number;
+    content_type: string;
+  }[];
+  log?: {
+    level: "info" | "warn" | "error";
+    message: string;
+    at: string;
+  }[];
+}
+
+/** space.domain-manage-request@1.0.0 (owner: space) */
+/**
+ * space.domain-manage-request@1: bodies of space.domain.manage on OpenVibe.Space (a maintainer or above of the project). POST /api/v1/sites/:id/domains { hostname } adds a custom domain, pending until its TXT record is verified: a fully qualified host name, lowercased (422 domain.invalid_hostname; 422 domain.reserved for any OpenVibe domain; 403 domain.sandbox in sandbox projects; 429 quota.custom_domains; 409 domain.exists, domain.taken). GET /api/v1/sites/:id/domains, POST /api/v1/domains/:id/verify (checks the TXT record now) and DELETE /api/v1/domains/:id (409 domain.default: the default domain goes only with the site) take no body.
+ */
+export type SpaceDomainManageRequest =
+  | {
+      /**
+       * e.g. www.example.org (a trailing dot is dropped).
+       */
+      hostname: string;
+    }
+  | NoBody;
+
+/** space.domain-manage-result@1.0.0 (owner: space) */
+/**
+ * space.domain-manage-result@1: answers of space.domain.manage on OpenVibe.Space. GET /api/v1/sites/:id/domains → { domains } (the default domain first). POST /api/v1/sites/:id/domains → 201 { domain } with the DNS records to publish. POST /api/v1/domains/:id/verify → { domain } after the check (status verified and served once the TXT record matches, else last_error says what was found; emits space.domain.verified). DELETE /api/v1/domains/:id → { deleted: true }.
+ */
+export type SpaceDomainManageResult =
+  | {
+      domains: SpaceDomain[];
+    }
+  | {
+      domain: SpaceDomain;
+    }
+  | {
+      deleted: true;
+    };
+
+/** space.domain@1.0.0 (owner: space) */
+/**
+ * space.domain@1: one domain of a static site on OpenVibe.Space (server/http/serialize.js domain): the default <site>.openvibe.website, or a custom domain that is served only once its DNS TXT record is verified (re-checked daily; it lapses when the record is gone). A custom domain carries the records its owner must publish (the TXT verification value is public by design and shown only to members); TLS certificates are issued by an operator.
+ */
+export interface SpaceDomain {
+  id: string;
+  site_id: string;
+  hostname: string;
+  kind: "default" | "custom";
+  status: "pending" | "verified" | "failed" | "lapsed";
+  served: boolean;
+  verified_at: string | null;
+  last_checked_at: string | null;
+  last_error: string | null;
+  instructions?: {
+    verification: {
+      type: "TXT";
+      /**
+       * _openvibe-space.<hostname>
+       */
+      name: string;
+      /**
+       * openvibe-space-verification=<token>
+       */
+      value: string;
+      note?: string;
+    };
+    /**
+     * A CNAME for a subdomain; A/AAAA for an apex domain when the operator configured them.
+     */
+    routing: {
+      type: string;
+      name: string;
+      value: string;
+      note?: string;
+    }[];
+    tls: string;
+  };
+}
+
+/** space.project@1.0.0 (owner: space) */
+/**
+ * space.project@1: one OpenVibe.Space tenant project (server/http/serialize.js project): owned by a person (usr_…), production or sandbox, with the caller's role in it and any staff takedown. POST /api/v1/projects and GET /api/v1/projects/:id add the effective quota and the usage.
+ */
+export interface SpaceProject {
+  id: string;
+  name: string;
+  environment: "production" | "sandbox";
+  /**
+   * The OpenVibe.Network project once Network has projects.
+   */
+  network_project_id: string | null;
+  owner: string;
+  /**
+   * The caller's role (staff: a Network admin who is not a member).
+   */
+  role: "owner" | "maintainer" | "deployer" | "staff" | null;
+  created_at: string;
+  /**
+   * A staff takedown covering it: serving stops while the content is kept for review.
+   */
+  takedown: {
+    scope: "project" | "site";
+    reason: string;
+    since: string | null;
+  } | null;
+  /**
+   * The effective quota: the project's override where set, else its environment's default.
+   */
+  quota?: {
+    storage_bytes: number;
+    deploys_per_day: number;
+    max_files: number;
+    max_file_bytes: number;
+    sites: number;
+    custom_domains: number;
+  };
+  usage?: {
+    storage_bytes: number;
+    objects: number;
+    deploys_last_24h: number;
+    sites: number;
+    custom_domains: number;
+  };
+}
+
+/** space.site-manage-request@1.0.0 (owner: space) */
+/**
+ * space.site-manage-request@1: bodies of space.site.manage on OpenVibe.Space (judged by the acting principal's project role too; a sandbox token is refused on production projects). POST /api/v1/projects { name, environment?, network_project_id? } creates a project owned by the person named with X-OV-Subject (403 project.owner_must_be_user; 422 project.invalid_name over 80 characters, project.invalid_environment; 429 quota.projects; 409 project.network_project_taken). PUT /api/v1/projects/:id/quota { storage_bytes?, deploys_per_day?, max_files?, max_file_bytes?, sites?, custom_domains? } (a Network staff user: 403 auth.staff_only; fields left out keep their value). PUT /api/v1/projects/:id/members/:principal { role } (the owner: 422 member.invalid_role, 409 member.owner_fixed). POST /api/v1/projects/:id/sites { name } (a maintainer; lowercased and trimmed, one DNS label of 3–40 characters: 422 site.invalid_name, site.name_reserved; 409 site.name_taken, site.name_held; 429 quota.sites). POST /api/v1/projects/:id/takedown and /sites/:id/takedown { reason } (staff: stop serving, keep the content; 409 takedown.exists); DELETE on those { note? } lifts it. GET /api/v1/projects, /projects/:id, /projects/:id/quota, /projects/:id/sites and /sites/:id, and DELETE /api/v1/projects/:id, /projects/:id/members/:principal, /sites/:id and /deploys/:id take no body (deleting refuses taken-down content for non-staff: 409 site.taken_down; an active deploy: 409 deploy.active).
+ */
+export type SpaceSiteManageRequest =
+  | {
+      /**
+       * 1–80 characters once trimmed.
+       */
+      name: string;
+      /**
+       * Default production; a sandbox credential creates sandbox projects only.
+       */
+      environment?: "production" | "sandbox" | null;
+      network_project_id?: string | null;
+    }
+  | {
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      storage_bytes?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      deploys_per_day?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      max_files?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      max_file_bytes?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      sites?: number | null;
+      /**
+       * A non-negative integer, or null for the environment default.
+       */
+      custom_domains?: number | null;
+    }
+  | {
+      /**
+       * Only a person (usr_…) can be an owner.
+       */
+      role: "owner" | "maintainer" | "deployer";
+    }
+  | {
+      /**
+       * The site name (lowercased).
+       */
+      name: string;
+    }
+  | {
+      /**
+       * Members see it.
+       */
+      reason: string;
+    }
+  | {
+      /**
+       * Cut to 500 characters.
+       */
+      note?: string | null;
+    }
+  | NoBody;
+
+/** space.site-manage-result@1.0.0 (owner: space) */
+/**
+ * space.site-manage-result@1: answers of space.site.manage on OpenVibe.Space. GET /api/v1/projects → { projects } (the caller's projects with their role). POST /api/v1/projects → 201 { project } (with quota and usage). GET /api/v1/projects/:id → { project, sites, members }. GET and PUT /api/v1/projects/:id/quota → { quota, usage }. PUT and DELETE /api/v1/projects/:id/members/:principal → { members }. GET /api/v1/projects/:id/sites → { sites }. POST /api/v1/projects/:id/sites → 201 { site }. GET /api/v1/sites/:id → { site, domains }. DELETE /api/v1/projects/:id and /sites/:id → { deleted: true } (serving stops at once; the objects are removed). DELETE /api/v1/deploys/:id → { deleted: true, objects_removed }. POST …/takedown → 201 { takedown }; DELETE …/takedown → { lifted: true }.
+ */
+export type SpaceSiteManageResult =
+  | {
+      projects: SpaceProject[];
+    }
+  | {
+      project: SpaceProject;
+      sites?: SpaceSite[];
+      members?: {
+        /**
+         * usr_…, app:app_… or svc:…
+         */
+        principal: string;
+        role: "owner" | "maintainer" | "deployer";
+        added_at: string;
+      }[];
+    }
+  | {
+      /**
+       * The effective quota: the project's override where set, else its environment's default.
+       */
+      quota: {
+        storage_bytes: number;
+        deploys_per_day: number;
+        max_files: number;
+        max_file_bytes: number;
+        sites: number;
+        custom_domains: number;
+      };
+      usage: {
+        storage_bytes: number;
+        objects: number;
+        deploys_last_24h: number;
+        sites: number;
+        custom_domains: number;
+      };
+    }
+  | {
+      members: {
+        /**
+         * usr_…, app:app_… or svc:…
+         */
+        principal: string;
+        role: "owner" | "maintainer" | "deployer";
+        added_at: string;
+      }[];
+    }
+  | {
+      sites: SpaceSite[];
+    }
+  | {
+      site: SpaceSite;
+      domains?: SpaceDomain[];
+    }
+  | {
+      deleted: true;
+      objects_removed?: number;
+    }
+  | {
+      /**
+       * The takedown now in force.
+       */
+      takedown: {
+        scope: "project" | "site";
+        reason: string;
+        since: string | null;
+      };
+    }
+  | {
+      lifted: true;
+    };
+
+/** space.site@1.0.0 (owner: space) */
+/**
+ * space.site@1: one static site on OpenVibe.Space (server/http/serialize.js site): its name (one DNS label), the default hostname and URL it is served at, the deploy it serves (one pointer; null until a deploy is activated) and any staff takedown.
+ */
+export interface SpaceSite {
+  id: string;
+  project_id: string;
+  name: string;
+  hostname: string;
+  url: string;
+  active_deploy_id: string | null;
+  /**
+   * A staff takedown covering it: serving stops while the content is kept for review.
+   */
+  takedown: {
+    scope: "project" | "site";
+    reason: string;
+    since: string | null;
+  } | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** space.site-config@1.0.0 (owner: space) */
+/**
+ * space.site-config@1: one Host site's serving configuration (plan T12 J3). headers are applied to every response of the site before the platform's own, which always win; the platform's security, routing, caching, scope and transport headers (Content-Security-Policy, Strict-Transport-Security, Set-Cookie, Cache-Control, Content-Type, Location, Service-Worker-Allowed, Alt-Svc and the rest of Host's reserved list) and every X-Forwarded-* header are refused. redirects are local paths only (no scheme, host, protocol-relative URL, backslash or control character, also after percent-decoding). spa serves /index.html for an extensionless path that has no file. A site with no configuration answers { headers: {}, redirects: [], spa: false }.
+ */
+export interface SpaceSiteConfig {
+  headers: {
+    [k: string]: string | undefined;
+  };
+  /**
+   * @maxItems 200
+   */
+  redirects: {
+    from: string;
+    to: string;
+    status: 301 | 302 | 307 | 308;
+  }[];
+  spa: boolean;
+}
+
+/** space.site-config-request@1.0.0 (owner: space) */
+/**
+ * space.site-config-request@1: the body of PUT /api/v1/sites/:id/config on OpenVibe.Space (space.site.config; the acting principal must be a maintainer or owner of the site's project). { headers?, redirects?, spa? } replaces the whole configuration: a field left out is reset to its default. A redirect's status defaults to 301. Refusals are 422 problem+json: site_config.reserved_header, site_config.header_name, site_config.header_value (longer than 1024 characters or a control character), site_config.too_many (over 50 headers or 200 redirects), site_config.redirect (not a local path, a duplicate from, or a status outside 301/302/307/308), site_config.headers and site_config.redirects (wrong type). GET and DELETE /api/v1/sites/:id/config take no body (DELETE resets to the defaults).
+ */
+export interface SpaceSiteConfigRequest {
+  headers?: {
+    [k: string]: string | undefined;
+  };
+  redirects?: {
+    from: string;
+    to: string;
+    status?: 301 | 302 | 307 | 308;
+  }[];
+  spa?: boolean;
+}
+
+/** space.site-config-result@1.0.0 (owner: space) */
+/**
+ * space.site-config-result@1: every answer of space.site.config on OpenVibe.Space. GET, PUT and DELETE /api/v1/sites/:id/config → { config } (after a PUT, the configuration as stored; after a DELETE, the defaults).
+ */
+export interface SpaceSiteConfigResult {
+  config: SpaceSiteConfig;
+}
+
+/** space.deploy.activated@1.0.0 (owner: space) */
+/**
+ * space.deploy.activated v1 (OpenVibe.Space server/domain/deploys.js switchPointer, Stage B tenant hosting). A tenant site's active deploy changed, written into Host's event outbox in the transaction that moves the pointer (activate or rollback). Envelope: subject { type: deploy, id: <deploy id> }, visibility internal, priority low, actor the person or app that switched it. A network service's release going live is space.release.published, not this.
+ */
+export interface SpaceDeployActivatedPayload {
+  project_id: string;
+  site_id: string;
+  /**
+   * The site's name (<site>.openvibe.website).
+   */
+  site: string;
+  deploy_id: string;
+  /**
+   * The deploy that served before; null for the site's first activation.
+   */
+  previous_deploy_id: string | null;
+  /**
+   * true when the switch was a rollback.
+   */
+  rollback: boolean;
+}
+
+/** space.deploy.created@1.0.0 (owner: space) */
+/**
+ * space.deploy.created v1 (OpenVibe.Space, subject deploy dpl_…, visibility internal): an upload or a Git ingest became an immutable, content-addressed deploy in the ready state. It is not yet serving: space.deploy.activated follows when it is made active. No file contents or paths.
+ */
+export interface SpaceDeployCreatedPayload {
+  project_id: string;
+  site_id: string;
+  /**
+   * the site name (one DNS label; the site is served at <site>.openvibe.website)
+   */
+  site: string;
+  /**
+   * how the deploy arrived: an archive or individual files, a private preview upload, or a Git ingest (always a preview)
+   */
+  source: "archive" | "files" | "preview" | "git";
+  file_count: number;
+  total_bytes: number;
+  /**
+   * sha256 of the deploy manifest (the content address of the whole deploy)
+   */
+  manifest_sha256: string;
+}
+
+/** space.deploy.failed@1.0.0 (owner: space) */
+/**
+ * space.deploy.failed v1 (OpenVibe.Space, subject deploy dpl_…, visibility internal): an upload was refused and recorded as a failed deploy with its log, so the owner can see why. Problem codes only, at most ten; never file contents.
+ */
+export interface SpaceDeployFailedPayload {
+  project_id: string;
+  site_id: string;
+  /**
+   * the site name (one DNS label; the site is served at <site>.openvibe.website)
+   */
+  site: string;
+  /**
+   * the refusal problem code (for example deploy.too_large or storage.space_full)
+   */
+  code: string;
+  /**
+   * the problem codes of the files that were refused
+   *
+   * @maxItems 10
+   */
+  problems:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string];
+}
+
+/** space.domain.verified@1.0.0 (owner: space) */
+/**
+ * space.domain.verified v1 (OpenVibe.Space, subject domain dom_…, visibility internal): a custom domain's TXT record (_openvibe-space.<hostname>) was found, and the domain now serves the site.
+ */
+export interface SpaceDomainVerifiedPayload {
+  project_id: string;
+  site_id: string;
+  /**
+   * the site name (one DNS label; the site is served at <site>.openvibe.website)
+   */
+  site: string;
+  /**
+   * the custom domain, a fully qualified host name in lower case
+   */
+  hostname: string;
+}

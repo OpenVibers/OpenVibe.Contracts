@@ -1,0 +1,23 @@
+{
+  "id": "space.site.config",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read, set and reset a Host site's serving configuration: response headers, local-only redirects and the SPA fallback (extensionless paths serve index.html). A capability holder must also hold the acting principal's project role (maintainer or owner to change, any role to read). Reserved headers (Content-Security-Policy, Strict-Transport-Security, Set-Cookie, X-Forwarded-*, caching, scope, transport and the platform's own) are refused, and a redirect target must be a local path, so a site can never become an open redirect.",
+  "permissions": [
+    "space:write"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "space-manage",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/sites/:id/config",
+    "PUT /api/v1/sites/:id/config",
+    "DELETE /api/v1/sites/:id/config"
+  ],
+  "inputSchema": "space.site-config-request@1",
+  "outputSchema": "space.site-config-result@1"
+}

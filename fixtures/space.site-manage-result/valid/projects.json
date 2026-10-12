@@ -1,0 +1,14 @@
+{
+  "projects": [
+    {
+      "id": "prj_01JAD1P2R3J4K5M6N7P8Q9R0S1",
+      "name": "Harbour Radio",
+      "environment": "production",
+      "network_project_id": null,
+      "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "role": "owner",
+      "created_at": "2026-09-24T08:15:00.000Z",
+      "takedown": null
+    }
+  ]
+}

@@ -6856,6 +6856,163 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "space.deploy-create-request",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/deploy-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.deploy-create-result",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/deploy-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.deploy",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/deploy.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.domain-manage-request",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/domain-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.domain-manage-result",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/domain-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.domain",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/domain.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.project",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/project.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.site-manage-request",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/site-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.site-manage-result",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/site-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.site",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/site.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.site-config",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/site-config.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.site-config-request",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/site-config-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.site-config-result",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/site-config-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.deploy.activated",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.deploy.activated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "space.deploy.created",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.deploy.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "space.deploy.failed",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.deploy.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "space.domain.verified",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.domain.verified.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
     }
   ]
 }

@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.149.0 — 2026-10-12
+
+- The static hosting engine moved from OpenVibe.Host to OpenVibe.Space (plan T20 step 2), so its contracts are now
+  `space.*`: capabilities `space.site.manage`, `space.deploy.create`, `space.domain.manage`, `space.site.config` and
+  `space.resource.read`; schemas `space.project`, `space.site`, `space.deploy`, `space.domain`, `space.site-config` and
+  their request/result pairs; events `space.deploy.created`, `space.deploy.activated`, `space.deploy.failed` and
+  `space.domain.verified`, each with a payload schema (Host only ever had one for `deploy.activated`). Tenant sites are
+  `<site>.openvibe.website`; a custom domain is verified by `_openvibe-space.<hostname>`. The space manifest owns them
+  and its catalog text says what is built (staff-only until the public launch).
+- `space.site` uses the site id pattern the engine has always issued (`sit_`); `host.site` said `site_`.
+- The `host.*` hosting ids stay until OpenVibe.Host has removed the engine; a later release retires them.
+
 ## 0.148.0 — 2026-10-12
 
 - Catalog text (`site.what`) for rent, food, work and games names what shipped today: Rent's affordable housing from

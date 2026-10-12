@@ -1,0 +1,31 @@
+{
+  "id": "space.deploy.create",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Upload an immutable static deploy (tar/tar.gz or multipart files; validated for path traversal, links, special and hidden files, server-side code, file types and quotas; never executed), list deploys and their upload logs, activate a deploy and roll a site back to any earlier ready deploy (one atomic pointer switch). Also judged by the acting principal's project role (deployer or above); an app principal added to a project as deployer can deploy from CI. A site with a Git source also accepts a CI-built deploy at /sites/:id/source/deploys naming the ref and full commit_sha; it is always a preview and records that commit as immutable provenance.",
+  "permissions": [
+    "host:deploy"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "space-deploy",
+  "events": [
+    "space.deploy.created",
+    "space.deploy.activated",
+    "space.deploy.failed"
+  ],
+  "implementedBy": [
+    "GET /api/v1/sites/:id/deploys",
+    "POST /api/v1/sites/:id/deploys",
+    "POST /api/v1/sites/:id/source/deploys",
+    "GET /api/v1/deploys/:id",
+    "GET /api/v1/deploys/:id/log",
+    "POST /api/v1/deploys/:id/activate",
+    "POST /api/v1/sites/:id/rollback"
+  ],
+  "inputSchema": "space.deploy-create-request@1",
+  "outputSchema": "space.deploy-create-result@1"
+}

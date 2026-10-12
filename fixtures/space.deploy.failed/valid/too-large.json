@@ -1,0 +1,9 @@
+{
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "site_id": "sit_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "site": "alpha-site",
+  "code": "deploy.too_large",
+  "problems": [
+    "file.too_large"
+  ]
+}
