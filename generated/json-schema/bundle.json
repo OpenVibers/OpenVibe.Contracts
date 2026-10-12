@@ -3798,6 +3798,34 @@
                   ],
                   "description": "array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37)."
                 },
+                "where": {
+                  "type": "object",
+                  "maxProperties": 10,
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": [
+                          "string",
+                          "number",
+                          "boolean"
+                        ]
+                      },
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "items": {
+                          "type": [
+                            "string",
+                            "number",
+                            "boolean"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "description": "Records kept only when every path equals its value (or one of an array of values); others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), and * for an object's single child (Sources#39)."
+                },
                 "item_kind": {
                   "type": "string",
                   "pattern": "^[a-z][a-z0-9_]{1,39}$"
@@ -3812,7 +3840,8 @@
                   "type": "object",
                   "additionalProperties": {
                     "type": "string"
-                  }
+                  },
+                  "description": "Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child."
                 }
               }
             }
@@ -7221,6 +7250,34 @@
                           ],
                           "description": "array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37)."
                         },
+                        "where": {
+                          "type": "object",
+                          "maxProperties": 10,
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": [
+                                  "string",
+                                  "number",
+                                  "boolean"
+                                ]
+                              },
+                              {
+                                "type": "array",
+                                "minItems": 1,
+                                "maxItems": 20,
+                                "items": {
+                                  "type": [
+                                    "string",
+                                    "number",
+                                    "boolean"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "description": "Records kept only when every path equals its value (or one of an array of values); others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), and * for an object's single child (Sources#39)."
+                        },
                         "item_kind": {
                           "type": "string",
                           "pattern": "^[a-z][a-z0-9_]{1,39}$"
@@ -7235,7 +7292,8 @@
                           "type": "object",
                           "additionalProperties": {
                             "type": "string"
-                          }
+                          },
+                          "description": "Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child."
                         }
                       }
                     }
