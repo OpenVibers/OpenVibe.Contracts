@@ -1,0 +1,26 @@
+{
+  "owner": "host",
+  "type": "plan",
+  "id": "plan-1",
+  "revision": 1,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.host/catalog/plans/hpl_01M4PJ8C3ZNPWVVZM9N5XXH45J",
+  "title": "Linode Nanode 1GB: $5.00 a month",
+  "summary": "1 vCPU · 1 GB RAM · 25 GB disk · 1 TB transfer · checked 2026-10-11",
+  "body": "Linode Nanode 1GB\n1 vCPU, 1 GB RAM, 25 GB disk, 1 TB transfer\n$5.00 a month (USD), checked 2026-10-11",
+  "facets": {
+    "provider": "linode",
+    "kind": "cloud",
+    "currency": "USD"
+  },
+  "authorship": "imported",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-11T23:00:00.000Z",
+  "updated_at": "2026-10-11T23:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

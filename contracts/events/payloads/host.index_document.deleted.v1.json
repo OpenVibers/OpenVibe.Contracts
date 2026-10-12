@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/host.index_document.deleted.v1.json",
+  "title": "HostIndexDocumentDeletedPayload",
+  "description": "host.index_document.deleted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a hosting catalog page (a plan or a provider) that is hidden, gone or deleted. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.",
+  "type": "object",
+  "required": [
+    "type",
+    "id",
+    "revision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "enum": [
+        "plan",
+        "provider"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^(hpl|hpv)_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}
