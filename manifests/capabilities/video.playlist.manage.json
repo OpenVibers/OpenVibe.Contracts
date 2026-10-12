@@ -2,10 +2,10 @@
   "id": "video.playlist.manage",
   "version": "1.0",
   "owner": "media-hub",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
   "sensitive": true,
-  "description": "PLANNED: create, rename, reorder and delete a playlist on openvibe.video as the acting person (plan T10 D6). Account-only.",
+  "description": "Create, rename, describe, change the visibility of, reorder, add items to, remove items from and delete playlists on openvibe.video that the caller owns. An app, agent or service owns a playlist under its own requester (app:app_..., agent:agt_..., service:<slug>) and the playlist records its project; it can never touch a person's playlist. A person acting for themself needs no capability; an app, agent or service token (audience openvibe.download) needs this one.",
   "permissions": [
     "video:write"
   ],
@@ -14,5 +14,14 @@
   ],
   "quotaClass": "video-write",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "POST /api/v1/video/playlists",
+    "PATCH /api/v1/video/playlists/:id",
+    "DELETE /api/v1/video/playlists/:id",
+    "POST /api/v1/video/playlists/:id/items",
+    "PATCH /api/v1/video/playlists/:id/items",
+    "DELETE /api/v1/video/playlists/:id/items/:kind/:itemId"
+  ],
+  "inputSchema": "video.playlist-manage-request@1",
+  "outputSchema": "video.playlist-manage-result@1"
 }

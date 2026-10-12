@@ -2,9 +2,9 @@
   "id": "video.playlist.read",
   "version": "1.0",
   "owner": "media-hub",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "PLANNED: read a playlist and its ordered items on openvibe.video (a new table; playlists do not exist anywhere today, plan T10 D6).",
+  "description": "Read playlists on openvibe.video: the ones the caller owns (a person, or an app, agent or service under its own requester) and any public or unlisted playlist by id, with its ordered items (vod or clip ids from OpenVibe.Live). A private playlist answers 404 to anyone but its owner. A person acting for themself needs no capability; an app, agent or service token (audience openvibe.download, the media hub's) needs this one.",
   "permissions": [
     "video:read"
   ],
@@ -13,5 +13,10 @@
   ],
   "quotaClass": "video-read",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "GET /api/v1/video/playlists",
+    "GET /api/v1/video/playlists/:id"
+  ],
+  "inputSchema": "video.playlist-read-request@1",
+  "outputSchema": "video.playlist-read-result@1"
 }

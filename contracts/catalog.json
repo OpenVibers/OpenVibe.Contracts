@@ -7013,6 +7013,51 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-004"
+    },
+    {
+      "id": "video.playlist",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "video/playlist.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "video.playlist-read-request",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "video/playlist-read-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "video.playlist-read-result",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "video/playlist-read-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "video.playlist-manage-request",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "video/playlist-manage-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "video.playlist-manage-result",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "video/playlist-manage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

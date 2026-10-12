@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/video/playlist.v1.json",
+  "title": "VideoPlaylist",
+  "description": "video.playlist@1: one playlist on openvibe.video as the API returns it. `owner` is present on reads of one playlist: a person (kind user, with their username when known) or an app, agent or service (never named).",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "description",
+    "visibility",
+    "item_count",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vpl_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "A playlist id (vpl_ + ULID)."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "visibility": {
+      "enum": [
+        "public",
+        "unlisted",
+        "private"
+      ]
+    },
+    "item_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string",
+      "description": "ISO 8601 time."
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "ISO 8601 time."
+    },
+    "owner": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "user",
+            "app",
+            "agent",
+            "service"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

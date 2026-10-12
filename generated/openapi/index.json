@@ -114,6 +114,13 @@
       "capabilities": 6
     },
     {
+      "service": "media-hub",
+      "name": "OpenVibe.MediaHub",
+      "origin": "https://openvibe.video",
+      "operations": 8,
+      "capabilities": 2
+    },
+    {
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
