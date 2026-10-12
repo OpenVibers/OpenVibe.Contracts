@@ -170,6 +170,13 @@
       "capabilities": 3
     },
     {
+      "service": "space",
+      "name": "OpenVibe.Space",
+      "origin": "https://openvibe.space",
+      "operations": 36,
+      "capabilities": 5
+    },
+    {
       "service": "tips",
       "name": "OpenVibe.Tips",
       "origin": "https://openvibe.tips",

@@ -1,0 +1,1 @@
+{ "config": { "headers": { "X-Frame-Options": "DENY" }, "redirects": [], "spa": false } }

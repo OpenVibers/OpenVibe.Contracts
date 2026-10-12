@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/space.deploy.created.v1.json",
+  "title": "SpaceDeployCreatedPayload",
+  "description": "space.deploy.created v1 (OpenVibe.Space, subject deploy dpl_…, visibility internal): an upload or a Git ingest became an immutable, content-addressed deploy in the ready state. It is not yet serving: space.deploy.activated follows when it is made active. No file contents or paths.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "site_id",
+    "site",
+    "source",
+    "file_count",
+    "total_bytes",
+    "manifest_sha256"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^sit_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$",
+      "description": "the site name (one DNS label; the site is served at <site>.openvibe.website)"
+    },
+    "source": {
+      "enum": [
+        "archive",
+        "files",
+        "preview",
+        "git"
+      ],
+      "description": "how the deploy arrived: an archive or individual files, a private preview upload, or a Git ingest (always a preview)"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "sha256 of the deploy manifest (the content address of the whole deploy)"
+    }
+  }
+}

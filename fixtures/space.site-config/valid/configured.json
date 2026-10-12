@@ -1,0 +1,1 @@
+{ "headers": { "X-Frame-Options": "DENY", "Access-Control-Allow-Origin": "*" }, "redirects": [{ "from": "/old", "to": "/new", "status": 301 }], "spa": true }

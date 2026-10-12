@@ -18,36 +18,47 @@
   "site": {
     "name": "Space",
     "icon": "space",
-    "tagline": "Code hosting and spaces",
-    "what": "OpenVibe's code hosting, and \"spaces\": apps that use your OpenVibe account and the SDK, coming next. The forum returned to OpenVibe.Community.",
+    "tagline": "Static sites, hosted by OpenVibe",
+    "what": "Static site hosting moved here from OpenVibe.Host: immutable deploys, one-step rollback, previews, Git ingest and verified custom domains, at <name>.openvibe.website. Open to OpenVibe staff until the public launch; dynamic pages and spaces come next. The forum is on OpenVibe.Community.",
     "legalProfile": "ugc",
     "position": 19,
     "tld": "space",
     "accent": "#818cf8",
-    "description": "OpenVibe.Space will host code and \"spaces\" — apps that use your OpenVibe account and the SDK — and both are still being built. Until they land it serves a home, and its former /s/* forum paths redirect permanently to openvibe.community.",
+    "description": "OpenVibe.Space hosts static sites: every deploy is immutable and content-addressed, the active one rolls back in one step, previews are private to the project, a site can deploy from a public Git repository, and custom domains are served after a TXT check. Sites get a name under openvibe.website. Hosting is open to OpenVibe staff until the public launch, which waits for abuse handling and a designated DMCA agent. Dynamic pages and spaces (apps on your OpenVibe account) are next and not built yet. The former /s/* forum paths redirect permanently to openvibe.community.",
     "pillars": [
       {
-        "title": "Code hosting",
-        "text": "The network's code, hosted here."
+        "title": "Immutable deploys",
+        "text": "Every deploy is kept, content-addressed, and the active one rolls back in one step."
       },
       {
-        "title": "Spaces",
-        "text": "Apps that use your OpenVibe account and the SDK."
+        "title": "Previews and Git",
+        "text": "Private previews for the project, and deploys from a public Git repository."
       },
       {
-        "title": "Coming next",
-        "text": "Neither is built yet; Space serves a home until they land."
+        "title": "Your own address",
+        "text": "A name under openvibe.website, or a custom domain verified by a TXT record."
       },
       {
-        "title": "One account",
-        "text": "Your OpenVibe identity, everywhere on the network."
+        "title": "Staff first",
+        "text": "Open to OpenVibe staff until abuse handling and a DMCA agent are in place."
       }
     ],
     "keywords": "openvibe space, code hosting, openvibe spaces, openvibe account, openvibe sdk",
     "launch": "Code hosting and spaces are still to be built; the forum moved back to OpenVibe.Community (2026-10-08)."
   },
-  "capabilities": [],
-  "eventsProduced": [],
+  "capabilities": [
+    "space.site.manage",
+    "space.deploy.create",
+    "space.domain.manage",
+    "space.site.config",
+    "space.resource.read"
+  ],
+  "eventsProduced": [
+    "space.deploy.created",
+    "space.deploy.activated",
+    "space.deploy.failed",
+    "space.domain.verified"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "space.*"
@@ -91,7 +102,7 @@
       "none": "no claims: one Space process runs and owns its database"
     }
   },
-  "notes": "Space is OpenVibe's code hosting, and \"spaces\" — apps that use your OpenVibe account and the SDK — come next. The forum returned to OpenVibe.Community (owner decision 2026-10-08), so Space serves a home and its former /s/* forum paths redirect permanently to openvibe.community; it keeps no forum capability, contract or event.",
+  "notes": "Space is OpenVibe's static site hosting since T20 step 2 (2026-10-12): the engine moved from OpenVibe.Host with its tables (Space migrations 0002-0005), under space.* capabilities and events. Tenant sites are served by Host header at <site>.openvibe.website and on TXT-verified custom domains; deploys are immutable and content-addressed with one-step rollback, previews, Git ingest from public repositories, per-site headers and redirects, takedowns and a resource index. SPACE_PUBLIC_HOSTING is off: only OpenVibe staff create projects, everyone else gets 403 space.not_launched. Consumes OpenVibe.Network (SSO, JWKS, client credentials) and OpenVibe.Media (objects, when the object store is media) and publishes through OpenVibe.Events (events.event.publish). The former forum paths /s/* redirect permanently to openvibe.community; the forum capabilities stay retired. The host.* hosting ids are retired once Host has dropped the engine.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4940"

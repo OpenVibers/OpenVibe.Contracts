@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/space.domain.verified.v1.json",
+  "title": "SpaceDomainVerifiedPayload",
+  "description": "space.domain.verified v1 (OpenVibe.Space, subject domain dom_…, visibility internal): a custom domain's TXT record (_openvibe-space.<hostname>) was found, and the domain now serves the site.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "site_id",
+    "site",
+    "hostname"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site_id": {
+      "type": "string",
+      "pattern": "^sit_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "site": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$",
+      "description": "the site name (one DNS label; the site is served at <site>.openvibe.website)"
+    },
+    "hostname": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 253,
+      "description": "the custom domain, a fully qualified host name in lower case"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{ "headers": { "X-Frame-Options": "SAMEORIGIN" }, "redirects": [{ "from": "/docs", "to": "/docs/" }], "spa": true }
