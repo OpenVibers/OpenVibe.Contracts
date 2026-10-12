@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/project-member-result.v1.json",
+  "title": "NetworkProjectMemberResult",
+  "description": "network.project-member-result@1: OpenVibe.Network's answer to GET /internal/projects/:project_id/members/:subject (network.project.member.read). It says whether one person belongs to a developer project, with which role, and whether the project is archived, so a receiver can check a project delegation (ADR-003 amendment 2026-10-12: the person must be an admin or owner of an unarchived project). Only members are answered; a non-member and an unknown project are both 404 project.member_not_found. It carries no other members, no apps and no secrets.",
+  "type": "object",
+  "required": [
+    "project_id",
+    "subject",
+    "role",
+    "archived"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "role": {
+      "enum": [
+        "viewer",
+        "developer",
+        "admin",
+        "owner"
+      ]
+    },
+    "archived": {
+      "type": "boolean"
+    },
+    "added_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

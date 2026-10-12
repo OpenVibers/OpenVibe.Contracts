@@ -1,6 +1,6 @@
 # ADR-003: Service/app principal authentication and capability grants
 
-**Status:** Accepted, implemented 2026-09-22. Amended 2026-09-24: delegated authorization semantics and approval UX (roadmap §28.3).
+**Status:** Accepted, implemented 2026-09-22. Amended 2026-09-24: delegated authorization semantics and approval UX (roadmap §28.3). Amended 2026-10-12: project delegation (`X-OV-Project`).
 
 ## Context and current evidence
 
@@ -104,3 +104,48 @@ Required next, owned by Network (not built yet):
   `invalid_scope`. A reused or expired code is `invalid_grant`.
 - Still to add, with items 4 to 6: the chooser lists exactly the issued capabilities, and a revoked
   authorization gets no new token.
+
+## Amendment 2026-10-12: project delegation
+
+Some work belongs to a project rather than to a person: OpenVibe.Run bills every job to a project and takes the
+project only from a token (ADR-036), so a first-party service acting for a person (`X-OV-Subject`) could not start a
+job for them. Watch's `run-job` action is the first case: a person's watch should start a Run job billed to a project
+the person runs. This amendment lets a first-party service name that project, and says how the receiver checks it.
+
+### The rule
+
+- **Who may name a project.** Only a first-party service (`svc:<id>`, `actor_type: service`) that also names the
+  person (`X-OV-Subject: usr_…`) may name a project, with `X-OV-Project: prj_…`. An app, mod or agent never may: its
+  project is its token's own `project_id`, and a request from one carrying `X-OV-Project` is refused (403
+  `project.not_delegated`). A client-credentials call with `X-OV-Project` but no `X-OV-Subject` is refused the same
+  way: a service has no project of its own to name.
+- **What the receiver checks, every time.** The receiver asks Network whether the person is a member of the project,
+  `GET /internal/projects/:project_id/members/:subject` (capability `network.project.member.read`, first-party, never
+  grantable to apps; answer `network.project-member-result@1`). The person must be an **admin or owner** (the roles
+  that may create production apps and approve grants, `docs/developer-projects.md`), and the project must not be
+  archived. Anything else is 403 `project.not_delegated`, with no detail that reveals whether the project exists. A
+  receiver may cache a yes for at most 60 seconds, so a removed member or an archived project stops new work within a
+  minute. The service checking at save time (Watch, when a watch names a project) does not replace the receiver's
+  check at use time.
+- **Intersection still holds.** The call is the person's, inside the project: the service's own grants (for example
+  `run.job.submit` for audience `openvibe.run`), the project's allowance, tier caps and quotas, and what the person may
+  do in that project all apply. Staff power is never delegated, as above.
+- **Records name all three.** The job (or other resource) belongs to the project; its requester is the person; the
+  service is recorded as `via`. Audit rows and events carry the same three.
+- **The service sees only its own.** A delegated caller reads only what it started for that person in that project.
+  Listing a project's work, or acting on someone else's, needs a token that names the project itself.
+
+### First uses
+
+- **Run** accepts a delegated `POST /api/v1/jobs` and `GET /api/v1/jobs/:id` (the job it started); list, cancel and
+  stream stay with project tokens.
+- **Watch** lets a watch name one of its owner's projects (`project_id` on `watch.watch-request@1`, checked at save
+  with the same Network read), and its `run-job` action starts the job with `X-OV-Subject` + `X-OV-Project`.
+
+### Tests
+
+- Receivers: `X-OV-Project` from an app token, or without `X-OV-Subject`, is 403 `project.not_delegated`; a viewer
+  or developer member, a non-member and an archived project are 403 `project.not_delegated`; an admin or owner
+  member is accepted and the record names project, person and `via`.
+- Network: the member read needs `network.project.member.read`; a non-member and an unknown project are both 404
+  `project.member_not_found`.

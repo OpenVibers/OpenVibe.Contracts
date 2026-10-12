@@ -1,0 +1,58 @@
+{
+  "name": "Rebuild the docs site on release",
+  "source": {
+    "kind": "event",
+    "pattern": "host.release.published",
+    "filter": null
+  },
+  "cadence": null,
+  "extraction": {
+    "kind": "json",
+    "selector": null,
+    "fields": null,
+    "value_path": "$.release",
+    "ai": null
+  },
+  "comparison": {
+    "mode": "changed",
+    "tolerance": null,
+    "percent": null
+  },
+  "condition": {
+    "op": "changed",
+    "value": null,
+    "for_sec": null
+  },
+  "action": [
+    {
+      "kind": "run-job",
+      "class": "function",
+      "artifact": {
+        "name": "docs-build",
+        "version": "1.4.0"
+      },
+      "args": {
+        "site": "docs"
+      },
+      "limits": {
+        "wall_ms": 120000,
+        "cpu_ms": 60000,
+        "mem_bytes": 268435456
+      },
+      "egress": "openvibe-only",
+      "firing_arg": "firing"
+    }
+  ],
+  "budget": {
+    "checks_per_day": 100,
+    "usd_per_month": 0,
+    "max_runtime_ms": 5000,
+    "max_bytes": 1048576
+  },
+  "retention": {
+    "observations_days": 30,
+    "keep_snapshots": false
+  },
+  "status": "active",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPS"
+}
