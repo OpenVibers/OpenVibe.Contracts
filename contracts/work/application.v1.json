@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/work/application.v1.json",
+  "title": "WorkApplication",
+  "description": "work.application@1: a person's tracked job application on OpenVibe.Work (server/applications.js toWire), as GET/POST/PATCH /api/v1/me/applications[/:id] answer it. GET of one application adds its append-only status changes as `events`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "subject_id",
+    "listing_id",
+    "title",
+    "company",
+    "url",
+    "status",
+    "notes",
+    "applied_at",
+    "next_step",
+    "next_step_at",
+    "actor_task_id",
+    "assists",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wap_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject_id": {
+      "type": "string",
+      "pattern": "^user:usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "listing_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "The Work listing it was tracked from, or null when added by hand."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2000
+    },
+    "status": {
+      "enum": [
+        "saved",
+        "applied",
+        "interviewing",
+        "offer",
+        "rejected",
+        "withdrawn"
+      ]
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 5000
+    },
+    "applied_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "next_step": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "next_step_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "actor_task_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "The latest OpenVibe.Actor task asked for this application (POST …/assist)."
+    },
+    "assists": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "from_status",
+          "to_status"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "from_status": {
+            "enum": [
+              "saved",
+              "applied",
+              "interviewing",
+              "offer",
+              "rejected",
+              "withdrawn"
+            ]
+          },
+          "to_status": {
+            "enum": [
+              "saved",
+              "applied",
+              "interviewing",
+              "offer",
+              "rejected",
+              "withdrawn"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

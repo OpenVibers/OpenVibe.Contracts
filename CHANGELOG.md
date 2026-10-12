@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.147.0 — 2026-10-12
+
+- `work.application.manage` (owner work): a person's tracked job applications on OpenVibe.Work, for apps and agents
+  (`work.application@1`, `work.application-write-request@1`, `work.application-result@1`). Asking the person's
+  OpenVibe.Actor agent about one is the person's own act and takes no capability. The work manifest lists it.
+- `food.recipes.suggest` (owner food): recipe ideas from the caller's pantry through OpenVibe.AI's
+  `food.suggest_recipes`, priced from Food's own food list (`food.recipe-suggest-request@1`,
+  `food.recipe-suggestion@1`, `food.recipe-result@1`). The food manifest lists it.
+
 ## 0.146.0 — 2026-10-12
 
 - `sources.source@1` and `sources.source-write-request@1`: an `api` endpoint may declare `where` (up to 10 path →

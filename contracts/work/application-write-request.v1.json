@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/work/application-write-request.v1.json",
+  "title": "WorkApplicationWriteRequest",
+  "description": "work.application-write-request@1: bodies of work.application.manage. POST /api/v1/me/applications takes a listing_id (title, company and URL are copied from the listing; a second POST for the same listing answers the existing application with 200) or title + company + url by hand. PATCH /api/v1/me/applications/:id takes status, notes, applied_at, next_step and next_step_at; a status change appends an event, and status applied with no applied_at stamps it now. Unknown fields are 400.",
+  "type": "object",
+  "additionalProperties": false,
+  "minProperties": 1,
+  "properties": {
+    "listing_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2000
+    },
+    "status": {
+      "enum": [
+        "saved",
+        "applied",
+        "interviewing",
+        "offer",
+        "rejected",
+        "withdrawn"
+      ]
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 5000
+    },
+    "applied_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "next_step": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "next_step_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

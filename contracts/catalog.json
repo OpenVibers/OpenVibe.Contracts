@@ -6802,6 +6802,60 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "work.application",
+      "version": "1.0.0",
+      "owner": "work",
+      "schema": "work/application.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "work.application-write-request",
+      "version": "1.0.0",
+      "owner": "work",
+      "schema": "work/application-write-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "work.application-result",
+      "version": "1.0.0",
+      "owner": "work",
+      "schema": "work/application-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.recipe-suggest-request",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/recipe-suggest-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.recipe-suggestion",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/recipe-suggestion.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "food.recipe-result",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/recipe-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

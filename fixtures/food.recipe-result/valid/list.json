@@ -1,0 +1,49 @@
+{
+  "recipes": [
+    {
+      "id": "rcp_01JQ8Z0000000000000000000C",
+      "created_at": "2026-10-12T05:25:14.000Z",
+      "ask": "something quick",
+      "people": 2,
+      "ai_run_id": "run_01JQ8Z0000000000000000000D",
+      "recipes": [
+        {
+          "title": "Egg fried rice",
+          "serves": 2,
+          "minutes": 15,
+          "ingredients": [
+            {
+              "name": "Eggs",
+              "amount": "3",
+              "from_pantry": true,
+              "citations": []
+            },
+            {
+              "name": "White rice",
+              "amount": "2 cups cooked",
+              "from_pantry": false,
+              "citations": [
+                1
+              ]
+            }
+          ],
+          "steps": [
+            "Scramble the eggs and set them aside.",
+            "Fry the rice, stir the eggs back in and serve."
+          ],
+          "notes": null,
+          "to_buy": [
+            {
+              "slug": "rice-long-grain",
+              "name": "Long Grain White Rice (2 lb)",
+              "price": 1.25
+            }
+          ],
+          "to_buy_cost": 1.25,
+          "to_buy_cost_partial": false,
+          "cost_note": "Cost is an estimate from typical prices, not a live price."
+        }
+      ]
+    }
+  ]
+}

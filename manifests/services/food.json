@@ -19,7 +19,8 @@
     "food.plan.read",
     "food.plan.write",
     "food.pantry.read",
-    "food.pantry.write"
+    "food.pantry.write",
+    "food.recipes.suggest"
   ],
   "eventsProduced": [],
   "eventsConsumed": [

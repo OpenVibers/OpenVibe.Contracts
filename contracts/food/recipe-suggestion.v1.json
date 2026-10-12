@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/food/recipe-suggestion.v1.json",
+  "title": "FoodRecipeSuggestion",
+  "description": "food.recipe-suggestion@1: one stored answer (the last 20 a person are kept). Ingredients are from the pantry or cite the food-list rows Food sent the workflow; to_buy and to_buy_cost are Food's own typical prices, never the model's. A recipe is AI-suggested and labelled so on the page.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "created_at",
+    "ask",
+    "people",
+    "ai_run_id",
+    "recipes"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^rcp_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ask": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "people": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 12
+    },
+    "ai_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recipes": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "ingredients",
+          "steps",
+          "to_buy",
+          "to_buy_cost",
+          "cost_note"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "serves": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 12
+          },
+          "minutes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 600
+          },
+          "ingredients": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 25,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "amount",
+                "from_pantry",
+                "citations"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                "amount": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80
+                },
+                "from_pantry": {
+                  "type": "boolean"
+                },
+                "citations": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "maxLength": 600
+            }
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 600
+          },
+          "to_buy": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slug",
+                "name",
+                "price"
+              ],
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "to_buy_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "to_buy_cost_partial": {
+            "type": "boolean"
+          },
+          "cost_note": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -75,8 +75,8 @@
       "service": "food",
       "name": "OpenVibe.Food",
       "origin": "https://openvibe.food",
-      "operations": 5,
-      "capabilities": 4
+      "operations": 7,
+      "capabilities": 5
     },
     {
       "service": "games",
@@ -210,6 +210,13 @@
       "origin": "https://openvibe.wiki",
       "operations": 25,
       "capabilities": 8
+    },
+    {
+      "service": "work",
+      "name": "OpenVibe.Work",
+      "origin": "https://openvibe.work",
+      "operations": 5,
+      "capabilities": 1
     }
   ]
 }

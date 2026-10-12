@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/work/application-result.v1.json",
+  "title": "WorkApplicationResult",
+  "description": "work.application-result@1: what work.application.manage answers: one application, or a page of them (GET /api/v1/me/applications, newest first, ?status= and ?cursor=; `next` is the next page's cursor or null). DELETE answers 204 with no body.",
+  "anyOf": [
+    {
+      "$ref": "application.v1.json"
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applications",
+        "next",
+        "count"
+      ],
+      "properties": {
+        "applications": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "application.v1.json"
+          }
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}
