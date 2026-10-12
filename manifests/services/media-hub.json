@@ -92,9 +92,9 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4990",
   "site": {
-    "name": "Media Hub",
+    "name": "Video",
     "icon": "media-hub",
-    "tagline": "Video, pics and downloads",
+    "tagline": "Past streams, clips and your drive",
     "what": "Your private drive with share links you control (openvibe.download), and watch pages for OpenVibe.Live's recordings and clips with AI chapters and captions (openvibe.video). Image hosting on openvibe.pics is not open.",
     "legalProfile": "hosting",
     "position": 20
