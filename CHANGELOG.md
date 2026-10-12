@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.151.0 — 2026-10-12
+
+- The media-hub site is named **Video** (tagline "Past streams, clips and your drive"): its public origin is openvibe.video,
+  which serves the network's watch pages since MediaHub#28, and the network directory showed it as "Media Hub". Its id,
+  icon and position are unchanged; openvibe.download stays in its description. No contract shape changes.
+
 ## 0.150.0 — 2026-10-12
 
 - OpenVibe.Host removed its copy of the static hosting engine (Host#84); OpenVibe.Space serves it as `space.*` (0.149.0).
