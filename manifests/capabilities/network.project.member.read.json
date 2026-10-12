@@ -1,0 +1,21 @@
+{
+  "id": "network.project.member.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read one person's membership of a developer project as a receiving service: the role and whether the project is archived. A service that accepts project delegation (ADR-003 amendment 2026-10-12: a first-party service names the person with X-OV-Subject and the project with X-OV-Project) checks here that the person is an admin or owner of an unarchived project before it does the project's work. A non-member and an unknown project answer the same 404, so membership is never a way to learn that a project exists. Never grantable to apps.",
+  "permissions": [
+    "projects:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "projects-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/projects/:project_id/members/:subject"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.project-member-result@1"
+}

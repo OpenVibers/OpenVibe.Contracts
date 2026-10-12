@@ -6,7 +6,7 @@ Platform-wide decisions from the OpenVibe development roadmap (section 10). Each
 |---|---|---|
 | [ADR-001](ADR-001-canonical-subjects.md) | Canonical subject IDs and legacy identity mapping | Accepted, implemented 2026-09-22 |
 | [ADR-002](ADR-002-contract-repository.md) | Contract repository and compatibility policy | Accepted, implemented 2026-09-22 (openvibe-contracts v0.1.0+) |
-| [ADR-003](ADR-003-service-principals.md) | Service/app principal authentication and capability grants | Accepted, implemented 2026-09-22; amended 2026-09-24 (delegated authorization and approval UX) |
+| [ADR-003](ADR-003-service-principals.md) | Service/app principal authentication and capability grants | Accepted, implemented 2026-09-22; amended 2026-09-24 (delegated authorization and approval UX), 2026-10-12 (project delegation) |
 | [ADR-004](ADR-004-durable-events.md) | Durable event store, outbox/inbox and delivery semantics | Accepted 2026-09-22; implementation in progress (OpenVibe.Events) |
 | [ADR-005](ADR-005-realtime.md) | Realtime topics, cursor/resume and whether OpenVibe.Realtime exists | Accepted 2026-09-22: realtime runs inside OpenVibe.Events; amendment 1 (2026-09-26): presence is ephemeral, in Chat's delivery plane; amendment 2 (2026-09-26): a person's topic is `network.notification.*` with subject visibility, and browsers authenticate with two-minute realtime tickets |
 | [ADR-006](ADR-006-media-objects.md) | Media object, location and namespace model | Accepted 2026-09-22; implementation in progress (OpenVibe.Media Wave 4); amended 2026-09-24 (placement classes, local provider, infrequent access deferred) |

@@ -55,6 +55,7 @@
     "network.notifications.push",
     "network.operator.alert",
     "network.project.manage",
+    "network.project.member.read",
     "network.project.read",
     "network.registry.read",
     "network.resource.read",

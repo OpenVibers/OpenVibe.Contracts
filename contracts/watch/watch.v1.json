@@ -591,14 +591,41 @@
         {
           "type": "object",
           "required": [
-            "kind",
-            "runtime",
-            "command"
+            "kind"
           ],
           "additionalProperties": false,
           "properties": {
             "kind": {
               "const": "run-job"
+            },
+            "class": {
+              "$ref": "../platform/runtime-class.v1.json"
+            },
+            "artifact": {
+              "$ref": "../run/job-create-request.v1.json#/$defs/artifact"
+            },
+            "args": {
+              "type": "object",
+              "description": "The artifact's declared input as JSON; default {}."
+            },
+            "limits": {
+              "$ref": "../run/job-create-request.v1.json#/$defs/limits"
+            },
+            "egress": {
+              "$ref": "../run/job-create-request.v1.json#/$defs/egress"
+            },
+            "ttl_ms": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 86400000
+            },
+            "firing_arg": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-z][a-z0-9_]{0,39}$",
+              "description": "The args key the firing is added under; null or absent: none."
             },
             "runtime": {
               "enum": [
@@ -618,7 +645,8 @@
               ],
               "additionalProperties": true
             }
-          }
+          },
+          "description": "Start one OpenVibe.Run job when the watch fires (run.job-create-request@1 fields). The job is billed to the watch's project_id, which the watch must name; Watch starts it as itself acting for the owner (X-OV-Subject) in that project (X-OV-Project, ADR-003 amendment 2026-10-12), so Run checks the owner is an admin or owner of the project and applies the project's tier caps. CLASS and LIMITS are required, and ARTIFACT for function and code (Watch refuses a watch without them, 422 watch.invalid). FIRING_ARG names the args key the firing (watch id, check run, value, previous value, observed_at) is added under; without it the job gets ARGS as written. The idempotency key watch.<check run>.<action index> makes a retried delivery the same job. RUNTIME, COMMAND and WORKLOAD are the field names of an earlier draft that never ran: they are not accepted (422 watch.invalid)."
         }
       ]
     },

@@ -4,6 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.153.0 — 2026-10-12
+
+- **Project delegation (ADR-003 amendment 2026-10-12).** A first-party service acting for a person (`X-OV-Subject`)
+  may name one project with `X-OV-Project: prj_…`; the receiver checks with Network that the person is an admin or
+  owner of the unarchived project (cache at most 60 s), records project, person and `via`, and shows the service only
+  what it started. Apps, mods and agents never may (403 `project.not_delegated`).
+- **`network.project.member.read`** (first-party, active): `GET /internal/projects/:project_id/members/:subject` on
+  Network answers `network.project-member-result@1` (`project_id`, `subject`, `role`, `archived`, `added_at`); a
+  non-member and an unknown project are the same 404 `project.member_not_found`. New schema with fixtures.
+- **Watch:** `watch.watch-request@1` takes `project_id` (checked at save with that read). The `run-job` action takes
+  `run.job-create-request@1` fields (`class`, `artifact`, `args`, `limits`, `egress`, `ttl_ms`) and `firing_arg`; the
+  draft's `runtime`/`command`/`workload` stay in the schema for compatibility but Watch refuses them.
+- `run.job-create-request@1`'s description states the delegated form. Additive only (compat vs 0.152.0: no breaking
+  changes).
+
 ## 0.152.0 — 2026-10-12
 
 - **`video.playlist.read` and `video.playlist.manage` are active.** openvibe.video's playlist API (MediaHub#33) takes a

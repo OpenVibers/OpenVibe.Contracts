@@ -141939,6 +141939,18 @@ export interface NetworkProjectReadResult {
   }[];
 }
 
+/** network.project-member-result@1.0.0 (owner: network) */
+/**
+ * network.project-member-result@1: OpenVibe.Network's answer to GET /internal/projects/:project_id/members/:subject (network.project.member.read). It says whether one person belongs to a developer project, with which role, and whether the project is archived, so a receiver can check a project delegation (ADR-003 amendment 2026-10-12: the person must be an admin or owner of an unarchived project). Only members are answered; a non-member and an unknown project are both 404 project.member_not_found. It carries no other members, no apps and no secrets.
+ */
+export interface NetworkProjectMemberResult {
+  project_id: string;
+  subject: string;
+  role: "viewer" | "developer" | "admin" | "owner";
+  archived: boolean;
+  added_at?: string | null;
+}
+
 /** network.project-usage-result@1.0.0 (owner: network) */
 /**
  * network.project-usage-result@1 (roadmap WS-N task 4, ADR-014): what GET /api/v1/projects/:project/usage?days=&env= on OpenVibe.Network answers a project's owner or admin (or staff): the project's usage per day, service, capability and unit, added up from the <service>.usage.recorded rollups (common.usage-recorded@1) the owning services emit after each hour closes; the project's recorded quotas with what the current window has used; and its recent failures with their codes and trace ids. Counts only, never who did what: no subject id, address, input or content.
@@ -154863,8 +154875,49 @@ export interface Watch {
           }
         | {
             kind: "run-job";
-            runtime: "function" | "code" | "browser" | "linux";
-            command: string;
+            class?: RuntimeClass;
+            /**
+             * The pre-registered artifact to run (platform.job@1 artifact).
+             */
+            artifact?: {
+              name: string;
+              /**
+               * One exact version, never a range
+               */
+              version: string;
+            };
+            /**
+             * The artifact's declared input as JSON; default {}.
+             */
+            args?: {};
+            /**
+             * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+             */
+            limits?: {
+              /**
+               * Running time from `job_started`
+               */
+              wall_ms: number;
+              /**
+               * CPU time, user plus system
+               */
+              cpu_ms: number;
+              /**
+               * Peak resident memory
+               */
+              mem_bytes: number;
+            };
+            /**
+             * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+             */
+            egress?: "none" | "public" | "openvibe-only";
+            ttl_ms?: number;
+            /**
+             * The args key the firing is added under; null or absent: none.
+             */
+            firing_arg?: string | null;
+            runtime?: "function" | "code" | "browser" | "linux";
+            command?: string;
             workload?: {
               [k: string]: unknown | undefined;
             } | null;
@@ -154906,8 +154959,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -154948,8 +155042,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -154992,8 +155127,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155034,8 +155210,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155076,8 +155293,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155120,8 +155378,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155162,8 +155461,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155204,8 +155544,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155246,8 +155627,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155290,8 +155712,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155332,8 +155795,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155374,8 +155878,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155416,8 +155961,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155458,8 +156044,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155502,8 +156129,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155544,8 +156212,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155586,8 +156295,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155628,8 +156378,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155670,8 +156461,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155712,8 +156544,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155756,8 +156629,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155798,8 +156712,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155840,8 +156795,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155882,8 +156878,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155924,8 +156961,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -155966,8 +157044,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156008,8 +157127,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156052,8 +157212,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156094,8 +157295,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156136,8 +157378,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156178,8 +157461,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156220,8 +157544,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156262,8 +157627,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156304,8 +157710,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156346,8 +157793,49 @@ export interface Watch {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156373,13 +157861,17 @@ export interface Watch {
 
 /** watch.watch-request@1.0.0 (owner: watch) */
 /**
- * watch.watch-request@1: the body of POST /api/v1/watches and PATCH /api/v1/watches/:id on OpenVibe.Watch (watch.watch.manage; the acting person). Every field is optional on a patch; a create requires source, extraction, condition and action, which the service enforces in code (422 watch.invalid).
+ * watch.watch-request@1: the body of POST /api/v1/watches and PATCH /api/v1/watches/:id on OpenVibe.Watch (watch.watch.manage; the acting person). Every field is optional on a patch, project_id included (null clears it); a create requires source, extraction, condition and action, which the service enforces in code (422 watch.invalid).
  */
 export interface WatchRequest {
   name?: string;
   labels?: {
     [k: string]: string | undefined;
   };
+  /**
+   * The project the watch's project work belongs to (its run-job actions are billed to it). The acting person must be an admin or owner of the unarchived project: Watch checks with Network when it is saved (network.project.member.read; 403 project.not_delegated otherwise) and OpenVibe.Run checks again at every job (ADR-003 amendment 2026-10-12). null clears it.
+   */
+  project_id?: string | null;
   source?:
     | {
         kind: "webhook";
@@ -156511,8 +158003,49 @@ export interface WatchRequest {
           }
         | {
             kind: "run-job";
-            runtime: "function" | "code" | "browser" | "linux";
-            command: string;
+            class?: RuntimeClass;
+            /**
+             * The pre-registered artifact to run (platform.job@1 artifact).
+             */
+            artifact?: {
+              name: string;
+              /**
+               * One exact version, never a range
+               */
+              version: string;
+            };
+            /**
+             * The artifact's declared input as JSON; default {}.
+             */
+            args?: {};
+            /**
+             * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+             */
+            limits?: {
+              /**
+               * Running time from `job_started`
+               */
+              wall_ms: number;
+              /**
+               * CPU time, user plus system
+               */
+              cpu_ms: number;
+              /**
+               * Peak resident memory
+               */
+              mem_bytes: number;
+            };
+            /**
+             * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+             */
+            egress?: "none" | "public" | "openvibe-only";
+            ttl_ms?: number;
+            /**
+             * The args key the firing is added under; null or absent: none.
+             */
+            firing_arg?: string | null;
+            runtime?: "function" | "code" | "browser" | "linux";
+            command?: string;
             workload?: {
               [k: string]: unknown | undefined;
             } | null;
@@ -156554,8 +158087,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156596,8 +158170,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156640,8 +158255,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156682,8 +158338,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156724,8 +158421,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156768,8 +158506,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156810,8 +158589,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156852,8 +158672,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156894,8 +158755,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156938,8 +158840,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -156980,8 +158923,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157022,8 +159006,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157064,8 +159089,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157106,8 +159172,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157150,8 +159257,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157192,8 +159340,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157234,8 +159423,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157276,8 +159506,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157318,8 +159589,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157360,8 +159672,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157404,8 +159757,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157446,8 +159840,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157488,8 +159923,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157530,8 +160006,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157572,8 +160089,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157614,8 +160172,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157656,8 +160255,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157700,8 +160340,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157742,8 +160423,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157784,8 +160506,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157826,8 +160589,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157868,8 +160672,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157910,8 +160755,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157952,8 +160838,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -157994,8 +160921,49 @@ export interface WatchRequest {
             }
           | {
               kind: "run-job";
-              runtime: "function" | "code" | "browser" | "linux";
-              command: string;
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
               workload?: {
                 [k: string]: unknown | undefined;
               } | null;
@@ -166916,7 +169884,7 @@ export interface BotCommandRefusedPayload {
 
 /** run.job-create-request@1.0.0 (owner: run) */
 /**
- * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.
+ * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names, or, for a first-party service acting for a person (X-OV-Subject), the project it names with X-OV-Project once Network confirms the person is an admin or owner of it (ADR-003 amendment 2026-10-12); the person is then the requester and the service is recorded as via. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.
  */
 export type RunJobCreateRequest = {
   [k: string]: unknown | undefined;
