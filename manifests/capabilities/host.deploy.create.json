@@ -2,9 +2,9 @@
   "id": "host.deploy.create",
   "version": "1.0",
   "owner": "host",
-  "status": "active",
+  "status": "retired",
   "visibility": "first-party",
-  "description": "Upload an immutable static deploy (tar/tar.gz or multipart files; validated for path traversal, links, special and hidden files, server-side code, file types and quotas; never executed), list deploys and their upload logs, activate a deploy and roll a site back to any earlier ready deploy (one atomic pointer switch). Also judged by the acting principal's project role (deployer or above); an app principal added to a project as deployer can deploy from CI. A site with a Git source also accepts a CI-built deploy at /sites/:id/source/deploys naming the ref and full commit_sha; it is always a preview and records that commit as immutable provenance.",
+  "description": "RETIRED at 0.150.0: the static hosting engine moved from OpenVibe.Host to OpenVibe.Space on 2026-10-12 (plan T20). Use space.deploy.create on OpenVibe.Space. Host answers the old routes with 410 host.moved_to_space.",
   "permissions": [
     "host:deploy"
   ],
@@ -17,15 +17,7 @@
     "host.deploy.activated",
     "host.deploy.failed"
   ],
-  "implementedBy": [
-    "GET /api/v1/sites/:id/deploys",
-    "POST /api/v1/sites/:id/deploys",
-    "POST /api/v1/sites/:id/source/deploys",
-    "GET /api/v1/deploys/:id",
-    "GET /api/v1/deploys/:id/log",
-    "POST /api/v1/deploys/:id/activate",
-    "POST /api/v1/sites/:id/rollback"
-  ],
+  "implementedBy": [],
   "inputSchema": "host.deploy-create-request@1",
   "outputSchema": "host.deploy-create-result@1"
 }

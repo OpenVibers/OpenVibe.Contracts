@@ -5468,7 +5468,7 @@
       "schema": "host/deploy-create-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.deploy-create-result",
@@ -5477,7 +5477,7 @@
       "schema": "host/deploy-create-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.deploy",
@@ -5486,7 +5486,7 @@
       "schema": "host/deploy.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.domain-manage-request",
@@ -5495,7 +5495,7 @@
       "schema": "host/domain-manage-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.domain-manage-result",
@@ -5504,7 +5504,7 @@
       "schema": "host/domain-manage-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.domain",
@@ -5513,7 +5513,7 @@
       "schema": "host/domain.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.project",
@@ -5522,7 +5522,7 @@
       "schema": "host/project.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.site-manage-request",
@@ -5531,7 +5531,7 @@
       "schema": "host/site-manage-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.site-config",
@@ -5540,7 +5540,7 @@
       "schema": "host/site-config.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.site-config-request",
@@ -5549,7 +5549,7 @@
       "schema": "host/site-config-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.site-config-result",
@@ -5558,7 +5558,7 @@
       "schema": "host/site-config-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.deploy.activated",
@@ -5567,7 +5567,7 @@
       "schema": "events/payloads/host.deploy.activated.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-004"
     },
     {
@@ -5587,7 +5587,7 @@
       "schema": "host/site-manage-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "host.catalog-manage-request",
@@ -5614,7 +5614,7 @@
       "schema": "host/site.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active"
+      "status": "retired"
     },
     {
       "id": "network.node",

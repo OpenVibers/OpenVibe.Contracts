@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.150.0 — 2026-10-12
+
+- OpenVibe.Host removed its copy of the static hosting engine (Host#84); OpenVibe.Space serves it as `space.*` (0.149.0).
+  The five engine capabilities (`host.site.manage`, `host.deploy.create`, `host.domain.manage`, `host.site.config`,
+  `host.resource.read`) are retired with no routes, and the fourteen engine schemas (project, site, deploy, domain,
+  site-config, their request/result pairs and the `host.deploy.activated` payload) are retired but stay loadable, each
+  deprecated in favour of its `space.*` twin until 1.0.0. The host manifest keeps `host.catalog.manage`,
+  `host.index_document.*` and `host.release.published`; Host answers the old routes with 410 `host.moved_to_space`.
+- OpenVibe.Video's first slice is live on openvibe.video (MediaHub#28): the product text and the media-hub manifest say what
+  it serves (watch pages for Live's recordings and clips, AI chapters and captions) and what is not built. `video.*` stays
+  planned.
+
 ## 0.149.0 — 2026-10-12
 
 - The static hosting engine moved from OpenVibe.Host to OpenVibe.Space (plan T20 step 2), so its contracts are now

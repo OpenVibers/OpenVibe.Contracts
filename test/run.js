@@ -823,19 +823,22 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
 
 // ── Release notifications (WS-P task 9, ADR-016): host.release.published, public, identifiers only ──
 // A network service's release went live (subject release, visibility public: browsers get it over
-// Events realtime). Tenant hosting's activations stay host.deploy.activated (first-party, its own shape);
-// neither payload passes for the other.
+// Events realtime). Tenant hosting's activations are space.deploy.activated since the engine moved to OpenVibe.Space
+// (0.149.0; host.deploy.activated is retired at 0.150.0): first-party, its own shape; neither payload passes for the other.
 {
     const R = (p) => contracts.validate('host.release.published@1', p).valid;
-    const D = (p) => contracts.validate('host.deploy.activated@1', p).valid;
+    const D = (p) => contracts.validate('space.deploy.activated@1', p).valid;
     const cat = (id) => contracts.catalog.find(c => c.id === id);
     ok(cat('host.release.published') && cat('host.release.published').owner === 'host' && cat('host.release.published').visibility === 'public', 'host.release.published is a public Host event');
-    ok(cat('host.deploy.activated') && cat('host.deploy.activated').visibility === 'first-party', 'host.deploy.activated stays first-party (tenant hosting)');
-    for (const id of ['host.release.published', 'host.deploy.activated']) ok(services.get('host').eventsProduced.includes(id), `the host manifest produces ${id}`);
+    ok(cat('space.deploy.activated') && cat('space.deploy.activated').visibility === 'first-party', 'space.deploy.activated is first-party (tenant hosting)');
+    ok(cat('host.deploy.activated') && cat('host.deploy.activated').status === 'retired', 'host.deploy.activated is retired (the engine moved to Space)');
+    ok(services.get('host').eventsProduced.includes('host.release.published'), 'the host manifest produces host.release.published');
+    ok(!services.get('host').eventsProduced.includes('host.deploy.activated'), 'the host manifest no longer produces host.deploy.activated');
+    ok(services.get('space').eventsProduced.includes('space.deploy.activated'), 'the space manifest produces space.deploy.activated');
     const rel = { service: 'live', release: 'd4e849f2', commit: null, origin: 'https://openvibe.live', deployed_at: '2026-09-26T08:00:05.000Z' };
-    const ten = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/host.deploy.activated/valid/tenant-site.json'), 'utf8'));
+    const ten = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/space.deploy.activated/valid/tenant-site.json'), 'utf8'));
     ok(R(rel) && D(ten) && !R(ten) && !D(rel) && !R({ ...rel, ...ten }), 'a release and a tenant activation are two contracts that never mix');
-    ok(!contracts.schema('host.deploy.activated').oneOf && !contracts.schema('host.release.published').oneOf, 'one shape each');
+    ok(!contracts.schema('space.deploy.activated').oneOf && !contracts.schema('host.release.published').oneOf, 'one shape each');
     for (const k of ['service', 'release', 'commit', 'origin', 'deployed_at']) ok(!R({ ...rel, [k]: undefined }), `a release needs ${k} (commit and origin may be null)`);
     for (const extra of [{ commits: [] }, { notes: 'x' }, { url: 'https://openvibe.live/updates' }]) ok(!R({ ...rel, ...extra }), `a release carries identifiers only (${Object.keys(extra)[0]})`);
     ok(R({ ...rel, release: 'd4e849f2a1b3c5d7e9f0a2b4c6d8e0f1a3b5c7d9' }) && !R({ ...rel, release: 'd4e84' }), 'a release is 7 to 40 hex, as registry.release-manifest@1 says');

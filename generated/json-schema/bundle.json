@@ -61896,7 +61896,7 @@
     "host.deploy-create-request": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/deploy-create-request.v1.json",
@@ -61945,7 +61945,7 @@
     "host.deploy-create-result": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/deploy-create-result.v1.json",
@@ -62121,7 +62121,7 @@
     "host.deploy": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/deploy.v1.json",
@@ -62293,7 +62293,7 @@
     "host.domain-manage-request": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/domain-manage-request.v1.json",
@@ -62323,7 +62323,7 @@
     "host.domain-manage-result": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/domain-manage-result.v1.json",
@@ -62372,7 +62372,7 @@
     "host.domain": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/domain.v1.json",
@@ -62508,7 +62508,7 @@
     "host.project": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/project.v1.json",
@@ -62672,7 +62672,7 @@
     "host.site-manage-request": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/site-manage-request.v1.json",
@@ -62828,7 +62828,7 @@
     "host.site-config": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/site-config.v1.json",
@@ -62895,7 +62895,7 @@
     "host.site-config-request": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/site-config-request.v1.json",
@@ -62946,7 +62946,7 @@
     "host.site-config-result": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/site-config-result.v1.json",
@@ -62967,7 +62967,7 @@
     "host.deploy.activated": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/host.deploy.activated.v1.json",
@@ -63107,7 +63107,7 @@
     "host.site-manage-result": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/site-manage-result.v1.json",
@@ -63705,7 +63705,7 @@
     "host.site": {
       "version": "1.0.0",
       "owner": "host",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/host/site.v1.json",
