@@ -65,19 +65,10 @@
     }
   },
   "capabilities": [
-    "host.site.manage",
-    "host.deploy.create",
-    "host.domain.manage",
-    "host.resource.read",
-    "host.site.config",
     "host.catalog.manage"
   ],
   "eventsProduced": [
-    "host.deploy.created",
-    "host.deploy.activated",
-    "host.deploy.failed",
     "host.release.published",
-    "host.domain.verified",
     "host.index_document.upserted",
     "host.index_document.deleted"
   ],
@@ -137,5 +128,5 @@
       ]
     }
   },
-  "notes": "Stage A: the ovhost operator CLI (no server). Stage B: the Host API service on port 4910 (unit openvibe-host.service, state /var/lib/openvibe-host-api): tenant projects keyed by project id (prj_, network_project_id once Network has projects, ADR-014), static sites served by Host header at <site>.openvibe.host (a registrable domain separate from every other OpenVibe domain) and on TXT-verified custom domains, immutable content-addressed deploys with rollback, quotas enforced here, upload logs. Consumes OpenVibe.Network (SSO, JWKS, client-credentials) and publishes through OpenVibe.Events (events.event.publish). The ovhost CLI publishes host.release.published (subject release, visibility public) when a network service's release goes live (ovhost deploy/rollback/announce; release notifications, WS-P task 9); host.deploy.activated is Stage B's tenant activations only. Stage C (sandboxed user code) is not started."
+  "notes": "Stage A: the ovhost operator CLI (no server). The Host service on port 4910 (unit openvibe-host.service) serves openvibe.host, hosting compared: providers, plans and promotions with dated, sourced prices from OpenVibe.Sources and staff entries (host.catalog.manage), discussion on OpenVibe.Community and its pages as OpenVibe.Search documents (host.index_document.*). The ovhost CLI publishes host.release.published. Stage B (tenant static hosting) moved to OpenVibe.Space on 2026-10-12 (plan T20): its host.* capabilities and events are retired at 0.150.0 in favour of space.*, and Host answers the old routes and tenant hosts with 410 host.moved_to_space."
 }

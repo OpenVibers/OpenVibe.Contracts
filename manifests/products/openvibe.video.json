@@ -4,24 +4,24 @@
   "name": "OpenVibe.Video",
   "icon": "fa-film",
   "accent": "#f87171",
-  "tagline": "Your videos, everywhere.",
-  "description": "OpenVibe.Video will be the home of long-form video on the OpenVibe network: watch pages, channels and playlists for uploads and past streams, a creator tool that publishes one upload to many platforms, and AI captions, highlights and editing, delivered by OpenVibe.Media.",
+  "tagline": "Watch what OpenVibe streamed.",
+  "description": "OpenVibe.Video is the watch site for the OpenVibe network: stream recordings and clips from OpenVibe.Live, each with a player, AI chapters and WebVTT captions, its clips and its OpenVibe.Community thread, and a page per channel. The files stay on OpenVibe.Media. Uploads, playlists and publishing to other platforms come later.",
   "pillars": [
     {
       "title": "Watch",
-      "text": "Channels, playlists and search for uploads and past streams."
+      "text": "Recordings and clips from OpenVibe.Live, and a page per channel."
     },
     {
-      "title": "Publish everywhere",
-      "text": "One upload, sent to the platforms you choose, tracked in one place."
-    },
-    {
-      "title": "AI tools",
-      "text": "Captions, translations, highlights and shorts from long videos."
+      "title": "Chapters and captions",
+      "text": "Chapters from the AI moments of a stream, captions from its AI transcript."
     },
     {
       "title": "From your streams",
-      "text": "Recordings from OpenVibe.Live land here, ready to share."
+      "text": "What you stream on OpenVibe.Live and make public lands here."
+    },
+    {
+      "title": "Next",
+      "text": "Uploads, playlists and publishing to other platforms are not built yet."
     }
   ],
   "keywords": "openvibe video, video hosting, youtube alternative, multi-platform upload, ai video tools",
@@ -31,14 +31,14 @@
     "noRepo": true,
     "meanwhile": [
       {
-        "label": "OpenVibe.Live",
-        "url": "https://openvibe.live",
-        "note": "Streams, recordings and clips live on OpenVibe.Live today."
-      },
-      {
         "label": "OpenRestream",
         "url": "https://openre.stream",
         "note": "Restreaming to many platforms is the sibling product."
+      },
+      {
+        "label": "OpenVibe.Live",
+        "url": "https://openvibe.live",
+        "note": "Owners manage their recordings and clips on OpenVibe.Live."
       }
     ]
   }

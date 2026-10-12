@@ -2,9 +2,9 @@
   "id": "host.resource.read",
   "version": "1.0",
   "owner": "host",
-  "status": "active",
+  "status": "retired",
   "visibility": "first-party",
-  "description": "Read OpenVibe.Host's resource index (ADR-048): GET /api/v1/resources lists the resources Host owns as a page of common.resource-summary@1 (common.resource-list-result@1), and GET /api/v1/resources/:ovrn reads one by its OVRN (common.resource-summary@1). Every authority serves these for OpenVibe.Services to fan out and merge; Host's own resources are its static sites (kind host.site, id sit_<ULID>), the immutable deploys of those sites (kind host.deploy, id dpl_<ULID>) and their default and custom domains (kind host.domain, id dom_<ULID>), each with the project_id of the Network project that owns it. Host lists no projects; only Network lists projects. Planned until Host ships the index.",
+  "description": "RETIRED at 0.150.0: the static hosting engine moved from OpenVibe.Host to OpenVibe.Space on 2026-10-12 (plan T20). Use space.resource.read on OpenVibe.Space. Host answers the old routes with 410 host.moved_to_space.",
   "permissions": [
     "resources:read"
   ],
@@ -13,10 +13,7 @@
   ],
   "quotaClass": "standard",
   "events": [],
-  "implementedBy": [
-    "GET /api/v1/resources",
-    "GET /api/v1/resources/:ovrn"
-  ],
+  "implementedBy": [],
   "inputSchema": "common.no-body@1",
   "outputSchema": "common.resource-list-result@1"
 }

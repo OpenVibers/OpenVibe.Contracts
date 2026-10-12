@@ -87,7 +87,7 @@
       "none": "no claims: one process serves the three domains"
     }
   },
-  "notes": "Port 4990, unit openvibe-media-hub.service, one process for openvibe.download, openvibe.pics and openvibe.video (plan T10 D4, by Host header). v1: openvibe.download is a private drive — account-only uploads streamed into OpenVibe.Media (app media-hub; a plain form up to 256 MB, resumable multipart beyond), private files and folders with per-person limits, share links that expire, need a signed-in downloader and may name accounts (matched by subject), reports that suspend a share for staff, and sandboxed attachment downloads. openvibe.pics and openvibe.video answer with coming pages: their uploads wait for scanning and abuse intake (the video.*/pics.*/download.* capabilities stay planned until an app may call them). Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client media-hub, JWKS, identity.subject.resolve) and OpenVibe.Media; answers account export and deletion (ADR-033).",
+  "notes": "Port 4990, unit openvibe-media-hub.service, one process for openvibe.download, openvibe.pics and openvibe.video (plan T10 D4, by Host header). v1: openvibe.download is a private drive — account-only uploads streamed into OpenVibe.Media (app media-hub; a plain form up to 256 MB, resumable multipart beyond), private files and folders with per-person limits, share links that expire, need a signed-in downloader and may name accounts (matched by subject), reports that suspend a share for staff, and sandboxed attachment downloads. openvibe.pics and openvibe.video answer with coming pages: their uploads wait for scanning and abuse intake (the video.*/pics.*/download.* capabilities stay planned until an app may call them). Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client media-hub, JWKS, identity.subject.resolve) and OpenVibe.Media; answers account export and deletion (ADR-033). Since 2026-10-12 the same process serves openvibe.video, OpenVibe.Video v1: public, read-only watch pages for OpenVibe.Live's stream recordings and clips (read from Live's public API, files on OpenVibe.Media), with WebVTT captions from the AI transcript and chapters from the AI moments. video.* stays planned until an app may call it; openvibe.pics stays parked.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4990",
@@ -95,7 +95,7 @@
     "name": "Media Hub",
     "icon": "media-hub",
     "tagline": "Video, pics and downloads",
-    "what": "The media-hub products in one service: video watch pages, chapters, captions and playlists (openvibe.video); image hosting and albums (openvibe.pics); share links, drive and backup (openvibe.download). Bytes stay in OpenVibe.Media.",
+    "what": "Your private drive with share links you control (openvibe.download), and watch pages for OpenVibe.Live's recordings and clips with AI chapters and captions (openvibe.video). Image hosting on openvibe.pics is not open.",
     "legalProfile": "hosting",
     "position": 20
   }

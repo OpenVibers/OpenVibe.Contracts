@@ -112,6 +112,104 @@
       "since": "0.113.0",
       "removeAfter": "1.0.0",
       "reason": "the developer portal (manifests, releases, trust, playgrounds) moves from OpenVibe.Codes to OpenVibe.Services (owner 2026-10-08; Codes becomes the open coding-agent harness); retired at once, kept loadable for historical events and compatibility"
+    },
+    {
+      "id": "host.deploy-create-request",
+      "replacement": "space.deploy-create-request@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.deploy-create-result",
+      "replacement": "space.deploy-create-result@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.deploy",
+      "replacement": "space.deploy@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.domain-manage-request",
+      "replacement": "space.domain-manage-request@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.domain-manage-result",
+      "replacement": "space.domain-manage-result@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.domain",
+      "replacement": "space.domain@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.project",
+      "replacement": "space.project@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.site-manage-request",
+      "replacement": "space.site-manage-request@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.site-manage-result",
+      "replacement": "space.site-manage-result@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.site",
+      "replacement": "space.site@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.site-config",
+      "replacement": "space.site-config@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.site-config-request",
+      "replacement": "space.site-config-request@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.site-config-result",
+      "replacement": "space.site-config-result@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "host.deploy.activated",
+      "replacement": "space.deploy.activated@1",
+      "since": "0.150.0",
+      "removeAfter": "1.0.0",
+      "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
     }
   ]
 }

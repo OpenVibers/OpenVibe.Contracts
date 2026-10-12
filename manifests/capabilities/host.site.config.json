@@ -2,9 +2,9 @@
   "id": "host.site.config",
   "version": "1.0",
   "owner": "host",
-  "status": "active",
+  "status": "retired",
   "visibility": "first-party",
-  "description": "Read, set and reset a Host site's serving configuration: response headers, local-only redirects and the SPA fallback (extensionless paths serve index.html). A capability holder must also hold the acting principal's project role (maintainer or owner to change, any role to read). Reserved headers (Content-Security-Policy, Strict-Transport-Security, Set-Cookie, X-Forwarded-*, caching, scope, transport and the platform's own) are refused, and a redirect target must be a local path, so a site can never become an open redirect.",
+  "description": "RETIRED at 0.150.0: the static hosting engine moved from OpenVibe.Host to OpenVibe.Space on 2026-10-12 (plan T20). Use space.site.config on OpenVibe.Space. Host answers the old routes with 410 host.moved_to_space.",
   "permissions": [
     "host:write"
   ],
@@ -13,11 +13,7 @@
   ],
   "quotaClass": "host-manage",
   "events": [],
-  "implementedBy": [
-    "GET /api/v1/sites/:id/config",
-    "PUT /api/v1/sites/:id/config",
-    "DELETE /api/v1/sites/:id/config"
-  ],
+  "implementedBy": [],
   "inputSchema": "host.site-config-request@1",
   "outputSchema": "host.site-config-result@1"
 }
