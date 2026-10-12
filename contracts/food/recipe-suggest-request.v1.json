@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/food/recipe-suggest-request.v1.json",
+  "title": "FoodRecipeSuggestRequest",
+  "description": "food.recipe-suggest-request@1: POST /api/v1/recipes/suggest. Asks OpenVibe.AI's food.suggest_recipes workflow for up to three recipes from the caller's saved pantry (an empty pantry is 422 food.pantry_empty). 10 a person a day (429 food.recipes_daily_limit); with Food's AI connection off, 503 food.ai_off.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ask": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "people": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12
+    }
+  }
+}

@@ -76499,6 +76499,508 @@
           }
         }
       }
+    },
+    "work.application": {
+      "version": "1.0.0",
+      "owner": "work",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/work/application.v1.json",
+        "title": "WorkApplication",
+        "description": "work.application@1: a person's tracked job application on OpenVibe.Work (server/applications.js toWire), as GET/POST/PATCH /api/v1/me/applications[/:id] answer it. GET of one application adds its append-only status changes as `events`.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "subject_id",
+          "listing_id",
+          "title",
+          "company",
+          "url",
+          "status",
+          "notes",
+          "applied_at",
+          "next_step",
+          "next_step_at",
+          "actor_task_id",
+          "assists",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^wap_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "subject_id": {
+            "type": "string",
+            "pattern": "^user:usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "listing_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The Work listing it was tracked from, or null when added by hand."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "company": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "status": {
+            "enum": [
+              "saved",
+              "applied",
+              "interviewing",
+              "offer",
+              "rejected",
+              "withdrawn"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "applied_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "next_step": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "next_step_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "actor_task_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The latest OpenVibe.Actor task asked for this application (POST …/assist)."
+          },
+          "assists": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "at",
+                "from_status",
+                "to_status"
+              ],
+              "properties": {
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "from_status": {
+                  "enum": [
+                    "saved",
+                    "applied",
+                    "interviewing",
+                    "offer",
+                    "rejected",
+                    "withdrawn"
+                  ]
+                },
+                "to_status": {
+                  "enum": [
+                    "saved",
+                    "applied",
+                    "interviewing",
+                    "offer",
+                    "rejected",
+                    "withdrawn"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "work.application-write-request": {
+      "version": "1.0.0",
+      "owner": "work",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/work/application-write-request.v1.json",
+        "title": "WorkApplicationWriteRequest",
+        "description": "work.application-write-request@1: bodies of work.application.manage. POST /api/v1/me/applications takes a listing_id (title, company and URL are copied from the listing; a second POST for the same listing answers the existing application with 200) or title + company + url by hand. PATCH /api/v1/me/applications/:id takes status, notes, applied_at, next_step and next_step_at; a status change appends an event, and status applied with no applied_at stamps it now. Unknown fields are 400.",
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "listing_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "company": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "status": {
+            "enum": [
+              "saved",
+              "applied",
+              "interviewing",
+              "offer",
+              "rejected",
+              "withdrawn"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "applied_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "next_step": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "next_step_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "work.application-result": {
+      "version": "1.0.0",
+      "owner": "work",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/work/application-result.v1.json",
+        "title": "WorkApplicationResult",
+        "description": "work.application-result@1: what work.application.manage answers: one application, or a page of them (GET /api/v1/me/applications, newest first, ?status= and ?cursor=; `next` is the next page's cursor or null). DELETE answers 204 with no body.",
+        "anyOf": [
+          {
+            "$ref": "application.v1.json"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "applications",
+              "next",
+              "count"
+            ],
+            "properties": {
+              "applications": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "$ref": "application.v1.json"
+                }
+              },
+              "next": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "food.recipe-suggest-request": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/recipe-suggest-request.v1.json",
+        "title": "FoodRecipeSuggestRequest",
+        "description": "food.recipe-suggest-request@1: POST /api/v1/recipes/suggest. Asks OpenVibe.AI's food.suggest_recipes workflow for up to three recipes from the caller's saved pantry (an empty pantry is 422 food.pantry_empty). 10 a person a day (429 food.recipes_daily_limit); with Food's AI connection off, 503 food.ai_off.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ask": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "people": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          }
+        }
+      }
+    },
+    "food.recipe-suggestion": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/recipe-suggestion.v1.json",
+        "title": "FoodRecipeSuggestion",
+        "description": "food.recipe-suggestion@1: one stored answer (the last 20 a person are kept). Ingredients are from the pantry or cite the food-list rows Food sent the workflow; to_buy and to_buy_cost are Food's own typical prices, never the model's. A recipe is AI-suggested and labelled so on the page.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "created_at",
+          "ask",
+          "people",
+          "ai_run_id",
+          "recipes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^rcp_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ask": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "people": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 12
+          },
+          "ai_run_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recipes": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "ingredients",
+                "steps",
+                "to_buy",
+                "to_buy_cost",
+                "cost_note"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "maxLength": 160
+                },
+                "serves": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1,
+                  "maximum": 12
+                },
+                "minutes": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1,
+                  "maximum": 600
+                },
+                "ingredients": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 25,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "name",
+                      "amount",
+                      "from_pantry",
+                      "citations"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "maxLength": 120
+                      },
+                      "amount": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 80
+                      },
+                      "from_pantry": {
+                        "type": "boolean"
+                      },
+                      "citations": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "steps": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 600
+                  }
+                },
+                "notes": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 600
+                },
+                "to_buy": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "slug",
+                      "name",
+                      "price"
+                    ],
+                    "properties": {
+                      "slug": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": [
+                          "number",
+                          "null"
+                        ],
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "to_buy_cost": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "to_buy_cost_partial": {
+                  "type": "boolean"
+                },
+                "cost_note": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "food.recipe-result": {
+      "version": "1.0.0",
+      "owner": "food",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/food/recipe-result.v1.json",
+        "title": "FoodRecipeResult",
+        "description": "food.recipe-result@1: what food.recipes.suggest answers: the new suggestion (POST /api/v1/recipes/suggest, 201) or the caller's recent ones (GET /api/v1/recipes).",
+        "anyOf": [
+          {
+            "$ref": "recipe-suggestion.v1.json"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "recipes"
+            ],
+            "properties": {
+              "recipes": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "$ref": "recipe-suggestion.v1.json"
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   }
 }

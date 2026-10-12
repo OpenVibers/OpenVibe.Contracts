@@ -1,0 +1,26 @@
+{
+  "id": "work.application.manage",
+  "version": "1.0",
+  "owner": "work",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Manage the caller's tracked job applications on OpenVibe.Work: list (GET /api/v1/me/applications), add from a listing or by hand (POST), read with its status history, edit status, notes, dates and next step (PATCH), and delete (DELETE). A person acting for themself needs no capability; an app or agent token needs this one. Asking the person's OpenVibe.Actor agent (POST …/assist) is the person's own act and takes no capability.",
+  "inputSchema": "work.application-write-request@1",
+  "outputSchema": "work.application-result@1",
+  "permissions": [
+    "work:application:manage"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/me/applications",
+    "POST /api/v1/me/applications",
+    "GET /api/v1/me/applications/:id",
+    "PATCH /api/v1/me/applications/:id",
+    "DELETE /api/v1/me/applications/:id"
+  ]
+}

@@ -171633,3 +171633,1441 @@ export interface QuestIndexDocumentDeletedPayload {
    */
   revision: number;
 }
+
+/** work.application@1.0.0 (owner: work) */
+/**
+ * work.application@1: a person's tracked job application on OpenVibe.Work (server/applications.js toWire), as GET/POST/PATCH /api/v1/me/applications[/:id] answer it. GET of one application adds its append-only status changes as `events`.
+ */
+export interface WorkApplication {
+  id: string;
+  subject_id: string;
+  /**
+   * The Work listing it was tracked from, or null when added by hand.
+   */
+  listing_id: string | null;
+  title: string;
+  company: string;
+  url: string;
+  status: "saved" | "applied" | "interviewing" | "offer" | "rejected" | "withdrawn";
+  notes: string;
+  applied_at: string | null;
+  next_step: string;
+  next_step_at: string | null;
+  /**
+   * The latest OpenVibe.Actor task asked for this application (POST …/assist).
+   */
+  actor_task_id: string | null;
+  assists: number;
+  created_at: string;
+  updated_at: string;
+  events?: {
+    at: string;
+    from_status: "saved" | "applied" | "interviewing" | "offer" | "rejected" | "withdrawn";
+    to_status: "saved" | "applied" | "interviewing" | "offer" | "rejected" | "withdrawn";
+  }[];
+}
+
+/** work.application-write-request@1.0.0 (owner: work) */
+/**
+ * work.application-write-request@1: bodies of work.application.manage. POST /api/v1/me/applications takes a listing_id (title, company and URL are copied from the listing; a second POST for the same listing answers the existing application with 200) or title + company + url by hand. PATCH /api/v1/me/applications/:id takes status, notes, applied_at, next_step and next_step_at; a status change appends an event, and status applied with no applied_at stamps it now. Unknown fields are 400.
+ */
+export interface WorkApplicationWriteRequest {
+  listing_id?: string;
+  title?: string;
+  company?: string;
+  url?: string;
+  status?: "saved" | "applied" | "interviewing" | "offer" | "rejected" | "withdrawn";
+  notes?: string;
+  applied_at?: string | null;
+  next_step?: string;
+  next_step_at?: string | null;
+}
+
+/** work.application-result@1.0.0 (owner: work) */
+/**
+ * work.application-result@1: what work.application.manage answers: one application, or a page of them (GET /api/v1/me/applications, newest first, ?status= and ?cursor=; `next` is the next page's cursor or null). DELETE answers 204 with no body.
+ */
+export type WorkApplicationResult =
+  | WorkApplication
+  | {
+      /**
+       * @maxItems 100
+       */
+      applications: WorkApplication[];
+      next: string | null;
+      count: number;
+    };
+
+/** food.recipe-suggest-request@1.0.0 (owner: food) */
+/**
+ * food.recipe-suggest-request@1: POST /api/v1/recipes/suggest. Asks OpenVibe.AI's food.suggest_recipes workflow for up to three recipes from the caller's saved pantry (an empty pantry is 422 food.pantry_empty). 10 a person a day (429 food.recipes_daily_limit); with Food's AI connection off, 503 food.ai_off.
+ */
+export interface FoodRecipeSuggestRequest {
+  ask?: string;
+  people?: number;
+}
+
+/** food.recipe-suggestion@1.0.0 (owner: food) */
+/**
+ * food.recipe-suggestion@1: one stored answer (the last 20 a person are kept). Ingredients are from the pantry or cite the food-list rows Food sent the workflow; to_buy and to_buy_cost are Food's own typical prices, never the model's. A recipe is AI-suggested and labelled so on the page.
+ */
+export interface FoodRecipeSuggestion {
+  id: string;
+  created_at: string;
+  ask: string | null;
+  people: number | null;
+  ai_run_id: string | null;
+  /**
+   * @maxItems 3
+   */
+  recipes:
+    | []
+    | [
+        {
+          title: string;
+          serves?: number | null;
+          minutes?: number | null;
+          /**
+           * @minItems 1
+           * @maxItems 25
+           */
+          ingredients: [
+            {
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            },
+            ...{
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            }[]
+          ];
+          /**
+           * @minItems 1
+           * @maxItems 20
+           */
+          steps:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ];
+          notes?: string | null;
+          to_buy: {
+            slug: string;
+            name: string;
+            price: number | null;
+          }[];
+          to_buy_cost: number;
+          to_buy_cost_partial?: boolean;
+          cost_note: string;
+        }
+      ]
+    | [
+        {
+          title: string;
+          serves?: number | null;
+          minutes?: number | null;
+          /**
+           * @minItems 1
+           * @maxItems 25
+           */
+          ingredients: [
+            {
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            },
+            ...{
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            }[]
+          ];
+          /**
+           * @minItems 1
+           * @maxItems 20
+           */
+          steps:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ];
+          notes?: string | null;
+          to_buy: {
+            slug: string;
+            name: string;
+            price: number | null;
+          }[];
+          to_buy_cost: number;
+          to_buy_cost_partial?: boolean;
+          cost_note: string;
+        },
+        {
+          title: string;
+          serves?: number | null;
+          minutes?: number | null;
+          /**
+           * @minItems 1
+           * @maxItems 25
+           */
+          ingredients: [
+            {
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            },
+            ...{
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            }[]
+          ];
+          /**
+           * @minItems 1
+           * @maxItems 20
+           */
+          steps:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ];
+          notes?: string | null;
+          to_buy: {
+            slug: string;
+            name: string;
+            price: number | null;
+          }[];
+          to_buy_cost: number;
+          to_buy_cost_partial?: boolean;
+          cost_note: string;
+        }
+      ]
+    | [
+        {
+          title: string;
+          serves?: number | null;
+          minutes?: number | null;
+          /**
+           * @minItems 1
+           * @maxItems 25
+           */
+          ingredients: [
+            {
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            },
+            ...{
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            }[]
+          ];
+          /**
+           * @minItems 1
+           * @maxItems 20
+           */
+          steps:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ];
+          notes?: string | null;
+          to_buy: {
+            slug: string;
+            name: string;
+            price: number | null;
+          }[];
+          to_buy_cost: number;
+          to_buy_cost_partial?: boolean;
+          cost_note: string;
+        },
+        {
+          title: string;
+          serves?: number | null;
+          minutes?: number | null;
+          /**
+           * @minItems 1
+           * @maxItems 25
+           */
+          ingredients: [
+            {
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            },
+            ...{
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            }[]
+          ];
+          /**
+           * @minItems 1
+           * @maxItems 20
+           */
+          steps:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ];
+          notes?: string | null;
+          to_buy: {
+            slug: string;
+            name: string;
+            price: number | null;
+          }[];
+          to_buy_cost: number;
+          to_buy_cost_partial?: boolean;
+          cost_note: string;
+        },
+        {
+          title: string;
+          serves?: number | null;
+          minutes?: number | null;
+          /**
+           * @minItems 1
+           * @maxItems 25
+           */
+          ingredients: [
+            {
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            },
+            ...{
+              name: string;
+              amount: string | null;
+              from_pantry: boolean;
+              citations: number[];
+            }[]
+          ];
+          /**
+           * @minItems 1
+           * @maxItems 20
+           */
+          steps:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ];
+          notes?: string | null;
+          to_buy: {
+            slug: string;
+            name: string;
+            price: number | null;
+          }[];
+          to_buy_cost: number;
+          to_buy_cost_partial?: boolean;
+          cost_note: string;
+        }
+      ];
+}
+
+/** food.recipe-result@1.0.0 (owner: food) */
+/**
+ * food.recipe-result@1: what food.recipes.suggest answers: the new suggestion (POST /api/v1/recipes/suggest, 201) or the caller's recent ones (GET /api/v1/recipes).
+ */
+export type FoodRecipeResult =
+  | FoodRecipeSuggestion
+  | {
+      /**
+       * @maxItems 20
+       */
+      recipes:
+        | []
+        | [FoodRecipeSuggestion]
+        | [FoodRecipeSuggestion, FoodRecipeSuggestion]
+        | [FoodRecipeSuggestion, FoodRecipeSuggestion, FoodRecipeSuggestion]
+        | [FoodRecipeSuggestion, FoodRecipeSuggestion, FoodRecipeSuggestion, FoodRecipeSuggestion]
+        | [FoodRecipeSuggestion, FoodRecipeSuggestion, FoodRecipeSuggestion, FoodRecipeSuggestion, FoodRecipeSuggestion]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ]
+        | [
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion,
+            FoodRecipeSuggestion
+          ];
+    };

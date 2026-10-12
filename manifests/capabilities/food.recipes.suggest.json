@@ -1,0 +1,23 @@
+{
+  "id": "food.recipes.suggest",
+  "version": "1.0",
+  "owner": "food",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Recipe ideas from the caller's saved pantry: POST /api/v1/recipes/suggest runs OpenVibe.AI's food.suggest_recipes workflow for the caller (up to three recipes; ingredients from the pantry or cited to Food's food list; what is still to buy priced from Food's own typical prices), 10 a person a day; GET /api/v1/recipes lists the last 20. A person acting for themself needs no capability; an app or agent token needs this one.",
+  "inputSchema": "food.recipe-suggest-request@1",
+  "outputSchema": "food.recipe-result@1",
+  "permissions": [
+    "food:recipes:suggest"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/recipes/suggest",
+    "GET /api/v1/recipes"
+  ]
+}

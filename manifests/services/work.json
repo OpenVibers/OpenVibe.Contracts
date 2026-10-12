@@ -15,7 +15,9 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "work.application.manage"
+  ],
   "eventsProduced": [
     "work.index_document.upserted",
     "work.index_document.deleted"
@@ -71,7 +73,7 @@
       "none": "no claims: one process serves the site"
     }
   },
-  "notes": "Port 4960, unit openvibe-work.service. Job listings gathered from open job-board APIs (Arbeitnow, Remotive, RemoteOK) with their provenance: a short plain-text excerpt only, the source named and the original listing linked on every list and page, never the full description. Search with remote/type/location filters, JobPosting JSON-LD, and saved searches with a count of what is new since you last looked. The ingest runs every 6 hours per source when WORK_INGEST=on, upserts by (source, source_id) and expires listings not seen for 30 days. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client work, JWKS). Owns work_listings, work_source_fetches and work_saved_searches. No capabilities yet: saved searches are a person's, listings are public.",
+  "notes": "Port 4960, unit openvibe-work.service. Job listings gathered from open job-board APIs (Arbeitnow, Remotive, RemoteOK) with their provenance: a short plain-text excerpt only, the source named and the original listing linked on every list and page, never the full description. Search with remote/type/location filters, JobPosting JSON-LD, and saved searches with a count of what is new since you last looked. The ingest runs every 6 hours per source when WORK_INGEST=on, upserts by (source, source_id) and expires listings not seen for 30 days. Consumes OpenVibe.Network (SSO with PKCE S256 as OAuth client work, JWKS). Owns work_listings, work_source_fetches, work_saved_searches, work_applications and work_application_events. The agent pillar: a person tracks applications (status, notes, next steps, history; work.application.manage for apps and agents) and can ask their OpenVibe.Actor agent to help prepare one (actor.task.create with X-OV-Subject, idempotency key per assist, 10 a day).",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4960",
