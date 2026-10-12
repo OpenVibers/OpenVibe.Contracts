@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.146.0 — 2026-10-12
+
+- `sources.source@1` and `sources.source-write-request@1`: an `api` endpoint may declare `where` (up to 10 path →
+  value conditions, a value or a list of values; records that fail are left out before `max_items` counts). Paths may
+  read the response from its root (`$root.<path>`, with a `{$key}` segment for the record's map key) and step into an
+  object's single child (`*`), matching OpenVibe.Sources' adapter (Sources#39). This lets one AWS price list file give
+  each instance bundle its own price.
+
 ## 0.145.0 — 2026-10-11
 
 - `host.index_document.upserted` and `host.index_document.deleted` (owner host, active): the hosting catalog's plan and
