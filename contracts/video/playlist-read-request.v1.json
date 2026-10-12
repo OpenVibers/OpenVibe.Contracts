@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/video/playlist-read-request.v1.json",
+  "title": "VideoPlaylistReadRequest",
+  "description": "video.playlist-read-request@1: video.playlist.read takes no body. GET /api/v1/video/playlists (the caller's own), GET /api/v1/video/playlists/:id (the owner sees a private one; anyone a public or unlisted one; otherwise 404 playlist.not_found, never 403) and the open GET /api/v1/video/users/:username/playlists, whose query is { limit?, cursor? } (limit 1-50, default 20; cursor is the previous page's next_cursor; 404 user.not_found).",
+  "type": "object",
+  "properties": {
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50
+    },
+    "cursor": {
+      "type": "string",
+      "maxLength": 400
+    }
+  }
+}

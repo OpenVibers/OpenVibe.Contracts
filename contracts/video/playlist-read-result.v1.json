@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/video/playlist-read-result.v1.json",
+  "title": "VideoPlaylistReadResult",
+  "description": "video.playlist-read-result@1: a list ({ playlists, next_cursor? }) or one playlist with its ordered items ({ playlist, items }).",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "playlists"
+      ],
+      "properties": {
+        "playlists": {
+          "type": "array",
+          "items": {
+            "$ref": "playlist.v1.json"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "playlist",
+        "items"
+      ],
+      "properties": {
+        "playlist": {
+          "$ref": "playlist.v1.json"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "id",
+              "position",
+              "added_at"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "vod",
+                  "clip"
+                ],
+                "description": "An OpenVibe.Live recording (vod) or clip."
+              },
+              "id": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The item's OpenVibe.Live id."
+              },
+              "position": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "added_at": {
+                "type": "string",
+                "description": "ISO 8601 time."
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -173584,3 +173584,140 @@ export interface SpaceDomainVerifiedPayload {
    */
   hostname: string;
 }
+
+/** video.playlist@1.0.0 (owner: media-hub) */
+/**
+ * video.playlist@1: one playlist on openvibe.video as the API returns it. `owner` is present on reads of one playlist: a person (kind user, with their username when known) or an app, agent or service (never named).
+ */
+export interface VideoPlaylist {
+  /**
+   * A playlist id (vpl_ + ULID).
+   */
+  id: string;
+  title: string;
+  description: string;
+  visibility: "public" | "unlisted" | "private";
+  item_count: number;
+  /**
+   * ISO 8601 time.
+   */
+  created_at: string;
+  /**
+   * ISO 8601 time.
+   */
+  updated_at: string;
+  owner?: {
+    kind: "user" | "app" | "agent" | "service";
+    username?: string | null;
+  };
+}
+
+/** video.playlist-read-request@1.0.0 (owner: media-hub) */
+/**
+ * video.playlist-read-request@1: video.playlist.read takes no body. GET /api/v1/video/playlists (the caller's own), GET /api/v1/video/playlists/:id (the owner sees a private one; anyone a public or unlisted one; otherwise 404 playlist.not_found, never 403) and the open GET /api/v1/video/users/:username/playlists, whose query is { limit?, cursor? } (limit 1-50, default 20; cursor is the previous page's next_cursor; 404 user.not_found).
+ */
+export interface VideoPlaylistReadRequest {
+  limit?: number;
+  cursor?: string;
+}
+
+/** video.playlist-read-result@1.0.0 (owner: media-hub) */
+/**
+ * video.playlist-read-result@1: a list ({ playlists, next_cursor? }) or one playlist with its ordered items ({ playlist, items }).
+ */
+export type VideoPlaylistReadResult =
+  | {
+      playlists: VideoPlaylist[];
+      next_cursor?: string | null;
+    }
+  | {
+      playlist: VideoPlaylist;
+      items: {
+        /**
+         * An OpenVibe.Live recording (vod) or clip.
+         */
+        kind: "vod" | "clip";
+        /**
+         * The item's OpenVibe.Live id.
+         */
+        id: number;
+        position: number;
+        /**
+         * ISO 8601 time.
+         */
+        added_at: string;
+      }[];
+    };
+
+/** video.playlist-manage-request@1.0.0 (owner: media-hub) */
+/**
+ * video.playlist-manage-request@1: bodies of video.playlist.manage on openvibe.video. POST /api/v1/video/playlists { title, description?, visibility? } creates one (default private; 422 playlist.invalid_title over 120 characters, playlist.invalid_description over 2,000, playlist.invalid_visibility, playlist.limit at 100 per owner). PATCH /api/v1/video/playlists/:id { title?, description?, visibility? }. POST /api/v1/video/playlists/:id/items { kind, id } adds one (409 playlist.item_duplicate; 422 playlist.invalid_kind, playlist.invalid_item, playlist.items_limit at 500). PATCH /api/v1/video/playlists/:id/items { items: [{ kind, id }, ...] } reorders: the full list, each item once (422 playlist.invalid_items). DELETE /api/v1/video/playlists/:id and /items/:kind/:itemId take no body. Another owner's playlist answers 404 playlist.not_found.
+ */
+export type VideoPlaylistManageRequest =
+  | {
+      title?: string;
+      description?: string;
+      visibility?: "public" | "unlisted" | "private";
+    }
+  | {
+      /**
+       * An OpenVibe.Live recording (vod) or clip.
+       */
+      kind: "vod" | "clip";
+      id: number | string;
+    }
+  | {
+      /**
+       * @maxItems 500
+       */
+      items: {
+        /**
+         * An OpenVibe.Live recording (vod) or clip.
+         */
+        kind: "vod" | "clip";
+        id: number | string;
+      }[];
+    };
+
+/** video.playlist-manage-result@1.0.0 (owner: media-hub) */
+/**
+ * video.playlist-manage-result@1: { playlist } after a create (201, Location) or an edit, { item } after an add (201), { items } after a reorder; a delete answers 204 with no body.
+ */
+export type VideoPlaylistManageResult =
+  | {
+      playlist: VideoPlaylist;
+    }
+  | {
+      item: {
+        /**
+         * An OpenVibe.Live recording (vod) or clip.
+         */
+        kind: "vod" | "clip";
+        /**
+         * The item's OpenVibe.Live id.
+         */
+        id: number;
+        position: number;
+        /**
+         * ISO 8601 time.
+         */
+        added_at: string;
+      };
+    }
+  | {
+      items: {
+        /**
+         * An OpenVibe.Live recording (vod) or clip.
+         */
+        kind: "vod" | "clip";
+        /**
+         * The item's OpenVibe.Live id.
+         */
+        id: number;
+        position: number;
+        /**
+         * ISO 8601 time.
+         */
+        added_at: string;
+      }[];
+    };

@@ -1,0 +1,29 @@
+{
+  "playlist": {
+    "id": "vpl_01K7A1B2C3D4E5F6G7H8J9K0MN",
+    "title": "Best of the week",
+    "description": "",
+    "visibility": "public",
+    "item_count": 2,
+    "created_at": "2026-10-12T19:00:00.000Z",
+    "updated_at": "2026-10-12T19:05:00.000Z",
+    "owner": {
+      "kind": "user",
+      "username": "kim"
+    }
+  },
+  "items": [
+    {
+      "kind": "vod",
+      "id": 5717,
+      "position": 0,
+      "added_at": "2026-10-12T19:01:00.000Z"
+    },
+    {
+      "kind": "clip",
+      "id": 441,
+      "position": 1,
+      "added_at": "2026-10-12T19:01:00.000Z"
+    }
+  ]
+}

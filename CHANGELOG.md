@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.152.0 — 2026-10-12
+
+- **`video.playlist.read` and `video.playlist.manage` are active.** openvibe.video's playlist API (MediaHub#33) takes a
+  person's Network token, an app/agent/service token with one of these, or no token for a public or unlisted playlist
+  by id and a person's public list (`GET /api/v1/video/users/:username/playlists`). An app owns playlists under its own
+  requester and project and never touches a person's.
+- New schemas (owner media-hub): `video.playlist@1`, `video.playlist-read-request@1`, `video.playlist-read-result@1`,
+  `video.playlist-manage-request@1` and `video.playlist-manage-result@1`, with fixtures; the two capabilities name them.
+  Additive only (compat vs 0.151.0: no breaking changes).
+
 ## 0.151.0 — 2026-10-12
 
 - The media-hub site is named **Video** (tagline "Past streams, clips and your drive"): its public origin is openvibe.video,
