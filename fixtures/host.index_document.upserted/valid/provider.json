@@ -1,0 +1,24 @@
+{
+  "owner": "host",
+  "type": "provider",
+  "id": "hpv_01M4PJ8C3ZZD1MMR8TH818KXYV",
+  "revision": 1,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.host/catalog/providers/linode",
+  "title": "Linode hosting plans and prices",
+  "summary": "45 plans from $5.00 a month",
+  "body": "Linode\n45 plans from $5.00 a month",
+  "facets": {
+    "provider": "linode"
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-11T23:00:00.000Z",
+  "updated_at": "2026-10-11T23:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

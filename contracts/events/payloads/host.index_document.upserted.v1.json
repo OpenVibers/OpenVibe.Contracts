@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/host.index_document.upserted.v1.json",
+  "title": "HostIndexDocumentUpsertedPayload",
+  "description": "host.index_document.upserted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a hosting catalog page: a plan (/catalog/plans/<id>: provider, plan name, vCPU, RAM, disk, transfer, monthly price and currency, the day the price was checked) or a provider (/catalog/providers/<slug>: its name, description and plan count). A plan from OpenVibe.Sources names its source as provenance (authorship imported); a staff entry names its source URL. A hidden or gone entry becomes a tombstone. The sequencer gives an unchanged document its old revision and nothing is sent. Facets: provider, kind, currency. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "host"
+        },
+        "type": {
+          "enum": [
+            "plan",
+            "provider"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^(hpl|hpv)_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

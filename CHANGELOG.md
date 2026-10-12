@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.145.0 — 2026-10-11
+
+- `host.index_document.upserted` and `host.index_document.deleted` (owner host, active): the hosting catalog's plan and
+  provider pages in OpenVibe.Search (types `plan`, `provider`; facets provider, kind, currency), sent through
+  openvibe-publishing/search-feed. The host manifest produces them.
+
 ## 0.144.0 — 2026-10-11
 
 - `sources.source@1` and `sources.source-write-request@1`: an `api` endpoint may declare `items_shape` (`array`, the

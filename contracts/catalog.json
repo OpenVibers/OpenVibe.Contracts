@@ -6714,6 +6714,24 @@
       "status": "active"
     },
     {
+      "id": "host.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "events/payloads/host.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "host.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "host",
+      "schema": "events/payloads/host.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "rent.index_document.upserted",
       "version": "1.0.0",
       "owner": "rent",

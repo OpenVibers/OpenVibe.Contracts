@@ -64834,6 +64834,30 @@ export interface WorkIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** host.index_document.upserted@1.0.0 (owner: host) */
+/**
+ * host.index_document.upserted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a hosting catalog page: a plan (/catalog/plans/<id>: provider, plan name, vCPU, RAM, disk, transfer, monthly price and currency, the day the price was checked) or a provider (/catalog/providers/<slug>: its name, description and plan count). A plan from OpenVibe.Sources names its source as provenance (authorship imported); a staff entry names its source URL. A hidden or gone entry becomes a tombstone. The sequencer gives an unchanged document its old revision and nothing is sent. Facets: provider, kind, currency. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.
+ */
+export type HostIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "host";
+  type: "plan" | "provider";
+  id?: string;
+  deleted: false;
+};
+
+/** host.index_document.deleted@1.0.0 (owner: host) */
+/**
+ * host.index_document.deleted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a hosting catalog page (a plan or a provider) that is hidden, gone or deleted. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.
+ */
+export interface HostIndexDocumentDeletedPayload {
+  type: "plan" | "provider";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
 /** rent.index_document.upserted@1.0.0 (owner: rent) */
 /**
  * rent.index_document.upserted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a rental listing page (type listing, /listings/<id>): title, description, price and period, city, region, country and neighbourhood (never a street address or the contact link). Sent in the transaction that created, edited, renewed, hid or removed the listing, and by the sweep (server/search-index.js); a listing that is hidden, removed or past its expiry becomes a tombstone. The sequencer (rent_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, country, city, currency, period, bedrooms. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision: <document revision> }, visibility internal, actor service:rent.
