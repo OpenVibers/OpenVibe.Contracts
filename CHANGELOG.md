@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.154.0 — 2026-10-13
+
+- **Contracts 0.154.0: `services.resource.control` capability (ADR-048 control operations)** (first-party, active):
+  `POST /api/v1/resources/control` on Services takes `common.resource-control-request@1` and answers
+  `common.resource-control-result@1`. Services forwards the operation to the authority that owns the OVRN through
+  `openvibe-sdk/resources`, is idempotent on `idempotency_key`, answers `unsupported` for an authority with no control
+  endpoint, and refuses a sensitive action with `confirmation_required` until its owner confirms (WS-Z2). Permission
+  `resources:control`; listed in Services' manifest capabilities. Additive only.
+
 ## 0.153.0 — 2026-10-12
 
 - **Project delegation (ADR-003 amendment 2026-10-12).** A first-party service acting for a person (`X-OV-Subject`)

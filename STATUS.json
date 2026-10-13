@@ -13,7 +13,7 @@
   "features": [
     "589 JSON Schemas with valid and invalid fixtures",
     "31 service manifests with lifecycle declarations",
-    "205 capability manifests and the staff capability map",
+    "206 capability manifests and the staff capability map",
     "13 user-module namespace manifests",
     "validate, ids, http (problem+json, trace and idempotency middleware), capabilities.check and serviceAuth",
     "openvibe-contracts-check for service CI",
@@ -26,6 +26,7 @@
     "platform.task@1 (planned, owner network) and ADR-044: one task at OpenVibe.Actor's router with a mode, a per-task and per-day budget, result, cost and explanation, SSE progress, cancel and webhooks",
     "watch.watch@1 and the other Watch contracts (plan T18, planned), three watch events, four capabilities and the placeholder service manifest: user-defined persistent observations over pages, feeds, APIs, events and devices",
     "chat.site-daily-result@1, chat.first-chat-result@1 and chat.sound-result@1: Chat's three new internal reads (kind site-daily for Live's home series, the welcome check, and the sound a !command plays), with chat.stats-request@1 now accepting kind site-daily and the two route lists extended",
+    "services.resource.control (active, ADR-048): control operations routed through the owning authority via openvibe-sdk/resources, idempotent on idempotency_key, with WS-Z2 confirmations for sensitive actions",
     "network.resource.read (active, ADR-048): OpenVibe.Network's resource index, GET /api/v1/resources (common.resource-list-result@1) and GET /api/v1/resources/:ovrn (common.resource-summary@1)",
     "OpenVibe.Bot is a site (navigation and the network home list it); bot.robot-profile's mapping.driver gains relay (plan T15 R9)",
     "resource-index capabilities for media, events, host and codes are active (plan T13 step 8) and Host is live; Run and Services register, with partial resource pages, Bot button/point commands and ai.app.run",

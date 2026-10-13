@@ -18,7 +18,8 @@
   "capabilities": [
     "services.resource.read",
     "services.release.read",
-    "services.release.manage"
+    "services.release.manage",
+    "services.resource.control"
   ],
   "eventsProduced": [
     "services.app.published",
