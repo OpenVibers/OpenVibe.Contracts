@@ -1,0 +1,21 @@
+{
+  "id": "services.resource.control",
+  "version": "1.0",
+  "owner": "services",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Services routes one control operation (create, update, delete, start, stop, resize, rotate, pair, grant, revoke and the like) to the authority that owns the resource, named by its OVRN, through openvibe-sdk/resources (ADR-048). Services never writes another service's database. It is idempotent on idempotency_key, answers common.resource-control-result@1 (an authority that exposes no control endpoint answers unsupported), and refuses a sensitive action with confirmation_required until its owner approves it through Network's confirmations (roadmap WS-Z2). Readable and callable by a first-party service token holding the capability, or by a person's user token scoped to one project they own or administer.",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}

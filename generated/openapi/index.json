@@ -166,8 +166,8 @@
       "service": "services",
       "name": "OpenVibe.Services",
       "origin": "https://openvibe.services",
-      "operations": 9,
-      "capabilities": 3
+      "operations": 10,
+      "capabilities": 4
     },
     {
       "service": "sources",
