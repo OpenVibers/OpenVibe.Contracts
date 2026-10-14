@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.163.0 — 2026-10-14
+
+- **`sources.source@1`: `extract` on an rss/atom endpoint** (plan T9, Sources#45). It reads the facts an item states in
+  its own title or summary by the source's patterns: `kind`, `require`, and `fields` (`from` title|summary, `pattern`
+  with one group, `as: date`). An item that yields every required field is stored as that kind with those fields.
+  The first user is `dealnews-coupon-codes`: the coupon code, the shop and the stated end date of DealNews deals,
+  read by OpenVibe.Coupons.
+- Additive. Fixtures: valid `rss-extract`; invalid `extract-from-body`, `extract-no-require`.
+
 ## 0.162.0 — 2026-10-14
 
 - **`codes.task.start`, `codes.task.read`, `codes.task.cancel`** (plan T16/T17): a first-party service starts a coding
