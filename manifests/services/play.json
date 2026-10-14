@@ -82,7 +82,7 @@
   "internalOrigin": "http://127.0.0.1:5040",
   "site": {
     "name": "Play",
-    "icon": "games",
+    "icon": "play",
     "tagline": "Achievements and leaderboards for every OpenVibe game.",
     "what": "See this week's leaders and the all-time boards of every OpenVibe game, and every achievement you have unlocked with your account.",
     "legalProfile": "ugc",
