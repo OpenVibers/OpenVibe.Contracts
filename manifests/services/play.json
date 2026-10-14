@@ -23,7 +23,8 @@
   "eventsProduced": [],
   "eventsConsumed": [
     "network.account.export_requested",
-    "network.account.deleted"
+    "network.account.deleted",
+    "network.subject.merged"
   ],
   "namespacesOwned": [
     "play.*"

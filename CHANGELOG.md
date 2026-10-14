@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.172.2 — 2026-10-14
+
+- **Who consumes `network.subject.merged`, written down.** Live, Chat, Community, Media and Games have folded merged
+  accounts since ADR-029 (2026-09-27) and Play since 0.2.0, but none of their manifests listed the topic in
+  `eventsConsumed`; all six do now. No change in behaviour.
+
 ## 0.172.1 — 2026-10-14
 
 - **Play's site has its own icon.** `play`'s site block named the `games` icon, and the Network frame keys a site's
