@@ -1,0 +1,21 @@
+{
+  "id": "play.player.read",
+  "version": "1.0",
+  "owner": "play",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read one player's unlocked achievements in a title the caller manages (GET /api/v1/titles/:title/players/:player/achievements): how a game shows a guest or a person what they have. The boards and titles themselves are public reads that need no capability.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "play.player-achievements@1",
+  "permissions": [
+    "play:player:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/titles/:title/players/:player/achievements"
+  ]
+}

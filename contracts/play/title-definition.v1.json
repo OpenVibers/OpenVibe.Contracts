@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/play/title-definition.v1.json",
+  "title": "PlayTitleDefinition",
+  "description": "A title as its own principal registers it (play.title.manage, PUT /api/v1/titles/:title). Achievements and boards are listed in display order; one left out is retired, never deleted. A board's kind never changes.",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https://",
+      "maxLength": 300,
+      "description": "where the game is played"
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "achievements": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "hidden": {
+            "type": "boolean",
+            "description": "a secret achievement: its name and text show only to whoever unlocked it"
+          }
+        }
+      }
+    },
+    "boards": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "enum": [
+              "best",
+              "sum"
+            ],
+            "description": "best: each player's best score; sum: the total of their scores"
+          }
+        }
+      }
+    }
+  }
+}

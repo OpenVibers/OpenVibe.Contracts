@@ -1,0 +1,10 @@
+{
+  "name": "X",
+  "boards": [
+    {
+      "id": "best",
+      "name": "Best",
+      "kind": "median"
+    }
+  ]
+}

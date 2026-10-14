@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/play/result-request.v1.json",
+  "title": "PlayResultRequest",
+  "description": "What a title's principal posts about its players (play.result.write): a round's scores to a board (POST …/scores; idempotent by ref), achievements a player unlocked (POST …/unlocks), or the person a guest became (POST …/players/:guest/adopt).",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "board",
+        "ref",
+        "entries"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "board": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "the round or run; a repeat changes nothing"
+        },
+        "at": {
+          "type": "integer",
+          "minimum": 1577836800000,
+          "description": "epoch milliseconds, never in the future (an import of past results); default now"
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "required": [
+              "player",
+              "name",
+              "score"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "player": {
+                "type": "string",
+                "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|guest:[A-Za-z0-9_-]{8,128})$",
+                "description": "a person (usr_) or a guest the title names (guest:<opaque>)"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "score": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "player",
+        "achievements"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "player": {
+          "type": "string",
+          "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|guest:[A-Za-z0-9_-]{8,128})$",
+          "description": "a person (usr_) or a guest the title names (guest:<opaque>)"
+        },
+        "achievements": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          }
+        },
+        "at": {
+          "type": "integer",
+          "minimum": 1577836800000,
+          "description": "epoch milliseconds, never in the future (an import of past results); default now"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "person"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "person": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      }
+    }
+  ]
+}

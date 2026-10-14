@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/play/player-achievements.v1.json",
+  "title": "PlayPlayerAchievements",
+  "description": "One player's unlocked achievements in a title the caller manages (play.player.read), newest first.",
+  "type": "object",
+  "required": [
+    "title",
+    "player",
+    "achievements"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,39}$"
+    },
+    "player": {
+      "type": "string",
+      "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|guest:[A-Za-z0-9_-]{8,128})$",
+      "description": "a person (usr_) or a guest the title names (guest:<opaque>)"
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "unlocked_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "unlocked_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "board": "best",
+  "ref": "round-1",
+  "entries": [
+    {
+      "player": "usr_01JABCDEFGHJKMNPQRSTVWXYZ0",
+      "name": "Ada",
+      "score": 450
+    },
+    {
+      "player": "guest:a1b2c3d4e5f6",
+      "name": "Guest 7",
+      "score": 300
+    }
+  ]
+}

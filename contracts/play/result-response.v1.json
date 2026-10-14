@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/play/result-response.v1.json",
+  "title": "PlayResultResponse",
+  "description": "The answer to a result post: scores recorded and repeated, the achievements that were new, or the unlocks and scores a guest's adoption moved.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "recorded",
+        "repeated"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "recorded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repeated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "unlocked"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "unlocked": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "unlocks",
+        "scores"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "unlocks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scores": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}

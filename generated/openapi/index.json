@@ -149,6 +149,13 @@
       "capabilities": 8
     },
     {
+      "service": "play",
+      "name": "OpenVibe.Play",
+      "origin": "https://play.openvibe.network",
+      "operations": 5,
+      "capabilities": 3
+    },
+    {
       "service": "reviews",
       "name": "OpenVibe.Reviews",
       "origin": "https://openvibe.reviews",

@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.172.0 — 2026-10-14
+
+- **`play`, a new service** (OpenVibe.Games ADR-0007 decision 10): OpenVibe.Play at play.openvibe.network (port 5040),
+  the platform's game services. A title is registered by its own principal, which alone writes to it; it holds
+  achievements and leaderboards (best or sum, this week and all time), idempotent score and unlock posts, and guest
+  adoption. Boards and titles are public reads. People's rows are in the account export and erasure (consumes
+  `network.account.export_requested` and `network.account.deleted`). Site block: Play, position 35 (the games icon).
+- Capabilities (active, public): **`play.title.manage`**, **`play.result.write`**, **`play.player.read`**.
+- Additive.
+
 ## 0.171.0 — 2026-10-14
 
 - **`input`, a computer kind** (plan T14/T17, "keyboard and mouse input"): `bot.command@1` takes

@@ -183915,3 +183915,160 @@ export interface CodesTask {
     error?: string;
   };
 }
+
+/** play.title-definition@1.0.0 (owner: play) */
+/**
+ * A title as its own principal registers it (play.title.manage, PUT /api/v1/titles/:title). Achievements and boards are listed in display order; one left out is retired, never deleted. A board's kind never changes.
+ */
+export interface PlayTitleDefinition {
+  name: string;
+  /**
+   * where the game is played
+   */
+  url?: string | null;
+  summary?: string;
+  /**
+   * @maxItems 200
+   */
+  achievements?: {
+    id: string;
+    name: string;
+    description?: string;
+    /**
+     * a secret achievement: its name and text show only to whoever unlocked it
+     */
+    hidden?: boolean;
+  }[];
+  /**
+   * @maxItems 200
+   */
+  boards?: {
+    id: string;
+    name: string;
+    /**
+     * best: each player's best score; sum: the total of their scores
+     */
+    kind: "best" | "sum";
+  }[];
+}
+
+/** play.title-result@1.0.0 (owner: play) */
+/**
+ * The answer to registering or updating a title: the title as anyone reads it, and whether this call created it (201) or updated it (200).
+ */
+export interface PlayTitleResult {
+  title: {
+    id: string;
+    name: string;
+    url?: string | null;
+    summary?: string;
+    players?: number;
+    achievements: {
+      id: string;
+      name: string;
+      description?: string;
+      hidden?: boolean;
+      unlocked_by?: number;
+    }[];
+    boards: {
+      id: string;
+      name: string;
+      kind: "best" | "sum";
+    }[];
+    created_at?: string;
+    updated_at?: string;
+  };
+  created: boolean;
+}
+
+/** play.result-request@1.0.0 (owner: play) */
+/**
+ * What a title's principal posts about its players (play.result.write): a round's scores to a board (POST …/scores; idempotent by ref), achievements a player unlocked (POST …/unlocks), or the person a guest became (POST …/players/:guest/adopt).
+ */
+export type PlayResultRequest =
+  | {
+      board: string;
+      /**
+       * the round or run; a repeat changes nothing
+       */
+      ref: string;
+      /**
+       * epoch milliseconds, never in the future (an import of past results); default now
+       */
+      at?: number;
+      /**
+       * @minItems 1
+       * @maxItems 100
+       */
+      entries: [
+        {
+          /**
+           * a person (usr_) or a guest the title names (guest:<opaque>)
+           */
+          player: string;
+          name: string;
+          score: number;
+        },
+        ...{
+          /**
+           * a person (usr_) or a guest the title names (guest:<opaque>)
+           */
+          player: string;
+          name: string;
+          score: number;
+        }[]
+      ];
+    }
+  | {
+      /**
+       * a person (usr_) or a guest the title names (guest:<opaque>)
+       */
+      player: string;
+      /**
+       * @minItems 1
+       * @maxItems 200
+       */
+      achievements: [string, ...string[]];
+      /**
+       * epoch milliseconds, never in the future (an import of past results); default now
+       */
+      at?: number;
+    }
+  | {
+      person: string;
+    };
+
+/** play.result-response@1.0.0 (owner: play) */
+/**
+ * The answer to a result post: scores recorded and repeated, the achievements that were new, or the unlocks and scores a guest's adoption moved.
+ */
+export type PlayResultResponse =
+  | {
+      recorded: number;
+      repeated: number;
+    }
+  | {
+      unlocked: string[];
+    }
+  | {
+      unlocks: number;
+      scores: number;
+    };
+
+/** play.player-achievements@1.0.0 (owner: play) */
+/**
+ * One player's unlocked achievements in a title the caller manages (play.player.read), newest first.
+ */
+export interface PlayPlayerAchievements {
+  title: string;
+  /**
+   * a person (usr_) or a guest the title names (guest:<opaque>)
+   */
+  player: string;
+  achievements: {
+    id: string;
+    name: string;
+    description?: string;
+    unlocked_at: string;
+  }[];
+}

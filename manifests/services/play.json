@@ -1,0 +1,91 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.122.0 <1.0.0"
+  },
+  "id": "play",
+  "name": "OpenVibe.Play",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Play",
+  "domains": [
+    "play.openvibe.network"
+  ],
+  "publicOrigin": "https://play.openvibe.network",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [
+    "play.title.manage",
+    "play.result.write",
+    "play.player.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "play.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; the database is what ready checks"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "Events subscription retries stopped",
+        "Network key refresher stopped",
+        "store closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are cookies verified against Network's keys, fetched again at boot"
+        },
+        {
+          "kind": "state",
+          "what": "every title, unlock and score is a committed row; posts are idempotent, so a game retries after a restart without counting twice"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop (at least once; account_data_events applies each once)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Play's own tables"
+      }
+    },
+    "contracts": {
+      "range": ">=0.122.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5040, unit openvibe-play.service, play.openvibe.network (the openvibe.network wildcard certificate). The platform's game services (OpenVibe.Games ADR-0007 decision 10): titles registered by their own principal, achievements and leaderboards (best or sum, this week and all time), idempotent score and unlock posts, guest adoption, in its own PostgreSQL database (ov_play). OpenVibe.Games is its first title owner (Scraplandia, Salvage Rush). People's rows are in the account export and erased with the account (ADR-033).",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5040",
+  "site": {
+    "name": "Play",
+    "icon": "games",
+    "tagline": "Achievements and leaderboards for every OpenVibe game.",
+    "what": "See this week's leaders and the all-time boards of every OpenVibe game, and every achievement you have unlocked with your account.",
+    "legalProfile": "ugc",
+    "position": 35
+  }
+}
