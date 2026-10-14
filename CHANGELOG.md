@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.172.1 — 2026-10-14
+
+- **Play's site has its own icon.** `play`'s site block named the `games` icon, and the Network frame keys a site's
+  navbar entry by its icon, so Play showed as a second Games. It names `play` (openvibe-shared 4.1.4's podium and star).
+
 ## 0.172.0 — 2026-10-14
 
 - **`play`, a new service** (OpenVibe.Games ADR-0007 decision 10): OpenVibe.Play at play.openvibe.network (port 5040),
