@@ -21,6 +21,7 @@
     "actor.task.list",
     "actor.agent.read",
     "actor.resource.read",
+    "actor.resource.control",
     "actor.agent.manage",
     "actor.agent.run"
   ],

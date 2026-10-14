@@ -37,6 +37,7 @@
     "media.object.read",
     "media.object.upload",
     "media.resource.read",
+    "media.resource.control",
     "media.upload.create"
   ],
   "eventsProduced": [
