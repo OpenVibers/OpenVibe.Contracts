@@ -34,7 +34,6 @@
     "live.channel.read",
     "live.chat_context.read",
     "live.chat_effects.write",
-    "live.chat_mirror.write",
     "live.discovery.read",
     "live.follower.read",
     "live.lineage.resolve",

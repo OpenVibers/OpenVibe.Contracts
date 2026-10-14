@@ -23,7 +23,7 @@ Before the cutover, Live's chat was one of its largest subsystems, all in-proces
 - **Interfaces:**
   - Chat reads Live's chat context through `/internal/chat-context/*` (`live.chat_context.read`).
   - Chat asks Live for effects through `/internal/chat-effects/*` (`live.chat_effects.write`), and Live re-checks every effect it performs for a person.
-  - Chat mirrors its rows back to Live's read copy (`live.chat_mirror.write`).
+  - Chat mirrors its rows back to Live's read copy (`live.chat_mirror.write`; retired 2026-10-14; the mirror is gone).
   - Live's remaining chat writers forward to Chat (`chat.live_bridge.write`).
   - All of these are service tokens, and all refuse traffic that came through nginx.
 - **Browsers are unchanged.** nginx routes the chat paths of `openvibe.live` to Chat, so no client change was needed.
