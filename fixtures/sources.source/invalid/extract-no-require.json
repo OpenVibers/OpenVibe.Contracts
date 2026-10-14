@@ -1,0 +1,44 @@
+{
+  "key": "dealnews-coupon-codes",
+  "name": "NASA news releases",
+  "type": "rss",
+  "category": "coupons",
+  "homepage_url": "https://www.nasa.gov/",
+  "endpoints": [
+    {
+      "url": "https://www.dealnews.com/?rss=1",
+      "extract": {
+        "kind": "coupon",
+        "fields": {
+          "code": {
+            "from": "summary",
+            "pattern": "(?:coupon|promo|discount) code \"([A-Z0-9][A-Z0-9-]{3,31})\""
+          },
+          "expires": {
+            "from": "summary",
+            "pattern": "(?:Deal|Sale|Offer|It) ends ([A-Z][a-z]{2,8}\\.? \\d{1,2}(?:, \\d{4})?)",
+            "as": "date"
+          },
+          "merchant": {
+            "from": "summary",
+            "pattern": "Buy Now at ([A-Z][A-Za-z0-9&.' -]{1,40}?)(?= Features| Shop|\\.|$)"
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "mode": "none"
+  },
+  "robots_note": "robots.txt allows the feed path (checked 2026-09-23)",
+  "terms_note": "US government work; verify before enabling",
+  "license_note": null,
+  "min_interval_ms": 60000,
+  "poll_interval_sec": 3600,
+  "stale_after_sec": 172800,
+  "max_items": 200,
+  "enabled": false,
+  "review_required": true,
+  "sensitivity": "none",
+  "default_indexability": "noindex"
+}
