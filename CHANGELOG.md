@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.161.0 — 2026-10-14
+
+- **`platform.resource-offer@1`: `owner` for a user-owned offer** (plan T14, ADR-046). A person's own Node is offered with
+  `owner` (`usr_…`), and such an offer is eligible only for that person's own workloads: a placer must never put a
+  user-owned offer without an owner, or with another owner, on anyone's work, and a public projection leaves
+  user-owned offers out. Until now nothing tied a user-owned offer to its owner, so a job naming `user-owned` could
+  have been placed on a stranger's machine (no such offer had ever been published). Additive: `owner` is optional in
+  the schema, and the rule is enforced by the placer (OpenVibe.Run) and the dispatcher (OpenVibe.Bot). The two
+  user-owned fixtures carry an owner; a new invalid fixture has a malformed one.
+
 ## 0.160.0 — 2026-10-14
 
 - **`bot.robot-profile@1`: `mapping.driver` may be `plugin`** (plan T15 "community-submitted profiles and drivers"): the

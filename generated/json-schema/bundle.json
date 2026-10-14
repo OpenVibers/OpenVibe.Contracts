@@ -64296,6 +64296,11 @@
               "external"
             ]
           },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "For a user-owned offer: the person whose node it is (ADR-046). Such an offer is eligible only for that person's own workloads (a job whose requester is this subject and whose requirements name user-owned); a placer must never put a user-owned offer without an owner, or with another owner, on anyone's work. First-party only: a public projection leaves user-owned offers out."
+          },
           "capabilities": {
             "type": "array",
             "items": {

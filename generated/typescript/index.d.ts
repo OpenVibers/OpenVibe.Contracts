@@ -166882,6 +166882,10 @@ export type ResourceOffer = {
    */
   trust: "first-party" | "user-owned" | "partner" | "community" | "external";
   /**
+   * For a user-owned offer: the person whose node it is (ADR-046). Such an offer is eligible only for that person's own workloads (a job whose requester is this subject and whose requirements name user-owned); a placer must never put a user-owned offer without an owner, or with another owner, on anyone's work. First-party only: a public projection leaves user-owned offers out.
+   */
+  owner?: string;
+  /**
    * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers.
    */
   capabilities: string[];
