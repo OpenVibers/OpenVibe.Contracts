@@ -5,6 +5,7 @@
   "provider": "self",
   "region": "home",
   "trust": "user-owned",
+  "owner": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A2",
   "capabilities": [
     "node:http",
     "worker:function",
