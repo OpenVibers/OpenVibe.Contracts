@@ -27,5 +27,7 @@ assert.ok(!c.validate('bot.command@1', cmd('exec', { argv: 'ls -la' })).valid, '
 assert.ok(!c.validate('bot.command@1', cmd('exec', {})).valid, 'exec needs argv');
 assert.ok(!c.validate('bot.command@1', cmd('fs', { op: 'delete', path: '/x' })).valid, 'fs has no delete');
 assert.ok(!c.validate('bot.command@1', cmd('screen', { max_width: 100 })).valid, 'a screen at least 320 wide');
+assert.ok(c.validate('bot.command@1', cmd('probe', { target: 'tcp://192.168.1.5:22' })).valid, 'a probe of a LAN port');
+assert.ok(!c.validate('bot.command@1', cmd('probe', { target: 'file:///etc/passwd' })).valid, 'a probe is http(s) or tcp');
 assert.ok(c.validate('bot.command-result@1', { v: 1, seq: 1, ts: 1, type: 'command_result', id: 'op-1', result: 'ack', data: { exit_code: 0 } }).valid, 'an ack with data');
 console.log('bot manifest: all checks passed');
