@@ -166,7 +166,12 @@
             "ptz",
             "say",
             "display",
-            "halt"
+            "halt",
+            "button",
+            "point",
+            "exec",
+            "fs",
+            "screen"
           ]
         },
         "value": {
@@ -174,7 +179,7 @@
         },
         "deadline_ms": {
           "type": "integer",
-          "description": "Absolute deadline, epoch milliseconds; the device stops the motion at it."
+          "description": "Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window."
         },
         "operator": {
           "type": "object",
@@ -728,6 +733,10 @@
         "latency_ms": {
           "type": "integer",
           "minimum": 0
+        },
+        "data": {
+          "type": "object",
+          "description": "OpenVibe.Node: a computer command's answer (exec, fs, screen), at most 512 KB of JSON."
         }
       }
     },

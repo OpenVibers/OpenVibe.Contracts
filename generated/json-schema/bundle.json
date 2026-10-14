@@ -70427,7 +70427,12 @@
                   "ptz",
                   "say",
                   "display",
-                  "halt"
+                  "halt",
+                  "button",
+                  "point",
+                  "exec",
+                  "fs",
+                  "screen"
                 ]
               },
               "value": {
@@ -70435,7 +70440,7 @@
               },
               "deadline_ms": {
                 "type": "integer",
-                "description": "Absolute deadline, epoch milliseconds; the device stops the motion at it."
+                "description": "Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window."
               },
               "operator": {
                 "type": "object",
@@ -70989,6 +70994,10 @@
               "latency_ms": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "data": {
+                "type": "object",
+                "description": "OpenVibe.Node: a computer command's answer (exec, fs, screen), at most 512 KB of JSON."
               }
             }
           },
@@ -71157,7 +71166,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command.v1.json",
         "title": "BotCommand",
-        "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9).",
+        "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data.",
         "type": "object",
         "required": [
           "type",
@@ -71193,7 +71202,10 @@
               "display",
               "halt",
               "button",
-              "point"
+              "point",
+              "exec",
+              "fs",
+              "screen"
             ]
           },
           "value": {
@@ -71283,6 +71295,157 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "exec"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "object",
+                  "required": [
+                    "argv"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "argv": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 64,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "description": "a program and its arguments, never a shell line"
+                    },
+                    "cwd": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "an absolute folder on the machine (default: its first allowed folder)"
+                    },
+                    "timeout_s": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 600,
+                      "description": "capped by the owner's timeout_s on the machine"
+                    },
+                    "stdin": {
+                      "type": "string",
+                      "maxLength": 65536
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "fs"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "object",
+                  "required": [
+                    "op",
+                    "path"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "op": {
+                      "enum": [
+                        "list",
+                        "stat",
+                        "read",
+                        "write",
+                        "mkdir"
+                      ]
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "absolute, on the machine"
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "length": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 262144
+                    },
+                    "content_b64": {
+                      "type": "string",
+                      "maxLength": 349528,
+                      "description": "write: at most 256 KB of content, base64"
+                    },
+                    "mode": {
+                      "enum": [
+                        "create",
+                        "overwrite",
+                        "append"
+                      ],
+                      "description": "write: create (default) never replaces a file"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "screen"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "max_width": {
+                      "type": "integer",
+                      "minimum": 320,
+                      "maximum": 3840
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       }
@@ -71295,7 +71458,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command-result.v1.json",
         "title": "BotCommandResult",
-        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result.",
+        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data.",
         "type": "object",
         "required": [
           "v",
@@ -71351,6 +71514,10 @@
           },
           "cached": {
             "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "description": "A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen."
           }
         }
       }

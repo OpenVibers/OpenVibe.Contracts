@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "seq": 30,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-30",
+  "kind": "exec",
+  "value": {
+    "argv": ["git", "status", "--short"],
+    "cwd": "/home/ada/projects/site",
+    "timeout_s": 20
+  },
+  "ms": 120000
+}

@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 31,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-31",
+  "kind": "fs",
+  "value": {
+    "op": "read",
+    "path": "/home/ada/projects/site/README.md",
+    "length": 4096
+  }
+}

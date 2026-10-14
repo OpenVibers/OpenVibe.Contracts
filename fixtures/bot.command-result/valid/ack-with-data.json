@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "seq": 14,
+  "ts": 1759600000120,
+  "type": "command_result",
+  "id": "op-30",
+  "result": "ack",
+  "reason": null,
+  "latency_ms": 118,
+  "data": {
+    "exit_code": 0,
+    "stdout": " M index.html\n",
+    "stderr": "",
+    "truncated": false,
+    "timed_out": false,
+    "duration_ms": 35
+  }
+}

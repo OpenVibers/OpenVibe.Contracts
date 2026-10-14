@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.166.0 — 2026-10-14
+
+- **Computer control (plan T14/T17, OpenVibe.Node's `computer` plugin, Node#41).** `bot.command@1` takes the kinds
+  `exec` (argv, cwd, timeout_s, stdin), `fs` (op list|stat|read|write|mkdir, path, offset, length, content_b64, mode) and
+  `screen` (max_width), each with its value's shape. `bot.command-result@1` and the device `ack` of
+  `bot.device-message@1` gain `data`: the machine's answer. The device `command` frame lists button, point and the
+  computer kinds.
+- **`bot.computer.control`** (active, first-party, sensitive): an agent service uses a person's own machine through
+  `POST /api/v1/robots/:id/commands`. It works only for the machine's owner, and only when the owner turned it on for
+  their agent. The owner's control level on the machine decides what may happen. The `bot` manifest lists it.
+- Additive. Fixtures: valid `exec`, `fs-read`, `screen` and an ack with data; invalid `exec-shell-line`, `fs-bad-op`.
+
 ## 0.165.0 — 2026-10-14
 
 - **`watch.resource.control`** (active, first-party, sensitive): OpenVibe.Watch's control API (ADR-048, plan T13 step

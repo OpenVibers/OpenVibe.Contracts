@@ -176086,10 +176086,10 @@ export type BotDeviceMessage =
       type: "command";
       id: string;
       ref?: string;
-      kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt";
+      kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "exec" | "fs" | "screen";
       value?: {};
       /**
-       * Absolute deadline, epoch milliseconds; the device stops the motion at it.
+       * Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window.
        */
       deadline_ms?: number;
       operator?: {
@@ -176228,6 +176228,10 @@ export type BotDeviceMessage =
       type: "ack";
       id: string;
       latency_ms?: number;
+      /**
+       * OpenVibe.Node: a computer command's answer (exec, fs, screen), at most 512 KB of JSON.
+       */
+      data?: {};
     }
   | {
       v: 1;
@@ -176268,7 +176272,7 @@ export type BotDeviceMessage =
 
 /** bot.command@1.0.0 (owner: bot) */
 /**
- * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9).
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data.
  */
 export type BotCommand = {
   [k: string]: unknown | undefined;
@@ -176278,14 +176282,14 @@ export type BotCommand = {
   ts?: number;
   type: "command";
   id?: string;
-  kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point";
+  kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "exec" | "fs" | "screen";
   value?: {};
   ms?: number;
 };
 
 /** bot.command-result@1.0.0 (owner: bot) */
 /**
- * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result.
+ * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data.
  */
 export interface BotCommandResult {
   v: 1;
@@ -176298,6 +176302,10 @@ export interface BotCommandResult {
   code?: string;
   latency_ms?: number;
   cached?: boolean;
+  /**
+   * A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen.
+   */
+  data?: {};
 }
 
 /** bot.job-dispatch-result@1.0.0 (owner: bot) */
