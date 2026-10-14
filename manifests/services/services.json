@@ -19,7 +19,10 @@
     "services.resource.read",
     "services.release.read",
     "services.release.manage",
-    "services.resource.control"
+    "services.resource.control",
+    "services.recipe.run",
+    "services.usage.read",
+    "services.cost.read"
   ],
   "eventsProduced": [
     "services.app.published",

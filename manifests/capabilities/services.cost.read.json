@@ -1,0 +1,20 @@
+{
+  "id": "services.cost.read",
+  "version": "1.0",
+  "owner": "services",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "PLANNED (plan T13): read what a project's metered use of the developer capabilities cost. Services does not serve the route yet.",
+  "permissions": [
+    "services:costs:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/costs"
+  ],
+  "inputSchema": "common.no-body@1"
+}

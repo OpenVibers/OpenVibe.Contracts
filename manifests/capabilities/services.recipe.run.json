@@ -1,0 +1,20 @@
+{
+  "id": "services.recipe.run",
+  "version": "1.0",
+  "owner": "services",
+  "status": "planned",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "PLANNED (plan T13): run a recipe, a saved sequence of calls, for a project the caller owns or belongs to. Services does not serve the route yet.",
+  "permissions": [
+    "services:recipes:run"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/recipes/:id/run"
+  ]
+}
