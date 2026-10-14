@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.159.0 — 2026-10-14
+
+- **Contracts 0.159.0: sandbox-provider job contracts (plan T14 R4b, ADR-034; planned, internal).** What OpenVibe.Run
+  sends to and reads from an external sandbox provider such as E2B or Fly Machines, the same shape as the
+  browser-provider set: `sandbox-provider.job-create-request@1` (`id`, `class` code or linux, `args`, `inputs` pinned by
+  sha256, `limits`, `egress`; no project, subject, requester or credential), `sandbox-provider.job-state@1` (`state`,
+  `started_ms`, `finished_ms`, `wall_ms` as the provider's claim only, `exit_reason`, `exit_code`, `result`, `stdout` in
+  Bot's ring shape) and `sandbox-provider.job-create-result@1` (`{ job, created }`). New capability
+  `sandbox_provider.job.dispatch` (Run's own outbound call, `planned`, `implementedBy` empty). Additive only.
+
 ## 0.158.0 — 2026-10-14
 
 - **`live.chat_mirror.write` is retired.** The Live read mirror is gone: Chat stopped its capture triggers

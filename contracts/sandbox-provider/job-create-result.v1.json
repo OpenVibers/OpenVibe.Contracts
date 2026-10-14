@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sandbox-provider/job-create-result.v1.json",
+  "title": "SandboxProviderJobCreateResult",
+  "description": "sandbox-provider.job-create-result@1 (PLANNED; plan T14 R4b, ADR-034): an external sandbox provider's (such as E2B or Fly Machines) answer to OpenVibe.Run's job POST (sandbox-provider.job-create-request@1): 201 { job, created: true } when it accepted a new job, 200 { job, created: false } for an idempotent repeat of an id it already holds (the first job's state, nothing started twice). JOB is sandbox-provider.job-state@1 and Run validates it before adopting any of it. A refused POST answers a problem instead (4xx; 5xx is retried by Run on its next tick), never this contract. For the later calls, GET <provider>/jobs/:id answers sandbox-provider.job-state@1 and POST <provider>/jobs/:id/cancel answers it too; a 404 on either means the provider does not know the job.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "job",
+    "created"
+  ],
+  "properties": {
+    "job": {
+      "$ref": "job-state.v1.json"
+    },
+    "created": {
+      "type": "boolean",
+      "description": "True when this POST created the job (201); false for an idempotent repeat (200)."
+    }
+  },
+  "examples": [
+    {
+      "job": {
+        "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "state": "queued",
+        "started_ms": null,
+        "finished_ms": null,
+        "wall_ms": 0,
+        "exit_reason": null,
+        "exit_code": null,
+        "result": null,
+        "stdout": null
+      },
+      "created": true
+    }
+  ]
+}

@@ -6256,6 +6256,36 @@
       "adr": "ADR-034"
     },
     {
+      "id": "sandbox-provider.job-create-request",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "sandbox-provider/job-create-request.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "sandbox-provider.job-create-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "sandbox-provider/job-create-result.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
+      "id": "sandbox-provider.job-state",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "sandbox-provider/job-state.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "planned",
+      "adr": "ADR-034"
+    },
+    {
       "id": "run.job-create-request",
       "version": "1.0.0",
       "owner": "run",
