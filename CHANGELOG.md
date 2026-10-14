@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.167.0 — 2026-10-14
+
+- **`probe`, a read-only computer kind** (plan T18 step 7, the `node` carrier): `bot.command@1` takes
+  `{ target, timeout_s }`. The target is `http(s)://…`, one GET from the machine with no redirect followed, or
+  `tcp://host:port`, which checks that it accepts a connection. Targets are on the machine's own network only:
+  private, loopback or link-local addresses. The device `command` frame lists it.
+- **`bot.computer.control`**: OpenVibe.Watch may send only `probe`, for owners who turned on "Let my watches check
+  things from this computer". `watch.watch@1`'s `node` source documents `node_id` (the machine) and `probe` (that
+  value).
+- Additive. Fixtures: valid `probe`; invalid `probe-ftp`.
+
 ## 0.166.0 — 2026-10-14
 
 - **Computer control (plan T14/T17, OpenVibe.Node's `computer` plugin, Node#41).** `bot.command@1` takes the kinds

@@ -261,11 +261,13 @@
               "const": "node"
             },
             "node_id": {
-              "type": "string"
+              "type": "string",
+              "description": "The machine (an OpenVibe.Bot device id, dev_…) the check runs from: the owner's own, with \"Let my watches check things from this computer\" on."
             },
             "probe": {
               "type": "object",
-              "additionalProperties": true
+              "additionalProperties": true,
+              "description": "{ target, timeout_s }: bot.command@1's probe value. target is http(s)://… (one GET from the machine; the answer's body is the document) or tcp://host:port (the document is { open, ms })."
             }
           }
         },

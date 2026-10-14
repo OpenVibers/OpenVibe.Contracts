@@ -161504,7 +161504,13 @@ export interface Watch {
       }
     | {
         kind: "node";
+        /**
+         * The machine (an OpenVibe.Bot device id, dev_…) the check runs from: the owner's own, with "Let my watches check things from this computer" on.
+         */
         node_id: string;
+        /**
+         * { target, timeout_s }: bot.command@1's probe value. target is http(s)://… (one GET from the machine; the answer's body is the document) or tcp://host:port (the document is { open, ms }).
+         */
         probe: {
           [k: string]: unknown | undefined;
         };
@@ -164632,7 +164638,13 @@ export interface WatchRequest {
       }
     | {
         kind: "node";
+        /**
+         * The machine (an OpenVibe.Bot device id, dev_…) the check runs from: the owner's own, with "Let my watches check things from this computer" on.
+         */
         node_id: string;
+        /**
+         * { target, timeout_s }: bot.command@1's probe value. target is http(s)://… (one GET from the machine; the answer's body is the document) or tcp://host:port (the document is { open, ms }).
+         */
         probe: {
           [k: string]: unknown | undefined;
         };
@@ -176086,7 +176098,19 @@ export type BotDeviceMessage =
       type: "command";
       id: string;
       ref?: string;
-      kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "exec" | "fs" | "screen";
+      kind:
+        | "drive"
+        | "actuator"
+        | "ptz"
+        | "say"
+        | "display"
+        | "halt"
+        | "button"
+        | "point"
+        | "exec"
+        | "fs"
+        | "screen"
+        | "probe";
       value?: {};
       /**
        * Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window.
@@ -176272,7 +176296,7 @@ export type BotDeviceMessage =
 
 /** bot.command@1.0.0 (owner: bot) */
 /**
- * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data.
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer.
  */
 export type BotCommand = {
   [k: string]: unknown | undefined;
@@ -176282,7 +176306,8 @@ export type BotCommand = {
   ts?: number;
   type: "command";
   id?: string;
-  kind: "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "exec" | "fs" | "screen";
+  kind:
+    "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "exec" | "fs" | "screen" | "probe";
   value?: {};
   ms?: number;
 };

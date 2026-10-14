@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "seq": 41,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-41",
+  "kind": "probe",
+  "value": {
+    "target": "ftp://192.168.1.20/"
+  }
+}
