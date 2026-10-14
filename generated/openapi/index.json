@@ -44,6 +44,13 @@
       "capabilities": 13
     },
     {
+      "service": "codes",
+      "name": "OpenVibe.Codes",
+      "origin": "https://openvibe.codes",
+      "operations": 3,
+      "capabilities": 3
+    },
+    {
       "service": "community",
       "name": "OpenVibe.Community",
       "origin": "https://openvibe.community",

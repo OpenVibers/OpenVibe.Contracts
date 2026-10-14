@@ -26,7 +26,11 @@
     "legalProfile": "ugc",
     "position": 22
   },
-  "capabilities": [],
+  "capabilities": [
+    "codes.task.start",
+    "codes.task.read",
+    "codes.task.cancel"
+  ],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [

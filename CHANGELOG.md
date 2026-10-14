@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.162.0 — 2026-10-14
+
+- **`codes.task.start`, `codes.task.read`, `codes.task.cancel`** (plan T16/T17): a first-party service starts a coding
+  task for a person on OpenVibe.Codes (`POST /api/v1/tasks`, the person in `X-OV-Subject`), reads it and cancels it.
+  - Codes runs the task on that person's own machine through OpenVibe.Run, in the project of their latest
+    openvibe.codes/run task. Without one: 409 `codes.no_project`.
+  - Only the service that started a task, for the same person, sees it.
+  - OpenVibe.Actor is the first caller: its `codes` agent routes coding work there instead of refusing it.
+- New contracts: `codes.task-start-request@1`, `codes.task-start-result@1`, `codes.task@1` (state, page URL, and once
+  ended: ok, summary, files, patch, push, cost on the person's own keys, duration).
+- Additive. `codes` declares the three capabilities in its service manifest.
+
 ## 0.161.0 — 2026-10-14
 
 - **`platform.resource-offer@1`: `owner` for a user-owned offer** (plan T14, ADR-046). A person's own Node is offered with

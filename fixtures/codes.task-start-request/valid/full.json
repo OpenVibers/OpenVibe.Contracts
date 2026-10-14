@@ -1,0 +1,10 @@
+{
+  "repo": "https://github.com/octocat/Hello-World",
+  "ref": "master",
+  "prompt": "Fix the failing test and run the suite.",
+  "agent": "deepseek",
+  "permission": "full",
+  "push": true,
+  "pull_request": true,
+  "idempotency_key": "act_01M4XF00000000000000000000:step-2"
+}
