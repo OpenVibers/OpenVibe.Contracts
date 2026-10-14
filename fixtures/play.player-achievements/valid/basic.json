@@ -1,0 +1,12 @@
+{
+  "title": "salvage-rush",
+  "player": "usr_01JABCDEFGHJKMNPQRSTVWXYZ0",
+  "achievements": [
+    {
+      "id": "first-haul",
+      "name": "First Haul",
+      "description": "Finish a round with scrap.",
+      "unlocked_at": "2026-10-14T12:00:00.000Z"
+    }
+  ]
+}

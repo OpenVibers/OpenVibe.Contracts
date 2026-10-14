@@ -1,0 +1,18 @@
+{
+  "name": "Salvage Rush",
+  "url": "https://openvibe.games/play?game=salvage-rush",
+  "achievements": [
+    {
+      "id": "first-haul",
+      "name": "First Haul",
+      "description": "Finish a round with scrap."
+    }
+  ],
+  "boards": [
+    {
+      "id": "best",
+      "name": "Best round",
+      "kind": "best"
+    }
+  ]
+}

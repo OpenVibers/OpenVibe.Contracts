@@ -7155,6 +7155,56 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "play.title-definition",
+      "version": "1.0.0",
+      "owner": "play",
+      "schema": "play/title-definition.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "Games ADR-0007"
+    },
+    {
+      "id": "play.title-result",
+      "version": "1.0.0",
+      "owner": "play",
+      "schema": "play/title-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "Games ADR-0007"
+    },
+    {
+      "id": "play.result-request",
+      "version": "1.0.0",
+      "owner": "play",
+      "schema": "play/result-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "Games ADR-0007"
+    },
+    {
+      "id": "play.result-response",
+      "version": "1.0.0",
+      "owner": "play",
+      "schema": "play/result-response.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "Games ADR-0007"
+    },
+    {
+      "id": "play.player-achievements",
+      "version": "1.0.0",
+      "owner": "play",
+      "schema": "play/player-achievements.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "Games ADR-0007"
     }
   ]
 }

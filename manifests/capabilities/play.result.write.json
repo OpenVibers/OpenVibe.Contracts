@@ -1,0 +1,23 @@
+{
+  "id": "play.result.write",
+  "version": "1.0",
+  "owner": "play",
+  "status": "active",
+  "visibility": "public",
+  "description": "Post what players did in a title the caller manages: scores for a round to one of its boards (POST /api/v1/titles/:title/scores, up to 100 entries, idempotent by ref), achievements unlocked by a player (POST /api/v1/titles/:title/unlocks, answering the new ones), and a guest's progress moved to the person who signed in (POST /api/v1/titles/:title/players/:guest/adopt). A player is a person's subject (usr_) or a guest the title names (guest:<opaque>).",
+  "inputSchema": "play.result-request@1",
+  "outputSchema": "play.result-response@1",
+  "permissions": [
+    "play:result:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "play-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/titles/:title/scores",
+    "POST /api/v1/titles/:title/unlocks",
+    "POST /api/v1/titles/:title/players/:guest/adopt"
+  ]
+}

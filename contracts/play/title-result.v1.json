@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/play/title-result.v1.json",
+  "title": "PlayTitleResult",
+  "description": "The answer to registering or updating a title: the title as anyone reads it, and whether this call created it (201) or updated it (200).",
+  "type": "object",
+  "required": [
+    "title",
+    "created"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "achievements",
+        "boards"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,39}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "players": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "achievements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
+              "unlocked_by": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "boards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "kind"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "best",
+                  "sum"
+                ]
+              }
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "created": {
+      "type": "boolean"
+    }
+  }
+}

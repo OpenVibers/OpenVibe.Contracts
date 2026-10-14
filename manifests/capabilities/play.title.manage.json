@@ -1,0 +1,21 @@
+{
+  "id": "play.title.manage",
+  "version": "1.0",
+  "owner": "play",
+  "status": "active",
+  "visibility": "public",
+  "description": "Register or update a title the caller manages on OpenVibe.Play (PUT /api/v1/titles/:title): its name, address and summary, its achievements (id, name, description, hidden) and its leaderboards (id, name, kind best or sum). The principal that registers a title is its only writer; another one is told it does not exist (404) or, registering it, 409 play.title_taken. A definition left out is retired, never deleted: what players earned stays. A board's kind never changes (409 play.board_kind_fixed).",
+  "inputSchema": "play.title-definition@1",
+  "outputSchema": "play.title-result@1",
+  "permissions": [
+    "play:title:manage"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "play-define",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/titles/:title"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "board": "best",
+  "ref": "round-1",
+  "entries": [
+    {
+      "player": "bob",
+      "name": "Bob",
+      "score": 1
+    }
+  ]
+}

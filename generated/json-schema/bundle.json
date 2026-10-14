@@ -80306,6 +80306,453 @@
           }
         }
       }
+    },
+    "play.title-definition": {
+      "version": "1.0.0",
+      "owner": "play",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/play/title-definition.v1.json",
+        "title": "PlayTitleDefinition",
+        "description": "A title as its own principal registers it (play.title.manage, PUT /api/v1/titles/:title). Achievements and boards are listed in display order; one left out is retired, never deleted. A board's kind never changes.",
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://",
+            "maxLength": 300,
+            "description": "where the game is played"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "achievements": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "hidden": {
+                  "type": "boolean",
+                  "description": "a secret achievement: its name and text show only to whoever unlocked it"
+                }
+              }
+            }
+          },
+          "boards": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "kind"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "kind": {
+                  "enum": [
+                    "best",
+                    "sum"
+                  ],
+                  "description": "best: each player's best score; sum: the total of their scores"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "play.title-result": {
+      "version": "1.0.0",
+      "owner": "play",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/play/title-result.v1.json",
+        "title": "PlayTitleResult",
+        "description": "The answer to registering or updating a title: the title as anyone reads it, and whether this call created it (201) or updated it (200).",
+        "type": "object",
+        "required": [
+          "title",
+          "created"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "achievements",
+              "boards"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{1,39}$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "summary": {
+                "type": "string"
+              },
+              "players": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "achievements": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "name"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "hidden": {
+                      "type": "boolean"
+                    },
+                    "unlocked_by": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              },
+              "boards": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "name",
+                    "kind"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "enum": [
+                        "best",
+                        "sum"
+                      ]
+                    }
+                  }
+                }
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "created": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "play.result-request": {
+      "version": "1.0.0",
+      "owner": "play",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/play/result-request.v1.json",
+        "title": "PlayResultRequest",
+        "description": "What a title's principal posts about its players (play.result.write): a round's scores to a board (POST …/scores; idempotent by ref), achievements a player unlocked (POST …/unlocks), or the person a guest became (POST …/players/:guest/adopt).",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "board",
+              "ref",
+              "entries"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "board": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "the round or run; a repeat changes nothing"
+              },
+              "at": {
+                "type": "integer",
+                "minimum": 1577836800000,
+                "description": "epoch milliseconds, never in the future (an import of past results); default now"
+              },
+              "entries": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "player",
+                    "name",
+                    "score"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "player": {
+                      "type": "string",
+                      "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|guest:[A-Za-z0-9_-]{8,128})$",
+                      "description": "a person (usr_) or a guest the title names (guest:<opaque>)"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "player",
+              "achievements"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "player": {
+                "type": "string",
+                "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|guest:[A-Za-z0-9_-]{8,128})$",
+                "description": "a person (usr_) or a guest the title names (guest:<opaque>)"
+              },
+              "achievements": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 200,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                }
+              },
+              "at": {
+                "type": "integer",
+                "minimum": 1577836800000,
+                "description": "epoch milliseconds, never in the future (an import of past results); default now"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "person"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "person": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "play.result-response": {
+      "version": "1.0.0",
+      "owner": "play",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/play/result-response.v1.json",
+        "title": "PlayResultResponse",
+        "description": "The answer to a result post: scores recorded and repeated, the achievements that were new, or the unlocks and scores a guest's adoption moved.",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "recorded",
+              "repeated"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "recorded": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "repeated": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "unlocked"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "unlocked": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "unlocks",
+              "scores"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "unlocks": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "scores": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "play.player-achievements": {
+      "version": "1.0.0",
+      "owner": "play",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/play/player-achievements.v1.json",
+        "title": "PlayPlayerAchievements",
+        "description": "One player's unlocked achievements in a title the caller manages (play.player.read), newest first.",
+        "type": "object",
+        "required": [
+          "title",
+          "player",
+          "achievements"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,39}$"
+          },
+          "player": {
+            "type": "string",
+            "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|guest:[A-Za-z0-9_-]{8,128})$",
+            "description": "a person (usr_) or a guest the title names (guest:<opaque>)"
+          },
+          "achievements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "unlocked_at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "unlocked_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

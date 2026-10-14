@@ -1,0 +1,27 @@
+{
+  "title": {
+    "id": "salvage-rush",
+    "name": "Salvage Rush",
+    "url": null,
+    "summary": "",
+    "players": 2,
+    "achievements": [
+      {
+        "id": "first-haul",
+        "name": "First Haul",
+        "description": "",
+        "unlocked_by": 2
+      }
+    ],
+    "boards": [
+      {
+        "id": "best",
+        "name": "Best round",
+        "kind": "best"
+      }
+    ],
+    "created_at": "2026-10-14T12:00:00.000Z",
+    "updated_at": "2026-10-14T12:00:00.000Z"
+  },
+  "created": true
+}
