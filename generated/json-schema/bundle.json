@@ -71917,6 +71917,287 @@
         }
       }
     },
+    "browser-provider.job-create-request": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/browser-provider/job-create-request.v1.json",
+        "title": "BrowserProviderJobCreateRequest",
+        "description": "browser-provider.job-create-request@1 (PLANNED; plan T14 R4a, ADR-034): the body OpenVibe.Run POSTs to an external managed-browser provider's job endpoint (capability browser_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is always browser. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is browser-provider.job-create-result@1.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "class",
+          "args",
+          "inputs",
+          "limits",
+          "egress"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "../platform/job-frame.v1.json#/$defs/job_id"
+          },
+          "class": {
+            "const": "browser"
+          },
+          "args": {
+            "type": "object",
+            "description": "The job's declared input as JSON; Run enforces the 512 KiB cap before sending."
+          },
+          "inputs": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "$ref": "../run/job-create-request.v1.json#/$defs/input"
+            },
+            "description": "Files for the job, each an OpenVibe.Media object pinned by sha256; names are unique; empty when the job has none."
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Caps on the running job (platform.job@1 limits); the provider ends a job that hits one with exit_reason limit.",
+            "required": [
+              "wall_ms"
+            ],
+            "properties": {
+              "wall_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Running time from the job's start"
+              },
+              "cpu_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "CPU time, user plus system; when the provider can enforce it"
+              },
+              "mem_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Peak resident memory; when the provider can enforce it"
+              }
+            }
+          },
+          "egress": {
+            "$ref": "../run/job-create-request.v1.json#/$defs/egress"
+          }
+        },
+        "examples": [
+          {
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "class": "browser",
+            "args": {
+              "url": "https://example.com",
+              "screenshot": true
+            },
+            "inputs": [],
+            "limits": {
+              "wall_ms": 60000
+            },
+            "egress": "public"
+          }
+        ]
+      }
+    },
+    "browser-provider.job-create-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/browser-provider/job-create-result.v1.json",
+        "title": "BrowserProviderJobCreateResult",
+        "description": "browser-provider.job-create-result@1 (PLANNED; plan T14 R4a, ADR-034): an external managed-browser provider's answer to OpenVibe.Run's job POST (browser-provider.job-create-request@1): 201 { job, created: true } when it accepted a new job, 200 { job, created: false } for an idempotent repeat of an id it already holds (the first job's state, nothing started twice). JOB is browser-provider.job-state@1 and Run validates it before adopting any of it. A refused POST answers a problem instead (4xx; 5xx is retried by Run on its next tick), never this contract. For the later calls, GET <provider>/jobs/:id answers browser-provider.job-state@1 and POST <provider>/jobs/:id/cancel answers it too; a 404 on either means the provider does not know the job.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "job",
+          "created"
+        ],
+        "properties": {
+          "job": {
+            "$ref": "job-state.v1.json"
+          },
+          "created": {
+            "type": "boolean",
+            "description": "True when this POST created the job (201); false for an idempotent repeat (200)."
+          }
+        },
+        "examples": [
+          {
+            "job": {
+              "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+              "state": "queued",
+              "started_ms": null,
+              "finished_ms": null,
+              "wall_ms": 0,
+              "exit_reason": null,
+              "exit_code": null,
+              "result": null,
+              "stdout": null
+            },
+            "created": true
+          }
+        ]
+      }
+    },
+    "browser-provider.job-state": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "planned",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/browser-provider/job-state.v1.json",
+        "title": "BrowserProviderJobState",
+        "description": "browser-provider.job-state@1 (PLANNED; plan T14 R4a, ADR-034): an external managed-browser provider's state of one job, the body of GET <provider>/jobs/:id and the `job` of browser-provider.job-create-result@1. OpenVibe.Run validates it before adopting any of it: a malformed state is never adopted, and the job stays as Run last saw it. A 404 on GET or on cancel means the provider does not know the job (Run fails the job run.job.worker_failed). STATE is queued, running, then one end state: succeeded, failed, cancelled or expired. WALL_MS is the provider's CLAIM of the time the job ran, nothing more: Run bills from its own observed duration and clamps a larger claim (observed plus 5 s), so this field never sets a price. STARTED_MS and FINISHED_MS are the provider's clock, Unix ms, null until they happen. EXIT_REASON uses the reasons of platform.job-frame@1 `job_exit` (exited, cancelled, ttl, limit, stopped, failed) and is null until the job ended. EXIT_CODE is the browser script's exit status, null when it was killed or never ran. RESULT is the declared output (an object, at most 256 KiB serialized), null unless the job succeeded. STDOUT is the captured output in the ring shape OpenVibe.Bot returns (bot.job-dispatch-result@1) so Run's poller streams it the same way, or null when there is none. There is no node, project or class field: a provider cannot name a node or a project.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "state",
+          "started_ms",
+          "finished_ms",
+          "wall_ms",
+          "exit_reason",
+          "exit_code",
+          "result",
+          "stdout"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "../platform/job-frame.v1.json#/$defs/job_id"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "expired"
+            ],
+            "description": "queued (accepted, not started), running, then one end state: succeeded (exited 0), failed (another exit code, a limit, or the provider could not run it), cancelled (a cancel), expired (the job's lifetime ran out)."
+          },
+          "started_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "When the job started, provider's clock, Unix ms; null until it started."
+          },
+          "finished_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "When the job ended, provider's clock, Unix ms; null until it ended."
+          },
+          "wall_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The provider's CLAIM of the running time; Run clamps it to its own observed duration plus 5 s and never bills above that. 0 while the job has not run."
+          },
+          "exit_reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "exited",
+              "cancelled",
+              "ttl",
+              "limit",
+              "stopped",
+              "failed",
+              null
+            ],
+            "description": "Why the job ended, as platform.job-frame@1 job_exit reason; null until it ended."
+          },
+          "exit_code": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The script's exit status; null when it was killed or never ran."
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The declared output as a JSON object, at most 256 KiB serialized; null unless the job succeeded."
+          },
+          "stdout": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "The held tail of the job's stdout, the ring shape of bot.job-dispatch-result@1.",
+                "required": [
+                  "text",
+                  "first_seq",
+                  "last_seq",
+                  "truncated"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "maxLength": 1048576,
+                    "description": "The held chunks joined in order, at most 1 MiB."
+                  },
+                  "first_seq": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "description": "The chunk_seq of the first held chunk; null when none is held."
+                  },
+                  "last_seq": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The highest chunk_seq seen for the job; 0 when none."
+                  },
+                  "truncated": {
+                    "type": "boolean",
+                    "description": "True when an earlier chunk fell off the ring."
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The captured stdout, or null when the job has none."
+          }
+        },
+        "examples": [
+          {
+            "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "state": "succeeded",
+            "started_ms": 1790935200250,
+            "finished_ms": 1790935202600,
+            "wall_ms": 2350,
+            "exit_reason": "exited",
+            "exit_code": 0,
+            "result": {
+              "title": "Example Domain"
+            },
+            "stdout": {
+              "text": "loaded\n",
+              "first_seq": 1,
+              "last_seq": 1,
+              "truncated": false
+            }
+          }
+        ]
+      }
+    },
     "run.job-create-request": {
       "version": "1.0.0",
       "owner": "run",
