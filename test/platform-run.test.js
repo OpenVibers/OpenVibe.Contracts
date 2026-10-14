@@ -102,4 +102,24 @@ for (const [id, routes] of Object.entries({
 ok(contracts.capabilities.get('run.job.admin').visibility === 'internal', 'run.job.admin is internal');
 for (const s of ['queued', 'started', 'succeeded', 'failed', 'cancelled', 'expired']) ok(run.eventsProduced.includes(`run.job.${s}`), `run produces run.job.${s}`);
 
+// Run's outbound call to an external managed-browser provider (T14 R4a). The request is a platform.job@1 reduced to
+// what the provider may know: it never carries a project, subject, requester or credential, and the provider's
+// answer cannot name a node, project or class. The provider's wall_ms is only a claim (Run clamps it).
+const bp = id => contracts.schema(`browser-provider.${id}`);
+const bpReq = bp('job-create-request');
+assert.deepStrictEqual(Object.keys(bpReq.properties).sort(), ['args', 'class', 'egress', 'id', 'inputs', 'limits']);
+assert.deepStrictEqual(Object.keys(bp('job-state').properties).sort(), ['exit_code', 'exit_reason', 'finished_ms', 'id', 'result', 'started_ms', 'state', 'stdout', 'wall_ms']);
+checks += 2;
+ok(bpReq.additionalProperties === false && bp('job-state').additionalProperties === false && bp('job-create-result').additionalProperties === false, 'browser-provider schemas refuse unknown fields');
+for (const k of ['wall_ms', 'cpu_ms', 'mem_bytes']) assert.deepStrictEqual({ ...bpReq.properties.limits.properties[k], description: 0 }, { ...job.properties.limits.properties[k], description: 0 });
+assert.deepStrictEqual(bp('job-state').properties.exit_reason.enum.filter(Boolean), contracts.schema('platform.job-frame').oneOf.find(f => f.properties.type.const === 'job_exit').properties.reason.enum);
+checks += 2;
+ok(bpReq.properties.limits.required.length === 1 && bpReq.properties.limits.required[0] === 'wall_ms', 'only wall_ms is required of a provider job');
+const botStdout = contracts.schema('bot.job-dispatch-result').$defs.stdout.properties;
+assert.deepStrictEqual(Object.keys(bp('job-state').properties.stdout.anyOf[0].properties), Object.keys(botStdout));
+checks++;
+const dispatch = contracts.capabilities.get('browser_provider.job.dispatch');
+ok(dispatch && dispatch.owner === 'run' && dispatch.status === 'planned' && dispatch.visibility === 'internal' && dispatch.sensitive === true && dispatch.implementedBy.length === 0 && dispatch.permissions.length === 0, 'browser_provider.job.dispatch is a planned internal sensitive capability of Run');
+ok(dispatch.inputSchema === 'browser-provider.job-create-request@1' && dispatch.outputSchema === 'browser-provider.job-create-result@1' && !run.capabilities.includes('browser_provider.job.dispatch'), 'it names the two contracts and is not yet a capability Run serves');
+
 console.log(`platform run: ${checks} job, frame and metering checks passed`);

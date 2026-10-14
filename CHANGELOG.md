@@ -4,13 +4,23 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## 0.155.0 — 2026-10-13
+## 0.156.0 — 2026-10-13
 
 - **OpenVibe.AI's catalog copy says the public API is live.** In `manifests/products/ai.openvibe.services.json`, `launch`
   now reads "a public API with its own keys, quotas and playground, live since 2026-10-07 with its developer console"
   and the description says the public API and developer console are live, with OpenVibe.Live and OpenVibe.Network
   calling it too. Copy only; no schema, capability or event changes. OpenVibe.Sites mirrors this manifest through
   `scripts/sync-catalog.js`, so it needs a pin bump and a resync.
+
+## 0.155.0 — 2026-10-13
+
+- **Contracts 0.155.0: browser-provider job contracts (plan T14 R4a, ADR-034; planned, internal).** What OpenVibe.Run
+  sends to and reads from an external managed-browser provider: `browser-provider.job-create-request@1` (`id`, `class`
+  browser, `args`, `inputs` pinned by sha256, `limits`, `egress`; no project, subject, requester or credential, so the
+  provider never learns who pays), `browser-provider.job-state@1` (`state`, `started_ms`, `finished_ms`, `wall_ms` as the
+  provider's claim only, `exit_reason`, `exit_code`, `result`, `stdout` in Bot's ring shape; no node, project or class
+  field) and `browser-provider.job-create-result@1` (`{ job, created }`, 201 or 200 on an idempotent repeat). New
+  capability `browser_provider.job.dispatch` (Run's own outbound call, `planned`, `implementedBy` empty). Additive only.
 
 ## 0.154.0 — 2026-10-13
 
