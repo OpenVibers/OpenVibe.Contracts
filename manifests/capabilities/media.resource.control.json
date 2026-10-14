@@ -1,0 +1,22 @@
+{
+  "id": "media.resource.control",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Control a media object through OpenVibe.Media's control API (ADR-048, plan T13 step 10): POST /api/v1/resources/control takes one common.resource-control-request@1 naming a media.object by its OVRN, from a first-party service (OpenVibe.Services) acting for the person in on_behalf_of. Action: delete (a soft delete, exactly as DELETE /api/v1/objects/:id: the object stops being served at once and can be restored through the API until its retention period ends; an object under a retention hold, or a legacy VOD, clip or file managed through its own routes, is refused). Any other action is refused unsupported. Only the object's owner may act on it, and only inside the project the OVRN names. dry_run decides and explains without applying. The first answer per (caller, project, idempotency_key) is kept and returned for a repeat; the same key with another request is refused. Answers common.resource-control-result@1.",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}

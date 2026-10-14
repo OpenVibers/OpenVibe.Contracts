@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.169.0 — 2026-10-14
+
+- **`actor.resource.control`** (active, first-party, sensitive): OpenVibe.Actor's control API (ADR-048, plan T13 step
+  10). `POST /api/v1/resources/control` takes `stop` for a person's `actor.task` (cancel: a queued task ends at once, a
+  running one is aborted and ends cancelled). The `actor` manifest lists it.
+- **`media.resource.control`** (active, first-party, sensitive): OpenVibe.Media's control API. `delete` soft-deletes a
+  person's `media.object` exactly as `DELETE /api/v1/objects/:id` does (restorable until its retention period ends; held
+  and legacy-managed objects are refused). The `media` manifest lists it.
+- Both: only the resource's owner, inside the OVRN's project; dry runs; idempotent per (caller, project, key). Additive.
+
 ## 0.168.0 — 2026-10-14
 
 - **`events.resource.control`** (active, first-party, sensitive): OpenVibe.Events' control API (ADR-048, plan T13 step
