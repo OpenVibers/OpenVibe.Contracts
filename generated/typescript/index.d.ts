@@ -176110,7 +176110,8 @@ export type BotDeviceMessage =
         | "exec"
         | "fs"
         | "screen"
-        | "probe";
+        | "probe"
+        | "input";
       value?: {};
       /**
        * Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window.
@@ -176296,7 +176297,7 @@ export type BotDeviceMessage =
 
 /** bot.command@1.0.0 (owner: bot) */
 /**
- * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer.
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask.
  */
 export type BotCommand = {
   [k: string]: unknown | undefined;
@@ -176307,7 +176308,19 @@ export type BotCommand = {
   type: "command";
   id?: string;
   kind:
-    "drive" | "actuator" | "ptz" | "say" | "display" | "halt" | "button" | "point" | "exec" | "fs" | "screen" | "probe";
+    | "drive"
+    | "actuator"
+    | "ptz"
+    | "say"
+    | "display"
+    | "halt"
+    | "button"
+    | "point"
+    | "exec"
+    | "fs"
+    | "screen"
+    | "probe"
+    | "input";
   value?: {};
   ms?: number;
 };

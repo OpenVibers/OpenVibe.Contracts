@@ -172,7 +172,8 @@
             "exec",
             "fs",
             "screen",
-            "probe"
+            "probe",
+            "input"
           ]
         },
         "value": {

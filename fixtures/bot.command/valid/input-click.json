@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "seq": 50,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-50",
+  "kind": "input",
+  "value": {
+    "action": "click",
+    "x": 640,
+    "y": 360,
+    "width": 1280,
+    "height": 720
+  }
+}
