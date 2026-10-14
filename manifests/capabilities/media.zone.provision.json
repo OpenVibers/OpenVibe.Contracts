@@ -1,0 +1,23 @@
+{
+  "id": "media.zone.provision",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Provision a zone in OpenVibe.Media (ADR-031 amendment 2026-10-02), granted only to OpenVibe.Zone: PUT /internal/zones/:zone_id with the zone.object-zone@1 record Zone owns. Media applies a record only when its revision is higher than the one it holds, checks it with contracts.zones.checkObjectZone, and refuses a name another zone of the environment holds (409 media.zone.name_retired) and any change of project, environment, name or namespace (409 media.zone.immutable). Media keeps a projection of each zone to resolve S3 bucket names, enforce the zone's quota_bytes beside the environment's, and answer NoSuchBucket for a zone that is deleting or deleted. GET /internal/zones/:zone_id reports the live objects and, while the zone is deleting, the objects remaining and held; Media tombstones and purges a deleting zone's objects (no restore window) and records when none remain. Loopback only.",
+  "permissions": [
+    "zones:provision"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "PUT /internal/zones/:zone_id",
+    "GET /internal/zones/:zone_id"
+  ],
+  "inputSchema": "zone.object-zone@1",
+  "outputSchema": "common.no-body@1"
+}

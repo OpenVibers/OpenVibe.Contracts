@@ -1,21 +1,20 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.87.0 <1.0.0"
+    "openvibe-contracts": ">=0.173.0 <1.0.0"
   },
   "id": "zone",
   "name": "OpenVibe.Zone",
-  "status": "placeholder",
+  "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Zone",
   "domains": [
     "openvibe.zone",
     "api.openvibe.zone"
   ],
-  "publicOrigin": "https://api.openvibe.zone",
+  "publicOrigin": "https://openvibe.zone",
   "exposure": {
-    "state": "placeholder",
-    "publicSite": null,
-    "note": "planned (ADR-031 amendment 2026-10-02); nothing is built or deployed, and no OpenVibe service serves openvibe.zone yet"
+    "state": "live",
+    "publicSite": "service"
   },
   "capabilities": [
     "zone.zone.create",
@@ -23,30 +22,73 @@
     "zone.zone.read",
     "zone.zone.manage",
     "zone.zone.delete",
-    "zone.usage.read"
+    "zone.usage.read",
+    "zone.resource.read",
+    "zone.resource.control"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],
-  "namespacesOwned": [],
+  "namespacesOwned": [
+    "zone.*"
+  ],
   "lifecycle": {
     "liveness": {
-      "none": "not built yet; nothing listens on a loopback address"
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; the database is what ready checks"
     },
     "shutdown": {
-      "none": "not built yet; nothing runs or drains"
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "deletion poller stopped",
+        "Network key refresher stopped",
+        "store closed"
+      ]
     },
     "startupRecovery": {
-      "none": "not built yet; nothing starts"
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "sign-in sessions are cookies verified against Network's keys, fetched again at boot"
+        },
+        {
+          "kind": "state",
+          "what": "every zone is a committed row with a revision; a zone still provisioning, or deleting, is pushed to Media again (Media applies only a higher revision)"
+        },
+        {
+          "kind": "jobs",
+          "what": "the deletion poller resumes every zone in state deleting and marks it deleted once Media reports nothing left"
+        }
+      ]
     },
     "rollback": {
-      "none": "not built yet; nothing is released or rolled back"
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Zone's own tables; Media keeps serving every zone from its projection while Zone is down"
+      }
     },
     "contracts": {
-      "range": ">=0.87.0 <1.0.0"
+      "range": ">=0.173.0 <1.0.0"
     },
     "leases": {
-      "none": "not built yet; nothing runs"
+      "none": "no claims: one process serves the site, the API and the deletion poller"
     }
   },
-  "notes": "Named object zones per project environment (ADR-031 amendment 2026-10-02). Zone owns the zone record and its control API in its own PostgreSQL database (ADR-035). OpenVibe.Media owns the objects, bytes, replicas, S3 and native data APIs, quota enforcement, usage counting and the one deletion path. Planned: nothing is built."
+  "notes": "Port 5050, unit openvibe-zone.service, openvibe.zone (its own certificate; api.openvibe.zone waits for its DNS record). Named object zones per project environment (ADR-031 amendment 2026-10-02): Zone owns the zone record, its name (never reused), state, quota setting and control API in its own PostgreSQL database (ov_zone, ADR-035), and provisions every change in OpenVibe.Media, which owns the objects, bytes, replicas, the S3 and native data APIs, quota enforcement, usage counting, the access keys and the one deletion path. Zone never lists keys or holds bytes. Its site is the storage console: a project's zones, their usage, S3 access keys (issued by Media), and how to use them.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5050",
+  "site": {
+    "name": "Zone",
+    "icon": "zone",
+    "tagline": "Private S3-compatible storage for your projects.",
+    "what": "Named storage zones for each project and environment: buckets that the AWS SDKs, rclone and backup tools reach over S3, with access keys you scope to a zone and quotas you set.",
+    "legalProfile": "ugc",
+    "position": 36
+  }
 }

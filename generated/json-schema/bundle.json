@@ -68568,12 +68568,12 @@
     "zone.object-zone": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone.v1.json",
         "title": "ObjectZone",
-        "description": "zone.object-zone@1 (PLANNED; ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.",
+        "description": "zone.object-zone@1 (ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -68862,12 +68862,12 @@
     "zone.object-zone-create-request": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone-create-request.v1.json",
         "title": "ObjectZoneCreateRequest",
-        "description": "zone.object-zone-create-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.",
+        "description": "zone.object-zone-create-request@1 (ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -68910,12 +68910,12 @@
     "zone.object-zone-update-request": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone-update-request.v1.json",
         "title": "ObjectZoneUpdateRequest",
-        "description": "zone.object-zone-update-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.",
+        "description": "zone.object-zone-update-request@1 (ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.",
         "type": "object",
         "additionalProperties": false,
         "minProperties": 1,
@@ -68941,12 +68941,12 @@
     "zone.object-zone-list-query": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone-list-query.v1.json",
         "title": "ObjectZoneListQuery",
-        "description": "zone.object-zone-list-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.",
+        "description": "zone.object-zone-list-query@1 (ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -68990,12 +68990,12 @@
     "zone.object-zone-list": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone-list.v1.json",
         "title": "ObjectZoneList",
-        "description": "zone.object-zone-list@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.",
+        "description": "zone.object-zone-list@1 (ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -69024,12 +69024,12 @@
     "zone.object-zone-delete-query": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone-delete-query.v1.json",
         "title": "ObjectZoneDeleteQuery",
-        "description": "zone.object-zone-delete-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.",
+        "description": "zone.object-zone-delete-query@1 (ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -69048,12 +69048,12 @@
     "zone.object-zone-usage": {
       "version": "1.0.0",
       "owner": "zone",
-      "status": "planned",
+      "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/zone/object-zone-usage.v1.json",
         "title": "ObjectZoneUsage",
-        "description": "zone.object-zone-usage@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Rollups are counts; Billing rates only platform.usage-sample readings (billing.usage.record). Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.",
+        "description": "zone.object-zone-usage@1 (ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Rollups are counts; Billing rates only platform.usage-sample readings (billing.usage.record). Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -80749,6 +80749,197 @@
                   "format": "date-time"
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "media.access-key": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/access-key.v1.json",
+        "title": "AccessKey",
+        "description": "media.access-key@1 (ADR-031, amended 2026-10-14): one S3 access key of OpenVibe.Media's S3 surface (https://s3.openvibe.media). It is bound to one project environment, reads and/or writes, and may be scoped to some zones of that environment (zone.object-zone@1 ids; empty means every zone). Media issues and verifies it: SigV4 needs the secret, so the party that checks signatures keeps it, encrypted, and shows it once (media.access-key-issued@1). The secret is never part of this record. A revoked key is refused at once; a key scoped only to a zone that is deleted is revoked with it. More fields may be added.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "project_id",
+          "env",
+          "name",
+          "permissions",
+          "zones",
+          "created_by",
+          "created_at",
+          "last_used_at",
+          "revoked_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ovk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The S3 access key id."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "env": {
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "What uses the key, as the person who issued it named it."
+          },
+          "permissions": {
+            "enum": [
+              "read",
+              "write",
+              "read-write"
+            ]
+          },
+          "zones": {
+            "type": "array",
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^zon_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "description": "The zones it may reach; empty = every zone of the environment."
+          },
+          "created_by": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_used_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The last signed request, to the minute."
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "media.access-key-issue-request": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/access-key-issue-request.v1.json",
+        "title": "AccessKeyIssueRequest",
+        "description": "media.access-key-issue-request@1 (ADR-031): the body of POST /api/v1/projects/:project_id/access-keys on OpenVibe.Media (capability media.access_key.manage), sent by a first-party service (OpenVibe.Zone, OpenVibe.Services) for the person in on_behalf_of, who must be an admin or owner of the project (Network decides). The answer is 201 media.access-key-issued@1. A zone that is not an active zone of this project environment answers 404 media.access_key.unknown_zone; more than 50 live keys in one environment answer 409 media.access_key.limit.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "env",
+          "name",
+          "on_behalf_of"
+        ],
+        "properties": {
+          "env": {
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "permissions": {
+            "enum": [
+              "read",
+              "write",
+              "read-write"
+            ],
+            "default": "read-write"
+          },
+          "zones": {
+            "type": "array",
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^zon_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "on_behalf_of": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    "media.access-key-issued": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/access-key-issued.v1.json",
+        "title": "AccessKeyIssued",
+        "description": "media.access-key-issued@1 (ADR-031): the 201 of POST /api/v1/projects/:project_id/access-keys. `secret` is the S3 secret access key; it is in this answer only, and Media never shows it again. A caller relays it to the person once and keeps no copy.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "secret"
+        ],
+        "properties": {
+          "key": {
+            "$ref": "access-key.v1.json"
+          },
+          "secret": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{40}$"
+          }
+        }
+      }
+    },
+    "media.access-key-list": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/access-key-list.v1.json",
+        "title": "AccessKeyList",
+        "description": "media.access-key-list@1 (ADR-031): GET /api/v1/projects/:project_id/access-keys (capability media.access_key.manage, for a project admin in on_behalf_of): every key of the project, newest first, revoked ones included. No secret is ever listed.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "keys"
+        ],
+        "properties": {
+          "keys": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "$ref": "access-key.v1.json"
             }
           }
         }

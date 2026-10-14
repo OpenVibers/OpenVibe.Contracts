@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/access-key-list.v1.json",
+  "title": "AccessKeyList",
+  "description": "media.access-key-list@1 (ADR-031): GET /api/v1/projects/:project_id/access-keys (capability media.access_key.manage, for a project admin in on_behalf_of): every key of the project, newest first, revoked ones included. No secret is ever listed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["keys"],
+  "properties": {
+    "keys": { "type": "array", "maxItems": 500, "items": { "$ref": "access-key.v1.json" } }
+  }
+}

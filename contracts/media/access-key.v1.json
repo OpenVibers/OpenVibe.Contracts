@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/access-key.v1.json",
+  "title": "AccessKey",
+  "description": "media.access-key@1 (ADR-031, amended 2026-10-14): one S3 access key of OpenVibe.Media's S3 surface (https://s3.openvibe.media). It is bound to one project environment, reads and/or writes, and may be scoped to some zones of that environment (zone.object-zone@1 ids; empty means every zone). Media issues and verifies it: SigV4 needs the secret, so the party that checks signatures keeps it, encrypted, and shows it once (media.access-key-issued@1). The secret is never part of this record. A revoked key is refused at once; a key scoped only to a zone that is deleted is revoked with it. More fields may be added.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "project_id", "env", "name", "permissions", "zones", "created_by", "created_at", "last_used_at", "revoked_at"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^ovk_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The S3 access key id." },
+    "project_id": { "type": "string", "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "env": { "enum": ["sandbox", "production"] },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80, "description": "What uses the key, as the person who issued it named it." },
+    "permissions": { "enum": ["read", "write", "read-write"] },
+    "zones": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^zon_[0-9A-HJKMNP-TV-Z]{26}$" }, "description": "The zones it may reach; empty = every zone of the environment." },
+    "created_by": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "last_used_at": { "type": ["string", "null"], "format": "date-time", "description": "The last signed request, to the minute." },
+    "revoked_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

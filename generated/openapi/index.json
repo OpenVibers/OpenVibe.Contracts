@@ -117,8 +117,8 @@
       "service": "media",
       "name": "OpenVibe.Media",
       "origin": "https://openvibe.media",
-      "operations": 10,
-      "capabilities": 7
+      "operations": 15,
+      "capabilities": 10
     },
     {
       "service": "media-hub",
@@ -245,6 +245,13 @@
       "origin": "https://openvibe.work",
       "operations": 5,
       "capabilities": 1
+    },
+    {
+      "service": "zone",
+      "name": "OpenVibe.Zone",
+      "origin": "https://openvibe.zone",
+      "operations": 9,
+      "capabilities": 8
     }
   ]
 }

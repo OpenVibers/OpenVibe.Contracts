@@ -8,7 +8,8 @@
   "status": "beta",
   "repository": "OpenVibers/OpenVibe.Media",
   "domains": [
-    "openvibe.media"
+    "openvibe.media",
+    "s3.openvibe.media"
   ],
   "publicOrigin": "https://openvibe.media",
   "health": "/healthz",
@@ -27,6 +28,7 @@
     "position": 4
   },
   "capabilities": [
+    "media.access_key.manage",
     "media.avatar.ingest",
     "media.derivative.create",
     "media.derivative.read",
@@ -35,10 +37,12 @@
     "media.object.delete",
     "media.object.list",
     "media.object.read",
+    "media.object.s3",
     "media.object.upload",
-    "media.resource.read",
     "media.resource.control",
-    "media.upload.create"
+    "media.resource.read",
+    "media.upload.create",
+    "media.zone.provision"
   ],
   "eventsProduced": [
     "media.clip.failed",

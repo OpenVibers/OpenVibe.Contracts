@@ -2,9 +2,9 @@
   "id": "zone.zone.manage",
   "version": "1.0",
   "owner": "zone",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "PLANNED (ADR-031 amendment 2026-10-02): Change an object zone's quota_bytes or description: PATCH /api/v1/zones/:zone_id. Name, environment and access are immutable. A quota change takes effect once Media acknowledges it. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "description": "Change an object zone's quota_bytes or description: PATCH /api/v1/zones/:zone_id. Name, environment and access are immutable. A quota change takes effect once Media acknowledges it. Callers: a developer app of the project with this capability, or a person who administers the project, signed in on openvibe.zone.",
   "inputSchema": "zone.object-zone-update-request@1",
   "outputSchema": "zone.object-zone@1",
   "permissions": [
@@ -15,5 +15,7 @@
   ],
   "quotaClass": "zone-control",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "PATCH /api/v1/zones/:zone_id"
+  ]
 }

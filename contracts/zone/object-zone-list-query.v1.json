@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/zone/object-zone-list-query.v1.json",
   "title": "ObjectZoneListQuery",
-  "description": "zone.object-zone-list-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.",
+  "description": "zone.object-zone-list-query@1 (ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.",
   "type": "object",
   "additionalProperties": false,
   "properties": {

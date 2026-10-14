@@ -2,9 +2,9 @@
   "id": "zone.usage.read",
   "version": "1.0",
   "owner": "zone",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "PLANNED (ADR-031 amendment 2026-10-02): Read an object zone's usage: GET /api/v1/zones/:zone_id/usage. It answers Media's live-object snapshot and the month's hourly rollups. Zone never counts. It becomes active, and enters generated/openapi/zone.json, when OpenVibe.Zone implements the route.",
+  "description": "Read an object zone's usage: GET /api/v1/zones/:zone_id/usage. It answers Media's live-object snapshot and the month's hourly rollups. Zone never counts. Callers: a developer app of the project with this capability, or a person who administers the project, signed in on openvibe.zone.",
   "outputSchema": "zone.object-zone-usage@1",
   "permissions": [
     "zone:read"
@@ -14,5 +14,8 @@
   ],
   "quotaClass": "zone-control",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "GET /api/v1/zones/:zone_id/usage"
+  ],
+  "inputSchema": "common.no-body@1"
 }
