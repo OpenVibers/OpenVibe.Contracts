@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/task-start-result.v1.json",
+  "title": "CodesTaskStartResult",
+  "description": "codes.task-start-result@1: the answer of POST /api/v1/tasks (201 created, or 200 with created false for a repeated idempotency key).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task",
+    "created"
+  ],
+  "properties": {
+    "task": {
+      "$ref": "task.v1.json"
+    },
+    "created": {
+      "type": "boolean"
+    }
+  }
+}

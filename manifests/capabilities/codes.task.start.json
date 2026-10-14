@@ -1,0 +1,22 @@
+{
+  "id": "codes.task.start",
+  "version": "1.0",
+  "owner": "codes",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Start a coding task for a person on their own machine: POST /api/v1/tasks on OpenVibe.Codes, as a first-party service naming the person in X-OV-Subject (OpenVibe.Actor routes coding work here, plan T17). Codes submits it to OpenVibe.Run as that person, in the project of their latest openvibe.codes/run task, and Run places it only on a machine of theirs (platform.resource-offer@1 owner). The person pays nothing to OpenVibe for it: the model use is on their own machine's keys.",
+  "inputSchema": "codes.task-start-request@1",
+  "outputSchema": "codes.task-start-result@1",
+  "permissions": [
+    "codes:tasks:start"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "codes-task-start",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/tasks"
+  ]
+}

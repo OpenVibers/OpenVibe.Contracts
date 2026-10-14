@@ -1,0 +1,12 @@
+{
+  "task": {
+    "id": "tsk_01M4XEV0JT93CAYTXVD6V0QW1E",
+    "state": "queued",
+    "repo": "https://github.com/octocat/Hello-World",
+    "ref": null,
+    "agent": "deepseek",
+    "url": "https://openvibe.codes/run/tasks/tsk_01M4XEV0JT93CAYTXVD6V0QW1E",
+    "created_at": "2026-10-14T15:00:00.000Z",
+    "updated_at": "2026-10-14T15:00:00.000Z"
+  }
+}

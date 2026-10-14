@@ -7128,6 +7128,33 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "codes.task-start-request",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/task-start-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task-start-result",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/task-start-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/task.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

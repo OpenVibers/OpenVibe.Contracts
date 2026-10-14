@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/task-start-request.v1.json",
+  "title": "CodesTaskStartRequest",
+  "description": "codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repo",
+    "prompt"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^\\s@/]+/[^\\s@]+$",
+      "maxLength": 300
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[^\\s~^:?*\\[\\\\]+$"
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000
+    },
+    "agent": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,40}$"
+    },
+    "permission": {
+      "enum": [
+        "edit",
+        "full"
+      ]
+    },
+    "push": {
+      "type": "boolean"
+    },
+    "pull_request": {
+      "type": "boolean"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    }
+  }
+}

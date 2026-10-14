@@ -1,0 +1,21 @@
+{
+  "id": "codes.task.cancel",
+  "version": "1.0",
+  "owner": "codes",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Cancel a coding task started through codes.task.start that has not ended: POST /api/v1/tasks/:id/cancel on OpenVibe.Codes, as the service that started it, naming the same person in X-OV-Subject. Codes cancels the Run job; the task ends cancelled (an ended one is answered as it is).",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "codes.task@1",
+  "permissions": [
+    "codes:tasks:cancel"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "codes-task-start",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/tasks/:id/cancel"
+  ]
+}

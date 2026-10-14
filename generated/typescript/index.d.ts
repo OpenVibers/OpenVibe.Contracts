@@ -176945,3 +176945,207 @@ export type VideoPlaylistManageResult =
         added_at: string;
       }[];
     };
+
+/** codes.task-start-request@1.0.0 (owner: codes) */
+/**
+ * codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).
+ */
+export interface CodesTaskStartRequest {
+  repo: string;
+  ref?: string;
+  prompt: string;
+  agent?: string;
+  permission?: "edit" | "full";
+  push?: boolean;
+  pull_request?: boolean;
+  idempotency_key?: string;
+}
+
+/** codes.task-start-result@1.0.0 (owner: codes) */
+/**
+ * codes.task-start-result@1: the answer of POST /api/v1/tasks (201 created, or 200 with created false for a repeated idempotency key).
+ */
+export interface CodesTaskStartResult {
+  task: CodesTask;
+  created: boolean;
+}
+
+/** codes.task@1.0.0 (owner: codes) */
+/**
+ * codes.task@1: a coding task on OpenVibe.Codes, as GET /api/v1/tasks/:id answers it (capability codes.task.read) and POST /api/v1/tasks creates it. STATE follows the OpenVibe.Run job that carries it: queued (waiting for one of the person's machines), placed, running, then succeeded, failed, cancelled or expired (no machine of theirs took it in time). URL is the task's page on openvibe.codes, where its owner follows it live. RESULT is present once it has ended: OK says whether the agents finished, SUMMARY what they said, FILES and PATCH the change (the patch at most 256 KiB, PATCH_TRUNCATED when cut), PUSH where it went when asked, COST_USD the model use on the person's own keys, DURATION_MS the time on their machine. ERROR says why a task that never ran ended (Run refused it, or the job failed before a result).
+ */
+export interface CodesTask {
+  /**
+   * The Codes task id (tsk_ + ULID).
+   */
+  id: string;
+  state: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+  repo: string;
+  ref?: string | null;
+  agent?: string | null;
+  url: string;
+  created_at: string;
+  updated_at: string;
+  error?: string | null;
+  result?: {
+    ok: boolean;
+    /**
+     * @maxItems 20
+     */
+    agents?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    summary?: string;
+    /**
+     * @maxItems 2000
+     */
+    files?: {
+      path: string;
+      added?: number | null;
+      removed?: number | null;
+    }[];
+    patch?: string;
+    patch_truncated?: boolean;
+    push?: {
+      pushed: boolean;
+      branch?: string;
+      branch_url?: string;
+      pull_request?: string;
+      pull_request_error?: string;
+      reason?: string;
+    };
+    cost_usd?: number;
+    duration_ms?: number;
+    error?: string;
+  };
+}
