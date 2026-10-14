@@ -1,0 +1,16 @@
+{
+  "id": "community.ballbot",
+  "version": 1,
+  "name": "Ballbot",
+  "vendor": "A community member",
+  "kind": "onboard",
+  "description": "A self-balancing ball robot on an ESP32, driven by a community Node plugin its owner installs.",
+  "capabilities": ["drive.differential", "battery"],
+  "mapping": { "driver": "plugin", "plugin": "ballbot" },
+  "commands": { "drive": { "axes": { "throttle": [-1, 1], "steer": [-1, 1] } } },
+  "widgets": [
+    { "type": "drive", "capability": "drive.differential", "label": "Drive", "order": 1, "command": { "kind": "drive" } },
+    { "type": "battery", "capability": "battery", "label": "Battery", "order": 2 }
+  ],
+  "limits": { "max_speed": 0.5, "max_turn": 0.6, "max_command_ms": 300, "heartbeat_ms": 1000 }
+}

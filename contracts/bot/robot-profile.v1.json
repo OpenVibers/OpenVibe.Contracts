@@ -78,7 +78,8 @@
             "onvif",
             "sim",
             "relay",
-            "phone"
+            "phone",
+            "plugin"
           ]
         },
         "plugin": {
