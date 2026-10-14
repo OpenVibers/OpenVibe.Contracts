@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 34,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-34",
+  "kind": "fs",
+  "value": {
+    "op": "delete",
+    "path": "/home/ada"
+  }
+}

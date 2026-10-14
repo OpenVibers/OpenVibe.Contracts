@@ -7,7 +7,9 @@ const c = require('..');
 
 // OpenVibe.Bot STATUS.json "capabilities" and "events" at origin/main (2026-10-04, with bot.job.dispatch, plan T14 step 6).
 // bot.resource.read: the robots in OpenVibe.Services' resource index (planned 0.129.0, active 0.130.0; plan T13 step 8).
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read'];
+// bot.computer.control: an owner's agent uses their own machine (0.166.0, plan T14/T17; Bot's STATUS.json lists it with
+// the computer kinds).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 
 const bot = c.services.get('bot');
@@ -18,4 +20,12 @@ for (const t of BOT_EVENTS) assert.ok(c.resolve(`${t}@1`), `${t} has a payload c
 // The device and operator WebSocket frames are contracts too, and a command frame is refused for an unknown kind.
 for (const id of ['bot.device-message@1', 'bot.command@1', 'bot.command-result@1', 'bot.robot-profile@1']) assert.ok(c.resolve(id), `${id} resolves`);
 assert.ok(!c.validate('bot.command@1', { type: 'command', kind: 'fly' }).valid, 'an unknown command kind is refused');
+// The computer kinds: a program and its arguments, never a shell line; a file op from the list; the answer in data.
+const cmd = (kind, value) => ({ v: 1, seq: 1, ts: 1, type: 'command', id: 'op-1', kind, value });
+assert.ok(c.validate('bot.command@1', cmd('exec', { argv: ['ls', '-la'] })).valid, 'exec with argv');
+assert.ok(!c.validate('bot.command@1', cmd('exec', { argv: 'ls -la' })).valid, 'exec with a shell line is refused');
+assert.ok(!c.validate('bot.command@1', cmd('exec', {})).valid, 'exec needs argv');
+assert.ok(!c.validate('bot.command@1', cmd('fs', { op: 'delete', path: '/x' })).valid, 'fs has no delete');
+assert.ok(!c.validate('bot.command@1', cmd('screen', { max_width: 100 })).valid, 'a screen at least 320 wide');
+assert.ok(c.validate('bot.command-result@1', { v: 1, seq: 1, ts: 1, type: 'command_result', id: 'op-1', result: 'ack', data: { exit_code: 0 } }).valid, 'an ack with data');
 console.log('bot manifest: all checks passed');

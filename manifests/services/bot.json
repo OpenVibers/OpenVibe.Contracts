@@ -30,6 +30,7 @@
     "bot.robot.read",
     "bot.robot.manage",
     "bot.robot.control",
+    "bot.computer.control",
     "bot.device.connect",
     "bot.job.dispatch",
     "bot.resource.read"

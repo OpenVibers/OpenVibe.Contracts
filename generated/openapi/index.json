@@ -34,7 +34,7 @@
       "name": "OpenVibe.Bot",
       "origin": "https://openvibe.bot",
       "operations": 20,
-      "capabilities": 5
+      "capabilities": 6
     },
     {
       "service": "chat",

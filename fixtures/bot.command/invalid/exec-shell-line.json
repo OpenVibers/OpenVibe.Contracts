@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "seq": 33,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-33",
+  "kind": "exec",
+  "value": {
+    "argv": "rm -rf /"
+  }
+}

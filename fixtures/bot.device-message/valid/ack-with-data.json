@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "seq": 52,
+  "ts": 1759600000118,
+  "type": "ack",
+  "id": "cmd_01JA0000000000000000000030",
+  "latency_ms": 101,
+  "data": {
+    "path": "/home/ada/projects/site",
+    "entries": [{ "name": "index.html", "type": "file", "size": 812, "mtime": 1759599000 }],
+    "total": 1,
+    "truncated": false
+  }
+}

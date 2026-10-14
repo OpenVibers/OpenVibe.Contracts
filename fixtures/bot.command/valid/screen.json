@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "seq": 32,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-32",
+  "kind": "screen",
+  "value": {
+    "max_width": 1280
+  }
+}

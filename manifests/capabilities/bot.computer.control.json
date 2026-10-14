@@ -1,0 +1,24 @@
+{
+  "id": "bot.computer.control",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Use a person's own computer with a Network service token naming that person in X-OV-Subject: the computer kinds of bot.command@1 (exec, fs, screen) through POST /api/v1/robots/:id/commands, for a machine (openvibe.bot/machines) whose owner is that person and who turned on 'Let my agent use this computer'. Bot takes them from no one else (never an operator or a queue member), and the machine's owner sets on the machine itself what may happen (OpenVibe.Node's computer plugin: observe, ask, trusted or full; ask waits for the owner's approval there). The answer is bot.command-result@1's data; every command is audited, a refused one emits bot.command.refused.",
+  "permissions": [
+    "bot:computer:control"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "bot-control",
+  "events": [
+    "bot.command.refused"
+  ],
+  "implementedBy": [
+    "POST /api/v1/robots/:id/commands with kind exec, fs or screen (bot.command@1, answered by bot.command-result@1 with data)"
+  ],
+  "inputSchema": "bot.command@1",
+  "outputSchema": "bot.command-result@1"
+}
