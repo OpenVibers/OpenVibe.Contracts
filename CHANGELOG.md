@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.155.0 — 2026-10-13
+
+- **OpenVibe.AI's catalog copy says the public API is live.** In `manifests/products/ai.openvibe.services.json`, `launch`
+  now reads "a public API with its own keys, quotas and playground, live since 2026-10-07 with its developer console"
+  and the description says the public API and developer console are live, with OpenVibe.Live and OpenVibe.Network
+  calling it too. Copy only; no schema, capability or event changes. OpenVibe.Sites mirrors this manifest through
+  `scripts/sync-catalog.js`, so it needs a pin bump and a resync.
+
 ## 0.154.0 — 2026-10-13
 
 - **Contracts 0.154.0: `services.resource.control` capability (ADR-048 control operations)** (first-party, active):
