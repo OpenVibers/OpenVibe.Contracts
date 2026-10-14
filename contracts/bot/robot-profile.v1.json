@@ -77,7 +77,8 @@
             "looi",
             "onvif",
             "sim",
-            "relay"
+            "relay",
+            "phone"
           ]
         },
         "plugin": {

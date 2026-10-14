@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.157.0 — 2026-10-14
+
+- **`bot.robot-profile@1`: `mapping.driver` may be `phone`** (plan T15 "an Android phone as the robot's brain"). A
+  phone joins OpenVibe.Bot as a device from its own browser, with nothing to install: it pairs with a one-time code
+  (or a QR code), publishes its camera over WHIP, speaks, shows a face or text, and reports its battery and tilt. The
+  driver runs in the page (OpenVibe.Bot `public/phone-device.js`), not as a Node plugin. Additive only: every
+  existing profile stays valid.
+
 ## 0.156.0 — 2026-10-13
 
 - **OpenVibe.AI's catalog copy says the public API is live.** In `manifests/products/ai.openvibe.services.json`, the
