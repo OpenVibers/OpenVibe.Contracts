@@ -169171,7 +169171,7 @@ export interface BotRobotProfile {
     [k: string]: {} | undefined;
   } | null;
   mapping: {
-    driver: "pca9685" | "ads7830" | "cozmo" | "looi" | "onvif" | "sim" | "relay" | "phone";
+    driver: "pca9685" | "ads7830" | "cozmo" | "looi" | "onvif" | "sim" | "relay" | "phone" | "plugin";
     plugin?: string;
   };
   commands?: {

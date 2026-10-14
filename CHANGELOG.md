@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.160.0 — 2026-10-14
+
+- **`bot.robot-profile@1`: `mapping.driver` may be `plugin`** (plan T15 "community-submitted profiles and drivers"): the
+  robot is driven by a third-party OpenVibe Node plugin, named in `mapping.plugin`, that its owner installs on their
+  Node. A community driver no longer needs a contract release of its own (as `looi` did); OpenVibe.Bot reviews and signs
+  community profiles before robots can use them. New valid fixture `community-plugin.json`. Additive only: every
+  existing profile stays valid.
+
 ## 0.159.0 — 2026-10-14
 
 - **Contracts 0.159.0: sandbox-provider job contracts (plan T14 R4b, ADR-034; planned, internal).** What OpenVibe.Run
