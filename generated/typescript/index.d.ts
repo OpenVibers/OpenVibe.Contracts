@@ -170008,6 +170008,132 @@ export interface BrowserProviderJobState {
   } | null;
 }
 
+/** sandbox-provider.job-create-request@1.0.0 (owner: run) */
+/**
+ * sandbox-provider.job-create-request@1 (PLANNED; plan T14 R4b, ADR-034): the body OpenVibe.Run POSTs to an external sandbox provider's (such as E2B or Fly Machines) job endpoint (capability sandbox_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is code or linux, the platform.runtime-class@1 classes a sandbox hosts. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is sandbox-provider.job-create-result@1.
+ */
+export interface SandboxProviderJobCreateRequest {
+  /**
+   * platform.job@1 `id`
+   */
+  id: string;
+  class: "code" | "linux";
+  /**
+   * The job's declared input as JSON; Run enforces the 512 KiB cap before sending.
+   */
+  args: {};
+  /**
+   * Files for the job, each an OpenVibe.Media object pinned by sha256; names are unique; empty when the job has none.
+   *
+   * @maxItems 32
+   */
+  inputs: {
+    /**
+     * File name in the job directory; no path separators.
+     */
+    name: string;
+    media_id: string;
+    /**
+     * Lowercase hex SHA-256 of the object's bytes.
+     */
+    sha256: string;
+    size_bytes?: number;
+  }[];
+  /**
+   * Caps on the running job (platform.job@1 limits); the provider ends a job that hits one with exit_reason limit.
+   */
+  limits: {
+    /**
+     * Running time from the job's start
+     */
+    wall_ms: number;
+    /**
+     * CPU time, user plus system; when the provider can enforce it
+     */
+    cpu_ms?: number;
+    /**
+     * Peak resident memory; when the provider can enforce it
+     */
+    mem_bytes?: number;
+  };
+  /**
+   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   */
+  egress: "none" | "public" | "openvibe-only";
+}
+
+/** sandbox-provider.job-create-result@1.0.0 (owner: run) */
+/**
+ * sandbox-provider.job-create-result@1 (PLANNED; plan T14 R4b, ADR-034): an external sandbox provider's (such as E2B or Fly Machines) answer to OpenVibe.Run's job POST (sandbox-provider.job-create-request@1): 201 { job, created: true } when it accepted a new job, 200 { job, created: false } for an idempotent repeat of an id it already holds (the first job's state, nothing started twice). JOB is sandbox-provider.job-state@1 and Run validates it before adopting any of it. A refused POST answers a problem instead (4xx; 5xx is retried by Run on its next tick), never this contract. For the later calls, GET <provider>/jobs/:id answers sandbox-provider.job-state@1 and POST <provider>/jobs/:id/cancel answers it too; a 404 on either means the provider does not know the job.
+ */
+export interface SandboxProviderJobCreateResult {
+  job: SandboxProviderJobState;
+  /**
+   * True when this POST created the job (201); false for an idempotent repeat (200).
+   */
+  created: boolean;
+}
+
+/** sandbox-provider.job-state@1.0.0 (owner: run) */
+/**
+ * sandbox-provider.job-state@1 (PLANNED; plan T14 R4b, ADR-034): an external sandbox provider's (such as E2B or Fly Machines) state of one job, the body of GET <provider>/jobs/:id and the `job` of sandbox-provider.job-create-result@1. OpenVibe.Run validates it before adopting any of it: a malformed state is never adopted, and the job stays as Run last saw it. A 404 on GET or on cancel means the provider does not know the job (Run fails the job run.job.worker_failed). STATE is queued, running, then one end state: succeeded, failed, cancelled or expired. WALL_MS is the provider's CLAIM of the time the job ran, nothing more: Run bills from its own observed duration and clamps a larger claim (observed plus 5 s), so this field never sets a price. STARTED_MS and FINISHED_MS are the provider's clock, Unix ms, null until they happen. EXIT_REASON uses the reasons of platform.job-frame@1 `job_exit` (exited, cancelled, ttl, limit, stopped, failed) and is null until the job ended. EXIT_CODE is the job's exit status, null when it was killed or never ran. RESULT is the declared output (an object, at most 256 KiB serialized), null unless the job succeeded. STDOUT is the captured output in the ring shape OpenVibe.Bot returns (bot.job-dispatch-result@1) so Run's poller streams it the same way, or null when there is none. There is no node, project or class field: a provider cannot name a node or a project.
+ */
+export interface SandboxProviderJobState {
+  /**
+   * platform.job@1 `id`
+   */
+  id: string;
+  /**
+   * queued (accepted, not started), running, then one end state: succeeded (exited 0), failed (another exit code, a limit, or the provider could not run it), cancelled (a cancel), expired (the job's lifetime ran out).
+   */
+  state: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
+  /**
+   * When the job started, provider's clock, Unix ms; null until it started.
+   */
+  started_ms: number | null;
+  /**
+   * When the job ended, provider's clock, Unix ms; null until it ended.
+   */
+  finished_ms: number | null;
+  /**
+   * The provider's CLAIM of the running time; Run clamps it to its own observed duration plus 5 s and never bills above that. 0 while the job has not run.
+   */
+  wall_ms: number;
+  /**
+   * Why the job ended, as platform.job-frame@1 job_exit reason; null until it ended.
+   */
+  exit_reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed" | null;
+  /**
+   * The script's exit status; null when it was killed or never ran.
+   */
+  exit_code: number | null;
+  /**
+   * The declared output as a JSON object, at most 256 KiB serialized; null unless the job succeeded.
+   */
+  result: {} | null;
+  /**
+   * The captured stdout, or null when the job has none.
+   */
+  stdout: {
+    /**
+     * The held chunks joined in order, at most 1 MiB.
+     */
+    text: string;
+    /**
+     * The chunk_seq of the first held chunk; null when none is held.
+     */
+    first_seq: number | null;
+    /**
+     * The highest chunk_seq seen for the job; 0 when none.
+     */
+    last_seq: number;
+    /**
+     * True when an earlier chunk fell off the ring.
+     */
+    truncated: boolean;
+  } | null;
+}
+
 /** run.job-create-request@1.0.0 (owner: run) */
 /**
  * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names, or, for a first-party service acting for a person (X-OV-Subject), the project it names with X-OV-Project once Network confirms the person is an admin or owner of it (ADR-003 amendment 2026-10-12); the person is then the requester and the service is recorded as via. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict.

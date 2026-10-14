@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sandbox-provider/job-state.v1.json",
+  "title": "SandboxProviderJobState",
+  "description": "sandbox-provider.job-state@1 (PLANNED; plan T14 R4b, ADR-034): an external sandbox provider's (such as E2B or Fly Machines) state of one job, the body of GET <provider>/jobs/:id and the `job` of sandbox-provider.job-create-result@1. OpenVibe.Run validates it before adopting any of it: a malformed state is never adopted, and the job stays as Run last saw it. A 404 on GET or on cancel means the provider does not know the job (Run fails the job run.job.worker_failed). STATE is queued, running, then one end state: succeeded, failed, cancelled or expired. WALL_MS is the provider's CLAIM of the time the job ran, nothing more: Run bills from its own observed duration and clamps a larger claim (observed plus 5 s), so this field never sets a price. STARTED_MS and FINISHED_MS are the provider's clock, Unix ms, null until they happen. EXIT_REASON uses the reasons of platform.job-frame@1 `job_exit` (exited, cancelled, ttl, limit, stopped, failed) and is null until the job ended. EXIT_CODE is the job's exit status, null when it was killed or never ran. RESULT is the declared output (an object, at most 256 KiB serialized), null unless the job succeeded. STDOUT is the captured output in the ring shape OpenVibe.Bot returns (bot.job-dispatch-result@1) so Run's poller streams it the same way, or null when there is none. There is no node, project or class field: a provider cannot name a node or a project.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "state",
+    "started_ms",
+    "finished_ms",
+    "wall_ms",
+    "exit_reason",
+    "exit_code",
+    "result",
+    "stdout"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "../platform/job-frame.v1.json#/$defs/job_id"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled",
+        "expired"
+      ],
+      "description": "queued (accepted, not started), running, then one end state: succeeded (exited 0), failed (another exit code, a limit, or the provider could not run it), cancelled (a cancel), expired (the job's lifetime ran out)."
+    },
+    "started_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "When the job started, provider's clock, Unix ms; null until it started."
+    },
+    "finished_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "When the job ended, provider's clock, Unix ms; null until it ended."
+    },
+    "wall_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The provider's CLAIM of the running time; Run clamps it to its own observed duration plus 5 s and never bills above that. 0 while the job has not run."
+    },
+    "exit_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "exited",
+        "cancelled",
+        "ttl",
+        "limit",
+        "stopped",
+        "failed",
+        null
+      ],
+      "description": "Why the job ended, as platform.job-frame@1 job_exit reason; null until it ended."
+    },
+    "exit_code": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The script's exit status; null when it was killed or never ran."
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The declared output as a JSON object, at most 256 KiB serialized; null unless the job succeeded."
+    },
+    "stdout": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "The held tail of the job's stdout, the ring shape of bot.job-dispatch-result@1.",
+          "required": [
+            "text",
+            "first_seq",
+            "last_seq",
+            "truncated"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "maxLength": 1048576,
+              "description": "The held chunks joined in order, at most 1 MiB."
+            },
+            "first_seq": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "description": "The chunk_seq of the first held chunk; null when none is held."
+            },
+            "last_seq": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "The highest chunk_seq seen for the job; 0 when none."
+            },
+            "truncated": {
+              "type": "boolean",
+              "description": "True when an earlier chunk fell off the ring."
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The captured stdout, or null when the job has none."
+    }
+  },
+  "examples": [
+    {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "state": "succeeded",
+      "started_ms": 1790935200250,
+      "finished_ms": 1790935202600,
+      "wall_ms": 2350,
+      "exit_reason": "exited",
+      "exit_code": 0,
+      "result": { "title": "Example Domain" },
+      "stdout": { "text": "loaded\n", "first_seq": 1, "last_seq": 1, "truncated": false }
+    }
+  ]
+}

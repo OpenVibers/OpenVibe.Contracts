@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sandbox-provider/job-create-request.v1.json",
+  "title": "SandboxProviderJobCreateRequest",
+  "description": "sandbox-provider.job-create-request@1 (PLANNED; plan T14 R4b, ADR-034): the body OpenVibe.Run POSTs to an external sandbox provider's (such as E2B or Fly Machines) job endpoint (capability sandbox_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is code or linux, the platform.runtime-class@1 classes a sandbox hosts. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is sandbox-provider.job-create-result@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "class",
+    "args",
+    "inputs",
+    "limits",
+    "egress"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "../platform/job-frame.v1.json#/$defs/job_id"
+    },
+    "class": {
+      "enum": ["code", "linux"]
+    },
+    "args": {
+      "type": "object",
+      "description": "The job's declared input as JSON; Run enforces the 512 KiB cap before sending."
+    },
+    "inputs": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$ref": "../run/job-create-request.v1.json#/$defs/input"
+      },
+      "description": "Files for the job, each an OpenVibe.Media object pinned by sha256; names are unique; empty when the job has none."
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Caps on the running job (platform.job@1 limits); the provider ends a job that hits one with exit_reason limit.",
+      "required": [
+        "wall_ms"
+      ],
+      "properties": {
+        "wall_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Running time from the job's start"
+        },
+        "cpu_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "CPU time, user plus system; when the provider can enforce it"
+        },
+        "mem_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Peak resident memory; when the provider can enforce it"
+        }
+      }
+    },
+    "egress": {
+      "$ref": "../run/job-create-request.v1.json#/$defs/egress"
+    }
+  },
+  "examples": [
+    {
+      "id": "job_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "class": "code",
+      "args": { "entry": "main.py" },
+      "inputs": [],
+      "limits": { "wall_ms": 60000 },
+      "egress": "public"
+    }
+  ]
+}

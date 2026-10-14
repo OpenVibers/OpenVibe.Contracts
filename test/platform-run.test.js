@@ -122,4 +122,16 @@ const dispatch = contracts.capabilities.get('browser_provider.job.dispatch');
 ok(dispatch && dispatch.owner === 'run' && dispatch.status === 'planned' && dispatch.visibility === 'internal' && dispatch.sensitive === true && dispatch.implementedBy.length === 0 && dispatch.permissions.length === 0, 'browser_provider.job.dispatch is a planned internal sensitive capability of Run');
 ok(dispatch.inputSchema === 'browser-provider.job-create-request@1' && dispatch.outputSchema === 'browser-provider.job-create-result@1' && !run.capabilities.includes('browser_provider.job.dispatch'), 'it names the two contracts and is not yet a capability Run serves');
 
+// Run's outbound call to an external sandbox provider (T14 R4b): the browser-provider shape for classes code and linux.
+const sp = id => contracts.schema(`sandbox-provider.${id}`);
+for (const id of ['job-create-request', 'job-state', 'job-create-result']) {
+    ok(sp(id).additionalProperties === false, `sandbox-provider.${id} refuses unknown fields`);
+    if (id !== 'job-create-result') assert.deepStrictEqual(Object.keys(sp(id).properties).filter(k => k !== 'class'), Object.keys(bp(id).properties).filter(k => k !== 'class'));
+}
+checks += 2;
+assert.deepStrictEqual(sp('job-create-request').properties.class.enum, ['code', 'linux']);
+checks++;
+const sandboxDispatch = contracts.capabilities.get('sandbox_provider.job.dispatch');
+ok(sandboxDispatch && sandboxDispatch.owner === 'run' && sandboxDispatch.status === 'planned' && sandboxDispatch.visibility === 'internal' && sandboxDispatch.sensitive === true && sandboxDispatch.implementedBy.length === 0 && sandboxDispatch.inputSchema === 'sandbox-provider.job-create-request@1' && sandboxDispatch.outputSchema === 'sandbox-provider.job-create-result@1' && !run.capabilities.includes('sandbox_provider.job.dispatch'), 'sandbox_provider.job.dispatch is a planned internal sensitive capability of Run naming the two contracts');
+
 console.log(`platform run: ${checks} job, frame and metering checks passed`);
