@@ -187,8 +187,8 @@
       "service": "space",
       "name": "OpenVibe.Space",
       "origin": "https://openvibe.space",
-      "operations": 36,
-      "capabilities": 5
+      "operations": 37,
+      "capabilities": 6
     },
     {
       "service": "tips",
