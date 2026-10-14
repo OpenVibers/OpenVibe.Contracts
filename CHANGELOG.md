@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.164.0 — 2026-10-14
+
+- **Planned (plan T13):** `services.recipe.run` (POST /api/v1/recipes/:id/run, sensitive), `services.usage.read`
+  (GET /api/v1/usage) and `services.cost.read` (GET /api/v1/costs) are project-scoped, first-party capabilities of
+  OpenVibe.Services. Services does not serve them yet. The `services` manifest lists them.
+- Additive (Contracts#114, re-applied on 0.163).
+
 ## 0.163.0 — 2026-10-14
 
 - **`sources.source@1`: `extract` on an rss/atom endpoint** (plan T9, Sources#45). It reads the facts an item states in

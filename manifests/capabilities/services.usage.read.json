@@ -1,0 +1,20 @@
+{
+  "id": "services.usage.read",
+  "version": "1.0",
+  "owner": "services",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "PLANNED (plan T13): read a project's metered use of the developer capabilities, one rollup per closed hour. Services does not serve the route yet.",
+  "permissions": [
+    "services:usage:read"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/usage"
+  ],
+  "inputSchema": "common.no-body@1"
+}
