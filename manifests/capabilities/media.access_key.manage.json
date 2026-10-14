@@ -1,0 +1,24 @@
+{
+  "id": "media.access_key.manage",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Issue, list and revoke the S3 access keys of a project (ADR-031, amended 2026-10-14: Media issues the keys it verifies). A first-party service (OpenVibe.Zone, OpenVibe.Services) calls for the person in on_behalf_of, who must be an admin or owner of the project (Media asks Network, network.project.member.read). POST /api/v1/projects/:project_id/access-keys takes media.access-key-issue-request@1 and answers 201 media.access-key-issued@1, the only answer that carries the secret; GET lists media.access-key-list@1; DELETE /:key_id revokes at once. Loopback only.",
+  "permissions": [
+    "keys:manage"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/projects/:project_id/access-keys",
+    "GET /api/v1/projects/:project_id/access-keys",
+    "DELETE /api/v1/projects/:project_id/access-keys/:key_id"
+  ],
+  "inputSchema": "media.access-key-issue-request@1",
+  "outputSchema": "media.access-key-issued@1"
+}

@@ -4,6 +4,24 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.173.0 — 2026-10-14
+
+- **OpenVibe.Zone is live, and so is Media's S3 surface** (ADR-031 and its zone amendment). Zone owns named object
+  zones per project environment at https://openvibe.zone (port 5050), provisioning each change in Media by revision.
+  Media serves the zones as S3 buckets and keeps the objects.
+- Zone's `zone.*` contracts and capabilities are now active, and two more are added: `zone.resource.read` and
+  `zone.resource.control` (delete, for Services).
+- **Media has three new capabilities:**
+  - `media.object.s3`: the S3 door, reached with an access key;
+  - `media.access_key.manage`: issue, list and revoke keys, for a project admin;
+  - `media.zone.provision`: Zone only.
+- **Access-key schemas:** `media.access-key@1`, `media.access-key-issue-request@1`, `media.access-key-issued@1` (the
+  only answer with the secret) and `media.access-key-list@1`.
+- **ADR-031 amendment 2026-10-14:**
+  - Media issues the keys, not Codes: the verifier must hold the secret, and Codes became the coding harness.
+  - The S3 surface is served by Host.
+  - Zone serves on its apex until api.openvibe.zone has DNS.
+
 ## 0.172.2 — 2026-10-14
 
 - **Who consumes `network.subject.merged`, written down.** Live, Chat, Community, Media and Games have folded merged

@@ -1,0 +1,9 @@
+{
+    "env": "production",
+    "name": "backups",
+    "permissions": "write",
+    "zones": [
+        "zon_01JZ0000000000000000000Z01"
+    ],
+    "on_behalf_of": "usr_01JZ0000000000000000000A01"
+}

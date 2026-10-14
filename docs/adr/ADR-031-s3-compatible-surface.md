@@ -1,6 +1,6 @@
 # ADR-031: An S3-compatible surface for OpenVibe.Media
 
-**Status:** Accepted 2026-09-26 (roadmap WS-N task 8). Implementation follows in OpenVibe.Media. Amended 2026-10-02: named object zones (OpenVibe.Zone). A bucket is a named zone inside a project environment, resolved per access key. The environment's own namespace is the zone `default`.
+**Status:** Accepted 2026-09-26 (roadmap WS-N task 8). Implemented 2026-10-14 (contracts 0.173.0): Media's S3 surface and OpenVibe.Zone. Amended 2026-10-02: named object zones (OpenVibe.Zone). Amended 2026-10-14: Media issues the access keys. A bucket is a named zone inside a project environment, resolved per access key. The environment's own namespace is the zone `default`.
 
 ## Context and current evidence
 
@@ -276,3 +276,24 @@ A hold placed on an object of the zone after that check is still allowed: Media 
 - **Identity:** `contracts.zones.checkObjectZone` refuses a record whose OVRN or namespace names another zone or project. Media refuses such a provision call.
 - **Usage:** every Media usage rollup carries the zone's resource name as `resource` and its id as `dimension`. Their stored-byte total matches Media's live bytes for the zone.
 - **Reconciliation:** an injected mismatch between Zone and Media's projection raises the alert.
+
+## Amendment 2026-10-14: Media issues the access keys; hosts until DNS
+
+**Status:** Accepted and implemented (contracts 0.173.0, OpenVibe.Media, OpenVibe.Zone).
+
+**Keys move from Codes to Media.** The Decision above gave key issuance to Codes. Since 2026-10-08 Codes is the coding harness, and the developer console moved to Services, which aggregates authorities and owns none of their records (D33). SigV4 also needs the secret wherever signatures are checked, and that is Media. If Codes kept the keys, every request would carry a secret across services.
+- **Media issues, stores and verifies the keys.** `media_access_keys` holds an `ovk_<ULID>` id, the project, environment, permissions (`read`, `write`, `read-write`), an optional zone list, and the secret encrypted with AES-256-GCM under `MEDIA_S3_KEY_SECRET`.
+- **The secret is shown once,** in `media.access-key-issued@1`.
+- **Keys are managed through Media's API** (capability `media.access_key.manage`). Zone's console and Services call it for a person who administers the project. Media asks Network for that person's role, as its control API does.
+- **When a zone is deleted,** a key scoped only to that zone is revoked, and other keys drop the zone from their scope.
+
+**Hosts.** The S3 surface is served by `Host` (`MEDIA_S3_HOSTS`, `s3.openvibe.media`), not by a path prefix.
+- nginx passes the request line untouched, because the client signed that exact path. An nginx `proxy_pass` with a URI part would decode it.
+- Zone serves its site and API on its apex, `https://openvibe.zone`.
+- `s3.openvibe.media` and `api.openvibe.zone` wait for their DNS records. The DNS token expired, so creating them is the owner's action.
+- The certificates already cover both names (wildcards).
+
+**What v1 leaves out.**
+- Multipart uploads and CopyObject answer `NotImplemented`. Single-request objects go up to Media's single-upload limit.
+- Overwritten and deleted objects keep counting against a developer project's quota until they are purged. That is Media's existing rule for developer tenants; this ADR's "only live objects count" applies once Media changes that rule.
+- Per-zone usage rollups (`media.usage.recorded` with the zone's resource name) are not emitted yet. Zone shows Media's live snapshot.

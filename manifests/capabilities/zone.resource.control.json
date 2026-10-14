@@ -1,0 +1,22 @@
+{
+  "id": "zone.resource.control",
+  "version": "1.0",
+  "owner": "zone",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Control a zone through OpenVibe.Zone's control API (ADR-048, plan T13 step 10): POST /api/v1/resources/control takes one common.resource-control-request@1 naming a zone.object-zone by its OVRN, from a first-party service (OpenVibe.Services) acting for the person in on_behalf_of, who must be an admin or owner of the project. Action: delete (recursive: the zone answers NoSuchBucket at once, Media tombstones and purges every object with no restore window, and the name is retired). The default zone, and a zone holding an object under a retention hold, are refused. Any other action is refused unsupported. dry_run decides and explains without applying. The first answer per (caller, project, idempotency_key) is kept and returned for a repeat; the same key with another request is refused. Answers common.resource-control-result@1.",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}

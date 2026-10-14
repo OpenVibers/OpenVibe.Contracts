@@ -5969,7 +5969,7 @@
       "schema": "zone/object-zone.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -5979,7 +5979,7 @@
       "schema": "zone/object-zone-create-request.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -5989,7 +5989,7 @@
       "schema": "zone/object-zone-update-request.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -5999,7 +5999,7 @@
       "schema": "zone/object-zone-list-query.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -6009,7 +6009,7 @@
       "schema": "zone/object-zone-list.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -6019,7 +6019,7 @@
       "schema": "zone/object-zone-delete-query.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -6029,7 +6029,7 @@
       "schema": "zone/object-zone-usage.v1.json",
       "visibility": "public",
       "compatibility": "backward",
-      "status": "planned",
+      "status": "active",
       "adr": "ADR-031"
     },
     {
@@ -7205,6 +7205,46 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "Games ADR-0007"
+    },
+    {
+      "id": "media.access-key",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/access-key.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "media.access-key-issue-request",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/access-key-issue-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "media.access-key-issued",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/access-key-issued.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-031"
+    },
+    {
+      "id": "media.access-key-list",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/access-key-list.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-031"
     }
   ]
 }

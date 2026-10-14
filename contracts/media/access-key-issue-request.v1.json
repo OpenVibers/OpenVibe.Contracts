@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/access-key-issue-request.v1.json",
+  "title": "AccessKeyIssueRequest",
+  "description": "media.access-key-issue-request@1 (ADR-031): the body of POST /api/v1/projects/:project_id/access-keys on OpenVibe.Media (capability media.access_key.manage), sent by a first-party service (OpenVibe.Zone, OpenVibe.Services) for the person in on_behalf_of, who must be an admin or owner of the project (Network decides). The answer is 201 media.access-key-issued@1. A zone that is not an active zone of this project environment answers 404 media.access_key.unknown_zone; more than 50 live keys in one environment answer 409 media.access_key.limit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["env", "name", "on_behalf_of"],
+  "properties": {
+    "env": { "enum": ["sandbox", "production"] },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "permissions": { "enum": ["read", "write", "read-write"], "default": "read-write" },
+    "zones": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^zon_[0-9A-HJKMNP-TV-Z]{26}$" } },
+    "on_behalf_of": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" }
+  }
+}

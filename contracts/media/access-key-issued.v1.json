@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/access-key-issued.v1.json",
+  "title": "AccessKeyIssued",
+  "description": "media.access-key-issued@1 (ADR-031): the 201 of POST /api/v1/projects/:project_id/access-keys. `secret` is the S3 secret access key; it is in this answer only, and Media never shows it again. A caller relays it to the person once and keeps no copy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["key", "secret"],
+  "properties": {
+    "key": { "$ref": "access-key.v1.json" },
+    "secret": { "type": "string", "pattern": "^[A-Za-z0-9_-]{40}$" }
+  }
+}

@@ -175561,7 +175561,7 @@ export type NetworkConfirmationChangedPayload = {
 
 /** zone.object-zone@1.0.0 (owner: zone) */
 /**
- * zone.object-zone@1 (PLANNED; ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.
+ * zone.object-zone@1 (ADR-031 amendment 2026-10-02): one named object zone, as OpenVibe.Zone's control API returns it (GET /api/v1/zones/{zone_id}, the list under /api/v1/projects/{project_id}/zones, and the 201 of a create). Zone owns this record: its name, environment, state, access policy and per-zone quota setting. Media owns everything inside it: the objects (ordinary med_ objects in the namespace media_namespace), their keys, bytes and replicas, quota enforcement, usage counting and the one deletion path. Zone never lists keys or holds bytes. The S3 bucket name is `name`, resolved within the project and environment of the access key that signs the request, at https://s3.openvibe.media/<name>/<key>. `ovrn` is ovrn:zone:<project_id>:object-zone/<id>, with the same project_id and id as this record. The id is never reused, and neither is a name: within one project environment a name belongs to one zone for ever, deleted or not, so a signed request names exactly one zone id. Name and env are immutable. Every environment has exactly one `default` zone, whose media_namespace is the environment root. Zone creates it with the environment, and it cannot be deleted on its own. Its access is per-object, and every other zone's is private. JSON Schema cannot compare fields: contracts.zones.checkObjectZone also requires that ovrn names this project_id and id, and that media_namespace is the environment root of project_id and env, followed by .<id> unless the zone is the default. More fields may be added.
  */
 export type ObjectZone = {
   [k: string]: unknown | undefined;
@@ -175634,7 +175634,7 @@ export type ObjectZone = {
 
 /** zone.object-zone-create-request@1.0.0 (owner: zone) */
 /**
- * zone.object-zone-create-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.
+ * zone.object-zone-create-request@1 (ADR-031 amendment 2026-10-02): the body of POST /api/v1/projects/{project_id}/zones on OpenVibe.Zone, sent with an Idempotency-Key header. The answer is 201 with a zone.object-zone@1 in state provisioning or active. A name held by a zone of that environment in state provisioning or active answers 409 zone.name_taken, and one held by a zone in state deleting or deleted answers 409 zone.name_retired, because a name belongs to one zone for ever; and going over the project's zones quota answers 403 zone.quota_exceeded. `default` cannot be requested, because Zone creates that zone with the environment.
  */
 export interface ObjectZoneCreateRequest {
   env: "sandbox" | "production";
@@ -175645,7 +175645,7 @@ export interface ObjectZoneCreateRequest {
 
 /** zone.object-zone-update-request@1.0.0 (owner: zone) */
 /**
- * zone.object-zone-update-request@1 (PLANNED; ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.
+ * zone.object-zone-update-request@1 (ADR-031 amendment 2026-10-02): the body of PATCH /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.manage). Only quota_bytes and description change. Name, environment and access are immutable, so a body naming them is refused. The answer is 200 with the zone.object-zone@1. A quota change takes effect once Media acknowledges it, and lowering quota_bytes below the zone's stored bytes only refuses later writes. It never deletes an object.
  */
 export interface ObjectZoneUpdateRequest {
   description?: string | null;
@@ -175657,7 +175657,7 @@ export interface ObjectZoneUpdateRequest {
 
 /** zone.object-zone-list-query@1.0.0 (owner: zone) */
 /**
- * zone.object-zone-list-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.
+ * zone.object-zone-list-query@1 (ADR-031 amendment 2026-10-02): the query string of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list). Without env it lists both environments the caller's grant reaches. A sandbox-only grant never lists production zones.
  */
 export interface ObjectZoneListQuery {
   env?: "sandbox" | "production";
@@ -175677,7 +175677,7 @@ export interface ObjectZoneListQuery {
 
 /** zone.object-zone-list@1.0.0 (owner: zone) */
 /**
- * zone.object-zone-list@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.
+ * zone.object-zone-list@1 (ADR-031 amendment 2026-10-02): the answer of GET /api/v1/projects/{project_id}/zones on OpenVibe.Zone (capability zone.zone.list), filtered by zone.object-zone-list-query@1. Zones come oldest first, the environment's default zone before the others. Deleted zones are listed only with include_deleted=true. contracts.zones.checkObjectZoneList also checks each zone's identity. More fields may be added.
  */
 export interface ObjectZoneList {
   /**
@@ -175692,7 +175692,7 @@ export interface ObjectZoneList {
 
 /** zone.object-zone-delete-query@1.0.0 (owner: zone) */
 /**
- * zone.object-zone-delete-query@1 (PLANNED; ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.
+ * zone.object-zone-delete-query@1 (ADR-031 amendment 2026-10-02): the query string of DELETE /api/v1/zones/{zone_id} on OpenVibe.Zone (capability zone.zone.delete). The answer is 202 with the zone.object-zone@1 in state deleting. Without recursive=true, a zone that still holds live objects answers 409 zone.not_empty. A zone with an object under a retention hold answers 409 zone.held, as media.object.delete refuses a held object. The default zone always answers 409 zone.default. Deletion goes through Media's one deletion path: every object is tombstoned at once, with no restore window, and every copy is erased within 24 hours. A hold placed after the request delays only that object's purge. The zone's name is retired: no later zone of the environment can take it.
  */
 export interface ObjectZoneDeleteQuery {
   /**
@@ -175703,7 +175703,7 @@ export interface ObjectZoneDeleteQuery {
 
 /** zone.object-zone-usage@1.0.0 (owner: zone) */
 /**
- * zone.object-zone-usage@1 (PLANNED; ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Rollups are counts; Billing rates only platform.usage-sample readings (billing.usage.record). Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.
+ * zone.object-zone-usage@1 (ADR-031 amendment 2026-10-02): the answer of GET /api/v1/zones/{zone_id}/usage on OpenVibe.Zone (capability zone.usage.read). Zone never counts. current is the live-object snapshot that Media's internal zone endpoint returns. series sums Media's hourly media.usage.recorded rollups (common.usage-recorded@1) whose dimension is this zone id in lowercase, over the closed hours of the current UTC month. Rollups are counts; Billing rates only platform.usage-sample readings (billing.usage.record). Zone's control operations are not metered. ovrn is the OVRN of zone_id, never of another zone (contracts.zones.checkObjectZoneUsage). More fields may be added.
  */
 export interface ObjectZoneUsage {
   zone_id: string;
@@ -184071,4 +184071,334 @@ export interface PlayPlayerAchievements {
     description?: string;
     unlocked_at: string;
   }[];
+}
+
+/** media.access-key@1.0.0 (owner: media) */
+/**
+ * media.access-key@1 (ADR-031, amended 2026-10-14): one S3 access key of OpenVibe.Media's S3 surface (https://s3.openvibe.media). It is bound to one project environment, reads and/or writes, and may be scoped to some zones of that environment (zone.object-zone@1 ids; empty means every zone). Media issues and verifies it: SigV4 needs the secret, so the party that checks signatures keeps it, encrypted, and shows it once (media.access-key-issued@1). The secret is never part of this record. A revoked key is refused at once; a key scoped only to a zone that is deleted is revoked with it. More fields may be added.
+ */
+export interface AccessKey {
+  /**
+   * The S3 access key id.
+   */
+  id: string;
+  project_id: string;
+  env: "sandbox" | "production";
+  /**
+   * What uses the key, as the person who issued it named it.
+   */
+  name: string;
+  permissions: "read" | "write" | "read-write";
+  /**
+   * The zones it may reach; empty = every zone of the environment.
+   *
+   * @maxItems 20
+   */
+  zones:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  created_by: string;
+  created_at: string;
+  /**
+   * The last signed request, to the minute.
+   */
+  last_used_at: string | null;
+  revoked_at: string | null;
+}
+
+/** media.access-key-issue-request@1.0.0 (owner: media) */
+/**
+ * media.access-key-issue-request@1 (ADR-031): the body of POST /api/v1/projects/:project_id/access-keys on OpenVibe.Media (capability media.access_key.manage), sent by a first-party service (OpenVibe.Zone, OpenVibe.Services) for the person in on_behalf_of, who must be an admin or owner of the project (Network decides). The answer is 201 media.access-key-issued@1. A zone that is not an active zone of this project environment answers 404 media.access_key.unknown_zone; more than 50 live keys in one environment answer 409 media.access_key.limit.
+ */
+export interface AccessKeyIssueRequest {
+  env: "sandbox" | "production";
+  name: string;
+  permissions?: "read" | "write" | "read-write";
+  /**
+   * @maxItems 20
+   */
+  zones?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  on_behalf_of: string;
+}
+
+/** media.access-key-issued@1.0.0 (owner: media) */
+/**
+ * media.access-key-issued@1 (ADR-031): the 201 of POST /api/v1/projects/:project_id/access-keys. `secret` is the S3 secret access key; it is in this answer only, and Media never shows it again. A caller relays it to the person once and keeps no copy.
+ */
+export interface AccessKeyIssued {
+  key: AccessKey;
+  secret: string;
+}
+
+/** media.access-key-list@1.0.0 (owner: media) */
+/**
+ * media.access-key-list@1 (ADR-031): GET /api/v1/projects/:project_id/access-keys (capability media.access_key.manage, for a project admin in on_behalf_of): every key of the project, newest first, revoked ones included. No secret is ever listed.
+ */
+export interface AccessKeyList {
+  /**
+   * @maxItems 500
+   */
+  keys: AccessKey[];
 }

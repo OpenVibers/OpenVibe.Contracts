@@ -1,0 +1,32 @@
+{
+  "id": "media.object.s3",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "public",
+  "description": "OpenVibe.Media's S3 surface (ADR-031), path style at https://s3.openvibe.media/<zone name>/<key>: PutObject (one request, aws-chunked bodies included, Content-MD5 and x-amz-checksum-* checked), GetObject (ranges), HeadObject, DeleteObject, DeleteObjects, ListObjectsV2 and ListObjects (prefix, delimiter, pages), ListBuckets, HeadBucket, GetBucketLocation, and presigned GET and PUT (SigV4 query, 7 days at most). Everything else answers NotImplemented (multipart, copy, ACLs, policies, versioning; buckets are made and deleted only through OpenVibe.Zone). It is reached with a media.access-key@1 rather than a Network token: the key fixes the project and environment, so a bucket name names one zone of that environment, and a key scoped to zones reaches only those. A request is authorised as the project's app would be: the same quotas (the zone's and the environment's), the same objects as the native API, and Media's one deletion path (a held object is neither deleted nor overwritten). Responses carry a sandbox Content-Security-Policy.",
+  "permissions": [
+    "objects:read",
+    "objects:write"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [
+    "media.object.uploaded",
+    "media.object.deleted"
+  ],
+  "implementedBy": [
+    "GET s3:/",
+    "HEAD s3:/:zone",
+    "GET s3:/:zone",
+    "POST s3:/:zone?delete",
+    "PUT s3:/:zone/:key",
+    "GET s3:/:zone/:key",
+    "HEAD s3:/:zone/:key",
+    "DELETE s3:/:zone/:key"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}
