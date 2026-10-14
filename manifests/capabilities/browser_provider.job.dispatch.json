@@ -1,0 +1,18 @@
+{
+  "id": "browser_provider.job.dispatch",
+  "version": "1.0",
+  "owner": "run",
+  "status": "planned",
+  "visibility": "internal",
+  "sensitive": true,
+  "description": "PLANNED (plan T14 R4a, ADR-034): OpenVibe.Run's outbound call to the external managed-browser provider it places class browser jobs on: POST <provider>/jobs {id, class, args, inputs, limits, egress} (idempotent by job id; 201 created, 200 repeat), GET <provider>/jobs/:id for the state, POST <provider>/jobs/:id/cancel to stop it; a 404 on the last two means the provider does not know the job. The request carries no project, subject or credential: the provider never learns who pays. Run authenticates with a key from its own environment, never from an offer and never logged, validates every answer against browser-provider.job-state@1 (a malformed state is never adopted), and bills from its own observed duration, clamping the provider's claimed wall_ms to that plus 5 s. Run's own outbound call; no token grants it and it is never delegated.",
+  "permissions": [],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "bot-jobs",
+  "events": [],
+  "implementedBy": [],
+  "inputSchema": "browser-provider.job-create-request@1",
+  "outputSchema": "browser-provider.job-create-result@1"
+}

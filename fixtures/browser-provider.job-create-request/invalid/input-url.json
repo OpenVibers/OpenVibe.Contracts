@@ -1,0 +1,1 @@
+{"id":"job_01JAB2C3D4E5F6G7H8J9K0MNPQ","class":"browser","args":{},"inputs":[{"name":"page.html","url":"https://example.com/page.html"}],"limits":{"wall_ms":60000},"egress":"none"}
