@@ -222,8 +222,8 @@
       "service": "watch",
       "name": "OpenVibe.Watch",
       "origin": "https://openvibe.watch",
-      "operations": 12,
-      "capabilities": 5
+      "operations": 13,
+      "capabilities": 6
     },
     {
       "service": "wiki",

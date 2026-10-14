@@ -1,0 +1,22 @@
+{
+  "id": "watch.resource.control",
+  "version": "1.0",
+  "owner": "watch",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Control a watch through OpenVibe.Watch's control API (ADR-048, plan T13 step 10): POST /api/v1/resources/control takes one common.resource-control-request@1 naming a watch.watch by its OVRN, from a first-party service (OpenVibe.Services) acting for the person in on_behalf_of. Actions: suspend (pause the watch: nothing is checked until it resumes), resume (active again) and delete (remove it, as DELETE /api/v1/watches/:id); any other action is refused unsupported. Only the watch's owner may act on it, and only inside the project the OVRN names. dry_run decides and explains without applying. The first answer per (caller, project, idempotency_key) is kept and returned for a repeat; the same key with another request is refused. Answers common.resource-control-result@1.",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}
