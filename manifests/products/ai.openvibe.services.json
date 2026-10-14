@@ -26,16 +26,8 @@
     }
   ],
   "keywords": "ai gateway, open source ai api, llm router, model routing, prompt templates, ai workflows, speech to text api, openvibe ai",
-  "launch": "a public API with its own keys, quotas and playground, live since 2026-10-07 with its developer console",
   "relationships": {
     "service": "ai",
-    "plannedRepo": "OpenVibe.AI",
-    "meanwhile": [
-      {
-        "label": "AI on OpenVibe.Live",
-        "url": "https://openvibe.live",
-        "note": "Live's AI moments, recaps, summaries and translations run through OpenVibe.AI; captions still run inside Live."
-      }
-    ]
+    "plannedRepo": "OpenVibe.AI"
   }
 }

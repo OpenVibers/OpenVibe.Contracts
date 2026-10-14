@@ -6,10 +6,9 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.156.0 — 2026-10-13
 
-- **OpenVibe.AI's catalog copy says the public API is live.** In `manifests/products/ai.openvibe.services.json`, `launch`
-  now reads "a public API with its own keys, quotas and playground, live since 2026-10-07 with its developer console"
-  and the description says the public API and developer console are live, with OpenVibe.Live and OpenVibe.Network
-  calling it too. Copy only; no schema, capability or event changes. OpenVibe.Sites mirrors this manifest through
+- **OpenVibe.AI's catalog copy says the public API is live.** In `manifests/products/ai.openvibe.services.json`, the
+  description says the public API and developer console are live, with OpenVibe.Live and OpenVibe.Network calling it
+  too. `launch` and `relationships.meanwhile` are removed because the product is live and nothing blocks it. Copy only; no schema, capability or event changes. OpenVibe.Sites mirrors this manifest through
   `scripts/sync-catalog.js`, so it needs a pin bump and a resync.
 
 ## 0.155.0 — 2026-10-13
