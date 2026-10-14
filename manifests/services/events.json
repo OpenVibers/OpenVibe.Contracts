@@ -22,6 +22,7 @@
     "events.event.publish",
     "events.event.read",
     "events.resource.read",
+    "events.resource.control",
     "events.subscription.manage",
     "events.delivery.admin",
     "events.app.publish",

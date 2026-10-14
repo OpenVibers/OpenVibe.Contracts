@@ -1,0 +1,22 @@
+{
+  "id": "events.resource.control",
+  "version": "1.0",
+  "owner": "events",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Control a subscription through OpenVibe.Events' control API (ADR-048, plan T13 step 10): POST /api/v1/resources/control takes one common.resource-control-request@1 naming an events.subscription by its OVRN, from a first-party service (OpenVibe.Services) acting for the person in on_behalf_of. Actions: suspend (the subscription is disabled: nothing is delivered to it until it resumes; events it matches meanwhile are kept as they always are and can be replayed) and resume (enabled again); any other action is refused unsupported. Only the subscription's consumer may act on it, and only inside the project the OVRN names. dry_run decides and explains without applying. The first answer per (caller, project, idempotency_key) is kept and returned for a repeat; the same key with another request is refused. Answers common.resource-control-result@1.",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}

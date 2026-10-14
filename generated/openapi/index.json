@@ -75,8 +75,8 @@
       "service": "events",
       "name": "OpenVibe.Events",
       "origin": "https://openvibe.events",
-      "operations": 15,
-      "capabilities": 8
+      "operations": 16,
+      "capabilities": 9
     },
     {
       "service": "food",

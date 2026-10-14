@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.168.0 — 2026-10-14
+
+- **`events.resource.control`** (active, first-party, sensitive): OpenVibe.Events' control API (ADR-048, plan T13 step
+  10). `POST /api/v1/resources/control` takes a `common.resource-control-request@1` for a project's subscription from
+  a first-party service acting for its consumer. The actions are suspend (disable) and resume (enable); there are dry
+  runs, and requests are idempotent per (caller, project, key). It is the second authority behind OpenVibe.Services'
+  control route. The `events` manifest lists it.
+- Additive.
+
 ## 0.167.0 — 2026-10-14
 
 - **`probe`, a read-only computer kind** (plan T18 step 7, the `node` carrier): `bot.command@1` takes
