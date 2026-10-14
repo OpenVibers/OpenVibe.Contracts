@@ -29,5 +29,10 @@ assert.ok(!c.validate('bot.command@1', cmd('fs', { op: 'delete', path: '/x' })).
 assert.ok(!c.validate('bot.command@1', cmd('screen', { max_width: 100 })).valid, 'a screen at least 320 wide');
 assert.ok(c.validate('bot.command@1', cmd('probe', { target: 'tcp://192.168.1.5:22' })).valid, 'a probe of a LAN port');
 assert.ok(!c.validate('bot.command@1', cmd('probe', { target: 'file:///etc/passwd' })).valid, 'a probe is http(s) or tcp');
+assert.ok(c.validate('bot.command@1', cmd('input', { action: 'click', x: 10, y: 20, width: 1280, height: 720 })).valid, 'a click in a picture\'s space');
+assert.ok(c.validate('bot.command@1', cmd('input', { action: 'type', text: 'hello' })).valid, 'typing');
+assert.ok(!c.validate('bot.command@1', cmd('input', { action: 'key', keys: 'ctrl+s; rm -rf ~' })).valid, 'a key is a key, never a command line');
+assert.ok(!c.validate('bot.command@1', cmd('input', { action: 'drag' })).valid, 'only the listed actions');
+assert.ok(!c.validate('bot.command@1', cmd('input', { action: 'scroll', dy: 500 })).valid, 'scrolls are bounded');
 assert.ok(c.validate('bot.command-result@1', { v: 1, seq: 1, ts: 1, type: 'command_result', id: 'op-1', result: 'ack', data: { exit_code: 0 } }).valid, 'an ack with data');
 console.log('bot manifest: all checks passed');

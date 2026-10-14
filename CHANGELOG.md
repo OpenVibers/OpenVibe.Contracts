@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.171.0 — 2026-10-14
+
+- **`input`, a computer kind** (plan T14/T17, "keyboard and mouse input"): `bot.command@1` takes
+  `{ action, x, y, width, height, dy, text, keys }`. move, click, double_click and right_click go to a point, scroll
+  by `dy` clicks, type text into whatever has focus, or press one key or chord (`keys`: letters, digits, `+`, `-` and
+  `_` only, for example `ctrl+s`). Coordinates are in the space of the screen picture the caller last saw (`width` and
+  `height`, the `screen` kind's answer); the Node scales them to the real screen. The machine's level decides: refused
+  at observe, approved one by one at ask. `bot.computer.control` lists it for a person's agent; the device frame
+  lists it.
+- Fixtures: valid `input-click` and `input-key`, invalid `input-key-shell`. Additive.
+
 ## 0.170.0 — 2026-10-14
 
 - **`space.resource.control`** (active, first-party, sensitive): OpenVibe.Space's control API (ADR-048, plan T13 step

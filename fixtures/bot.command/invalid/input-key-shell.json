@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 52,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-52",
+  "kind": "input",
+  "value": {
+    "action": "key",
+    "keys": "ctrl+s; rm -rf ~"
+  }
+}
