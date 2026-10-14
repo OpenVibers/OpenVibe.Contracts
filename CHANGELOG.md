@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.170.0 — 2026-10-14
+
+- **`space.resource.control`** (active, first-party, sensitive): OpenVibe.Space's control API (ADR-048, plan T13 step
+  10). `POST /api/v1/resources/control` takes `delete` for a `space.site`, `space.deploy` or `space.domain`, exactly as
+  the API's DELETE routes (a site's deploys and domains go with it; the deploy being served, a default domain and anything
+  taken down are refused with Space's own reason). Space decides by its own project roles (maintainer or owner). Dry runs; idempotent per
+  (caller, project, key). The `space` manifest lists it. Additive.
+
 ## 0.169.0 — 2026-10-14
 
 - **`actor.resource.control`** (active, first-party, sensitive): OpenVibe.Actor's control API (ADR-048, plan T13 step

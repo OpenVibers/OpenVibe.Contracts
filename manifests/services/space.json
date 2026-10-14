@@ -51,7 +51,8 @@
     "space.deploy.create",
     "space.domain.manage",
     "space.site.config",
-    "space.resource.read"
+    "space.resource.read",
+    "space.resource.control"
   ],
   "eventsProduced": [
     "space.deploy.created",

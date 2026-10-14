@@ -1,0 +1,22 @@
+{
+  "id": "space.resource.control",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Control a site, deploy or domain through OpenVibe.Space's control API (ADR-048, plan T13 step 10): POST /api/v1/resources/control takes one common.resource-control-request@1 naming a space.site, space.deploy or space.domain by its OVRN, from a first-party service (OpenVibe.Services) acting for the person in on_behalf_of. Action: delete, exactly as the API's DELETE /api/v1/sites/:id, /deploys/:id and /domains/:id: a site stops serving at once and its deploys and domains go with it; the deploy a site is serving, a site's default domain, and anything of a site under a takedown are refused with Space's own reason. Any other action is refused unsupported. Space decides by its own project roles (deleting needs maintainer or owner of the project), so a person who is not a member is refused as not found, never confirmed to exist; and only inside the project the OVRN names. dry_run decides and explains without applying. The first answer per (caller, project, idempotency_key) is kept and returned for a repeat; the same key with another request is refused. Answers common.resource-control-result@1.",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}
