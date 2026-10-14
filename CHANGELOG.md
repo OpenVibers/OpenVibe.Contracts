@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.165.0 — 2026-10-14
+
+- **`watch.resource.control`** (active, first-party, sensitive): OpenVibe.Watch's control API (ADR-048, plan T13 step
+  10). `POST /api/v1/resources/control` takes a `common.resource-control-request@1` for a watch from a first-party
+  service acting for the watch's owner: suspend, resume, delete; dry runs; idempotent per (caller, project, key). It is
+  the first authority behind OpenVibe.Services' control route. The `watch` manifest lists it.
+- Additive.
+
 ## 0.164.0 — 2026-10-14
 
 - **Planned (plan T13):** `services.recipe.run` (POST /api/v1/recipes/:id/run, sensitive), `services.usage.read`
