@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.158.0 — 2026-10-14
+
+- **`live.chat_mirror.write` is retired.** The Live read mirror is gone: Chat stopped its capture triggers
+  (Chat migration 0006) and drops its table (0009), Live keeps no chat tables and reads through Chat's
+  internal read API, and OpenVibe.Network revokes the grant at boot. The capability manifest stays loadable
+  with status `retired`; `manifests/services/live.json` no longer lists it. No schema change.
+
 ## 0.157.0 — 2026-10-14
 
 - **`bot.robot-profile@1`: `mapping.driver` may be `phone`** (plan T15 "an Android phone as the robot's brain"). A
