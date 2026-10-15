@@ -149739,6 +149739,6624 @@ export interface ProjectUsageResult {
   };
 }
 
+/** network.project-secret@1.0.0 (owner: network) */
+/**
+ * network.project-secret@1 (ADR-056): one project secret as OpenVibe.Network shows it to the project's members and staff — its name, environment, version, a keyed fingerprint and its grants. Never the value: a secret is written once and used by name (sign or reveal through network.secret.use).
+ */
+export interface ProjectSecret {
+  project_id: string;
+  environment: "sandbox" | "production";
+  name: string;
+  /**
+   * One more each time the value is set again.
+   */
+  version: number;
+  /**
+   * A keyed hash of the value: equal values have equal fingerprints, and it reveals nothing else.
+   */
+  fingerprint: string;
+  /**
+   * @maxItems 20
+   */
+  grants:
+    | []
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        },
+        {
+          /**
+           * The service id the secret is granted to (its token's svc:<id>).
+           */
+          service: string;
+          /**
+           * @minItems 1
+           * @maxItems 2
+           */
+          purposes: ["sign" | "reveal"] | ["sign" | "reveal", "sign" | "reveal"];
+          /**
+           * The https origins the value may be revealed for (reveal only; empty for sign).
+           *
+           * @maxItems 10
+           */
+          origins:
+            | []
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string];
+          created_at: string;
+          created_by: string;
+          last_used_at: string | null;
+        }
+      ];
+  created_at: string;
+  created_by: string;
+  updated_at: string;
+  updated_by: string;
+}
+
+/** network.secret-use-request@1.0.0 (owner: network) */
+/**
+ * network.secret-use-request@1 (ADR-056): what a first-party service sends to POST /internal/secrets/use with network.secret.use. sign asks for HMAC-SHA256 of message under the secret (the value never leaves Network); reveal asks for the value, to send to origin. Either needs a grant of that secret to the calling service for that purpose (and origin).
+ */
+export type SecretUseRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  project_id: string;
+  environment: "sandbox" | "production";
+  name: string;
+  purpose: "sign" | "reveal";
+  /**
+   * sign: the exact text to sign (for a webhook delivery, "<timestamp>.<raw body>"). Not allowed with reveal.
+   */
+  message?: string;
+  /**
+   * reveal: the https origin the value will be sent to; the grant must list it. Not allowed with sign.
+   */
+  origin?: string;
+};
+
+/** network.secret-use-result@1.0.0 (owner: network) */
+/**
+ * network.secret-use-result@1 (ADR-056): POST /internal/secrets/use's answer — the secret's name and version with the HMAC-SHA256 signature (sign) or the value (reveal). Sent with Cache-Control: no-store; a caller keeps a revealed value only as long as the request it is for.
+ */
+export type SecretUseResult = {
+  [k: string]: unknown | undefined;
+} & {
+  name: string;
+  version: number;
+  purpose: "sign" | "reveal";
+  /**
+   * sign: the lowercase hex HMAC-SHA256 of the message under the secret.
+   */
+  signature?: string;
+  /**
+   * reveal: the value.
+   */
+  value?: string;
+};
+
 /** network.status-incident@1.0.0 (owner: network) */
 /**
  * network.status-incident@1 (roadmap WS-N task 12): one incident or maintenance window on openvibe.network/status, public. An incident moves investigating → identified → monitoring → resolved; a maintenance window scheduled → in_progress → completed. Each change adds an update with its message; the newest state is the incident's. Services are registry ids. Messages are plain text written for people (no internal hostnames, secrets or personal data).
