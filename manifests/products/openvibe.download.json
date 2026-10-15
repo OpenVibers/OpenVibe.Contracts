@@ -8,20 +8,20 @@
   "description": "OpenVibe.Download will be the file home of the OpenVibe network: large uploads and simple share links with or without an account, folders, sync and backups when you sign in, and AI that previews, sorts and finds your files, in the spirit of MediaFire and MEGA, built on OpenVibe.Media and open through the API.",
   "pillars": [
     {
+      "title": "Your own drive",
+      "text": "Folders and files, private to you, with previews of your pictures."
+    },
+    {
       "title": "Share links",
-      "text": "Big files, simple links, clear limits."
+      "text": "One link per file or folder, expiring in an hour to seven days, revocable at any moment, downloads counted."
     },
     {
-      "title": "Drive & backup",
-      "text": "Folders, sync and backups under your OpenVibe account."
+      "title": "Signed in, always",
+      "text": "Nobody opens a share link without an OpenVibe account: no anonymous uploads or downloads."
     },
     {
-      "title": "Smart files",
-      "text": "Previews, search and summaries from the network's AI."
-    },
-    {
-      "title": "Built for apps",
-      "text": "The same file service every OpenVibe site and your own apps use."
+      "title": "Reports that act",
+      "text": "Every share page has a Report form, and reports suspend a share until staff look at it."
     }
   ],
   "keywords": "openvibe download, file sharing, file upload, cloud storage, backup, mediafire alternative",

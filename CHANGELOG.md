@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.186.0 — 2026-10-15
+
+- **More pillars say what is built** (the 0.184.0 audit, finished): openvibe.download has no AI search or summaries
+  and no sync (its drive, share links, sign-in rule and reports instead); openvibe.quest has no quest creation for
+  people (one log across eight sites, real activity only, badges, games); openvibe.rent does not gather other sites'
+  listings or summarise them with AI (posted by people, HUD affordable housing, alerts through Watch, your account);
+  openvibe.help has no anonymous or email inbox and no project widget (answers from the manifests, one search,
+  tickets, every site); openvibe.zone's keys scope zones, not people, and zones do not back streams (keys you scope,
+  any S3 tool); openvibe.actor calls its models directly, not through OpenVibe.AI, and there is no Website yet.
+
 ## 0.185.0 — 2026-10-15
 
 - **openvibe.food: "Plan together" is a pillar again, because it is built** (Food#39). A saved meal plan is shared with
