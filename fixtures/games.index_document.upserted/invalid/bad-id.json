@@ -1,0 +1,25 @@
+{
+  "owner": "games",
+  "type": "world",
+  "id": "../scraplandia",
+  "revision": 1,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.games/worlds/wk3j9x0a2bq",
+  "title": "Moon base",
+  "summary": "A low-gravity base on a crater rim, built by kim.",
+  "body": "Moon base\nA low-gravity base on a crater rim, built by kim.\nA creator world on OpenVibe.Games: join it from your browser.",
+  "facets": {
+    "kind": "creator_world",
+    "owner": "kim"
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-15T23:00:00.000Z",
+  "updated_at": "2026-10-15T23:30:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

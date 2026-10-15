@@ -180641,6 +180641,30 @@ export interface GamesWorldSavedPayload {
   since: string;
 }
 
+/** games.index_document.upserted@1.0.0 (owner: games) */
+/**
+ * games.index_document.upserted v1 (OpenVibe.Games apps/server/src/worlds/searchIndex.ts, via openvibe-publishing/search-feed). The OpenVibe.Search document of a published creator world (type world, /worlds/<id>, which opens the world in /play): its title, the player who made it and their summary. Sent when a world is published, renamed or edited while published, and by the sweep at boot and on a timer; a world that is unpublished, taken down by staff or deleted becomes a tombstone. The sequencer (games_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: kind (creator_world), owner (the maker's display name). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: world, id, revision: <document revision> }, visibility internal, actor service:games.
+ */
+export type GamesIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "games";
+  type: "world";
+  id?: string;
+  deleted: false;
+};
+
+/** games.index_document.deleted@1.0.0 (owner: games) */
+/**
+ * games.index_document.deleted v1 (OpenVibe.Games apps/server/src/worlds/searchIndex.ts, via openvibe-publishing/search-feed). A Search tombstone for a creator world page (/worlds/<id>) that is no longer published (unpublished, taken down by staff, or deleted). Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: world, id, revision }, visibility internal, actor service:games.
+ */
+export interface GamesIndexDocumentDeletedPayload {
+  type: "world";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
 /** games.world.published@1.0.0 (owner: games) */
 /**
  * games.world.published v1 (OpenVibe.Games apps/server/src/worlds/worldRoutes.ts): a player published one of their creator worlds for the first time, so it is listed at https://openvibe.games/worlds and anyone can join it. Written to Games' outbox in the transaction that publishes it; unpublishing and publishing again does not repeat it. OpenVibe.Quest credits the owner's "Publish a creator world" quest from it. Envelope: subject { type: world, id: <world id> }, actor the owner, visibility public.
