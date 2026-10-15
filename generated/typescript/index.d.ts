@@ -180641,6 +180641,24 @@ export interface GamesWorldSavedPayload {
   since: string;
 }
 
+/** games.world.published@1.0.0 (owner: games) */
+/**
+ * games.world.published v1 (OpenVibe.Games apps/server/src/worlds/worldRoutes.ts): a player published one of their creator worlds for the first time, so it is listed at https://openvibe.games/worlds and anyone can join it. Written to Games' outbox in the transaction that publishes it; unpublishing and publishing again does not repeat it. OpenVibe.Quest credits the owner's "Publish a creator world" quest from it. Envelope: subject { type: world, id: <world id> }, actor the owner, visibility public.
+ */
+export interface GamesWorldPublishedPayload {
+  /**
+   * The creator world id. Also the envelope subject id.
+   */
+  world: string;
+  owner: SubjectRef;
+  title: string;
+  /**
+   * Where anyone joins it: https://openvibe.games/play?world=<id>.
+   */
+  url: string;
+  published_at: string;
+}
+
 /** games.mod.installed@1.0.0 (owner: games) */
 /**
  * games.mod.installed v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.install in mods/registry.ts; POST /api/v1/mods). A games-content@1 mod was installed after its manifest and content pack were validated. requested is the manifest's capability list, granted the approved subset (only capabilities the games-content@1 runtime binds: games.world.announce, games.prop.place), status whether it was installed enabled. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
