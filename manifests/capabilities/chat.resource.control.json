@@ -1,0 +1,22 @@
+{
+  "id": "chat.resource.control",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Control a person's rooms through the authority's control API (ADR-048 amendment 2026-10-15, step 8 phase 2): POST /api/v1/resources/control takes one common.owned-resource-control-request@1 naming a chat.room (id the room's slug) from a first-party service (OpenVibe.Services) acting for the person in on_behalf_of. Actions: archive (the room leaves every listing and takes no new messages; its history is kept for its members, as an archived room); any other action is refused unsupported. Only the resource's owner may act: the request's owner must be the owner the authority holds. dry_run decides and explains without applying. The first answer per (caller, idempotency_key) is kept and returned for a repeat; the same key with another request is refused. Answers common.resource-control-result@1 without resource (person-owned resources have no OVRN).",
+  "permissions": [
+    "resources:control"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/resources/control"
+  ],
+  "inputSchema": "common.owned-resource-control-request@1",
+  "outputSchema": "common.resource-control-result@1"
+}

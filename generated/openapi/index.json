@@ -33,15 +33,15 @@
       "service": "bot",
       "name": "OpenVibe.Bot",
       "origin": "https://openvibe.bot",
-      "operations": 20,
-      "capabilities": 6
+      "operations": 21,
+      "capabilities": 7
     },
     {
       "service": "chat",
       "name": "OpenVibe.Chat",
       "origin": "https://openvibe.chat",
-      "operations": 24,
-      "capabilities": 13
+      "operations": 25,
+      "capabilities": 14
     },
     {
       "service": "codes",
@@ -54,8 +54,8 @@
       "service": "community",
       "name": "OpenVibe.Community",
       "origin": "https://openvibe.community",
-      "operations": 39,
-      "capabilities": 12
+      "operations": 40,
+      "capabilities": 13
     },
     {
       "service": "coupons",
@@ -145,8 +145,8 @@
       "service": "openre",
       "name": "OpenRestream",
       "origin": "https://openre.stream",
-      "operations": 24,
-      "capabilities": 8
+      "operations": 25,
+      "capabilities": 9
     },
     {
       "service": "play",

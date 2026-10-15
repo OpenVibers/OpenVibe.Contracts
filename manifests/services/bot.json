@@ -33,7 +33,8 @@
     "bot.computer.control",
     "bot.device.connect",
     "bot.job.dispatch",
-    "bot.resource.read"
+    "bot.resource.read",
+    "bot.resource.control"
   ],
   "eventsProduced": [
     "bot.robot.online",

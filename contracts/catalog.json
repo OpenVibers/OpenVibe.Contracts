@@ -6446,6 +6446,16 @@
       "adr": "ADR-048"
     },
     {
+      "id": "common.owned-resource-control-request",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/owned-resource-control-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-048"
+    },
+    {
       "id": "common.resource-control-result",
       "version": "1.0.0",
       "owner": "contracts",

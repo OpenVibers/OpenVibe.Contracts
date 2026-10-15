@@ -74823,6 +74823,104 @@
         }
       }
     },
+    "common.owned-resource-control-request": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/owned-resource-control-request.v1.json",
+        "title": "OwnedResourceControlRequest",
+        "description": "common.owned-resource-control-request@1 (ADR-048 amendment 2026-10-15, step 8 phase 2): one control operation on a person-owned resource. Robots, chat rooms, restream definitions and pastes belong to a person, not to a project, so they carry no OVRN and the project-scoped common.resource-control-request@1 cannot name them. OpenVibe.Services sends this to the owning authority's POST /api/v1/resources/control (the same route, told apart by `owned`), acting for the person in on_behalf_of. owned names the resource by its index summary's kind and id. owner is the person it belongs to: the authority refuses unless its own record says the same (Services also offers actions only on the viewer's own resources). A sensitive action (deleting, physical control) asked by an agent is refused with confirmation_required until the owner approves, as for project resources. idempotency_key makes a retry safe: the authority answers a repeated key from the same caller with the first result, and refuses the key reused with another request. Answered with common.resource-control-result@1 (without resource: there is no OVRN). The actions each authority takes are in its <service>.resource.control capability; any other action is refused unsupported.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "owned",
+          "owner",
+          "idempotency_key"
+        ],
+        "properties": {
+          "action": {
+            "enum": [
+              "delete",
+              "stop",
+              "suspend",
+              "resume",
+              "archive"
+            ]
+          },
+          "owned": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "description": "The resource, as its owning authority's resource index lists it (common.resource-summary@1 kind and id).",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,31}\\.[a-z][a-z0-9-]{0,39}$"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+                "description": "The summary's id: a prefixed ULID (rob_…) or the service's own slug (a paste, a room)."
+              }
+            }
+          },
+          "owner": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id"
+            ],
+            "description": "The person the resource belongs to. Person-owned resources belong to people, never to agents or apps.",
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            }
+          },
+          "params": {
+            "type": "object",
+            "description": "Action-specific input, shaped by the authority's own contract (never redefined here)."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 200
+          },
+          "on_behalf_of": {
+            "$ref": "../identity/subject-ref.v1.json",
+            "description": "Who asks: the owner, or their agent (whose sensitive actions wait for the owner's approval)."
+          },
+          "confirmation_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "description": "The approved confirmation from an earlier confirmation_required answer."
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false,
+            "description": "Decide and explain without applying."
+          },
+          "trace_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{32}$"
+          }
+        }
+      }
+    },
     "common.resource-control-result": {
       "version": "1.0.0",
       "owner": "contracts",

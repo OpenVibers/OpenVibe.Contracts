@@ -4,6 +4,23 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.176.0 — 2026-10-15
+
+- **Person-owned resources can be controlled** (ADR-048 amendment, step 8 phase 2, the control half).
+  `common.owned-resource-control-request@1` names a robot, room, restream definition or paste by its index kind and id
+  and its owner (a person). It goes to the same `POST /api/v1/resources/control`.
+  `contracts.resources.checkControlRequest` takes either form (`checkOwnedControlRequest` for this one) and refuses a
+  person acting on someone else's resource.
+- **Four control capabilities, active:**
+  - `bot.resource.control`: stop and resume a robot's e-stop;
+  - `chat.resource.control`: archive a room;
+  - `openre.resource.control`: suspend and resume a restream definition;
+  - `community.resource.control`: delete a paste.
+
+  Each is listed in its service's manifest.
+- **Fixtures:** valid `bot-robot-stop` and `community-paste-delete-dry-run`; invalid `with-project`, `agent-owner` and
+  `create`.
+
 ## 0.175.0 — 2026-10-15
 
 - **`media.usage.recorded`** (ADR-031 section 8): Media's per-zone hourly rollups (`common.usage-recorded@1`). Each one

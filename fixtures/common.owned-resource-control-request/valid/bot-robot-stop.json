@@ -1,0 +1,16 @@
+{
+  "action": "stop",
+  "owned": {
+    "kind": "bot.robot",
+    "id": "rob_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "on_behalf_of": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "idempotency_key": "idem_stop_robot_1"
+}
