@@ -25,7 +25,7 @@
     },
     {
       "title": "Cupboard recipes",
-      "text": "Tell it what you have; it says what you can make and suggests recipes that use it."
+      "text": "Scan barcodes, or snap a shelf or a receipt, to fill your cupboard; it says what you can make and suggests recipes."
     },
     {
       "title": "Delivery, compared",
@@ -55,7 +55,6 @@
     }
   ],
   "keywords": "openvibe food, food bank near me, food pantry finder, budget grocery stores, meal planner, shopping list cost, recipes from your cupboard",
-  "launch": "shared household plans (live since 2026-10-15)",
   "relationships": {
     "service": "food"
   }

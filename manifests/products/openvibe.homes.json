@@ -4,35 +4,35 @@
   "name": "OpenVibe.Homes",
   "icon": "fa-house",
   "accent": "#a3e635",
-  "tagline": "Homes to own, clearly explained.",
-  "description": "OpenVibe.Homes will be the owning side of OpenVibe.Rent: homes for sale, property records and neighbourhood context in one place, with alerts and AI summaries that always link their sources.",
+  "tagline": "Homes to own, every site at once.",
+  "description": "OpenVibe.Homes is the owning side of OpenVibe.Rent: one search opens homes for sale on Zillow, Realtor.com, Redfin, Homes.com, Trulia and Craigslist for a place, with government and bank homes (HUD, HomePath, auctions), land and commercial listings, the county's property records, local home prices from the FHFA index and a mortgage calculator. Listings stay on the sites that hold them.",
   "pillars": [
     {
-      "title": "Listings",
-      "text": "Homes for sale from many sources, in one search."
+      "title": "Every for-sale site",
+      "text": "One search opens Zillow, Realtor.com, Redfin, Homes.com, Trulia and Craigslist at your place, with your price and bedrooms."
+    },
+    {
+      "title": "Foreclosures, land, commercial",
+      "text": "HUD homes, Fannie Mae HomePath and auctions; land and commercial listings for the same place."
     },
     {
       "title": "Property records",
-      "text": "Sale history and public records, with their sources."
+      "text": "The county records directory for every US state: deeds, assessments and tax records at their source."
     },
     {
-      "title": "Neighbourhoods",
-      "text": "Context that helps you decide."
-    },
-    {
-      "title": "Alerts",
-      "text": "Be told when a home that fits appears."
+      "title": "Prices and payments",
+      "text": "Local home price changes from the FHFA index and a mortgage calculator with tax, insurance and HOA."
     }
   ],
-  "keywords": "openvibe homes, homes for sale, property records, real estate search, home alerts",
-  "launch": "verified listing and records sources",
+  "keywords": "openvibe homes, homes for sale, foreclosures, land for sale, property records, mortgage calculator, real estate search",
   "relationships": {
-    "noRepo": true,
+    "service": "rent",
+    "plannedRepo": "OpenVibe.Rent",
     "meanwhile": [
       {
-        "label": "OpenVibe.Deals",
-        "url": "https://openvibe.deals",
-        "note": "Deal discovery is the sibling room."
+        "label": "OpenVibe.Rent",
+        "url": "https://openvibe.rent",
+        "note": "Renting instead: every rental site at once, and a board for posting your own."
       }
     ]
   }

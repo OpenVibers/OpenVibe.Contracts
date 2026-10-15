@@ -4,20 +4,24 @@
   "name": "OpenVibe.Video",
   "icon": "fa-film",
   "accent": "#f87171",
-  "tagline": "Watch what OpenVibe streamed.",
-  "description": "OpenVibe.Video is the watch site for the OpenVibe network: stream recordings and clips from OpenVibe.Live, each with a player, AI chapters and WebVTT captions, its clips and its OpenVibe.Community thread, and a page per channel. The files stay on OpenVibe.Media. Uploads, playlists and publishing to other platforms come later.",
+  "tagline": "Watch, upload and record.",
+  "description": "OpenVibe.Video is the video site of the OpenVibe network: stream recordings and clips from OpenVibe.Live, your own uploads and recordings made in the browser (camera or screen), each with a player, AI captions, chapters and a summary, its OpenVibe.Community thread, and a page per channel. The files stay on OpenVibe.Media. Publishing to other platforms comes later.",
   "pillars": [
     {
       "title": "Watch",
-      "text": "Recordings and clips from OpenVibe.Live, and a page per channel."
+      "text": "Recordings and clips from OpenVibe.Live, uploads, and a page per channel."
     },
     {
-      "title": "Chapters and captions",
-      "text": "Chapters from the AI moments of a stream, captions from its AI transcript."
+      "title": "Upload",
+      "text": "Upload a video, private, unlisted or public; it plays from OpenVibe.Media."
     },
     {
-      "title": "From your streams",
-      "text": "What you stream on OpenVibe.Live and make public lands here."
+      "title": "Record",
+      "text": "Record your camera or screen in the browser and keep it as a video, never live."
+    },
+    {
+      "title": "AI edit",
+      "text": "Captions from a transcript, chapters from the highlights and a summary you can use as the description, made on OpenVibe's own servers."
     },
     {
       "title": "Playlists",
@@ -25,14 +29,12 @@
     },
     {
       "title": "Next",
-      "text": "Uploads and publishing to other platforms are not built yet."
+      "text": "Publishing to other platforms is not built yet."
     }
   ],
   "keywords": "openvibe video, video hosting, youtube alternative, multi-platform upload, ai video tools",
-  "launch": "the video service on OpenVibe.Media",
   "relationships": {
     "service": "media-hub",
-    "noRepo": true,
     "meanwhile": [
       {
         "label": "OpenRestream",
@@ -44,6 +46,7 @@
         "url": "https://openvibe.live",
         "note": "Owners manage their recordings and clips on OpenVibe.Live."
       }
-    ]
+    ],
+    "plannedRepo": "OpenVibe.MediaHub"
   }
 }
