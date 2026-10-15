@@ -1,0 +1,10 @@
+{
+  "recipient": "42",
+  "merchant_id": "mer_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "merchant_name": "Example Outdoor Store",
+  "merchant_url": "https://openvibe.coupons/m/example-outdoor-store",
+  "coupon_id": "cpn_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "coupon_url": "https://openvibe.coupons/c/cpn_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "title": "15% off",
+  "expires_at": null
+}

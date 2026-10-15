@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/coupons.watch.matched.v1.json",
+  "title": "CouponsWatchMatchedPayload",
+  "description": "coupons.watch.matched v1 (OpenVibe.Coupons server/domain/watches.js notifyWatchers). A code for a merchant a person watches became publicly listed (created published, or approved from review), inside the same transaction. One event per (watcher, coupon): never for the person who submitted the code, never twice. Internal visibility, the envelope subject is the coupon; recipient is who OpenVibe.Network notifies. The payload carries no code text: the notification links the coupon page, where its restrictions and reports are.",
+  "type": "object",
+  "required": ["recipient", "merchant_id", "merchant_name", "merchant_url", "coupon_id", "coupon_url", "title", "expires_at"],
+  "additionalProperties": false,
+  "properties": {
+    "recipient": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The watcher's user subject id: who is notified." },
+    "merchant_id": { "type": "string", "pattern": "^mer_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "merchant_name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "merchant_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The merchant's page on Coupons." },
+    "coupon_id": { "type": "string", "pattern": "^cpn_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "coupon_url": { "type": "string", "format": "uri", "pattern": "^https?://", "maxLength": 2048, "description": "The coupon's page on Coupons." },
+    "title": { "type": "string", "minLength": 1, "maxLength": 500, "description": "The code's title as listed (what it gives)." },
+    "expires_at": { "type": ["string", "null"], "maxLength": 40, "description": "The stated expiry (ISO date or date-time), or null when unknown." }
+  }
+}

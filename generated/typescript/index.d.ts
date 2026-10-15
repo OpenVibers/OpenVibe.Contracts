@@ -169536,6 +169536,36 @@ export interface CouponsCouponCreatedPayload {
   origin: "member" | "staff" | "source" | "ai";
 }
 
+/** coupons.watch.matched@1.0.0 (owner: coupons) */
+/**
+ * coupons.watch.matched v1 (OpenVibe.Coupons server/domain/watches.js notifyWatchers). A code for a merchant a person watches became publicly listed (created published, or approved from review), inside the same transaction. One event per (watcher, coupon): never for the person who submitted the code, never twice. Internal visibility, the envelope subject is the coupon; recipient is who OpenVibe.Network notifies. The payload carries no code text: the notification links the coupon page, where its restrictions and reports are.
+ */
+export interface CouponsWatchMatchedPayload {
+  /**
+   * The watcher's user subject id: who is notified.
+   */
+  recipient: string;
+  merchant_id: string;
+  merchant_name: string;
+  /**
+   * The merchant's page on Coupons.
+   */
+  merchant_url: string;
+  coupon_id: string;
+  /**
+   * The coupon's page on Coupons.
+   */
+  coupon_url: string;
+  /**
+   * The code's title as listed (what it gives).
+   */
+  title: string;
+  /**
+   * The stated expiry (ISO date or date-time), or null when unknown.
+   */
+  expires_at: string | null;
+}
+
 /** coupons.coupon.updated@1.0.0 (owner: coupons) */
 /**
  * coupons.coupon.updated v1 (OpenVibe.Coupons server/domain/coupons.js recompute, approve and setExpiry, payload from lifecyclePayload). Emitted in the transaction of the change when (a) a code's status moved to unknown, reported_working or reported_failed: people's reports through the confidence formula (reason report), evidence added or withdrawn (evidence), old reports decaying (decay), or staff or a service re-enabling a disabled or expired code (staff, service:<client>[:<note>]); (b) staff published a code that waited for review (reason approved; status unchanged, so previous_status equals status and may be any status); or (c) the code's expiry was set or cleared (reason expiry_changed, no previous_status; setExpiry has no HTTP route yet). A move to expired or disabled is coupons.coupon.expired or coupons.coupon.disabled instead, and a confidence change without a status change emits only coupons.confidence.changed. Staff notes are reduced to reason staff; a service's note is copied into the reason. Never names a submitter, reporter or staff member. Envelope: subject { type: coupon, id: cpn_… }, visibility public when the code is publicly listed after the change (recompute: before or after), otherwise internal, priority important (not set: the Events default), actor service:coupons. No known consumers.
