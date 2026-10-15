@@ -47,6 +47,13 @@ try {
     // The summary counts skipped services separately and only the checked ones in the ratio.
     ok(summarize([{ gaps: [] }, { gaps: ['x'] }, { skipped: 'placeholder', gaps: [] }]) === '1/2 current, 1 placeholder skipped', 'the summary counts skipped placeholders separately');
     ok(summarize([{ gaps: [] }, { gaps: [] }]) === '2/2 current', 'without a placeholder the summary is unchanged');
+
+    // A retired service (Sites, 2026-10-14) is skipped even when an old checkout with no charter README is around.
+    fs.mkdirSync(path.join(root, 'OpenVibe.Gone'));
+    fs.writeFileSync(path.join(root, 'OpenVibe.Gone', 'README.md'), '# Gone\n');
+    const retired = checkRepo(root, { id: 'gone', repository: 'OpenVibers/OpenVibe.Gone', status: 'retired' });
+    ok(retired.skipped === 'retired' && retired.gaps.length === 0, 'a retired service is skipped, checkout or not');
+    ok(summarize([{ gaps: [] }, { skipped: 'retired', gaps: [] }]) === '1/1 current, 1 retired skipped', 'the summary counts retired services apart');
 } finally {
     fs.rmSync(root, { recursive: true, force: true });
 }

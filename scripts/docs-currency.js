@@ -10,7 +10,8 @@
  *
  * The services are manifests/services/*.json (their `repository`, e.g. OpenVibers/OpenVibe.Search, is looked up as
  * <root>/OpenVibe.Search). A manifest with status "placeholder" is one the roadmap has named but not built, so an
- * absent checkout is skipped (not a gap); a placeholder that does have a checkout is checked like any other. For
+ * absent checkout is skipped (not a gap); a placeholder that does have a checkout is checked like any other. A
+ * "retired" service (Sites, 2026-10-14) has no running code to document and is skipped too. For
  * each checkout:
  *
  *   README.md has a level-2 heading for each of: Purpose, Owns, Does not own, Depends on, Capabilities or Grants,
@@ -62,6 +63,8 @@ function checkRepo(root, manifest) {
     const name = String(manifest.repository || '').split('/').pop();
     const dir = path.join(root, name);
     const gaps = [];
+    // A retired service has nothing running to document, whether or not an old checkout is still around.
+    if (manifest.status === 'retired') return { id: manifest.id, repository: manifest.repository, skipped: 'retired', gaps: [] };
     if (!name || !fs.existsSync(dir)) {
         // A placeholder service (status "placeholder": named by the roadmap, not built) has no repository to check
         // yet; report it as skipped rather than a gap. A placeholder that does have a checkout falls through and is
@@ -94,12 +97,13 @@ function checkRepo(root, manifest) {
     return { id: manifest.id, repository: manifest.repository, gaps };
 }
 
-/** The summary line: skipped placeholders are counted apart from the checkouts that were actually checked. */
+/** The summary line: skipped placeholders and retired services are counted apart from the checkouts actually checked. */
 function summarize(results) {
-    const skipped = results.filter((r) => r.skipped).length;
-    const checked = results.length - skipped;
+    const placeholders = results.filter((r) => r.skipped === 'placeholder').length;
+    const retired = results.filter((r) => r.skipped === 'retired').length;
+    const checked = results.length - placeholders - retired;
     const bad = results.filter((r) => r.gaps.length).length;
-    return `${checked - bad}/${checked} current${skipped ? `, ${skipped} placeholder skipped` : ''}`;
+    return `${checked - bad}/${checked} current${placeholders ? `, ${placeholders} placeholder skipped` : ''}${retired ? `, ${retired} retired skipped` : ''}`;
 }
 
 function main(argv) {
@@ -114,7 +118,7 @@ function main(argv) {
     if (argv.includes('--json')) console.log(JSON.stringify(results, null, 2));
     else {
         for (const r of results) {
-            if (r.skipped) console.log(`– ${r.id.padEnd(12)} placeholder, no repository yet`);
+            if (r.skipped) console.log(`– ${r.id.padEnd(12)} ${r.skipped === 'retired' ? 'retired, nothing to document' : 'placeholder, no repository yet'}`);
             else console.log(`${r.gaps.length ? '✗' : '✓'} ${r.id.padEnd(12)} ${r.gaps.length ? r.gaps.join('; ') : 'current'}`);
         }
         console.log(summarize(results));

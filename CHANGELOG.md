@@ -4,9 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.181.0 — 2026-10-15
+
+- **OpenVibe.Sites is retired** (plan T11, 2026-10-14). The service manifest's `status` and `exposure.state` are
+  `retired`, with the reason in the note, and its repository record is no longer deployed. `scripts/docs-currency.js`
+  skips a retired service whether or not an old checkout is around, and counts it apart (`44/44 current, 1 retired
+  skipped`).
+- **The estate covers every repository again** (`docs/ESTATE.md`, `manifests/repositories/`): 50, regenerated from
+  current clones. It adds the ten built since the last refresh (Actor, Food, Help, Inventory, MediaHub, Play, Quest,
+  Rent, Work, Zone), and the other 37 records now carry their current pins. `scripts/estate.js` reads symlinked
+  checkouts, and a retired service's record is never "deployed".
+- The 0.180.0 Sources descriptions named the implementing pull request as Sources#49; it is Sources#51.
+
 ## 0.180.0 — 2026-10-15
 
-- **Sources api endpoints read catalogs that keep plans, hardware and prices apart** (Sources#49, for OVHcloud's public
+- **Sources api endpoints read catalogs that keep plans, hardware and prices apart** (Sources#51, for OVHcloud's public
   VPS catalog). `sources.source@1` and `sources.source-write-request@1`:
   - A path segment may carry a selector, `key[field=value,…]` (one to four conditions). It steps into the first
     element of the array `key` whose fields equal the values, compared as text. A value is literal text or

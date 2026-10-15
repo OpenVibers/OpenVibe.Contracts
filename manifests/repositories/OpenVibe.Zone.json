@@ -1,0 +1,26 @@
+{
+  "name": "OpenVibe.Zone",
+  "repository": "OpenVibers/OpenVibe.Zone",
+  "service": "zone",
+  "product": "Zone",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 2,
+  "authority": [
+    "zone.*"
+  ],
+  "domains": [
+    "openvibe.zone",
+    "api.openvibe.zone"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.175.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8"
+  },
+  "deployed": false,
+  "exposure": "live",
+  "track": "T8"
+}

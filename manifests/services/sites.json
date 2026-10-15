@@ -5,12 +5,12 @@
   },
   "id": "sites",
   "name": "OpenVibe.Sites",
-  "status": "stable",
+  "status": "retired",
   "repository": "OpenVibers/OpenVibe.Sites",
   "exposure": {
-    "state": "live",
+    "state": "retired",
     "publicSite": "service",
-    "note": "serves only openvibe.tips and openvibe.vip (frozen pages until plan T5 launches them) and the legal pages of openvibe.bot and openvibe.games; every other domain is served by its product or by OpenVibe.Network (its subdomains, and redirects for parked domains) since 2026-10-09"
+    "note": "retired 2026-10-14 (plan T11): nothing deploys it and the repository is archived; openvibe.tips and openvibe.vip are parked by OpenVibe.Network (parked-domains), and every other domain is served by its product"
   },
   "domains": [],
   "capabilities": [],
@@ -29,7 +29,7 @@
     },
     "rollback": {
       "conditions": [
-        "manual: ovhost rollback sites --to <sha> rebuilds that commit and installs its vhosts (nginx -t before the reload); there is no ready URL, so nothing is automatic"
+        "none: retired; the archived repository is kept for history and nothing deploys it"
       ],
       "window": "any time; each deploy builds from a commit",
       "blockers": {
@@ -43,5 +43,5 @@
       "none": "static files; nothing runs"
     }
   },
-  "notes": "Static files only; not a runtime. Being deleted (plan T11)."
+  "notes": "Retired 2026-10-14 (plan T11): static files only, never a runtime; the repository is archived."
 }

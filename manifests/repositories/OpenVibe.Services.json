@@ -1,21 +1,25 @@
 {
   "name": "OpenVibe.Services",
-  "repository": null,
+  "repository": "OpenVibers/OpenVibe.Services",
   "service": "services",
-  "product": "OpenVibe.Services",
-  "stage": null,
-  "version": null,
-  "runtime": null,
-  "database": null,
-  "migrations": 0,
+  "product": "Services",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 5,
   "authority": [
-    "services"
+    "services.*"
   ],
   "domains": [
     "openvibe.services"
   ],
-  "pins": {},
-  "deployed": null,
-  "exposure": "internal",
-  "track": null
+  "pins": {
+    "openvibe-contracts": "v0.177.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W13"
 }

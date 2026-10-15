@@ -1,21 +1,25 @@
 {
   "name": "OpenVibe.Run",
-  "repository": null,
+  "repository": "OpenVibers/OpenVibe.Run",
   "service": "run",
-  "product": "OpenVibe.Run",
-  "stage": null,
-  "version": null,
-  "runtime": null,
-  "database": null,
-  "migrations": 0,
+  "product": "Run",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 3,
   "authority": [
     "run"
   ],
   "domains": [
     "openvibe.run"
   ],
-  "pins": {},
-  "deployed": null,
-  "exposure": "internal",
-  "track": null
+  "pins": {
+    "openvibe-contracts": "v0.161.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W20"
 }

@@ -7,7 +7,7 @@
   "version": "0.3.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 4,
+  "migrations": 9,
   "authority": [
     "host.*"
   ],
@@ -15,11 +15,12 @@
     "openvibe.host"
   ],
   "pins": {
-    "openvibe-contracts": "v0.83.0",
-    "openvibe-sdk": "v0.26.0",
-    "openvibe-shared": "v2.10.1"
+    "openvibe-contracts": "v0.172.1",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8",
+    "openvibe-publishing": "v1.4.0"
   },
-  "deployed": "loopback only, not launched",
+  "deployed": "openvibe.host catalog",
   "exposure": "live",
-  "track": "W21 Stage A + Stage B"
+  "track": "T20 hosting compared"
 }

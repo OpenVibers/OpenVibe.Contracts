@@ -15,7 +15,7 @@
     "openvibe.tools"
   ],
   "pins": {
-    "openvibe-contracts": "v0.92.0"
+    "openvibe-contracts": "v0.129.0"
   },
   "deployed": true,
   "exposure": "live",
