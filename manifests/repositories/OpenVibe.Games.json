@@ -16,9 +16,9 @@
     "play.openvibe.games"
   ],
   "pins": {
-    "openvibe-contracts": "v0.78.0",
-    "openvibe-sdk": "v0.23.1",
-    "openvibe-shared": "v2.6.0"
+    "openvibe-contracts": "v0.142.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.0.0"
   },
   "deployed": true,
   "exposure": "live",

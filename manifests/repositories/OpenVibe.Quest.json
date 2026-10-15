@@ -1,0 +1,26 @@
+{
+  "name": "OpenVibe.Quest",
+  "repository": "OpenVibers/OpenVibe.Quest",
+  "service": "quest",
+  "product": "Quest",
+  "stage": "alpha",
+  "version": "0.3.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 5,
+  "authority": [
+    "quest.*"
+  ],
+  "domains": [
+    "openvibe.quest"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.143.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8",
+    "openvibe-publishing": "v1.4.0"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W20"
+}

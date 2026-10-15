@@ -1,0 +1,30 @@
+{
+  "name": "OpenVibe.MediaHub",
+  "repository": "OpenVibers/OpenVibe.MediaHub",
+  "service": "media-hub",
+  "product": "Video",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 4,
+  "authority": [
+    "video.*",
+    "pics.*",
+    "download.*"
+  ],
+  "domains": [
+    "openvibe.video",
+    "openvibe.pics",
+    "openvibe.download",
+    "openvibe.network"
+  ],
+  "pins": {
+    "openvibe-contracts": "v0.152.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W20"
+}

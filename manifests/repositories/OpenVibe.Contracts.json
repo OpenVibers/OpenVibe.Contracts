@@ -4,7 +4,7 @@
   "service": "contracts",
   "product": "OpenVibe.Contracts",
   "stage": "alpha",
-  "version": "0.106.0",
+  "version": "0.181.0",
   "runtime": "node >=20",
   "database": null,
   "migrations": 0,
@@ -13,7 +13,7 @@
   ],
   "domains": [],
   "pins": {
-    "openvibe-contracts": "v0.106.0"
+    "openvibe-contracts": "v0.127.0"
   },
   "deployed": false,
   "exposure": "library",

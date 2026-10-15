@@ -1,21 +1,25 @@
 {
   "name": "OpenVibe.Watch",
-  "repository": null,
+  "repository": "OpenVibers/OpenVibe.Watch",
   "service": "watch",
-  "product": "OpenVibe.Watch",
-  "stage": null,
-  "version": null,
-  "runtime": null,
-  "database": null,
-  "migrations": 0,
+  "product": "Watch",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "PostgreSQL",
+  "migrations": 10,
   "authority": [
     "watch"
   ],
   "domains": [
     "openvibe.watch"
   ],
-  "pins": {},
-  "deployed": null,
-  "exposure": "internal",
-  "track": null
+  "pins": {
+    "openvibe-contracts": "v0.179.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "W18"
 }

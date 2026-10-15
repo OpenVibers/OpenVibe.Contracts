@@ -2,12 +2,12 @@
   "name": "OpenVibe.Search",
   "repository": "OpenVibers/OpenVibe.Search",
   "service": "search",
-  "product": "OpenVibe.Search",
+  "product": "Search",
   "stage": "alpha",
   "version": "0.1.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 1,
+  "migrations": 2,
   "authority": [
     "search"
   ],
@@ -15,9 +15,9 @@
     "search.openvibe.network"
   ],
   "pins": {
-    "openvibe-contracts": "v0.96.0",
-    "openvibe-sdk": "v0.26.0",
-    "openvibe-shared": "v2.9.0"
+    "openvibe-contracts": "v0.143.0",
+    "openvibe-sdk": "v0.44.0",
+    "openvibe-shared": "v4.1.8"
   },
   "deployed": true,
   "exposure": "live",

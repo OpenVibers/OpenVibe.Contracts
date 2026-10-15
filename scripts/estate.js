@@ -140,7 +140,8 @@ function recordFor(name, dir, index) {
         authority: service ? ((service.namespacesOwned || []).length ? service.namespacesOwned.slice() : [service.id]) : [],
         domains: domainsOf(status, manifest),
         pins: estatePins(pkg, status),
-        deployed: status ? (status.deployed === undefined ? null : status.deployed) : null,
+        // A retired service (its manifest says so) runs nowhere, whatever its archived STATUS.json last said.
+        deployed: exposure === 'retired' ? false : status ? (status.deployed === undefined ? null : status.deployed) : null,
         exposure,
         track: (status && status.wave) || null,
     };
@@ -149,7 +150,8 @@ function recordFor(name, dir, index) {
 /** Every checkout under the root, sorted by name. */
 function checkouts(root) {
     return fs.readdirSync(root, { withFileTypes: true })
-        .filter((e) => e.isDirectory() && !e.name.startsWith('.'))
+        // A symlinked checkout counts (an estate root assembled from clones kept elsewhere).
+        .filter((e) => !e.name.startsWith('.') && (e.isDirectory() || (e.isSymbolicLink() && fs.statSync(path.join(root, e.name), { throwIfNoEntry: false })?.isDirectory())))
         .map((e) => e.name)
         .filter((n) => MARKERS.some((m) => fs.existsSync(path.join(root, n, m))))
         .sort();
