@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.189.1 — 2026-10-15
+
+- **Food compares delivery** (Food#52): its product description, pillars and `site.what` say one search opens every
+  delivery app and meal kits are side by side; the household chat is named as next.
+- **Rent's board and the Companion** are built (Rent#55, Extensions v0.2.0): the product description and pillars say
+  so instead of naming them as next. Copy only.
+
 ## 0.189.0 — 2026-10-15
 
 - **`food.household.read`** (owner food, internal, granted to Chat): a household's pantry and plan as plain text for
