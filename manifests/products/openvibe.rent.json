@@ -5,7 +5,7 @@
   "icon": "fa-key",
   "accent": "#22d3ee",
   "tagline": "Every rental site, one search.",
-  "description": "OpenVibe.Rent is a rental aggregator: one search opens Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper, Rent.com and a dozen more at the place and filters you choose, for apartments, houses, rooms, furnished stays, commercial space, parking, storage and cars. Next to them: affordable housing from U.S. HUD open data, listings people post here (no street addresses, reports that hide a listing until staff look), saved searches and alerts through OpenVibe.Watch. The listings, messages and payments stay on each site. Next: a board that saves listings from any site, the OpenVibe Companion extension, and licensed listing feeds.",
+  "description": "OpenVibe.Rent is a rental aggregator: one search opens Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper, Rent.com and more at the place and filters you choose, for apartments, houses, rooms, stays, commercial space, parking, storage and cars. Next to them: affordable housing from U.S. HUD open data, listings people post here, and alerts through OpenVibe.Watch. Listings, messages and payments stay on each site. Next: a board that saves listings from any site, and the OpenVibe Companion extension.",
   "pillars": [
     {
       "title": "Search every site",
