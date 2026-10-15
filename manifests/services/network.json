@@ -97,6 +97,7 @@
     "live.moderation.action",
     "live.stream.started",
     "media.moderation.action",
+    "media.usage.recorded",
     "news.moderation.action",
     "reviews.moderation.action",
     "services.moderation.action",

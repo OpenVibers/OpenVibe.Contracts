@@ -2390,6 +2390,16 @@
       "adr": "ADR-014"
     },
     {
+      "id": "media.usage.recorded",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.usage.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-014"
+    },
+    {
       "id": "live.stream.started",
       "version": "1.0.0",
       "owner": "live",

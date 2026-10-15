@@ -146880,6 +146880,974 @@ export interface EventsUsageRecordedPayload {
   revision?: number;
 }
 
+/** media.usage.recorded@1.0.0 (owner: media) */
+/**
+ * media.usage.recorded v1 (ADR-031 amendment 2026-10-02, section 8). One closed hour of one zone's use on OpenVibe.Media's S3 surface: resource is the zone's OVRN (ovrn:zone:<project_id>:object-zone/<zon_id>) and dimension the zone id in lowercase, on every rollup. The series: stored bytes (media.object.upload, unit byte_hours: the live objects' bytes summed over the hour, sampled each minute), writes (media.object.upload and media.object.delete, unit requests), lists (media.object.list, unit requests), reads (media.object.read, unit requests) and egress (media.object.read, unit egress_bytes). errors counts the operations refused or failed in the hour, by S3 error code mapped to media.s3.<code>. Media counts as it answers and stores the rollup as its own event after the hour closes, in the same transaction that marks the hour sent; a corrected hour is re-sent with a higher revision. Rollups are counts for dashboards and quotas, never money. The payload is common.usage-recorded@1. Envelope: source media, subject { type: project, id: <project_id> }, visibility internal, priority low, actor service:media.
+ */
+export interface MediaUsageRecordedPayload {
+  /**
+   * The developer project whose app token did the work.
+   */
+  project_id: string;
+  /**
+   * The environment of that app token.
+   */
+  env: "sandbox" | "production";
+  /**
+   * The capability the usage counts against: tools.job.create, tools.tool.run, events.app.publish, events.app.subscribe.
+   */
+  capability: string;
+  /**
+   * Optional finer key inside the capability, as the producer names it: a job type (img.process) or a tool id (image-resize). Never the id of a person, an app, a request or a job.
+   */
+  dimension?: string;
+  /**
+   * Optional resource name (ADR-034 section 2) of the project resource the usage counts against, so a dashboard or quota can group a count by resource (rollups are counts, never money; Billing never consumes them and rates only platform.usage-sample readings): ovrn:zone:<project_id>:object-zone/<zon_id> on Media's per-zone rollups (ADR-031 amendment 2026-10-02). Its project is project_id: a resource of another project is refused (contracts.usage.checkUsageRecorded). Added in 1.1.0. Never the resource name of a person, an app, a request or a job.
+   */
+  resource?: string;
+  /**
+   * What quantity counts (jobs, events, deliveries, requests, bytes, tokens): the same word a Network project quota uses for its unit.
+   */
+  unit: string;
+  /**
+   * The length of the window.
+   */
+  window: "hour" | "day";
+  /**
+   * UTC, on the hour (midnight for a day).
+   */
+  window_start: string;
+  /**
+   * window_start plus the window, exclusive.
+   */
+  window_end: string;
+  /**
+   * Units used in the window, by work that succeeded and work that failed alike.
+   */
+  quantity: number;
+  /**
+   * Operations in the window that failed or were refused: a job that failed, a publish refused with a problem, a webhook attempt without a 2xx. A refused operation may use no unit, so errors can exceed quantity.
+   */
+  errors: number;
+  /**
+   * The errors by problem code (at most 20 codes; the rest are only in errors).
+   */
+  error_codes?: {
+    [k: string]: number | undefined;
+  };
+  /**
+   * The last failures of the window, newest first, so a developer can find them in their own logs.
+   *
+   * @maxItems 10
+   */
+  samples?:
+    | []
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ]
+    | [
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        },
+        {
+          at: string;
+          code: string;
+          /**
+           * The HTTP status the failure was answered with, when there was one.
+           */
+          status?: number;
+          /**
+           * The W3C trace id of the request (or event) that failed.
+           */
+          trace_id?: string;
+          /**
+           * What failed, when the project can look it up with its own token: a job, an event, an AI run, a Media object. Never a subject.
+           */
+          ref?: string;
+        }
+      ];
+  /**
+   * 1 when absent. A producer that re-emits a window with corrected totals raises it.
+   */
+  revision?: number;
+}
+
 /** live.stream.started@1.0.0 (owner: live) */
 /**
  * live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRestream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.
