@@ -42,5 +42,5 @@
     "News, Reviews, Trade, Coupons and OpenRestream go live on their own domains (plan T11); the product at openre.stream is OpenRestream, with OpenVibe Live on by default (live.openre.slot.bind)",
     "ADR-055 (proposed): money and the inventory — primary sales first, gifting next; trading and a market stay closed, and chance is never paid for"
   ],
-  "updated": "2026-10-11"
+  "updated": "2026-10-15"
 }
