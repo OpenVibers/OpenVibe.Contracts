@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.187.0 — 2026-10-15
+
+- **openvibe.video: playlists are built** (MediaHub's `/playlists`, its API and "Add to playlist" on every watch
+  page; MediaHub#55 puts Playlists in the navbar). The pillar list gains Playlists, and "Next" names only uploads and
+  publishing to other platforms.
+
 ## 0.186.0 — 2026-10-15
 
 - **More pillars say what is built** (the 0.184.0 audit, finished): openvibe.download has no AI search or summaries
