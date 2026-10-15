@@ -16,6 +16,10 @@
       "text": "One person, a couple or a household, up to fourteen days, with the shopping list and its cost."
     },
     {
+      "title": "Plan together",
+      "text": "Share a saved plan with your household: everyone sees it and ticks the shopping list off as they buy."
+    },
+    {
       "title": "A food list you can read",
       "text": "Nutrition per serving and per 100 g, the typical price band and the cheapest budget chain."
     },
@@ -47,7 +51,7 @@
     }
   ],
   "keywords": "openvibe food, food bank near me, food pantry finder, budget grocery stores, meal planner, shopping list cost, recipes from your cupboard",
-  "launch": "shared household plans",
+  "launch": "shared household plans (live since 2026-10-15)",
   "relationships": {
     "service": "food"
   }

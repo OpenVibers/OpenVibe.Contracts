@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.185.0 — 2026-10-15
+
+- **openvibe.food: "Plan together" is a pillar again, because it is built** (Food#39). A saved meal plan is shared with
+  a household by a link shown once (only its hash is kept), and everyone in it ticks the shopping list off for
+  everyone. Delivery price comparison stays out: the delivery apps publish no open prices.
+
 ## 0.184.0 — 2026-10-15
 
 - **The catalog says what each site does today.** OpenVibe.Help shows every site's pillars as "What you can do".
