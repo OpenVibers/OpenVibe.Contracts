@@ -4,6 +4,10 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.193.2 — 2026-10-15
+
+- Copy: Quest's `site.what` says developer apps add quests on their own events (Quest#55, SDK 0.47.0).
+
 ## 0.193.1 — 2026-10-15
 
 - `generated/openapi/quest.json`: Quest's routes now that it declares a capability (left out of the 0.193.0 commit).
