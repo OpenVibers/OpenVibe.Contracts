@@ -5,40 +5,44 @@
   "icon": "fa-images",
   "accent": "#f472b6",
   "tagline": "Share pictures. Fast, open, yours.",
-  "description": "OpenVibe.Pics will be the picture home of the OpenVibe network: quick uploads and share links with or without an account, albums and galleries, image processing and optimisation served from a shared CDN, and AI image tools, an open and modular alternative to Imgur that is also usable through the OpenVibe API.",
+  "description": "OpenVibe.Pics is the picture host of the OpenVibe network, an open and ad-free alternative to Imgur: upload a picture and get a link to share or embed anywhere (the page, the direct link, Markdown, BBCode and HTML), with albums. Every picture is re-encoded with its GPS position and camera details removed, served unlisted (only people with the link see it), and anyone can report one; staff takedowns keep the same picture from coming back. Uploads need an OpenVibe account for now. AI image tools come next.",
   "pillars": [
     {
       "title": "Upload & share",
-      "text": "Drop a picture, get a link, with or without an account."
+      "text": "Drop, paste or choose pictures and get links to share and embed anywhere."
     },
     {
-      "title": "Albums & galleries",
-      "text": "Collections, embeds and community galleries."
+      "title": "Albums",
+      "text": "Put pictures together and share the album with one link."
     },
     {
-      "title": "Processing",
-      "text": "Resize, convert and optimise on the fly, cached close to viewers."
+      "title": "Clean files",
+      "text": "Every picture is re-encoded: location and camera details are removed before anyone sees it."
     },
     {
-      "title": "AI image tools",
-      "text": "Describe, tag, edit and generate with the network's shared AI."
+      "title": "Safe by default",
+      "text": "Unlisted links, a report button on every picture, and takedowns that stay down."
+    },
+    {
+      "title": "Next",
+      "text": "Uploads without an account, and AI image tools."
     }
   ],
   "keywords": "openvibe pics, image hosting, image upload, imgur alternative, image cdn, ai image tools",
-  "launch": "the shared image upload and processing service",
+  "launch": "live on MediaHub since 2026-10-15",
   "relationships": {
     "service": "media-hub",
     "noRepo": true,
     "meanwhile": [
       {
-        "label": "OpenVibe.Media",
-        "url": "https://openvibe.media",
-        "note": "Media already stores and serves the network's pictures and video."
-      },
-      {
         "label": "Image tools",
         "url": "https://img.openvibe.tools",
-        "note": "Convert, resize and compress images today."
+        "note": "Convert, resize and compress images."
+      },
+      {
+        "label": "OpenVibe.Download",
+        "url": "https://openvibe.download",
+        "note": "Any other file, private, with share links you control."
       }
     ]
   }

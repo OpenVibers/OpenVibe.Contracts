@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.188.3 — 2026-10-15
+
+- **OpenVibe.Pics is live** on openvibe.pics (MediaHub#64): the product's tagline, description and pillars, and
+  media-hub's `notes` and `site.what`, say what it is now: signed-in picture uploads re-encoded without metadata,
+  unlisted share and embed links, albums, reports and takedowns. Signed-out uploads and AI image tools are named as
+  next. The `pics.*` capabilities stay planned (no app may call the API yet). Copy only.
+
 ## 0.188.2 — 2026-10-15
 
 - **Rent is the rental aggregator** the owner asked for. Its `site.tagline` and `site.what`, and the product's tagline,
