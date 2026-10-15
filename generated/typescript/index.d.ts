@@ -189128,6 +189128,10 @@ export type BotPairResult =
 export interface BotRobotOnlinePayload {
   robot_id: string;
   device_id: string;
+  /**
+   * The robot owner's user subject (Bot since 0.192.0; absent from older events). OpenVibe.Quest credits the owner's "Bring a robot online" quest from it.
+   */
+  owner?: string;
 }
 
 /** bot.robot.offline@1.0.0 (owner: bot) */
@@ -189137,6 +189141,10 @@ export interface BotRobotOnlinePayload {
 export interface BotRobotOfflinePayload {
   robot_id: string;
   device_id: string;
+  /**
+   * The robot owner's user subject (Bot since 0.192.0; absent from older events). OpenVibe.Quest credits the owner's "Bring a robot online" quest from it.
+   */
+  owner?: string;
 }
 
 /** bot.estop.set@1.0.0 (owner: bot) */

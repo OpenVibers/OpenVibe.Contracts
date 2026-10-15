@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.192.0 — 2026-10-15
+
+- **`bot.robot.online` / `bot.robot.offline`** gain an optional `owner` (the robot owner's `usr_` subject; absent from
+  older events): OpenVibe.Quest credits the owner's "Bring a robot online" quest from it (the audit's device and robot
+  quest type).
+- **Quest consumes** `blog.post.published`, `deals.offer.created`, `deals.vote.changed`, `run.job.succeeded`,
+  `inventory.item.equipped` and `bot.robot.online` (Quest#53 and the robot quest): quests on Blog, Deals, Run,
+  Inventory and Bot.
+
 ## 0.191.1 — 2026-10-15
 
 - **Copy** (copy only): Deals' site names its crowdfunding discovery (Deals#62: one search across Kickstarter,
