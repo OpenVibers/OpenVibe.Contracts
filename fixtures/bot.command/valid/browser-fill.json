@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 61,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-61",
+  "kind": "browser",
+  "value": {
+    "action": "fill",
+    "selector": "#q",
+    "text": "hello"
+  }
+}

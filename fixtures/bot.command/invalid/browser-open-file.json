@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 62,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-62",
+  "kind": "browser",
+  "value": {
+    "action": "open",
+    "url": "file:///etc/passwd"
+  }
+}
