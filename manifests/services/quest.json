@@ -31,6 +31,12 @@
     "network.follow.created",
     "tools.job.created",
     "wiki.revision.created",
+    "blog.post.published",
+    "deals.offer.created",
+    "deals.vote.changed",
+    "run.job.succeeded",
+    "inventory.item.equipped",
+    "bot.robot.online",
     "network.account.export_requested",
     "network.account.deleted"
   ],

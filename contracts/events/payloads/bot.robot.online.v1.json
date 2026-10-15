@@ -17,6 +17,11 @@
     "device_id": {
       "type": "string",
       "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The robot owner's user subject (Bot since 0.192.0; absent from older events). OpenVibe.Quest credits the owner's \"Bring a robot online\" quest from it."
     }
   }
 }
