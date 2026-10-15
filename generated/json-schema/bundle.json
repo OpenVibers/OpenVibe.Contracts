@@ -25524,6 +25524,77 @@
         "$ref": "../../common/usage-recorded.v1.json"
       }
     },
+    "live.setup.task_completed": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.setup.task_completed.v1.json",
+        "title": "LiveSetupTaskCompletedPayload",
+        "description": "live.setup.task_completed v1 (OpenVibe.Live server/streaming/setup-progress.js): a streamer finished one of the tasks of Live's go-live setup hub for the first time (their first stream slot, first custom emote, first follower, ...). Live records each task once per person (live_setup_tasks) and writes this event to its outbox in the same transaction, when it next works out the person's progress. OpenVibe.Quest turns each task into a quest (owner Q16: Live's setup steps become quests). Envelope: subject { type: user, id: usr_... } the streamer, actor the same person, visibility internal. Never carries what the person made, only which task it was.",
+        "type": "object",
+        "required": [
+          "task",
+          "user"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "task": {
+            "enum": [
+              "slot",
+              "method",
+              "restream",
+              "golive",
+              "profile",
+              "offline",
+              "emote",
+              "sound",
+              "goal",
+              "powerchat",
+              "panels",
+              "share",
+              "mods",
+              "requests",
+              "moderation",
+              "robot",
+              "aibot",
+              "paste"
+            ],
+            "description": "The setup hub's task id: slot, method, restream, golive, profile, offline, emote, sound, goal, powerchat, panels, share, mods, requests, moderation, robot, aibot, paste."
+          },
+          "user": {
+            "$ref": "../../identity/subject-ref.v1.json",
+            "description": "The streamer who finished it."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "The task's title as the hub shows it."
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The hub's group: Stream, Look & feel, Community & money, Grow, Build & mod."
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "done": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "How many of the hub's tasks the person has done, this one included."
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
     "live.stream.started": {
       "version": "1.0.0",
       "owner": "live",

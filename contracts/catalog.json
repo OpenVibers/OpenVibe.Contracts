@@ -2400,6 +2400,16 @@
       "adr": "ADR-014"
     },
     {
+      "id": "live.setup.task_completed",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.setup.task_completed.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
       "id": "live.stream.started",
       "version": "1.0.0",
       "owner": "live",
