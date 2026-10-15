@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.189.0 — 2026-10-15
+
+- **`food.household.read`** (owner food, internal, granted to Chat): a household's pantry and plan as plain text for
+  the AI member of its OpenVibe.Chat room, `GET /internal/households/:planId/chat-context` →
+  `food.household-chat-context@1` `{ text, source, updated_at }` (new contract, with fixtures). The owner's Q15: a Food
+  household's group chat with an AI member that knows what is in the cupboard. Chat's AI members (Chat#102) read it
+  with Chat's own service token; Network grants it (Network follows); Food serves it (Food follows).
+
 ## 0.188.3 — 2026-10-15
 
 - **OpenVibe.Pics is live** on openvibe.pics (MediaHub#64): the product's tagline, description and pillars, and
