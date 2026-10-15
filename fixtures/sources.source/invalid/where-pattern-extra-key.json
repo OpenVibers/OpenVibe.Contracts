@@ -1,0 +1,45 @@
+{
+  "key": "ovhcloud-vps-flags",
+  "name": "OVHcloud VPS plans (US catalog)",
+  "type": "api",
+  "category": "hosting",
+  "homepage_url": "https://us.ovhcloud.com/vps/",
+  "endpoints": [
+    {
+      "url": "https://api.us.ovhcloud.com/1.0/order/catalog/public/vps?ovhSubsidiary=US",
+      "format": "json",
+      "items_path": "plans",
+      "item_kind": "plan",
+      "max_bytes": 25165824,
+      "where": {
+        "planCode": {
+          "pattern": "^vps-",
+          "flags": "i"
+        }
+      },
+      "fields": {
+        "identity": "planCode",
+        "title": "invoiceName"
+      },
+      "extra": {
+        "vcpu": "$root.products[name=$rec.product].blobs.technical.cpu.cores",
+        "memory_gb": "$root.products[name=$rec.product].blobs.technical.memory.size",
+        "price_monthly": "pricings[mode=default,commitment=0,intervalUnit=month,interval=1].price"
+      }
+    }
+  ],
+  "auth": {
+    "mode": "none"
+  },
+  "robots_note": "robots.txt on the API host answers 404 (checked 2026-10-15)",
+  "terms_note": "OVHcloud's API schema marks the public catalog noAuthentication; prices shown as dated observations with a link.",
+  "license_note": null,
+  "min_interval_ms": 60000,
+  "poll_interval_sec": 86400,
+  "stale_after_sec": 172800,
+  "max_items": 50,
+  "enabled": false,
+  "review_required": true,
+  "sensitivity": "none",
+  "default_indexability": "noindex"
+}
