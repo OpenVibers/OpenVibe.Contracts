@@ -178621,6 +178621,46 @@ export type ResourceControlRequest = {
   [k: string]: unknown | undefined;
 };
 
+/** common.owned-resource-control-request@1.0.0 (owner: contracts) */
+/**
+ * common.owned-resource-control-request@1 (ADR-048 amendment 2026-10-15, step 8 phase 2): one control operation on a person-owned resource. Robots, chat rooms, restream definitions and pastes belong to a person, not to a project, so they carry no OVRN and the project-scoped common.resource-control-request@1 cannot name them. OpenVibe.Services sends this to the owning authority's POST /api/v1/resources/control (the same route, told apart by `owned`), acting for the person in on_behalf_of. owned names the resource by its index summary's kind and id. owner is the person it belongs to: the authority refuses unless its own record says the same (Services also offers actions only on the viewer's own resources). A sensitive action (deleting, physical control) asked by an agent is refused with confirmation_required until the owner approves, as for project resources. idempotency_key makes a retry safe: the authority answers a repeated key from the same caller with the first result, and refuses the key reused with another request. Answered with common.resource-control-result@1 (without resource: there is no OVRN). The actions each authority takes are in its <service>.resource.control capability; any other action is refused unsupported.
+ */
+export interface OwnedResourceControlRequest {
+  action: "delete" | "stop" | "suspend" | "resume" | "archive";
+  /**
+   * The resource, as its owning authority's resource index lists it (common.resource-summary@1 kind and id).
+   */
+  owned: {
+    kind: string;
+    /**
+     * The summary's id: a prefixed ULID (rob_…) or the service's own slug (a paste, a room).
+     */
+    id: string;
+  };
+  /**
+   * The person the resource belongs to. Person-owned resources belong to people, never to agents or apps.
+   */
+  owner: {
+    type: "user";
+    id: string;
+  };
+  /**
+   * Action-specific input, shaped by the authority's own contract (never redefined here).
+   */
+  params?: {};
+  idempotency_key: string;
+  on_behalf_of?: SubjectRef;
+  /**
+   * The approved confirmation from an earlier confirmation_required answer.
+   */
+  confirmation_id?: string | null;
+  /**
+   * Decide and explain without applying.
+   */
+  dry_run?: boolean;
+  trace_id?: string;
+}
+
 /** common.resource-control-result@1.0.0 (owner: contracts) */
 /**
  * common.resource-control-result@1: the authority's answer to a common.resource-control-request@1 (ADR-048, plan T13). state is the outcome, not the resource's own state: done (applied), pending (accepted and asynchronous; the authority reports completion later on its events), refused (a policy or confirmation gate said no) or failed (an error). State rules: refused carries problem or confirmation_required; failed carries problem; done and pending carry neither; confirmation_required appears only on refused. result carries the authority's own response document and never another service's rows. The state rules are checked by contracts.resources.checkControlResult.

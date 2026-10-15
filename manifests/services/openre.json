@@ -125,7 +125,8 @@
     "openre.session.end",
     "openre.output.read",
     "openre.output.write",
-    "openre.resource.read"
+    "openre.resource.read",
+    "openre.resource.control"
   ],
   "eventsProduced": [
     "openre.session.started",

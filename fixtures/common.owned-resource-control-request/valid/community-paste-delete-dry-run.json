@@ -1,0 +1,14 @@
+{
+  "action": "delete",
+  "owned": {
+    "kind": "community.paste",
+    "id": "my-notes-2026"
+  },
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "idempotency_key": "idem_delete_paste_1",
+  "dry_run": true,
+  "trace_id": "0af7651916cd43dd8448eb211c80319c"
+}

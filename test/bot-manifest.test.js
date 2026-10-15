@@ -9,7 +9,8 @@ const c = require('..');
 // bot.resource.read: the robots in OpenVibe.Services' resource index (planned 0.129.0, active 0.130.0; plan T13 step 8).
 // bot.computer.control: an owner's agent uses their own machine (0.166.0, plan T14/T17; Bot's STATUS.json lists it with
 // the computer kinds).
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read'];
+// bot.resource.control: an owner stops or resumes their robot from OpenVibe.Services (0.176.0, ADR-048 step 8 phase 2).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 
 const bot = c.services.get('bot');

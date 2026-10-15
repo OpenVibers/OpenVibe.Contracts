@@ -6,7 +6,8 @@
 id prefixes Events and Codes still owe, plus the prefixes not yet in `lib/ids.js`. Amended 2026-10-07 (step 8, the
 Contracts half): only Network lists projects, Media lists objects alone, Events waits for a stored queue row, Codes
 hosts no repositories, the person-owned kinds are step 8 phase 2, and the chosen prefixes joined `lib/ids.js`. No
-contract schema changes.
+contract schema changes. Amended 2026-10-15 (step 8 phase 2, the control half): person-owned resources are controlled
+through `common.owned-resource-control-request@1` (see "Person-owned resources" below).
 Builds on ADR-034 §2 (one resource name) and §5 (control plane
 and data plane) and on ADR-046 §6 (the data plane keeps running without the control plane). Contracts:
 `common.resource-name@1`, `common.resource-control-request@1`, `common.resource-control-result@1`; helpers in
@@ -130,6 +131,27 @@ every missing prefix, resolves the `run_` collision and adds them to `lib/ids.js
 
   `confirmation_required` appears only on `refused`, and `done` and `pending` carry no problem.
   `contracts.resources.checkControlResult` enforces these rules.
+
+## Person-owned resources (amendment 2026-10-15)
+
+Robots (Bot), chat rooms (Chat), restream definitions (OpenRestream) and pastes (Community) belong to a person. They
+are in no project and have no OVRN, so the project-scoped request cannot name them. They are controlled with
+`common.owned-resource-control-request@1`, sent to the same `POST /api/v1/resources/control` route.
+
+- **Naming:** a request names the resource by its index summary's `kind` and `id` (`owned`) and its `owner` (a
+  `usr_` subject). It carries no `project_id`. The authority tells the two forms apart by `owned`.
+- **Who decides:** the authority refuses unless its own record has the same owner. Services offers the actions only
+  on the viewer's own resources ("Your resources"), and sends `owner` and `on_behalf_of` as the viewer.
+  `contracts.resources.checkControlRequest` checks either form and refuses a person acting on someone else's resource.
+- **Gates:** an agent's sensitive actions (deleting, physical control such as a robot's stop) wait for the owner's
+  approval, as with project resources. Idempotency is per (caller, key).
+- **Answers:** `common.resource-control-result@1` without `resource`.
+- **Actions per authority**, as each `<service>.resource.control` capability lists them; any other is refused
+  `unsupported`:
+  - `bot.robot`: stop (the remote e-stop) and resume (clear it);
+  - `chat.room`: archive;
+  - `openre.stream`: suspend and resume (the definition disabled or active);
+  - `community.paste`: delete.
 
 ## Out of scope
 
