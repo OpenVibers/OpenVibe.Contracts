@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.188.1 — 2026-10-15
+
+- **Quest's site text:** quests pay badges and OpenCoins. OpenCoins have been credited since `QUEST_COINS` was switched on, but the
+  `site.what` and the product description still said "once they are switched on" (Network's front door and Help read
+  them). Copy only; no schema or capability changes.
+
 ## 0.188.0 — 2026-10-15
 
 - **`coupons.watch.matched` v1:** a person watching a merchant on OpenVibe.Coupons is told when a code for it is
