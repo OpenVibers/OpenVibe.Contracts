@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.191.0 — 2026-10-15
+
+- Sources category `crowdfunding` (`sources.source@1`, `sources.item@1`, `sources.source-write-request@1` and the
+  `sources.item.created|updated|removed` and `sources.fetch.failed` payloads): campaigns and collectives raising money in
+  the open, read by OpenVibe.Deals' crowdfunding discovery (the owner's crowdfunding aggregator ask).
+- Sources `api` endpoints may set `request_content_type` (`application/json` only): sent as the Content-Type of the
+  endpoint's GET. Open Collective's public GraphQL API answers a GET only with it (its CSRF guard).
+
 ## 0.190.1 — 2026-10-15
 
 - **Copy for what shipped on 2026-10-15** (copy only): OpenVibe.Homes is live (served by OpenVibe.Rent, Rent#58): every
