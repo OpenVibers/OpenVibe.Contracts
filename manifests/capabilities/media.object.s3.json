@@ -4,7 +4,7 @@
   "owner": "media",
   "status": "active",
   "visibility": "public",
-  "description": "OpenVibe.Media's S3 surface (ADR-031), path style at https://s3.openvibe.media/<zone name>/<key>: PutObject (one request, aws-chunked bodies included, Content-MD5 and x-amz-checksum-* checked), GetObject (ranges), HeadObject, DeleteObject, DeleteObjects, ListObjectsV2 and ListObjects (prefix, delimiter, pages), ListBuckets, HeadBucket, GetBucketLocation, and presigned GET and PUT (SigV4 query, 7 days at most). Everything else answers NotImplemented (multipart, copy, ACLs, policies, versioning; buckets are made and deleted only through OpenVibe.Zone). It is reached with a media.access-key@1 rather than a Network token: the key fixes the project and environment, so a bucket name names one zone of that environment, and a key scoped to zones reaches only those. A request is authorised as the project's app would be: the same quotas (the zone's and the environment's), the same objects as the native API, and Media's one deletion path (a held object is neither deleted nor overwritten). Responses carry a sandbox Content-Security-Policy.",
+  "description": "OpenVibe.Media's S3 surface (ADR-031), path style at https://s3.openvibe.media/<zone name>/<key>: PutObject (one request, aws-chunked bodies included, Content-MD5 and x-amz-checksum-* checked), GetObject (ranges), HeadObject, DeleteObject, DeleteObjects, ListObjectsV2 and ListObjects (prefix, delimiter, pages), ListBuckets, HeadBucket, GetBucketLocation, and presigned GET and PUT (SigV4 query, 7 days at most). multipart uploads (CreateMultipartUpload, UploadPart, CompleteMultipartUpload, AbortMultipartUpload, ListParts, ListMultipartUploads; every part but the last at least 5 MiB, parts of 256 MB and objects of 20 GB at most by default, 10000 parts, an upload expiring after a day). Everything else answers NotImplemented (copy, part copy, ACLs, policies, versioning; buckets are made and deleted only through OpenVibe.Zone). It is reached with a media.access-key@1 rather than a Network token: the key fixes the project and environment, so a bucket name names one zone of that environment, and a key scoped to zones reaches only those. A request is authorised as the project's app would be: the same quotas (the zone's and the environment's), the same objects as the native API, and Media's one deletion path (a held object is neither deleted nor overwritten). Responses carry a sandbox Content-Security-Policy.",
   "permissions": [
     "objects:read",
     "objects:write"
@@ -25,7 +25,13 @@
     "PUT s3:/:zone/:key",
     "GET s3:/:zone/:key",
     "HEAD s3:/:zone/:key",
-    "DELETE s3:/:zone/:key"
+    "DELETE s3:/:zone/:key",
+    "POST s3:/:zone/:key?uploads",
+    "PUT s3:/:zone/:key?partNumber&uploadId",
+    "POST s3:/:zone/:key?uploadId",
+    "DELETE s3:/:zone/:key?uploadId",
+    "GET s3:/:zone/:key?uploadId",
+    "GET s3:/:zone?uploads"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "common.no-body@1"

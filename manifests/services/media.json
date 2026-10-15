@@ -68,6 +68,7 @@
     "media.replica.requested",
     "media.storage.alert",
     "media.storage.recovered",
+    "media.usage.recorded",
     "media.vod.failed",
     "media.vod.ready"
   ],

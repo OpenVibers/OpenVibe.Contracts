@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.usage.recorded.v1.json",
+  "title": "MediaUsageRecordedPayload",
+  "description": "media.usage.recorded v1 (ADR-031 amendment 2026-10-02, section 8). One closed hour of one zone's use on OpenVibe.Media's S3 surface: resource is the zone's OVRN (ovrn:zone:<project_id>:object-zone/<zon_id>) and dimension the zone id in lowercase, on every rollup. The series: stored bytes (media.object.upload, unit byte_hours: the live objects' bytes summed over the hour, sampled each minute), writes (media.object.upload and media.object.delete, unit requests), lists (media.object.list, unit requests), reads (media.object.read, unit requests) and egress (media.object.read, unit egress_bytes). errors counts the operations refused or failed in the hour, by S3 error code mapped to media.s3.<code>. Media counts as it answers and stores the rollup as its own event after the hour closes, in the same transaction that marks the hour sent; a corrected hour is re-sent with a higher revision. Rollups are counts for dashboards and quotas, never money. The payload is common.usage-recorded@1. Envelope: source media, subject { type: project, id: <project_id> }, visibility internal, priority low, actor service:media.",
+  "$ref": "../../common/usage-recorded.v1.json"
+}

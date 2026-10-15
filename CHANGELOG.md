@@ -4,6 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.175.0 — 2026-10-15
+
+- **`media.usage.recorded`** (ADR-031 section 8): Media's per-zone hourly rollups (`common.usage-recorded@1`). Each one
+  names the zone twice: `resource` is its OVRN and `dimension` its id in lowercase. The series:
+  - stored bytes (`media.object.upload`, `byte_hours`);
+  - writes (`media.object.upload`, `media.object.delete`) and lists (`media.object.list`), each in `requests`;
+  - reads (`media.object.read`), in `requests` and `egress_bytes`.
+
+  Media produces it. Network (the project's usage) and Zone (its usage view) consume it.
+- **`media.object.s3`** lists multipart uploads (Media#109) and their routes. Copy and part copy still answer
+  NotImplemented.
+- **ADR-031:**
+  - the interim `s3.openvibe.network` host behind Cloudflare, where a HEAD forwarded as GET is served (Media#110);
+  - what v1 leaves out, now that multipart and the rollups exist.
+
 ## 0.174.0 — 2026-10-14
 
 - **`browser`, a computer kind** (plan T14/T17 next step; OpenVibe.Node's computer plugin 0.5.0). `bot.command@1` takes
