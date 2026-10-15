@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/food/household-chat-context.v1.json",
+  "title": "FoodHouseholdChatContext",
+  "description": "food.household-chat-context@1: what food.household.read answers (GET /internal/households/:planId/chat-context): a household's pantry and plan as plain text for the AI member of its OpenVibe.Chat room, and where it comes from.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["text", "source"],
+  "properties": {
+    "text": { "type": "string", "maxLength": 4000, "description": "The household's members, the plan (days, people, budget, meals), what is still to buy and what is in their cupboards." },
+    "source": { "type": "string", "maxLength": 80, "description": "A label for the prompt, e.g. 'OpenVibe.Food household'." },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

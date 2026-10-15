@@ -1,0 +1,21 @@
+{
+  "id": "food.household.read",
+  "version": "1.0",
+  "owner": "food",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read a household's pantry and plan as plain text for the AI member of its OpenVibe.Chat room (Chat's AI members, linked to a Food household): GET /internal/households/:planId/chat-context → { text, source, updated_at }. The household is a saved plan shared with its members; the text names the members by display name, the plan's days and meals, what is still to buy and what each member keeps in their cupboard. Loopback only, service token; granted to Chat.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "food.household-chat-context@1",
+  "permissions": [
+    "food:household:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/households/:planId/chat-context"
+  ]
+}

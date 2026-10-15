@@ -6629,6 +6629,15 @@
       "status": "active"
     },
     {
+      "id": "food.household-chat-context",
+      "version": "1.0.0",
+      "owner": "food",
+      "schema": "food/household-chat-context.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "food.pantry-result",
       "version": "1.0.0",
       "owner": "food",

@@ -190580,6 +190580,22 @@ export interface FoodPantryRequest {
   items: string[];
 }
 
+/** food.household-chat-context@1.0.0 (owner: food) */
+/**
+ * food.household-chat-context@1: what food.household.read answers (GET /internal/households/:planId/chat-context): a household's pantry and plan as plain text for the AI member of its OpenVibe.Chat room, and where it comes from.
+ */
+export interface FoodHouseholdChatContext {
+  /**
+   * The household's members, the plan (days, people, budget, meals), what is still to buy and what is in their cupboards.
+   */
+  text: string;
+  /**
+   * A label for the prompt, e.g. 'OpenVibe.Food household'.
+   */
+  source: string;
+  updated_at?: string;
+}
+
 /** food.pantry-result@1.0.0 (owner: food) */
 /**
  * food.pantry-result@1: GET and PUT /api/v1/pantry on OpenVibe.Food: the slugs, each food as the food list shows it, and the suggestions matched against them (can_make: everything there; almost: one or two items missing, named).

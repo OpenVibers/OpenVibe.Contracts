@@ -20,7 +20,8 @@
     "food.plan.write",
     "food.pantry.read",
     "food.pantry.write",
-    "food.recipes.suggest"
+    "food.recipes.suggest",
+    "food.household.read"
   ],
   "eventsProduced": [],
   "eventsConsumed": [
