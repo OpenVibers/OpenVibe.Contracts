@@ -9,7 +9,6 @@
   "repository": "OpenVibers/OpenVibe.MediaHub",
   "domains": [
     "openvibe.video",
-    "openvibe.pics",
     "openvibe.download"
   ],
   "publicOrigin": "https://openvibe.video",

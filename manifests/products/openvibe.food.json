@@ -8,20 +8,20 @@
   "description": "OpenVibe.Food finds food banks, pantries and budget grocers near you from OpenStreetMap, plans meals for one person, a couple or a household for the days ahead with the shopping list and what it costs, and tells you what your cupboard can already make. Next: delivery price comparison, meal kits and planning together.",
   "pillars": [
     {
-      "title": "Compare delivery",
-      "text": "One search across delivery apps, with prices side by side."
+      "title": "Food near you",
+      "text": "Food banks, pantries, community fridges and budget grocers, with distance, address and hours."
     },
     {
-      "title": "Kits & boxes",
-      "text": "Meal kits and snack boxes, budget-friendly picks first."
+      "title": "A meal planner",
+      "text": "One person, a couple or a household, up to fourteen days, with the shopping list and its cost."
     },
     {
-      "title": "Plan together",
-      "text": "Shared plans and chats for couples, households and groups."
+      "title": "A food list you can read",
+      "text": "Nutrition per serving and per 100 g, the typical price band and the cheapest budget chain."
     },
     {
       "title": "Cupboard recipes",
-      "text": "Tell it what you have; get ideas that use it."
+      "text": "Tell it what you have; it says what you can make and suggests recipes that use it."
     }
   ],
   "faq": [
@@ -35,7 +35,7 @@
     },
     {
       "question": "Are the prices live?",
-      "answer": "No. The food list carries typical prices from budget chains, and every price says so. Live delivery and store prices come with the comparison feature."
+      "answer": "No. The food list carries typical prices from budget chains, and every price says so."
     },
     {
       "question": "How does the meal planner work?",
@@ -46,8 +46,8 @@
       "answer": "No. It matches what you have against simple recipes written by OpenVibe and says which ones you can make now and which need one or two more things."
     }
   ],
-  "keywords": "openvibe food, compare food delivery prices, meal kits, meal planning, recipe ideas, grocery tools",
-  "launch": "delivery price comparison and shared plans",
+  "keywords": "openvibe food, food bank near me, food pantry finder, budget grocery stores, meal planner, shopping list cost, recipes from your cupboard",
+  "launch": "shared household plans",
   "relationships": {
     "service": "food"
   }

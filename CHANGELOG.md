@@ -4,6 +4,24 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.184.0 — 2026-10-15
+
+- **The catalog says what each site does today.** OpenVibe.Help shows every site's pillars as "What you can do".
+  Several pillars promised features that are not built; they now repeat what each site's own front page lists as
+  working.
+  - **openvibe.food:** "Compare delivery", "Kits & boxes" and "Plan together" are not built. The pillars are now its
+    food near you, meal planner, food list and cupboard recipes. The prices FAQ no longer promises live delivery
+    prices, and `keywords` and `launch` follow suit.
+  - **deals:** prices as of a time, votes, compare across stores, watches and saved searches. There are no AI
+    summaries.
+  - **news:** cited paragraphs, revisions on the record, source checks, discussion. There are no "many angles" or
+    framing controls.
+  - **coupons:** shop matching, stated restrictions, honest expiry, reports from people. There is no browser helper.
+  - **trade:** find an instrument, values with their times, filings, watchlists and alert rules.
+  - **reviews:** sourced signals, a checkable aggregate, history, editor summaries.
+- **openvibe.pics is not a live domain of media-hub.** It is parked: MediaHub answers its host with a 302 to
+  openvibe.network. Listing it made Help call Pics "live". Its product manifest stays its catalog home.
+
 ## 0.183.0 — 2026-10-15
 
 - **Ask Actor from chat** (plan T17, "Reach"). OpenVibe.Actor consumes `chat.message.created` and calls
