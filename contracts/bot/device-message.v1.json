@@ -173,7 +173,8 @@
             "fs",
             "screen",
             "probe",
-            "input"
+            "input",
+            "browser"
           ]
         },
         "value": {

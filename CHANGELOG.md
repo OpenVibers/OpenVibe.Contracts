@@ -4,6 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.174.0 — 2026-10-14
+
+- **`browser`, a computer kind** (plan T14/T17 next step; OpenVibe.Node's computer plugin 0.5.0). `bot.command@1` takes
+  `{ action, url, selector, text, key, max_width }`:
+  - `open` an http(s) `url`;
+  - `click` a CSS `selector` or the button or link showing `text`;
+  - `fill` a field (`selector`, `text`);
+  - `press` a named key;
+  - `back`, `read`, `screenshot` and `close`.
+
+  The browser is the agent's own, in a profile of its own on the person's machine. `read`, `screenshot` and `close` run at
+  every level; the rest are refused at observe and approved one by one at ask. Below level full, `open` refuses an
+  address on the machine's own network. `bot.computer.control` and the device frame list `browser`.
+- **Fixtures:** valid `browser-open` and `browser-fill`; invalid `browser-open-file`.
+
 ## 0.173.0 — 2026-10-14
 
 - **OpenVibe.Zone is live, and so is Media's S3 surface** (ADR-031 and its zone amendment). Zone owns named object

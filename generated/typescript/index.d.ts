@@ -176111,7 +176111,8 @@ export type BotDeviceMessage =
         | "fs"
         | "screen"
         | "probe"
-        | "input";
+        | "input"
+        | "browser";
       value?: {};
       /**
        * Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window.
@@ -176297,7 +176298,7 @@ export type BotDeviceMessage =
 
 /** bot.command@1.0.0 (owner: bot) */
 /**
- * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask.
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network.
  */
 export type BotCommand = {
   [k: string]: unknown | undefined;
@@ -176320,7 +176321,8 @@ export type BotCommand = {
     | "fs"
     | "screen"
     | "probe"
-    | "input";
+    | "input"
+    | "browser";
   value?: {};
   ms?: number;
 };
