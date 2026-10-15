@@ -3687,6 +3687,15 @@
       "status": "active"
     },
     {
+      "id": "coupons.watch.matched",
+      "version": "1.0.0",
+      "owner": "coupons",
+      "schema": "events/payloads/coupons.watch.matched.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "coupons.coupon.updated",
       "version": "1.0.0",
       "owner": "coupons",

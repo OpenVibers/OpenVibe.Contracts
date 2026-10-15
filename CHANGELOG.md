@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.188.0 — 2026-10-15
+
+- **`coupons.watch.matched` v1:** a person watching a merchant on OpenVibe.Coupons is told when a code for it is
+  publicly listed (created published, or approved from review). One event per (watcher, coupon), never for the code's
+  submitter, inside the listing's transaction. Coupons produces it, and OpenVibe.Network consumes it into an inbox
+  notification linking the coupon page, as for `deals.watch.matched`. The payload carries no code text. Coupons'
+  watches had been recorded but never delivered.
+
 ## 0.187.0 — 2026-10-15
 
 - **openvibe.video: playlists are built** (MediaHub's `/playlists`, its API and "Add to playlist" on every watch

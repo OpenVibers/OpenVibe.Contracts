@@ -92,6 +92,7 @@
     "community.moderation.action",
     "coupons.moderation.action",
     "deals.moderation.action",
+    "coupons.watch.matched",
     "deals.watch.matched",
     "events.usage.recorded",
     "games.moderation.action",
