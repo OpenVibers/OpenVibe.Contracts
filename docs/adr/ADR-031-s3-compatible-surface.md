@@ -295,6 +295,6 @@ A hold placed on an object of the zone after that check is still allowed: Media 
 - Meanwhile Zone points people at `s3.openvibe.network`, which Cloudflare proxies. Cloudflare forwards a HEAD as a GET for paths it may cache, so Media serves a header-signed request that verifies only as HEAD as the GET (never a presigned URL; Media#110). Every S3 answer is `private, no-store`, so the edge never caches one.
 
 **What v1 leaves out.**
-- CopyObject and UploadPartCopy answer `NotImplemented`. Multipart uploads work since 2026-10-15 (Media#109): parts of 256 MB and objects of 20 GB at most by default, and a single request goes up to Media's single-upload limit.
+- Multipart uploads work since 2026-10-15 (Media#109): parts of 256 MB and objects of 20 GB at most by default, and a single request goes up to Media's single-upload limit. CopyObject and UploadPartCopy work too (Media#113): server-side copies within the key's environment, through the same commit path.
 - Overwritten and deleted objects keep counting against a developer project's quota until they are purged. That is Media's existing rule for developer tenants; this ADR's "only live objects count" applies once Media changes that rule.
 - Per-zone usage rollups are `media.usage.recorded` (contracts 0.175.0), with the series of section 8. Network adds them to the project's usage, and Zone sums them in its usage view beside Media's live snapshot.

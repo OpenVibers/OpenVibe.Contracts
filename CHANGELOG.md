@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.176.1 — 2026-10-15
+
+- **`media.object.s3`** lists CopyObject and UploadPartCopy (Media#113): server-side copies within the key's environment,
+  COPY or REPLACE metadata, the copy-source conditions, part byte ranges, and the same commit path. A `versionId` source
+  still answers NotImplemented. ADR-031's "what v1 leaves out" says the same.
+
 ## 0.176.0 — 2026-10-15
 
 - **Person-owned resources can be controlled** (ADR-048 amendment, step 8 phase 2, the control half).
