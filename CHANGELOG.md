@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.183.0 — 2026-10-15
+
+- **Ask Actor from chat** (plan T17, "Reach"). OpenVibe.Actor consumes `chat.message.created` and calls
+  OpenVibe.Chat's service API with `chat.message.send`.
+  - **What it answers:** a signed-in person's `@actor <task>` in the global chat or their own channel becomes their task.
+  - **Public tools only:** the task never uses the person's computers, robots or code.
+  - **The reply** is posted back in the same room, answering the message.
+  - Guests, relayed external chatters and other people's channels are ignored.
+  - The service manifest's `eventsConsumed` and notes say so.
+
 ## 0.182.0 — 2026-10-15
 
 - **The live screen** (plan T14, OpenVibe.Node v0.12.0): `bot.device-message@1` commands take the kind `screen_stream`.
