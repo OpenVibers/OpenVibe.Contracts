@@ -9,7 +9,7 @@
   "properties": {
     "item_id": { "type": "string", "pattern": "^itm_[0-9A-HJKMNP-TV-Z]{26}$" },
     "source_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
-    "category": { "enum": ["news", "blog", "reviews", "deals", "coupons", "trade", "hosting"] },
+    "category": { "enum": ["news", "blog", "reviews", "deals", "coupons", "trade", "hosting", "crowdfunding"] },
     "kind": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$", "description": "article | url | sitemap | product | offer | review | record … (sources.item@1 kind)." },
     "canonical_url": { "type": ["string", "null"], "format": "uri" },
     "title": { "type": ["string", "null"] },
