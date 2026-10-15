@@ -182247,7 +182247,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182268,7 +182268,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182287,7 +182287,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182308,7 +182308,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182327,7 +182327,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182346,7 +182346,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182367,7 +182367,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182386,7 +182386,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182405,7 +182405,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182424,7 +182424,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182445,7 +182445,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182464,7 +182464,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182483,7 +182483,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182502,7 +182502,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182521,7 +182521,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182542,7 +182542,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182561,7 +182561,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182580,7 +182580,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182599,7 +182599,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182618,7 +182618,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182637,7 +182637,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182658,7 +182658,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182677,7 +182677,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182696,7 +182696,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182715,7 +182715,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182734,7 +182734,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182753,7 +182753,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182772,7 +182772,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -182793,7 +182793,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182812,7 +182812,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182831,7 +182831,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182850,7 +182850,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182869,7 +182869,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182888,7 +182888,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182907,7 +182907,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         },
@@ -182926,7 +182926,7 @@ export type Task = {
             ...("queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled")[]
           ];
           /**
-           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference.
+           * The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference.
            */
           secret_ref?: string;
         }
@@ -185401,7 +185401,7 @@ export interface SpaceModerationActionPayload {
 
 /** actor.task-create-request@1.0.0 (owner: actor) */
 /**
- * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A project secret named by reference (platform.task@1 `secret_ref`) is not accepted yet.
+ * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A webhook may instead name a project secret (`secret_ref`, ADR-056): its deliveries are then signed by OpenVibe.Network with that secret, in the same headers, and no webhook_secret is minted when every webhook names one. A secret_ref on a task outside a project is refused 422 actor.webhook.secret_unavailable.
  */
 export interface ActorTaskCreateRequest {
   /**
@@ -185469,6 +185469,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -185515,6 +185519,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185559,6 +185567,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -185605,6 +185617,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185649,6 +185665,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185693,6 +185713,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -185739,6 +185763,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185783,6 +185811,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185827,6 +185859,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185871,6 +185907,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -185917,6 +185957,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -185961,6 +186005,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186005,6 +186053,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186049,6 +186101,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186093,6 +186149,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -186139,6 +186199,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186183,6 +186247,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186227,6 +186295,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186271,6 +186343,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186315,6 +186391,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186359,6 +186439,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -186405,6 +186489,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186449,6 +186537,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186493,6 +186585,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186537,6 +186633,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186581,6 +186681,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186625,6 +186729,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186669,6 +186777,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ]
     | [
@@ -186715,6 +186827,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186759,6 +186875,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186803,6 +186923,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186847,6 +186971,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186891,6 +187019,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186935,6 +187067,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -186979,6 +187115,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         },
         {
           /**
@@ -187023,6 +187163,10 @@ export interface ActorTaskCreateRequest {
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled",
                 "queued" | "running" | "verifying" | "succeeded" | "failed" | "cancelled"
               ];
+          /**
+           * The name of a project secret (ADR-056) that signs this webhook's deliveries instead of the task's own secret. The task must be made in a project (by an app or agent token carrying project_id and env); the secret is looked up in that project and environment, and the project must have granted it to actor for sign. Actor never sees the value: OpenVibe.Network computes each signature.
+           */
+          secret_ref?: string;
         }
       ];
 }

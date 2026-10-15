@@ -240,8 +240,8 @@
           },
           "secret_ref": {
             "type": "string",
-            "pattern": "^[A-Z0-9_]+$",
-            "description": "The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference."
+            "pattern": "^([A-Z0-9_]+|[a-z][a-z0-9_-]{0,63})$",
+            "description": "The NAME of the project secret used to sign the delivery (an HMAC header), never the secret itself, as community.moderation-request@1 names a webhook_url_ref and ADR-043 keeps device credentials by reference. Project secrets (ADR-056) are named in lower case; the upper-case form is the earlier environment-variable reference."
           }
         }
       },
