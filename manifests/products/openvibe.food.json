@@ -28,6 +28,10 @@
       "text": "Scan barcodes, or snap a shelf or a receipt, to fill your cupboard; it says what you can make and suggests recipes."
     },
     {
+      "title": "A recipe library",
+      "text": "Budget recipes written by AI from the food list, each with what to buy and its typical cost; the ones a person checked are marked."
+    },
+    {
       "title": "Delivery, compared",
       "text": "Search DoorDash, Uber Eats, Grubhub, Seamless, Caviar and Instacart at once, and compare meal kits by tier."
     }
