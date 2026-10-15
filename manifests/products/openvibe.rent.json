@@ -4,16 +4,20 @@
   "name": "OpenVibe.Rent",
   "icon": "fa-key",
   "accent": "#22d3ee",
-  "tagline": "Every rental, one search.",
-  "description": "OpenVibe.Rent is one place to find and offer things to rent — apartments, rooms, houses, workspace, parking and storage, and equipment — posted by people, with no street addresses, contact details only for signed-in people, reports that hide a listing until staff look, and saved searches. Nothing is scraped and no payments are taken. Next: listing sources whose terms are verified, and alerts.",
+  "tagline": "Every rental site, one search.",
+  "description": "OpenVibe.Rent is a rental aggregator: one search opens Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper, Rent.com and a dozen more at the place and filters you choose, for apartments, houses, rooms, furnished stays, commercial space, parking, storage and cars. Next to them: affordable housing from U.S. HUD open data, listings people post here (no street addresses, reports that hide a listing until staff look), saved searches and alerts through OpenVibe.Watch. The listings, messages and payments stay on each site. Next: a board that saves listings from any site, the OpenVibe Companion extension, and licensed listing feeds.",
   "pillars": [
     {
-      "title": "Posted by people",
-      "text": "Apartments, rooms, houses, commercial space, parking, storage and equipment, posted here; nothing scraped."
+      "title": "Search every site",
+      "text": "One place and filters open Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper and more at once."
     },
     {
       "title": "Affordable housing near you",
       "text": "Public housing, tax-credit and HUD-assisted homes and where to apply, from U.S. HUD open data."
+    },
+    {
+      "title": "Posted here too",
+      "text": "Apartments, rooms, houses, commercial space, parking, storage and equipment, posted by people on OpenVibe.Rent."
     },
     {
       "title": "Alerts",
