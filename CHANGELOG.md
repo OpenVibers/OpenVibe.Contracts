@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.180.0 — 2026-10-15
+
+- **Sources api endpoints read catalogs that keep plans, hardware and prices apart** (Sources#49, for OVHcloud's public
+  VPS catalog). `sources.source@1` and `sources.source-write-request@1`:
+  - A path segment may carry a selector, `key[field=value,…]` (one to four conditions). It steps into the first
+    element of the array `key` whose fields equal the values, compared as text. A value is literal text or
+    `$rec.<path>`, read from the record. This is documented on `extra` and `where`; the field types are unchanged.
+  - A `where` expectation may be `{ "pattern": "<regular expression, at most 200 characters>" }`, which the value must
+    match as text.
+  - `max_bytes` (an integer from 1 KiB to 32 MiB) sets one endpoint's body cap.
+- Fixtures: a valid OVHcloud-shaped source with a selector, a pattern and `max_bytes`; an invalid pattern with an extra
+  key; an invalid `max_bytes` over the cap.
+
 ## 0.179.0 — 2026-10-15
 
 - **Watch uses project secrets** (ADR-056).
