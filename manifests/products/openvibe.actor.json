@@ -17,11 +17,11 @@
     },
     {
       "title": "Any model",
-      "text": "Routed through OpenVibe.AI: hosted, open or local models."
+      "text": "DeepSeek, OpenAI, a model on your own machine or any OpenAI-compatible endpoint, each with its price."
     },
     {
-      "title": "Works with everything",
-      "text": "Watch, Website, Work, Bot, Events, Tools and more."
+      "title": "Works with OpenVibe",
+      "text": "Your robots on Bot, coding on Codes, Search, Tools, Chat and Work."
     }
   ],
   "faq": [

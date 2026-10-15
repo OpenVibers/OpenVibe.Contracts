@@ -8,20 +8,20 @@
   "description": "OpenVibe.Quest is the network's shared quest log: real things you do on OpenVibe sites — going live, following someone, starting a thread, chatting, playing, improving a wiki page — complete quests that pay badges, and OpenCoins once they are switched on. Quest counts only the events the sites already report. Next: OpenCoins rewards, quests streamers and communities write, and quests for OpenVibe.Games.",
   "pillars": [
     {
-      "title": "Quests everywhere",
-      "text": "One quest log across every OpenVibe site."
+      "title": "One log, many sites",
+      "text": "Streams, threads, chat messages, wiki edits and games: one quest log across eight OpenVibe sites."
     },
     {
-      "title": "Rewards",
-      "text": "Cosmetics, badges and OpenCoins."
+      "title": "Only what really happened",
+      "text": "Quest runs nothing of its own; it listens to what the sites already report."
     },
     {
-      "title": "Make your own",
-      "text": "Streamers, modders and developers create quests for their communities."
+      "title": "Rewards are badges",
+      "text": "A badge on your profile across the network, and OpenCoins: loyalty points, never money."
     },
     {
       "title": "Built for games",
-      "text": "The quest layer for OpenVibe.Games and its creators."
+      "text": "OpenVibe.Games reports to it like every other site, so play counts too."
     }
   ],
   "faq": [

@@ -16,12 +16,12 @@
       "text": "Files and data that stay put, with copies kept safe."
     },
     {
-      "title": "Access you control",
-      "text": "Decide which services, agents and people can read or write each zone."
+      "title": "Keys you scope",
+      "text": "Read, write or both, for every zone of an environment or only some. The secret is shown once."
     },
     {
-      "title": "Used across the network",
-      "text": "The same zones back your streams, media, agents and apps."
+      "title": "Any S3 tool",
+      "text": "The AWS SDKs, rclone and backup tools, path-style over S3; every object is an OpenVibe.Media object too."
     }
   ],
   "keywords": "openvibe zone, object storage, s3 compatible storage, buckets, persistent storage, file storage api",

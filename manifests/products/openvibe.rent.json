@@ -8,20 +8,20 @@
   "description": "OpenVibe.Rent is one place to find and offer things to rent — apartments, rooms, houses, workspace, parking and storage, and equipment — posted by people, with no street addresses, contact details only for signed-in people, reports that hide a listing until staff look, and saved searches. Nothing is scraped and no payments are taken. Next: listing sources whose terms are verified, and alerts.",
   "pillars": [
     {
-      "title": "One search",
-      "text": "Listings from many sites, in one list."
+      "title": "Posted by people",
+      "text": "Apartments, rooms, houses, commercial space, parking, storage and equipment, posted here; nothing scraped."
+    },
+    {
+      "title": "Affordable housing near you",
+      "text": "Public housing, tax-credit and HUD-assisted homes and where to apply, from U.S. HUD open data."
     },
     {
       "title": "Alerts",
-      "text": "Be told when something that fits appears."
-    },
-    {
-      "title": "Clear summaries",
-      "text": "AI summaries that always link the original listing."
+      "text": "Get alerts for any search through OpenVibe.Watch."
     },
     {
       "title": "Your account",
-      "text": "Saved searches and favourites under your OpenVibe account."
+      "text": "Your listings and saved searches under your OpenVibe account."
     }
   ],
   "faq": [

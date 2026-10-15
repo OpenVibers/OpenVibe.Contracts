@@ -8,20 +8,20 @@
   "description": "OpenVibe.Help is the help centre for every OpenVibe site: what each site does and whether it is live, the common questions each one answers about itself, search across all of them, and a support ticket that stays one conversation with the people who run OpenVibe. Next: answers from the docs, wiki and status pages, and a Report Problem button on every site.",
   "pillars": [
     {
-      "title": "Grounded answers",
-      "text": "From the real docs, wiki and status, with sources."
+      "title": "Answers from the sites",
+      "text": "Each product's own manifest, word for word, with a link back to where it was read."
     },
     {
-      "title": "One support inbox",
-      "text": "Signed in or not, on the web or by email."
+      "title": "One search",
+      "text": "One box over every site's answers and over the whole OpenVibe network."
     },
     {
-      "title": "Report a problem",
-      "text": "Useful, privacy-scrubbed details attached for you."
+      "title": "Tickets",
+      "text": "Signed in, open a ticket and it stays one conversation with the people who run the site."
     },
     {
-      "title": "For your projects",
-      "text": "A support widget and help center for sites built on OpenVibe."
+      "title": "Every site in one place",
+      "text": "Live sites first, each with its own words, its own questions and what shipped on it."
     }
   ],
   "faq": [
