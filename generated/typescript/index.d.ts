@@ -197128,3 +197128,319 @@ export interface AccessKeyList {
    */
   keys: AccessKey[];
 }
+
+/** quest.app-quest-request@1.0.0 (owner: quest) */
+/**
+ * quest.app-quest-request@1: PUT /api/v1/app-quests/:slug on OpenVibe.Quest with an app token (capability quest.app_quest.manage). A developer app defines a quest on its own project's events: each step counts events of type app.<project_key>.<name> whose envelope actor is a person (the app publishing on_behalf_of them). The badge is the only reward: app quests never pay OpenCoins. Only production apps' events are counted (Events never hands sandbox events to first-party consumers).
+ */
+export interface QuestAppQuestRequest {
+  title: string;
+  why?: string;
+  /**
+   * @minItems 1
+   * @maxItems 5
+   */
+  steps:
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ];
+  badge: {
+    name: string;
+  };
+  /**
+   * Where a person does the steps: the app's own page.
+   */
+  url?: string;
+  /**
+   * retired: kept with its completions and badges, no longer counted or listed. Default active.
+   */
+  status?: "active" | "retired";
+}
+
+/** quest.app-quest@1.0.0 (owner: quest) */
+/**
+ * quest.app-quest@1: one app quest as OpenVibe.Quest keeps it (the answer to PUT and GET /api/v1/app-quests[/:slug]). id is app.<project_key>.<slug>; badge.id is the same id; completions counts the people who finished it.
+ */
+export interface QuestAppQuest {
+  id: string;
+  slug: string;
+  project_id: string;
+  /**
+   * The app that last defined it.
+   */
+  app: string;
+  env: "sandbox" | "production";
+  title: string;
+  why?: string | null;
+  /**
+   * @minItems 1
+   * @maxItems 5
+   */
+  steps:
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        },
+        {
+          /**
+           * One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events.
+           */
+          event_type: string;
+          count: number;
+          label: string;
+        }
+      ];
+  badge: {
+    id: string;
+    name: string;
+  };
+  url?: string | null;
+  status: "active" | "retired";
+  created_at: string;
+  updated_at: string;
+  completions: number;
+}

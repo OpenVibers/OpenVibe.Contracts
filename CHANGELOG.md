@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.193.0 — 2026-10-15
+
+- **App quests** (the owner's "moddable in the SDK" for Quest): capability `quest.app_quest.manage` (owner quest,
+  public, project-scoped) and `quest.app-quest-request@1` / `quest.app-quest@1`. A developer app defines quests on its
+  own project's events (`app.<project_key>.<name>`, the actor a person); OpenVibe.Quest counts production events only,
+  keeps at most 20 per project, and rewards a badge named for the app — never OpenCoins.
+
 ## 0.192.0 — 2026-10-15
 
 - **`bot.robot.online` / `bot.robot.offline`** gain an optional `owner` (the robot owner's `usr_` subject; absent from

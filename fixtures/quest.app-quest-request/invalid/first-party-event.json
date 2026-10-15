@@ -1,0 +1,13 @@
+{
+  "title": "Go live",
+  "steps": [
+    {
+      "event_type": "live.stream.started",
+      "count": 1,
+      "label": "Go live"
+    }
+  ],
+  "badge": {
+    "name": "Live"
+  }
+}
