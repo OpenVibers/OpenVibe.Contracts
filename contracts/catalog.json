@@ -4429,6 +4429,24 @@
       "status": "active"
     },
     {
+      "id": "games.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "games.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "games.world.published",
       "version": "1.0.0",
       "owner": "games",

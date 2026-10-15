@@ -43,6 +43,8 @@
     "games.player.left",
     "games.skill.leveled",
     "games.blueprint.unlocked",
+    "games.index_document.upserted",
+    "games.index_document.deleted",
     "games.world.published",
     "games.world.saved",
     "games.mod.installed",

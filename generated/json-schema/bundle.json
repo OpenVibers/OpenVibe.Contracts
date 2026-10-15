@@ -49221,6 +49221,78 @@
         }
       }
     },
+    "games.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/games.index_document.upserted.v1.json",
+        "title": "GamesIndexDocumentUpsertedPayload",
+        "description": "games.index_document.upserted v1 (OpenVibe.Games apps/server/src/worlds/searchIndex.ts, via openvibe-publishing/search-feed). The OpenVibe.Search document of a published creator world (type world, /worlds/<id>, which opens the world in /play): its title, the player who made it and their summary. Sent when a world is published, renamed or edited while published, and by the sweep at boot and on a timer; a world that is unpublished, taken down by staff or deleted becomes a tombstone. The sequencer (games_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: kind (creator_world), owner (the maker's display name). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: world, id, revision: <document revision> }, visibility internal, actor service:games.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "games"
+              },
+              "type": {
+                "const": "world"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^w[0-9a-z]{10}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "games.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/games.index_document.deleted.v1.json",
+        "title": "GamesIndexDocumentDeletedPayload",
+        "description": "games.index_document.deleted v1 (OpenVibe.Games apps/server/src/worlds/searchIndex.ts, via openvibe-publishing/search-feed). A Search tombstone for a creator world page (/worlds/<id>) that is no longer published (unpublished, taken down by staff, or deleted). Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: world, id, revision }, visibility internal, actor service:games.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "world"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^w[0-9a-z]{10}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
     "games.world.published": {
       "version": "1.0.0",
       "owner": "games",

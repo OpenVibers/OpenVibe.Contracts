@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.195.0 — 2026-10-15
+
+- **Search documents for creator worlds:** `games.index_document.upserted` and `.deleted` v1 (type `world`,
+  `/worlds/<id>`, id `w` + ten base-36 characters), `search.index-document@1` with the owner, type and id fixed, plus
+  the tombstone. A published world is a document; unpublished, taken down or deleted, a tombstone. Games'
+  eventsProduced; fixtures (valid document, tombstone; refused: bad id, other owner, tombstone as an upsert, other
+  type, a full document as a tombstone).
+
 ## 0.194.0 — 2026-10-15
 
 - **`games.world.published`** (OpenVibe.Games creator worlds): a player published one of their worlds for the first

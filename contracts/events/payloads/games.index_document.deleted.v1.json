@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/games.index_document.deleted.v1.json",
+  "title": "GamesIndexDocumentDeletedPayload",
+  "description": "games.index_document.deleted v1 (OpenVibe.Games apps/server/src/worlds/searchIndex.ts, via openvibe-publishing/search-feed). A Search tombstone for a creator world page (/worlds/<id>) that is no longer published (unpublished, taken down by staff, or deleted). Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: world, id, revision }, visibility internal, actor service:games.",
+  "type": "object",
+  "required": [
+    "type",
+    "id",
+    "revision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "world"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^w[0-9a-z]{10}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}
