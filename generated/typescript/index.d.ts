@@ -186870,10 +186870,14 @@ export type BotDeviceMessage =
         | "screen"
         | "probe"
         | "input"
-        | "browser";
+        | "browser"
+        | "screen_stream";
+      /**
+       * The command's value. screen_stream (OpenVibe.Node v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind.
+       */
       value?: {};
       /**
-       * Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs and screen it is the reply window.
+       * Absolute deadline, epoch milliseconds; the device stops the motion at it. For exec, fs, screen and screen_stream it is the reply window.
        */
       deadline_ms?: number;
       operator?: {

@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.182.0 — 2026-10-15
+
+- **The live screen** (plan T14, OpenVibe.Node v0.12.0): `bot.device-message@1` commands take the kind `screen_stream`.
+  Its value is `{ action: 'start', whip_url, publish_key, seconds?, fps? }` or `{ action: 'stop' }`. It shows the machine's
+  screen live to its owner on the machine's own OpenRestream stream: playback private, no recording, never mirrored to
+  Live.
+  - Bot alone fills in the WHIP URL and key. The kind is not in `bot.command@1`, so no operator, agent or service can
+    send it or choose where the screen goes.
+  - `bot.computer.control` says so too.
+- Devices: `deadline_ms` is the reply window of `screen_stream`, as of the other computer kinds.
+
 ## 0.181.0 — 2026-10-15
 
 - **OpenVibe.Sites is retired** (plan T11, 2026-10-14). The service manifest's `status` and `exposure.state` are
