@@ -156,6 +156,13 @@
       "capabilities": 3
     },
     {
+      "service": "quest",
+      "name": "OpenVibe.Quest",
+      "origin": "https://openvibe.quest",
+      "operations": 3,
+      "capabilities": 1
+    },
+    {
       "service": "reviews",
       "name": "OpenVibe.Reviews",
       "origin": "https://openvibe.reviews",

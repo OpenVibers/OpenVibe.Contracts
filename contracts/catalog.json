@@ -7323,6 +7323,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-031"
+    },
+    {
+      "id": "quest.app-quest-request",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/app-quest-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.app-quest",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/app-quest.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

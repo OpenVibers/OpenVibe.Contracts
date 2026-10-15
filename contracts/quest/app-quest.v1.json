@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/quest/app-quest.v1.json",
+  "title": "QuestAppQuest",
+  "description": "quest.app-quest@1: one app quest as OpenVibe.Quest keeps it (the answer to PUT and GET /api/v1/app-quests[/:slug]). id is app.<project_key>.<slug>; badge.id is the same id; completions counts the people who finished it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "slug",
+    "project_id",
+    "app",
+    "env",
+    "title",
+    "steps",
+    "badge",
+    "status",
+    "created_at",
+    "updated_at",
+    "completions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^app\\.p[0-9a-z]{26}\\.[a-z0-9][a-z0-9-]{0,47}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,47}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "app": {
+      "type": "string",
+      "pattern": "^app:app_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The app that last defined it."
+    },
+    "env": {
+      "enum": [
+        "sandbox",
+        "production"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "why": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_type",
+          "count",
+          "label"
+        ],
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "pattern": "^app\\.p[0-9a-z]{26}\\.[a-z0-9_]+(\\.[a-z0-9_]+){0,3}$",
+            "description": "One of the app's own event types (app.<project_key>.<name>), as it publishes them at OpenVibe.Events."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "badge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "status": {
+      "enum": [
+        "active",
+        "retired"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completions": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

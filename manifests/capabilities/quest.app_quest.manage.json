@@ -1,0 +1,23 @@
+{
+  "id": "quest.app_quest.manage",
+  "version": "1.0",
+  "owner": "quest",
+  "status": "active",
+  "visibility": "public",
+  "description": "Define your app's own quests on OpenVibe.Quest (the SDK's moddable quests): PUT /api/v1/app-quests/:slug with quest.app-quest-request@1 creates or replaces one (at most 20 per project), GET /api/v1/app-quests lists your project's, DELETE /api/v1/app-quests/:slug retires one (its completions and badges stay). Steps count the project's own events app.<project_key>.<name> at OpenVibe.Events whose actor is a person; only production events count. The reward is a badge named for your app; app quests never pay OpenCoins.",
+  "inputSchema": "quest.app-quest-request@1",
+  "outputSchema": "quest.app-quest@1",
+  "permissions": [
+    "quest:app-quests:write"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "quest-app-write",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/app-quests/:slug",
+    "GET /api/v1/app-quests",
+    "DELETE /api/v1/app-quests/:slug"
+  ]
+}

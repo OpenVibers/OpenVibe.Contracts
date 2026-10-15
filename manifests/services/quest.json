@@ -15,7 +15,9 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "quest.app_quest.manage"
+  ],
   "eventsProduced": [
     "quest.index_document.upserted",
     "quest.index_document.deleted"
