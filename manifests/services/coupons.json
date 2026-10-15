@@ -30,20 +30,20 @@
     "description": "OpenVibe.Coupons is community-checked coupon discovery: codes matched to stores, validity reported by real people, expirations tracked, and a browser helper on the way.",
     "pillars": [
       {
-        "title": "Checked by people",
-        "text": "Codes that worked, codes that didn't, reported honestly."
+        "title": "The right shop",
+        "text": "Each shop lists the domains and paths it covers, so a code is matched to the site you are on."
       },
       {
-        "title": "Store matching",
-        "text": "The right codes for the store you are on."
+        "title": "Restrictions stated",
+        "text": "Minimum spend, new customers only, the products it applies to: written down, not hidden."
       },
       {
-        "title": "Expiry tracking",
-        "text": "Dead codes go away."
+        "title": "Honest expiry",
+        "text": "An expiry date when there is one, and \"unknown\" when there is not."
       },
       {
-        "title": "Browser helper",
-        "text": "Apply codes where you shop — coming with the site."
+        "title": "Reports from people",
+        "text": "Worked or did not work, recently: the status comes from what people said when they tried it."
       }
     ],
     "keywords": "openvibe coupons, coupon codes, community coupons",

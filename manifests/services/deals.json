@@ -30,20 +30,20 @@
     "description": "OpenVibe.Deals is community deal discovery for the OpenVibe network: deals people vote on, hotness that reflects real interest, keyword alerts, price comparisons and honest discussion.",
     "pillars": [
       {
-        "title": "Voted, not paid for",
-        "text": "Deals rise because people like them."
+        "title": "Prices as of a time",
+        "text": "Each deal keeps every price it was seen at, newest first, with its source. Nothing is called current without a fresh one."
       },
       {
-        "title": "Alerts",
-        "text": "Tell it what you want; it tells you when it is cheap."
+        "title": "Votes decide what is hot",
+        "text": "One vote per person, counted on the server; a deal shows its hotness with the formula and the inputs."
       },
       {
-        "title": "Compare",
-        "text": "Summaries and comparisons, with sources."
+        "title": "Compare across stores",
+        "text": "A product page lists every offer for it, each with its own latest price and when it was seen."
       },
       {
-        "title": "Discuss",
-        "text": "Threads through OpenVibe.Community."
+        "title": "Watches and saved searches",
+        "text": "Watch words, a product or a price limit for new prices that match, or save a search to run again."
       }
     ],
     "keywords": "openvibe deals, community deals, deal alerts",

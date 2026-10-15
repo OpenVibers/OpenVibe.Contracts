@@ -30,20 +30,20 @@
     "description": "OpenVibe.News aggregates the news with transparency: sourced stories, summaries that show their sources, multiple angles side by side, topic pages and framing you control — not an algorithm you can't see.",
     "pillars": [
       {
-        "title": "Sources first",
-        "text": "Every summary links to what it was built from."
+        "title": "Cited paragraphs",
+        "text": "Each paragraph names the sources behind it, with outlet, authors and date."
       },
       {
-        "title": "Many angles",
-        "text": "Read the same story from several perspectives, side by side."
+        "title": "Revisions on the record",
+        "text": "Corrections and retractions are kept and shown, never quietly edited away."
       },
       {
-        "title": "Your framing",
-        "text": "You choose the lens; nothing is chosen for you silently."
+        "title": "Source checks",
+        "text": "When a source changes or is removed upstream, the story says so while editors check it."
       },
       {
-        "title": "Topics",
-        "text": "Follow topics across sources, with your OpenVibe account."
+        "title": "Discussion",
+        "text": "Talk about a story on OpenVibe.Community with your OpenVibe account."
       }
     ],
     "keywords": "openvibe news, transparent news, news aggregation, multiple perspectives",

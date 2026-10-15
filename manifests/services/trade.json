@@ -30,20 +30,20 @@
     "description": "OpenVibe.Trade is the market intelligence room of the OpenVibe network: watchlists, alerts, summaries and community discussion for markets, collectibles and deals — information and tools, never advice.",
     "pillars": [
       {
-        "title": "Watchlists & alerts",
-        "text": "Track what you care about, get told when it moves."
+        "title": "Find an instrument",
+        "text": "By ticker, SEC CIK or company name: one match goes straight there, several are listed, never guessed."
       },
       {
-        "title": "Summaries",
-        "text": "What happened and why, with sources."
+        "title": "Values with their times",
+        "text": "Each observation keeps the value as stated, its source, and when it was observed and retrieved."
       },
       {
-        "title": "Community",
-        "text": "Discuss with people, not bots."
+        "title": "Filings and documents",
+        "text": "Documents gathered by OpenVibe.Sources with their dates, and feeds in RSS, Atom and JSON."
       },
       {
-        "title": "Not advice",
-        "text": "Tools and information only — always labelled as such."
+        "title": "Watchlists and alert rules",
+        "text": "Private to you when signed in. Information only: no orders, no brokerage, no advice."
       }
     ],
     "keywords": "openvibe trade, watchlists, market alerts, community trading tools",
