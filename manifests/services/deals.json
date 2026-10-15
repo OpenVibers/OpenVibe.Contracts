@@ -22,12 +22,12 @@
     "name": "Deals",
     "icon": "deals",
     "tagline": "Deals worth sharing",
-    "what": "Deals submitted and voted on by the community, with source, price and freshness always shown.",
+    "what": "Deals submitted and voted on by the community, with source, price and freshness always shown, and crowdfunding: one search across Kickstarter, Indiegogo, GoFundMe and more.",
     "legalProfile": "info",
     "position": 16,
     "tld": "deals",
     "accent": "#f97316",
-    "description": "OpenVibe.Deals is community deal discovery for the OpenVibe network: deals people vote on, hotness that reflects real interest, keyword alerts, price comparisons and honest discussion.",
+    "description": "OpenVibe.Deals is community deal discovery for the OpenVibe network: deals people vote on, hotness that reflects real interest, keyword alerts, price comparisons, honest discussion, and crowdfunding discovery across every platform at once.",
     "pillars": [
       {
         "title": "Prices as of a time",
@@ -44,10 +44,13 @@
       {
         "title": "Watches and saved searches",
         "text": "Watch words, a product or a price limit for new prices that match, or save a search to run again."
+      },
+      {
+        "title": "Crowdfunding, every platform",
+        "text": "One search opens Kickstarter, Indiegogo, GoFundMe, Open Collective and more, beside open-source campaigns with what they have raised."
       }
     ],
-    "keywords": "openvibe deals, community deals, deal alerts",
-    "launch": "a person to verify a deals source's terms and switch it on",
+    "keywords": "openvibe deals, community deals, deal alerts, crowdfunding search, kickstarter alternative search",
     "relationships": {
       "plannedRepo": "OpenVibe.Deals",
       "meanwhile": [

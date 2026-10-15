@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.191.1 — 2026-10-15
+
+- **Copy** (copy only): Deals' site names its crowdfunding discovery (Deals#62: one search across Kickstarter,
+  Indiegogo, GoFundMe and more, beside Open Collective campaigns) and drops its `launch` (DealNews is on). Food gains the
+  "A recipe library" pillar (Food#55: budget recipes written by AI from the food list, costed by Food).
+
 ## 0.191.0 — 2026-10-15
 
 - Sources category `crowdfunding` (`sources.source@1`, `sources.item@1`, `sources.source-write-request@1` and the
