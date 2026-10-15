@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.190.0 — 2026-10-15
+
+- **`live.setup.task_completed`** (owner live, internal; Live produces, Quest consumes): a streamer finished one of the
+  18 tasks of Live's go-live setup hub for the first time. Payload `{ task, user, title, group, completed_at, done,
+  total }`, `task` one of the hub's ids (slot, method, restream, golive, profile, offline, emote, sound, goal, powerchat,
+  panels, share, mods, requests, moderation, robot, aibot, paste). The owner's Q16: Live's setup steps become quests.
+
 ## 0.189.1 — 2026-10-15
 
 - **Food compares delivery** (Food#52): its product description, pillars and `site.what` say one search opens every

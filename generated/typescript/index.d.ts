@@ -150788,6 +150788,50 @@ export interface MediaUsageRecordedPayload {
   revision?: number;
 }
 
+/** live.setup.task_completed@1.0.0 (owner: live) */
+/**
+ * live.setup.task_completed v1 (OpenVibe.Live server/streaming/setup-progress.js): a streamer finished one of the tasks of Live's go-live setup hub for the first time (their first stream slot, first custom emote, first follower, ...). Live records each task once per person (live_setup_tasks) and writes this event to its outbox in the same transaction, when it next works out the person's progress. OpenVibe.Quest turns each task into a quest (owner Q16: Live's setup steps become quests). Envelope: subject { type: user, id: usr_... } the streamer, actor the same person, visibility internal. Never carries what the person made, only which task it was.
+ */
+export interface LiveSetupTaskCompletedPayload {
+  /**
+   * The setup hub's task id: slot, method, restream, golive, profile, offline, emote, sound, goal, powerchat, panels, share, mods, requests, moderation, robot, aibot, paste.
+   */
+  task:
+    | "slot"
+    | "method"
+    | "restream"
+    | "golive"
+    | "profile"
+    | "offline"
+    | "emote"
+    | "sound"
+    | "goal"
+    | "powerchat"
+    | "panels"
+    | "share"
+    | "mods"
+    | "requests"
+    | "moderation"
+    | "robot"
+    | "aibot"
+    | "paste";
+  user: SubjectRef;
+  /**
+   * The task's title as the hub shows it.
+   */
+  title?: string;
+  /**
+   * The hub's group: Stream, Look & feel, Community & money, Grow, Build & mod.
+   */
+  group?: string;
+  completed_at?: string;
+  /**
+   * How many of the hub's tasks the person has done, this one included.
+   */
+  done?: number;
+  total?: number;
+}
+
 /** live.stream.started@1.0.0 (owner: live) */
 /**
  * live.stream.started v1 (OpenVibe.Live server/events/stream-events.js envelopeFor, fired by server/db/database.js createStream). A streams row went live: WebRTC/JSMPEG from the dashboard, RTMP ingest, WHIP, or an OpenRestream session mirrored into Live. Written to Live's event_outbox in the transaction that inserts the row, so the event exists if and only if the stream did. Carries public channel facts only (the stream is listed publicly already); consumers such as Network's go-live notifications decide who hears about it. Never the stream key, the Live user id or the description. Envelope: subject { type: stream, id: <stream_id as a string>, revision: 1 }, visibility public, priority important, actor the streamer's user subject when Live knows it, else service:live.

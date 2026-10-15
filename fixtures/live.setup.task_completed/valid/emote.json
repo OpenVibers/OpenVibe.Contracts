@@ -1,0 +1,12 @@
+{
+  "task": "emote",
+  "user": {
+    "type": "user",
+    "id": "usr_01J8Z3V9Q6N1X2Y3Z4A5B6C7D8"
+  },
+  "title": "Upload a custom emote",
+  "group": "Look & feel",
+  "completed_at": "2026-10-15T18:00:00.000Z",
+  "done": 5,
+  "total": 18
+}
