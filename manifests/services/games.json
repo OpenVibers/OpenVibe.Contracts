@@ -23,7 +23,7 @@
     "name": "Games",
     "icon": "games",
     "tagline": "Browser games",
-    "what": "Scraplandia, Salvage Rush and other multiplayer games that run in a tab, know your OpenVibe account and keep leaderboards.",
+    "what": "Scraplandia, Salvage Rush and other multiplayer games that run in a tab, know your OpenVibe account and keep leaderboards. Build your own world in the map editor and publish it for anyone to join.",
     "legalProfile": "games",
     "position": 3
   },
@@ -43,6 +43,7 @@
     "games.player.left",
     "games.skill.leveled",
     "games.blueprint.unlocked",
+    "games.world.published",
     "games.world.saved",
     "games.mod.installed",
     "games.mod.enabled",

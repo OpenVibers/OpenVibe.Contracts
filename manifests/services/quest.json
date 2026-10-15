@@ -28,6 +28,7 @@
     "community.post.created",
     "community.thread.created",
     "games.player.joined",
+    "games.world.published",
     "live.setup.task_completed",
     "live.stream.started",
     "network.follow.created",

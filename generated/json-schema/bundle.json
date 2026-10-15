@@ -49221,6 +49221,51 @@
         }
       }
     },
+    "games.world.published": {
+      "version": "1.0.0",
+      "owner": "games",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/games.world.published.v1.json",
+        "title": "GamesWorldPublishedPayload",
+        "description": "games.world.published v1 (OpenVibe.Games apps/server/src/worlds/worldRoutes.ts): a player published one of their creator worlds for the first time, so it is listed at https://openvibe.games/worlds and anyone can join it. Written to Games' outbox in the transaction that publishes it; unpublishing and publishing again does not repeat it. OpenVibe.Quest credits the owner's \"Publish a creator world\" quest from it. Envelope: subject { type: world, id: <world id> }, actor the owner, visibility public.",
+        "type": "object",
+        "required": [
+          "world",
+          "owner",
+          "title",
+          "url",
+          "published_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "world": {
+            "type": "string",
+            "pattern": "^w[0-9a-z]{10}$",
+            "description": "The creator world id. Also the envelope subject id."
+          },
+          "owner": {
+            "$ref": "../../identity/subject-ref.v1.json",
+            "description": "The player who made and published it."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Where anyone joins it: https://openvibe.games/play?world=<id>."
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "games.mod.installed": {
       "version": "1.0.0",
       "owner": "games",

@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.194.0 — 2026-10-15
+
+- **`games.world.published`** (OpenVibe.Games creator worlds): a player published one of their worlds for the first
+  time `{ world, owner, title, url, published_at }` (public). Games' eventsProduced, Quest's eventsConsumed (the
+  "Publish a creator world" quest). Games' `site.what` says players build and publish their own worlds.
+
 ## 0.193.2 — 2026-10-15
 
 - Copy: Quest's `site.what` says developer apps add quests on their own events (Quest#55, SDK 0.47.0).

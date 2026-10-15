@@ -4429,6 +4429,15 @@
       "status": "active"
     },
     {
+      "id": "games.world.published",
+      "version": "1.0.0",
+      "owner": "games",
+      "schema": "events/payloads/games.world.published.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "games.mod.installed",
       "version": "1.0.0",
       "owner": "games",
