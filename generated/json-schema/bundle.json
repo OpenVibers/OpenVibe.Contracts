@@ -47169,6 +47169,14 @@
             ],
             "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
           },
+          "project_env": {
+            "enum": [
+              "sandbox",
+              "production",
+              null
+            ],
+            "description": "The project environment its project secrets (ADR-056, secret_ref) are looked up in; null when the watch names no project."
+          },
           "owner": {
             "type": "string",
             "description": "The acting person or agent the watch belongs to: usr_…, agt_… or svc:…."
@@ -47261,6 +47269,14 @@
                 ],
                 "pattern": "^WATCH_CRED_[A-Z0-9_]{2,60}$",
                 "description": "The name of the environment variable holding the credential; Watch reads it by name at fetch time and never stores the value."
+              },
+              "secret_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+                "description": "Instead of env: the name of a project secret (ADR-056) in the watch's project and project_env, granted to watch for reveal to the source URL's origin. OpenVibe.Network answers the value at fetch time; Watch never stores it."
               },
               "header": {
                 "type": [
@@ -47643,8 +47659,19 @@
                 "type": "object",
                 "required": [
                   "kind",
-                  "url",
-                  "secret_env"
+                  "url"
+                ],
+                "anyOf": [
+                  {
+                    "required": [
+                      "secret_env"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "secret_ref"
+                    ]
+                  }
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -47659,6 +47686,11 @@
                   "secret_env": {
                     "type": "string",
                     "pattern": "^WATCH_HOOK_[A-Z0-9_]{2,60}$"
+                  },
+                  "secret_ref": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+                    "description": "Instead of secret_env: the name of a project secret (ADR-056) in the watch's project and project_env, granted to watch for sign. OpenVibe.Network signs each delivery in the same headers; Watch never holds the value."
                   }
                 }
               },
@@ -47877,6 +47909,13 @@
             ],
             "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The project the watch's project work belongs to (its run-job actions are billed to it). The acting person must be an admin or owner of the unarchived project: Watch checks with Network when it is saved (network.project.member.read; 403 project.not_delegated otherwise) and OpenVibe.Run checks again at every job (ADR-003 amendment 2026-10-12). null clears it."
+          },
+          "project_env": {
+            "enum": [
+              "sandbox",
+              "production"
+            ],
+            "description": "The project environment the watch's project secrets (ADR-056: a source credential's or a webhook action's secret_ref) are looked up in. Defaults to production when the watch names a project; meaningless without one."
           },
           "source": {
             "$ref": "watch.v1.json#/$defs/source"

@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.179.0 — 2026-10-15
+
+- **Watch uses project secrets** (ADR-056).
+  - A source credential (`auth`) may name `secret_ref` instead of `env`: a project secret granted to `watch` for
+    `reveal` to the source URL's origin, answered by OpenVibe.Network at fetch time.
+  - A webhook action may name `secret_ref` instead of `secret_env`: a project secret granted to `watch` for `sign`, so
+    Network signs each delivery and Watch never holds the value. Exactly one of the two is required.
+  - `watch.watch-request@1` takes `project_env` (sandbox or production; production by default when the watch names a
+    project), and `watch.watch@1` shows it.
+- Fixtures: a watch with a project webhook secret, and an invalid webhook action with neither secret.
+
 ## 0.178.0 — 2026-10-15
 
 - **Actor webhooks name a project secret** (ADR-044 §7, ADR-056). `actor.task-create-request@1` webhooks take

@@ -169042,6 +169042,10 @@ export interface Watch {
   id: string;
   project_id?: string | null;
   /**
+   * The project environment its project secrets (ADR-056, secret_ref) are looked up in; null when the watch names no project.
+   */
+  project_env?: "sandbox" | "production" | null;
+  /**
    * The acting person or agent the watch belongs to: usr_…, agt_… or svc:….
    */
   owner: string;
@@ -169077,6 +169081,10 @@ export interface Watch {
            * The name of the environment variable holding the credential; Watch reads it by name at fetch time and never stores the value.
            */
           env?: string | null;
+          /**
+           * Instead of env: the name of a project secret (ADR-056) in the watch's project and project_env, granted to watch for reveal to the source URL's origin. OpenVibe.Network answers the value at fetch time; Watch never stores it.
+           */
+          secret_ref?: string | null;
           header?: string | null;
           param?: string | null;
         };
@@ -169165,11 +169173,14 @@ export interface Watch {
               [k: string]: unknown | undefined;
             } | null;
           }
-        | {
-            kind: "webhook";
-            url: string;
-            secret_env: string;
-          }
+        | (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          )
         | {
             kind: "actor-task";
             brief: string;
@@ -169249,11 +169260,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -169332,11 +169346,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -169417,94 +169434,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -169583,11 +169520,100 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -169668,94 +169694,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -169834,11 +169780,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -169917,11 +169866,100 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170002,94 +170040,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170168,94 +170126,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170334,11 +170212,186 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170419,94 +170472,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170585,94 +170558,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170751,11 +170644,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170834,11 +170730,186 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -170919,94 +170990,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -171085,94 +171076,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -171251,94 +171162,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -171417,11 +171248,272 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -171502,94 +171594,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -171668,94 +171680,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -171834,94 +171766,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172000,11 +171852,14 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172083,11 +171938,272 @@ export interface Watch {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172184,6 +172300,10 @@ export interface WatchRequest {
    * The project the watch's project work belongs to (its run-job actions are billed to it). The acting person must be an admin or owner of the unarchived project: Watch checks with Network when it is saved (network.project.member.read; 403 project.not_delegated otherwise) and OpenVibe.Run checks again at every job (ADR-003 amendment 2026-10-12). null clears it.
    */
   project_id?: string | null;
+  /**
+   * The project environment the watch's project secrets (ADR-056: a source credential's or a webhook action's secret_ref) are looked up in. Defaults to production when the watch names a project; meaningless without one.
+   */
+  project_env?: "sandbox" | "production";
   source?:
     | {
         kind: "webhook";
@@ -172211,6 +172331,10 @@ export interface WatchRequest {
            * The name of the environment variable holding the credential; Watch reads it by name at fetch time and never stores the value.
            */
           env?: string | null;
+          /**
+           * Instead of env: the name of a project secret (ADR-056) in the watch's project and project_env, granted to watch for reveal to the source URL's origin. OpenVibe.Network answers the value at fetch time; Watch never stores it.
+           */
+          secret_ref?: string | null;
           header?: string | null;
           param?: string | null;
         };
@@ -172299,11 +172423,14 @@ export interface WatchRequest {
               [k: string]: unknown | undefined;
             } | null;
           }
-        | {
-            kind: "webhook";
-            url: string;
-            secret_env: string;
-          }
+        | (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          )
         | {
             kind: "actor-task";
             brief: string;
@@ -172383,11 +172510,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172466,11 +172596,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172551,94 +172684,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172717,11 +172770,100 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172802,94 +172944,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -172968,11 +173030,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173051,11 +173116,100 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173136,94 +173290,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173302,94 +173376,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173468,11 +173462,186 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173553,94 +173722,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173719,94 +173808,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173885,11 +173894,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -173968,11 +173980,186 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174053,94 +174240,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174219,94 +174326,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174385,94 +174412,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174551,11 +174498,272 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174636,94 +174844,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174802,94 +174930,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -174968,94 +175016,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
-          | {
-              kind: "actor-task";
-              brief: string;
-              budget_usd?: number | null;
-            }
-          | {
-              kind: "actor-agent";
-              agent_id: string;
-              note?: string | null;
-            }
-          | {
-              kind: "codes-run";
-              repo: string;
-              brief: string;
-            }
-          | {
-              kind: "run-job";
-              class?: RuntimeClass;
-              /**
-               * The pre-registered artifact to run (platform.job@1 artifact).
-               */
-              artifact?: {
-                name: string;
-                /**
-                 * One exact version, never a range
-                 */
-                version: string;
-              };
-              /**
-               * The artifact's declared input as JSON; default {}.
-               */
-              args?: {};
-              /**
-               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
-               */
-              limits?: {
-                /**
-                 * Running time from `job_started`
-                 */
-                wall_ms: number;
-                /**
-                 * CPU time, user plus system
-                 */
-                cpu_ms: number;
-                /**
-                 * Peak resident memory
-                 */
-                mem_bytes: number;
-              };
-              /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
-               */
-              egress?: "none" | "public" | "openvibe-only";
-              ttl_ms?: number;
-              /**
-               * The args key the firing is added under; null or absent: none.
-               */
-              firing_arg?: string | null;
-              runtime?: "function" | "code" | "browser" | "linux";
-              command?: string;
-              workload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-        ),
-        (
-          | {
-              kind: "notification";
-              category?: "service" | "social" | "system";
-              priority?: "low" | "normal" | "high" | "critical";
-            }
-          | {
-              kind: "event";
-              event_type: string;
-              payload?: {
-                [k: string]: unknown | undefined;
-              } | null;
-            }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -175134,11 +175102,14 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
-          | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
-            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;
@@ -175217,11 +175188,272 @@ export interface WatchRequest {
                 [k: string]: unknown | undefined;
               } | null;
             }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
-              kind: "webhook";
-              url: string;
-              secret_env: string;
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
             }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
+          | {
+              kind: "actor-task";
+              brief: string;
+              budget_usd?: number | null;
+            }
+          | {
+              kind: "actor-agent";
+              agent_id: string;
+              note?: string | null;
+            }
+          | {
+              kind: "codes-run";
+              repo: string;
+              brief: string;
+            }
+          | {
+              kind: "run-job";
+              class?: RuntimeClass;
+              /**
+               * The pre-registered artifact to run (platform.job@1 artifact).
+               */
+              artifact?: {
+                name: string;
+                /**
+                 * One exact version, never a range
+                 */
+                version: string;
+              };
+              /**
+               * The artifact's declared input as JSON; default {}.
+               */
+              args?: {};
+              /**
+               * Caps on the running process (platform.job@1 limits); hitting one ends the job failed with run.job.limit.
+               */
+              limits?: {
+                /**
+                 * Running time from `job_started`
+                 */
+                wall_ms: number;
+                /**
+                 * CPU time, user plus system
+                 */
+                cpu_ms: number;
+                /**
+                 * Peak resident memory
+                 */
+                mem_bytes: number;
+              };
+              /**
+               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               */
+              egress?: "none" | "public" | "openvibe-only";
+              ttl_ms?: number;
+              /**
+               * The args key the firing is added under; null or absent: none.
+               */
+              firing_arg?: string | null;
+              runtime?: "function" | "code" | "browser" | "linux";
+              command?: string;
+              workload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+        ),
+        (
+          | {
+              kind: "notification";
+              category?: "service" | "social" | "system";
+              priority?: "low" | "normal" | "high" | "critical";
+            }
+          | {
+              kind: "event";
+              event_type: string;
+              payload?: {
+                [k: string]: unknown | undefined;
+              } | null;
+            }
+          | (
+              | {
+                  [k: string]: unknown | undefined;
+                }
+              | {
+                  [k: string]: unknown | undefined;
+                }
+            )
           | {
               kind: "actor-task";
               brief: string;

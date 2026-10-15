@@ -9,6 +9,7 @@
     "name": { "type": "string", "minLength": 1, "maxLength": 120 },
     "labels": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 60 } },
     "project_id": { "type": ["string", "null"], "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The project the watch's project work belongs to (its run-job actions are billed to it). The acting person must be an admin or owner of the unarchived project: Watch checks with Network when it is saved (network.project.member.read; 403 project.not_delegated otherwise) and OpenVibe.Run checks again at every job (ADR-003 amendment 2026-10-12). null clears it." },
+    "project_env": { "enum": ["sandbox", "production"], "description": "The project environment the watch's project secrets (ADR-056: a source credential's or a webhook action's secret_ref) are looked up in. Defaults to production when the watch names a project; meaningless without one." },
     "source": { "$ref": "watch.v1.json#/$defs/source" },
     "cadence": { "$ref": "watch.v1.json#/$defs/cadence" },
     "extraction": { "$ref": "watch.v1.json#/$defs/extraction" },
