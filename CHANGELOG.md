@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.188.2 — 2026-10-15
+
+- **Rent is the rental aggregator** the owner asked for. Its `site.tagline` and `site.what`, and the product's tagline,
+  description and pillars, now say: one search opens Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper
+  and more, next to HUD affordable housing and listings posted here (Rent#53). "Nothing scraped" is gone.
+  Copy only.
+
 ## 0.188.1 — 2026-10-15
 
 - **Quest's site text:** quests pay badges and OpenCoins. OpenCoins have been credited since `QUEST_COINS` was switched on, but the

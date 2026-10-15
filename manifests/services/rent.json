@@ -82,8 +82,8 @@
   "site": {
     "name": "Rent",
     "icon": "rent",
-    "tagline": "Find a place, or rent yours out",
-    "what": "Affordable housing near you from HUD open data (public housing, tax-credit and assisted homes, housing authorities), plus apartments, rooms and more posted by people, with safety rules and no payments taken.",
+    "tagline": "Every rental site, one search",
+    "what": "Search Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper and more at once for apartments, houses, rooms, stays, commercial space, parking, storage and cars, next to affordable housing from HUD and listings people post here.",
     "legalProfile": "ugc",
     "position": 28
   }
