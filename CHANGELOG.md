@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.177.0 — 2026-10-15
+
+- **Project secrets (ADR-056).** OpenVibe.Network keeps secrets per project and environment, written once and used by
+  name: no API returns a value to a person.
+  - `network.project-secret@1`: what members and staff see (name, environment, version, a keyed fingerprint, grants,
+    who set it and when).
+  - `network.secret.use` (first-party, `POST /internal/secrets/use`): a service the project granted a secret to either
+    signs a message with it (`sign`, HMAC-SHA256; the value never leaves Network) or receives the value for an https
+    origin the grant lists (`reveal`). `network.secret-use-request@1` and `network.secret-use-result@1` refuse a sign
+    without a message, a reveal without an origin, and either one mixed with the other's field.
+  - Listed in Network's manifest. Fixtures: valid signing and reveal grants, sign and reveal requests and results;
+    invalid a secret with its value, an upper-case name, an http origin, and mixed or missing fields.
+
 ## 0.176.1 — 2026-10-15
 
 - **`media.object.s3`** lists CopyObject and UploadPartCopy (Media#113): server-side copies within the key's environment,

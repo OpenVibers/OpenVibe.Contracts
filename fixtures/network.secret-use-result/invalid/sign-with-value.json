@@ -1,0 +1,7 @@
+{
+  "name": "webhook-signing",
+  "version": 2,
+  "purpose": "sign",
+  "signature": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "value": "x"
+}
