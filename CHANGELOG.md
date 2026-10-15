@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.178.0 — 2026-10-15
+
+- **Actor webhooks name a project secret** (ADR-044 §7, ADR-056). `actor.task-create-request@1` webhooks take
+  `secret_ref`, the lower-case name of a project secret granted to `actor` for `sign`. OpenVibe.Network signs each
+  delivery in the same headers, so Actor never holds the value, and no `webhook_secret` is minted when every webhook
+  names one. A task outside a project is refused 422 `actor.webhook.secret_unavailable`.
+- **`platform.task@1`** `secret_ref` accepts the ADR-056 lower-case names as well as the earlier upper-case
+  environment-variable references.
+- Fixtures: a valid task webhook with `secret_ref`, and an invalid one with spaces in the name.
+
 ## 0.177.0 — 2026-10-15
 
 - **Project secrets (ADR-056).** OpenVibe.Network keeps secrets per project and environment, written once and used by
