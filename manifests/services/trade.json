@@ -27,19 +27,23 @@
     "position": 14,
     "tld": "trade",
     "accent": "#60a5fa",
-    "description": "OpenVibe.Trade is the market intelligence room of the OpenVibe network: watchlists, alerts, summaries and community discussion for markets, collectibles and deals — information and tools, never advice.",
+    "description": "OpenVibe.Trade is the market intelligence room of the OpenVibe network: every company on SEC's ticker list with its filings and reported numbers, AI briefs that cite every line, watchlists and alerts — information and tools, never advice.",
     "pillars": [
       {
-        "title": "Find an instrument",
-        "text": "By ticker, SEC CIK or company name: one match goes straight there, several are listed, never guessed."
+        "title": "Every listed company",
+        "text": "More than 8,000 companies from SEC's ticker list, by ticker, CIK or name: one match goes straight there, several are listed."
       },
       {
-        "title": "Values with their times",
-        "text": "Each observation keeps the value as stated, its source, and when it was observed and retrieved."
+        "title": "Reported numbers",
+        "text": "Revenue, profit and other figures from SEC filings, each with its period, filing and the date it was observed."
+      },
+      {
+        "title": "AI briefs",
+        "text": "A short AI summary of the latest figures and filings, every line cited. Informational only: no advice, no predictions."
       },
       {
         "title": "Filings and documents",
-        "text": "Documents gathered by OpenVibe.Sources with their dates, and feeds in RSS, Atom and JSON."
+        "text": "Filings gathered by OpenVibe.Sources with their dates, and feeds in RSS, Atom and JSON."
       },
       {
         "title": "Watchlists and alert rules",
@@ -47,7 +51,6 @@
       }
     ],
     "keywords": "openvibe trade, watchlists, market alerts, community trading tools",
-    "launch": "a verified data source and editors adding the first instruments",
     "relationships": {
       "plannedRepo": "OpenVibe.Trade",
       "meanwhile": [

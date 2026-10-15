@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.190.1 — 2026-10-15
+
+- **Copy for what shipped on 2026-10-15** (copy only): OpenVibe.Homes is live (served by OpenVibe.Rent, Rent#58): every
+  for-sale site at once, foreclosures, land and commercial, county records, FHFA prices and a mortgage calculator; its
+  `launch` and `noRepo` are gone. OpenVibe.Video uploads, records in the browser and makes AI captions, chapters and a
+  summary (MediaHub#67-#71). Trade covers every company on SEC's ticker list with reported numbers and cited AI briefs
+  (Trade#68-#70; `launch` gone). Food fills the cupboard by barcode, shelf photo or receipt (Food#53-#54; `launch` gone).
+  Blog's `site.what` names the AI desks (Blog#57); Codes' names OpenVibe Git at openvibe.codes/git (Codes#85-#86).
+
 ## 0.190.0 — 2026-10-15
 
 - **`live.setup.task_completed`** (owner live, internal; Live produces, Quest consumes): a streamer finished one of the
