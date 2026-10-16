@@ -22,12 +22,12 @@
     "name": "Host",
     "icon": "host",
     "tagline": "Hosting, compared honestly",
-    "what": "Cloud, VPS and dedicated plans side by side, priced per month, per vCPU and per GB, each with the day it was checked and its source; never ranked by who pays.",
+    "what": "Cloud, VPS and dedicated plans, hosting offers and domain prices side by side, each with the day it was checked and its source; never ranked by who pays.",
     "legalProfile": "hosting",
     "position": 15,
     "tld": "host",
     "accent": "#94a3b8",
-    "description": "OpenVibe.Host compares hosting: plans from providers' official APIs (through OpenVibe.Sources) and staff entries that name their source, with the monthly price, the price per vCPU and per GB of RAM and disk, the day each price was checked and a link to where it came from. The order comes only from the sort a visitor picks; affiliate links are marked and disclosed beside the link. OpenVibe's own static hosting (immutable deploys, custom domains, one-step rollback) is built and opens after a launch review.",
+    "description": "OpenVibe.Host compares hosting: plans from providers' official APIs and staff entries that name their source, priced per month, per vCPU and per GB, each dated and linked to its source; the offers providers post on LowEndTalk and LowEndBox; and domain prices per ending (first year, renewal, transfer, five years) with a name check at the registry. The order comes only from the visitor's sort; affiliate links are marked. Static hosting is OpenVibe.Space.",
     "pillars": [
       {
         "title": "Sourced prices",
@@ -44,9 +44,13 @@
       {
         "title": "Ranked by you",
         "text": "No paid placement: affiliate links are marked, disclosed beside the link, and never change the order."
+      },
+      {
+        "title": "Domains too",
+        "text": "Every ending's first year, renewal, transfer and five-year cost, a mark where the renewal jumps, and a name check at the registry."
       }
     ],
-    "keywords": "openvibe host, hosting comparison, vps comparison, cloud server prices, price per vcpu, static site hosting",
+    "keywords": "openvibe host, hosting comparison, vps comparison, cloud server prices, price per vcpu, lowendbox offers, domain price comparison, tld prices, domain name check",
     "launch": "the owner's go on its launch checklist",
     "relationships": {
       "plannedRepo": "OpenVibe.Host",

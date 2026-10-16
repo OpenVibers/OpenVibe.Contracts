@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.198.1 — 2026-10-16
+
+- Host's catalog copy names what openvibe.host compares today: plans, the offers providers post on LowEndTalk and
+  LowEndBox, and domain prices (first year, renewal, transfer, five years per ending) with a name check at the registry;
+  a "Domains too" pillar; the old line about Host's own static hosting opening after a review now points to
+  OpenVibe.Space.
+
 ## 0.198.0 — 2026-10-16
 
 - `rent.index_document.upserted` / `.deleted` v1 also carry **OpenVibe.Homes city pages** (type `homes_city`, the same
