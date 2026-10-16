@@ -61,7 +61,21 @@
     "tagline": "Pastes and posts",
     "what": "Share text and code with a link, comment, and follow what people on OpenVibe are making.",
     "legalProfile": "ugc",
-    "position": 2
+    "position": 2,
+    "faq": [
+      {
+        "question": "What can I share here?",
+        "answer": "Text and code as pastes with a link, comments on pastes, clips, recordings and blog posts across OpenVibe, and posts in the forum."
+      },
+      {
+        "question": "Who sees my pastes?",
+        "answer": "You choose: public, unlisted (only people with the link) or private."
+      },
+      {
+        "question": "Are comments on other sites hosted here?",
+        "answer": "Yes. Comments on Live recordings and clips, blog posts and hosting plans are OpenVibe.Community threads, so one account and one moderation team cover them all."
+      }
+    ]
   },
   "lifecycle": {
     "liveness": {

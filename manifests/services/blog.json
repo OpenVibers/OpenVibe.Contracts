@@ -24,7 +24,21 @@
     "tagline": "Long-form, yours to keep",
     "what": "The official OpenVibe blog and a blog for every member: drafts, scheduling, media, comments and feeds, plus AI desks: cited digests of public data and a satire column, labelled as AI.",
     "legalProfile": "info",
-    "position": 8
+    "position": 8,
+    "faq": [
+      {
+        "question": "Can anyone have a blog here?",
+        "answer": "Yes. Every OpenVibe account gets its own blog with drafts, scheduling, media and comments, alongside the official OpenVibe blog."
+      },
+      {
+        "question": "Is anything here written by AI?",
+        "answer": "AI can help you draft, and the desks (news, food safety, deals, hosting, crowdfunding and developer digests, plus a satire desk) are written by AI from the sources they cite. They are labelled as AI, and the satire is labelled as satire."
+      },
+      {
+        "question": "Can I follow a blog without an account?",
+        "answer": "Yes. Every blog has RSS, Atom and JSON feeds."
+      }
+    ]
   },
   "capabilities": [
     "blog.blog.create",

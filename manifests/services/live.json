@@ -25,7 +25,25 @@
     "tagline": "Streams, clips and chat",
     "what": "Live streaming from a browser, OBS or a phone, with restreaming, clips, VODs, chat games and channel points.",
     "legalProfile": "streaming",
-    "position": 0
+    "position": 0,
+    "faq": [
+      {
+        "question": "Can I go live without OBS?",
+        "answer": "Yes. Go live straight from your browser, camera or screen, with no software to install and no follower minimum. OBS, phones and other RTMP or WHIP tools work too."
+      },
+      {
+        "question": "Can I stream to Twitch, YouTube or Kick at the same time?",
+        "answer": "Yes. Add your other platforms as restream destinations and one broadcast goes to all of them, through OpenRestream."
+      },
+      {
+        "question": "Where do my past streams and clips go?",
+        "answer": "Recordings and clips are watched on OpenVibe.Video, where you can keep them public, unlisted or private, and make clips and AI edits."
+      },
+      {
+        "question": "What is the Arena?",
+        "answer": "ARENA ALERT, the site's drama desk: rage quits, viewer crashes, meltdowns heard on mic, beefs and records from every stream, with the Lolcow Index and the Clout Rankings. Every story states what was measured. Streamers can keep themselves out of it from the Arena page."
+      }
+    ]
   },
   "capabilities": [
     "live.analytics.read",

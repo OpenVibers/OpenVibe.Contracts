@@ -29,7 +29,21 @@
     "tagline": "Account and themes",
     "what": "The account behind every site: one sign-in, themes, notifications, history and linked services.",
     "legalProfile": "account",
-    "position": 5
+    "position": 5,
+    "faq": [
+      {
+        "question": "Do I need a separate account for each OpenVibe site?",
+        "answer": "No. One OpenVibe account signs you in everywhere, with the same themes, notifications and history."
+      },
+      {
+        "question": "Can I download or delete my data?",
+        "answer": "Yes. Export everything OpenVibe holds about you from your account settings, or delete your account; every OpenVibe service takes part."
+      },
+      {
+        "question": "Can I link my other accounts?",
+        "answer": "Yes. Link platforms like Twitch, YouTube or Kick to your OpenVibe account, and unlink them whenever you like."
+      }
+    ]
   },
   "capabilities": [
     "identity.subject.resolve",

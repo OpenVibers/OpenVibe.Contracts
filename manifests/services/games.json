@@ -25,7 +25,21 @@
     "tagline": "Browser games, and worlds you build",
     "what": "Scraplandia, Salvage Rush and other multiplayer games that run in a tab, know your OpenVibe account and keep leaderboards. Build your own world in the map editor and publish it for anyone to join.",
     "legalProfile": "games",
-    "position": 3
+    "position": 3,
+    "faq": [
+      {
+        "question": "Do I need to install anything?",
+        "answer": "No. Scraplandia, Salvage Rush, Vibe Heroes and the rest run in a browser tab and know your OpenVibe account."
+      },
+      {
+        "question": "Can I build my own world?",
+        "answer": "Yes. Any account can make up to five worlds in the map editor, publish them and let anyone join from a browser."
+      },
+      {
+        "question": "Is my progress saved?",
+        "answer": "Yes. Leaderboards, achievements and cloud saves come from OpenVibe.Play, so your progress follows your account."
+      }
+    ]
   },
   "capabilities": [
     "games.mod.manage",

@@ -57,7 +57,21 @@
           "note": "Deal discovery is the sibling of this room."
         }
       ]
-    }
+    },
+    "faq": [
+      {
+        "question": "How do I know a code still works?",
+        "answer": "Each code shows reports from people who tried it recently, its stated restrictions and its expiry when there is one. A code nobody could use stops being shown as working."
+      },
+      {
+        "question": "Does the browser extension change referral links?",
+        "answer": "No. The OpenVibe Companion tries codes at checkout and shows deals, but it never rewrites or adds affiliate links."
+      },
+      {
+        "question": "Where do the codes come from?",
+        "answer": "From people who share them and from permitted merchant and deal feeds, matched to the shop and pages they apply to."
+      }
+    ]
   },
   "capabilities": [
     "coupons.coupon.submit",

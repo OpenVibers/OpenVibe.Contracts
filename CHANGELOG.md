@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.198.2 — 2026-10-16
+
+- FAQs for the twelve sites whose Help pages had none: Live, Blog, Codes, Community, Coupons, Deals, Games, Host,
+  Media, Network, Inventory and the AI service (`site.faq` in their service manifests).
+
 ## 0.198.1 — 2026-10-16
 
 - Host's catalog copy names what openvibe.host compares today: plans, the offers providers post on LowEndTalk and

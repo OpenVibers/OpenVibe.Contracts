@@ -60,7 +60,21 @@
           "note": "The coupon room is the sibling of this one."
         }
       ]
-    }
+    },
+    "faq": [
+      {
+        "question": "Where do the deals come from?",
+        "answer": "From the community, who post and vote, and from permitted deal feeds such as DealNews. Each deal shows its source, its price, the shop that sells it and how fresh it is."
+      },
+      {
+        "question": "Can I see every deal from one shop?",
+        "answer": "Yes. Shops lists the stores with deals, and each store has its own page."
+      },
+      {
+        "question": "Do you get paid for deals?",
+        "answer": "Some links may be affiliate links, and they are marked as such. They never change the order or what is shown."
+      }
+    ]
   },
   "capabilities": [
     "deals.offer.submit",
