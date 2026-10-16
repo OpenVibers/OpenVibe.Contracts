@@ -41,7 +41,9 @@
     "inventory.item.equipped",
     "bot.robot.online",
     "network.account.export_requested",
-    "network.account.deleted"
+    "network.account.deleted",
+    "mediahub.picture.uploaded",
+    "mediahub.video.published"
   ],
   "namespacesOwned": [
     "quest.*"

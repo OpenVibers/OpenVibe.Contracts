@@ -28,7 +28,10 @@
     "download.file.upload",
     "download.share.create"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "mediahub.picture.uploaded",
+    "mediahub.video.published"
+  ],
   "eventsConsumed": [
     "network.account.export_requested",
     "network.account.deleted"
@@ -36,7 +39,8 @@
   "namespacesOwned": [
     "video.*",
     "pics.*",
-    "download.*"
+    "download.*",
+    "mediahub.*"
   ],
   "lifecycle": {
     "liveness": {

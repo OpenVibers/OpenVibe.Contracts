@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.196.0 — 2026-10-16
+
+- **MediaHub publishes events** (in its hyphen-free namespace `mediahub.*`, Events#91): `mediahub.video.published` v1
+  (a person's upload is public and ready for the first time: `{ upload, owner, title, url, published_at }`, public) and
+  `mediahub.picture.uploaded` v1 (a signed-in person's picture on OpenVibe.Pics: `{ picture, owner, uploaded_at }`,
+  internal, without the link or title since pictures are unlisted). MediaHub's eventsProduced; Quest consumes both
+  for its "Publish a video" and "Share a picture" quests.
+
 ## 0.195.2 — 2026-10-16
 
 - Copy: OpenVibe.Pics' pillars name resize and convert ("Any size, any format") and alt text, and its Next is AI image
