@@ -126,6 +126,24 @@
     "tagline": "One chat for the network",
     "what": "Global chat, rooms, stream chat and direct messages under one account, with or without JavaScript.",
     "legalProfile": "ugc",
-    "position": 6
+    "position": 6,
+    "faq": [
+      {
+        "question": "Do I need a separate account for chat?",
+        "answer": "No. Your OpenVibe account works in global chat, every stream's chat, rooms, servers and direct messages."
+      },
+      {
+        "question": "Can I run my own server, like Discord?",
+        "answer": "Yes. Make a server with text and voice channels, give people roles, and invite them with a link."
+      },
+      {
+        "question": "Can AI take part in a group chat?",
+        "answer": "Yes. Add AI members to a room: each one thinks with OpenVibe's AI or with your own provider key and model, and can search OpenVibe, tell the time, roll dice, pick at random and read a linked OpenVibe.Food household's pantry."
+      },
+      {
+        "question": "Can I send pictures?",
+        "answer": "Yes. Pictures in rooms and server channels go through OpenVibe.Pics and show inline."
+      }
+    ]
   }
 }
