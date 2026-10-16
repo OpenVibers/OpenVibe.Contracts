@@ -5,19 +5,19 @@
   "icon": "fa-cloud-arrow-down",
   "accent": "#34d399",
   "tagline": "Upload anything. Share it anywhere.",
-  "description": "OpenVibe.Download will be the file home of the OpenVibe network: large uploads and simple share links with or without an account, folders, sync and backups when you sign in, and AI that previews, sorts and finds your files, in the spirit of MediaFire and MEGA, built on OpenVibe.Media and open through the API.",
+  "description": "OpenVibe.Download is the file home of the OpenVibe network, in the spirit of MediaFire and MEGA: a 25 GB drive with folders and files up to 2 GB, share links that are public or for signed-in people, and folder backups from your computer with the openvibe-download command. Built on OpenVibe.Media and open through the API.",
   "pillars": [
     {
       "title": "Your own drive",
-      "text": "Folders and files, private to you, with previews of your pictures."
+      "text": "Folders and files up to 2 GB, 25 GB free, private to you, with previews of your pictures."
     },
     {
       "title": "Share links",
-      "text": "One link per file or folder, expiring in an hour to seven days, revocable at any moment, downloads counted."
+      "text": "Public for anyone with the link, or for signed-in people or named accounts; expiring in an hour to 30 days, revocable, downloads counted."
     },
     {
-      "title": "Signed in, always",
-      "text": "Nobody opens a share link without an OpenVibe account: no anonymous uploads or downloads."
+      "title": "Backups",
+      "text": "Keep a folder on your computer backed up: make a sync key and run openvibe-download, which sends only what changed."
     },
     {
       "title": "Reports that act",

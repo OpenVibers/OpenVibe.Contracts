@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.195.1 — 2026-10-16
+
+- Copy: OpenVibe.Download says what is live (a 25 GB drive, public or signed-in share links, folder backups with
+  `openvibe-download`) instead of "will be" and "no anonymous downloads"; MediaHub's `site.what` names Download's
+  backups and Video's uploads and playlists.
+
 ## 0.195.0 — 2026-10-15
 
 - **Search documents for creator worlds:** `games.index_document.upserted` and `.deleted` v1 (type `world`,

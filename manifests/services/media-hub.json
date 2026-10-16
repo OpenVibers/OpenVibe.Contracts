@@ -94,7 +94,7 @@
     "name": "Video",
     "icon": "media-hub",
     "tagline": "Past streams, clips and your drive",
-    "what": "Your private drive with share links you control (openvibe.download), and watch pages for OpenVibe.Live's recordings and clips with AI chapters and captions (openvibe.video). Picture hosting with share and embed links and albums (openvibe.pics).",
+    "what": "A 25 GB drive with public or signed-in share links and folder backups (openvibe.download), videos you upload or record and OpenVibe.Live's recordings with AI captions, chapters and playlists (openvibe.video), and picture hosting with share and embed links and albums (openvibe.pics).",
     "legalProfile": "hosting",
     "position": 20
   }
