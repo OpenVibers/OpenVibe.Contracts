@@ -97,7 +97,7 @@
   "site": {
     "name": "Video",
     "icon": "media-hub",
-    "tagline": "Past streams, clips and your drive",
+    "tagline": "Videos, pictures and your files",
     "what": "A 25 GB drive with share links and folder backups (openvibe.download), videos you upload or record with AI captions, chapters and the AI cut, plus Live's recordings (openvibe.video), and pictures with embed links, albums, any size and format, and alt text (openvibe.pics).",
     "legalProfile": "hosting",
     "position": 20
