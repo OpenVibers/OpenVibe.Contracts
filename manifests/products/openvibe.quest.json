@@ -39,7 +39,7 @@
     },
     {
       "question": "Can my community make its own quests?",
-      "answer": "Not yet: community quests need moderation tools first. The quest log and its API are already built for them."
+      "answer": "Developers can already define quests for their own apps through the OpenVibe SDK, on their app's own events (badges only). Quests written by a community or a streamer wait for moderation tools, so nobody can be sent to do something harmful."
     }
   ],
   "keywords": "openvibe quest, quests, achievements, rewards, gamification, streamer quests",
