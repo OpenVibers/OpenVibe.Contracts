@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.197.1 — 2026-10-16
+
+- Copy: OpenVibe.Rent's FAQ says where the listings come from (every major rental site, opened at your place) instead
+  of "nothing is copied in this first version", and answers "How do I know if a rent is fair?" (Rent by city, the rent
+  check, the Companion); its pillars add Rent by city. OpenVibe.Play's tagline and `site.what` name cloud saves.
+
 ## 0.197.0 — 2026-10-16
 
 - `rent.index_document.upserted` / `.deleted` v1 also carry **city pages** (type `city`, id `<state>-<city slug>`, e.g.

@@ -12,6 +12,10 @@
       "text": "One place and filters open Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper and more at once."
     },
     {
+      "title": "Rent by city",
+      "text": "Typical rents by size in 885 US cities from Census data, and a check for any rent you are quoted."
+    },
+    {
       "title": "Your board",
       "text": "Keep listings from any site in one list, with your notes and how far you got."
     },
@@ -34,8 +38,12 @@
   ],
   "faq": [
     {
-      "question": "Who posts the listings?",
-      "answer": "People with an OpenVibe account. In this first version nothing is copied from other listing sites; sources whose terms allow it come later, each named and linked."
+      "question": "Where do the listings come from?",
+      "answer": "From every major rental site: one search opens Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper and more at your place and filters, and each listing opens on its own site. People also post listings here, and affordable housing comes from U.S. HUD open data."
+    },
+    {
+      "question": "How do I know if a rent is fair?",
+      "answer": "Rent by city (openvibe.rent/in) shows the typical rent by number of bedrooms in 885 US cities, from the Census Bureau, and the rent check (openvibe.rent/fair) compares any rent you are quoted with it. The OpenVibe Companion browser extension opens the check from a listing on any site."
     },
     {
       "question": "Does OpenVibe take payments or deposits?",
