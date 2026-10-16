@@ -18,8 +18,8 @@
   "site": {
     "name": "Space",
     "icon": "space",
-    "tagline": "Static sites, hosted by OpenVibe",
-    "what": "Static site hosting moved here from OpenVibe.Host: immutable deploys, one-step rollback, previews, Git ingest and verified custom domains, at <name>.openvibe.website. Open to OpenVibe staff until the public launch; dynamic pages and spaces come next. The forum is on OpenVibe.Community.",
+    "tagline": "Make a space: an app on your account",
+    "what": "Small apps on your OpenVibe account: describe one and OpenVibe AI builds it, or start from a template and change anything in the editor. Spaces sign visitors in, keep shared lists and private data, and talk to OpenVibe AI. Static site hosting too.",
     "legalProfile": "ugc",
     "position": 19,
     "tld": "space",
@@ -44,7 +44,25 @@
       }
     ],
     "keywords": "openvibe space, code hosting, openvibe spaces, openvibe account, openvibe sdk",
-    "launch": "Code hosting and spaces are still to be built; the forum moved back to OpenVibe.Community (2026-10-08)."
+    "launch": "Code hosting and spaces are still to be built; the forum moved back to OpenVibe.Community (2026-10-08).",
+    "faq": [
+      {
+        "question": "What is a space?",
+        "answer": "A small web app on your OpenVibe account: a guestbook, a poll, a quiz, a game with a leaderboard, an AI character. Visitors sign in with OpenVibe, and the space can keep shared lists, each visitor's private data, and ask OpenVibe AI for them."
+      },
+      {
+        "question": "Do I need to code?",
+        "answer": "No. Describe what you want and OpenVibe AI builds it, then ask for changes in plain words. You can also start from a template, or edit the HTML, CSS and JavaScript yourself with a live preview."
+      },
+      {
+        "question": "What does a space see when I sign in?",
+        "answer": "Only what it asked for and you approved: your username and display name, the things you add to its lists, your private data in that space, and AI answers it asks for you. Never your password or your OpenVibe session, and the sign-in lasts a day."
+      },
+      {
+        "question": "Can I share my space?",
+        "answer": "Publishing a space at its own address opens with OpenVibe.Space's public hosting. Until then it runs in your editor, and OpenVibe staff can publish."
+      }
+    ]
   },
   "capabilities": [
     "space.site.manage",
