@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.199.3 — 2026-10-16
+
+- Chat's catalog copy says what it is now: rooms with AI members on their own models with tools, Discord-style servers
+  with roles, invites and text and voice channels, pictures, DMs, global and stream chat (Chat#102-#109). Its tagline
+  is "Group chats with AI, servers and voice".
+- Space's summary adds that spaces run their own server code (space functions, Space#62).
+
 ## 0.199.2 — 2026-10-16
 
 - Space's catalog copy names spaces (small apps on a person's OpenVibe account: the AI builder, templates, the editor,

@@ -19,7 +19,7 @@
     "name": "Space",
     "icon": "space",
     "tagline": "Make a space: an app on your account",
-    "what": "Small apps on your OpenVibe account: describe one and OpenVibe AI builds it, or start from a template and change anything in the editor. Spaces sign visitors in, keep shared lists and private data, and talk to OpenVibe AI. Static site hosting too.",
+    "what": "Small apps on your OpenVibe account: describe one and OpenVibe AI builds it, or start from a template and change anything in the editor. Spaces sign visitors in, keep shared lists and private data, talk to OpenVibe AI and run their own server code. Static site hosting too.",
     "legalProfile": "ugc",
     "position": 19,
     "tld": "space",
