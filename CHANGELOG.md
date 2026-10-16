@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.199.2 — 2026-10-16
+
+- Space's catalog copy names spaces (small apps on a person's OpenVibe account: the AI builder, templates, the editor,
+  sign-in, shared lists, private storage and AI; Space#58) ahead of static hosting, with a FAQ (`site.faq`).
+
 ## 0.199.1 — 2026-10-16
 
 - Chat's FAQ (`site.faq` in its service manifest): one account everywhere, servers with text and voice channels and
