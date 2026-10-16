@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.199.1 — 2026-10-16
+
+- Chat's FAQ (`site.faq` in its service manifest): one account everywhere, servers with text and voice channels and
+  roles, AI members in rooms (OpenVibe's AI or the person's own key, with tools), pictures through OpenVibe.Pics.
+- Live's one-line `what` names ARENA ALERT, the drama desk on every stream.
+
 ## 0.199.0 — 2026-10-16
 
 - `host.index_document.upserted` / `.deleted` v1 also carry **domain endings** (type `tld`, id `tld-<tld>` such as
