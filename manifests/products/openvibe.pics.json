@@ -9,15 +9,19 @@
   "pillars": [
     {
       "title": "Upload & share",
-      "text": "Drop, paste or choose pictures and get links to share and embed anywhere."
-    },
-    {
-      "title": "Albums",
-      "text": "Put pictures together and share the album with one link."
+      "text": "Drop, paste or choose pictures and get links to share and embed anywhere, alone or in albums."
     },
     {
       "title": "Clean files",
       "text": "Every picture is re-encoded: location and camera details are removed before anyone sees it."
+    },
+    {
+      "title": "Any size, any format",
+      "text": "Every picture also comes 320 to 2560 pixels wide, as WebP, AVIF, JPEG or PNG, each with a link of its own."
+    },
+    {
+      "title": "Alt text",
+      "text": "Say what a picture shows for people who cannot see it, or let AI draft it; every embed carries it."
     },
     {
       "title": "Safe by default",
@@ -25,7 +29,7 @@
     },
     {
       "title": "Next",
-      "text": "Uploads without an account, and AI image tools."
+      "text": "Uploads without an account, and AI image generation."
     }
   ],
   "keywords": "openvibe pics, image hosting, image upload, imgur alternative, image cdn, ai image tools",
