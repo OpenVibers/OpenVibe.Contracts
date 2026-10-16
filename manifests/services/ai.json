@@ -93,6 +93,20 @@
     "tagline": "Many models, one API. Every answer explained.",
     "what": "One API for chat, generation, summaries, classification, extraction and embeddings across many models; every run says which model answered, why it was chosen and what it cost.",
     "legalProfile": "tools",
-    "position": 32
+    "position": 32,
+    "faq": [
+      {
+        "question": "What is the AI service for?",
+        "answer": "One API for chat, generation, summaries, classification, extraction and embeddings across model providers, used by every OpenVibe site and open to developers."
+      },
+      {
+        "question": "Can I use my own provider key?",
+        "answer": "Yes. Store your own OpenAI, Anthropic or OpenAI-compatible key once; it is encrypted, never shown again, and used only for your own runs."
+      },
+      {
+        "question": "How is AI paid for?",
+        "answer": "At cost: each project has quotas and budgets, and every run records its model, usage and cost."
+      }
+    ]
   }
 }

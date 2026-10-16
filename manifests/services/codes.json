@@ -24,7 +24,21 @@
     "tagline": "Code with any agent",
     "what": "The open coding-agent harness: Claude Code, Codex, OpenCode, Command Code, the DeepSeek API and self-hosted models behind one router with hand-offs, sessions and budgets, OpenVibe Git (a code forge with OpenVibe sign-in at openvibe.codes/git) and the way to improve OpenVibe itself.",
     "legalProfile": "ugc",
-    "position": 22
+    "position": 22,
+    "faq": [
+      {
+        "question": "What is OpenVibe.Codes?",
+        "answer": "An open harness for coding agents: it runs Claude Code, Codex, OpenCode, Command Code and DeepSeek-backed agents on your tasks, with hand-offs between them and a review by a second model."
+      },
+      {
+        "question": "Can it run on my own machine?",
+        "answer": "Yes. With OpenVibe.Run and the OpenVibe node on your computer, a task can run on your own hardware instead of a server."
+      },
+      {
+        "question": "Where is the code?",
+        "answer": "On GitHub under OpenVibers, open source like the rest of OpenVibe."
+      }
+    ]
   },
   "capabilities": [
     "codes.task.start",

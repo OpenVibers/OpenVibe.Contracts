@@ -25,7 +25,17 @@
     "tagline": "VODs, clips, files",
     "what": "The public media library behind every site: recorded streams, clips, images and uploads.",
     "legalProfile": "hosting",
-    "position": 4
+    "position": 4,
+    "faq": [
+      {
+        "question": "What is on OpenVibe.Media?",
+        "answer": "The library behind every site: recorded streams, clips, pictures and uploads. You watch videos on OpenVibe.Video, share pictures on OpenVibe.Pics and keep files on OpenVibe.Download."
+      },
+      {
+        "question": "Who can see my uploads?",
+        "answer": "You choose for each one: public, unlisted (only people with the link) or private."
+      }
+    ]
   },
   "capabilities": [
     "media.access_key.manage",
