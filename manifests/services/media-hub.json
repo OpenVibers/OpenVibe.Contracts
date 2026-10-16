@@ -7,10 +7,7 @@
   "name": "OpenVibe.MediaHub",
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.MediaHub",
-  "domains": [
-    "openvibe.video",
-    "openvibe.download"
-  ],
+  "domains": ["openvibe.video", "openvibe.download", "openvibe.pics"],
   "publicOrigin": "https://openvibe.video",
   "exposure": {
     "state": "live",
