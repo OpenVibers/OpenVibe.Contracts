@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.197.0 — 2026-10-16
+
+- `rent.index_document.upserted` / `.deleted` v1 also carry **city pages** (type `city`, id `<state>-<city slug>`, e.g.
+  `tx-austin`): OpenVibe.Rent's Rent by city pages with the typical rents by size (Census ACS), sent by its sweep.
+
 ## 0.196.2 — 2026-10-16
 
 - Fix: `media-hub` declares `openvibe.pics` and `rent` declares `openvibe.homes` in `domains`. Network builds its CORS
