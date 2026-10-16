@@ -194329,21 +194329,21 @@ export interface HostIndexDocumentDeletedPayload {
 
 /** rent.index_document.upserted@1.0.0 (owner: rent) */
 /**
- * rent.index_document.upserted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a rental listing page (type listing, /listings/<id>): title, description, price and period, city, region, country and neighbourhood (never a street address or the contact link); or of a city page (type city, /in/<state>/<city>, id <state>-<city slug>, e.g. tx-austin): the city's typical rents by size from the Census ACS (facets state, population, rent_2br), sent by the sweep whenever the city data changed. Sent in the transaction that created, edited, renewed, hid or removed the listing, and by the sweep (server/search-index.js); a listing that is hidden, removed or past its expiry becomes a tombstone. The sequencer (rent_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, country, city, currency, period, bedrooms. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision: <document revision> }, visibility internal, actor service:rent.
+ * rent.index_document.upserted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a rental listing page (type listing, /listings/<id>): title, description, price and period, city, region, country and neighbourhood (never a street address or the contact link); or of a city page (type city, /in/<state>/<city>, id <state>-<city slug>, e.g. tx-austin): the city's typical rents by size from the Census ACS (facets state, population, rent_2br), sent by the sweep whenever the city data changed; or of an OpenVibe.Homes city page (type homes_city, https://openvibe.homes/in/<state>/<city>, the same id): the median home value and rent. Sent in the transaction that created, edited, renewed, hid or removed the listing, and by the sweep (server/search-index.js); a listing that is hidden, removed or past its expiry becomes a tombstone. The sequencer (rent_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published; a page its own robots mark noindex stays in Search as a noindex document. Facets: kind, country, city, currency, period, bedrooms. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision: <document revision> }, visibility internal, actor service:rent.
  */
 export type RentIndexDocumentUpsertedPayload = IndexDocument & {
   owner: "rent";
-  type: "listing" | "city";
+  type: "listing" | "city" | "homes_city";
   id?: string;
   deleted: false;
 };
 
 /** rent.index_document.deleted@1.0.0 (owner: rent) */
 /**
- * rent.index_document.deleted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a listing page (/listings/<id>) that is no longer listed or whose row is gone, or for a city page (/in/<state>/<city>) that left the city data. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision }, visibility internal, actor service:rent.
+ * rent.index_document.deleted v1 (OpenVibe.Rent server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a listing page (/listings/<id>) that is no longer listed or whose row is gone, or for a city page on OpenVibe.Rent or OpenVibe.Homes (/in/<state>/<city>) that left the city data. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: listing, id, revision }, visibility internal, actor service:rent.
  */
 export interface RentIndexDocumentDeletedPayload {
-  type: "listing" | "city";
+  type: "listing" | "city" | "homes_city";
   id: string;
   /**
    * Index revision of the tombstone; wins over any document at the same or an older revision.

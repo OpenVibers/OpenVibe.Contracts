@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.198.0 — 2026-10-16
+
+- `rent.index_document.upserted` / `.deleted` v1 also carry **OpenVibe.Homes city pages** (type `homes_city`, the same
+  `<state>-<slug>` id, canonical on openvibe.homes): the median home value and rent, sent by Rent's sweep.
+
 ## 0.197.2 — 2026-10-16
 
 - Copy: OpenVibe.Work's "Will an AI apply for me?" says the Actor agent helps prepare applications today (it said the
