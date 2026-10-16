@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/mediahub.video.published.v1.json",
+  "title": "MediahubVideoPublishedPayload",
+  "description": "mediahub.video.published v1 (OpenVibe.MediaHub server/video/uploads.js): a video a person uploaded or recorded on OpenVibe.Video is public and ready for the first time, so it has a listed watch page. Written to MediaHub's outbox in the transaction that makes it so; making it private and public again does not repeat it. OpenVibe.Quest credits the owner's \"Publish a video\" quest from it. Envelope: source media-hub (namespace mediahub), subject { type: video, id: <upload id> }, actor the owner, visibility public.",
+  "type": "object",
+  "required": ["upload", "owner", "title", "url", "published_at"],
+  "additionalProperties": false,
+  "properties": {
+    "upload": {
+      "type": "string",
+      "pattern": "^vup_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The upload id. Also the envelope subject id."
+    },
+    "owner": {
+      "$ref": "../../identity/subject-ref.v1.json",
+      "description": "The person who uploaded it."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Its watch page: https://openvibe.video/u/<upload id>."
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

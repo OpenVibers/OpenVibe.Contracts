@@ -4456,6 +4456,24 @@
       "status": "active"
     },
     {
+      "id": "mediahub.video.published",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "events/payloads/mediahub.video.published.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mediahub.picture.uploaded",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "events/payloads/mediahub.picture.uploaded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "games.mod.installed",
       "version": "1.0.0",
       "owner": "games",

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/mediahub.picture.uploaded.v1.json",
+  "title": "MediahubPictureUploadedPayload",
+  "description": "mediahub.picture.uploaded v1 (OpenVibe.MediaHub server/pics/service.js): a signed-in person uploaded a picture to OpenVibe.Pics. Pictures are unlisted (reachable only by their link), so the event is internal and carries neither the link nor the title. Written to MediaHub's outbox in the transaction that stores the picture; signed-out uploads emit nothing. OpenVibe.Quest credits the owner's \"Share a picture\" quest from it. Envelope: source media-hub (namespace mediahub), subject { type: picture, id: <picture id> }, actor the uploader, visibility internal.",
+  "type": "object",
+  "required": ["picture", "owner", "uploaded_at"],
+  "additionalProperties": false,
+  "properties": {
+    "picture": {
+      "type": "string",
+      "pattern": "^pic_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The picture id. Also the envelope subject id."
+    },
+    "owner": {
+      "$ref": "../../identity/subject-ref.v1.json",
+      "description": "The person who uploaded it."
+    },
+    "uploaded_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -180683,6 +180683,37 @@ export interface GamesWorldPublishedPayload {
   published_at: string;
 }
 
+/** mediahub.video.published@1.0.0 (owner: media-hub) */
+/**
+ * mediahub.video.published v1 (OpenVibe.MediaHub server/video/uploads.js): a video a person uploaded or recorded on OpenVibe.Video is public and ready for the first time, so it has a listed watch page. Written to MediaHub's outbox in the transaction that makes it so; making it private and public again does not repeat it. OpenVibe.Quest credits the owner's "Publish a video" quest from it. Envelope: source media-hub (namespace mediahub), subject { type: video, id: <upload id> }, actor the owner, visibility public.
+ */
+export interface MediahubVideoPublishedPayload {
+  /**
+   * The upload id. Also the envelope subject id.
+   */
+  upload: string;
+  owner: SubjectRef;
+  title: string;
+  /**
+   * Its watch page: https://openvibe.video/u/<upload id>.
+   */
+  url: string;
+  published_at: string;
+}
+
+/** mediahub.picture.uploaded@1.0.0 (owner: media-hub) */
+/**
+ * mediahub.picture.uploaded v1 (OpenVibe.MediaHub server/pics/service.js): a signed-in person uploaded a picture to OpenVibe.Pics. Pictures are unlisted (reachable only by their link), so the event is internal and carries neither the link nor the title. Written to MediaHub's outbox in the transaction that stores the picture; signed-out uploads emit nothing. OpenVibe.Quest credits the owner's "Share a picture" quest from it. Envelope: source media-hub (namespace mediahub), subject { type: picture, id: <picture id> }, actor the uploader, visibility internal.
+ */
+export interface MediahubPictureUploadedPayload {
+  /**
+   * The picture id. Also the envelope subject id.
+   */
+  picture: string;
+  owner: SubjectRef;
+  uploaded_at: string;
+}
+
 /** games.mod.installed@1.0.0 (owner: games) */
 /**
  * games.mod.installed v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts modEvent, via ModRegistry.install in mods/registry.ts; POST /api/v1/mods). A games-content@1 mod was installed after its manifest and content pack were validated. requested is the manifest's capability list, granted the approved subset (only capabilities the games-content@1 runtime binds: games.world.announce, games.prop.place), status whether it was installed enabled. Written to Games' event_outbox in the same SQLite transaction as the registry and mod_audit rows (mods/registry.ts). The manifest, content pack, audit actor string and installer are left out. No consumer yet. Envelope: subject { type: mod, id: <mod.id> }, visibility internal, priority low, actor the staff member who made the change (user:<usr_...>), service:<client> for a principal token carrying games.mod.manage, or service:games (pre-subject staff token, editor key).
