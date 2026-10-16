@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.197.2 — 2026-10-16
+
+- Copy: OpenVibe.Work's "Will an AI apply for me?" says the Actor agent helps prepare applications today (it said the
+  agent was coming), and OpenVibe.Quest's community-quests answer names the SDK's app quests that already work.
+
 ## 0.197.1 — 2026-10-16
 
 - Copy: OpenVibe.Rent's FAQ says where the listings come from (every major rental site, opened at your place) instead
