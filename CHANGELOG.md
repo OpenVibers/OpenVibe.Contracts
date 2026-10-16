@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.196.2 — 2026-10-16
+
+- Fix: `media-hub` declares `openvibe.pics` and `rent` declares `openvibe.homes` in `domains`. Network builds its CORS
+  allow-list from manifest domains, so both sites' shared navbars were refused (403 on /api/auth/me: signed-in people
+  saw "Sign In").
+
 ## 0.196.1 — 2026-10-16
 
 - Copy: MediaHub's tagline is "Videos, pictures and your files" (it serves Video uploads, Pics and Download, not only
