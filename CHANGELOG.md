@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.195.2 — 2026-10-16
+
+- Copy: OpenVibe.Pics' pillars name resize and convert ("Any size, any format") and alt text, and its Next is AI image
+  generation; OpenVibe.Video's AI edit names the AI cut and its playlists hold uploads; MediaHub's `site.what` follows.
+
 ## 0.195.1 — 2026-10-16
 
 - Copy: OpenVibe.Download says what is live (a 25 GB drive, public or signed-in share links, folder backups with
