@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/host.index_document.deleted.v1.json",
   "title": "HostIndexDocumentDeletedPayload",
-  "description": "host.index_document.deleted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a hosting catalog page (a plan or a provider) that is hidden, gone or deleted. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.",
+  "description": "host.index_document.deleted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a hosting catalog page (a plan, a provider or a domain ending) that is hidden, gone or deleted. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider|tld, id, revision }, visibility internal, actor service:host.",
   "type": "object",
   "required": [
     "type",
@@ -14,12 +14,13 @@
     "type": {
       "enum": [
         "plan",
-        "provider"
+        "provider",
+        "tld"
       ]
     },
     "id": {
       "type": "string",
-      "pattern": "^(hpl|hpv)_[0-9A-HJKMNP-TV-Z]{26}$"
+      "pattern": "^((hpl|hpv)_[0-9A-HJKMNP-TV-Z]{26}|tld-(xn--)?[a-z0-9]+(-[a-z0-9]+)*(\\.(xn--)?[a-z0-9]+(-[a-z0-9]+)*)*)$"
     },
     "revision": {
       "type": "integer",
