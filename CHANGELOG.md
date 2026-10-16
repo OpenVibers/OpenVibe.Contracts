@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.199.0 — 2026-10-16
+
+- `host.index_document.upserted` / `.deleted` v1 also carry **domain endings** (type `tld`, id `tld-<tld>` such as
+  `tld-dev` or `tld-co.uk`, page /catalog/domains/<tld>): the cheapest first year, renewal and five years at any
+  registrar, facets kind, register_usd, renew_usd.
+
 ## 0.198.2 — 2026-10-16
 
 - FAQs for the twelve sites whose Help pages had none: Live, Blog, Codes, Community, Coupons, Deals, Games, Host,

@@ -194305,21 +194305,21 @@ export interface WorkIndexDocumentDeletedPayload {
 
 /** host.index_document.upserted@1.0.0 (owner: host) */
 /**
- * host.index_document.upserted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a hosting catalog page: a plan (/catalog/plans/<id>: provider, plan name, vCPU, RAM, disk, transfer, monthly price and currency, the day the price was checked) or a provider (/catalog/providers/<slug>: its name, description and plan count). A plan from OpenVibe.Sources names its source as provenance (authorship imported); a staff entry names its source URL. A hidden or gone entry becomes a tombstone. The sequencer gives an unchanged document its old revision and nothing is sent. Facets: provider, kind, currency. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.
+ * host.index_document.upserted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a hosting catalog page: a plan (/catalog/plans/<id>: provider, plan name, vCPU, RAM, disk, transfer, monthly price and currency, the day the price was checked) or a provider (/catalog/providers/<slug>: its name, description and plan count), or a domain ending (type tld, /catalog/domains/<tld>, id tld-<tld> such as tld-dev or tld-co.uk: the cheapest first year, renewal and five years at any registrar and how many registrars list it; facets kind, register_usd, renew_usd). A plan from OpenVibe.Sources names its source as provenance (authorship imported); a staff entry names its source URL. A hidden or gone entry becomes a tombstone. The sequencer gives an unchanged document its old revision and nothing is sent. Facets: provider, kind, currency. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider|tld, id, revision }, visibility internal, actor service:host.
  */
 export type HostIndexDocumentUpsertedPayload = IndexDocument & {
   owner: "host";
-  type: "plan" | "provider";
+  type: "plan" | "provider" | "tld";
   id?: string;
   deleted: false;
 };
 
 /** host.index_document.deleted@1.0.0 (owner: host) */
 /**
- * host.index_document.deleted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a hosting catalog page (a plan or a provider) that is hidden, gone or deleted. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider, id, revision }, visibility internal, actor service:host.
+ * host.index_document.deleted v1 (OpenVibe.Host server/catalog/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a hosting catalog page (a plan, a provider or a domain ending) that is hidden, gone or deleted. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: plan|provider|tld, id, revision }, visibility internal, actor service:host.
  */
 export interface HostIndexDocumentDeletedPayload {
-  type: "plan" | "provider";
+  type: "plan" | "provider" | "tld";
   id: string;
   /**
    * Index revision of the tombstone; wins over any document at the same or an older revision.
