@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.196.1 — 2026-10-16
+
+- Copy: MediaHub's tagline is "Videos, pictures and your files" (it serves Video uploads, Pics and Download, not only
+  Live's past streams), and OpenVibe.Games' is "Browser games, and worlds you build" (creator worlds since 0.193).
+
 ## 0.196.0 — 2026-10-16
 
 - **MediaHub publishes events** (in its hyphen-free namespace `mediahub.*`, Events#91): `mediahub.video.published` v1
