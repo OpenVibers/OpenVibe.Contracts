@@ -26,6 +26,7 @@
     "billing.cashout.request",
     "billing.cashout.manage",
     "billing.subscription.manage",
+    "billing.tier.manage",
     "billing.entitlement.check",
     "billing.ledger.admin",
     "billing.usage.record"

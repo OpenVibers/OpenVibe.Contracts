@@ -149342,6 +149342,10 @@ export interface BillingEntitlement {
   kind: string;
   active: boolean;
   expires_at: string | null;
+  /**
+   * The subscription's tier (1 unless the creator sells tiers); null without a subscription.
+   */
+  tier?: number | null;
   subscription: {
     id?: string;
     status?: string;
@@ -149353,7 +149357,7 @@ export interface BillingEntitlement {
 
 /** billing.intent-request@1.0.0 (owner: billing) */
 /**
- * billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer }; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
+ * billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer, tier? } at the tier's price; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).
  */
 export type BillingIntentRequest =
   | {
@@ -149385,6 +149389,10 @@ export type BillingIntentRequest =
       auto_renew?: boolean | number;
       success_url?: string;
       cancel_url?: string;
+      /**
+       * Subscription: the creator's tier (1 by default), priced by Billing (billing.tier.manage).
+       */
+      tier?: number | string;
     }
   | NoBody;
 
@@ -149463,6 +149471,10 @@ export type BillingSubscriptionRequest =
         subscription_ref?: string;
         test?: boolean;
       };
+      /**
+       * The creator's tier (1 by default): a credit-paid period costs the tier's price (billing.tier.manage); a renewal keeps the price the subscription was bought at.
+       */
+      tier?: number | string;
     }
   | NoBody;
 
@@ -149487,6 +149499,48 @@ export type BillingSubscriptionResult =
     }
   | {
       subscriptions: BillingSubscription[];
+    };
+
+/** billing.tier-request@1.0.0 (owner: billing) */
+/**
+ * billing.tier-request@1: the body of PUT /api/v1/tiers/:streamer/:tier on OpenVibe.Billing (billing.tier.manage): the monthly price of one of a creator's subscription tiers (1 to max_tiers), which the creator chooses on the product that sells it (OpenVibe.VIP) and Billing keeps and charges (ADR-012: Billing prices, products never do). price_cents must be within Billing's bounds (min_price_cents to max_price_cents, from GET /api/v1/tiers/:streamer or /api/v1/rates). status archived stops new subscriptions to the tier; running ones renew at the price they were bought at. A tier without a row: tier 1 is sold at the site's default subscription price, any other tier is refused (billing.tier_unknown). GET /api/v1/tiers/:streamer takes no body. The PUT needs an Idempotency-Key header and is refused with 503 billing.frozen while the economy is frozen.
+ */
+export interface BillingTierRequest {
+  /**
+   * USD cents per period (a month).
+   */
+  price_cents: number | string;
+  /**
+   * active (the default) sells the tier; archived sells it no more.
+   */
+  status?: "active" | "archived";
+}
+
+/** billing.tier-result@1.0.0 (owner: billing) */
+/**
+ * billing.tier-result@1: answers of billing.tier.manage on OpenVibe.Billing. GET /api/v1/tiers/:streamer → { streamer, tiers, default_price_cents, min_price_cents, max_price_cents, max_tiers } (tiers: every tier with a price, archived included; tier 1 without a row is sold at default_price_cents); PUT /api/v1/tiers/:streamer/:tier → { tier }.
+ */
+export type BillingTierResult =
+  | {
+      streamer: SubjectRef;
+      tiers: {
+        tier: number;
+        price_cents: number;
+        status: "active" | "archived";
+        updated_at?: string;
+      }[];
+      default_price_cents: number;
+      min_price_cents: number;
+      max_price_cents: number;
+      max_tiers: number;
+    }
+  | {
+      tier: {
+        tier: number;
+        price_cents: number;
+        status: "active" | "archived";
+        updated_at?: string;
+      };
     };
 
 /** billing.subscription@1.0.0 (owner: billing) */

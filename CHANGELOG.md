@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.201.0 — 2026-10-17
+
+- Subscription tiers priced by OpenVibe.Billing (the owner's VIP ask: creator memberships with tiers). New capability
+  `billing.tier.manage` (`GET /api/v1/tiers/:streamer`, `PUT /api/v1/tiers/:streamer/:tier`) with `billing.tier-request@1`
+  and `billing.tier-result@1`: the product where a creator sells tiers (OpenVibe.VIP) sets each tier's monthly price
+  within Billing's bounds; Billing keeps and charges it (ADR-012). Optional `tier` on `billing.intent-request@1`
+  (subscriptions), `billing.subscription-request@1` and `billing.entitlement@1`. Tier 1 without a price keeps the site's
+  default subscription price, so nothing changes for anyone who does not set tiers.
+
 ## 0.200.0 — 2026-10-17
 
 - OpenVibe.Tips and OpenVibe.VIP are live sites (`exposure.state: live`, `publicSite: service`) now that OpenVibe.Billing is
