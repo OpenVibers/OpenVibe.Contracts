@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.203.0 — 2026-10-17
+
+- `billing.stats.read` (`GET /api/v1/stats`, `billing.stats-result@1`): network-wide money counts with no person in them
+  (Vibes bought with money, channel subscriptions active and started, recent windows and daily series), so a product's
+  public stats read Billing, the money ledger, instead of tables that stopped at the cutover (OpenVibe.Live's home).
+
 ## 0.202.0 — 2026-10-17
 
 - OpenVibe.Tips: other ways to support a creator, paid outside OpenVibe (the owner's 10-08 ask: Billing is provider

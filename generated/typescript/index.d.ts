@@ -150699,6 +150699,40 @@ export type BillingSubscriptionResult =
       subscriptions: BillingSubscription[];
     };
 
+/** billing.stats-result@1.0.0 (owner: billing) */
+/**
+ * billing.stats-result@1: GET /api/v1/stats on OpenVibe.Billing (billing.stats.read, ?days=1..90, default 30). Counts with no person in them. purchases: Vibes bought with money (settled purchase transactions, test ones left out): bits_total all time, windows d/w/m (the last 1, 7 and 30 days) and pw (the 7 days before the last 7), series [{ day, value }] per UTC day over `days`. subscriptions: active now, started in the windows (paid first periods, renewals not counted) and per day. as_of is when the counts were taken.
+ */
+export interface BillingStatsResult {
+  as_of: string;
+  purchases: {
+    bits_total: number;
+    windows: {
+      d: number;
+      w: number;
+      m: number;
+      pw: number;
+    };
+    series: {
+      day: string;
+      value: number;
+    }[];
+  };
+  subscriptions: {
+    active: number;
+    windows: {
+      d: number;
+      w: number;
+      m: number;
+      pw: number;
+    };
+    series: {
+      day: string;
+      value: number;
+    }[];
+  };
+}
+
 /** billing.tier-request@1.0.0 (owner: billing) */
 /**
  * billing.tier-request@1: the body of PUT /api/v1/tiers/:streamer/:tier on OpenVibe.Billing (billing.tier.manage): the monthly price of one of a creator's subscription tiers (1 to max_tiers), which the creator chooses on the product that sells it (OpenVibe.VIP) and Billing keeps and charges (ADR-012: Billing prices, products never do). price_cents must be within Billing's bounds (min_price_cents to max_price_cents, from GET /api/v1/tiers/:streamer or /api/v1/rates). status archived stops new subscriptions to the tier; running ones renew at the price they were bought at. A tier without a row: tier 1 is sold at the site's default subscription price, any other tier is refused (billing.tier_unknown). GET /api/v1/tiers/:streamer takes no body. The PUT needs an Idempotency-Key header and is refused with 503 billing.frozen while the economy is frozen.

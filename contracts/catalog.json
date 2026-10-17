@@ -2250,6 +2250,15 @@
       "status": "active"
     },
     {
+      "id": "billing.stats-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/stats-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "billing.tier-request",
       "version": "1.0.0",
       "owner": "billing",

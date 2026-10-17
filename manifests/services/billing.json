@@ -28,6 +28,7 @@
     "billing.subscription.manage",
     "billing.tier.manage",
     "billing.entitlement.check",
+    "billing.stats.read",
     "billing.ledger.admin",
     "billing.usage.record"
   ],

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/stats-result.v1.json",
+  "title": "BillingStatsResult",
+  "description": "billing.stats-result@1: GET /api/v1/stats on OpenVibe.Billing (billing.stats.read, ?days=1..90, default 30). Counts with no person in them. purchases: Vibes bought with money (settled purchase transactions, test ones left out): bits_total all time, windows d/w/m (the last 1, 7 and 30 days) and pw (the 7 days before the last 7), series [{ day, value }] per UTC day over `days`. subscriptions: active now, started in the windows (paid first periods, renewals not counted) and per day. as_of is when the counts were taken.",
+  "type": "object",
+  "required": [
+    "as_of",
+    "purchases",
+    "subscriptions"
+  ],
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "purchases": {
+      "type": "object",
+      "required": [
+        "bits_total",
+        "windows",
+        "series"
+      ],
+      "properties": {
+        "bits_total": {
+          "type": "integer"
+        },
+        "windows": {
+          "$ref": "#/$defs/windows"
+        },
+        "series": {
+          "$ref": "#/$defs/series"
+        }
+      }
+    },
+    "subscriptions": {
+      "type": "object",
+      "required": [
+        "active",
+        "windows",
+        "series"
+      ],
+      "properties": {
+        "active": {
+          "type": "integer"
+        },
+        "windows": {
+          "$ref": "#/$defs/windows"
+        },
+        "series": {
+          "$ref": "#/$defs/series"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "windows": {
+      "type": "object",
+      "required": [
+        "d",
+        "w",
+        "m",
+        "pw"
+      ],
+      "properties": {
+        "d": {
+          "type": "integer"
+        },
+        "w": {
+          "type": "integer"
+        },
+        "m": {
+          "type": "integer"
+        },
+        "pw": {
+          "type": "integer"
+        }
+      }
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "day",
+          "value"
+        ],
+        "properties": {
+          "day": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "value": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
