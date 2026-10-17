@@ -140952,6 +140952,569 @@ export interface TipsProfileUpdateRequest {
    * Creating a profile as a service: an https URL.
    */
   avatar_url?: string | null;
+  /**
+   * Replace the creator's other ways to support them (one per provider, at most 8): { provider, handle }, where handle may also be the creator's link on that service (https://ko-fi.com/name). An empty list removes them; an unknown provider or a handle that service does not allow is refused (422 tips.invalid_input).
+   *
+   * @maxItems 8
+   */
+  support_links?:
+    | []
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          handle: string;
+        }
+      ];
 }
 
 /** tips.profile@1.0.0 (owner: tips) */
@@ -141425,6 +141988,641 @@ export interface TipsProfile {
   revision?: number;
   created_at?: string;
   updated_at?: string;
+  /**
+   * Other ways to support the creator, paid outside OpenVibe (Billing never holds these): the creator's handle on a known service, and the link Tips builds from it (never a free-form URL).
+   *
+   * @maxItems 8
+   */
+  support_links?:
+    | []
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ]
+    | [
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        },
+        {
+          provider:
+            | "kofi"
+            | "paypal"
+            | "patreon"
+            | "buymeacoffee"
+            | "cashapp"
+            | "venmo"
+            | "github"
+            | "liberapay"
+            | "opencollective"
+            | "streamlabs"
+            | "streamelements";
+          label: string;
+          handle: string;
+          url: string;
+        }
+      ];
 }
 
 /** tips.public-interaction@1.0.0 (owner: tips) */
