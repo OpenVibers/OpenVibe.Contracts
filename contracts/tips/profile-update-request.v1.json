@@ -227,6 +227,40 @@
         "null"
       ],
       "description": "Creating a profile as a service: an https URL."
+    },
+    "support_links": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Replace the creator's other ways to support them (one per provider, at most 8): { provider, handle }, where handle may also be the creator's link on that service (https://ko-fi.com/name). An empty list removes them; an unknown provider or a handle that service does not allow is refused (422 tips.invalid_input).",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "handle"
+        ],
+        "properties": {
+          "provider": {
+            "enum": [
+              "kofi",
+              "paypal",
+              "patreon",
+              "buymeacoffee",
+              "cashapp",
+              "venmo",
+              "github",
+              "liberapay",
+              "opencollective",
+              "streamlabs",
+              "streamelements"
+            ]
+          },
+          "handle": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "additionalProperties": false
+      }
     }
   }
 }

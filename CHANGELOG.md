@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.202.0 — 2026-10-17
+
+- OpenVibe.Tips: other ways to support a creator, paid outside OpenVibe (the owner's 10-08 ask: Billing is provider
+  agnostic; creators bring Ko-fi, PayPal.me, Patreon and other links). Optional `support_links` on `tips.profile@1`
+  (`{ provider, label, handle, url }`, Tips builds the link) and on `tips.profile-update-request@1`
+  (`{ provider, handle }`, at most 8). Providers: Ko-fi, PayPal.me, Patreon, Buy Me a Coffee, Cash App, Venmo, GitHub
+  Sponsors, Liberapay, Open Collective, Streamlabs and StreamElements tip pages.
+
 ## 0.201.0 — 2026-10-17
 
 - Subscription tiers priced by OpenVibe.Billing (the owner's VIP ask: creator memberships with tiers). New capability

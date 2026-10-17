@@ -231,6 +231,46 @@
     },
     "updated_at": {
       "type": "string"
+    },
+    "support_links": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Other ways to support the creator, paid outside OpenVibe (Billing never holds these): the creator's handle on a known service, and the link Tips builds from it (never a free-form URL).",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "label",
+          "handle",
+          "url"
+        ],
+        "properties": {
+          "provider": {
+            "enum": [
+              "kofi",
+              "paypal",
+              "patreon",
+              "buymeacoffee",
+              "cashapp",
+              "venmo",
+              "github",
+              "liberapay",
+              "opencollective",
+              "streamlabs",
+              "streamelements"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }
