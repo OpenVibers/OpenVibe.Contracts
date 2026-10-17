@@ -23865,6 +23865,13 @@
               "null"
             ]
           },
+          "tier": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The subscription's tier (1 unless the creator sells tiers); null without a subscription."
+          },
           "subscription": {
             "type": [
               "object",
@@ -23905,7 +23912,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/billing/intent-request.v1.json",
         "title": "BillingIntentRequest",
-        "description": "billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer }; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
+        "description": "billing.intent-request@1: the body of POST /api/v1/intents on OpenVibe.Billing (billing.intent.create): a checkout with an enabled provider for a Vibes purchase ({ kind: purchase, bits } at least the minimum purchase) or a channel subscription ({ kind: subscription, streamer, tier? } at the tier's price; route direct pays the streamer's own account, and a direct PowerChat subscription names receiving_account). Billing prices it; the answer is { intent, checkout_url } (201). GET /api/v1/intents/:id and POST /api/v1/intents/:id/capture take no body. Every mutating call needs an Idempotency-Key header (a replay with the same key and body returns the first answer) and is refused with 503 billing.frozen while the economy is frozen. Refusals are problem+json (billing.invalid_input, billing.invalid_amount, billing.insufficient_funds, …).",
         "anyOf": [
           {
             "type": "object",
@@ -23978,6 +23985,15 @@
               },
               "cancel_url": {
                 "type": "string"
+              },
+              "tier": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]?$",
+                "description": "Subscription: the creator's tier (1 by default), priced by Billing (billing.tier.manage)."
               }
             }
           },
@@ -24218,6 +24234,15 @@
                     "type": "boolean"
                   }
                 }
+              },
+              "tier": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "minimum": 1,
+                "pattern": "^[1-9][0-9]?$",
+                "description": "The creator's tier (1 by default): a credit-paid period costs the tier's price (billing.tier.manage); a renewal keeps the price the subscription was bought at."
               }
             }
           },
@@ -24273,6 +24298,126 @@
             }
           }
         ]
+      }
+    },
+    "billing.tier-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/tier-request.v1.json",
+        "title": "BillingTierRequest",
+        "description": "billing.tier-request@1: the body of PUT /api/v1/tiers/:streamer/:tier on OpenVibe.Billing (billing.tier.manage): the monthly price of one of a creator's subscription tiers (1 to max_tiers), which the creator chooses on the product that sells it (OpenVibe.VIP) and Billing keeps and charges (ADR-012: Billing prices, products never do). price_cents must be within Billing's bounds (min_price_cents to max_price_cents, from GET /api/v1/tiers/:streamer or /api/v1/rates). status archived stops new subscriptions to the tier; running ones renew at the price they were bought at. A tier without a row: tier 1 is sold at the site's default subscription price, any other tier is refused (billing.tier_unknown). GET /api/v1/tiers/:streamer takes no body. The PUT needs an Idempotency-Key header and is refused with 503 billing.frozen while the economy is frozen.",
+        "type": "object",
+        "required": [
+          "price_cents"
+        ],
+        "properties": {
+          "price_cents": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "minimum": 1,
+            "pattern": "^[1-9][0-9]*$",
+            "description": "USD cents per period (a month)."
+          },
+          "status": {
+            "enum": [
+              "active",
+              "archived"
+            ],
+            "description": "active (the default) sells the tier; archived sells it no more."
+          }
+        }
+      }
+    },
+    "billing.tier-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/tier-result.v1.json",
+        "title": "BillingTierResult",
+        "description": "billing.tier-result@1: answers of billing.tier.manage on OpenVibe.Billing. GET /api/v1/tiers/:streamer → { streamer, tiers, default_price_cents, min_price_cents, max_price_cents, max_tiers } (tiers: every tier with a price, archived included; tier 1 without a row is sold at default_price_cents); PUT /api/v1/tiers/:streamer/:tier → { tier }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "streamer",
+              "tiers",
+              "default_price_cents",
+              "min_price_cents",
+              "max_price_cents",
+              "max_tiers"
+            ],
+            "properties": {
+              "streamer": {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              "tiers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/tier"
+                }
+              },
+              "default_price_cents": {
+                "type": "integer"
+              },
+              "min_price_cents": {
+                "type": "integer"
+              },
+              "max_price_cents": {
+                "type": "integer"
+              },
+              "max_tiers": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "tier"
+            ],
+            "properties": {
+              "tier": {
+                "$ref": "#/$defs/tier"
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "tier": {
+            "type": "object",
+            "required": [
+              "tier",
+              "price_cents",
+              "status"
+            ],
+            "properties": {
+              "tier": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "price_cents": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "archived"
+                ]
+              },
+              "updated_at": {
+                "type": "string"
+              }
+            }
+          }
+        }
       }
     },
     "billing.subscription": {

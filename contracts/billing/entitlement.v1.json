@@ -11,6 +11,7 @@
     "kind": { "type": "string" },
     "active": { "type": "boolean" },
     "expires_at": { "type": ["string", "null"] },
+    "tier": { "type": ["integer", "null"], "description": "The subscription's tier (1 unless the creator sells tiers); null without a subscription." },
     "subscription": {
       "type": ["object", "null"],
       "properties": {

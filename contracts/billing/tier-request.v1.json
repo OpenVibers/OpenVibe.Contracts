@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/tier-request.v1.json",
+  "title": "BillingTierRequest",
+  "description": "billing.tier-request@1: the body of PUT /api/v1/tiers/:streamer/:tier on OpenVibe.Billing (billing.tier.manage): the monthly price of one of a creator's subscription tiers (1 to max_tiers), which the creator chooses on the product that sells it (OpenVibe.VIP) and Billing keeps and charges (ADR-012: Billing prices, products never do). price_cents must be within Billing's bounds (min_price_cents to max_price_cents, from GET /api/v1/tiers/:streamer or /api/v1/rates). status archived stops new subscriptions to the tier; running ones renew at the price they were bought at. A tier without a row: tier 1 is sold at the site's default subscription price, any other tier is refused (billing.tier_unknown). GET /api/v1/tiers/:streamer takes no body. The PUT needs an Idempotency-Key header and is refused with 503 billing.frozen while the economy is frozen.",
+  "type": "object",
+  "required": [
+    "price_cents"
+  ],
+  "properties": {
+    "price_cents": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "pattern": "^[1-9][0-9]*$",
+      "description": "USD cents per period (a month)."
+    },
+    "status": {
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "description": "active (the default) sells the tier; archived sells it no more."
+    }
+  }
+}

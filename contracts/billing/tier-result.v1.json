@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/tier-result.v1.json",
+  "title": "BillingTierResult",
+  "description": "billing.tier-result@1: answers of billing.tier.manage on OpenVibe.Billing. GET /api/v1/tiers/:streamer → { streamer, tiers, default_price_cents, min_price_cents, max_price_cents, max_tiers } (tiers: every tier with a price, archived included; tier 1 without a row is sold at default_price_cents); PUT /api/v1/tiers/:streamer/:tier → { tier }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "streamer",
+        "tiers",
+        "default_price_cents",
+        "min_price_cents",
+        "max_price_cents",
+        "max_tiers"
+      ],
+      "properties": {
+        "streamer": {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tier"
+          }
+        },
+        "default_price_cents": {
+          "type": "integer"
+        },
+        "min_price_cents": {
+          "type": "integer"
+        },
+        "max_price_cents": {
+          "type": "integer"
+        },
+        "max_tiers": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "tier"
+      ],
+      "properties": {
+        "tier": {
+          "$ref": "#/$defs/tier"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "tier": {
+      "type": "object",
+      "required": [
+        "tier",
+        "price_cents",
+        "status"
+      ],
+      "properties": {
+        "tier": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "price_cents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
