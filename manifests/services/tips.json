@@ -89,6 +89,7 @@
     "tips.superchat.create",
     "tips.tts.request",
     "tips.media_request.create",
+    "tips.sound.request",
     "tips.interaction.get",
     "tips.interaction.list",
     "tips.interaction.record",

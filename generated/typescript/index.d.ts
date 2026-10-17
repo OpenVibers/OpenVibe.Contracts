@@ -139983,7 +139983,7 @@ export interface TipsInteractionReadyPayload {
    * Display name at the time.
    */
   supporter_name: string | null;
-  kind: "tip" | "paid_message" | "tts" | "media_request";
+  kind: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   /**
    * Integer amount in currency minor units (Vibes bits).
    */
@@ -140020,7 +140020,7 @@ export interface TipsInteractionFailedPayload {
    * Display name at the time.
    */
   supporter_name: string | null;
-  kind: "tip" | "paid_message" | "tts" | "media_request";
+  kind: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   /**
    * Integer amount in currency minor units (Vibes bits).
    */
@@ -140072,7 +140072,7 @@ export interface TipsInteractionCancelledPayload {
    * Display name at the time.
    */
   supporter_name: string | null;
-  kind: "tip" | "paid_message" | "tts" | "media_request";
+  kind: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   /**
    * Integer amount in currency minor units (Vibes bits).
    */
@@ -140387,7 +140387,7 @@ export interface TipsInteraction {
    */
   supporter: SubjectRef | null;
   supporter_name: string | null;
-  kind: "tip" | "paid_message" | "tts" | "media_request";
+  kind: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   amount: number;
   /**
    * vibes-bits.
@@ -140401,6 +140401,17 @@ export interface TipsInteraction {
   media: {
     url: string;
     provider?: string;
+  } | null;
+  /**
+   * Kind sound: the sound the overlay plays.
+   */
+  sound?: {
+    id: string;
+    name: string;
+    /**
+     * The audio file on openvibe.tips (/sounds/<id>).
+     */
+    url: string;
   } | null;
   /**
    * The goal the supporter picked.
@@ -140513,7 +140524,7 @@ export type TipsModerationResult =
  */
 export interface TipsModerationView {
   id: string;
-  kind: "tip" | "paid_message" | "tts" | "media_request";
+  kind: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   created_at: string;
   settled_at: string | null;
   payment_state: "pending" | "settled" | "reversed" | "failed";
@@ -140732,7 +140743,7 @@ export interface TipsOverlayToken {
 
 /** tips.paid-request@1.0.0 (owner: tips) */
 /**
- * tips.paid-request@1: bodies of the paid requests on OpenVibe.Tips: POST /api/v1/checkout (tips.checkout.create: a tip), POST /api/v1/paid-messages (tips.superchat.create: needs message; paid_message_min applies), POST /api/v1/tts-requests (tips.tts.request: needs text to read, tts.text or message, within the creator's TTS settings) and POST /api/v1/media-requests (tips.media_request.create: needs media.url; the creator's minimum and length apply): { creator, amount, supporter?, supporter_name?, message?, pay_with?, provider?, tts?, media?, goal_id?, target?, privacy? }. The route sets the kind. A service names the supporter; a person pays as themselves. pay_with credit (default) pays from the supporter's Billing credit at once; checkout starts a Billing checkout (from TIPS_MIN_CHECKOUT_BITS, 100 bits by default). Tips never prices money; Billing does. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input, tips.invalid_amount, tips.amount_too_small, tips.text_too_long (message over TIPS_MESSAGE_CHARS, 300 by default), tips.invalid_media, tips.invalid_subject, tips.name_taken, tips.goal_not_found or tips.self_dealing; 409 tips.not_accepting, tips.tts_disabled or tips.media_disabled; 409 tips.payment_failed (a replay of a request whose payment failed) and Billing's own refusal code (409 billing.insufficient_funds, else 422), both with the interaction in details; 404 tips.creator_not_found; 429 tips.too_many_pending; 502 tips.billing_unavailable. Unknown fields are ignored.
+ * tips.paid-request@1: bodies of the paid requests on OpenVibe.Tips: POST /api/v1/checkout (tips.checkout.create: a tip), POST /api/v1/sound-requests (tips.sound.request: a paid sound), POST /api/v1/paid-messages (tips.superchat.create: needs message; paid_message_min applies), POST /api/v1/tts-requests (tips.tts.request: needs text to read, tts.text or message, within the creator's TTS settings) and POST /api/v1/media-requests (tips.media_request.create: needs media.url; the creator's minimum and length apply): { creator, amount, supporter?, supporter_name?, message?, pay_with?, provider?, tts?, media?, goal_id?, target?, privacy? }. The route sets the kind. A service names the supporter; a person pays as themselves. pay_with credit (default) pays from the supporter's Billing credit at once; checkout starts a Billing checkout (from TIPS_MIN_CHECKOUT_BITS, 100 bits by default). Tips never prices money; Billing does. Needs an Idempotency-Key header (8-200 of A-Z a-z 0-9 . _ : -; 400 idempotency.key_required): a replay with the same key and body returns the first answer, the same key with another body is 422 idempotency.key_reused. Refusals are problem+json: 422 tips.invalid_input, tips.invalid_amount, tips.amount_too_small, tips.text_too_long (message over TIPS_MESSAGE_CHARS, 300 by default), tips.invalid_media, tips.invalid_subject, tips.name_taken, tips.goal_not_found or tips.self_dealing; 409 tips.not_accepting, tips.tts_disabled or tips.media_disabled; 409 tips.payment_failed (a replay of a request whose payment failed) and Billing's own refusal code (409 billing.insufficient_funds, else 422), both with the interaction in details; 404 tips.creator_not_found; 429 tips.too_many_pending; 502 tips.billing_unavailable. Unknown fields are ignored.
  */
 export interface TipsPaidRequest {
   /**
@@ -140787,6 +140798,15 @@ export interface TipsPaidRequest {
      * An https link on an allowed host (TIPS_MEDIA_HOSTS; YouTube by default).
      */
     url: string;
+  };
+  /**
+   * A paid sound (kind sound): the creator’s overlay plays it on stream.
+   */
+  sound?: {
+    /**
+     * One of the creator's sounds (GET /api/v1/profiles/:creator/sounds).
+     */
+    id: string;
   };
   /**
    * One of the creator's open goals.
@@ -140872,6 +140892,8 @@ export interface TipsProfileUpdateRequest {
    * The smallest media request (1 to 1000000 bits).
    */
   media_request_min?: number | string;
+  sounds_enabled?: boolean;
+  sound_min?: number;
   /**
    * The longest media request (10 to 10800 seconds).
    */
@@ -140950,6 +140972,7 @@ export interface TipsProfile {
     paid_message: number;
     tts: number | null;
     media_request: number | null;
+    sound?: number | null;
   };
   tts: {
     enabled: boolean;
@@ -140959,6 +140982,431 @@ export interface TipsProfile {
   media_requests: {
     enabled: boolean;
     max_seconds: number;
+  };
+  /**
+   * Paid sounds: whether they are on and the creator's sounds (up to 12).
+   */
+  sounds?: {
+    enabled: boolean;
+    /**
+     * @maxItems 12
+     */
+    items?:
+      | []
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ]
+      | [
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          },
+          {
+            id: string;
+            name: string;
+            url: string;
+          }
+        ];
   };
   page: {
     goal_amounts: boolean;
@@ -140985,7 +141433,7 @@ export interface TipsProfile {
  */
 export interface TipsPublicInteraction {
   interaction_id: string;
-  kind: "tip" | "paid_message" | "tts" | "media_request";
+  kind: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   /**
    * Vibes bits; null when hidden.
    */
@@ -141007,6 +141455,17 @@ export interface TipsPublicInteraction {
   media: {
     url: string;
   } | null;
+  /**
+   * Kind sound: the sound the overlay plays.
+   */
+  sound?: {
+    id: string;
+    name: string;
+    /**
+     * The audio file on openvibe.tips (/sounds/<id>).
+     */
+    url: string;
+  } | null;
   hidden: boolean;
 }
 
@@ -141019,7 +141478,7 @@ export interface TipsSimulationRequest {
    * The creator whose overlays show it (default: the signed-in person).
    */
   creator?: SubjectRef | string;
-  kind?: "tip" | "paid_message" | "tts" | "media_request";
+  kind?: "tip" | "paid_message" | "tts" | "media_request" | "sound";
   /**
    * Vibes bits.
    */
@@ -141055,6 +141514,15 @@ export interface TipsSimulationRequest {
      * An https link on an allowed host (TIPS_MEDIA_HOSTS; YouTube by default).
      */
     url: string;
+  };
+  /**
+   * A paid sound (kind sound): the creator’s overlay plays it on stream.
+   */
+  sound?: {
+    /**
+     * One of the creator's sounds (GET /api/v1/profiles/:creator/sounds).
+     */
+    id: string;
   };
   goal_id?: string;
   supporter_name?: string | null;

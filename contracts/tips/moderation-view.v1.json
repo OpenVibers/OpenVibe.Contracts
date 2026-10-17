@@ -29,7 +29,8 @@
         "tip",
         "paid_message",
         "tts",
-        "media_request"
+        "media_request",
+        "sound"
       ]
     },
     "created_at": {

@@ -7,9 +7,16 @@ the notes were in the tag and commit messages (`git tag -n1`).
 ## 0.200.0 — 2026-10-17
 
 - OpenVibe.Tips and OpenVibe.VIP are live sites (`exposure.state: live`, `publicSite: service`) now that OpenVibe.Billing is
-  the money ledger. Tips: a tip page per creator, paid messages, text-to-speech, media requests, goals and OBS overlays on
+  the money ledger. Tips: a tip page per creator, paid messages, text-to-speech, media requests, paid sounds, goals and OBS overlays on
   any platform. VIP: memberships open to anyone, with perks across OpenVibe and subscriptions to people's own software
   (openvibe-sdk/vip). Both catalog entries say so, with FAQs, and name what comes next.
+- Tips: paid sounds (the owner's "paid soundboard … triggers"). A new interaction `kind: sound` appears in every Tips
+  kind enum (interaction, public interaction, moderation view, simulation request, and the tips.interaction.ready,
+  failed and cancelled payloads). Optional `sound` fields cover the paid and simulation requests (`{ id }`) and the
+  interaction and public interaction (`{ id, name, url }`). The profile gets optional `sounds` (`enabled`, up to 12
+  `items`) and `minimums.sound`; the profile update gets `sounds_enabled` and `sound_min`. Capability
+  `tips.sound.request` covers `POST /api/v1/sound-requests`. Everything is optional or additive, so the current
+  Tips release still validates.
 
 ## 0.199.3 — 2026-10-16
 

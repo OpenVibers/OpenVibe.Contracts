@@ -23,7 +23,8 @@
         "tip",
         "paid_message",
         "tts",
-        "media_request"
+        "media_request",
+        "sound"
       ]
     },
     "amount": {
@@ -82,6 +83,20 @@
         }
       },
       "description": "A media request (kind media_request)."
+    },
+    "sound": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^tsnd_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "One of the creator's sounds (GET /api/v1/profiles/:creator/sounds)."
+        }
+      },
+      "description": "A paid sound (kind sound): the creator’s overlay plays it on stream."
     },
     "goal_id": {
       "type": "string"

@@ -1,0 +1,23 @@
+{
+  "id": "tips.sound.request",
+  "version": "1.0",
+  "owner": "tips",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Start a paid sound for a supporter: one of the creator's sounds, played by the creator's overlay after settlement.",
+  "permissions": [
+    "tips:checkout"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "payments",
+  "events": [
+    "tips.interaction.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/sound-requests"
+  ],
+  "inputSchema": "tips.paid-request@1",
+  "outputSchema": "tips.paid-result@1"
+}
