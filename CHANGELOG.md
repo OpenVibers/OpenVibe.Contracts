@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.200.0 — 2026-10-17
+
+- OpenVibe.Tips and OpenVibe.VIP are live sites (`exposure.state: live`, `publicSite: service`) now that OpenVibe.Billing is
+  the money ledger. Tips: a tip page per creator, paid messages, text-to-speech, media requests, goals and OBS overlays on
+  any platform. VIP: memberships open to anyone, with perks across OpenVibe and subscriptions to people's own software
+  (openvibe-sdk/vip). Both catalog entries say so, with FAQs, and name what comes next.
+
 ## 0.199.3 — 2026-10-16
 
 - Chat's catalog copy says what it is now: rooms with AI members on their own models with tools, Discord-style servers

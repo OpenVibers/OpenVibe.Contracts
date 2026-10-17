@@ -15,50 +15,72 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4610",
   "exposure": {
-    "state": "internal",
-    "publicSite": "placeholder",
-    "note": "the domain serves the OpenVibe.Sites placeholder page"
+    "state": "live",
+    "publicSite": "service"
   },
   "site": {
     "name": "Tips",
     "icon": "tips",
-    "tagline": "Support creators",
-    "what": "Tips, goals, paid messages and alerts for creators, settled by the network's billing ledger.",
+    "tagline": "Tips, paid messages and alerts for any stream",
+    "what": "A tip page and alert kit for creators on any platform: tips, paid messages, text-to-speech and media requests, goals and OBS overlays, settled by the network’s billing ledger.",
     "legalProfile": "streaming",
     "position": 12,
     "tld": "tips",
     "accent": "#4ade80",
-    "description": "OpenVibe.Tips is the tipping and alerts layer of the OpenVibe network: tips, donation goals, superchats, paid text-to-speech and media requests, with alert overlays for creators.",
+    "description": "OpenVibe.Tips gives every creator a tip page at openvibe.tips/<name> and an alert kit for their stream, wherever they stream: supporters send a tip, a highlighted paid message, a message read out on stream or a video request, within the creator’s own limits, and an overlay link shows each one in OBS as it lands, next to the creator’s goals. It works for OpenVibe.Live, Twitch, YouTube and Kick alike. Payments settle in OpenVibe.Billing, and every receipt shows separately when the payment settled and when the message was delivered.",
     "pillars": [
       {
-        "title": "Tips & goals",
-        "text": "Tip a creator, fund a goal, see it land on stream."
+        "title": "A tip page of your own",
+        "text": "openvibe.tips/yourname, with your goals, your supporters and your own minimums."
       },
       {
-        "title": "Superchat & TTS",
-        "text": "Paid messages read out on stream, through OpenVibe.Chat."
+        "title": "Paid messages, voice and videos",
+        "text": "Highlighted messages, text-to-speech and media requests, each one only where you turned it on."
       },
       {
-        "title": "Alert overlays",
-        "text": "Overlays for OBS and the browser, themed with the network."
+        "title": "Alerts in OBS",
+        "text": "One overlay link for OBS or any browser source shows tips and goals as they land, on any platform."
       },
       {
-        "title": "One ledger",
-        "text": "Every transaction on the network's own ledger, visible to you."
+        "title": "Receipts you can read",
+        "text": "When the payment settled and when your message was delivered, shown apart, on one ledger."
       }
     ],
-    "keywords": "openvibe tips, tip streamers, donation alerts, superchat",
-    "launch": "the payments cutover to OpenVibe.Billing and a security review; tips keep working on OpenVibe.Live meanwhile",
+    "keywords": "openvibe tips, tip streamers, donation alerts, superchat, paid messages, text to speech donations, media requests, obs alerts, streamlabs alternative",
+    "launch": "paid sound alerts, and more checkout options as OpenVibe.Billing adds them",
     "relationships": {
       "plannedRepo": "OpenVibe.Tips",
       "meanwhile": [
         {
-          "label": "Tip with Vibes on OpenVibe.Live",
+          "label": "Go live on OpenVibe.Live",
           "url": "https://openvibe.live",
-          "note": "Tips already work on Live today."
+          "note": "Tips show in your Live chat with your alert sound."
+        },
+        {
+          "label": "Memberships on OpenVibe.VIP",
+          "url": "https://openvibe.vip",
+          "note": "Monthly support, with perks across OpenVibe."
         }
       ]
-    }
+    },
+    "faq": [
+      {
+        "question": "Do I need to stream on OpenVibe.Live?",
+        "answer": "No. Your tip page works as a link anywhere, and the overlay is a browser source for OBS, so it shows alerts on Twitch, YouTube or Kick too. On OpenVibe.Live, tips also appear in your chat with your alert sound."
+      },
+      {
+        "question": "How do supporters pay?",
+        "answer": "In Vibes from their OpenVibe balance (100 Vibes = $1), or through a checkout OpenVibe.Billing offers. Billing settles every payment; Tips never holds money."
+      },
+      {
+        "question": "What do supporters have to send?",
+        "answer": "A new page starts at 1 Vibe for a tip, 100 for a paid message or text-to-speech and 25 for a media request. You set your own minimums, and you choose whether text-to-speech and media requests are on."
+      },
+      {
+        "question": "How do I get the money?",
+        "answer": "Tips arrive as Vibes you can cash out, under the network’s cash-out rules (from 500 Vibes, after a 14-day hold)."
+      }
+    ]
   },
   "capabilities": [
     "tips.profile.get",
