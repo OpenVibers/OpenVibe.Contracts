@@ -82,6 +82,13 @@
             "null"
           ],
           "minimum": 1
+        },
+        "sound": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
         }
       }
     },
@@ -118,6 +125,41 @@
           "type": "integer"
         }
       }
+    },
+    "sounds": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Paid sounds: whether they are on and the creator's sounds (up to 12)."
     },
     "page": {
       "type": "object",

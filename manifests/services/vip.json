@@ -15,50 +15,72 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4620",
   "exposure": {
-    "state": "internal",
-    "publicSite": "placeholder",
-    "note": "the domain serves the OpenVibe.Sites placeholder page"
+    "state": "live",
+    "publicSite": "service"
   },
   "site": {
     "name": "VIP",
     "icon": "vip",
-    "tagline": "Memberships and perks",
-    "what": "Creator and network memberships: plans, perks and benefits recognised on every OpenVibe site.",
+    "tagline": "Memberships for creators and their software",
+    "what": "Memberships open to anyone on OpenVibe: creators publish plans with perks, members join through the network’s billing ledger, and apps and tools check a membership with the SDK.",
     "legalProfile": "account",
     "position": 13,
     "tld": "vip",
     "accent": "#e879f9",
-    "description": "OpenVibe.VIP is the membership layer of the OpenVibe network: creator memberships, channel subscriptions, VIP tiers and perks that unlock across Live, Community, Blog and more.",
+    "description": "OpenVibe.VIP is a membership site, like Patreon, open to anyone with an OpenVibe account. A creator publishes plans with perks, and members join from their Vibes credit or another way OpenVibe.Billing offers. The perks follow them across OpenVibe: a badge in chat, members-only posts and rooms, roles and emotes. Plans are versioned, so members keep the terms they joined under. Developers sell subscriptions to their own apps and tools the same way: the app signs a person in with OpenVibe and asks VIP whether they are a member (openvibe-sdk/vip).",
     "pillars": [
       {
-        "title": "Creator memberships",
-        "text": "Subscribe to the people you watch; perks follow you everywhere."
+        "title": "Plans and perks",
+        "text": "Build each plan from perks; members see exactly what they get and keep the version they joined."
       },
       {
-        "title": "Network VIP",
-        "text": "One membership that supports the whole network."
+        "title": "Perks across OpenVibe",
+        "text": "Badges in chat, members-only posts and rooms, roles and emotes, wherever a site honours them."
       },
       {
-        "title": "Perks",
-        "text": "Badges, emotes, early access, gated posts — set by creators."
+        "title": "For your software",
+        "text": "Sell a subscription to your app or tool: sign people in with OpenVibe and check their membership with the SDK."
       },
       {
-        "title": "Transparent",
-        "text": "What it costs and where it goes, in the open."
+        "title": "Open terms",
+        "text": "Every plan version stays public, and payments, renewals and refunds run through one ledger."
       }
     ],
-    "keywords": "openvibe vip, creator memberships, subscriptions",
-    "launch": "the payments cutover to OpenVibe.Billing; checkout stays closed until then",
+    "keywords": "openvibe vip, creator memberships, subscriptions, patreon alternative, members only, software subscriptions, license check",
+    "launch": "OpenVibe’s own premium plan, sold here",
     "relationships": {
       "plannedRepo": "OpenVibe.VIP",
       "meanwhile": [
         {
-          "label": "Subscriptions on OpenVibe.Live",
-          "url": "https://openvibe.live",
-          "note": "Channel subscriptions exist on Live today."
+          "label": "Tips on OpenVibe.Tips",
+          "url": "https://openvibe.tips",
+          "note": "One-off support with alerts on stream."
+        },
+        {
+          "label": "The OpenVibe SDK",
+          "url": "https://github.com/OpenVibers/OpenVibe.SDK",
+          "note": "openvibe-sdk/vip checks a membership from your app."
         }
       ]
-    }
+    },
+    "faq": [
+      {
+        "question": "Who can make a plan?",
+        "answer": "Anyone with an OpenVibe account: streamers, writers, communities and developers. Your plans are on your page at openvibe.vip/<name>."
+      },
+      {
+        "question": "How do members pay?",
+        "answer": "From their Vibes credit or another way OpenVibe.Billing offers, renewing automatically or not, as they choose. VIP never holds money."
+      },
+      {
+        "question": "Can I sell a subscription to my own software?",
+        "answer": "Yes. Your app signs a person in with OpenVibe, then asks VIP whether they belong to your plan (openvibe-sdk/vip, checkEntitlement), and unlocks what your plan promises."
+      },
+      {
+        "question": "What happens when a plan changes?",
+        "answer": "A change publishes a new version. Members keep the version they joined while their membership lasts, and every version stays public in the plan’s terms history."
+      }
+    ]
   },
   "capabilities": [
     "vip.plan.create",

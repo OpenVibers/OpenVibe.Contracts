@@ -208,8 +208,8 @@
       "service": "tips",
       "name": "OpenVibe.Tips",
       "origin": "https://openvibe.tips",
-      "operations": 26,
-      "capabilities": 18
+      "operations": 27,
+      "capabilities": 19
     },
     {
       "service": "tools",

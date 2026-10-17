@@ -29,7 +29,8 @@
         "tip",
         "paid_message",
         "tts",
-        "media_request"
+        "media_request",
+        "sound"
       ]
     },
     "amount": {
@@ -112,6 +113,34 @@
           "type": "null"
         }
       ]
+    },
+    "sound": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "url"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "description": "The audio file on openvibe.tips (/sounds/<id>)."
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Kind sound: the sound the overlay plays."
     },
     "hidden": {
       "type": "boolean"

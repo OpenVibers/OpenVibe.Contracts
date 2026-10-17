@@ -14,7 +14,7 @@
       "description": "The supporter, null when external, anonymous or unmapped."
     },
     "supporter_name": { "type": ["string", "null"], "description": "Display name at the time." },
-    "kind": { "enum": ["tip", "paid_message", "tts", "media_request"] },
+    "kind": { "enum": ["tip", "paid_message", "tts", "media_request", "sound"] },
     "amount": { "type": "integer", "minimum": 1, "description": "Integer amount in currency minor units (Vibes bits)." },
     "currency": { "type": "string", "description": "vibes-bits today." },
     "settlement": { "enum": ["billing", "external", "simulated", "imported"] },
