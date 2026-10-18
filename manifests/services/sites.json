@@ -10,7 +10,7 @@
   "exposure": {
     "state": "retired",
     "publicSite": "service",
-    "note": "retired 2026-10-14 (plan T11): nothing deploys it and the repository is archived; openvibe.tips and openvibe.vip are parked by OpenVibe.Network (parked-domains), and every other domain is served by its product"
+    "note": "retired 2026-10-14 (plan T11): nothing deploys it and the repository is archived; every domain it served is now served by its product (openvibe.tips and openvibe.vip since 2026-10-17, when OpenVibe.Tips and OpenVibe.VIP took them from Network's parked-domains)"
   },
   "domains": [],
   "capabilities": [],
