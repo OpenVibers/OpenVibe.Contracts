@@ -6435,6 +6435,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -6750,6 +6754,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -7063,947 +7071,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        }
-      ]
-    | [
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
-           */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
-           */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -8319,6 +7390,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -8632,6 +7707,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -8945,319 +8024,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -9573,6 +8343,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -9886,6 +8660,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -10199,6 +8977,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -10512,319 +9294,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -11140,6 +9613,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -11453,6 +9930,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -11766,6 +10247,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -12079,6 +10564,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -12392,319 +10881,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -13020,6 +11200,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -13333,6 +11517,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -13646,6 +11834,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -13959,6 +12151,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -14272,6 +12468,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -14585,319 +12785,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -15213,6 +13104,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -15526,6 +13421,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -15839,6 +13738,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -16152,6 +14055,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -16465,6 +14372,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -16778,6 +14689,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -17091,319 +15006,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -17719,6 +15325,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -18032,6 +15642,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -18345,6 +15959,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -18658,6 +16276,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -18971,6 +16593,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -19284,6 +16910,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -19597,6 +17227,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -19910,319 +17544,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -20538,6 +17863,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -20851,6 +18180,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -21164,6 +18497,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -21477,6 +18814,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -21790,6 +19131,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -22103,6 +19448,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -22416,6 +19765,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -22729,6 +20082,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -23042,319 +20399,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -23670,6 +20718,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -23983,6 +21035,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -24296,6 +21352,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -24609,6 +21669,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -24922,6 +21986,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -25235,6 +22303,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -25548,6 +22620,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -25861,6 +22937,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -26174,6 +23254,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -26487,319 +23571,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -27115,6 +23890,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -27428,6 +24207,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -27741,6 +24524,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -28054,6 +24841,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -28367,6 +25158,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -28680,6 +25475,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -28993,6 +25792,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -29306,6 +26109,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -29619,6 +26426,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -29932,6 +26743,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -30245,319 +27060,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -30873,6 +27379,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -31186,6 +27696,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -31499,6 +28013,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -31812,6 +28330,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -32125,6 +28647,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -32438,6 +28964,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -32751,6 +29281,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -33064,6 +29598,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -33377,6 +29915,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -33690,6 +30232,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -34003,6 +30549,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -34316,319 +30866,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -34944,6 +31185,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -35257,6 +31502,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -35570,6 +31819,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -35883,6 +32136,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -36196,6 +32453,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -36509,6 +32770,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -36822,6 +33087,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -37135,6 +33404,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -37448,6 +33721,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -37761,6 +34038,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -38074,6 +34355,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -38387,6 +34672,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -38700,319 +34989,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -39328,6 +35308,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -39641,6 +35625,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -39954,6 +35942,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -40267,6 +36259,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -40580,6 +36576,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -40893,6 +36893,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -41206,6 +37210,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -41519,6 +37527,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -41832,6 +37844,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -42145,6 +38161,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -42458,6 +38478,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -42771,6 +38795,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -43084,6 +39112,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -43397,319 +39429,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -44025,6 +39748,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -44338,6 +40065,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -44651,6 +40382,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -44964,6 +40699,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -45277,6 +41016,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -45590,6 +41333,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -45903,6 +41650,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -46216,6 +41967,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -46529,6 +42284,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -46842,6 +42601,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -47155,6 +42918,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -47468,6 +43235,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -47781,6 +43552,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -48094,6 +43869,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -48407,319 +44186,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -49035,6 +44505,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -49348,6 +44822,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -49661,6 +45139,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -49974,6 +45456,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -50287,6 +45773,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -50600,6 +46090,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -50913,6 +46407,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -51226,6 +46724,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -51539,6 +47041,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -51852,6 +47358,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -52165,6 +47675,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -52478,6 +47992,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -52791,6 +48309,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -53104,6 +48626,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -53417,6 +48943,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -53730,319 +49260,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -54358,6 +49579,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -54671,6 +49896,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -54984,6 +50213,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -55297,6 +50530,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -55610,6 +50847,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -55923,6 +51164,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -56236,6 +51481,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -56549,6 +51798,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -56862,6 +52115,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -57175,6 +52432,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -57488,6 +52749,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -57801,6 +53066,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -58114,6 +53383,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -58427,6 +53700,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -58740,6 +54017,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -59053,6 +54334,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -59366,319 +54651,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -59994,6 +54970,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -60307,6 +55287,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -60620,6 +55604,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -60933,6 +55921,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -61246,6 +56238,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -61559,6 +56555,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -61872,6 +56872,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -62185,6 +57189,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -62498,6 +57506,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -62811,6 +57823,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -63124,6 +58140,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -63437,6 +58457,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -63750,6 +58774,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -64063,6 +59091,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -64376,6 +59408,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -64689,6 +59725,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -65002,6 +60042,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -65315,319 +60359,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
-          fields?: {
-            [k: string]: string | undefined;
-          };
           /**
-           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
            */
-          extra?: {
-            [k: string]: string | undefined;
-          };
-          /**
-           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
-           */
-          extract?: {
-            kind: string;
-            /**
-             * @minItems 1
-             * @maxItems 12
-             */
-            require:
-              | [string]
-              | [string, string]
-              | [string, string, string]
-              | [string, string, string, string]
-              | [string, string, string, string, string]
-              | [string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string]
-              | [string, string, string, string, string, string, string, string, string, string, string, string];
-            fields: {
-              [k: string]:
-                | {
-                    from: "title" | "summary";
-                    pattern: string;
-                    as?: "date";
-                  }
-                | undefined;
-            };
-          };
-        },
-        {
-          url: string;
-          format?: "json" | "xml";
-          items_path?: string;
-          /**
-           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
-           */
-          items_shape?: "array" | "map";
-          /**
-           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
-           */
-          where?: {
-            [k: string]:
-              | (
-                  | (string | number | boolean)
-                  | [string | number | boolean]
-                  | [string | number | boolean, string | number | boolean]
-                  | [string | number | boolean, string | number | boolean, string | number | boolean]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | [
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean,
-                      string | number | boolean
-                    ]
-                  | {
-                      pattern: string;
-                    }
-                )
-              | undefined;
-          };
-          item_kind?: string;
-          /**
-           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
-           */
-          request_content_type?: "application/json";
-          /**
-           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
-           */
-          max_bytes?: number;
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -65943,6 +60678,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -66256,6 +60995,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -66569,6 +61312,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -66882,6 +61629,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -67195,6 +61946,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -67508,6 +62263,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -67821,6 +62580,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -68134,6 +62897,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -68447,6 +63214,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -68760,6 +63531,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -69073,6 +63848,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -69386,6 +64165,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -69699,6 +64482,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -70012,6 +64799,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -70325,6 +65116,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -70638,6 +65433,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -70951,6 +65750,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -71264,6 +66067,10 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -71577,6 +66384,329 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        }
+      ]
+    | [
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };
@@ -71890,6 +67020,5716 @@ export interface Source {
            * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
            */
           max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
+          fields?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51).
+           */
+          extra?: {
+            [k: string]: string | undefined;
+          };
+          /**
+           * rss and atom sources only (Sources#45): facts an item states in its own title or summary, read by the source's patterns. An item that yields every REQUIRE'd field is stored as KIND with those fields; any other item is skipped. Each field's PATTERN has one capturing group; AS date turns a stated day such as October 20 into YYYY-MM-DD (without a year, the first such day on or after the item's publication).
+           */
+          extract?: {
+            kind: string;
+            /**
+             * @minItems 1
+             * @maxItems 12
+             */
+            require:
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string];
+            fields: {
+              [k: string]:
+                | {
+                    from: "title" | "summary";
+                    pattern: string;
+                    as?: "date";
+                  }
+                | undefined;
+            };
+          };
+        },
+        {
+          url: string;
+          format?: "json" | "xml";
+          items_path?: string;
+          /**
+           * array (default): items_path names a JSON array of records. map: items_path names an object whose own properties are the records, in sorted key order, with the key available as the path $key (Sources#37).
+           */
+          items_shape?: "array" | "map";
+          /**
+           * Records kept only when every path equals its value (or one of an array of values), or, for { pattern }, is text the regular expression matches; others are left out before max_items counts. Paths follow the field rules: relative to the record, $key, an absolute $root.<path> into the response (a {$key} segment there is the record's map key), * for an object's single child, and key[field=value,...] selectors (Sources#39, Sources#51).
+           */
+          where?: {
+            [k: string]:
+              | (
+                  | (string | number | boolean)
+                  | [string | number | boolean]
+                  | [string | number | boolean, string | number | boolean]
+                  | [string | number | boolean, string | number | boolean, string | number | boolean]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | [
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean,
+                      string | number | boolean
+                    ]
+                  | {
+                      pattern: string;
+                    }
+                )
+              | undefined;
+          };
+          item_kind?: string;
+          /**
+           * Sent as the request's Content-Type on this endpoint's GET (no body). Open Collective's GraphQL API answers a GET only with it, as its CSRF guard (Sources#65).
+           */
+          request_content_type?: "application/json";
+          /**
+           * The body cap for this endpoint, in bytes (1 KiB to 32 MiB); the deployment's cap otherwise. OVHcloud's VPS catalog is about 12 MB (Sources#51).
+           */
+          max_bytes?: number;
+          /**
+           * This endpoint's fetch deadline, in milliseconds (1 s to 120 s); the deployment's otherwise. NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds (Sources#76).
+           */
+          timeout_ms?: number;
           fields?: {
             [k: string]: string | undefined;
           };

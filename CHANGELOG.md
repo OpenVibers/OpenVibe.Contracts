@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.204.0 — 2026-10-18
+
+- `sources.source@1`: an api endpoint may carry `timeout_ms` (1 s to 120 s), its own fetch deadline instead of the
+  deployment's (OpenVibe.Sources#76: NYC Open Data computes the HPD per-building violation tally in 12 to 60 seconds).
+
 ## 0.203.0 — 2026-10-17
 
 - `billing.stats.read` (`GET /api/v1/stats`, `billing.stats-result@1`): network-wide money counts with no person in them
