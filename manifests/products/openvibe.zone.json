@@ -5,7 +5,7 @@
   "icon": "fa-box-archive",
   "accent": "#2dd4bf",
   "tagline": "Your data, in zones.",
-  "description": "OpenVibe.Zone will keep your data and files in zones — S3-style buckets for persistent storage that every OpenVibe service and agent can use with your permission, also offered to developers through OpenVibe.Services. Part of the OpenVibe network, with one account for every site.",
+  "description": "OpenVibe.Zone keeps your data and files in zones: private S3-style buckets for your projects, with keys you scope and signed links, usable from any S3 tool and offered to developers through OpenVibe.Services. Part of the OpenVibe network, with one account for every site.",
   "pillars": [
     {
       "title": "An S3-style API",
@@ -24,8 +24,21 @@
       "text": "The AWS SDKs, rclone and backup tools, path-style over S3; every object is an OpenVibe.Media object too."
     }
   ],
+  "faq": [
+    {
+      "question": "What is a zone?",
+      "answer": "A private S3-style storage bucket for one of your projects, with objects and signed links."
+    },
+    {
+      "question": "Which tools work with it?",
+      "answer": "Anything that speaks S3 path-style: the AWS SDKs, rclone and backup tools."
+    },
+    {
+      "question": "How do keys work?",
+      "answer": "Make keys that read, write or both, for every zone of an environment or only some. The secret is shown once."
+    }
+  ],
   "keywords": "openvibe zone, object storage, s3 compatible storage, buckets, persistent storage, file storage api",
-  "launch": "zones for data and files",
   "relationships": {
     "service": "zone",
     "plannedRepo": "OpenVibe.Zone",

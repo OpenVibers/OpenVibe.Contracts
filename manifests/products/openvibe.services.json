@@ -5,7 +5,7 @@
   "icon": "fa-server",
   "accent": "#38bdf8",
   "tagline": "Build with the whole network.",
-  "description": "OpenVibe.Services is the way into everything programmable on OpenVibe: projects, apps, keys, grants and usage over Network's developer API; generated API, contract, SDK, capability and event docs; OAuth and webhook tools; playgrounds; app and mod releases; and one resource index over every service, with each service keeping its own data. Next: start from what you want to build and it assembles the services, keys, permissions and working code for you.",
+  "description": "OpenVibe.Services is the way into everything programmable on OpenVibe: projects, apps, keys, grants and usage over Network's developer API; generated API, contract, SDK, capability and event docs; OAuth and webhook tools; playgrounds; app and mod releases; and one resource index over every service, with each service keeping its own data.",
   "pillars": [
     {
       "title": "Discover",
@@ -24,8 +24,21 @@
       "text": "Usage, quotas, exports and one resource index over the whole network."
     }
   ],
+  "faq": [
+    {
+      "question": "What is OpenVibe.Services for?",
+      "answer": "Building on the network: make a project, register apps, create keys and grants, watch usage, and read generated docs for every API, contract, SDK, capability and event."
+    },
+    {
+      "question": "Can I publish an app or a mod?",
+      "answer": "Yes. App and mod manifests are released here with a trust tier, and each app gets a public page."
+    },
+    {
+      "question": "Where does my data live?",
+      "answer": "Each OpenVibe service keeps its own data. Services shows one resource index over all of them, with usage, quotas and exports."
+    }
+  ],
   "keywords": "openvibe services, developer platform, open source backend, api platform, event bus api, ai gateway, website monitoring api, developer console",
-  "launch": "the developer console and docs (moved from openvibe.codes) and the merged resource index",
   "relationships": {
     "service": "services"
   }

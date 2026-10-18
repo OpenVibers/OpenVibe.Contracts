@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.204.1 — 2026-10-18
+
+- Catalog says what each site is today (owner: "lots of stuff across websites is still unfinished / coming soon / next
+  steps"): every stale `launch` note is gone (Actor, Bot, Download, Events, Help, Pics, Quest, Rent, Services, Watch,
+  Work, Website, Zone, Coupons, Host, News, OpenRestream, Reviews, Space, Tips and VIP are live), and so are the "Next"
+  pillars (Pics, Video) and "planned"/"comes later" sentences (Services, Video, Pics, Events, admin, themes).
+  openvibe.website describes OpenVibe.Space (where it redirects) and Zone its live S3-style storage, in the present tense.
+- FAQs for the 16 sites Help showed with none: Download, Events, Homes, Pics, Services, Video, Website, Zone, News,
+  Reviews, Run, Tools, Trade, Wiki, Play and Search. Quest's FAQ: OpenCoins rewards are on (`QUEST_COINS=on`).
+
 ## 0.204.0 — 2026-10-18
 
 - `sources.source@1`: an api endpoint may carry `timeout_ms` (1 s to 120 s), its own fetch deadline instead of the

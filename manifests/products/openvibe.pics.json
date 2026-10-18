@@ -5,7 +5,7 @@
   "icon": "fa-images",
   "accent": "#f472b6",
   "tagline": "Share pictures. Fast, open, yours.",
-  "description": "OpenVibe.Pics is the picture host of the OpenVibe network, an open and ad-free alternative to Imgur: upload a picture and get a link to share or embed anywhere (the page, the direct link, Markdown, BBCode and HTML), with albums. Every picture is re-encoded with its GPS position and camera details removed, served unlisted (only people with the link see it), and anyone can report one; staff takedowns keep the same picture from coming back. Uploads need an OpenVibe account for now. AI image tools come next.",
+  "description": "OpenVibe.Pics is the picture host of the OpenVibe network, an open and ad-free alternative to Imgur: upload a picture and get a link to share or embed anywhere (the page, the direct link, Markdown, BBCode and HTML), with albums. Every picture is re-encoded with its GPS position and camera details removed, served unlisted (only people with the link see it), and anyone can report one; staff takedowns keep the same picture from coming back. Uploading takes a free OpenVibe account.",
   "pillars": [
     {
       "title": "Upload & share",
@@ -26,14 +26,31 @@
     {
       "title": "Safe by default",
       "text": "Unlisted links, a report button on every picture, and takedowns that stay down."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Who can see my pictures?",
+      "answer": "Only people with the link: every picture is unlisted. Share it as its page or a direct link, or embed it with Markdown, BBCode or HTML."
     },
     {
-      "title": "Next",
-      "text": "Uploads without an account, and AI image generation."
+      "question": "Does a picture keep where it was taken?",
+      "answer": "No. Every upload is re-encoded with its GPS position and camera details removed before anyone sees it."
+    },
+    {
+      "question": "Can I get other sizes or formats?",
+      "answer": "Yes. Every picture also comes 320 to 2560 pixels wide as WebP, AVIF, JPEG or PNG, each with a link of its own."
+    },
+    {
+      "question": "Do I need an account?",
+      "answer": "To upload, yes: a free OpenVibe account. Opening a shared picture needs none."
+    },
+    {
+      "question": "What if a picture breaks the rules?",
+      "answer": "Anyone can report it, and a staff takedown keeps the same picture from being uploaded again."
     }
   ],
   "keywords": "openvibe pics, image hosting, image upload, imgur alternative, image cdn, ai image tools",
-  "launch": "live on MediaHub since 2026-10-15",
   "relationships": {
     "service": "media-hub",
     "noRepo": true,

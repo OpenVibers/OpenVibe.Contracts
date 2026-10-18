@@ -46,8 +46,25 @@
         "text": "Talk about a story on OpenVibe.Community with your OpenVibe account."
       }
     ],
+    "faq": [
+      {
+        "question": "Where do the stories come from?",
+        "answer": "From the reports OpenVibe.Sources collects from outlets' feeds. The wire shows each outlet's own headline linked to its report, and a story names the sources behind every paragraph."
+      },
+      {
+        "question": "Who writes the briefs?",
+        "answer": "AI, labelled as AI, from the reports it cites. A story under News' own name is written or approved by an editor, and its corrections stay on the record."
+      },
+      {
+        "question": "Can I see different angles on a story?",
+        "answer": "Yes. Topic pages put several outlets side by side, and you choose the framing instead of an algorithm you cannot see."
+      },
+      {
+        "question": "Can I discuss a story?",
+        "answer": "Yes, on OpenVibe.Community with your OpenVibe account."
+      }
+    ],
     "keywords": "openvibe news, transparent news, news aggregation, multiple perspectives",
-    "launch": "a person to verify a news source's terms and an editor to publish the first reviewed story",
     "relationships": {
       "plannedRepo": "OpenVibe.News",
       "meanwhile": [

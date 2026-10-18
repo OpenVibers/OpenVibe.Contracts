@@ -63,7 +63,6 @@
     }
   ],
   "keywords": "openvibe rent, rental search, apartments for rent, rooms for rent, commercial rentals, rental alerts",
-  "launch": "verified listing sources and alerts",
   "relationships": {
     "service": "rent"
   }

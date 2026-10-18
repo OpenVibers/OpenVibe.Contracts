@@ -90,6 +90,16 @@
     "tagline": "Search the OpenVibe network.",
     "what": "One search box over what the network's services have published: streams, clips, pastes, wiki pages, news and more, from OpenVibe's own index.",
     "legalProfile": "info",
-    "position": 33
+    "position": 33,
+    "faq": [
+      {
+        "question": "What does OpenVibe Search cover?",
+        "answer": "Public pages from across the network: wiki pages, reviews, news, deals, coupons, jobs, rentals, help articles, videos and more, each from the site that holds it."
+      },
+      {
+        "question": "Why is a page missing?",
+        "answer": "Search lists only what its site marks public and indexable. Private, draft and noindex pages never appear, and a page removed from its site leaves Search too."
+      }
+    ]
   }
 }

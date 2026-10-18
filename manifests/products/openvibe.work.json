@@ -47,7 +47,6 @@
     }
   ],
   "keywords": "openvibe work, job search, job listings, job alerts, ai job application assistant",
-  "launch": "alerts and the application agent",
   "relationships": {
     "service": "work"
   }

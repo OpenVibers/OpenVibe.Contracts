@@ -31,7 +31,7 @@
     },
     {
       "question": "What do quests pay?",
-      "answer": "A badge for each completed quest, shown on your profile across the network. OpenCoins rewards are built and switch on soon."
+      "answer": "A badge for each completed quest, shown on your profile across the network, and OpenCoins for the quests that offer them."
     },
     {
       "question": "Are OpenCoins money?",
@@ -39,11 +39,10 @@
     },
     {
       "question": "Can my community make its own quests?",
-      "answer": "Developers can already define quests for their own apps through the OpenVibe SDK, on their app's own events (badges only). Quests written by a community or a streamer wait for moderation tools, so nobody can be sent to do something harmful."
+      "answer": "Developers define quests for their own apps through the OpenVibe SDK, on their app's own events (badges only). Quests are not written by communities or streamers: a quest sends people to do something, so only OpenVibe's own quests and developers' app quests exist."
     }
   ],
   "keywords": "openvibe quest, quests, achievements, rewards, gamification, streamer quests",
-  "launch": "OpenCoins rewards and community quests",
   "relationships": {
     "service": "quest"
   }

@@ -87,6 +87,20 @@
     "tagline": "Achievements, leaderboards and cloud saves for every game.",
     "what": "See this week's leaders and the all-time boards of every OpenVibe game, every achievement you have unlocked, and the saves games keep for you so your progress follows you to any device.",
     "legalProfile": "ugc",
-    "position": 35
+    "position": 35,
+    "faq": [
+      {
+        "question": "What is OpenVibe Play?",
+        "answer": "Game services for every OpenVibe game: achievements, leaderboards (this week and all time) and cloud saves that follow you to any device."
+      },
+      {
+        "question": "Can my game use it?",
+        "answer": "Yes. A game registers its title with its own OpenVibe token, posts what its players did, and anyone can read its boards."
+      },
+      {
+        "question": "What happens to a guest's progress?",
+        "answer": "When a guest signs in, the game adopts them and their unlocks and scores become the person's."
+      }
+    ]
   }
 }

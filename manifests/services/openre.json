@@ -100,7 +100,6 @@
         "url": "https://openvibe.live/docs/go-live-in-your-browser"
       }
     },
-    "launch": "live on openre.stream since 2026-10-09: sign in, create a stream and restream it from OBS; OpenVibe.Live stream slots move onto its ingest one at a time",
     "relationships": {
       "plannedRepo": "OpenRestream",
       "meanwhile": [

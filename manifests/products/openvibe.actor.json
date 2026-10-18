@@ -374,7 +374,6 @@
     ],
     "building": "OpenVibe.Actor is being built now, on the network's accounts, AI router and event system that already run."
   },
-  "launch": "the task router: its own runtime on OpenVibe services, other platforms' agents, a private open model and a cross-family check; then Codes, personal agents and Node control",
   "relationships": {
     "service": "actor"
   }

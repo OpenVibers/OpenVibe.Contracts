@@ -83,6 +83,24 @@
         "text": "The node link measures each job's wall clock; that reading is what the job is charged against."
       }
     ],
+    "faq": [
+      {
+        "question": "What does OpenVibe.Run do?",
+        "answer": "It runs jobs: a project submits a job (a registered artifact, its input and its limits), and Run places it on a node whose offer meets its requirements."
+      },
+      {
+        "question": "Where do jobs run?",
+        "answer": "On nodes paired with OpenVibe through the OpenVibe Node, including computers of your own."
+      },
+      {
+        "question": "How is a job charged?",
+        "answer": "By the wall-clock seconds the node measures for it."
+      },
+      {
+        "question": "Can I watch a job run?",
+        "answer": "Yes. Its event stream shows each state change and the node's output as it happens."
+      }
+    ],
     "keywords": "openvibe run, job runner, run jobs on nodes, sandbox api, per-second metering"
   }
 }

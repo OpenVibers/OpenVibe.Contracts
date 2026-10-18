@@ -50,6 +50,24 @@
         "text": "Private to you when signed in. Information only: no orders, no brokerage, no advice."
       }
     ],
+    "faq": [
+      {
+        "question": "Is this investment advice?",
+        "answer": "No. Trade shows information and tools: SEC filings and reported numbers, AI briefs and alerts. It gives no advice, makes no predictions and takes no orders."
+      },
+      {
+        "question": "Which companies are covered?",
+        "answer": "More than 8,000 from SEC's ticker list, found by ticker, CIK or name."
+      },
+      {
+        "question": "Where do the numbers come from?",
+        "answer": "From SEC filings, each figure with its period, the filing it came from and the date it was read."
+      },
+      {
+        "question": "Can I get alerts?",
+        "answer": "Yes. Signed in, you keep watchlists and alert rules, private to you."
+      }
+    ],
     "keywords": "openvibe trade, watchlists, market alerts, community trading tools",
     "relationships": {
       "plannedRepo": "OpenVibe.Trade",
