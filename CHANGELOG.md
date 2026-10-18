@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.205.0 — 2026-10-18
+
+- `sources.source@1`, `sources.item@1`, the source write request and the `sources.item.*` / `sources.fetch.failed`
+  payloads: a `games` category, for game store data OpenVibe.Games shows (Steam's featured lists: top sellers, new
+  releases and specials, read from store.steampowered.com/api, which its robots.txt allows).
+- `quest` consumes `network.subject.merged`: account merges move a person's quests to the survivor (OpenVibe.Quest#65).
+
 ## 0.204.1 — 2026-10-18
 
 - Catalog says what each site is today (owner: "lots of stuff across websites is still unfinished / coming soon / next
