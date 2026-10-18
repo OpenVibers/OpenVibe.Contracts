@@ -24,7 +24,7 @@
     "position": 19,
     "tld": "space",
     "accent": "#818cf8",
-    "description": "OpenVibe.Space hosts static sites: every deploy is immutable and content-addressed, the active one rolls back in one step, previews are private to the project, a site can deploy from a public Git repository, and custom domains are served after a TXT check. Sites get a name under openvibe.website. Hosting is open to OpenVibe staff until the public launch, which waits for abuse handling and a designated DMCA agent. Dynamic pages and spaces (apps on your OpenVibe account) are next and not built yet. The former /s/* forum paths redirect permanently to openvibe.community.",
+    "description": "OpenVibe.Space is where you make spaces, small web apps on your OpenVibe account that OpenVibe AI builds from a description or a template, and host static sites: immutable deploys, one-step rollback, private previews, deploys from a public Git repository and custom domains after a TXT check, with names under openvibe.website. Publishing at a public address is open to OpenVibe staff while abuse handling and a designated DMCA agent are put in place. The old /s/* forum paths redirect to openvibe.community.",
     "pillars": [
       {
         "title": "Immutable deploys",
@@ -59,7 +59,7 @@
       },
       {
         "question": "Can I share my space?",
-        "answer": "Publishing a space at its own address opens with OpenVibe.Space's public hosting. Until then it runs in your editor, and OpenVibe staff can publish."
+        "answer": "A space runs in your editor with a live preview, and OpenVibe staff publish spaces at their own addresses. Publishing for everyone opens once the network's abuse handling and its designated DMCA agent are in place."
       }
     ]
   },
