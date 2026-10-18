@@ -43,7 +43,6 @@
     }
   ],
   "keywords": "openvibe help, openvibe support, help center, support tickets, troubleshooting",
-  "launch": "grounded answers and the Report Problem button",
   "relationships": {
     "service": "help"
   }

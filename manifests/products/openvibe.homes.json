@@ -24,6 +24,24 @@
       "text": "Local home price changes from the FHFA index and a mortgage calculator with tax, insurance and HOA."
     }
   ],
+  "faq": [
+    {
+      "question": "Does OpenVibe.Homes list homes itself?",
+      "answer": "No. One search opens Zillow, Realtor.com, Redfin, Homes.com, Trulia and Craigslist at your place, price and bedrooms. Listings stay on the sites that hold them."
+    },
+    {
+      "question": "Can I find foreclosures and land?",
+      "answer": "Yes: HUD homes, Fannie Mae HomePath and auctions, plus land and commercial listings for the same place."
+    },
+    {
+      "question": "Where are property records?",
+      "answer": "Homes links every US state's county records: deeds, assessments and tax records at their source."
+    },
+    {
+      "question": "What do homes cost in my city?",
+      "answer": "City pages show the median home value with the FHFA price trend, and the mortgage calculator adds tax, insurance and HOA."
+    }
+  ],
   "keywords": "openvibe homes, homes for sale, foreclosures, land for sale, property records, mortgage calculator, real estate search",
   "relationships": {
     "service": "rent",

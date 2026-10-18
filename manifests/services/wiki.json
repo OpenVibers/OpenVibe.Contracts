@@ -24,7 +24,21 @@
     "tagline": "Knowledge, with sources",
     "what": "Wiki spaces with page trees, revision history, citations and discussion, editable together.",
     "legalProfile": "ugc",
-    "position": 9
+    "position": 9,
+    "faq": [
+      {
+        "question": "Can I start my own wiki?",
+        "answer": "Yes. Any OpenVibe account can start one: public, members-only or for its owner's VIP members, with page trees, revisions, citations, media and discussion."
+      },
+      {
+        "question": "How are pages sourced?",
+        "answer": "A page cites its sources, each with where it came from and when it was retrieved, and the history keeps every revision."
+      },
+      {
+        "question": "What does 'Not yet reviewed by a person' mean?",
+        "answer": "The page was written with AI assistance. It stays readable with that label, and out of search engines and network search until a person reviews it."
+      }
+    ]
   },
   "capabilities": [
     "wiki.space.create",

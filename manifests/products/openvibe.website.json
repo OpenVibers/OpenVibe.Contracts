@@ -5,7 +5,7 @@
   "icon": "fa-globe",
   "accent": "#22d3ee",
   "tagline": "Websites that work, not just pages.",
-  "description": "OpenVibe.Website will be an AI-assisted website and small-app builder with a real file tree: generate a site from a description, import one or fork a Git repository, edit HTML, CSS, JavaScript or Markdown by hand or visually, and publish to yourname.openvibe.website or your own domain. Sites can sign people in with OpenVibe, take bookings and forms, show media, run a blog or docs, and add chat, comments, memberships or support, with good SEO built in.",
+  "description": "openvibe.website opens OpenVibe.Space, the network's website and app builder: describe what you want and OpenVibe AI builds it as a space on your OpenVibe account, or start from a template, then edit and publish it, with static hosting for your own files.",
   "pillars": [
     {
       "title": "Generate or code",
@@ -24,8 +24,13 @@
       "text": "yourname.openvibe.website or your own domain, with rollback."
     }
   ],
+  "faq": [
+    {
+      "question": "Where did openvibe.website go?",
+      "answer": "It opens OpenVibe.Space, the network's builder: describe what you want and OpenVibe AI builds it as a space on your account, or start from a template, then edit and publish it, with static hosting for your own files."
+    }
+  ],
   "keywords": "ai website builder, open source website builder, static site builder, portfolio builder, website generator, docs site generator",
-  "launch": "tenant hosting on OpenVibe.Host (built, not launched) and the editor",
   "relationships": {
     "noRepo": true,
     "meanwhile": [

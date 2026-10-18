@@ -47,7 +47,6 @@
       }
     ],
     "keywords": "openvibe tips, tip streamers, donation alerts, superchat, paid messages, text to speech donations, media requests, obs alerts, streamlabs alternative",
-    "launch": "paid sound alerts, and more checkout options as OpenVibe.Billing adds them",
     "relationships": {
       "plannedRepo": "OpenVibe.Tips",
       "meanwhile": [

@@ -47,7 +47,6 @@
     }
   ],
   "keywords": "website change monitoring, uptime monitoring api, price drop alerts, restock alerts, release monitoring, youtube video analysis, security camera alerts",
-  "launch": "events, webhooks, browser checks and actions",
   "relationships": {
     "service": "watch"
   }

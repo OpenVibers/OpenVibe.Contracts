@@ -201,7 +201,6 @@
     ],
     "building": "OpenVibe.Bot is being built now, starting with our own robots; stream-controlled robots already run on OpenVibe.Live."
   },
-  "launch": "the Bot service, its device agent and the first robots paired",
   "relationships": {
     "service": "bot",
     "plannedRepo": "OpenVibe.Bot",

@@ -5,7 +5,7 @@
   "icon": "fa-film",
   "accent": "#f87171",
   "tagline": "Watch, upload and record.",
-  "description": "OpenVibe.Video is the video site of the OpenVibe network: stream recordings and clips from OpenVibe.Live, your own uploads and recordings made in the browser (camera or screen), each with a player, AI captions, chapters and a summary, its OpenVibe.Community thread, and a page per channel. The files stay on OpenVibe.Media. Publishing to other platforms comes later.",
+  "description": "OpenVibe.Video is the video site of the OpenVibe network: stream recordings and clips from OpenVibe.Live, your own uploads and recordings made in the browser (camera or screen), each with a player, AI captions, chapters and a summary, its OpenVibe.Community thread, and a page per channel. The files stay on OpenVibe.Media.",
   "pillars": [
     {
       "title": "Watch",
@@ -26,10 +26,24 @@
     {
       "title": "Playlists",
       "text": "Put recordings, clips and uploads in order, private, unlisted or public, and share them."
+    }
+  ],
+  "faq": [
+    {
+      "question": "What can I watch?",
+      "answer": "Recordings and clips from OpenVibe.Live streams, people's uploads, playlists, and a page per channel."
     },
     {
-      "title": "Next",
-      "text": "Publishing to other platforms is not built yet."
+      "question": "Can I upload my own videos?",
+      "answer": "Yes, private, unlisted or public. They play from OpenVibe.Media."
+    },
+    {
+      "question": "Can I record without going live?",
+      "answer": "Yes. Record your camera or screen in the browser at openvibe.video/record and keep it as a video; nothing is broadcast."
+    },
+    {
+      "question": "What does the AI edit do?",
+      "answer": "It makes captions, chapters and a summary on OpenVibe's own servers, and the AI cut: an edited copy with the pauses taken out, or a highlights reel."
     }
   ],
   "keywords": "openvibe video, video hosting, youtube alternative, multi-platform upload, ai video tools",

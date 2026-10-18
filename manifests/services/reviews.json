@@ -46,8 +46,25 @@
         "text": "Written or approved by an editor, citing the signals they rest on, and never carrying a rating."
       }
     ],
+    "faq": [
+      {
+        "question": "Where do the ratings come from?",
+        "answer": "Every rating shows its source and when it was read: members' own reviews, the ratings members saved from sites like Glassdoor, Yelp or Trustpilot, and signals from permitted sources."
+      },
+      {
+        "question": "Can I write a review?",
+        "answer": "Yes, as any signed-in OpenVibe member: 1 to 5 stars and how you know the place (an employee, a tenant, a customer). Members' reviews are shown as theirs, never mixed into the sources' aggregate."
+      },
+      {
+        "question": "What are official records?",
+        "answer": "What a public body published: CFPB complaint counts for companies, NYC Health inspections for restaurants and NYC HPD's open housing violations for apartment buildings, each linked to its source."
+      },
+      {
+        "question": "Does Reviews copy other sites' reviews?",
+        "answer": "No. /everywhere opens Glassdoor, Yelp, the BBB, Trustpilot, Google Maps and others for a name, each in its own tab; their reviews stay there."
+      }
+    ],
     "keywords": "openvibe reviews, review aggregation, honest reviews",
-    "launch": "a person to verify a review source's terms and an editor to publish the first reviewed summary",
     "relationships": {
       "plannedRepo": "OpenVibe.Reviews",
       "meanwhile": [

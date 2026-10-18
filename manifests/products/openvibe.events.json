@@ -5,7 +5,7 @@
   "icon": "fa-bolt",
   "accent": "#34d399",
   "tagline": "Events, queues and webhooks you can build on.",
-  "description": "OpenVibe.Events is the network's event system: durable events, topics and subscriptions, signed webhooks with retries, dead-letter queues and replay, pull consumers with checkpoints, and realtime delivery to browsers with cursor resume. Every OpenVibe product already publishes through it. This domain becomes its home, with queues, streams, project namespaces and developer tools.",
+  "description": "OpenVibe.Events is the network's event system: durable events, topics and subscriptions, signed webhooks with retries, dead-letter queues and replay, pull consumers with checkpoints, and realtime delivery to browsers with cursor resume. Every OpenVibe product already publishes through it. This domain is its home: the developer docs, the API and the realtime stream.",
   "pillars": [
     {
       "title": "Topics & webhooks",
@@ -24,8 +24,25 @@
       "text": "Nothing is lost quietly: replay it, or inspect what failed."
     }
   ],
+  "faq": [
+    {
+      "question": "What is OpenVibe.Events?",
+      "answer": "The event system every OpenVibe product publishes through: durable events, topics and subscriptions, signed webhooks with retries, dead-letter queues with replay, and a realtime stream for browsers."
+    },
+    {
+      "question": "Can my own app use it?",
+      "answer": "Yes. With a project on OpenVibe.Services, an app token publishes your app's events, reads them with a cursor and subscribes webhooks to them."
+    },
+    {
+      "question": "What if my webhook is down?",
+      "answer": "Deliveries are signed and retried. One that still fails goes to a dead-letter queue, where it can be inspected and replayed, so nothing is dropped quietly."
+    },
+    {
+      "question": "How do browsers get live updates?",
+      "answer": "Server-sent events at openvibe.events/realtime/stream, which pick up from a cursor after a dropped connection."
+    }
+  ],
   "keywords": "event bus api, webhook retry service, sqs alternative, sns alternative, pub sub api, realtime sse api, dead letter queue, webhook replay",
-  "launch": "the developer site, the API and the realtime stream on openvibe.events; queue and stream primitives",
   "relationships": {
     "service": "events",
     "plannedRepo": "OpenVibe.Events",
