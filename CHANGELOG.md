@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.205.1 — 2026-10-18
+
+- Space's catalog entry describes spaces as built (they shipped 2026-10-16; it said "next and not built yet"), and its FAQ
+  says plainly that publishing for everyone waits on abuse handling and a designated DMCA agent.
+
 ## 0.205.0 — 2026-10-18
 
 - `sources.source@1`, `sources.item@1`, the source write request and the `sources.item.*` / `sources.fetch.failed`
