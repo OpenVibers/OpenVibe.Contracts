@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.205.3 — 2026-10-19
+
+- Host's catalog entry says what it is since the 19 October maintenance: offers from LowEndSpirit's Offers board (it
+  named LowEndTalk and LowEndBox, whose feeds refuse the production host), benchmarks people run with YABS, and the
+  console for your own servers on Linode, DigitalOcean, Vultr and Hetzner Cloud, with a question for each.
+
 ## 0.205.2 — 2026-10-19
 
 - openvibe.website is a moved address (`kind: "moved"`, service `space`, linking to OpenVibe.Space): the apex redirects
