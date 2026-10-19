@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.205.2 — 2026-10-19
+
+- openvibe.website is a moved address (`kind: "moved"`, service `space`, linking to OpenVibe.Space): the apex redirects
+  to openvibe.space and published sites take names under it, so the help centre no longer lists it as a site "still
+  coming".
+
 ## 0.205.1 — 2026-10-18
 
 - Space's catalog entry describes spaces as built (they shipped 2026-10-16; it said "next and not built yet"), and its FAQ
