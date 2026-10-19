@@ -4,6 +4,7 @@
   "name": "OpenVibe.Website",
   "icon": "fa-globe",
   "accent": "#22d3ee",
+  "kind": "moved",
   "tagline": "Websites that work, not just pages.",
   "description": "openvibe.website opens OpenVibe.Space, the network's website and app builder: describe what you want and OpenVibe AI builds it as a space on your OpenVibe account, or start from a template, then edit and publish it, with static hosting for your own files.",
   "pillars": [
@@ -32,17 +33,13 @@
   ],
   "keywords": "ai website builder, open source website builder, static site builder, portfolio builder, website generator, docs site generator",
   "relationships": {
-    "noRepo": true,
-    "meanwhile": [
+    "service": "space",
+    "linksLead": "openvibe.website opens OpenVibe.Space, where websites and apps are made; published sites get their names under openvibe.website.",
+    "links": [
       {
-        "label": "OpenVibe.Services",
-        "url": "https://openvibe.services",
-        "note": "The developer platform, API and SDK docs work today."
-      },
-      {
-        "label": "OpenVibe.Tools",
-        "url": "https://openvibe.tools",
-        "note": "Dozens of tools that run in the browser today."
+        "label": "OpenVibe.Space",
+        "url": "https://openvibe.space/",
+        "note": "Describe a site or an app and OpenVibe AI builds it, or start from a template; static hosting too."
       }
     ]
   }
