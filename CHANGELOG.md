@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.207.0 — 2026-10-20
+
+- Reviews and the Wiki open their reads to apps: `reviews.entity.resolve` (look up a business, product or place and
+  read its record and history), `reviews.correction.submit` (send a correction to the editors' queue for the person),
+  `wiki.page.read` and `wiki.search.query` (what the person may read; without a person, public pages only) are
+  `public`. Both services already act for an app only as its `on_behalf_of` person and refuse sandbox tokens. News'
+  `story.read` and `cluster.read` stay first-party: they are the editorial reads (drafts, flags, ingestion), and
+  published stories need no capability. `wiki.revision.propose` stays first-party (it is OpenVibe.AI's output).
+
 ## 0.206.0 — 2026-10-20
 
 - Blog's posts are open to apps: `blog.feed.read` and `blog.post.create`, `.read`, `.update`, `.publish`,
