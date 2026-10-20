@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "blog",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Take a published post down (readers get 404, Search a tombstone, feeds and sitemaps drop it). Editors, owners, the author, and staff (moderation).",
   "permissions": [
     "blog:write"

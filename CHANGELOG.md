@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.206.0 — 2026-10-20
+
+- Blog's posts are open to apps: `blog.feed.read` and `blog.post.create`, `.read`, `.update`, `.publish`,
+  `.unpublish`, `.schedule` and `.delete` are `public` (they were `first-party`), so Network can grant them to a
+  developer app for the person who authorizes it. Blog already acts for an app only as its `on_behalf_of` person
+  and refuses sandbox tokens; AI-origin drafts (`X-OV-Origin: ai`) stay first-party, since only a `svc:` principal
+  may set it. Publishing, unpublishing, scheduling and deleting are `sensitive`. Creating a blog, its settings,
+  members and theme stay first-party. This is the first step of the roadmap's "Every product in the SDK" for products
+  whose API only their own site could use.
+
 ## 0.205.4 — 2026-10-20
 
 - Live's site block leads with what it is for: the tagline is "Go live from your browser" (it was "Streams, clips and
