@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "blog",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Schedule a publish of a revision (or an unpublish) at a future time, or cancel it. Idempotent per (post, action, time, revision); applied by Blog's worker with leases, so a restart never publishes twice; a job that cannot succeed emits blog.schedule.failed.",
   "permissions": [
     "blog:write"

@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "blog",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "sensitive": true,
   "description": "Make a revision the published one (idempotent). AI-generated revisions are refused (409 post.review_required) until a person has recorded an approving review.",
   "permissions": [

@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "blog",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Read posts that are not public (drafts, scheduled, members-only, private), their revisions and diffs, for the member in X-OV-Subject. Published public posts need no capability.",
   "permissions": [
     "blog:read"

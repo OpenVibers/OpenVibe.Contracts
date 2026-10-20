@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "blog",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Edit a post: content becomes a new immutable revision (expected_revision required; 412 revision.conflict when someone saved first), slug changes leave 301 redirects, visibility, taxonomy, series, media attachments (OpenVibe.Media object ids) and revert as a new revision. Authors edit their own posts; editors and owners every post of the blog.",
   "permissions": [
     "blog:write"

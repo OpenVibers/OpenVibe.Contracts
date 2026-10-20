@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "blog",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "sensitive": true,
   "description": "Delete a post: readers get 410, Search a tombstone, the Community thread is hidden; immutable revisions are kept. Editors, owners, the author, and staff (moderation).",
   "permissions": [
