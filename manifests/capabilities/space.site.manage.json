@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "space",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Manage OpenVibe.Space tenant projects and static sites: create a project (owned by the person named with X-OV-Subject; apps cannot own projects), read projects, quotas and usage, manage members (owner role), create and delete sites, delete a deploy that is not active. Also judged by the acting principal's project role; a sandbox token (env=sandbox) is refused on production projects. Quota changes and takedowns (stop serving a site or a whole project while keeping its content for review; lift) additionally need a Network staff user. Read, set or remove a site's Git source (provider, public repository URL and branch; never a credential).",
   "permissions": [
     "space:write"

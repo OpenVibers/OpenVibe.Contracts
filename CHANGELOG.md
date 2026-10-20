@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.209.0 — 2026-10-20
+
+- OpenVibe.Space's site capabilities are public, so a developer app can be granted them: `space.deploy.create`
+  (sensitive: upload, activate and roll back deploys — "an app principal added to a project as deployer can deploy
+  from CI", which no app could do while it was first-party), `space.site.config` (headers, local redirects, the SPA
+  fallback), `space.site.manage` (sensitive: sites and members; apps still cannot own projects) and
+  `space.domain.manage` (sensitive: custom domains, served only after DNS TXT verification). Space judges every one by
+  the acting principal's project role as well: an app is a principal of its own and can touch only the projects a
+  person added it to, as deployer, maintainer or owner. Sandbox tokens stay confined to sandbox projects.
+
 ## 0.208.0 — 2026-10-20
 
 - Coupons, Deals and Trade open what a person does for themselves to apps (all three already act for an app only as
