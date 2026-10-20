@@ -22,8 +22,8 @@
   "site": {
     "name": "Live",
     "icon": "live",
-    "tagline": "Streams, clips and chat",
-    "what": "Live streaming from a browser, OBS or a phone, with restreaming, clips, VODs, chat games, channel points and ARENA ALERT, the drama desk on every stream.",
+    "tagline": "Go live from your browser",
+    "what": "No OBS, no downloads, no follower minimum. Restream to Twitch, YouTube and Kick, with clips, recordings and chat games.",
     "legalProfile": "streaming",
     "position": 0,
     "faq": [
@@ -40,8 +40,8 @@
         "answer": "Recordings and clips are watched on OpenVibe.Video, where you can keep them public, unlisted or private, and make clips and AI edits."
       },
       {
-        "question": "What is the Arena?",
-        "answer": "ARENA ALERT, the site's drama desk: rage quits, viewer crashes, meltdowns heard on mic, beefs and records from every stream, with the Lolcow Index and the Clout Rankings. Every story states what was measured. Streamers can keep themselves out of it from the Arena page."
+        "question": "What is The Rundown?",
+        "answer": "A write-up of what streamers talked about, from their own speech: the topics, each streamer's take in their own words with a link to the moment, every stream as an episode with a recap and chapters, and crossovers when streamers name each other. It replaced the Arena on 19 October 2026: no beefs, ratings or rankings."
       }
     ]
   },

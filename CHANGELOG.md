@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.205.4 — 2026-10-20
+
+- Live's site block leads with what it is for: the tagline is "Go live from your browser" (it was "Streams, clips and
+  chat") and the summary says no OBS, no downloads, no follower minimum. It still described ARENA ALERT, the drama desk,
+  with the Lolcow Index and the Clout Rankings, which The Rundown replaced on 2026-10-19; the Arena question in its FAQ
+  is now "What is The Rundown?". The share card, the launcher and the help centre read these.
+
 ## 0.205.3 — 2026-10-19
 
 - Host's catalog entry says what it is since the 19 October maintenance: offers from LowEndSpirit's Offers board (it
