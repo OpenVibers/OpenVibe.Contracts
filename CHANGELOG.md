@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.208.0 — 2026-10-20
+
+- Coupons, Deals and Trade open what a person does for themselves to apps (all three already act for an app only as
+  its `on_behalf_of` person and refuse sandbox tokens):
+  - Coupons: `coupon.lookup` and `merchant.resolve` (public data), `coupon.submit` (sensitive: a code under the
+    person's name, status unknown until reports) and `report.create` (worked or failed, one a day per code).
+  - Deals: `offer.submit` (sensitive), `offer.update` (the person's own offers, or a new price observation),
+    `flag.create`, `vote.set` (sensitive) and `vote.remove`, and `watch.create`, `.read` and `.delete`.
+  - Trade: `instrument.resolve`, and the person's own `watchlist.*` and `alert.*`.
+- Moderation (`coupons.status.update`, `coupons.merchant.manage`, `deals.offer.moderate`, `.merge`, `.expire`),
+  `deals.product.resolve` (which creates products) and `trade.context.read` (drafts awaiting review and OpenVibe.AI's
+  workflow input) stay first-party.
+
 ## 0.207.0 — 2026-10-20
 
 - Reviews and the Wiki open their reads to apps: `reviews.entity.resolve` (look up a business, product or place and

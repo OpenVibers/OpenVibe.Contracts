@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "trade",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Rename a watchlist of the person in X-OV-Subject, or add and remove instruments on it.",
   "permissions": [
     "trade:write"

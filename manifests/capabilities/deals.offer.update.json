@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Edit an offer the acting person submitted (title, description, category, stated expiry, product link), or record a new observation of any active offer for the acting person (POST …/observations: price with currency, shipping, condition, availability, with the time it was observed). Prices are never edited in place; each observation is a new row. Services may state observed_at (never in the future).",
   "permissions": [
     "deals:write"

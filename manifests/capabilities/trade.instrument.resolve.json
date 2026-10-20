@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "trade",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Resolve a ticker, SEC CIK or exact company name to an instrument, deterministically (CIK, then ticker, then exact normalised name; several name matches are \"ambiguous\" and none is chosen). Browsers and anonymous readers need no capability.",
   "permissions": [
     "trade:read"

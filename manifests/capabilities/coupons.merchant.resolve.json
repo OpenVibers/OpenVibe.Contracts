@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "coupons",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Resolve a hostname to an active merchant (normalized host, eTLD+1 from a bundled public-suffix subset, subdomain rules; path rules never match host-only lookups). Public data only; anonymous callers may use the route with tighter rate limits.",
   "permissions": [
     "coupons:read"

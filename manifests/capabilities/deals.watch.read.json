@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "List the acting person's watches and saved searches with their notification counts.",
   "permissions": [
     "deals:watch"

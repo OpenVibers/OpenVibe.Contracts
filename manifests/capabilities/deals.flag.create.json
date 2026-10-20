@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Report a problem with an offer for the acting person (expired, price_wrong, duplicate, spam, other). One open report per person and offer; rate-limited. Flags never change an offer by themselves.",
   "permissions": [
     "deals:write"

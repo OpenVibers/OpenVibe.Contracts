@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "trade",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Read the watchlists of the person in X-OV-Subject (never anyone else's: another person's watchlist is 404).",
   "permissions": [
     "trade:read"

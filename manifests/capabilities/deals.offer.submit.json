@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Submit a deal for the acting person (X-OV-Subject): a link, title and what the person sees now (price with its currency, shipping, condition, availability — each optional, never defaulted). The first observation is recorded with its time. A link already posted answers 409 offer.duplicate with the existing offer. With X-OV-Origin: ai the text is AI-assisted: disclosed and noindex until a person reviews it. Rate-limited per person.",
   "permissions": [
     "deals:write"

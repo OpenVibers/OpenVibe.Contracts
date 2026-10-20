@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Remove the acting person's vote on an offer (kept as a removed row for history). Same abuse controls as deals.vote.set.",
   "permissions": [
     "deals:vote"
