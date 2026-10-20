@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "space",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Add a custom domain to a static site (never an OpenVibe domain; not in sandbox projects), read its DNS TXT verification and routing records, trigger a verification check, and remove it. A custom domain is served only after its TXT record is verified; TLS certificates are issued by an operator and never pass through this capability.",
   "permissions": [
     "space:write"

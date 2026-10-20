@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "space",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Upload an immutable static deploy (tar/tar.gz or multipart files; validated for path traversal, links, special and hidden files, server-side code, file types and quotas; never executed), list deploys and their upload logs, activate a deploy and roll a site back to any earlier ready deploy (one atomic pointer switch). Also judged by the acting principal's project role (deployer or above); an app principal added to a project as deployer can deploy from CI. A site with a Git source also accepts a CI-built deploy at /sites/:id/source/deploys naming the ref and full commit_sha; it is always a preview and records that commit as immutable provenance.",
   "permissions": [
     "host:deploy"
