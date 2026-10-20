@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Delete one of the acting person's watches or saved searches.",
   "permissions": [
     "deals:watch"

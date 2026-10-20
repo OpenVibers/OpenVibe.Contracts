@@ -3,7 +3,8 @@
   "version": "1.0",
   "owner": "coupons",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
+  "sensitive": true,
   "description": "Submit a coupon code for a merchant (by merchant id, host or URL) on behalf of a person (X-OV-Subject) or as AI output (X-OV-Origin: ai, held for staff review). The code starts with status unknown; a status, confidence or 'verified' field is refused. A site no merchant covers becomes a pending merchant for staff review. The charter's coupons.submit.",
   "permissions": [
     "coupons:write"

@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "deals",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Create a keyword, product or price-below watch, or a saved search (never notifies), for the acting person. A watch notifies at most once per observation (deals.watch.matched, internal; Deals never emails).",
   "permissions": [
     "deals:watch"
