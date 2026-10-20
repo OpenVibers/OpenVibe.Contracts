@@ -3,7 +3,7 @@
   "version": "1.0",
   "owner": "wiki",
   "status": "active",
-  "visibility": "first-party",
+  "visibility": "public",
   "description": "Read pages, revisions, diffs, citations and AI proposals as the person named in X-OV-Subject sees them (without a subject: public, published content only). Members-only and private pages follow the space's roles; drafts and history of unpublished pages need the editor role.",
   "permissions": [
     "wiki:page:read"
