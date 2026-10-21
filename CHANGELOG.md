@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.209.1 — 2026-10-21
+
+- The four Watch capabilities (`watch.watch.read`, `watch.watch.manage`, `watch.observation.read`, `watch.check.run`)
+  no longer say "PLANNED (plan T18; OpenVibe.Watch is not built yet)" or that they become active once Watch implements
+  their routes. They have been `active` since Watch launched on 2026-10-08, and openvibe.services' capability docs
+  printed the old note beside each. Descriptions only, with no schema or status change.
+
 ## 0.209.0 — 2026-10-20
 
 - OpenVibe.Space's site capabilities are public, so a developer app can be granted them: `space.deploy.create`
