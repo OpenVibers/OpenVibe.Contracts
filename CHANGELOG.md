@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.209.3 — 2026-10-21
+
+- Codes' site text names OpenVibe Git at `git.openvibe.codes`, where it moved on 2026-10-21 (Codes#93; the old
+  `openvibe.codes/git` redirects there), and its "Where is the code?" answer mentions the read mirrors there.
+  Network's frame footer prints `site.what` on Codes' pages. Text only, with no schema or status change.
+
 ## 0.209.2 — 2026-10-21
 
 - The service manifests of Reviews, Tips and VIP no longer say they are "deployed internally (loopback only), not
