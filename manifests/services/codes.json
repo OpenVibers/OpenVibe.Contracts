@@ -22,7 +22,7 @@
     "name": "Codes",
     "icon": "codes",
     "tagline": "Code with any agent",
-    "what": "The open coding-agent harness: Claude Code, Codex, OpenCode, Command Code, the DeepSeek API and self-hosted models behind one router with hand-offs, sessions and budgets, OpenVibe Git (a code forge with OpenVibe sign-in at openvibe.codes/git) and the way to improve OpenVibe itself.",
+    "what": "The open coding-agent harness: Claude Code, Codex, OpenCode, Command Code, the DeepSeek API and self-hosted models behind one router with hand-offs, sessions and budgets, OpenVibe Git (a code forge with OpenVibe sign-in at git.openvibe.codes) and the way to improve OpenVibe itself.",
     "legalProfile": "ugc",
     "position": 22,
     "faq": [
@@ -36,7 +36,7 @@
       },
       {
         "question": "Where is the code?",
-        "answer": "On GitHub under OpenVibers, open source like the rest of OpenVibe."
+        "answer": "On GitHub under OpenVibers, open source like the rest of OpenVibe, with read mirrors on OpenVibe Git at git.openvibe.codes."
       }
     ]
   },
