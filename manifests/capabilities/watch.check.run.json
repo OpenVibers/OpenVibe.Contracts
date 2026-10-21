@@ -4,7 +4,7 @@
   "owner": "watch",
   "status": "active",
   "visibility": "first-party",
-  "description": "PLANNED (plan T18; OpenVibe.Watch is not built yet): Run one check of a watch now, outside its cadence: POST /api/v1/watches/:id/check (409 watch.busy when one is already running). It becomes active, and enters generated/openapi/watch.json, when OpenVibe.Watch implements the route.",
+  "description": "Run one check of a watch now, outside its cadence: POST /api/v1/watches/:id/check (409 watch.busy when one is already running).",
   "permissions": [
     "watch:run"
   ],
