@@ -289,10 +289,10 @@ A hold placed on an object of the zone after that check is still allowed: Media 
 
 **Hosts.** The S3 surface is served by `Host` (`MEDIA_S3_HOSTS`, `s3.openvibe.media`), not by a path prefix.
 - nginx passes the request line untouched, because the client signed that exact path. An nginx `proxy_pass` with a URI part would decode it.
-- Zone serves its site and API on its apex, `https://openvibe.zone`.
-- `s3.openvibe.media` and `api.openvibe.zone` wait for their DNS records. The DNS token expired, so creating them is the owner's action.
-- The certificates already cover both names (wildcards).
-- Meanwhile Zone points people at `s3.openvibe.network`, which Cloudflare proxies. Cloudflare forwards a HEAD as a GET for paths it may cache, so Media serves a header-signed request that verifies only as HEAD as the GET (never a presigned URL; Media#110). Every S3 answer is `private, no-store`, so the edge never caches one.
+- Zone serves its site and API on its apex, `https://openvibe.zone`, and on `https://api.openvibe.zone` (DNS since 2026-10-21, proxied).
+- `s3.openvibe.media` has a DNS-only record since 2026-10-21, so a request reaches the origin directly and is not held to the 100 MB that Cloudflare's proxy carries. Zone names it (`ZONE_S3_ENDPOINT`).
+- The certificates cover both names (wildcards).
+- `s3.openvibe.network`, the interim name from 2026-10-14 to 2026-10-21, still answers the same surface through Cloudflare. Cloudflare forwards a HEAD as a GET for paths it may cache, so Media serves a header-signed request that verifies only as HEAD as the GET (never a presigned URL; Media#110). Every S3 answer is `private, no-store`, so the edge never caches one.
 
 **What v1 leaves out.**
 - Multipart uploads work since 2026-10-15 (Media#109): parts of 256 MB and objects of 20 GB at most by default, and a single request goes up to Media's single-upload limit. CopyObject and UploadPartCopy work too (Media#113): server-side copies within the key's environment, through the same commit path.
