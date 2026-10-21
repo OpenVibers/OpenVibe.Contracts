@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.209.2 — 2026-10-21
+
+- The service manifests of Reviews, Tips and VIP no longer say they are "deployed internally (loopback only), not
+  launched publicly" behind the OpenVibe.Sites placeholder. Reviews has been public since 2026-10-09, and Tips and
+  VIP since 2026-10-17. Network's public registry API served the old notes. Notes only, with no schema or status change.
+
 ## 0.209.1 — 2026-10-21
 
 - The four Watch capabilities (`watch.watch.read`, `watch.watch.manage`, `watch.observation.read`, `watch.check.run`)
