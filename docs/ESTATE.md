@@ -21,7 +21,7 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | OpenVibe.Chat | Chat | chat.preferences, chat.tts_defaults, chat.dm_settings, chat.presence_prefs | node 22 | PostgreSQL | openvibe.chat, openvibe.live | contracts v0.209.0, sdk v0.60.0, shared v4.4.0 | deployed | live | W6 |
 | OpenVibe.Codes | Codes | codes.* | node 22 | PostgreSQL | openvibe.codes | contracts v0.209.0, sdk v0.60.0, shared v4.4.0 | deployed | live | W20 |
 | OpenVibe.Community | Community | community.* | node 22 | PostgreSQL | openvibe.community | contracts v0.209.0, sdk v0.60.0, shared v4.4.0 | deployed | live | W5 |
-| OpenVibe.Contracts | OpenVibe.Contracts | contracts | node >=20 | — | — | contracts v0.199.3 | not deployed | library | W1 |
+| OpenVibe.Contracts | OpenVibe.Contracts | contracts | node >=20 | — | — | — | not deployed | library | W1 |
 | OpenVibe.Coupons | Coupons | coupons.* | node 22 | PostgreSQL | openvibe.coupons | contracts v0.209.0, sdk v0.60.0, shared v4.4.0, publishing v1.3.0 | deployed | live | W18 |
 | OpenVibe.Deals | Deals | deals.* | node 22 | PostgreSQL | openvibe.deals | contracts v0.209.0, sdk v0.60.0, shared v4.4.0, publishing v1.3.0 | deployed | live | W18 |
 | OpenVibe.Events | Events | events | node 22 | PostgreSQL | openvibe.events | contracts v0.209.0, sdk v0.60.0, shared v4.4.0 | deployed | live | W3 |
