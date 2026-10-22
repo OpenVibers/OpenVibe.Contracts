@@ -19,7 +19,7 @@
     "openvibe-sdk": "v0.60.0",
     "openvibe-shared": "v4.4.0"
   },
-  "deployed": false,
+  "deployed": true,
   "exposure": "live",
   "track": "T8"
 }

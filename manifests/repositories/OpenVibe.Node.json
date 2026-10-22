@@ -1,17 +1,17 @@
 {
   "name": "OpenVibe.Node",
-  "repository": null,
+  "repository": "OpenVibers/OpenVibe.Node",
   "service": null,
   "product": null,
-  "stage": null,
-  "version": null,
-  "runtime": null,
-  "database": null,
+  "stage": "alpha",
+  "version": "0.13.0",
+  "runtime": "go 1.24 (one static binary per platform)",
+  "database": "none",
   "migrations": 0,
   "authority": [],
   "domains": [],
   "pins": {},
-  "deployed": null,
+  "deployed": false,
   "exposure": null,
-  "track": null
+  "track": "T15"
 }
