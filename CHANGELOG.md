@@ -4,6 +4,34 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.210.0 — 2026-10-22
+
+- **Sources categories `housing`, `food` and `jobs`** (plan 2026-10-22, track F1). `sources.source@1`,
+  `sources.item@1`, `sources.source-write-request@1` and the four `sources.*` event payloads accept them, so the
+  owner's top aggregators can move their own fetches into Sources:
+  - OpenVibe.Rent's and Homes' listings and rent data;
+  - OpenVibe.Food's recalls and food data;
+  - OpenVibe.Work's job boards.
+
+  They then share Sources' robots and terms checks, retention and the Search feed. A consumer that switched on the
+  old nine values should treat an unknown category as "other". Nothing in production sends the new values until
+  Sources pins this release.
+- Catalog copy that promised what the products do not do (plan 2026-10-22, track H5), checked against each product's
+  code. **OpenVibe.Bot**:
+  - Its description, FAQ and keywords named ESP32 boards, Android apps, ONVIF and RTSP cameras, ready-made bots to buy
+    and "kits that list exactly what to buy". None ships:
+    - OpenVibe sells no hardware, and the one curated kit (Adeept ADR036) is a parts list;
+    - the ONVIF camera is a server-side connector the operator configures.
+  - It now names what Bot's profiles and drivers run: the Adeept kit, ROS 2, Cozmo, LOOI, a phone in its browser, and
+    the generic relay for anything else.
+  - The planned-site `vision` block (robot arms, telepresence bots, a recording toggle, "flash a ready-made card")
+    and the `plannedRepo`/`meanwhile` pointers go, as for the other live products; nothing reads them since
+    OpenVibe.Sites retired.
+- **OpenVibe.Actor**'s cost answer gives its real free tier (20 tasks a day, $0.05 a task, $0.25 a day), not "limits
+  published before launch".
+- **OpenVibe.Help** no longer says "live or coming": every site it covers is live.
+- The catalog changes are text only.
+
 ## 0.209.3 — 2026-10-21
 
 - Codes' site text names OpenVibe Git at `git.openvibe.codes`, where it moved on 2026-10-21 (Codes#93; the old

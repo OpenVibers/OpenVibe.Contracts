@@ -3759,7 +3759,10 @@
               "trade",
               "hosting",
               "crowdfunding",
-              "games"
+              "games",
+              "housing",
+              "food",
+              "jobs"
             ]
           },
           "homepage_url": {
@@ -4153,7 +4156,10 @@
               "trade",
               "hosting",
               "crowdfunding",
-              "games"
+              "games",
+              "housing",
+              "food",
+              "jobs"
             ]
           },
           "kind": {
@@ -6790,7 +6796,10 @@
               "trade",
               "hosting",
               "crowdfunding",
-              "games"
+              "games",
+              "housing",
+              "food",
+              "jobs"
             ]
           },
           "kind": {
@@ -6869,7 +6878,10 @@
               "trade",
               "hosting",
               "crowdfunding",
-              "games"
+              "games",
+              "housing",
+              "food",
+              "jobs"
             ]
           },
           "kind": {
@@ -6952,7 +6964,10 @@
               "trade",
               "hosting",
               "crowdfunding",
-              "games"
+              "games",
+              "housing",
+              "food",
+              "jobs"
             ]
           },
           "kind": {
@@ -7030,7 +7045,10 @@
               "trade",
               "hosting",
               "crowdfunding",
-              "games"
+              "games",
+              "housing",
+              "food",
+              "jobs"
             ]
           },
           "run_id": {
@@ -7307,7 +7325,10 @@
                   "trade",
                   "hosting",
                   "crowdfunding",
-                  "games"
+                  "games",
+                  "housing",
+                  "food",
+                  "jobs"
                 ]
               },
               "homepage_url": {

@@ -11,7 +11,7 @@
   "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
   "contracts": "openvibe-contracts (this package: package.json's version, released as the matching tag)",
   "features": [
-    "798 JSON Schemas with valid and invalid fixtures (at v0.209.3)",
+    "798 JSON Schemas with valid and invalid fixtures (at v0.210.0)",
     "45 service manifests with lifecycle declarations (39 alpha, 1 beta, 4 stable, 1 retired)",
     "348 capability manifests (306 active, 27 planned, 15 retired) and the staff capability map",
     "13 user-module namespace manifests",
