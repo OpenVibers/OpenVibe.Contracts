@@ -5,7 +5,7 @@
   "icon": "fa-robot",
   "accent": "#f472b6",
   "tagline": "Get your robot online in minutes.",
-  "description": "OpenVibe.Bot is an open control panel for robots. Add a robot, pair it with one command or a QR code, and drive it from any browser with live video, real controls and a stop button that always works. Buy a ready-made bot or bring your own: a Raspberry Pi robot, an ESP32, a ROS 2 robot, a phone, or a Cozmo. Share control, automate it, hand it to your AI agent, and stream it to OpenVibe.Live or openre.stream when you want to.",
+  "description": "OpenVibe.Bot is an open control panel for robots. Add a robot, pair it with one command on the robot (or a QR code for a phone), and drive it from any browser with live video, real controls and a stop button that always works. It runs a Raspberry Pi robot such as the Adeept 4WD kit, a ROS 2 robot, a Cozmo, a LOOI or a phone, and anything else through the generic relay and your own script. Share control, automate it, hand it to your AI agent, and show it on OpenVibe.Live or openre.stream when you want to.",
   "pillars": [
     {
       "title": "Pair devices",
@@ -21,7 +21,7 @@
     },
     {
       "title": "Stream it",
-      "text": "Connect a device to a Live stream, a game or a website."
+      "text": "Show the camera on a Live channel, or embed a read-only view in any website."
     }
   ],
   "faq": [
@@ -34,8 +34,8 @@
       "answer": "No. Streaming is optional. Bot is a control panel for your robot first: drive it, check on it, share it and automate it."
     },
     {
-      "question": "Which robot comes first?",
-      "answer": "The Adeept 4WD Smart Car Kit for Raspberry Pi: four motors, a pan-tilt camera, distance and line sensors, lights and a buzzer. OpenVibe's device agent drives it directly, so its own open control port never has to be exposed."
+      "question": "Which robots have built-in support?",
+      "answer": "The Adeept 4WD Smart Car Kit for Raspberry Pi (ordinary or mecanum wheels), ROS 2 robots that take cmd_vel, Cozmo, LOOI through the community's Bluetooth bridge, and a phone, whose browser becomes the robot. OpenVibe's device agent drives each one directly, so no robot's own control port is ever exposed."
     },
     {
       "question": "Does it work with Cozmo?",
@@ -43,7 +43,7 @@
     },
     {
       "question": "What hardware works?",
-      "answer": "A Raspberry Pi or another Linux board, an ESP32, a ROS 2 robot, an Android phone, or an ONVIF or RTSP camera. The curated kits list exactly what to buy."
+      "answer": "A Raspberry Pi or another Linux board running the OpenVibe Node, with a driver for your model; a ROS 2 robot; a Cozmo or a LOOI through a computer next to it; or any phone, in its browser, with nothing to install. Anything else joins through the generic relay and your own script, or a driver you write and submit for others to use. The Adeept kit's page lists its parts; OpenVibe does not sell hardware."
     },
     {
       "question": "How does it keep the robot safe?",
@@ -51,170 +51,11 @@
     },
     {
       "question": "What will it cost?",
-      "answer": "Controlling your own robot will not cost anything. Limits and any paid extras will be published before launch."
+      "answer": "Controlling your own robot is free. Any paid extra would be listed on the site, with its price, before it starts."
     }
   ],
-  "keywords": "robot control panel, control a robot from the browser, remote control robot online, raspberry pi robot web control, esp32 robot control, ros 2 web control, telepresence robot, stream a robot live, open source robot controller, cozmo remote control, cozmo web control, cozmo sdk alternative",
-  "vision": {
-    "badge": "being built",
-    "cta": [
-      "Robots on Live today",
-      "https://openvibe.live",
-      "fa-tower-broadcast"
-    ],
-    "viz": {
-      "kind": "panel",
-      "name": "Rover-1",
-      "latency": "84 ms",
-      "onair": "Streaming to openvibe.live",
-      "battery": 82,
-      "keys": [
-        [
-          "fa-lightbulb",
-          "Lights"
-        ],
-        [
-          "fa-bullhorn",
-          "Horn"
-        ],
-        [
-          "fa-comment",
-          "Speak"
-        ],
-        [
-          "fa-camera-rotate",
-          "Camera"
-        ]
-      ],
-      "caption": "Design preview of the robot panel",
-      "label": "Design preview: a robot control panel with live video, a drive pad, buttons, battery level and a stop button"
-    },
-    "stepsTitle": "Online in three steps",
-    "stepsLead": "No port forwarding, no stream keys, no config files.",
-    "steps": [
-      [
-        "Add a robot",
-        "Name it and pick what it is: a rover, an arm, a camera, a phone on wheels or your own design."
-      ],
-      [
-        "Pair it",
-        "Paste one command on the robot, flash a ready-made card, or scan a QR code. It gets its own key, which you can revoke any time."
-      ],
-      [
-        "Drive it",
-        "Live video and controls in any browser, phone included, with a stop button that always works."
-      ]
-    ],
-    "choices": {
-      "title": "Buy one or bring your own",
-      "lead": "Start with hardware that is known to work, or use what you already have.",
-      "items": [
-        {
-          "icon": "fa-box-open",
-          "title": "Get a robot",
-          "text": "Curated kits with parts lists, tested settings and build guides, and ready-made bots that arrive paired to your account. The first one on OpenVibe.Bot is the Adeept 4WD Smart Car for Raspberry Pi.",
-          "chips": [
-            "Adeept 4WD Smart Car (Raspberry Pi)",
-            "Rover kits",
-            "Telepresence bots",
-            "Pan-tilt cameras",
-            "Robot arms"
-          ]
-        },
-        {
-          "icon": "fa-screwdriver-wrench",
-          "title": "Bring your own",
-          "text": "Anything with motors, a camera or sensors. Install the OpenVibe device agent on the robot, or, for robots with their own firmware like Cozmo, on a computer next to it, and your robot shows up in the panel.",
-          "chips": [
-            "Raspberry Pi and Linux boards",
-            "Cozmo, through a bridge",
-            "ESP32",
-            "ROS 2",
-            "Android phones",
-            "ONVIF and RTSP cameras",
-            "Serial motor boards"
-          ]
-        }
-      ]
-    },
-    "featuresTitle": "More than a stream",
-    "featuresLead": "A control panel for anything you build, whether or not anyone is watching.",
-    "features": [
-      [
-        "fa-gamepad",
-        "Real controls",
-        "Drive pad, keyboard, touch joystick and gamepad; buttons, sliders, servos and camera pan-tilt, laid out from your robot's profile."
-      ],
-      [
-        "fa-bolt",
-        "Low latency",
-        "Video and commands over WebRTC, so driving feels direct. Works behind ordinary home and mobile networks."
-      ],
-      [
-        "fa-user-group",
-        "Share control",
-        "Invite friends as operators, or open a public queue with timed turns, cooldowns and per-role limits."
-      ],
-      [
-        "fa-shield-halved",
-        "Safe by default",
-        "The robot stops itself when commands stop. An emergency stop, speed and range limits and time windows, all logged."
-      ],
-      [
-        "fa-diagram-project",
-        "Automate it",
-        "Schedules, triggers and webhooks, plus an API and SDKs for your own apps."
-      ],
-      [
-        "fa-user-astronaut",
-        "Hand it to your agent",
-        "Let your OpenVibe.Actor agent patrol, check on or perform with your robot, with your approval."
-      ]
-    ],
-    "connectTitle": "Stream it, record it, connect it",
-    "connectLead": "Optional, one toggle each. Your robot does not need an audience to be useful.",
-    "connect": [
-      [
-        "fa-tower-broadcast",
-        "Stream to OpenVibe.Live",
-        "Put the robot's camera on your channel; viewers can drive it from chat or the panel.",
-        "https://openvibe.live"
-      ],
-      [
-        "fa-satellite-dish",
-        "Stream through openre.stream",
-        "Low-latency ingest and restreaming to other platforms from the same camera.",
-        "https://openre.stream"
-      ],
-      [
-        "fa-photo-film",
-        "Record to OpenVibe.Media",
-        "Keep every run as a video and cut clips from it.",
-        "https://openvibe.media"
-      ],
-      [
-        "fa-code",
-        "Build on it",
-        "The API, SDKs and examples.",
-        "https://openvibe.services"
-      ]
-    ],
-    "building": "OpenVibe.Bot is being built now, starting with our own robots; stream-controlled robots already run on OpenVibe.Live."
-  },
+  "keywords": "robot control panel, control a robot from the browser, remote control robot online, raspberry pi robot web control, ros 2 web control, telepresence robot, stream a robot live, open source robot controller, cozmo remote control, cozmo web control, cozmo sdk alternative, phone as a robot",
   "relationships": {
-    "service": "bot",
-    "plannedRepo": "OpenVibe.Bot",
-    "meanwhile": [
-      {
-        "label": "Robots on OpenVibe.Live",
-        "url": "https://openvibe.live",
-        "note": "Stream-controlled robots and cameras run on Live today."
-      },
-      {
-        "label": "OpenVibe.Extensions",
-        "url": "https://github.com/OpenVibers/OpenVibe.Extensions",
-        "note": "Device-side agents and hardware scripts."
-      }
-    ]
+    "service": "bot"
   }
 }

@@ -37,7 +37,10 @@
             "trade",
             "hosting",
             "crowdfunding",
-            "games"
+            "games",
+            "housing",
+            "food",
+            "jobs"
           ]
         },
         "homepage_url": {

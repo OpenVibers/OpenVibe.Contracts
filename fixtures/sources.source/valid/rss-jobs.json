@@ -1,0 +1,26 @@
+{
+  "key": "example-jobs-feed",
+  "name": "A jobs board feed (example)",
+  "type": "rss",
+  "category": "jobs",
+  "homepage_url": "https://jobs.example.org/",
+  "endpoints": [
+    {
+      "url": "https://jobs.example.org/feed.xml"
+    }
+  ],
+  "auth": {
+    "mode": "none"
+  },
+  "robots_note": "example fixture",
+  "terms_note": "example fixture",
+  "license_note": null,
+  "min_interval_ms": 60000,
+  "poll_interval_sec": 3600,
+  "stale_after_sec": 172800,
+  "max_items": 200,
+  "enabled": false,
+  "review_required": true,
+  "sensitivity": "none",
+  "default_indexability": "noindex"
+}

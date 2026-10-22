@@ -54,8 +54,8 @@
       "answer": "Yes. The router, the runtime, the console and the Node are open source and run on your own server with local models, and can link to openvibe.actor when you want hosted agents or the rest of the network."
     },
     {
-      "question": "What will it cost?",
-      "answer": "You will be able to start without paying, within limits published before launch; bigger tasks and stronger agents will be paid, with the cost shown per task."
+      "question": "What does it cost?",
+      "answer": "Every task shows what it cost and why it went where it did. Each person gets 20 free tasks a day, up to $0.05 a task and $0.25 a day; a task whose cheapest capable agent would cost more than its budget is refused before it runs. Paid budgets are not on sale yet."
     }
   ],
   "keywords": "ai agent router, openrouter for agents, ai agent that controls your computer, remote control computer with ai, self-hosted ai agent, computer use agent, ai command console, agent api, cloud ai agent, mcp server",
