@@ -7,7 +7,7 @@
   "version": "0.2.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 2,
+  "migrations": 4,
   "authority": [
     "play.*"
   ],
@@ -15,9 +15,9 @@
     "play.openvibe.network"
   ],
   "pins": {
-    "openvibe-contracts": "v0.172.1",
-    "openvibe-sdk": "v0.44.0",
-    "openvibe-shared": "v4.1.8"
+    "openvibe-contracts": "v0.209.0",
+    "openvibe-sdk": "v0.60.0",
+    "openvibe-shared": "v4.4.0"
   },
   "deployed": false,
   "exposure": "live",

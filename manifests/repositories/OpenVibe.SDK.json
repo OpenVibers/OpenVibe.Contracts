@@ -4,7 +4,7 @@
   "service": "sdk",
   "product": "OpenVibe.SDK",
   "stage": "alpha",
-  "version": "0.46.0",
+  "version": "0.60.0",
   "runtime": "node >=20",
   "database": null,
   "migrations": 0,
@@ -13,7 +13,7 @@
   ],
   "domains": [],
   "pins": {
-    "openvibe-contracts": "v0.159.0"
+    "openvibe-contracts": "v0.209.0"
   },
   "deployed": false,
   "exposure": "library",
