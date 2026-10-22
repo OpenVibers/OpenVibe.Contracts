@@ -12,9 +12,7 @@
     "contracts"
   ],
   "domains": [],
-  "pins": {
-    "openvibe-contracts": "v0.199.3"
-  },
+  "pins": {},
   "deployed": false,
   "exposure": "library",
   "track": "W1"
