@@ -11,8 +11,11 @@
  *
  * A checkout is a directory under the root holding `.git`, `package.json` or `STATUS.json`. For each one:
  *
- *   package.json   version, engines.node and the openvibe-contracts/-sdk/-shared/-publishing pins
- *   STATUS.json    repository, stage, runtime, domain, database, deployed and wave
+ *   package.json   version, engines.node and the openvibe-contracts/-sdk/-shared/-publishing pins; a pin the root
+ *                  package.json lacks is read from a nested one (apps/server, examples/<name>: at most three levels
+ *                  down, never node_modules), then from STATUS.json's prose
+ *   STATUS.json    repository, stage, runtime, domain, database, deployed and wave; version when there is no
+ *                  package.json (a Go repository such as OpenVibe.Node)
  *   migrations/    the count and the dialect the SQL declares
  *   this repository's manifests/services|products/*.json   the service or product the checkout is
  *
@@ -106,8 +109,36 @@ function pinTag(text, name) {
     return m ? (m[1].startsWith('v') ? m[1] : `v${m[1]}`) : null;
 }
 
-function estatePins(pkg, status) {
+/** package.json files below a checkout's root, nearest first, at most three levels down (never node_modules). */
+function nestedPackages(dir) {
+    const out = [];
+    let level = [dir];
+    for (let depth = 1; depth <= 3 && level.length; depth++) {
+        const next = [];
+        for (const d of level) {
+            let entries = [];
+            try { entries = fs.readdirSync(d, { withFileTypes: true }); } catch { continue; }
+            for (const e of entries.filter((x) => x.isDirectory() && !x.name.startsWith('.') && !['node_modules', 'vendor', 'dist', 'build', 'coverage'].includes(x.name)).sort((a, b) => a.name.localeCompare(b.name))) {
+                const sub = path.join(d, e.name);
+                const pkg = readJson(path.join(sub, 'package.json'));
+                if (pkg) out.push(pkg);
+                next.push(sub);
+            }
+        }
+        level = next;
+    }
+    return out;
+}
+
+function estatePins(pkg, status, dir) {
     const pins = pinsOf(pkg);
+    if (dir && PIN_NAMES.some((name) => !pins[name])) {
+        for (const nested of nestedPackages(dir)) {
+            const found = pinsOf(nested);
+            // A library's own package in a nested template (Shared's templates/site) is not a pin of the library.
+            for (const name of PIN_NAMES) if (!pins[name] && name !== (pkg && pkg.name) && found[name] && /^v\d+\.\d+\.\d+$/.test(found[name])) pins[name] = found[name];
+        }
+    }
     if (status) for (const name of PIN_NAMES) if (!pins[name]) {
         const tag = pinTag(`${status.contracts || ''} ${status.sdk || ''}`, name);
         if (tag) pins[name] = tag;
@@ -133,13 +164,13 @@ function recordFor(name, dir, index) {
         service: service ? service.id : null,
         product: service ? ((service.site && service.site.name) || service.name) : (product ? product.name : (status && status.product) || null),
         stage: (status && status.stage) || null,
-        version: (pkg && pkg.version) || null,
+        version: (pkg && pkg.version) || (status && typeof status.version === 'string' ? status.version : null),
         runtime,
         database: databaseOf(dir, status, pkg, exposure),
         migrations: migrationFiles(dir).length,
         authority: service ? ((service.namespacesOwned || []).length ? service.namespacesOwned.slice() : [service.id]) : [],
         domains: domainsOf(status, manifest),
-        pins: estatePins(pkg, status),
+        pins: estatePins(pkg, status, dir),
         // A retired service (its manifest says so) runs nowhere, whatever its archived STATUS.json last said.
         deployed: exposure === 'retired' ? false : status ? (status.deployed === undefined ? null : status.deployed) : null,
         exposure,
