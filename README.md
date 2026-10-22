@@ -2,7 +2,7 @@
 
 > Machine-readable contracts for the whole OpenVibe network.
 
-**Status:** alpha, v0.75.0 (first released in Wave 1). 589 schemas in `contracts/catalog.json`, 31 service manifests, 206 capability manifests, 13 namespace manifests and the staff capability map. Service repositories run `openvibe-contracts-check` and the pin-drift check in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Consumers pin release tags (each repository's `STATUS.json` names its pin; `node scripts/docs-currency.js <root>` checks that it matches `package.json`). `node scripts/estate.js` generates `docs/ESTATE.md` and `manifests/repositories/` from the estate checkouts, and `--check` fails on drift (plan T1 step 3).
+**Status:** alpha (first released in Wave 1; the release is package.json's `version`, tagged). At v0.209.3: 798 schemas in `contracts/catalog.json`, 45 service manifests, 348 capability manifests, 13 namespace manifests and the staff capability map. Service repositories run `openvibe-contracts-check` and the pin-drift check in CI, and deployed services verify service and app tokens with `serviceAuth` in production. Consumers pin release tags (each repository's `STATUS.json` names its pin). `node scripts/docs-currency.js <root>` checks every checkout's README and `STATUS.json` against its code: the pins and versions they name, a library's consumer list, the deployed flag against the manifest, README links, and the paths and migrations they name. `node scripts/estate.js` generates `docs/ESTATE.md` and `manifests/repositories/` from the estate checkouts, and `--check` fails on drift (plan T1 step 3).
 
 **Plan:** OpenVibe Development Roadmap, Wave 1 (implementation plan rev 3, §3.1 and §18.11).  
 **License:** AGPL-3.0 (same as every OpenVibe service).
@@ -63,7 +63,7 @@ OpenAPI 3.1 per service: `generated/openapi/<service>.json` (index in `generated
 | `events.event-envelope` | events | durable event shape for OpenVibe.Events (Wave 3) |
 | `media.media-ref` | media | `med_<ULID>` (Wave 4) or transitional `legacy:<app>:<kind>:<id>` |
 
-Manifests: `manifests/services/` (30 services as of v0.34.0: 24 `alpha`, 1 `beta` and 5 `stable`; OpenVibe.Realtime has no manifest, as ADR-005 closed it before it was built; SDK, Shared and Publishing are released libraries and Examples a repository with CI, none of them a runtime), `manifests/capabilities/` (191 capabilities as of v0.34.0, 18 of them `planned`; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
+Manifests: `manifests/services/` (45 services at v0.209.3: 39 `alpha`, 1 `beta` (Media), 4 `stable` (Games, Live, Network, Tools) and 1 `retired` (Sites, 2026-10-14); OpenVibe.Realtime has no manifest, as ADR-005 closed it before it was built; Contracts, SDK, Shared and Publishing are released libraries and Examples a repository with CI, none of them a runtime; `docs/ESTATE.md` tables every repository), `manifests/capabilities/` (348 capabilities at v0.209.3: 306 `active`, 27 `planned` and 15 `retired`; the v0.1 set was Media upload/read, chat send, paste create, coins credit/debit, notifications push, subject resolve and Community post). Each active capability names the route that implements it today. Where a service is reachable today (public, loopback only, library) is Network's observed overlay (`server/registry/exposure.js` there); manifest notes say whether a service is deployed and launched publicly.
 
 **Ids.** Subjects use prefixed ULIDs: `usr_`, `gst_`, `app_`, `mod_`. Services and system actors use slugs (`live`, `media`). Events use `evt_` and Media objects `med_`.
 
@@ -182,8 +182,8 @@ A run is answered inline, or with its job (202 + `Location`) while a job tool is
 Callers are tiered: anonymous < session < user < app/service. Quotas count each tool's `cost` within
 its `quotaClass`. yt is page-only (`api: false`). Only real tools have descriptors: there is no
 `planned` status, and a planned or mirror id is `404 tools.tool.not_found`. The registry routes are
-served on the gateway and every satellite (`tools.tool.read` is `active` since v0.33.1); the run route
-and `tools.net.probe` are `planned` until Tools serves them.
+served on the gateway and every satellite (`tools.tool.read` is `active` since v0.33.1), and so is the run route
+(`tools.tool.run` and `tools.net.probe` are `active`).
 
 `contracts.tools.checkDescriptor(d)` and `checkList(list)` apply the rules that JSON Schema cannot
 express, such as `run.path` being the tool's own, and check each example's input against an embedded
@@ -222,10 +222,11 @@ Each service manifest has a `lifecycle` block, filled from the service's code an
 
 `ovhost validate <service>` (OpenVibe.Host) reads the block from the inventory or from this package's manifest. It fails when a field is missing, when `deadlineSeconds` exceeds the unit's TimeoutStopSec or the unit's KillSignal is a different signal, and when the checkout's installed openvibe-contracts is outside `contracts.range`.
 
-## Run job API (v0.90, planned)
+## Run job API (v0.90)
 
-OpenVibe.Run (`manifests/services/run.json`, a placeholder until the repository exists; plan T14 R1) takes jobs,
-places each on a node that advertises `worker:<class>` and sends it as `platform.job@1`. Its routes, all planned:
+OpenVibe.Run (`manifests/services/run.json`; plan T14 R1, deployed since 2026-10-07 and public at https://openvibe.run)
+takes jobs, places each on a node that advertises `worker:<class>` and sends it as `platform.job@1`. Its routes, under
+`https://openvibe.run/api/v1`:
 
 | Route | Capability | Body | Answer |
 | --- | --- | --- | --- |
@@ -322,9 +323,9 @@ consumers pinning the previous tag; a published tag is never moved.
 
 ## Launch rule
 
-This repository does not make the product real, and the domain keeps its placeholder page on
-[OpenVibers/OpenVibe.Sites](https://github.com/OpenVibers/OpenVibe.Sites) until all of the
-following exist here (plan §12.12):
+This repository does not make a product real: a product domain stays an entry in `manifests/products/<domain>.json`
+(OpenVibe.Sites, which served the placeholder pages, retired on 2026-10-14) until all of the following exist in the
+product's own repository (plan §12.12):
 
 1. an owning runtime with health/readiness endpoints and observability;
 2. canonical identity/auth integration (OpenVibe.Network subjects, scoped service principals);
