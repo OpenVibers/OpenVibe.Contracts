@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 5,
+  "migrations": 6,
   "authority": [
     "tools.*"
   ],
