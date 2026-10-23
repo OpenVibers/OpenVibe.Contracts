@@ -11,6 +11,24 @@ the notes were in the tag and commit messages (`git tag -n1`).
   scalars Sources keeps as up to 20 of them (a lone scalar is a list of one, a missing value an empty list). Job boards
   give tags and job types as arrays, which `extra` reads as null; OpenVibe.Work filters by both, so it can follow
   Arbeitnow through Sources without losing them. Additive: an older reader ignores the field, and `extra` is unchanged.
+- Catalog copy checked against each product's code once more (plan 2026-10-22, track H5; Bot, Actor and Help were
+  fixed in 0.210.0).
+  - **OpenVibe.Watch** promised what it does not do:
+    - "videos, streams and cameras" as sources, "AI summaries", and keywords for YouTube video analysis and security
+      camera alerts (the `ai` extraction and the browser rung do not exist yet);
+    - "robots rules" on every check (Watch reads no robots.txt; it sends the site's validators, spaces requests per
+      host and honours Retry-After).
+    - It also left out what it does: a price, OpenVibe events and webhooks with no polling, a device on your own
+      network checked by your computer, and actions that start an Actor agent or a coding task, all on its site.
+    - "Next" is now browser checks and AI summaries.
+  - **OpenVibe.Quest**'s "Next" named OpenCoins rewards (on in production), quests for OpenVibe.Games (counted:
+    joining and publishing a world) and quests streamers and communities write, which its own FAQ rules out; the
+    "streamer quests" keyword goes too.
+  - **OpenVibe.Work**'s "Next" named Watch alerts and the Actor helper, both live: any search is an Atom feed Watch
+    follows, and the agent drafts an application and asks before each step.
+  - **OpenVibe.Food**'s "Next" named the household chat, which is live: a household opens a room on OpenVibe.Chat with
+    Pantry, an AI member that knows the plan and every cupboard.
+  - Pics, Download, Video, Rent, Homes, Events, Services and Zone read true against their code.
 
 ## 0.211.0 — 2026-10-23
 

@@ -5,7 +5,7 @@
   "icon": "fa-utensils",
   "accent": "#fb923c",
   "tagline": "What should we eat?",
-  "description": "OpenVibe.Food finds food banks, pantries and budget grocers near you from OpenStreetMap, plans meals for one person, a couple or a household with the shopping list and what it costs, shares the plan with your household, tells you what your cupboard can already make, and compares delivery: one search opens DoorDash, Uber Eats, Grubhub and the other apps at once, with meal kits side by side. Next: a household chat with an AI member that knows your cupboards.",
+  "description": "OpenVibe.Food finds food banks, pantries and budget grocers near you from OpenStreetMap, plans meals for one person, a couple or a household with the shopping list and what it costs, shares the plan with your household, tells you what your cupboard can already make, and compares delivery: one search opens DoorDash, Uber Eats, Grubhub and the other apps at once, with meal kits side by side. A household can open its own room on OpenVibe.Chat with Pantry, an AI member that knows the plan and every member's cupboard.",
   "pillars": [
     {
       "title": "Food near you",
