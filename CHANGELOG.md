@@ -6,6 +6,11 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.212.0 — 2026-10-24
 
+- **A tab-separated body, and which duplicate wins** (OpenVibe.Food's BLS prices). An api endpoint of
+  `sources.source@1` and `sources.source-write-request@1` may say `"format": "tsv"`: a file whose first line names the
+  columns, read as an array of records keyed by those names (`items_path` is ""). `"duplicates": "first" | "last"` says
+  which of two records with the same identity is kept (first, as before, by default); BLS's series files list each
+  series oldest to newest, so `last` keeps its newest month.
 - **`extra_lists` on an api endpoint of a source** (plan 2026-10-22, track F2). `sources.source@1` and
   `sources.source-write-request@1` take, beside `extra`, up to ten list fields: each maps to a path whose array of
   scalars Sources keeps as up to 20 of them (a lone scalar is a list of one, a missing value an empty list). Job boards

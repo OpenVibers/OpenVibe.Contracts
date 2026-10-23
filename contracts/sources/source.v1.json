@@ -82,8 +82,17 @@
           "format": {
             "enum": [
               "json",
-              "xml"
-            ]
+              "xml",
+              "tsv"
+            ],
+            "description": "json (default), xml, or tsv: a tab-separated file whose first line names the columns, read as an array of records keyed by those names (items_path is \"\"; BLS series files, Sources 2026-10-24)."
+          },
+          "duplicates": {
+            "enum": [
+              "first",
+              "last"
+            ],
+            "description": "Two records with the same identity: first (default) keeps the first, last keeps the last in the first one's place (a file listing each series oldest to newest then yields its newest value; Sources, 2026-10-24)."
           },
           "items_path": {
             "type": "string"
