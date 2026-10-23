@@ -72803,6 +72803,10 @@ export interface Source {
   min_interval_ms: number;
   poll_interval_sec: number;
   stale_after_sec: number;
+  /**
+   * Retire what the feed stopped showing (jobs, listings): once a fetch of this source succeeds, an item it has not seen for this many seconds is removed with reason "gone_from_source" (a change, so consumers following the change feed learn it). null (the default): items stay, as a news archive or a dataset should.
+   */
+  retire_after_sec?: number | null;
   max_items: number;
   enabled: boolean;
   /**
@@ -135582,6 +135586,10 @@ export type SourcesSourceWriteRequest =
       min_interval_ms?: number;
       poll_interval_sec?: number;
       stale_after_sec?: number;
+      /**
+       * Retire what the feed stopped showing (jobs, listings): once a fetch of this source succeeds, an item it has not seen for this many seconds is removed with reason "gone_from_source" (a change, so consumers following the change feed learn it). null (the default): items stay, as a news archive or a dataset should.
+       */
+      retire_after_sec?: number | null;
       max_items?: number;
       enabled?: boolean;
       /**

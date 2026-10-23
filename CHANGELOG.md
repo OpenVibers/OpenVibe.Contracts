@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.211.0 — 2026-10-23
+
+- **`retire_after_sec` on a source** (plan 2026-10-22, track F2). `sources.source@1` and
+  `sources.source-write-request@1` take an optional integer (an hour to a year) or null. Once a fetch of the source
+  succeeds, an item it has not seen for that long is removed with reason `gone_from_source`: a change in the feed, so a
+  consumer following `GET /api/v1/items` learns that the job or the listing is gone. Sources kept every item it ever saw,
+  so OpenVibe.Work could not follow Arbeitnow through it without showing closed jobs. null, the default, keeps today's
+  behaviour for news, prices and datasets. Additive: an older reader ignores the field.
+
 ## 0.210.0 — 2026-10-22
 
 - **Sources categories `housing`, `food` and `jobs`** (plan 2026-10-22, track F1). `sources.source@1`,
