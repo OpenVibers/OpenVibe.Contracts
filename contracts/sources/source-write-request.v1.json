@@ -156,6 +156,14 @@
                       "type": "string"
                     },
                     "description": "Extra fields copied as the API gave them (scalars). A path is relative to the record; $key is the map key; $root.<path> reads the response from its root, where a {$key} segment is the record's map key; * steps into an object's single child; key[field=value,...] (one to four conditions) steps into the first element of the array key whose fields equal the values, compared as text, where a value is literal text or $rec.<path> read from the record (Sources#51)."
+                  },
+                  "extra_lists": {
+                    "type": "object",
+                    "maxProperties": 10,
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Lists the API gives (tags, job types): each field maps to a path whose array of scalars is kept as up to 20 of them; a lone scalar is a list of one and a missing value an empty list. Separate from extra, which reads an array as null (Sources, 2026-10-24)."
                   }
                 }
               }

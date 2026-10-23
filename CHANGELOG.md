@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.212.0 — 2026-10-24
+
+- **`extra_lists` on an api endpoint of a source** (plan 2026-10-22, track F2). `sources.source@1` and
+  `sources.source-write-request@1` take, beside `extra`, up to ten list fields: each maps to a path whose array of
+  scalars Sources keeps as up to 20 of them (a lone scalar is a list of one, a missing value an empty list). Job boards
+  give tags and job types as arrays, which `extra` reads as null; OpenVibe.Work filters by both, so it can follow
+  Arbeitnow through Sources without losing them. Additive: an older reader ignores the field, and `extra` is unchanged.
+
 ## 0.211.0 — 2026-10-23
 
 - **`retire_after_sec` on a source** (plan 2026-10-22, track F2). `sources.source@1` and
