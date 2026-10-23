@@ -4,7 +4,7 @@
   "service": null,
   "product": null,
   "stage": "alpha",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "runtime": "node >=22.0.0",
   "database": null,
   "migrations": 0,

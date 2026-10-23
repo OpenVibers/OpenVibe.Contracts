@@ -13,7 +13,7 @@
   ],
   "domains": [],
   "pins": {
-    "openvibe-sdk": "v0.60.0",
+    "openvibe-sdk": "v0.62.0",
     "openvibe-contracts": "v0.209.0"
   },
   "deployed": false,

@@ -7,7 +7,7 @@
   "version": "0.1.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 9,
+  "migrations": 10,
   "authority": [
     "rent.*"
   ],
@@ -17,8 +17,8 @@
   ],
   "pins": {
     "openvibe-contracts": "v0.209.0",
-    "openvibe-sdk": "v0.60.0",
-    "openvibe-shared": "v4.4.0",
+    "openvibe-sdk": "v0.62.0",
+    "openvibe-shared": "v4.9.0",
     "openvibe-publishing": "v1.4.0"
   },
   "deployed": true,

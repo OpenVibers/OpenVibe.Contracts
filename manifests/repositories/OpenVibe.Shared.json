@@ -4,7 +4,7 @@
   "service": "shared",
   "product": "OpenVibe.Shared",
   "stage": "alpha",
-  "version": "4.7.0",
+  "version": "4.9.0",
   "runtime": null,
   "database": null,
   "migrations": 0,
@@ -14,7 +14,7 @@
   "domains": [],
   "pins": {
     "openvibe-contracts": "v0.209.0",
-    "openvibe-sdk": "v0.60.0"
+    "openvibe-sdk": "v0.62.0"
   },
   "deployed": false,
   "exposure": "library",
