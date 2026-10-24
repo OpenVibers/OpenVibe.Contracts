@@ -5,29 +5,29 @@
   "icon": "fa-eye",
   "accent": "#facc15",
   "tagline": "Watch anything. Hear about what matters.",
-  "description": "OpenVibe.Watch checks a web page, an RSS or Atom feed or a JSON API on the cadence you pick, pulls out the value you care about, and tells you when it changes or crosses the line you set — politely: it asks sites whether anything changed before reading them, spaces its requests per site and waits when a site asks. Next: events and webhooks, browser checks, prices and releases, cameras on your own network, and actions for your apps and agents.",
+  "description": "OpenVibe.Watch checks a web page, a price, an RSS or Atom feed or a JSON API on the cadence you pick, waits for an OpenVibe event or a webhook without polling, or has your own computer check a device on your network. It pulls out the value you care about and tells you when it changes or crosses the line you set, or starts one of your Actor agents or a coding task. It is polite: it asks sites whether anything changed before reading them, spaces its requests per site and waits when a site asks. Next: checks in a real browser and AI summaries of what changed.",
   "pillars": [
     {
       "title": "Any source",
-      "text": "Pages, feeds, APIs, repos, videos, streams and cameras."
+      "text": "Pages, prices, feeds, APIs, OpenVibe events, webhooks and devices on your own network."
     },
     {
       "title": "What changed",
-      "text": "Extraction, diffs and conditions, with AI summaries when you want them."
+      "text": "A CSS selector, a pattern or a JSON path picks the value, and a condition says when it matters."
     },
     {
       "title": "Anywhere it matters",
-      "text": "Notifications, events, webhooks and agent triggers."
+      "text": "Notifications, events, webhooks, your Actor agents and coding tasks."
     },
     {
       "title": "Respectful and safe",
-      "text": "Site terms, robots rules and fair limits on every check."
+      "text": "The site's own validators first, a gap between requests to one site, and a pause whenever a site asks for one."
     }
   ],
   "faq": [
     {
       "question": "What can I watch today?",
-      "answer": "A web page (all of it, or the part a CSS selector or a pattern picks), an RSS or Atom feed (for example a GitHub releases feed), or a JSON API and a path into it."
+      "answer": "A web page (all of it, or the part a CSS selector or a pattern picks), a price on a page, an RSS or Atom feed (for example a GitHub releases feed), a JSON API and a path into it, an OpenVibe event such as a channel going live, a webhook from anything that can send one, or a device on your own network that your computer checks. Checks in a real browser are not offered yet."
     },
     {
       "question": "How often does it check?",
@@ -35,7 +35,7 @@
     },
     {
       "question": "How will I hear about a change?",
-      "answer": "When your condition fires, a notification arrives on your OpenVibe account, and the watch page shows every check and the value it found."
+      "answer": "When your condition fires, a notification arrives on your OpenVibe account, and the watch page shows every check and the value it found. A watch can also start one of your Actor agents or a coding task."
     },
     {
       "question": "Does it hammer the sites it watches?",
@@ -46,7 +46,7 @@
       "answer": "Yes, while it is in alpha."
     }
   ],
-  "keywords": "website change monitoring, uptime monitoring api, price drop alerts, restock alerts, release monitoring, youtube video analysis, security camera alerts",
+  "keywords": "website change monitoring, uptime monitoring, price drop alerts, restock alerts, release monitoring, webhook alerts, home network monitoring",
   "relationships": {
     "service": "watch"
   }

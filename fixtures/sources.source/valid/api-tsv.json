@@ -1,0 +1,45 @@
+{
+  "key": "bls-average-prices",
+  "name": "BLS average retail food prices (US city average)",
+  "type": "api",
+  "category": "food",
+  "homepage_url": "https://www.bls.gov/cpi/factsheets/average-prices.htm",
+  "endpoints": [
+    {
+      "url": "https://download.bls.gov/pub/time.series/ap/ap.data.0.Current",
+      "format": "tsv",
+      "items_path": "",
+      "item_kind": "price",
+      "duplicates": "last",
+      "where": {
+        "series_id": [
+          "APU0000708111",
+          "APU0000709112"
+        ]
+      },
+      "fields": {
+        "identity": "series_id",
+        "title": "series_id"
+      },
+      "extra": {
+        "value": "value",
+        "year": "year",
+        "period": "period"
+      }
+    }
+  ],
+  "auth": {
+    "mode": "none"
+  },
+  "robots_note": "robots.txt allows the feed path (checked 2026-09-23)",
+  "terms_note": "Each AWS price list file says it is for informational purposes; prices are subject to the terms on aws.amazon.com.",
+  "license_note": null,
+  "min_interval_ms": 60000,
+  "poll_interval_sec": 3600,
+  "stale_after_sec": 172800,
+  "max_items": 200,
+  "enabled": false,
+  "review_required": true,
+  "sensitivity": "none",
+  "default_indexability": "noindex"
+}

@@ -5,7 +5,7 @@
   "icon": "fa-briefcase",
   "accent": "#34d399",
   "tagline": "Find work, with an agent on your side.",
-  "description": "OpenVibe.Work gathers job listings from open job boards (Arbeitnow, Remotive and RemoteOK) into one search, shows a short excerpt with the board named and links every listing back to where you apply, and keeps your saved searches with a count of what is new. Next: alerts through OpenVibe.Watch and an agent that helps you prepare and apply, with your approval at every step.",
+  "description": "OpenVibe.Work gathers job listings from open job boards (Arbeitnow, Remotive and RemoteOK) into one search, shows a short excerpt with the board named and links every listing back to where you apply, and keeps your saved searches with a count of what is new. Any search is also a feed OpenVibe.Watch can follow for alerts, and your OpenVibe.Actor agent helps you prepare an application, asking before every step.",
   "pillars": [
     {
       "title": "Every listing sourced",
