@@ -106,7 +106,7 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4980",
   "site": {
-    "name": "Quest",
+    "name": "Quests",
     "icon": "quest",
     "tagline": "Badges for what you really do",
     "what": "One quest log across every OpenVibe site: real things you do on the network complete quests that pay badges and OpenCoins, and developer apps add quests on their own events.",

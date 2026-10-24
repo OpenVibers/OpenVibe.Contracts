@@ -123,8 +123,8 @@
   "site": {
     "name": "Chat",
     "icon": "chat",
-    "tagline": "Group chats with AI, servers and voice",
-    "what": "Rooms with friends and AI members (each on its own model, with tools), Discord-style servers with roles, invites and text and voice channels, pictures, direct messages, the network-wide global chat and stream chat, all under one OpenVibe account.",
+    "tagline": "Chat with Vibe, friends and groups",
+    "what": "Vibe, OpenVibe's assistant, in a chat of your own; rooms with friends and AI members (each on its own model, with tools), Discord-style servers with roles, invites and text and voice channels, pictures, direct messages, the network-wide global chat and stream chat, all under one OpenVibe account.",
     "legalProfile": "ugc",
     "position": 6,
     "faq": [

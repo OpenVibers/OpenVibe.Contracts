@@ -78,10 +78,10 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4960",
   "site": {
-    "name": "Work",
+    "name": "Jobs",
     "icon": "work",
     "tagline": "Find work, with an agent on your side",
-    "what": "Job listings from open job boards in one search, saved searches that tell you what is new, and an application tracker where your OpenVibe.Actor agent helps you prepare.",
+    "what": "Job listings from open job boards in one search, saved searches that tell you what is new, and an application tracker where your agent helps you prepare.",
     "legalProfile": "info",
     "position": 26
   }
