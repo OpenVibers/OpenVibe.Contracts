@@ -196857,6 +196857,10 @@ export type BotDeviceMessage =
         subject?: string | null;
         role: string;
       };
+      /**
+       * The robot's control epoch when Bot decided this command (Bot#155): it rises each time a queue turn ends, is left or is paused by an owner takeover, and Bot's own halt for that change carries the new value. A device or plugin may refuse a command whose turn_epoch is lower than the newest halt's, defence in depth on top of Bot's own guarantee that nothing decided under a turn is sent after that turn's halt. Milliseconds on Bot's clock, so it keeps rising across Bot restarts. Absent from Bots before 0.213.0 and on robots without a turn queue.
+       */
+      turn_epoch?: number;
       robot_id?: string;
       /**
        * OpenVibe.Node only: the driver to send it to.
