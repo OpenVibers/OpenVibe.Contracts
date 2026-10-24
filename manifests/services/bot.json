@@ -19,9 +19,9 @@
     "publicSite": "service"
   },
   "site": {
-    "name": "Bot",
+    "name": "Robots",
     "icon": "bot",
-    "tagline": "An open control panel for robots",
+    "tagline": "Drive any robot from your browser",
     "what": "Pair a robot with one pasted command and drive it from any browser, with roles, limits and an emergency stop on every command.",
     "legalProfile": "games",
     "position": 21

@@ -83,10 +83,10 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4950",
   "site": {
-    "name": "Actor",
+    "name": "Agents",
     "icon": "actor",
-    "tagline": "Your agent for everything",
-    "what": "Give a task in plain words; Actor sends it to the best agent for it, its own or another platform's, checks the result and shows the cost and why.",
+    "tagline": "Agents that work while you are away",
+    "what": "Agents that run tasks for you, now or on a schedule, on OpenVibe's own agent or another platform's, on your computers and robots when you allow it, with every result checked and its cost shown.",
     "legalProfile": "ugc",
     "position": 23
   }

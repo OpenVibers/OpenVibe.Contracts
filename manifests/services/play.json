@@ -82,7 +82,7 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5040",
   "site": {
-    "name": "Play",
+    "name": "Game services",
     "icon": "play",
     "tagline": "Achievements, leaderboards and cloud saves for every game.",
     "what": "See this week's leaders and the all-time boards of every OpenVibe game, every achievement you have unlocked, and the saves games keep for you so your progress follows you to any device.",

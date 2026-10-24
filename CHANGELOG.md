@@ -4,6 +4,35 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.213.0 — 2026-10-25
+
+- **Plain names in every menu** (the owner, 2026-10-24: make the products consumer-friendly and familiar, with the
+  developer side on OpenVibe.Services; plan of record track K). The `site` names and lines the launcher, the footer
+  and Network's home show:
+
+  | Service | Name | Line |
+  |---|---|---|
+  | actor | Agents | Agents that work while you are away |
+  | bot | Robots | Drive any robot from your browser |
+  | codes | Code | Build and fix apps with AI |
+  | watch | Alerts | Know the moment it changes |
+  | work | Jobs | Find work, with an agent on your side |
+  | rent | Rentals | Every rental site, one search |
+  | trade | Markets | Watchlists and alerts |
+  | host | Hosting | Hosting, compared honestly |
+  | vip | Memberships | Memberships for creators and their software |
+  | space | Spaces | Make a space: an app on your account |
+  | quest | Quests | Badges for what you really do |
+  | inventory | Items | Your items, on every OpenVibe site. |
+  | run | Compute | Run jobs on machines that can. |
+  | zone | Storage | Private S3-compatible storage for your projects. |
+  | ai | AI API | Many models, one API. Every answer explained. |
+  | play | Game services | Achievements, leaderboards and cloud saves for every game. |
+
+  - Chat's line is now "Chat with Vibe, friends and groups": Vibe, OpenVibe's assistant, lives at openvibe.chat/vibe
+    (OpenVibe.Chat#139).
+  - Service ids, domains, capabilities and events are unchanged: only what people read.
+
 ## 0.212.0 — 2026-10-24
 
 - **A tab-separated body, and which duplicate wins** (OpenVibe.Food's BLS prices). An api endpoint of

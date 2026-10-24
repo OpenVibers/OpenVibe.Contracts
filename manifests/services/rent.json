@@ -78,7 +78,7 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5010",
   "site": {
-    "name": "Rent",
+    "name": "Rentals",
     "icon": "rent",
     "tagline": "Every rental site, one search",
     "what": "Search Craigslist, Facebook Marketplace, Zillow, Apartments.com, Zumper and more at once for apartments, houses, rooms, stays, commercial space, parking, storage and cars, next to affordable housing from HUD and listings people post here.",
