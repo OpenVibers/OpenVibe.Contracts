@@ -32,6 +32,11 @@ the notes were in the tag and commit messages (`git tag -n1`).
   - Chat's line is now "Chat with Vibe, friends and groups": Vibe, OpenVibe's assistant, lives at openvibe.chat/vibe
     (OpenVibe.Chat#139).
   - Service ids, domains, capabilities and events are unchanged: only what people read.
+- **`turn_epoch` on a device command** (`bot.device-message@1`, additive). This was the community LOOI driver's
+  reviewers' question A2. It carries the robot's control epoch when Bot decided the command: it rises when a queue turn
+  ends, is left or is paused by an owner takeover (OpenVibe.Bot#155), and Bot's halt for that change carries the new
+  value. A device or plugin may refuse a command older than the newest halt's epoch. It is milliseconds on Bot's
+  clock, so it keeps rising across Bot restarts. Older devices ignore it (Node's decoder skips unknown fields).
 
 ## 0.212.0 — 2026-10-24
 
