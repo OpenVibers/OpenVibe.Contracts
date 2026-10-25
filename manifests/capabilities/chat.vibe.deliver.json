@@ -1,0 +1,22 @@
+{
+  "id": "chat.vibe.deliver",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Put a result of a person's own work into their Vibe chats: OpenVibe.Actor posts each finished run of one of their OpenVibe Agents (one chat per agent, named after it) as Vibe's message, so each run is a chat they can open and continue. No AI answer is made and nothing counts against their allowance. Loopback only, first-party service token; never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/vibe/deliver"
+  ],
+  "inputSchema": "chat.vibe-deliver-request@1",
+  "outputSchema": "chat.vibe-deliver-result@1"
+}

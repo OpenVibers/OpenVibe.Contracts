@@ -191023,6 +191023,53 @@ export interface ChatVibeAskResult {
   code?: string;
 }
 
+/** chat.vibe-deliver-request@1.0.0 (owner: chat) */
+/**
+ * chat.vibe-deliver-request@1: a first-party service puts a result of the person's own work into their Vibe chats (OpenVibe.Actor: each finished run of one of their OpenVibe Agents, when the agent sends its results to Vibe). Chat keeps one chat per source, named after it, and posts the text there as Vibe's message, so each run is a chat they can open and continue. No AI answer is made and nothing counts against their allowance. POST /internal/chat/vibe/deliver, capability chat.vibe.deliver, loopback only.
+ */
+export interface ChatVibeDeliverRequest {
+  /**
+   * The person whose work it is, as the calling service vouches (Actor: the agent's owner).
+   */
+  subject: string;
+  source: {
+    kind: "agent";
+    /**
+     * The source's stable id (the agent's agt_ id): one chat per source.
+     */
+    id: string;
+    /**
+     * What to call it in the chat's name (the agent's name).
+     */
+    name?: string;
+  };
+  /**
+   * The result, in Markdown (as Vibe's answers are shown).
+   */
+  text: string;
+  /**
+   * Where the whole run is (its steps, sources and cost).
+   */
+  url?: string;
+  /**
+   * The caller's id for this result (Actor: the run's task id): sent again, it is posted once.
+   */
+  idempotency_key: string;
+}
+
+/** chat.vibe-deliver-result@1.0.0 (owner: chat) */
+/**
+ * chat.vibe-deliver-result@1: where a chat.vibe-deliver-request@1 was posted. `repeated` is true when the idempotency key was seen before (nothing was posted again).
+ */
+export interface ChatVibeDeliverResult {
+  /**
+   * The Vibe chat's slug.
+   */
+  chat: string;
+  url: string;
+  repeated: boolean;
+}
+
 /** live.moderation.action@1.0.0 (owner: live) */
 /**
  * live.moderation.action v1 (OpenVibe.Live server/db/database.js logModerationAction; ADR-022). A staff or channel moderator action taken on OpenVibe.Live outside chat: site and global bans, IP bans, message deletes and purges from Live's admin panel, a stream force-ended, relay users hidden, channel moderators added or removed. Not a person tidying their own messages or configuring their own channel. Written to Live's outbox in the transaction that records the action. OpenVibe.Network keeps it in the moderation audit log. Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).
@@ -200433,7 +200480,7 @@ export interface ActorTaskCreateRequest {
 
 /** actor.agent-manage-request@1.0.0 (owner: actor) */
 /**
- * actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, quiet_from?, quiet_to?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.
+ * actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, quiet_from?, quiet_to?, send_to_vibe?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.
  */
 export type ActorAgentManageRequest =
   | {
@@ -200462,6 +200509,10 @@ export type ActorAgentManageRequest =
        * HH:MM UTC: quiet hours end.
        */
       quiet_to?: string | null;
+      /**
+       * Post each finished run into the person's own Vibe chat named after the agent (chat.vibe.deliver), so each run is a chat they can open and continue. Default true.
+       */
+      send_to_vibe?: boolean;
       status?: "active" | "paused";
     }
   | {
@@ -200502,6 +200553,10 @@ export type ActorAgentManageResult =
          * HH:MM UTC: quiet hours end.
          */
         quiet_to?: string | null;
+        /**
+         * Post each finished run into the person's own Vibe chat named after the agent (chat.vibe.deliver), so each run is a chat they can open and continue. Default true.
+         */
+        send_to_vibe?: boolean;
         status: "active" | "paused";
         next_run_at?: string | null;
         last_run_at?: string | null;
@@ -200548,6 +200603,10 @@ export type ActorAgentManageResult =
        * HH:MM UTC: quiet hours end.
        */
       quiet_to?: string | null;
+      /**
+       * Post each finished run into the person's own Vibe chat named after the agent (chat.vibe.deliver), so each run is a chat they can open and continue. Default true.
+       */
+      send_to_vibe?: boolean;
       status: "active" | "paused";
       next_run_at?: string | null;
       last_run_at?: string | null;

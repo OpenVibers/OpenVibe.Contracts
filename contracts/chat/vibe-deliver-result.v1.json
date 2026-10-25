@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/vibe-deliver-result.v1.json",
+  "title": "ChatVibeDeliverResult",
+  "description": "chat.vibe-deliver-result@1: where a chat.vibe-deliver-request@1 was posted. `repeated` is true when the idempotency key was seen before (nothing was posted again).",
+  "type": "object",
+  "required": [
+    "chat",
+    "url",
+    "repeated"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "chat": {
+      "type": "string",
+      "pattern": "^v-[0-9a-f]{12}$",
+      "description": "The Vibe chat's slug."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "repeated": {
+      "type": "boolean"
+    }
+  }
+}
