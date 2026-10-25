@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/inbox-reply-request.v1.json",
+  "title": "ChatInboxReplyRequest",
+  "description": "chat.inbox-reply-request@1: what one of an inbox's people sends while working a conversation (chat.inbox.reply). A reply (POST /api/chat/inboxes/:id/conversations/:cid/messages { message }: the conversation becomes open, Vibe stays quiet in it, and the person takes it if nobody has); a status or an assignment (PATCH /:id/conversations/:cid { status: open | resolved | bot, assignee_id: one of the inbox's people | null }); a translation (POST /:id/conversations/:cid/messages/:mid/translate { to } or POST /:id/translate { text, to }). Marking read (POST /:id/conversations/:cid/read) takes no body.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "open",
+            "resolved",
+            "bot"
+          ]
+        },
+        "assignee_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "status"
+          ]
+        },
+        {
+          "required": [
+            "assignee_id"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "object",
+      "required": [
+        "to"
+      ],
+      "properties": {
+        "to": {
+          "type": "string",
+          "maxLength": 16,
+          "description": "A language code (en, es, ja, …)."
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 4000
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

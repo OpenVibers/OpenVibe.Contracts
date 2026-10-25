@@ -4042,7 +4042,7 @@ export interface Capability {
   inputSchema?: string;
   outputSchema?: string;
   permissions: string[];
-  resourceConstraints: ("namespace" | "owner" | "room_member" | "space_member" | "project" | "none")[];
+  resourceConstraints: ("namespace" | "owner" | "room_member" | "space_member" | "inbox_member" | "project" | "none")[];
   quotaClass: string;
   events: string[];
   /**
@@ -205666,4 +205666,260 @@ export interface QuestAppQuest {
   created_at: string;
   updated_at: string;
   completions: number;
+}
+
+/** chat.inbox-request@1.0.0 (owner: chat) */
+/**
+ * chat.inbox-request@1: a support inbox, made (POST /api/chat/inboxes, name required) or changed by its owner (PATCH /api/chat/inboxes/:id, any subset). Unknown fields are ignored; a bad value is 422 with a code (inbox.name, inbox.origin, inbox.hours, inbox.retention, …). Members (POST /:id/members { username }), saved replies (POST /:id/replies { shortcut, body }), webhooks (POST /:id/webhooks { url }), actions (POST /:id/actions { name, description, url, params }) and verified visitors (POST /:id/identity { action: on | rotate | off }) take their own small bodies on the routes chat.inbox.manage names.
+ */
+export interface ChatInboxRequest {
+  name?: string;
+  /**
+   * The first line a visitor sees.
+   */
+  greeting?: string;
+  color?: string;
+  /**
+   * Vibe, the assistant, answers first.
+   */
+  ai_enabled?: boolean;
+  /**
+   * What Vibe should know and how to answer (content, never rules that override Chat's).
+   */
+  ai_instructions?: string;
+  /**
+   * https pages Vibe may read (an array, or one a line).
+   */
+  knowledge_urls?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | string;
+  /**
+   * The sites the widget answers (empty: any).
+   */
+  allowed_origins?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | string;
+  /**
+   * The inbox's people answer too (false: a site assistant where only Vibe answers).
+   */
+  handoff?: boolean;
+  /**
+   * When the people answer; null: always.
+   */
+  hours?: {
+    tz?: string;
+    days?: number[];
+    start?: string;
+    end?: string;
+  } | null;
+  /**
+   * round_robin: a visitor waiting for a person goes to the next of the people.
+   */
+  route?: "none" | "round_robin";
+  /**
+   * How long finished conversations stay; null: forever.
+   */
+  retention_days?: number | null;
+}
+
+/** chat.inbox-result@1.0.0 (owner: chat) */
+/**
+ * chat.inbox-result@1: a support inbox as its people see it ({ inbox, members?, embed? }: the widget snippet and panel address), or the inboxes a person works in ({ inboxes }, each with their role and how many conversations wait and are open). Secrets (the identity secret, webhook and action secrets) appear only on the answer that made them.
+ */
+export interface ChatInboxResult {
+  inbox?: {
+    id: string;
+    name: string;
+  };
+  inboxes?: {
+    id: string;
+    name: string;
+    role: "owner" | "agent";
+    waiting?: number;
+    open?: number;
+  }[];
+  members?: {}[];
+  embed?: {
+    script?: string;
+    panel?: string;
+  };
+}
+
+/** chat.inbox-reply-request@1.0.0 (owner: chat) */
+/**
+ * chat.inbox-reply-request@1: what one of an inbox's people sends while working a conversation (chat.inbox.reply). A reply (POST /api/chat/inboxes/:id/conversations/:cid/messages { message }: the conversation becomes open, Vibe stays quiet in it, and the person takes it if nobody has); a status or an assignment (PATCH /:id/conversations/:cid { status: open | resolved | bot, assignee_id: one of the inbox's people | null }); a translation (POST /:id/conversations/:cid/messages/:mid/translate { to } or POST /:id/translate { text, to }). Marking read (POST /:id/conversations/:cid/read) takes no body.
+ */
+export type ChatInboxReplyRequest =
+  | {
+      message: string;
+    }
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      /**
+       * A language code (en, es, ja, …).
+       */
+      to: string;
+      text?: string;
+    };
+
+/** chat.inbox-conversations-result@1.0.0 (owner: chat) */
+/**
+ * chat.inbox-conversations-result@1: an inbox's conversations ({ conversations }: waiting first, each with status, who has it, the visitor's name and whether their site verified them, a preview and unread count), one conversation's messages ({ conversation, messages }, ?after= a message id), a reply ({ message }), its saved replies ({ replies }), or the owner's export (?format=json: { inbox, exported_at, conversations: [{ …, messages }] }; ?format=csv is text/csv, one row per message). A message is { id, author: visitor | agent | ai | system, author_name, body, created_at, account? }.
+ */
+export interface ChatInboxConversationsResult {
+  conversations?: {
+    id: string;
+    status: "bot" | "waiting" | "open" | "resolved";
+  }[];
+  conversation?: {} | null;
+  messages?: {
+    id: number;
+    author: "visitor" | "agent" | "ai" | "system";
+    body: string;
+  }[];
+  message?: {};
+  replies?: {}[];
 }

@@ -7413,6 +7413,42 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "chat.inbox-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/inbox-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.inbox-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/inbox-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.inbox-reply-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/inbox-reply-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.inbox-conversations-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/inbox-conversations-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

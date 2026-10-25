@@ -1,0 +1,26 @@
+{
+  "id": "chat.inbox.reply",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Answer visitors for the person in a support inbox they work in on OpenVibe.Chat: reply in a conversation (it becomes open, Vibe stays quiet in it), resolve, reopen or give it back to Vibe, assign it to one of the inbox's people, mark it read, and translate a visitor's message or a reply. The reply is the person's, under their name.",
+  "permissions": [
+    "chat:inbox:reply"
+  ],
+  "resourceConstraints": [
+    "inbox_member"
+  ],
+  "quotaClass": "chat-inbox-reply",
+  "events": [],
+  "implementedBy": [
+    "POST /api/chat/inboxes/:id/conversations/:cid/messages",
+    "PATCH /api/chat/inboxes/:id/conversations/:cid",
+    "POST /api/chat/inboxes/:id/conversations/:cid/read",
+    "POST /api/chat/inboxes/:id/conversations/:cid/messages/:mid/translate",
+    "POST /api/chat/inboxes/:id/translate"
+  ],
+  "inputSchema": "chat.inbox-reply-request@1",
+  "outputSchema": "chat.inbox-conversations-result@1"
+}

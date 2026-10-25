@@ -1,0 +1,13 @@
+{
+  "name": "Pixel Lamp Co.",
+  "greeting": "Questions about your lamp? Ask away.",
+  "color": "#7c5cff",
+  "ai_enabled": true,
+  "ai_instructions": "We sell smart lamps.",
+  "knowledge_urls": [
+    "https://pixellamp.example/faq"
+  ],
+  "allowed_origins": [
+    "https://pixellamp.example"
+  ]
+}

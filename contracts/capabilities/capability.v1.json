@@ -16,7 +16,7 @@
     "inputSchema": { "type": "string" },
     "outputSchema": { "type": "string" },
     "permissions": { "type": "array", "items": { "type": "string" } },
-    "resourceConstraints": { "type": "array", "items": { "enum": ["namespace", "owner", "room_member", "space_member", "project", "none"] } },
+    "resourceConstraints": { "type": "array", "items": { "enum": ["namespace", "owner", "room_member", "space_member", "inbox_member", "project", "none"] } },
     "quotaClass": { "type": "string" },
     "events": { "type": "array", "items": { "type": "string" } },
     "implementedBy": { "type": "array", "items": { "type": "string" }, "description": "Current route(s) that perform this action today, e.g. 'POST /api/v1/:app/files'." },

@@ -1,0 +1,10 @@
+{
+  "inbox": {
+    "id": "inb_01J9ZQ3M5K8V2R4T6Y8W0X2C4B",
+    "name": "Pixel Lamp Co."
+  },
+  "embed": {
+    "script": "<script src=\"https://openvibe.chat/widget.js\" data-inbox=\"inb_01J9ZQ3M5K8V2R4T6Y8W0X2C4B\" async></script>",
+    "panel": "https://openvibe.chat/embed/inbox/inb_01J9ZQ3M5K8V2R4T6Y8W0X2C4B"
+  }
+}

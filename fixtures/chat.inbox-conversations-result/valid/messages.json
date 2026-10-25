@@ -1,0 +1,22 @@
+{
+  "conversation": {
+    "id": "cnv_01J9ZQ3M5K8V2R4T6Y8W0X2C4C",
+    "status": "open"
+  },
+  "messages": [
+    {
+      "id": 1,
+      "author": "visitor",
+      "author_name": "Dana",
+      "body": "My lamp arrived cracked",
+      "created_at": "2026-10-25 02:00:00"
+    },
+    {
+      "id": 2,
+      "author": "agent",
+      "author_name": "Ann",
+      "body": "Sorry! A new shade ships today.",
+      "created_at": "2026-10-25 02:01:00"
+    }
+  ]
+}

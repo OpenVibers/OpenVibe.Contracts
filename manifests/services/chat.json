@@ -27,7 +27,10 @@
     "chat.stats.read",
     "chat.ticket.write",
     "chat.resource.read",
-    "chat.resource.control"
+    "chat.resource.control",
+    "chat.inbox.read",
+    "chat.inbox.reply",
+    "chat.inbox.manage"
   ],
   "eventsProduced": [
     "chat.message.created",
