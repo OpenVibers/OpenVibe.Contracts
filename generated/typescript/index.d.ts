@@ -196794,7 +196794,7 @@ export interface BotRobotProfile {
 
 /** bot.device-message@1.0.0 (owner: bot) */
 /**
- * bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state. The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).
+ * bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).
  */
 export type BotDeviceMessage =
   | {
@@ -196821,6 +196821,14 @@ export type BotDeviceMessage =
       };
       allowed_commands: ("drive" | "actuator" | "ptz" | "say" | "display" | "halt")[];
       estop_latched: boolean;
+      /**
+       * Vibe by voice: the owner turned it on for this machine, so it may listen for its call word and send voice_ask (absent or false: it does not).
+       */
+      voice?: boolean;
+      /**
+       * The call word the owner chose ("hey vibe" unless they chose another); sent with voice on.
+       */
+      call_word?: string;
     }
   | {
       v: 1;
@@ -197033,6 +197041,47 @@ export type BotDeviceMessage =
       robot_id?: string;
       local_stop?: boolean;
       reason?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "voice_answer";
+      /**
+       * The voice_ask this answers.
+       */
+      id: string;
+      state: "working" | "answered" | "refused";
+      /**
+       * The answer to speak (answered), a short line (working), or why not (refused).
+       */
+      text?: string;
+      /**
+       * Where the person can read it later: the Vibe chat that keeps the question and the answer.
+       */
+      url?: string;
+    }
+  | {
+      v: 1;
+      seq: number;
+      ts: number;
+      type: "voice_ask";
+      /**
+       * The device's id for this request (unique per device for a day); the answers carry it.
+       */
+      id: string;
+      /**
+       * What the person asked after the call word, as the machine heard it.
+       */
+      text: string;
+      /**
+       * The language it was heard in (BCP 47), when the recogniser knows.
+       */
+      lang?: string;
+      /**
+       * The robot whose microphone heard it, when the device is a robot's bridge.
+       */
+      robot_id?: string;
     };
 
 /** bot.command@1.0.0 (owner: bot) */

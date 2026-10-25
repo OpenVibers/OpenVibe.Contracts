@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 2,
+  "ts": 1792940000000,
+  "type": "config",
+  "heartbeat_ms": 1000,
+  "limits": {},
+  "allowed_commands": [],
+  "estop_latched": false,
+  "voice": true,
+  "call_word": "hey vibe"
+}

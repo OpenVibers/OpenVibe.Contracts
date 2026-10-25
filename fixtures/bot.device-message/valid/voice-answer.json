@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "seq": 12,
+  "ts": 1792940003000,
+  "type": "voice_answer",
+  "id": "va-20261026-001",
+  "state": "answered",
+  "text": "You have a call at three and nothing after four.",
+  "url": "https://openvibe.chat/vibe/v-0123456789ab"
+}
